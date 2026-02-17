@@ -83,8 +83,4 @@ The frontend will be built using Next.js (App Router), TypeScript, and Tailwind 
 
 1.  **Professional Dashboard (`/pro/dashboard`):** Create the main dashboard, which will serve as the entry point to all professional-specific features.
 2.  **Profile Management (`/pro/profil`):** Implement the form for professionals to edit their public-facing information and manage their portfolio.
-3.  **CPM & Visibility (`/pro/credit`):** Build the UI for purchasing CPM credit, setting monthly caps, and configuring auto-reload. This will involve integrating with the backend payment processing logic.
-4.  **Reputation Management:**
-    *   **Link Recommendations (`/pro/recommandations`):** Create the interface for professionals to view and link incoming verified recommendations.
-    *   **Respond to Signals (`/pro/signal`):** Build the page where professionals can view a signal against them and submit their response.
-5.  **Analytics (`/pro/analytique`):** Develop the analytics page to display key performance indicators fetched from the backend.
+3.  **CPM & Visibility (`/pro/credit`):** Build the UI for purchasing CPM credit, setting monthly caps, and a
