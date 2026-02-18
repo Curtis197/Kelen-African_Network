@@ -1,26 +1,57 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ============================================
+   KELEN — West African Flag Inspired Palette
+   Green (#009639) · Yellow (#FCCF00) · Red (#CE1126)
+   ============================================ */
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  /* Fonts */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Core colors */
+  --color-background: #ffffff;
+  --color-foreground: #1A1A1A;
+
+  /* Kelen Green */
+  --color-kelen-green-50: #ECFDF3;
+  --color-kelen-green-100: #D1FAE5;
+  --color-kelen-green-500: #009639;
+  --color-kelen-green-600: #007A2E;
+  --color-kelen-green-700: #006124;
+  --color-kelen-green-800: #004D1C;
+
+  /* Kelen Yellow */
+  --color-kelen-yellow-50: #FEFCE8;
+  --color-kelen-yellow-100: #FEF9C3;
+  --color-kelen-yellow-500: #FCCF00;
+  --color-kelen-yellow-600: #D4AD00;
+  --color-kelen-yellow-700: #AB8C00;
+  --color-kelen-yellow-800: #7A6400;
+
+  /* Kelen Red */
+  --color-kelen-red-50: #FEF2F2;
+  --color-kelen-red-100: #FEE2E2;
+  --color-kelen-red-500: #CE1126;
+  --color-kelen-red-600: #A80E1F;
+  --color-kelen-red-700: #860B18;
+  --color-kelen-red-800: #6B0913;
+
+  /* Neutrals */
+  --color-muted: #F5F5F4;
+  --color-muted-foreground: #78716C;
+  --color-border: #E7E5E4;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Focus ring utility */
+*:focus-visible {
+  outline: 2px solid var(--color-kelen-green-500);
+  outline-offset: 2px;
 }
