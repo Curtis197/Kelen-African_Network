@@ -20,7 +20,10 @@ export default function HomePage() {
             </h1>
             <p className="mt-6 text-lg leading-relaxed text-muted-foreground sm:text-xl">
               Kelen documente les professionnels africains. Contrats, photos,
-              délais — chaque projet laisse une trace permanente et vérifiée.
+              délais —{" "}
+              <span className="font-medium text-kelen-yellow-700">
+                chaque projet laisse une trace permanente et vérifiée.
+              </span>{" "}
               Cherchez un nom. Consultez l&apos;historique. Décidez.
             </p>
 
@@ -50,7 +53,8 @@ export default function HomePage() {
             Comment ça marche
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-center text-muted-foreground">
-            Un système simple. Des faits vérifiés. Une confiance documentée.
+            Un système simple. Des faits vérifiés.{" "}
+            <span className="font-medium text-kelen-yellow-700">Une confiance documentée.</span>
           </p>
 
           <div className="mt-12 grid gap-8 sm:grid-cols-3">
@@ -77,8 +81,8 @@ export default function HomePage() {
                 Kelen vérifie les preuves
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                Notre équipe examine contrats, photos et chronologie.
-                Rien n&apos;est publié sans vérification.
+                Notre équipe examine contrats, photos et chronologie.{" "}
+                <span className="font-medium text-kelen-yellow-700">Rien n&apos;est publié sans vérification.</span>
               </p>
             </div>
 
@@ -106,8 +110,8 @@ export default function HomePage() {
             Un statut qui se mérite
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-center text-muted-foreground">
-            Le statut d&apos;un professionnel reflète son historique documenté.
-            Il ne peut être ni acheté, ni modifié.
+            Le statut d&apos;un professionnel reflète son historique documenté.{" "}
+            <span className="font-medium text-kelen-red-600">Il ne peut être ni acheté, ni modifié.</span>
           </p>
 
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -157,8 +161,8 @@ export default function HomePage() {
                 size="md"
               />
               <p className="mt-4 text-sm leading-relaxed text-foreground/70">
-                Un manquement contractuel vérifié et documenté avec preuves.
-                Ce signal ne peut être ni retiré, ni effacé.
+                Un manquement contractuel vérifié et documenté avec preuves.{" "}
+                <span className="font-medium text-kelen-red-600">Ce signal ne peut être ni retiré, ni effacé.</span>
               </p>
             </div>
           </div>
@@ -211,7 +215,8 @@ export default function HomePage() {
               </h3>
               <p className="mt-2 text-muted-foreground">
                 Les professionnels payent pour être découverts dans les
-                recherches par catégorie. 5 € pour 1 000 vues de profil.
+                recherches par catégorie.{" "}
+                <span className="font-semibold text-kelen-yellow-700">5 € pour 1 000 vues de profil.</span>
               </p>
               <ul className="mt-6 space-y-3">
                 {[
@@ -272,7 +277,8 @@ export default function HomePage() {
           <p className="mt-6 text-sm text-muted-foreground">
             Kelen signifie « un » en bambara et dioula.
             <br />
-            Un contrat. Une parole. Un manquement suffit.
+            Un contrat. Une parole.{" "}
+            <span className="font-medium text-kelen-red-600">Un manquement suffit.</span>
           </p>
         </div>
       </section>
