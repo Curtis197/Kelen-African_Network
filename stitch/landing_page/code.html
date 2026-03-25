@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Répertoire des Experts | Diaspora Connect</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-fixed": "#70fbbd",
+              "tertiary-fixed-dim": "#ffb3af",
+              "on-surface": "#1a1c1c",
+              "on-primary-fixed": "#002113",
+              "background": "#f9f9f8",
+              "on-primary-container": "#00402a",
+              "secondary-container": "#fdc425",
+              "on-background": "#1a1c1c",
+              "secondary-fixed-dim": "#f7be1d",
+              "on-primary": "#ffffff",
+              "on-error": "#ffffff",
+              "surface-container": "#eeeeed",
+              "primary": "#006c49",
+              "on-surface-variant": "#3c4a42",
+              "outline-variant": "#bbcabf",
+              "surface-container-lowest": "#ffffff",
+              "inverse-primary": "#50dea3",
+              "secondary-fixed": "#ffdf9a",
+              "on-tertiary-fixed-variant": "#842325",
+              "tertiary-container": "#f97a77",
+              "secondary": "#785a00",
+              "on-secondary-fixed-variant": "#5a4300",
+              "primary-fixed-dim": "#50dea3",
+              "primary-container": "#10b77f",
+              "error": "#ba1a1a",
+              "tertiary-fixed": "#ffdad7",
+              "on-tertiary-fixed": "#410006",
+              "on-primary-fixed-variant": "#005236",
+              "on-tertiary-container": "#6f1218",
+              "inverse-surface": "#2f3130",
+              "tertiary": "#a43a3b",
+              "surface-dim": "#dadad9",
+              "surface-bright": "#f9f9f8",
+              "on-secondary-container": "#6d5200",
+              "surface-container-highest": "#e2e2e2",
+              "surface-container-high": "#e8e8e7",
+              "inverse-on-surface": "#f1f1f0",
+              "surface": "#f9f9f8",
+              "on-tertiary": "#ffffff",
+              "error-container": "#ffdad6",
+              "surface-container-low": "#f3f4f3",
+              "on-secondary": "#ffffff",
+              "on-error-container": "#93000a",
+              "outline": "#6c7a71",
+              "surface-tint": "#006c49",
+              "on-secondary-fixed": "#251a00",
+              "surface-variant": "#e2e2e2"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      body { font-family: 'Inter', sans-serif; }
+      h1, h2, h3, h4 { font-family: 'Manrope', sans-serif; }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-nav {
+        background: rgba(249, 249, 248, 0.7);
+        backdrop-filter: blur(12px);
+      }
+      .tonal-shift {
+        background-color: #f3f4f3;
+      }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex">
+<!-- SideNavBar Component -->
+<aside class="hidden lg:flex flex-col p-4 space-y-4 h-screen w-64 bg-stone-100 dark:bg-stone-950 fixed left-0 top-0 z-[60] border-r-0 font-manrope text-sm font-semibold">
+<div class="flex items-center space-x-3 px-2 py-4">
+<div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">language</span>
+</div>
+<div>
+<h2 class="text-lg font-black text-stone-900 dark:text-stone-50 leading-tight">Diaspora Connect</h2>
+<p class="text-[10px] uppercase tracking-widest text-stone-500">Expertise Platform</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1 py-4">
+<!-- Active Tab: Tous les experts -->
+<a class="flex items-center space-x-3 px-4 py-3 bg-white dark:bg-stone-900 text-emerald-700 dark:text-emerald-400 rounded-xl shadow-sm transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="person_search">person_search</span>
+<span>Tous les experts</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 text-stone-500 dark:text-stone-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-stone-200/50 dark:hover:bg-stone-800/50 rounded-xl transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="star">star</span>
+<span>Mes favoris</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 text-stone-500 dark:text-stone-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-stone-200/50 dark:hover:bg-stone-800/50 rounded-xl transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span>Recherches enregistrées</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 text-stone-500 dark:text-stone-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-stone-200/50 dark:hover:bg-stone-800/50 rounded-xl transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="category">category</span>
+<span>Catégories</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 text-stone-500 dark:text-stone-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-stone-200/50 dark:hover:bg-stone-800/50 rounded-xl transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="query_stats">query_stats</span>
+<span>Analyses</span>
+</a>
+</nav>
+<div class="pt-4 border-t border-stone-200/50">
+<button class="w-full bg-primary-container text-on-primary-container py-3 rounded-xl font-bold flex items-center justify-center space-x-2 shadow-sm hover:shadow-md transition-all active:scale-95">
+<span class="material-symbols-outlined">add_circle</span>
+<span>Devenir Expert</span>
+</button>
+</div>
+<div class="space-y-1 pb-4">
+<a class="flex items-center space-x-3 px-4 py-3 text-stone-500 hover:text-emerald-600 rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span>Aide</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 text-stone-500 hover:text-error rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Déconnexion</span>
+</a>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="flex-1 lg:ml-64 flex flex-col min-h-screen">
+<!-- TopNavBar Component -->
+<header class="fixed top-0 right-0 left-0 lg:left-64 h-16 glass-nav z-50 border-b border-stone-200/10 flex justify-between items-center px-6 lg:px-12 font-manrope">
+<div class="flex items-center space-x-8">
+<h1 class="text-xl font-bold tracking-tight text-emerald-700 dark:text-emerald-400">Répertoire des Experts</h1>
+<nav class="hidden xl:flex space-x-6 text-sm">
+<a class="text-stone-600 hover:text-stone-900 transition-colors" href="#">Tableau de bord</a>
+<a class="text-emerald-700 border-b-2 border-emerald-600 pb-1" href="#">Missions</a>
+<a class="text-stone-600 hover:text-stone-900 transition-colors" href="#">Ressources</a>
+<a class="text-stone-600 hover:text-stone-900 transition-colors" href="#">Messagerie</a>
+</nav>
+</div>
+<div class="flex items-center space-x-4">
+<div class="relative group hidden md:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 group-focus-within:text-emerald-600 transition-colors">search</span>
+<input class="pl-10 pr-4 py-2 bg-stone-100 border-none rounded-full text-sm w-64 focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all" placeholder="Rechercher un expert..." type="text"/>
+</div>
+<div class="flex items-center space-x-2">
+<button class="p-2 text-stone-600 hover:bg-stone-200/50 rounded-lg transition-all active:scale-95">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-stone-600 hover:bg-stone-200/50 rounded-lg transition-all active:scale-95">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden ml-2 ring-2 ring-emerald-500/20">
+<img alt="User profile avatar" data-alt="close-up portrait of a professional man in a tailored suit with a confident expression in a bright modern office setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAawuTWTVowUIiz6rQZkK9Z42pK_YyWlB1qoshG1j_JXUG41EuoPI1Q18pVzIsoMpnkXeSPpQzhxWFdqQD02kDSUfyy5SWlQdATPrrMUOpziHH-bOdPX16bk_EM-nb9Umgz32QQ9NED4ezakUPZ0-P-W9fCNC_5yDunQY26hXpnWGQ_RvvtyK82s_herU8LFNYQcIDdSebdugcjjhfBQElTK6ezhToybCdG26oDBuryjqesj_CotOuHJw8bUDTPJrpYH41aq7qWw2w"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<div class="pt-24 px-6 lg:px-12 pb-12 max-w-[1600px] mx-auto w-full">
+<!-- Hero / Title Section -->
+<div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<h2 class="text-4xl font-extrabold text-on-surface mb-2 tracking-tight">Trouvez votre expert de confiance</h2>
+<p class="text-on-surface-variant max-w-2xl text-lg font-body">Parcourez notre réseau de professionnels qualifiés pour accompagner vos projets au pays.</p>
+</div>
+<div class="flex items-center space-x-3 text-sm font-semibold text-primary">
+<span class="flex h-2 w-2 rounded-full bg-primary animate-pulse"></span>
+<span>1,240 experts vérifiés disponibles</span>
+</div>
+</div>
+<!-- Advanced Filter Bar -->
+<section class="mb-8 p-4 bg-surface-container-low rounded-2xl flex flex-wrap items-center gap-4">
+<div class="flex-1 min-w-[200px]">
+<label class="block text-[10px] uppercase font-bold text-stone-500 mb-1 ml-1">Spécialité</label>
+<select class="w-full bg-surface-container-lowest border-none rounded-xl text-sm focus:ring-2 focus:ring-primary shadow-sm">
+<option>Toutes les spécialités</option>
+<option>Construction &amp; Immobilier</option>
+<option>Conseil Juridique</option>
+<option>Technologie &amp; IT</option>
+<option>Agriculture</option>
+</select>
+</div>
+<div class="flex-1 min-w-[200px]">
+<label class="block text-[10px] uppercase font-bold text-stone-500 mb-1 ml-1">Localisation</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm">location_on</span>
+<input class="w-full pl-9 bg-surface-container-lowest border-none rounded-xl text-sm focus:ring-2 focus:ring-primary shadow-sm" placeholder="Abidjan, Yamoussoukro..." type="text"/>
+</div>
+</div>
+<div class="flex-1 min-w-[200px]">
+<label class="block text-[10px] uppercase font-bold text-stone-500 mb-1 ml-1">Niveau d'excellence</label>
+<div class="flex space-x-2">
+<button class="flex-1 py-2 px-3 bg-secondary-container/20 text-on-secondary-container border border-secondary-container/30 rounded-xl text-xs font-bold hover:bg-secondary-container/40 transition-colors">Or</button>
+<button class="flex-1 py-2 px-3 bg-stone-200 text-stone-600 rounded-xl text-xs font-bold hover:bg-stone-300 transition-colors">Argent</button>
+<button class="flex-1 py-2 px-3 bg-stone-200 text-stone-600 rounded-xl text-xs font-bold hover:bg-stone-300 transition-colors">Tous</button>
+</div>
+</div>
+<div class="md:w-auto w-full pt-5 md:pt-0">
+<button class="w-full md:w-auto px-6 py-2.5 bg-primary text-white rounded-xl font-bold flex items-center justify-center space-x-2 shadow-sm hover:shadow-md transition-all active:scale-95">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+<span>Filtrer</span>
+</button>
+</div>
+</section>
+<!-- Expert Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8">
+<!-- Card 1: Kouassi Construction -->
+<div class="group bg-surface-container-lowest rounded-[1.5rem] overflow-hidden transition-all duration-300 hover:translate-y-[-4px] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.08)] relative">
+<div class="relative h-48 overflow-hidden">
+<img alt="Professional Construction project" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="modern architectural structure under construction with steel beams and golden hour sunlight reflecting off glass panels" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBncEagmcPtpfu9E0IMEnSM4k_EKvlklwqMBE485FJvQFJnrqcbv7NcgvqtzqILElO9i9pds2TrBe8gFVsp2i73NKkWTU38AE0m2IvRL9SUU__VwFILK6tHrpzOl9UdAPCyoEdk_rQrc9jSNu09lO2BiJ6dfE-hg5y7GZweMTIHVHVrunhSG2mBN9uSrBBUEPvW3p7AVm_1loFHSYebrUvveE5AjAgrE-Mc_gGqdOQJgqNejxe_Ff1fGIUFtK-cCPYOyramfA9qmB0"/>
+<div class="absolute top-4 left-4">
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-black uppercase tracking-widest rounded-full flex items-center shadow-sm">
+<span class="material-symbols-outlined text-xs mr-1" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+                                Rang Or
+                            </span>
+</div>
+<button class="absolute top-4 right-4 w-8 h-8 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white hover:text-red-500 transition-all">
+<span class="material-symbols-outlined text-sm">favorite</span>
+</button>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<div>
+<h3 class="text-xl font-bold text-stone-900 group-hover:text-primary transition-colors">Kouassi Construction</h3>
+<p class="text-sm text-stone-500 font-medium">BTP &amp; Architecture</p>
+</div>
+<div class="flex items-center text-emerald-600">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div class="flex items-center space-x-4 mb-4 text-xs font-semibold text-stone-600">
+<div class="flex items-center">
+<span class="material-symbols-outlined text-sm text-amber-500 mr-1" style="font-variation-settings: 'FILL' 1;">star</span>
+                                4.9 <span class="text-stone-400 ml-1">(128)</span>
+</div>
+<div class="flex items-center">
+<span class="material-symbols-outlined text-sm mr-1">location_on</span>
+                                Abidjan, CI
+                            </div>
+</div>
+<div class="py-3 border-y border-stone-100 flex justify-between items-center mb-6">
+<span class="text-[10px] uppercase font-bold text-stone-400">Projets réalisés</span>
+<span class="text-sm font-bold text-stone-900">42 Missions</span>
+</div>
+<a class="w-full py-3 bg-primary-container/10 text-primary hover:bg-primary hover:text-white rounded-xl font-bold flex items-center justify-center transition-all duration-200" href="#">
+                            Consulter le profil
+                        </a>
+</div>
+</div>
+<!-- Card 2: Diallo Juris -->
+<div class="group bg-surface-container-lowest rounded-[1.5rem] overflow-hidden transition-all duration-300 hover:translate-y-[-4px] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.08)] relative">
+<div class="relative h-48 overflow-hidden">
+<img alt="Legal professional workspace" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="elegant law library background with leather bound books and a mahogany desk with soft warm lamp lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWEd0tvCMUtG9bUv-NVwtAfndiR08dBfg0K0M2OsKepzuRSrf2phdX3wO7RBa388dG01dnpHc-R_HzfBEXuQcA5gH-KpCIrcbYIPmDGW63puAvfdAnvj_i_3KyPM_fNj1wstKClF1uvpQbUMFpV00-0KrXMihP_ZUTqzMD9gDsJ6iIMZ2wK94n6AUS82ofX-ZI_yRZZy2uQFy5wYLK0WFVXNW8ZYmZFGolbXhu21A7sqYFDcr9CwGfnlP7gBPfkWiEX6QoFRgZMjQ"/>
+<div class="absolute top-4 left-4">
+<span class="px-3 py-1 bg-stone-200 text-stone-600 text-[10px] font-black uppercase tracking-widest rounded-full flex items-center shadow-sm">
+<span class="material-symbols-outlined text-xs mr-1" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+                                Rang Argent
+                            </span>
+</div>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<div>
+<h3 class="text-xl font-bold text-stone-900 group-hover:text-primary transition-colors">Diallo Juris</h3>
+<p class="text-sm text-stone-500 font-medium">Droit des Affaires</p>
+</div>
+<div class="flex items-center text-emerald-600">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div class="flex items-center space-x-4 mb-4 text-xs font-semibold text-stone-600">
+<div class="flex items-center">
+<span class="material-symbols-outlined text-sm text-amber-500 mr-1" style="font-variation-settings: 'FILL' 1;">star</span>
+                                4.7 <span class="text-stone-400 ml-1">(84)</span>
+</div>
+<div class="flex items-center">
+<span class="material-symbols-outlined text-sm mr-1">location_on</span>
+                                Dakar, SN
+                            </div>
+</div>
+<div class="py-3 border-y border-stone-100 flex justify-between items-center mb-6">
+<span class="text-[10px] uppercase font-bold text-stone-400">Projets réalisés</span>
+<span class="text-sm font-bold text-stone-900">26 Missions</span>
+</div>
+<a class="w-full py-3 bg-primary-container/10 text-primary hover:bg-primary hover:text-white rounded-xl font-bold flex items-center justify-center transition-all duration-200" href="#">
+                            Consulter le profil
+                        </a>
+</div>
+</div>
+<!-- Card 3: BioTech Agri -->
+<div class="group bg-surface-container-lowest rounded-[1.5rem] overflow-hidden transition-all duration-300 hover:translate-y-[-4px] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.08)] relative">
+<div class="relative h-48 overflow-hidden">
+<img alt="Agriculture expert" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="lush green agricultural field with modern irrigation system and a drone flying overhead under a clear blue sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCB4PNvJUI4N5NwpG4rJfI48EAF7Giw9xJ2xdqnaN1RrEhdcHh1GKNWkr0vNWFCZEQ7WRFdNe3KHqMJ8-Ui2394_ankZg_Gjp3h3ouQazRCyLCyg0URHio3efvwA6ibzt3j4JVsLsY7yUoksjWYBz3qPglYySfdvJiqk3lEFTCvTJy_5YgsJq6lZbQBS96ljT2BolJAF5hocVO9HNqCXbsq9LJ-ujZ5I3UWMFOlx3LRnjX3yeOfMW1H4CqwLSMTQksu8nrgb9J9Ngs"/>
+<div class="absolute top-4 left-4">
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-black uppercase tracking-widest rounded-full flex items-center shadow-sm">
+<span class="material-symbols-outlined text-xs mr-1" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+                                Rang Or
+                            </span>
+</div>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<div>
+<h3 class="text-xl font-bold text-stone-900 group-hover:text-primary transition-colors">BioTech Agri</h3>
+<p class="text-sm text-stone-500 font-medium">Agronomie &amp; Conseil</p>
+</div>
+<div class="flex items-center text-emerald-600">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div class="flex items-center space-x-4 mb-4 text-xs font-semibold text-stone-600">
+<div class="flex items-center">
+<span class="material-symbols-outlined text-sm text-amber-500 mr-1" style="font-variation-settings: 'FILL' 1;">star</span>
+                                5.0 <span class="text-stone-400 ml-1">(52)</span>
+</div>
+<div class="flex items-center">
+<span class="material-symbols-outlined text-sm mr-1">location_on</span>
+                                Bamako, ML
+                            </div>
+</div>
+<div class="py-3 border-y border-stone-100 flex justify-between items-center mb-6">
+<span class="text-[10px] uppercase font-bold text-stone-400">Projets réalisés</span>
+<span class="text-sm font-bold text-stone-900">19 Missions</span>
+</div>
+<a class="w-full py-3 bg-primary-container/10 text-primary hover:bg-primary hover:text-white rounded-xl font-bold flex items-center justify-center transition-all duration-200" href="#">
+                            Consulter le profil
+                        </a>
+</div>
+</div>
+<!-- Card 4: Sodeka Logistics -->
+<div class="group bg-surface-container-lowest rounded-[1.5rem] overflow-hidden transition-all duration-300 hover:translate-y-[-4px] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.08)] relative">
+<div class="relative h-48 overflow-hidden">
+<img alt="Logistics management" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="clean organized warehouse with high shelving and workers using digital tablets to manage inventory in soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDD4jE8NmTsD2f-TredUQzkBfdFOqa0RXxZdzUxJaZgUikr-5-wD7pCWvV476dSKaY7y-36Gr_mgeKQ2KMB5KRPa6UwsMU9AHkfiN5rF649S_9USvcUzUuM13TIOK1Nk3aPbt0roAcqTTgEQYn-V5qmr8jhy1e4XgBQ05h4i7j5n0eDji8Zacu9XMKkFgqQWi0rl6nzJdKT-FEeFwvHAHg1evZtd3vTPKUvknPO8nQ2mr4WQy7mwA5zrTVBAw0bt8YFAzwTbde1jvk"/>
+<div class="absolute top-4 left-4">
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-black uppercase tracking-widest rounded-full flex items-center shadow-sm">
+<span class="material-symbols-outlined text-xs mr-1" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+                                Rang Or
+                            </span>
+</div>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<div>
+<h3 class="text-xl font-bold text-stone-900 group-hover:text-primary transition-colors">Sodeka Logistics</h3>
+<p class="text-sm text-stone-500 font-medium">Supply Chain</p>
+</div>
+<div class="flex items-center text-emerald-600">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div class="flex items-center space-x-4 mb-4 text-xs font-semibold text-stone-600">
+<div class="flex items-center">
+<span class="material-symbols-outlined text-sm text-amber-500 mr-1" style="font-variation-settings: 'FILL' 1;">star</span>
+                                4.8 <span class="text-stone-400 ml-1">(210)</span>
+</div>
+<div class="flex items-center">
+<span class="material-symbols-outlined text-sm mr-1">location_on</span>
+                                Lomé, TG
+                            </div>
+</div>
+<div class="py-3 border-y border-stone-100 flex justify-between items-center mb-6">
+<span class="text-[10px] uppercase font-bold text-stone-400">Projets réalisés</span>
+<span class="text-sm font-bold text-stone-900">75 Missions</span>
+</div>
+<a class="w-full py-3 bg-primary-container/10 text-primary hover:bg-primary hover:text-white rounded-xl font-bold flex items-center justify-center transition-all duration-200" href="#">
+                            Consulter le profil
+                        </a>
+</div>
+</div>
+</div>
+<!-- Pagination / Load More -->
+<div class="mt-16 flex flex-col items-center">
+<button class="px-8 py-4 bg-surface-container-high text-on-surface hover:bg-surface-container-highest rounded-2xl font-bold transition-all flex items-center space-x-2 active:scale-95 shadow-sm">
+<span>Voir plus d'experts</span>
+<span class="material-symbols-outlined">expand_more</span>
+</button>
+<div class="mt-4 flex items-center space-x-2">
+<button class="w-10 h-10 rounded-full bg-primary text-white font-bold text-sm">1</button>
+<button class="w-10 h-10 rounded-full hover:bg-stone-200 text-stone-600 font-bold text-sm">2</button>
+<button class="w-10 h-10 rounded-full hover:bg-stone-200 text-stone-600 font-bold text-sm">3</button>
+<span class="px-2">...</span>
+<button class="w-10 h-10 rounded-full hover:bg-stone-200 text-stone-600 font-bold text-sm">12</button>
+</div>
+</div>
+</div>
+<!-- Footer Overlay (Desktop minimal) -->
+<footer class="mt-auto border-t border-stone-200/20 py-8 px-12 bg-surface-container-low text-stone-500 text-xs flex flex-col md:flex-row justify-between items-center gap-4">
+<div class="flex items-center space-x-6">
+<a class="hover:text-primary transition-colors" href="#">Politique de confidentialité</a>
+<a class="hover:text-primary transition-colors" href="#">Conditions d'utilisation</a>
+<a class="hover:text-primary transition-colors" href="#">Mentions légales</a>
+</div>
+<p>© 2024 Diaspora Connect. Tous droits réservés.</p>
+</footer>
+</main>
+<!-- Mobile Nav Anchor (Responsive Pivot) -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-stone-100 px-6 py-3 flex justify-between items-center z-[70] shadow-[0_-10px_30px_-15px_rgba(0,0,0,0.1)]">
+<button class="flex flex-col items-center space-y-1 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">explore</span>
+<span class="text-[10px] font-bold">Explorer</span>
+</button>
+<button class="flex flex-col items-center space-y-1 text-stone-400">
+<span class="material-symbols-outlined">chat_bubble</span>
+<span class="text-[10px] font-bold">Messages</span>
+</button>
+<div class="relative -top-6">
+<button class="w-14 h-14 bg-primary text-white rounded-full flex items-center justify-center shadow-lg shadow-primary/40 active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+</div>
+<button class="flex flex-col items-center space-y-1 text-stone-400">
+<span class="material-symbols-outlined">assignment</span>
+<span class="text-[10px] font-bold">Missions</span>
+</button>
+<button class="flex flex-col items-center space-y-1 text-stone-400">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="text-[10px] font-bold">Profil</span>
+</button>
+</nav>
+</body></html>

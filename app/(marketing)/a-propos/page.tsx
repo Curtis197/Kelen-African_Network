@@ -13,16 +13,16 @@ export default function AboutPage() {
         <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
           <div className="max-w-3xl">
             <h1 className="text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-              Vous construisez en Afrique depuis la diaspora.{" "}
+              Vous menez des projets à distance.{" "}
               <span className="text-kelen-green-500">
-                Vérifiez les professionnels avant de virer.
+                Vérifiez les professionnels avant de payer.
               </span>
             </h1>
             <p className="mt-6 text-lg leading-relaxed text-muted-foreground sm:text-xl">
-              Kelen documente les professionnels africains. Contrats, photos,
+              Kelen documente l&apos;historique des professionnels. Contrats, résultats,
               délais —{" "}
               <span className="font-medium text-kelen-yellow-700">
-                chaque projet laisse une trace permanente et vérifiée.
+                chaque service laisse une trace permanente et vérifiée.
               </span>{" "}
               Cherchez un nom. Consultez l&apos;historique. Décidez.
             </p>
@@ -124,9 +124,9 @@ export default function AboutPage() {
                 size="md"
               />
               <p className="mt-4 text-sm leading-relaxed text-foreground/70">
-                Au moins 5 projets vérifiés, aucun signal, satisfaction
+                Plusieurs projets vérifiés, aucun signal, satisfaction
                 exemplaire. L&apos;identité professionnelle la plus documentée
-                sur Kelen. Référence pour tout mandant diaspora.
+                sur Kelen. Référence pour tout client exigeant.
               </p>
             </div>
 
@@ -208,22 +208,22 @@ export default function AboutPage() {
             {/* Advertisement */}
             <div className="rounded-xl bg-white p-8 shadow-sm">
               <div className="inline-flex items-center gap-2 rounded-full bg-kelen-yellow-50 px-4 py-1.5 text-sm font-semibold text-kelen-yellow-700">
-                CPM
+                Premium
               </div>
               <h3 className="mt-4 text-2xl font-bold text-foreground">
                 Visibilité
               </h3>
               <p className="mt-2 text-muted-foreground">
-                Les professionnels payent pour être découverts dans les
+                Les professionnels s&apos;abonnent pour être découverts dans les
                 recherches par catégorie.{" "}
-                <span className="font-semibold text-kelen-yellow-700">5 € pour 1 000 vues de profil.</span>
+                <span className="font-semibold text-kelen-yellow-700">3 000 FCFA / 15 € par mois.</span>
               </p>
               <ul className="mt-6 space-y-3">
                 {[
-                  "Pas d'abonnement — payez par vue",
+                  "Abonnement mensuel — visibilité illimitée",
                   "Profil visible dans la découverte par catégorie",
                   "N'affecte jamais le statut ou les signaux",
-                  "Crédit épuisé = retiré de la découverte",
+                  "Pages indexables sur Google (SEO)",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-2 text-sm">
                     <span className="mt-0.5 text-kelen-yellow-600">→</span>
@@ -240,11 +240,11 @@ export default function AboutPage() {
       <section className="bg-kelen-green-500 py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-white sm:text-4xl">
-            Vous êtes professionnel en Afrique ?
+            Vous êtes un professionnel ?
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-white/80">
-            Accédez à la clientèle diaspora. Prouvez que vous le méritez.
-            La visibilité s&apos;achète. La réputation se construit.
+            Accédez à une clientèle internationale. Prouvez que vous le méritez.
+            La visibilité se mérite. La réputation se construit.
           </p>
           <p className="mx-auto mt-2 max-w-xl text-base text-white/60">
             Inscription gratuite pendant la phase de lancement.

@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Pour les professionnels — Kelen",
   description:
-    "Créez votre profil vérifié sur Kelen et gagnez la confiance de la diaspora africaine.",
+    "Créez votre profil vérifié sur Kelen et gagnez la confiance de vos clients.",
 };
 
 const BENEFITS = [
@@ -22,15 +22,15 @@ const BENEFITS = [
   },
   {
     icon: "📊",
-    title: "Visibilité auprès de la diaspora",
+    title: "Visibilité internationale",
     description:
-      "Les membres de la diaspora consultent Kelen avant de mandater un professionnel. Soyez visible là où ils cherchent.",
+      "Les clients consultent Kelen avant de mandater un professionnel. Soyez visible là où ils cherchent.",
   },
   {
     icon: "💰",
-    title: "Système de crédits transparent",
+    title: "Abonnement simple",
     description:
-      "Achetez des crédits de visibilité à 5 €/CPM. Pas d'abonnement, pas d'engagement. Vous ne payez que ce que vous consommez.",
+      "Bénéficiez d'une visibilité illimitée pour 15 € par mois. Pas d'engagement, résiliez à tout moment.",
   },
 ];
 
@@ -159,13 +159,13 @@ export default function PourLesProPage() {
             </ul>
             <hr className="my-6 border-border" />
             <p className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
-              Visibilité (optionnel)
+              Visibilité Premium
             </p>
             <p className="mt-2 text-2xl font-bold text-foreground">
-              5 € <span className="text-base font-normal text-muted-foreground">/ 1000 vues</span>
+              15 € <span className="text-base font-normal text-muted-foreground">/ mois</span>
             </p>
             <p className="mt-1 text-xs text-muted-foreground">
-              Crédits prépayés · Pas d&apos;abonnement
+              Accès illimité · Visibilité maximale
             </p>
           </div>
         </div>
@@ -177,7 +177,7 @@ export default function PourLesProPage() {
           Prêt à documenter votre fiabilité ?
         </h2>
         <p className="mx-auto mt-3 max-w-lg text-kelen-green-100">
-          Rejoignez Kelen et montrez à la diaspora que vous êtes un
+          Rejoignez Kelen et montrez à vos clients que vous êtes un
           professionnel de confiance.
         </p>
         <Link

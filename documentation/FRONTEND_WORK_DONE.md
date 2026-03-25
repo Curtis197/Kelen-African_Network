@@ -29,7 +29,7 @@
 | `app/(marketing)/layout.tsx` | Marketing | Navbar + Footer |
 | `app/(validation)/layout.tsx` | Validation | Navbar + Footer |
 | `app/(auth)/layout.tsx` | Auth | Centered card, Kelen logo, founding phrase |
-| `app/(diaspora)/layout.tsx` | Diaspora | DashboardSidebar + main content area |
+| `app/(client)/layout.tsx` | client | DashboardSidebar + main content area |
 | `app/(professional)/layout.tsx` | Professional | ProSidebar (with "Pro" badge) + main content area |
 | `app/(admin)/layout.tsx` | Admin | AdminSidebar (with "Admin" badge) + main content area |
 
@@ -53,18 +53,18 @@
 | Route | File | Description |
 |---|---|---|
 | `/connexion` | `app/(auth)/connexion/page.tsx` | Login with email/password |
-| `/inscription` | `app/(auth)/inscription/page.tsx` | Register — Diaspora/Professional toggle with conditional fields |
+| `/inscription` | `app/(auth)/inscription/page.tsx` | Register — client/Professional toggle with conditional fields |
 | `/mot-de-passe` | `app/(auth)/mot-de-passe/page.tsx` | Password reset — email input, success confirmation |
 
-### Diaspora Dashboard (5)
+### client Dashboard (5)
 | Route | File | Description |
 |---|---|---|
-| `/dashboard` | `app/(diaspora)/dashboard/page.tsx` | Quick actions, stats, recent activity list |
-| `/recommandation` | `app/(diaspora)/recommandation/page.tsx` | Select professional to recommend |
-| `/recommandation/[slug]` | `app/(diaspora)/recommandation/[slug]/page.tsx` | 4-step recommendation form |
-| `/signal` | `app/(diaspora)/signal/page.tsx` | Select professional to signal |
-| `/signal/[slug]` | `app/(diaspora)/signal/[slug]/page.tsx` | 5-step signal form with legal checkboxes |
-| `/avis/[slug]` | `app/(diaspora)/avis/[slug]/page.tsx` | Star rating + comment review form |
+| `/dashboard` | `app/(client)/dashboard/page.tsx` | Quick actions, stats, recent activity list |
+| `/recommandation` | `app/(client)/recommandation/page.tsx` | Select professional to recommend |
+| `/recommandation/[slug]` | `app/(client)/recommandation/[slug]/page.tsx` | 4-step recommendation form |
+| `/signal` | `app/(client)/signal/page.tsx` | Select professional to signal |
+| `/signal/[slug]` | `app/(client)/signal/[slug]/page.tsx` | 5-step signal form with legal checkboxes |
+| `/avis/[slug]` | `app/(client)/avis/[slug]/page.tsx` | Star rating + comment review form |
 
 ### Professional Dashboard (6)
 | Route | File | Description |
@@ -93,7 +93,7 @@
 |---|---|---|
 | `Navbar` | `components/layout/Navbar.tsx` | Responsive navbar, mobile hamburger, marketing nav, CTA buttons |
 | `Footer` | `components/layout/Footer.tsx` | Dark footer, 4-column grid, founding phrase |
-| `DashboardSidebar` | `components/layout/DashboardSidebar.tsx` | Diaspora sidebar — active state, user info, logout |
+| `DashboardSidebar` | `components/layout/DashboardSidebar.tsx` | client sidebar — active state, user info, logout |
 | `ProSidebar` | `components/layout/ProSidebar.tsx` | Professional sidebar — 6 nav items, "Pro" badge |
 | `AdminSidebar` | `components/layout/AdminSidebar.tsx` | Admin sidebar — 3 nav items, "Admin" badge |
 
@@ -113,7 +113,7 @@
 | Component | File | Description |
 |---|---|---|
 | `LoginForm` | `components/forms/LoginForm.tsx` | Email/password with Zod validation |
-| `RegisterForm` | `components/forms/RegisterForm.tsx` | Diaspora/Pro toggle, conditional fields, 3 checkboxes |
+| `RegisterForm` | `components/forms/RegisterForm.tsx` | client/Pro toggle, conditional fields, 3 checkboxes |
 | `PasswordResetForm` | `components/forms/PasswordResetForm.tsx` | Email input, success state |
 | `RecommendationForm` | `components/forms/RecommendationForm.tsx` | 4-step multi-step form with step indicator |
 | `SignalForm` | `components/forms/SignalForm.tsx` | 5-step form with severity, dates, file upload, legal |
@@ -132,7 +132,7 @@
 | File | Purpose |
 |---|---|
 | `BLUEPRINT.md` | Master frontend reference document |
-| `IMAGE_REQUESTS.md` | 3 images needed (hero, diaspora, OG) |
+| `IMAGE_REQUESTS.md` | 3 images needed (hero, client, OG) |
 
 ---
 

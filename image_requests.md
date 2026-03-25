@@ -15,9 +15,9 @@
 - **Style:** Professional, optimistic, real photography (not stock-looking). Warm tones. No logos or text overlays.
 - **Avoid:** Poverty imagery, run-down buildings, overly staged poses.
 
-### 2. `hero-diaspora.jpg`
+### 2. `hero-client.jpg`
 - **Where:** Home page or "Pour les pros" section (future use)
-- **Description:** African diaspora professional in Europe — person at a desk, on a laptop or phone, looking confident. Modern office or home environment.
+- **Description:** African client professional in Europe — person at a desk, on a laptop or phone, looking confident. Modern office or home environment.
 - **Dimensions:** 1200x800 minimum
 - **Style:** Clean, professional, contemporary. Natural lighting.
 - **Avoid:** Stereotypical imagery, sadness, isolation.

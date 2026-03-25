@@ -3,7 +3,7 @@
 // These types match the tables defined in DATABASE_REFERENCE.md
 // ============================================
 
-export type UserRole = "user" | "professional" | "admin";
+export type UserRole = "client" | "pro_africa" | "pro_europe" | "pro_intl" | "admin";
 export type ProfessionalStatus = "gold" | "silver" | "white" | "red" | "black";
 export type BudgetRange = "0-10k" | "10k-25k" | "25k-50k" | "50k-100k" | "100k+";
 export type BreachType = "timeline" | "budget" | "quality" | "abandonment" | "fraud";

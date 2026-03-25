@@ -97,7 +97,7 @@ It is a simple, predictable subscription model.
 - ✅ Unlimited potential ROI - one fixed price regardless of how many views you get.
 - ✅ Simple to understand and budget for.
 
-**At 3000 FCFA / 15€ per month, if your profile is visible to qualified diaspora, you're profitable even with just one project a year.**
+**At 3000 FCFA / 15€ per month, if your profile is visible to qualified client, you're profitable even with just one project a year.**
 
 ---
 
@@ -106,13 +106,13 @@ It is a simple, predictable subscription model.
 **Not random impressions:**
 
 Views come ONLY from:
-- Diaspora actively searching for contractors
+- client actively searching for contractors
 - Users browsing Gold-status pros
 - People about to invest €20k-100k
 
 **This is qualified traffic:**
 - High intent (they're looking for pros NOW)
-- High budget (diaspora sending life savings)
+- High budget (client sending life savings)
 - Pre-filtered (only see Gold-status if they want safety)
 
 **A pro would need to be completely incompetent to not convert projects from this highly qualified traffic.**
@@ -243,7 +243,7 @@ Subscription: 15€/month
 ✓ CLEAN RECORD
   8 verified projects completed
   0 signals
-  Recommended for diaspora investment
+  Recommended for client investment
 ```
 
 **What this means:**
@@ -262,21 +262,21 @@ Subscription: 15€/month
 **Display:**
 ```
 ⚠️ SIGNALS ON RECORD
-   Not recommended for diaspora investment
+   Not recommended for client investment
    
    11 verified recommendations
    2 verified signals
    
    This professional has documented contract breaches.
    While they have successful projects, the presence of
-   any signal indicates unacceptable risk for diaspora investment.
+   any signal indicates unacceptable risk for client investment.
    
    [View signal details]
 ```
 
 **What this means:**
 - Contract breaches documented
-- Permanently disqualified for diaspora work
+- Permanently disqualified for client work
 - May still work locally, but not through Kelen
 - No amount of good work erases this
 
@@ -363,7 +363,7 @@ Subscription: 15€/month
 
 ## Why This Split Is Brilliant
 
-### For Users (Diaspora):
+### For Users (client):
 **Checking is free forever:**
 - Protects against known scammers
 - Validates referrals from family/friends
@@ -441,10 +441,10 @@ You're absolutely right: **This platform doesn't exist even in Western countries
 - Can't dilute with fake reviews (evidence required)
 - Can't pay to remove (validation is free/permanent)
 
-### Why It Works for Diaspora First
+### Why It Works for client First
 
 **Lower barriers to launch:**
-- Diaspora already desperate for solution (€50k at stake)
+- client already desperate for solution (€50k at stake)
 - Scam rate higher (enforcement weaker)
 - Social proof spreads faster (tight communities)
 - Fewer legal complexities (operating in African jurisdiction initially)
@@ -551,18 +551,18 @@ Not "requires explanation."
 
 Why this standard?
 
-Because you're asking for access to diaspora life savings.
+Because you're asking for access to client life savings.
 Money earned through years of sacrifice in foreign countries.
 Money that cannot be recovered if you fail.
 
 **The choice is yours:**
 
-✓ Don't work with diaspora clients
+✓ Don't work with client clients
   → Don't join Kelen
   → Continue working locally
   → No risk to you
 
-✓ Work with diaspora clients
+✓ Work with client clients
   → Join Kelen
   → Accept perfection as the standard
   → Build a Gold record that becomes your most valuable asset
@@ -585,7 +585,7 @@ This is the appropriate standard when someone entrusts you with everything they 
 **Because the upside is massive:**
 
 A Gold-status professional on Kelen:
-- Gets pre-qualified diaspora clients (serious, funded)
+- Gets pre-qualified client clients (serious, funded)
 - Can charge premium prices (scarcity of clean records)
 - Builds an asset (reputation that follows them)
 - Reduces acquisition costs (clients find them)
@@ -601,13 +601,13 @@ Option A: Don't join Kelen
 - No permanent record (good or bad)
 
 Option B: Join Kelen, take it seriously
-- Access diaspora money
+- Access client money
 - Premium pricing
 - Permanent Gold status (career asset)
 - But ONE mistake = permanent Red status
 
 Option C: Join Kelen, don't take it seriously
-- Get one or two diaspora clients
+- Get one or two client clients
 - Breach contract
 - Get signal
 - Permanent Red status
@@ -662,7 +662,7 @@ Just prove validation works.
 
 ## Why This Will Work (And Spread)
 
-### In Africa/Diaspora First:
+### In Africa/client First:
 - Desperate need (€50k losses common)
 - Weak legal recourse
 - Tight communities (word spreads fast)
@@ -777,7 +777,7 @@ profile_interactions (
      - Lookup search (by exact name)
      - Gold vs Red vs Grey profiles
      - What signals look like with evidence
-   - Show to 20 diaspora members
+   - Show to 20 client members
    - Ask: "Would you check here before sending money?"
 
 3. **Build MVP - Two-Track Development:**
@@ -807,10 +807,10 @@ profile_interactions (
    - Hosting: Vercel
 
 5. **Soft Launch (Week 5-6):**
-   - Target: 10 diaspora WhatsApp groups
+   - Target: 10 client WhatsApp groups
    - Message variants:
      - **For checking:** "Before you send money, check here"
-     - **For pros:** "Get discovered by diaspora clients"
+     - **For pros:** "Get discovered by client clients"
    - Goals:
      - 500 validation lookups
      - 50 signal/recommendation submissions

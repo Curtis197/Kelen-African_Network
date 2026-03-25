@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { UserRole } from "@/lib/supabase/types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -9,16 +10,16 @@ import {
   type RegisterUserFormData,
   type RegisterProfessionalFormData,
 } from "@/lib/utils/validators";
-import { DIASPORA_COUNTRIES, COUNTRIES, CATEGORIES } from "@/lib/utils/constants";
+import { SUPPORTED_COUNTRIES, CATEGORIES, AFRICA_COUNTRIES, EUROPE_COUNTRIES } from "@/lib/utils/constants";
 
-type RegisterMode = "diaspora" | "professional";
+type RegisterMode = "client" | "professional";
 
 export function RegisterForm() {
-  const [mode, setMode] = useState<RegisterMode>("diaspora");
+  const [mode, setMode] = useState<RegisterMode>("client");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const schema = mode === "diaspora" ? registerUserSchema : registerProfessionalSchema;
+  const schema = mode === "client" ? registerUserSchema : registerProfessionalSchema;
 
   const {
     register,
@@ -35,6 +36,12 @@ export function RegisterForm() {
     reset();
   };
 
+  const getProRole = (country: string): UserRole => {
+    if ((AFRICA_COUNTRIES as unknown as string[]).includes(country)) return "pro_africa";
+    if ((EUROPE_COUNTRIES as unknown as string[]).includes(country)) return "pro_europe";
+    return "pro_intl";
+  };
+
   const onSubmit = async (data: RegisterUserFormData | RegisterProfessionalFormData) => {
     setIsLoading(true);
     setError(null);
@@ -49,7 +56,9 @@ export function RegisterForm() {
       // Then insert into users/professionals table
       // router.push('/dashboard');
 
-      console.log("Register attempt:", data.email, mode);
+      const finalRole = mode === "client" ? "client" : getProRole(data.country);
+      console.log("Register attempt:", data.email, finalRole);
+
       await new Promise((resolve) => setTimeout(resolve, 1000));
       setError("Inscription Supabase non configurée. Backend en cours de développement.");
     } catch {
@@ -59,9 +68,7 @@ export function RegisterForm() {
     }
   };
 
-  const countries = mode === "diaspora"
-    ? [...DIASPORA_COUNTRIES, ...COUNTRIES]
-    : [...COUNTRIES, ...DIASPORA_COUNTRIES];
+  const countries = SUPPORTED_COUNTRIES;
 
   return (
     <div>
@@ -69,14 +76,14 @@ export function RegisterForm() {
       <div className="mb-6 flex rounded-lg border border-border bg-muted/50 p-1">
         <button
           type="button"
-          onClick={() => handleModeSwitch("diaspora")}
+          onClick={() => handleModeSwitch("client")}
           className={`flex-1 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-            mode === "diaspora"
+            mode === "client"
               ? "bg-white text-foreground shadow-sm"
               : "text-muted-foreground hover:text-foreground"
           }`}
         >
-          Diaspora
+          Client
         </button>
         <button
           type="button"
@@ -199,12 +206,13 @@ export function RegisterForm() {
             {/* Business name */}
             <div>
               <label htmlFor="business_name" className="mb-1.5 block text-sm font-medium text-foreground">
-                Nom de l&apos;entreprise
+                Nom de l&apos;entreprise / activité
               </label>
               <input
                 id="business_name"
                 type="text"
                 {...register("business_name")}
+                placeholder="Ex: Cabinet d&apos;avocats, Atelier XYZ, Boutique..."
                 className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors placeholder:text-muted-foreground focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
               />
               {errors.business_name && (

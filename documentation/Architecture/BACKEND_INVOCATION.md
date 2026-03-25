@@ -2,6 +2,7 @@
 
 > **À qui s'adresse ce document :** au développeur frontend (Claude Code / Gemini).
 > Il liste toutes les fonctions backend disponibles, comment les appeler depuis Next.js, et ce qu'elles retournent.
+> Ce document définit les protocoles d'interaction entre le frontend Next.js et les services backend (Supabase + Edge Functions) pour garantir la fiabilité des collaborations internationales.
 > Ne pas appeler les fonctions SQL directement depuis le client — utiliser les Edge Functions ou les Server Actions indiqués.
 
 ---
@@ -191,7 +192,7 @@ const { data: reviews } = await supabase
 
 ---
 
-### Dashboard diaspora — `/dashboard`
+### Dashboard client — `/dashboard`
 
 ```typescript
 const userId = session.user.id

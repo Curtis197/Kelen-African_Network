@@ -36,7 +36,7 @@ TikTok (posts + Lives) → Communauté → WhatsApp (nurturing) → Kelen (trans
 3. Insight ou résolution en conclusion
 
 ### Hook TikTok
-Les 2-3 premières secondes sont déterminantes. Formats qui fonctionnent pour la diaspora :
+Les 2-3 premières secondes sont déterminantes. Formats qui fonctionnent pour la client :
 - Un chiffre ("40 millions perdus")
 - Une situation relatable ("tu envoies de l'argent au pays et...")
 - Une affirmation provocatrice qui arrête le scroll
@@ -67,7 +67,7 @@ Ces histoires couvrent le spectre émotionnel complet pour la série d'ouverture
 Homme trentaine, venu du Cameroun en Italie puis France. Travaille en restauration, économise pour construire sa maison. Mère tombe malade — il l'aide sans sacrifier son projet de construction. Retourne au Cameroun pour les funérailles de sa mère : le maçon a disparu avec l'argent. Sa sœur aînée vit dans la pauvreté avec ses enfants. Il a porté l'affaire en justice, récupéré une partie, mais le retard l'empêche encore d'aider sa sœur.
 
 **Registre :** Tragédie systémique, triple coup du destin simultané  
-**Hook :** *"Il est rentré au Cameroun pour enterrer sa mère. Ce qu'il a découvert sur son chantier ce jour-là, je ne l'oublierai jamais."*
+**Hook :** *"Il est rentré au Cameroun pour enterrer sa mère. Ce qu'il a découvert sur son projet ce jour-là, je ne l'oublierai jamais."*
 
 ---
 
@@ -82,18 +82,18 @@ Femme arrivée en France dans les années 90, début vingtaine. Ascension social
 ### Histoire 3 — La maison volée (Congo)
 Homme arrivé en France dans les années 80, travaille toute sa vie dans le transport de machines commerciales. Économise et construit une maison au Congo pour sa retraite. À l'âge de la retraite, il arrive pour préparer son retour définitif : la famille a occupé toute la maison, impossible de les déloger. La justice ne peut rien faire car c'est la famille. De retour en Europe, son état mental se dégrade rapidement. Diagnostiqué Alzheimer. Il arrête de se nourrir et de boire. Décède un an plus tard.
 
-**Registre :** Le contrat psychologique diaspora brisé à la ligne d'arrivée  
+**Registre :** Le contrat psychologique client brisé à la ligne d'arrivée  
 **Hook :** *"Il a travaillé 40 ans en France pour construire une maison au Congo. Le jour où il est arrivé pour prendre sa retraite, toutes les pièces étaient occupées par la famille. La justice n'a rien pu faire. Il est mort un an plus tard."*
 
 ---
 
 ### Histoire 4 — La victoire silencieuse (Cameroun)
-Femme au Cameroun, en couple avec un homme de bonne famille. Ils ont un enfant ensemble mais la famille du compagnon méprise la femme et le force à rompre. Elle élève seule son fils, se marie puis divorce. Elle travaille toute sa vie. L'ex-compagnon part aux USA, fait une belle carrière, se remarie, a d'autres enfants. Il paie voiture et université américaine pour ses nouveaux enfants, n'assume jamais le premier. La femme décède. Le fils, qui travaille honnêtement dans l'hôtellerie, découvre à sa mort qu'elle avait discrètement constitué un important patrimoine immobilier au pays. Il n'a plus besoin de travailler. Le père, lui, a bâti aux USA mais n'a rien construit en Afrique — aucun de ses enfants n'est protégé financièrement.
+Femme au Cameroun, en couple avec un homme de bonne famille. Ils ont un enfant ensemble mais la famille du compagnon méprise la femme et le force à rompre. Elle élève seule son fils, se marie puis divorce. Elle travaille toute sa vie. L'ex-compagnon part aux USA, fait une belle carrière, se remarie, a d'autres enfants. Il paie voiture et université américaine pour ses nouveaux enfants, n'assume jamais le premier. La femme décède. Le fils, qui travaille honnêtement dans l'hôtellerie, découvre à sa mort qu'elle avait discrètement constitué un important patrimoine immobilier au pays. Il n'a plus besoin de travailler. Le père, lui, a bâti aux USA mais n'a rien construit partout — aucun de ses enfants n'est protégé financièrement.
 
 **Registre :** Victoire silencieuse, dignité et vision long terme  
 **Hook :** *"Son père est parti aux USA, a fait une belle vie, a payé l'université américaine à ses autres enfants. Lui, il a grandi sans père. Le jour où sa mère est morte, il a découvert qu'il n'avait plus jamais besoin de travailler."*
 
-**Note :** Cette histoire est le cœur philosophique de Kelen — investir en Afrique, bien protégé, crée une richesse générationnelle que les salaires occidentaux seuls ne peuvent pas répliquer.
+**Note :** Cette histoire est le cœur philosophique de Kelen — investir partout, bien protégé, crée une richesse générationnelle que les salaires occidentaux seuls ne peuvent pas répliquer.
 
 ---
 
@@ -103,7 +103,7 @@ Homme malien, plongeur dans un hôtel en France depuis 30 ans. L'hôtel met une 
 **Registre :** Succès par discipline et clarté d'intention  
 **Hook :** *"Il lave la vaisselle dans un hôtel depuis 30 ans. L'hôtel lui donne une chambre, il n'a jamais payé de loyer en France. Il vient de finir la deuxième maison de sa deuxième femme au Mali."*
 
-**Note :** Ce post sera le plus partagé. Il reframe ce que le succès veut dire et challenge l'obsession diaspora pour la visibilité et le statut en Europe.
+**Note :** Ce post sera le plus partagé. Il reframe ce que le succès veut dire et challenge l'obsession client pour la visibilité et le statut en Europe.
 
 ---
 
@@ -123,15 +123,15 @@ Les 5 histoires couvrent des registres émotionnels différents — tragédie, a
 ### Le problème n'est pas africain — il est universel
 La fraude et l'escroquerie entre clients et professionnels existent partout. En France l'émission de Julien Courbet (*Que le meilleur gagne*, *Ça peut vous arriver*) en est la preuve — des milliers de clients spoliés par des professionnels peu scrupuleux, et c'est du contenu TV grand public.
 
-Mais le problème est **plus prévalent et plus douloureux en Afrique** pour plusieurs raisons structurelles : recours juridique faible ou inexistant, distances géographiques entre client et prestataire, fonds représentant des années d'économies, communautés diaspora sans filet de sécurité local.
+Mais le problème est **plus prévalent et plus douloureux partout** pour plusieurs raisons structurelles : recours juridique faible ou inexistant, distances géographiques entre client et prestataire, fonds représentant des années d'économies, communautés client sans filet de sécurité local.
 
-La conviction dominante en Europe — "je suis protégé par l'État" — supprime artificiellement la demande pour des solutions alternatives, même quand cette protection est largement illusoire. La diaspora africaine n'a pas cette illusion. Elle sait qu'elle est seule.
+La conviction dominante en Europe — "je suis protégé par l'État" — supprime artificiellement la demande pour des solutions alternatives, même quand cette protection est largement illusoire. La client africaine n'a pas cette illusion. Elle sait qu'elle est seule.
 
 ### Les 4 scénarios de trajectoire
 
 **Scénario 1 — Échec :** Le produit n'adresse pas le problème de la façon dont l'utilisateur le veut. Problème d'exécution, pas de marché.
 
-**Scénario 2 — Référence diaspora :** Kelen devient la référence pour les communautés africaines en Europe avant d'envoyer de l'argent pour construire ou investir. Objectif réaliste et premier jalon.
+**Scénario 2 — Référence client :** Kelen devient la référence pour les communautés africaines en Europe avant d'envoyer de l'argent pour construire ou investir. Objectif réaliste et premier jalon.
 
 **Scénario 3 — Référence panafricaine :** Kelen devient un standard de vérification professionnelle à travers l'Afrique. L'économie interne africaine croît et les mêmes problèmes de confiance existent entre Africains eux-mêmes.
 
@@ -153,7 +153,7 @@ Un marketplace prend une commission sur chaque transaction — revenus immédiat
 
 **Google Reviews / Trustpilot** — agrègent des opinions non vérifiées. N'importe qui peut poster, les mauvais avis disparaissent ou se noient. Aucune conséquence permanente, aucune vérification de contrat. Résout un problème différent.
 
-**Associations professionnelles et ordres africains** — existent dans certains pays mais opaques, inaccessibles à la diaspora, ne communiquent pas entre frontières. Aucune portabilité.
+**Associations professionnelles et ordres africains** — existent dans certains pays mais opaques, inaccessibles à la client, ne communiquent pas entre frontières. Aucune portabilité.
 
 **Recommandations WhatsApp** — fonctionnent dans des cercles très étroits, ne scalent pas, ne laissent aucune trace permanente et consultable.
 
@@ -170,14 +170,14 @@ Un acteur bien financé — fintech, plateforme de remittance — pourrait déci
 ## Stratégie de monétisation — côté professionnels
 
 ### Gratuit jusqu'à la masse critique
-La publicité et la visibilité pour les professionnels africains seront gratuites jusqu'à 10k ou 100k utilisateurs. La croissance est le seul objectif de la phase initiale.
+La publicité et la visibilité pour les professionnels de confiance seront gratuites jusqu'à 10k ou 100k utilisateurs. La croissance est le seul objectif de la phase initiale.
 
-**Logique :** Un profil payant sur une plateforme vide n'a aucune valeur. Un profil gratuit sur une plateforme avec une audience diaspora engagée devient désirable de lui-même.
+**Logique :** Un profil payant sur une plateforme vide n'a aucune valeur. Un profil gratuit sur une plateforme avec une audience client engagée devient désirable de lui-même.
 
 ### Willingness to pay — une inconnue honnête
-On ne connaît pas encore la disposition des professionnels africains à payer pour la visibilité. Et c'est la bonne réponse pour l'instant — supposer sans données mène à construire le mauvais produit.
+On ne connaît pas encore la disposition des professionnels de confiance à payer pour la visibilité. Et c'est la bonne réponse pour l'instant — supposer sans données mène à construire le mauvais produit.
 
-La question se résoudra d'elle-même une fois la demande côté diaspora établie. Un contractor à Abidjan qui voit que ses clients potentiels utilisent Kelen avant de virer de l'argent a une raison concrète et financière de payer pour être visible et vérifié. La preuve de demande précède la preuve de willingness to pay.
+La question se résoudra d'elle-même une fois la demande côté client établie. Un contractor à Abidjan qui voit que ses clients potentiels utilisent Kelen avant de virer de l'argent a une raison concrète et financière de payer pour être visible et vérifié. La preuve de demande précède la preuve de willingness to pay.
 
 ### Le profil du professionnel qui paiera en premier
 Ce n'est pas le plus grand ni le plus connu — c'est celui qui a le plus à gagner d'un système qui récompense l'intégrité. Le professionnel honnête et compétent qui perd des clients face à des concurrents qui promettent n'importe quoi. Kelen lui donne un avantage structurel. Il se self-sélectionne.

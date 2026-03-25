@@ -13,7 +13,7 @@
 
 ---
 
-## Emails utilisateur diaspora
+## Emails utilisateur client
 
 ### Bienvenue
 
@@ -164,7 +164,7 @@
 >
 > Votre profil professionnel est actif.
 >
-> Kelen met en contact les professionnels africains sérieux avec des membres de la diaspora qui investissent. Pour accéder à cette clientèle, vous avez besoin d'un historique vérifié.
+> Kelen met en contact les professionnels de confiance sérieux avec des membres de la client qui investissent. Pour accéder à cette clientèle, vous avez besoin d'un historique vérifié.
 >
 > **Comment construire votre statut :**
 > Demandez à vos anciens clients de documenter leurs projets sur Kelen. Chaque recommandation vérifiée que vous liez à votre profil renforce votre statut.
@@ -279,7 +279,7 @@
 >
 > 3 projets vérifiés. 0 manquement.
 >
-> Votre profil apparaît désormais dans les résultats filtrés "Liste Or" pour les utilisateurs diaspora.
+> Votre profil apparaît désormais dans les résultats filtrés "Liste Or" pour les utilisateurs client.
 >
 > *Ce statut n'est pas permanent — il évolue avec votre historique.*
 >
@@ -430,7 +430,7 @@ Les notifications in-app sont courtes — une ligne maximum. Elles dirigent vers
 
 ---
 
-### Utilisateurs diaspora
+### Utilisateurs client
 
 ```
 ● Votre recommandation a été vérifiée et publiée

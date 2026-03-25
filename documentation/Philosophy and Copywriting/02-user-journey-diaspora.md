@@ -1,4 +1,4 @@
-# Kelen — User Journey (Diaspora)
+# Kelen — User Journey (client)
 *Copywriting complet — Version 1.0*
 
 ---
@@ -6,11 +6,11 @@
 ## Page d'accueil
 
 ### Headline
-> Vous investissez en Afrique.
+> Vous investissez partout.
 > Sachez à qui vous pouvez faire confiance.
 
 ### Sous-titre
-> Kelen répertorie les professionnels africains dont les clients ont documenté chaque projet. Cherchez un nom. Voyez son historique. Décidez en connaissance de cause.
+> Kelen répertorie les professionnels de confiance dont les clients ont documenté chaque projet. Cherchez un nom. Voyez son historique. Décidez en connaissance de cause.
 
 ### Deux CTA — égaux en importance visuelle
 
@@ -38,7 +38,7 @@
 
 > **Vous travaillez sérieusement. Faites-le savoir.**
 >
-> Des millions de membres de la diaspora investissent chaque année. Ils cherchent des professionnels à leur niveau. Kelen vous donne les moyens de le prouver.
+> Des millions de membres de la client investissent chaque année. Ils cherchent des professionnels à leur niveau. Kelen vous donne les moyens de le prouver.
 >
 > [Créer un profil professionnel →]
 
@@ -159,7 +159,7 @@ Mars 2022 — Novembre 2022
 Budget convenu : 45 000 € · Budget final : 45 000 €  (respecté)
 Délai convenu : 8 mois · Délai réel : 8 mois  (respecté)
 
-"Chantier livré exactement comme prévu. Communication
+"projet livré exactement comme prévu. Communication
 sérieuse tout au long du projet."
 — M. D., Paris
 
@@ -197,7 +197,7 @@ sérieuse tout au long du projet."
 > **Votre témoignage devient une référence permanente.**
 >
 > Une fois vérifié et publié, il sera consultable par tous les utilisateurs de Kelen.
-> Il aide d'autres membres de la diaspora à prendre des décisions éclairées.
+> Il aide d'autres membres de la client à prendre des décisions éclairées.
 >
 > Comptez environ 10 minutes. Vous aurez besoin du contrat signé et de photos du projet.
 
@@ -233,7 +233,7 @@ Localisation du projet *
 Ville : [Champ texte]
 
 Dates du projet *
-Début des travaux : [Date]
+Début des projets : [Date]
 Livraison convenue : [Date]
 Livraison effective : [Date]
 
@@ -273,7 +273,7 @@ Documents complémentaires (optionnel)
 ```
 [Zone de texte — 50 à 500 caractères]
 
-Exemple : "Chantier livré dans les délais et conformément aux plans.
+Exemple : "projet livré dans les délais et conformément aux plans.
 Communication régulière, réactivité en cas de problème."
 ```
 
@@ -303,7 +303,7 @@ Photos à rendre publiques
 > Notre équipe l'examinera dans un délai de 2 à 5 jours ouvrés.
 > Une fois vérifiée, elle sera publiée sur le profil du professionnel.
 >
-> Merci de contribuer à rendre les investissements de la diaspora plus sûrs.
+> Merci de contribuer à rendre les investissements de la client plus sûrs.
 
 ---
 
@@ -338,7 +338,7 @@ Type de manquement *
 ○ Non-respect des délais
 ○ Dépassement de budget non consenti
 ○ Qualité non conforme au contrat
-○ Abandon de chantier
+○ Abandon de projet
 ○ Autre manquement grave
 
 Description factuelle *
@@ -359,9 +359,9 @@ Date de signature du contrat *    [Date]
 Montant convenu *                 [Champ numérique] €
 Montant versé à ce jour           [Champ numérique] €
 
-Début des travaux convenu *       [Date]
+Début des projets convenu *       [Date]
 Livraison convenue *              [Date]
-Les travaux ont-ils commencé ?    ○ Oui  ○ Non
+Les projets ont-ils commencé ?    ○ Oui  ○ Non
 État d'avancement actuel          [Champ texte]
 
 Avez-vous tenté de résoudre le problème à l'amiable ?
@@ -432,7 +432,7 @@ Documents joints : 4 fichiers
 
 ---
 
-## Inscription utilisateur diaspora
+## Inscription utilisateur client
 
 ### Contexte
 
@@ -468,7 +468,7 @@ Notifications par email
 
 ---
 
-## Tableau de bord utilisateur diaspora
+## Tableau de bord utilisateur client
 
 ### En-tête
 
@@ -509,7 +509,7 @@ Soumis le 3 novembre 2024
 
 **Carte en cours :**
 ```
-Abandon de chantier · Abidjan
+Abandon de projet · Abidjan
 Professionnel : Construction Traoré
 Soumis le 8 janvier 2025
 ● En cours d'examen

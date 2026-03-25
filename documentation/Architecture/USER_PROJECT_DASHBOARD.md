@@ -27,7 +27,7 @@
 
 ### Ce que c'est
 
-Le **dashboard projet** est un espace privé pour chaque utilisateur diaspora. Il permet de :
+Le **dashboard projet** est un espace privé pour chaque utilisateur client. Il permet de :
 
 - Créer et gérer un nombre illimité de projets
 - Définir un budget global, enregistrer des versements, suivre le reste à payer
@@ -38,7 +38,7 @@ Le **dashboard projet** est un espace privé pour chaque utilisateur diaspora. I
 
 ### Ce que ce n'est PAS
 
-- Pas un outil de suivi de chantier en temps réel
+- Pas un outil de suivi de projet en temps réel
 - Pas une messagerie entre client et pro
 - Pas une plateforme de paiement (les versements sont des notes privées, pas des transactions)
 - Pas visible par les professionnels — espace strictement privé client
@@ -1086,7 +1086,7 @@ ci-dessus. Consultez le détail complet des versements pour voir tous les montan
 
 ### Responsive / Mobile
 
-La diaspora consulte majoritairement sur mobile. Priorités :
+La client consulte majoritairement sur mobile. Priorités :
 - Cartes projets : liste verticale (une colonne)
 - BudgetPanel : blocs empilés (Prévu → Versé → Reste)
 - Cartes pros : scroll vertical

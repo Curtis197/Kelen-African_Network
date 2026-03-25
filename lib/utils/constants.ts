@@ -3,50 +3,57 @@
 // ============================================
 
 export const CATEGORIES = [
-  { value: "construction", label: "Construction" },
+  { value: "construction", label: "Bâtiment & Travaux" },
   { value: "renovation", label: "Rénovation" },
-  { value: "plomberie", label: "Plomberie" },
-  { value: "electricite", label: "Électricité" },
-  { value: "menuiserie", label: "Menuiserie" },
-  { value: "carrelage", label: "Carrelage" },
-  { value: "peinture", label: "Peinture" },
-  { value: "architecture", label: "Architecture" },
+  { value: "juridique", label: "Droit & Juridique" },
+  { value: "mecanique", label: "Mécanique & Réparation" },
+  { value: "education", label: "Éducation & Coaching" },
+  { value: "sante", label: "Santé & Bien-être" },
+  { value: "numerique", label: "Digital & Tech" },
+  { value: "service_personne", label: "Services à la personne" },
+  { value: "commerce", label: "Commerce & Vente" },
+  { value: "architecture", label: "Architecture & Design" },
   { value: "ingenierie", label: "Ingénierie" },
   { value: "autre", label: "Autre" },
 ] as const;
 
-export const COUNTRIES = [
-  { value: "CI", label: "Côte d'Ivoire" },
-  { value: "SN", label: "Sénégal" },
-  { value: "ML", label: "Mali" },
-  { value: "BF", label: "Burkina Faso" },
-  { value: "GN", label: "Guinée" },
-  { value: "CM", label: "Cameroun" },
-  { value: "CD", label: "RD Congo" },
-  { value: "CG", label: "Congo" },
-  { value: "GA", label: "Gabon" },
-  { value: "BJ", label: "Bénin" },
-  { value: "TG", label: "Togo" },
-  { value: "NE", label: "Niger" },
-  { value: "TD", label: "Tchad" },
-  { value: "MG", label: "Madagascar" },
-  { value: "MA", label: "Maroc" },
-  { value: "TN", label: "Tunisie" },
+export const SUPPORTED_COUNTRIES = [
   { value: "DZ", label: "Algérie" },
+  { value: "DE", label: "Allemagne" },
+  { value: "BE", label: "Belgique" },
+  { value: "BJ", label: "Bénin" },
+  { value: "BF", label: "Burkina Faso" },
+  { value: "CM", label: "Cameroun" },
+  { value: "CA", label: "Canada" },
+  { value: "CG", label: "Congo" },
+  { value: "CI", label: "Côte d'Ivoire" },
+  { value: "ES", label: "Espagne" },
+  { value: "US", label: "États-Unis" },
+  { value: "FR", label: "France" },
+  { value: "GA", label: "Gabon" },
+  { value: "GN", label: "Guinée" },
+  { value: "IT", label: "Italie" },
+  { value: "MG", label: "Madagascar" },
+  { value: "ML", label: "Mali" },
+  { value: "MA", label: "Maroc" },
+  { value: "NE", label: "Niger" },
+  { value: "PT", label: "Portugal" },
+  { value: "CD", label: "RD Congo" },
+  { value: "GB", label: "Royaume-Uni" },
+  { value: "SN", label: "Sénégal" },
+  { value: "CH", label: "Suisse" },
+  { value: "TD", label: "Tchad" },
+  { value: "TG", label: "Togo" },
+  { value: "TN", label: "Tunisie" },
 ] as const;
 
-export const DIASPORA_COUNTRIES = [
-  { value: "FR", label: "France" },
-  { value: "BE", label: "Belgique" },
-  { value: "CH", label: "Suisse" },
-  { value: "CA", label: "Canada" },
-  { value: "US", label: "États-Unis" },
-  { value: "GB", label: "Royaume-Uni" },
-  { value: "DE", label: "Allemagne" },
-  { value: "IT", label: "Italie" },
-  { value: "ES", label: "Espagne" },
-  { value: "PT", label: "Portugal" },
-] as const;
+export const AFRICA_COUNTRIES = ["DZ", "BJ", "BF", "CM", "CG", "CI", "GA", "GN", "MG", "ML", "MA", "NE", "CD", "SN", "TD", "TG", "TN"];
+export const EUROPE_COUNTRIES = ["DE", "BE", "ES", "FR", "IT", "PT", "GB", "CH"];
+
+// Legacy aliases for backward compatibility if needed temporarily, 
+// but we'll refactor the forms to use SUPPORTED_COUNTRIES.
+export const COUNTRIES = SUPPORTED_COUNTRIES;
+export const CLIENT_RESIDENCE_COUNTRIES = SUPPORTED_COUNTRIES;
 
 export const BUDGET_RANGES = [
   { value: "0-10k", label: "0 — 10 000 €" },
@@ -60,7 +67,7 @@ export const BREACH_TYPES = [
   { value: "timeline", label: "Non-respect des délais" },
   { value: "budget", label: "Dépassement budgétaire" },
   { value: "quality", label: "Qualité insuffisante" },
-  { value: "abandonment", label: "Abandon de chantier" },
+  { value: "abandonment", label: "Abandon de projet ou de service" },
   { value: "fraud", label: "Autre manquement grave" },
 ] as const;
 

@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { SearchBar } from "@/components/shared/SearchBar";
+import { ProfessionalDirectory } from "@/components/landing/ProfessionalDirectory";
 import { Search, ShieldCheck, FolderPlus, ArrowRight } from "lucide-react";
 
 export default function SearchHubPage() {
@@ -15,12 +16,12 @@ export default function SearchHubPage() {
         <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 lg:py-40">
           <div className="mx-auto max-w-4xl text-center">
             <h1 className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-              Construisez en Afrique en toute{" "}
+              Vos projets en toute{" "}
               <span className="text-kelen-green-500">confiance</span>
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-xl leading-relaxed text-muted-foreground">
-              Vérifiez l&apos;historique des professionnels du bâtiment,
-              consultez les preuves de leurs réalisations et démarrez votre projet sereinement.
+              Vérifiez l&apos;historique des professionnels,
+              consultez les preuves de leurs réalisations et bâtissez vos projets sereinement.
             </p>
 
             <div className="mx-auto mt-10 max-w-2xl">
@@ -34,12 +35,15 @@ export default function SearchHubPage() {
                 <span className="flex items-center gap-1.5 inline-flex bg-kelen-green-50 text-kelen-green-700 px-3 py-1 rounded-full text-xs font-semibold">
                   <ShieldCheck className="h-4 w-4" /> Entièrement vérifié
                 </span>
-                <span>Plus de 500+ professionnels documentés</span>
+                <span>Plus de 500+ professionnels vérifiés</span>
               </div>
             </div>
           </div>
         </div>
       </section>
+
+      {/* ===== PROFESSIONAL DIRECTORY ===== */}
+      <ProfessionalDirectory />
 
       {/* ===== QUICK ACTIONS ===== */}
       <section className="bg-muted py-20">
@@ -55,7 +59,7 @@ export default function SearchHubPage() {
                 <h3 className="text-2xl font-bold text-foreground">Préparer un projet</h3>
                 <p className="mt-4 max-w-sm leading-relaxed text-muted-foreground">
                   Centralisez vos documents, définissez votre budget, et suivez
-                  l&apos;avancée de vos travaux avec les professionnels Kelen.
+                  l&apos;avancée de vos projets avec les professionnels Kelen.
                 </p>
                 <div className="mt-8">
                   <Link

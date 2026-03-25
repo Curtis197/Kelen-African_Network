@@ -17,13 +17,13 @@ This document outlines the necessary backend architecture and tasks required to 
 The following tables are proposed for the Supabase PostgreSQL database.
 
 #### `profiles`
-Stores public data for both regular users (diaspora) and professionals.
+Stores public data for both regular users (client) and professionals.
 
 | Column | Type | Description |
 | :--- | :--- | :--- |
 | `id` | `uuid` | Primary Key. Foreign key to `auth.users.id`. |
 | `created_at` | `timestampz` |  |
-| `role` | `text` | User role: 'diaspora' or 'professional'. |
+| `role` | `text` | User role: 'client' or 'professional'. |
 | `full_name` | `text` | User's full name or company name. |
 | `email` | `text` | User's email address. |
 | `is_public` | `boolean` | Is the profile visible in public searches? |
@@ -43,7 +43,7 @@ Stores data specific to professionals.
 | `analytics_views` | `integer` | Tracks profile views over a period. |
 
 #### `recommendations`
-Stores positive reviews submitted by diaspora users.
+Stores positive reviews submitted by client users.
 
 | Column | Type | Description |
 | :--- | :--- | :--- |
@@ -51,9 +51,9 @@ Stores positive reviews submitted by diaspora users.
 | `created_at` | `timestampz` |  |
 | `project_name` | `text` | Name of the project being reviewed. |
 | `comment` | `text` | The client's testimonial. |
-| `client_name` | `text` | Name of the diaspora user who submitted it. |
+| `client_name` | `text` | Name of the client user who submitted it. |
 | `professional_id` | `uuid` | Foreign key to `profiles.id`. |
-| `submitter_id` | `uuid` | Foreign key to `profiles.id` (the diaspora user). |
+| `submitter_id` | `uuid` | Foreign key to `profiles.id` (the client user). |
 | `evidence_urls`| `text[]` | Array of URLs to uploaded evidence files in Supabase Storage. |
 | `status` | `text` | 'pending', 'verified', 'rejected'. |
 
@@ -75,7 +75,7 @@ Stores negative reports (contract breaches).
 ## 2. Backend Implementation by Feature
 
 ### **Task 1: Authentication**
-*   **Objective:** Set up secure user registration and login for both 'diaspora' and 'professional' roles.
+*   **Objective:** Set up secure user registration and login for both 'client' and 'professional' roles.
 *   **Implementation:**
     1.  **Enable Supabase Auth:** Configure authentication in your Supabase project.
     2.  **Create Server Actions:**
@@ -112,7 +112,7 @@ Stores negative reports (contract breaches).
     3.  **Create Triggers:** Set up database triggers so that the `update_professional_status` function runs automatically whenever a change occurs in the `recommendations` or `signals` tables for a specific professional. This ensures the status is always up-to-date without needing to run manual checks.
 
 ### **Task 4: Reputation Workflow (Recommendations & Signals)**
-*   **Objective:** Allow diaspora users to submit evidence and admins to verify it.
+*   **Objective:** Allow client users to submit evidence and admins to verify it.
 *   **Implementation:**
     1.  **File Uploads:** Both submission forms will need to upload multiple files to Supabase Storage.
     2.  **Create Server Actions:**

@@ -26,7 +26,7 @@ app/
 │   ├── inscription/       → /inscription
 │   └── mot-de-passe/      → /mot-de-passe
 │
-├── (diaspora)/            → Authenticated (role: user)
+├── (client)/            → Authenticated (role: user)
 │   ├── dashboard/         → /dashboard
 │   ├── recommandation/    → /recommandation (select pro)
 │   │   └── [slug]/        → /recommandation/[slug] (form)
@@ -62,7 +62,7 @@ app/
 **Rendering:** SSG (static, cached, CDN)
 **SEO priority:** Maximum
 
-**Purpose:** Explain the platform, convert visitors into searchers or registrations. Two equal CTAs for the two user types (diaspora checking, diaspora discovering).
+**Purpose:** Explain the platform, convert visitors into searchers or registrations. Two equal CTAs for the two user types (client checking, client discovering).
 
 **Key sections:**
 - Hero: headline + two CTAs ("Vérifier un professionnel" / "Trouver un professionnel")
@@ -80,7 +80,7 @@ app/
 
 **User:** Professionals discovering the platform
 **Rendering:** SSG
-**SEO priority:** High (target: "trouver des clients diaspora")
+**SEO priority:** High (target: "trouver des clients client")
 
 **Purpose:** 7-screen scroll explaining the opportunity, Gold status, CPM model, and the standard (one signal = Red). Converts professionals to registration.
 
@@ -304,7 +304,7 @@ SELECT track_profile_view(:professional_id, :viewer_ip, :country, :source, :quer
 - Email notifications opt-in
 - Terms + Privacy acceptance
 
-**Account type selection:** Two paths — "Je suis un client diaspora" / "Je suis un professionnel"
+**Account type selection:** Two paths — "Je suis un client client" / "Je suis un professionnel"
 - Professional path adds: business name, category, city, phone
 
 **Supabase calls:**
@@ -327,14 +327,14 @@ INSERT INTO professionals (user_id, business_name, category, city, ...)
 
 ---
 
-## 4. (diaspora) — Authenticated User Area
+## 4. (client) — Authenticated User Area
 
-### 4.1 Diaspora Dashboard — `/dashboard`
+### 4.1 client Dashboard — `/dashboard`
 
 **User:** Authenticated (role: user)
 **Rendering:** SSR (server-side, personalized)
 
-**Purpose:** Central hub for a diaspora member's activity on the platform.
+**Purpose:** Central hub for a client member's activity on the platform.
 
 **Sections:**
 
@@ -791,7 +791,7 @@ LIMIT 50 OFFSET :offset
 | 10 | Login | `/connexion` | No | Client | P0 |
 | 11 | Register | `/inscription` | No | Client | P0 |
 | 12 | Password reset | `/mot-de-passe` | No | Client | P1 |
-| 13 | Diaspora dashboard | `/dashboard` | user | SSR | P0 |
+| 13 | client dashboard | `/dashboard` | user | SSR | P0 |
 | 14 | Submit recommendation | `/recommandation/[slug]` | user | Client | P0 |
 | 15 | Submit signal | `/signal/[slug]` | user | Client | P0 |
 | 16 | Leave a review | `/avis/[slug]` | user | Client | P1 |

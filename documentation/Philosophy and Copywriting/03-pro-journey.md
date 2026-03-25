@@ -7,7 +7,7 @@
 
 ### Écran 1 — L'opportunité
 
-> **La diaspora africaine investit des milliards chaque année.**
+> **La client africaine investit des milliards chaque année.**
 > **Elle cherche des professionnels à sa hauteur.**
 >
 > Kelen vous donne les moyens de prouver que vous en êtes.
@@ -16,7 +16,7 @@
 
 ### Écran 2 — Le marché en chiffres
 
-> €47 milliards envoyés en Afrique en 2023.
+> €47 milliards envoyés partout en 2023.
 > Des millions de projets de construction, rénovation, investissement.
 >
 > Un seul problème : la confiance.
@@ -31,7 +31,7 @@
 >
 > 1. Vos clients documentent leurs projets — contrat, photos, dates.
 > 2. Vous liez ces projets à votre profil.
-> 3. Votre profil devient une référence consultable par toute la diaspora.
+> 3. Votre profil devient une référence consultable par toute la client.
 >
 > *C'est ce qui le rend crédible.*
 
@@ -49,7 +49,7 @@
 > **L'arithmétique :**
 >
 > 3000 FCFA par mois.
-> Un projet diaspora = €15 000 à €80 000 de chiffre d'affaires
+> Un projet client = €15 000 à €80 000 de chiffre d'affaires
 >
 > *Nous ne promettons pas de taux de conversion. L'arithmétique est la vôtre à faire.*
 
@@ -93,11 +93,11 @@
 ## Page d'atterrissage pour les professionnels (version condensée)
 
 ### Headline
-> Accédez à la clientèle diaspora.
+> Accédez à la clientèle client.
 > Prouvez que vous le méritez.
 
 ### Sous-titre
-> Kelen connecte les professionnels africains sérieux avec des clients diaspora qui cherchent exactement ce que vous offrez.
+> Kelen connecte les professionnels de confiance sérieux avec des clients client qui cherchent exactement ce que vous offrez.
 
 ---
 
@@ -476,7 +476,7 @@ Budget : 45 000 €
 Livraison : Dans les délais
 
 Témoignage :
-"Chantier livré exactement comme prévu. Communication sérieuse."
+"projet livré exactement comme prévu. Communication sérieuse."
 — M. D., Paris
 
 Soumis le : 14 décembre 2024
@@ -542,7 +542,7 @@ d'identité, contactez-nous : support@kelen.com
 ```
 Signal soumis concernant votre profil
 
-Type de manquement : Abandon de chantier
+Type de manquement : Abandon de projet
 Type de projet : Construction résidentielle
 Localisation déclarée : Abidjan, Côte d'Ivoire
 Période déclarée : juin 2022 — mars 2023
@@ -570,7 +570,7 @@ Documents à l'appui (fortement recommandé)
 [Zone de dépôt multiple — PDF, JPG, PNG]
 
 Contre-contrat, échanges prouvant des accords modifiés,
-photos montrant l'avancement réel des travaux,
+photos montrant l'avancement réel des projets,
 preuves de tentatives de contact avec le client.
 ```
 
@@ -696,7 +696,7 @@ Les modifications sont prises en compte immédiatement.
 3000 FCFA / 15€ par mois.
 
 Même avec 1 projet généré sur toute l'année :
-Un projet diaspora = €15 000 à €80 000 de chiffre d'affaires
+Un projet client = €15 000 à €80 000 de chiffre d'affaires
 
 Abonnement annuel : 36 000 FCFA / 180€
 ```

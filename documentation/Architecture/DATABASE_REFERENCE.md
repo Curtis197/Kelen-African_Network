@@ -12,8 +12,10 @@ Chaque utilisateur authentifié a un `role` stocké dans la table `users` :
 
 | Rôle | Description |
 |---|---|
-| `user` | Membre de la diaspora. Peut soumettre des recommandations, signaux, et avis. |
-| `professional` | Professionnel africain. A un profil dans `professionals`. |
+| `client` | Client / Investisseur (ex-diaspora) |
+| `pro_africa` | Professionnel basé en Afrique |
+| `pro_europe` | Professionnel basé en Europe |
+| `pro_intl` | Professionnel basé ailleurs (US, Canada, etc.) |
 | `admin` | Équipe Kelen. Accès complet à tout. |
 
 Un utilisateur non authentifié (visiteur public) peut lire certaines données — les détails sont précisés table par table.
@@ -46,8 +48,9 @@ Créé automatiquement à l'inscription via Supabase Auth. L'`id` est identique 
 | `id` | UUID | Clé primaire. Identique à `auth.uid()` |
 | `email` | TEXT | Unique. Non modifiable par l'utilisateur |
 | `display_name` | TEXT | Nom affiché publiquement |
-| `role` | TEXT | `user` / `professional` / `admin` |
-| `country` | TEXT | Code ISO 3166-1 alpha-2 (ex: `FR`, `CI`, `SN`) |
+| `role` | TEXT | `role` TEXT NOT NULL DEFAULT 'client'
+       CHECK (role IN ('client', 'pro_africa', 'pro_europe', 'pro_intl', 'admin')) |
+| `country` | TEXT | `country` TEXT NOT NULL, -- ISO 3166-1 alpha-2 (France, Côte d'Ivoire, US, etc.) |
 | `phone` | TEXT | Optionnel |
 | `email_notifications` | BOOLEAN | Préférence de notifications |
 | `language` | TEXT | `fr` ou `en` |

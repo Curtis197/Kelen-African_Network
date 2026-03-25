@@ -19,13 +19,14 @@ export const metadata: Metadata = {
     template: "%s — Kelen",
   },
   description:
-    "Registre permanent de collaborations vérifiées entre diaspora et professionnels en Afrique. Cherchez un nom, voyez son historique, décidez en connaissance de cause.",
+    "Registre permanent de collaborations vérifiées entre clients et professionnels. Cherchez un nom, voyez son historique, décidez en connaissance de cause.",
   keywords: [
-    "diaspora",
-    "professionnels africains",
+    "clients",
+    "investisseurs",
+    "professionnels vérifiés",
     "vérification",
-    "construction Afrique",
-    "investissement diaspora",
+    "historique professionnel",
+    "investissement sécurisé",
   ],
   openGraph: {
     type: "website",

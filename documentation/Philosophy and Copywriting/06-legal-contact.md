@@ -63,7 +63,7 @@
 
 ### Ce que nous collectons
 
-**Pour les utilisateurs diaspora :**
+**Pour les utilisateurs client :**
 
 > Lors de la création d'un compte : email, prénom, nom, pays de résidence.
 >
@@ -264,9 +264,9 @@
 
 ---
 
-> Des millions de familles envoient de l'argent en Afrique chaque année. Pour construire. Pour investir. Pour rentrer un jour.
+> Des millions de familles envoient de l'argent partout chaque année. Pour construire. Pour investir. Pour rentrer un jour.
 >
-> Une partie significative de ces projets échoue. Pas parce que les professionnels africains sont moins compétents. Parce qu'il n'existait aucun moyen fiable de les distinguer.
+> Une partie significative de ces projets échoue. Pas parce que les professionnels de confiance sont moins compétents. Parce qu'il n'existait aucun moyen fiable de les distinguer.
 
 ---
 
@@ -282,7 +282,7 @@
 
 > Le standard que Kelen a choisi est exigeant : un manquement vérifié suffit, et il est permanent.
 >
-> Ce n'est pas une punition. C'est la reconnaissance de ce que représente l'argent de la diaspora. Des économies construites loin de chez soi. Une exigence à la hauteur de la confiance demandée.
+> Ce n'est pas une punition. C'est la reconnaissance de ce que représente l'argent de la client. Des économies construites loin de chez soi. Une exigence à la hauteur de la confiance demandée.
 >
 > Les professionnels sérieux l'acceptent. C'est ce qui distingue leur statut.
 
@@ -296,7 +296,7 @@
 
 > Kelen existe pour deux communautés qui méritent mieux que le statu quo.
 >
-> La diaspora qui veut investir avec certitude.
+> La client qui veut investir avec certitude.
 > Les professionnels sérieux qui veulent enfin pouvoir le prouver.
 
 ---
@@ -309,7 +309,7 @@
 
 ## FAQ
 
-### Pour la diaspora
+### Pour la client
 
 **Q : Que signifie le statut Liste Or ?**
 > Ce professionnel a au moins 3 projets documentés et vérifiés par notre équipe, avec un taux de satisfaction de 90% ou plus, et aucun manquement enregistré à ce jour. C'est un historique documenté positif — pas une garantie pour votre projet futur.

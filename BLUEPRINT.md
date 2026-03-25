@@ -103,7 +103,7 @@ app/
 │   └── mot-de-passe/
 │       └── page.tsx                → /mot-de-passe
 │
-├── (diaspora)/                     → Authenticated (role: user)
+├── (client)/                     → Authenticated (role: user)
 │   ├── layout.tsx                  → Dashboard layout + sidebar
 │   ├── dashboard/
 │   │   └── page.tsx                → /dashboard
@@ -247,7 +247,7 @@ These pages ship first. They represent the free validation system.
 | 3 | Public Profile | `/pro/[slug]` | SSR + ISR | No | `professionals`, `recommendations`, `signals`, `reviews` tables + `track_profile_view` RPC |
 | 4 | Login | `/connexion` | Client | No | Supabase Auth |
 | 5 | Register | `/inscription` | Client | No | Supabase Auth + `users` + `professionals` tables |
-| 6 | Diaspora Dashboard | `/dashboard` | SSR | user | `recommendations`, `signals` tables |
+| 6 | client Dashboard | `/dashboard` | SSR | user | `recommendations`, `signals` tables |
 | 7 | Submit Recommendation | `/recommandation/[slug]` | Client | user | `professionals`, `recommendations` tables + `contracts`, `evidence-photos` buckets |
 | 8 | Submit Signal | `/signal/[slug]` | Client | user | `professionals`, `signals` tables + `contracts`, `evidence-photos` buckets |
 | 9 | For Professionals | `/pour-les-pros` | SSG | No | None |
@@ -538,7 +538,7 @@ interface FileUploadProps {
 
 ### Registration Form
 
-**Path A — Diaspora user (2 steps)**
+**Path A — client user (2 steps)**
 - Step 1: first name, last name, email, password (8+ chars), country
 - Step 2: language (fr/en), email notification preferences, terms acceptance
 
@@ -620,8 +620,8 @@ Detailed in `documentation/Architecture/BACKEND_INVOCATION.md` — that file is 
 
 | Context | Text |
 |---|---|
-| Homepage headline | "Vous investissez en Afrique. Sachez à qui vous pouvez faire confiance." |
-| Homepage subtitle | "Kelen répertorie les professionnels africains dont les clients ont documenté chaque projet. Cherchez un nom. Voyez son historique. Décidez en connaissance de cause." |
+| Homepage headline | "Un registre permanent de confiance pour mandater n'importe quel professionnel." |
+| Homepage subtitle | "Kelen répertorie les professionnels de confiance dont les clients ont documenté chaque projet. Cherchez un nom. Voyez son historique. Décidez en connaissance de cause." |
 | CTA — check | "Vérifier un professionnel" |
 | CTA — find | "Trouver un professionnel" |
 | Search placeholder | "Nom d'un professionnel ou d'une entreprise" |
@@ -651,10 +651,10 @@ Detailed in `documentation/Architecture/BACKEND_INVOCATION.md` — that file is 
 
 | Page | Title | Description |
 |---|---|---|
-| `/` | "Kelen — Vérifiez les professionnels africains avant d'investir" | "Registre permanent de collaborations vérifiées entre diaspora et professionnels en Afrique. Cherchez un nom, voyez son historique." |
+| `/` | "Kelen — Vérifiez les professionnels avant d'investir" | "Registre permanent de collaborations vérifiées entre client et professionnels à l'échelle internationale. Cherchez un nom, voyez son historique." |
 | `/pro/[slug]` | "[Business Name] — Profil Kelen" | Dynamic from professional data |
 | `/recherche` | "Rechercher un professionnel — Kelen" | "Vérifiez le parcours documenté de tout professionnel référencé sur Kelen." |
-| `/pour-les-pros` | "Professionnels — Rejoignez Kelen" | "Accédez à la clientèle diaspora. Prouvez que vous le méritez." |
+| `/pour-les-pros` | "Professionnels — Rejoignez Kelen" | "Accédez à la clientèle client. Prouvez que vous le méritez." |
 
 ### Images
 All image requests are documented in `IMAGE_REQUESTS.md` at project root. Owner provides the files in `public/images/`. Claude Code updates the request file whenever a new image is needed during development.
@@ -736,7 +736,7 @@ npm install recharts @stripe/stripe-js
 - [ ] Public profile `/pro/[slug]`
 - [ ] Login `/connexion`
 - [ ] Register `/inscription`
-- [ ] Diaspora dashboard `/dashboard`
+- [ ] client dashboard `/dashboard`
 - [ ] Submit recommendation `/recommandation/[slug]`
 - [ ] Submit signal `/signal/[slug]`
 - [ ] For professionals `/pour-les-pros`

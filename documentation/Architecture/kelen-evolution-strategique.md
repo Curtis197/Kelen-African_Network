@@ -8,9 +8,9 @@
 
 ## Ce qui a changé
 
-### 1. La plateforme s'étend aux professionnels de la diaspora en Europe
+### 1. La plateforme s'étend aux professionnels de la client en Europe
 
-Kelen n'est plus uniquement un pont entre diaspora (client) et professionnels africains (prestataire). Un troisième profil émerge : **le professionnel africain installé en Europe**, qui a besoin des mêmes outils de crédibilité documentée pour accéder à des clients sérieux.
+Kelen n'est plus uniquement un pont entre client (client) et professionnels de confiance (prestataire). Un troisième profil émerge : **le professionnel africain installé en Europe**, qui a besoin des mêmes outils de crédibilité documentée pour accéder à des clients sérieux.
 
 ---
 
@@ -18,9 +18,9 @@ Kelen n'est plus uniquement un pont entre diaspora (client) et professionnels af
 
 | Profil | Qui | Paie | Accès |
 |--------|-----|------|-------|
-| **Client** | Diaspora, investisseur, particulier | Gratuit | Vérification par nom, découverte, profils complets |
-| **Pro Afrique** | Prestataire basé en Afrique | Abonnement — 3 000 FCFA/mois | Visibilité dans les recherches, outils de documentation |
-| **Pro Europe** | Prestataire africain basé en Europe | Abonnement — €15/mois | Outils de documentation, visibilité, crédibilité diaspora |
+| **Client** | client, investisseur, particulier | Gratuit | Vérification par nom, découverte, profils complets |
+| **Pro Afrique** | Prestataire basé partout | Abonnement — 3 000 FCFA/mois | Visibilité dans les recherches, outils de documentation |
+| **Pro Europe** | Prestataire africain basé en Europe | Abonnement — €15/mois | Outils de documentation, visibilité, crédibilité client |
 
 **Règle absolue :** Le client ne paie jamais. Ni pour vérifier, ni pour découvrir, ni pour contacter.
 
@@ -86,17 +86,17 @@ Inchangé. Un signal vérifié = Liste Rouge permanente.
 | Portfolio photos | ✅ | ✅ | ✅ |
 | Projets documentés | ✅ | ✅ | ✅ |
 | Recommandations vérifiées | ✅ | ✅ | ✅ |
-| Outils de documentation chantier | ❌ | ❌ | ✅ |
+| Outils de documentation projet | ❌ | ❌ | ✅ |
 | Analytics de profil | ❌ | ❌ | ✅ |
 
-**Note :** La documentation chantier est un outil pro, pas un contenu réservé. Les clients voient le résultat (projet documenté). Seuls les pros ont accès aux outils pour créer ces dossiers.
+**Note :** La documentation projet est un outil pro, pas un contenu réservé. Les clients voient le résultat (projet documenté). Seuls les pros ont accès aux outils pour créer ces dossiers.
 
 ---
 
 ## Le positionnement élargi
 
 ### Ce que Kelen était
-Un outil anti-arnaque pour la diaspora investissant en Afrique.
+Un outil anti-arnaque pour la client investissant partout.
 
 ### Ce que Kelen est
 **L'infrastructure commerciale qui manque à la communauté africaine.**
@@ -145,7 +145,7 @@ Ce cap s'impose non par technologie mais par philosophie. Les gens vérifieront 
 ## Ce que ça implique techniquement (pour le backend)
 
 ### Nouvelle table : `project_documents`
-Stocke les documents de chantier uploadés par les pros. Liée à une table `projects` qui regroupe contrat, PV de livraison, photos horodatées.
+Stocke les documents de projet uploadés par les pros. Liée à une table `projects` qui regroupe contrat, PV de livraison, photos horodatées.
 
 ### Nouveau champ dans `users` : `role`
 Trois valeurs : `client`, `pro_africa`, `pro_europe`

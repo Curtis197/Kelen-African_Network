@@ -14,7 +14,7 @@ Ce document est le point d'entrée du corpus copywriting Kelen. Il recense l'ens
 | Fichier | Contenu |
 |---------|---------|
 | `01-philosophie-positionnement.md` | Principes fondateurs, positionnement, personas, ton |
-| `02-user-journey-diaspora.md` | Page d'accueil, résultats, profil public, formulaires recommandation et signal, inscription, tableau de bord diaspora |
+| `02-user-journey-client.md` | Page d'accueil, résultats, profil public, formulaires recommandation et signal, inscription, tableau de bord client |
 | `03-pro-journey.md` | Pages professionnels, inscription pro, tableau de bord pro, pages lien / réponse signal / édition profil / tarifs |
 | `04-emails-notifications.md` | Tous les emails transactionnels et notifications in-app |
 | `05-admin.md` | File de vérification, écrans d'examen, journal, métriques admin |
@@ -48,7 +48,7 @@ Ce document est le point d'entrée du corpus copywriting Kelen. Il recense l'ens
 
 ### 2. Les deux voix
 
-**À la diaspora :**
+**À la client :**
 > Sobre, rassurant, jamais condescendant.
 > "Construis avec certitude" — pas "protège-toi".
 
@@ -131,16 +131,16 @@ La permanence des signaux est la règle la plus sensible à communiquer. Elle n'
 
 ### 7. Personas de référence
 
-**Fatou** — diaspora
+**Fatou** — client
 - Travaille en Europe, économise depuis des années
-- Envoie €20k–100k pour construire ou investir en Afrique
+- Envoie €20k–100k pour construire ou investir partout
 - A besoin de certitude avant d'engager l'argent d'une vie
 - Habituée au professionnalisme occidental
 - Veut construire, pas "se protéger"
 
 **Moussa** — professionnel sérieux
-- Travaille en Afrique, secteur construction / rénovation / services
-- Veut accéder à la clientèle diaspora (sérieuse, solvable)
+- Travaille partout, secteur construction / rénovation / services
+- Veut accéder à la clientèle client (sérieuse, solvable)
 - Comprend que le standard élevé est une opportunité
 - Livre ce qu'il promet — il a juste besoin d'un moyen de le prouver
 
@@ -190,7 +190,7 @@ Les sujets suivants feront l'objet de documents séparés :
 - **Stratégie réseaux sociaux** — contenu organique, contenu viral, ton par plateforme
 - **Onboarding email** — séquence post-inscription (si pertinent)
 - **Guide de style visuel** — couleurs, typographie, iconographie des statuts
-- **Copywriting pour les partenaires** — chambres de commerce, organisations diaspora
+- **Copywriting pour les partenaires** — chambres de commerce, organisations client
 
 ---
 

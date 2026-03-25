@@ -22,14 +22,14 @@
 
 ## 1. Platform Overview
 
-Kelen is a **permanent accountability platform** for diaspora-professional collaborations in Africa.
+Kelen is a **permanent accountability platform** for global client-professional collaborations.
 
 **Core principle:** A verified pattern of contract breaches ends your career. Sustained excellence builds absolute trust.
 
 | Actor | Problem | Kelen Solution |
 |---|---|---|
-| Diaspora (users) | Sending €20k–100k with no way to verify trust | Free permanent lookup of any professional by name |
-| Professionals | Can't reach diaspora clients, reputation doesn't travel | Paid discovery via Subscription model, status earned through track record |
+| client (users) | Sending €20k–100k with no way to verify trust | Free permanent lookup of any professional by name |
+| Professionals | Can't reach international clients, reputation doesn't travel | Paid discovery via Subscription model, status earned through track record |
 
 ---
 
@@ -80,7 +80,7 @@ Kelen is a **permanent accountability platform** for diaspora-professional colla
 | Payments (EU) | Stripe | Cards, SEPA, Apple/Google Pay |
 | Payments (Africa) | Wave + Orange Money | Mobile money, XOF |
 | Email | Resend | Transactional, React templates |
-| SMS/OTP | Twilio | Phone auth for Africa |
+| SMS/OTP | Twilio | Phone auth and notifications |
 | Errors | Sentry | Production monitoring |
 
 **Currency rule:** All balances stored in EUR. Display in XOF based on user location at runtime.
@@ -98,7 +98,7 @@ CREATE TABLE users (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   email TEXT UNIQUE NOT NULL,
   display_name TEXT NOT NULL,
-  role TEXT NOT NULL CHECK (role IN ('user', 'professional', 'admin')),
+  role TEXT NOT NULL CHECK (role IN ('client', 'pro_africa', 'pro_europe', 'pro_intl', 'admin')),
   country TEXT NOT NULL, -- ISO 3166-1 alpha-2
   phone TEXT,
   email_notifications BOOLEAN DEFAULT TRUE,
@@ -515,7 +515,7 @@ Provides: total users/professionals, Gold/Red/Grey counts, verification queue si
 
 | Service | Role |
 |---|---|
-| **Stripe** | EUR payments from diaspora (cards, SEPA, Apple/Google Pay) |
+| **Stripe** | EUR payments from client (cards, SEPA, Apple/Google Pay) |
 | **Wave** | XOF mobile money (Senegal, Côte d'Ivoire, Mali, Burkina Faso) |
 | **Orange Money** | XOF backup (pan-African coverage) |
 | **Resend** | Transactional email (verification, credit alerts, signal notifications) |

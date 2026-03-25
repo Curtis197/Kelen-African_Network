@@ -31,7 +31,7 @@ Le niveau le plus difficile à atteindre. Réservé aux professionnels dont le t
 - 0 signal vérifié
 - *Ancienneté ≥ 3 ans sur la plateforme* — **critère optionnel, activé ultérieurement**
 
-**Signification :** La diaspora peut engager ce professionnel pour des projets à 5 ou 6 chiffres sans hésitation. Chaque critère est rempli indépendamment.
+**Signification :** Le client peut engager ce professionnel pour des projets à 5 ou 6 chiffres sans hésitation. Chaque critère est rempli indépendamment.
 
 **Sur le critère d'ancienneté (quand activé) :**
 Un professionnel peut avoir 6 recommandations excellentes mais seulement 8 mois de présence. Il reste en Liste Argent jusqu'à atteindre 3 ans. L'ancienneté protège contre les profils récents qui n'ont pas encore eu le temps d'être signalés. Aucun statut intermédiaire n'est affiché — le professionnel est simplement en Argent, pas encore éligible à l'Or.
@@ -73,9 +73,9 @@ Aucun historique sur Kelen. Ni preuve de fiabilité, ni signal. Point de départ
 - 1 signal vérifié (et un seul)
 - Peu importe le nombre de recommandations
 
-**Visibilité :** Apparaît dans les résultats de recherche et de browsing, avec un badge d'alerte rouge prominent. La diaspora peut voir le profil complet et décider en connaissance de cause.
+**Visibilité :** Apparaît dans les résultats de recherche et de browsing, avec un badge d'alerte rouge prominent. Le client peut voir le profil complet et décider en connaissance de cause.
 
-**Signification :** Un manquement contractuel documenté. Peut être un incident isolé. La réponse du professionnel est visible aux côtés du signal. La diaspora dispose de toutes les informations pour décider.
+**Signification :** Un manquement contractuel documenté. Peut être un incident isolé. La réponse du professionnel est visible aux côtés du signal. Le client dispose de toutes les informations pour décider.
 
 **Sur la réponse du professionnel :** Il peut soumettre une réponse et des contre-preuves. Cette réponse est publique. Elle ne retire pas le signal mais contextualise.
 
@@ -307,7 +307,7 @@ Le statut n'affecte pas directement la visibilité de base (qui dépend uniqueme
 - Liste Blanche : apparaît normalement
 - Liste Argent / Or : apparaît avec badge positif (plus de clics attendus)
 
-La diaspora peut filtrer les résultats sur "Liste Or uniquement" ou "Liste Or et Argent".
+Le client peut filrer les résultats sur "Liste Or uniquement" ou "Liste Or et Argent".
 
 ---
 

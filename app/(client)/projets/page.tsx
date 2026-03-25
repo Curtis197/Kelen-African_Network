@@ -14,7 +14,7 @@ export default function Page() {
 <span className="text-[#10b77f]">Mes Projets</span>
 </nav>
 <h1 className="text-4xl font-extrabold tracking-tight text-on-surface mb-2 font-headline">Mes Projets</h1>
-<p className="text-on-surface-variant max-w-lg">Gérez vos investissements immobiliers et suivez l'avancement de vos chantiers en temps réel.</p>
+<p className="text-on-surface-variant max-w-lg">Gérez vos investissements immobiliers et suivez l'avancement de vos projets en temps réel.</p>
 </div>
 <div className="flex items-center gap-3">
 <button className="p-2.5 bg-surface-container-high rounded-xl text-on-surface-variant hover:bg-surface-container-highest transition-colors">

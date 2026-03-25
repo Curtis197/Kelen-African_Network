@@ -16,7 +16,7 @@ This document outlines the necessary backend architecture and tasks required to 
 
 Before implementation, it's crucial to design the data structure. The backend will need to manage a few core entities:
 
-*   **User & Professional Profiles:** A central table is required to store information for all users. This entity should differentiate between "diaspora" and "professional" roles and hold common information like names and email. A separate, linked entity should hold details exclusive to professionals, such as their location, description, portfolio, and advertising credits.
+*   **User & Professional Profiles:** A central table is required to store information for all users. This entity should differentiate between "client" and "professional" roles and hold common information like names and email. A separate, linked entity should hold details exclusive to professionals, such as their location, description, portfolio, and advertising credits.
 
 *   **Reputation Data:** Two distinct entities are needed to record the platform's core value:
     *   **Recommendations:** To store positive reviews, linked to both the submitting user and the reviewed professional.
@@ -26,7 +26,7 @@ Before implementation, it's crucial to design the data structure. The backend wi
 
 ### **Task 1: Implement a User Authentication System**
 
-The first step is to build a secure authentication system. This system must handle the entire user lifecycle (registration, login, logout) and manage user sessions. A key requirement is to differentiate between the two primary roles on the platform—'diaspora' and 'professional'—and to protect application routes so that only authenticated users with the correct role can access sensitive areas like the dashboards.
+The first step is to build a secure authentication system. This system must handle the entire user lifecycle (registration, login, logout) and manage user sessions. A key requirement is to differentiate between the two primary roles on the platform—'client' and 'professional'—and to protect application routes so that only authenticated users with the correct role can access sensitive areas like the dashboards.
 
 ### **Task 2: Develop the Profile Management System**
 
@@ -48,7 +48,7 @@ This calculation should be triggered automatically whenever a professional's rep
 
 ### **Task 4: Construct the Reputation & Evidence Workflow**
 
-This task involves building the backend functionality for the platform's evidence-based review system. You will need to create server-side logic that allows diaspora users to submit their recommendations and signals. This workflow must handle the intake of descriptive text and the upload of associated evidence files (contracts, photos, etc.). A crucial part of this is establishing a clear status for each submission (e.g., 'pending,' 'verified,' 'rejected') to facilitate a future administrative review process.
+This task involves building the backend functionality for the platform's evidence-based review system. You will need to create server-side logic that allows client users to submit their recommendations and signals. This workflow must handle the intake of descriptive text and the upload of associated evidence files (contracts, photos, etc.). A crucial part of this is establishing a clear status for each submission (e.g., 'pending,' 'verified,' 'rejected') to facilitate a future administrative review process.
 
 ### **Task 5: Integrate Payment & Analytics Systems**
 

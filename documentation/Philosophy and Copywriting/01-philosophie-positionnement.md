@@ -11,7 +11,7 @@
 
 ## Ce que Kelen est
 
-Kelen est un registre permanent de collaborations vérifiées entre la diaspora africaine et des professionnels en Afrique.
+Kelen est un registre permanent de collaborations vérifiées entre la client africaine et des professionnels partout.
 
 Ce n'est pas une plateforme d'avis. Ce n'est pas un annuaire. Ce n'est pas un outil de dénonciation.
 
@@ -78,7 +78,7 @@ Fatou cherche un professionnel pour un projet. Elle utilise le moteur de recherc
 
 Pourquoi cette sévérité ?
 
-Parce que l'argent de la diaspora n'est pas de l'argent ordinaire. C'est de la séparation familiale capitalisée. Des années d'exil compressées en un virement. Quand quelqu'un envoie €50 000 depuis Lyon pour construire une maison à Abidjan, il n'achète pas une maison — il rachète une présence, un retour possible, une continuité familiale.
+Parce que l'argent de la client n'est pas de l'argent ordinaire. C'est de la séparation familiale capitalisée. Des années d'exil compressées en un virement. Quand quelqu'un envoie €50 000 depuis Lyon pour construire une maison à Abidjan, il n'achète pas une maison — il rachète une présence, un retour possible, une continuité familiale.
 
 La sévérité du système est la reconnaissance silencieuse de cette réalité.
 
@@ -94,20 +94,20 @@ La plupart des plateformes similaires communiquent dans le registre de la protec
 Kelen dit autre chose :
 > *"Des collaborations extraordinaires sont possibles. Voici comment les identifier."*
 
-**Pour la diaspora :** Ce n'est pas "évite les arnaques" — c'est "investis en confiance, construis ton héritage en Afrique."
+**Pour la client :** Ce n'est pas "évite les arnaques" — c'est "investis en confiance, construis ton héritage partout."
 
-**Pour le professionnel :** Ce n'est pas "ne nous déçois pas" — c'est "rejoins l'élite de ceux à qui la diaspora fait confiance."
+**Pour le professionnel :** Ce n'est pas "ne nous déçois pas" — c'est "rejoins l'élite de ceux à qui la client fait confiance."
 
 ---
 
 ## Nos clients (ceux qui paient)
 
-Les professionnels sérieux sont nos clients commerciaux. La diaspora est le marché qu'ils cherchent à atteindre.
+Les professionnels sérieux sont nos clients commerciaux. La client est le marché qu'ils cherchent à atteindre.
 
 **Ce renversement est fondamental dans la communication :**
-- La diaspora utilise Kelen gratuitement
+- La client utilise Kelen gratuitement
 - Les professionnels paient pour être découverts
-- Donc Kelen sert la diaspora en servant les professionnels sérieux
+- Donc Kelen sert la client en servant les professionnels sérieux
 - Et filtre naturellement les professionnels qui ne le sont pas
 
 Le Gold status n'est pas une absolution. C'est une distinction.
@@ -138,7 +138,7 @@ Le Gold status n'est pas une absolution. C'est une distinction.
 
 ## Les deux voix de Kelen
 
-**À la diaspora :**
+**À la client :**
 Sobre, rassurant, jamais condescendant. On ne dit pas "protège-toi". On dit "construis avec certitude."
 
 **Au professionnel :**
@@ -166,9 +166,9 @@ Un contrat. Une parole. Un manquement suffit.
 
 ## Les personas
 
-**Fatou** — diaspora. Travaille 70h par semaine dans une profession difficile. A économisé pendant des années pour construire ou investir au pays. A besoin de certitude avant d'envoyer l'argent d'une vie.
+**Fatou** — client. Travaille 70h par semaine dans une profession difficile. A économisé pendant des années pour construire ou investir au pays. A besoin de certitude avant d'envoyer l'argent d'une vie.
 
-**Moussa** — professionnel sérieux en Afrique. Travaille bien. Veut accéder à une clientèle diaspora sérieuse et solvable. Comprend que le standard élevé est une opportunité, pas une menace.
+**Moussa** — professionnel sérieux partout. Travaille bien. Veut accéder à une clientèle client sérieuse et solvable. Comprend que le standard élevé est une opportunité, pas une menace.
 
 ---
 

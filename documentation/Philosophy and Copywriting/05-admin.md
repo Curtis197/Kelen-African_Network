@@ -35,7 +35,7 @@ Les signaux apparaissent en premier — priorité absolue.
 
 ```
 ⚠ SIGNAL
-Abandon de chantier · Abidjan
+Abandon de projet · Abidjan
 Professionnel : Kouadio Construction
 Montant concerné : 38 000 €
 Soumis le : 8 janvier 2025 · il y a 2 jours
@@ -89,12 +89,12 @@ Soumetteur : M. D. · Paris · m.d@example.com
 Type de projet : Construction résidentielle
 Localisation : Dakar, Sénégal
 Budget déclaré : 45 000 €
-Début des travaux : mars 2023
+Début des projets : mars 2023
 Livraison convenue : novembre 2023
 Livraison effective : novembre 2023
 
 Témoignage :
-"Chantier livré dans les délais. Bonne communication."
+"projet livré dans les délais. Bonne communication."
 ```
 
 ---
@@ -164,14 +164,14 @@ Prenez le temps nécessaire.
 Professionnel : Kouadio Construction · Abidjan
 Soumetteur : Mme K. · Bruxelles · mme.k@example.com
 
-Type de manquement : Abandon de chantier
+Type de manquement : Abandon de projet
 Montant concerné : 38 000 €
 
 Chronologie déclarée :
 - Contrat signé : juin 2022
-- Début travaux convenu : juillet 2022
+- Début projets convenu : juillet 2022
 - Livraison convenue : décembre 2022
-- Livraison effective : chantier abandonné, mars 2023
+- Livraison effective : projet abandonné, mars 2023
 
 Acompte versé : 19 000 €
 Tentatives de résolution : 3 tentatives de contact, sans réponse
@@ -183,7 +183,7 @@ Tentatives de résolution : 3 tentatives de contact, sans réponse
 
 ```
 [Contrat signé]     [Preuves de paiement (2)]
-[Photos chantier (5)]     [Captures WhatsApp (8)]
+[Photos projet (5)]     [Captures WhatsApp (8)]
 ```
 
 ---
