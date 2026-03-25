@@ -28,90 +28,97 @@ export async function middleware(request: NextRequest) {
     },
   });
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
+  try {
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "",
+      {
+        cookies: {
+          getAll() {
+            return request.cookies.getAll();
+          },
+          setAll(cookiesToSet: { name: string; value: string; options: CookieOptions }[]) {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              request.cookies.set(name, value)
+            );
+            response = NextResponse.next({
+              request: {
+                headers: request.headers,
+              },
+            });
+            cookiesToSet.forEach(({ name, value, options }) =>
+              response.cookies.set(name, value, options)
+            );
+          },
         },
-        setAll(cookiesToSet: { name: string; value: string; options: CookieOptions }[]) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value)
-          );
-          response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            response.cookies.set(name, value, options)
-          );
-        },
-      },
+      }
+    );
+
+    // This will refresh the session if needed
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    // 1. Define Route Protection Rules
+    const isAuthPage = pathname.startsWith("/connexion") || 
+                       pathname.startsWith("/inscription") ||
+                       pathname.startsWith("/pro/connexion") ||
+                       pathname.startsWith("/pro/inscription");
+
+    const isClientRoute = pathname === "/dashboard" || 
+                          pathname.startsWith("/projets") ||
+                          pathname.startsWith("/recommandation") ||
+                          pathname.startsWith("/signal") ||
+                          pathname.startsWith("/avis");
+
+    const isProRoute = pathname.startsWith("/pro/") && !isAuthPage;
+    const isAdminRoute = pathname.startsWith("/admin");
+
+    // 2. Handle Authentication
+    if (!session) {
+      if (isClientRoute || isProRoute || isAdminRoute) {
+        const redirectUrl = new URL(isProRoute ? "/pro/connexion" : "/connexion", request.url);
+        redirectUrl.searchParams.set("redirect", pathname);
+        return NextResponse.redirect(redirectUrl);
+      }
+      return response;
     }
-  );
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+    // 3. Handle Role-Based Access
+    const { data: user } = await supabase
+      .from("users")
+      .select("role")
+      .eq("id", session.user.id)
+      .single();
 
-  // 1. Define Route Protection Rules
-  const isAuthPage = pathname.startsWith("/connexion") || 
-                     pathname.startsWith("/inscription") ||
-                     pathname.startsWith("/pro/connexion") ||
-                     pathname.startsWith("/pro/inscription");
+    const role = user?.role || "client";
+    const isPro = role.startsWith("pro_");
+    const isAdmin = role === "admin";
+    const isClient = role === "client";
 
-  const isClientRoute = pathname === "/dashboard" || 
-                        pathname.startsWith("/projets") ||
-                        pathname.startsWith("/recommandation") ||
-                        pathname.startsWith("/signal") ||
-                        pathname.startsWith("/avis");
-
-  const isProRoute = pathname.startsWith("/pro/") && !isAuthPage;
-  const isAdminRoute = pathname.startsWith("/admin");
-
-  // 2. Handle Authentication
-  if (!session) {
-    if (isClientRoute || isProRoute || isAdminRoute) {
-      const redirectUrl = new URL(isProRoute ? "/pro/connexion" : "/connexion", request.url);
-      redirectUrl.searchParams.set("redirect", pathname);
-      return NextResponse.redirect(redirectUrl);
+    // Redirect logged-in users away from auth pages to their dashboards
+    if (isAuthPage) {
+      if (isAdmin) return NextResponse.redirect(new URL("/admin", request.url));
+      if (isPro) return NextResponse.redirect(new URL("/pro/dashboard", request.url));
+      return NextResponse.redirect(new URL("/dashboard", request.url));
     }
+
+    // Cross-role protection
+    if (isClientRoute && !isClient && !isAdmin) {
+      return NextResponse.redirect(new URL("/pro/dashboard", request.url));
+    }
+
+    if (isProRoute && !isPro && !isAdmin) {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
+
+    if (isAdminRoute && !isAdmin) {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
+  } catch (err) {
+    console.error("Middleware Auth Error:", err);
+    // In case of error, just continue to the route (safe fallback)
     return response;
-  }
-
-  // 3. Handle Role-Based Access
-  const { data: user } = await supabase
-    .from("users")
-    .select("role")
-    .eq("id", session.user.id)
-    .single();
-
-  const role = user?.role || "client";
-  const isPro = role.startsWith("pro_");
-  const isAdmin = role === "admin";
-  const isClient = role === "client";
-
-  // Redirect logged-in users away from auth pages to their dashboards
-  if (isAuthPage) {
-    if (isAdmin) return NextResponse.redirect(new URL("/admin", request.url));
-    if (isPro) return NextResponse.redirect(new URL("/pro/dashboard", request.url));
-    return NextResponse.redirect(new URL("/dashboard", request.url));
-  }
-
-  // Cross-role protection
-  if (isClientRoute && !isClient && !isAdmin) {
-    return NextResponse.redirect(new URL("/pro/dashboard", request.url));
-  }
-
-  if (isProRoute && !isPro && !isAdmin) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
-  }
-
-  if (isAdminRoute && !isAdmin) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
   return response;
