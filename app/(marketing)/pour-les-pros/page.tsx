@@ -68,7 +68,7 @@ export default function PourLesProPage() {
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-4">
           <Link
-            href="/inscription"
+            href="/pro/inscription"
             className="rounded-lg bg-kelen-green-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-kelen-green-600"
           >
             Créer mon profil professionnel
@@ -181,7 +181,7 @@ export default function PourLesProPage() {
           professionnel de confiance.
         </p>
         <Link
-          href="/inscription"
+          href="/pro/inscription"
           className="mt-8 inline-flex rounded-lg bg-white px-8 py-3 text-sm font-medium text-kelen-green-700 transition-colors hover:bg-kelen-green-50"
         >
           Créer mon profil gratuitement

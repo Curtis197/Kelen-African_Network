@@ -64,26 +64,26 @@ export function ProfessionalDirectory() {
   const [tier, setTier] = useState("Tous");
 
   return (
-    <section className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+    <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 bg-surface">
       {/* Header */}
-      <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-8">
+      <div className="mb-14 flex flex-col md:flex-row md:items-end justify-between gap-8">
         <div className="max-w-3xl">
-          <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
+          <h1 className="text-4xl font-extrabold tracking-tight text-on-surface sm:text-5xl lg:text-6xl font-display">
             Trouvez votre expert de confiance
-          </h2>
+          </h1>
           <p className="mt-4 text-xl text-muted-foreground leading-relaxed">
             Parcourez notre réseau de professionnels qualifiés pour accompagner vos projets au pays. 
             Vérifiés, transparents, et engagés.
           </p>
         </div>
-        <div className="flex items-center gap-3 rounded-full bg-kelen-green-50 px-5 py-2 text-sm font-bold text-kelen-green-700 ring-1 ring-kelen-green-100">
-          <span className="flex h-2 w-2 rounded-full bg-kelen-green-500 animate-pulse" />
+        <div className="flex items-center gap-3 rounded-full bg-surface-container-low px-5 py-2.5 text-sm font-bold text-kelen-green-700">
+          <span className="flex h-2 w-2 rounded-full bg-kelen-green-500" />
           <span>1,240 experts vérifiés disponibles</span>
         </div>
       </div>
 
       {/* Advanced Filter Bar */}
-      <div className="mb-16 rounded-[2rem] bg-surface-container-low p-6 lg:p-10 shadow-xl shadow-kelen-green-900/5 ring-1 ring-border">
+      <div className="mb-16 rounded-3xl bg-surface-container-low p-6 lg:p-8">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-2">
             <label className="mb-1 ml-1 block text-[11px] font-black uppercase tracking-widest text-muted-foreground">
@@ -93,7 +93,7 @@ export function ProfessionalDirectory() {
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full appearance-none rounded-2xl border-none bg-white p-4 text-sm shadow-sm ring-1 ring-black/5 transition-all focus:ring-2 focus:ring-kelen-green-500 group-hover:ring-black/10"
+                className="w-full appearance-none rounded-2xl border-none bg-surface-container-lowest p-4 text-sm shadow-sm transition-all focus:ring-2 focus:ring-kelen-green-500"
               >
                 <option>Toutes les spécialités</option>
                 <option>Construction & Immobilier</option>
@@ -114,7 +114,7 @@ export function ProfessionalDirectory() {
               <input
                 type="text"
                 placeholder="Abidjan, Dakar..."
-                className="w-full rounded-2xl border-none bg-white py-4 pl-11 pr-4 text-sm shadow-sm ring-1 ring-black/5 transition-all focus:ring-2 focus:ring-kelen-green-500 group-hover:ring-black/10"
+                className="w-full rounded-2xl border-none bg-surface-container-lowest py-4 pl-11 pr-4 text-sm shadow-sm transition-all focus:ring-2 focus:ring-kelen-green-500"
               />
             </div>
           </div>
@@ -123,15 +123,15 @@ export function ProfessionalDirectory() {
             <label className="mb-1 ml-1 block text-[11px] font-black uppercase tracking-widest text-muted-foreground">
               Niveau d&apos;excellence
             </label>
-            <div className="flex gap-2 p-1 bg-white rounded-2xl ring-1 ring-black/5 shadow-sm">
+            <div className="flex gap-1 p-1 bg-surface-container-lowest rounded-2xl shadow-sm">
               {[ "Argent", "Or", "Tous"].map((t) => (
                 <button
                   key={t}
                   onClick={() => setTier(t)}
-                  className={`flex-1 rounded-xl py-3 text-xs font-bold transition-all ${
+                  className={`flex-1 rounded-xl py-3 text-[11px] font-black uppercase tracking-tighter transition-all ${
                     tier === t
-                      ? t === "Or" ? "bg-kelen-yellow-500 text-white shadow-md shadow-kelen-yellow-500/20" : "bg-kelen-green-500 text-white shadow-md shadow-kelen-green-500/20"
-                      : "text-muted-foreground hover:bg-muted"
+                      ? "bg-kelen-green-600 text-white"
+                      : "text-muted-foreground hover:bg-surface-container-low"
                   }`}
                 >
                   {t}

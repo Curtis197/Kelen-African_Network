@@ -7,7 +7,11 @@ import { useRouter } from "next/navigation";
 import { loginSchema, type LoginFormData } from "@/lib/utils/validators";
 import { createClient } from "@/lib/supabase/client";
 
-export function LoginForm() {
+interface LoginFormProps {
+  defaultRole?: "client" | "professional";
+}
+
+export function LoginForm({ defaultRole }: LoginFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -42,12 +46,13 @@ export function LoginForm() {
           .single();
 
         if (profileError) {
-          // If profile not found, maybe it's a fresh auth user without a record yet
           console.error("Profile fetch error:", profileError);
           router.push("/dashboard");
         } else {
           // Redirect based on role
-          if (profile.role === "professional") {
+          const isPro = profile.role.startsWith("pro_");
+          
+          if (isPro) {
             router.push("/pro/dashboard");
           } else if (profile.role === "admin") {
             router.push("/admin/dashboard");

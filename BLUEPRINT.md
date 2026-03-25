@@ -97,9 +97,14 @@ app/
 ├── (auth)/                         → Auth pages (no index)
 │   ├── layout.tsx                  → Centered card layout
 │   ├── connexion/
-│   │   └── page.tsx                → /connexion
+│   │   └── page.tsx                → /connexion (Client Login)
 │   ├── inscription/
-│   │   └── page.tsx                → /inscription
+│   │   └── page.tsx                → /inscription (Client Register)
+│   ├── pro/
+│   │   ├── connexion/
+│   │   │   └── page.tsx            → /pro/connexion (Pro Login)
+│   │   └── inscription/
+│   │       └── page.tsx            → /pro/inscription (Pro Register)
 │   └── mot-de-passe/
 │       └── page.tsx                → /mot-de-passe
 │
@@ -245,11 +250,13 @@ These pages ship first. They represent the free validation system.
 | 1 | Home | `/` | SSG | No | None |
 | 2 | Search / Browse | `/recherche` | SSR | No | `professionals` table |
 | 3 | Public Profile | `/pro/[slug]` | SSR + ISR | No | `professionals`, `recommendations`, `signals`, `reviews` tables + `track_profile_view` RPC |
-| 4 | Login | `/connexion` | Client | No | Supabase Auth |
-| 5 | Register | `/inscription` | Client | No | Supabase Auth + `users` + `professionals` tables |
-| 6 | client Dashboard | `/dashboard` | SSR | user | `recommendations`, `signals` tables |
-| 7 | Submit Recommendation | `/recommandation/[slug]` | Client | user | `professionals`, `recommendations` tables + `contracts`, `evidence-photos` buckets |
-| 8 | Submit Signal | `/signal/[slug]` | Client | user | `professionals`, `signals` tables + `contracts`, `evidence-photos` buckets |
+| 4 | Client Login | `/connexion` | Client | No | Supabase Auth |
+| 5 | Client Register | `/inscription` | Client | No | Supabase Auth + `users` table |
+| 5b| Pro Login | `/pro/connexion` | Client | No | Supabase Auth |
+| 5c| Pro Register | `/pro/inscription` | Client | No | Supabase Auth + `users` + `professionals` tables |
+| 6 | Client Dashboard | `/dashboard` | SSR | client | `recommendations`, `signals` tables |
+| 7 | Submit Recommendation | `/recommandation/[slug]` | Client | client | `professionals`, `recommendations` tables + `contracts`, `evidence-photos` buckets |
+| 8 | Submit Signal | `/signal/[slug]` | Client | client | `professionals`, `signals` tables + `contracts`, `evidence-photos` buckets |
 | 9 | For Professionals | `/pour-les-pros` | SSG | No | None |
 | 10 | Pro Dashboard | `/pro/dashboard` | SSR + RT | professional | `professionals`, `recommendations`, `signals` tables + `professional_analytics_view` |
 | 11 | Link Recommendations | `/pro/recommandations` | SSR | professional | `recommendations` table |
@@ -553,21 +560,21 @@ interface FileUploadProps {
 
 ### middleware.ts logic
 
-```
-/dashboard*         → redirect /connexion if !authenticated OR role ≠ 'user'
-/recommandation*    → redirect /connexion if !authenticated OR role ≠ 'user'
-/signal*            → redirect /connexion if !authenticated OR role ≠ 'user'
-/avis*              → redirect /connexion if !authenticated OR role ≠ 'user'
-/pro/*              → redirect /connexion if !authenticated OR role ≠ 'professional'
-/admin/*            → redirect /connexion if !authenticated OR role ≠ 'admin'
-```
+Live Supabase SSR middleware enforcing:
+- Auth check for all protected routes.
+- Access restricted by role:
+  - `/dashboard*`, `/projets*`, `/recommandation*`, `/signal*`, `/avis*` → `role: client`
+  - `/pro/*` (except auth pages) → `role: pro_*`
+  - `/admin/*` → `role: admin`
+- Auto-redirection for logged-in users away from `/connexion` / `/inscription`.
+- Cross-role access protection (e.g. Clients blocked from Pro pages).
 
 ### Post-login redirects
 
 | Role | Redirect to |
 |---|---|
-| `user` | `/dashboard` |
-| `professional` | `/pro/dashboard` |
+| `client` | `/dashboard` |
+| `pro_*` | `/pro/dashboard` |
 | `admin` | `/admin` |
 
 ### Session management
@@ -728,34 +735,36 @@ npm install recharts @stripe/stripe-js
 - [ ] Build Navbar component
 - [ ] Build Footer component
 - [ ] Build FileUpload component
-- [ ] Set up middleware.ts (auth guard skeleton — activates when Supabase is connected)
+- [x] Set up middleware.ts (live SSR auth guard & role-based redirects)
 
 ### Phase 1 pages
-- [ ] Home `/`
-- [ ] Search `/recherche`
-- [ ] Public profile `/pro/[slug]`
-- [ ] Login `/connexion`
-- [ ] Register `/inscription`
-- [ ] client dashboard `/dashboard`
-- [ ] Submit recommendation `/recommandation/[slug]`
-- [ ] Submit signal `/signal/[slug]`
-- [ ] For professionals `/pour-les-pros`
-- [ ] Pro dashboard `/pro/dashboard`
-- [ ] Link recommendations `/pro/recommandations`
-- [ ] Respond to signal `/pro/signal`
-- [ ] Admin dashboard `/admin`
-- [ ] Verification queue `/admin/queue`
-- [ ] Review screen `/admin/queue/[id]`
+- [x] Home `/`
+- [x] Search `/recherche`
+- [x] Public profile `/pro/[slug]`
+- [x] Client Login `/connexion`
+- [x] Client Register `/inscription`
+- [x] Pro Login `/pro/connexion`
+- [x] Pro Register `/pro/inscription`
+- [x] Client dashboard `/dashboard`
+- [x] Submit recommendation `/recommandation/[slug]`
+- [x] Submit signal `/signal/[slug]`
+- [x] For professionals `/pour-les-pros`
+- [x] Pro dashboard `/pro/dashboard`
+- [x] Link recommendations `/pro/recommandations`
+- [x] Respond to signal `/pro/signal`
+- [x] Admin dashboard `/admin`
+- [x] Verification queue `/admin/queue`
+- [x] Review screen `/admin/queue/[id]`
 
 ### Phase 2 pages
-- [ ] Subscription `/pro/abonnement`
-- [ ] Edit profile `/pro/profil`
-- [ ] Analytics `/pro/analytique`
-- [ ] How it works `/comment-ca-marche`
-- [ ] Pricing `/tarifs`
+- [x] Subscription `/pro/abonnement`
+- [x] Edit profile `/pro/profil`
+- [x] Analytics `/pro/analytique`
+- [x] How it works `/comment-ca-marche`
+- [x] Pricing `/tarifs`
 - [ ] Password reset `/mot-de-passe`
 - [ ] Leave review `/avis/[slug]`
-- [ ] Audit log `/admin/journal`
+- [x] Audit log `/admin/journal`
 - [ ] Legal pages (3)
 
 ### Phase 3 pages

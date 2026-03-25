@@ -95,13 +95,37 @@ export default function ProAnalyticsPage() {
         contact_clicks: contacts || 0,
       });
 
-      // Prepare Chart Data (Mocking aggregation logic for brevity, in real app use a SQL view or complex query)
-      const months = ["Sept", "Oct", "Nov", "Déc", "Jan", "Fév"];
-      const mockMonthly = months.map((m, i) => ({
-        month: m,
-        views: Math.floor(Math.random() * 200) + 100 // Fallback for demo
-      }));
-      setChartData(mockMonthly);
+      // Prepare Chart Data - Grouping actual views by month for the last 6 months
+      const last6Months: { date: Date, month: string, count: number }[] = [];
+      const current = new Date();
+      for (let i = 5; i >= 0; i--) {
+        const d = new Date(current.getFullYear(), current.getMonth() - i, 1);
+        last6Months.push({
+          date: d,
+          month: d.toLocaleDateString('fr-FR', { month: 'short' }),
+          count: 0
+        });
+      }
+
+      const { data: allViews } = await supabase
+        .from("profile_views")
+        .select("created_at")
+        .eq("professional_id", pro.id)
+        .gte("created_at", last6Months[0].date.toISOString());
+
+      if (allViews) {
+        allViews.forEach(v => {
+          const vDate = new Date(v.created_at);
+          const monthIndex = last6Months.findIndex(m => 
+            m.date.getMonth() === vDate.getMonth() && m.date.getFullYear() === vDate.getFullYear()
+          );
+          if (monthIndex !== -1) {
+            last6Months[monthIndex].count++;
+          }
+        });
+      }
+
+      setChartData(last6Months.map(m => ({ month: m.month, views: m.count })));
 
       // Traffic Sources
       const { data: viewData } = await supabase
@@ -111,14 +135,17 @@ export default function ProAnalyticsPage() {
 
       if (viewData && viewData.length > 0) {
         const counts: Record<string, number> = {};
-        viewData.forEach(v => counts[v.source] = (counts[v.source] || 0) + 1);
+        viewData.forEach(v => {
+          const s = v.source || 'direct';
+          counts[s] = (counts[s] || 0) + 1;
+        });
         const total = viewData.length;
         const mappedSources = Object.entries(counts).map(([source, count]) => ({
           source: source === 'search' ? 'Recherche Kelen' : source === 'direct' ? 'Lien direct' : source,
           count,
           pct: Math.round((count / total) * 100)
         }));
-        setSources(mappedSources);
+        setSources(mappedSources.sort((a, b) => b.count - a.count));
       } else {
         setSources([
           { source: "Recherche Kelen", count: 0, pct: 0 },

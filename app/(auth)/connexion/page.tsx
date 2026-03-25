@@ -20,7 +20,7 @@ export default function LoginPage() {
       </p>
 
       <div className="mt-6">
-        <LoginForm />
+        <LoginForm defaultRole="client" />
       </div>
 
       <p className="mt-6 text-center text-sm text-muted-foreground">

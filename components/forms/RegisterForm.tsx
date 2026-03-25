@@ -17,8 +17,13 @@ import { SUPPORTED_COUNTRIES, CATEGORIES, AFRICA_COUNTRIES, EUROPE_COUNTRIES } f
 
 type RegisterMode = "client" | "professional";
 
-export function RegisterForm() {
-  const [mode, setMode] = useState<RegisterMode>("client");
+interface RegisterFormProps {
+  defaultMode?: RegisterMode;
+  allowSwitch?: boolean;
+}
+
+export function RegisterForm({ defaultMode = "client", allowSwitch = true }: RegisterFormProps) {
+  const [mode, setMode] = useState<RegisterMode>(defaultMode);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -122,30 +127,32 @@ export function RegisterForm() {
   return (
     <div>
       {/* Mode toggle */}
-      <div className="mb-6 flex rounded-lg border border-border bg-muted/50 p-1">
-        <button
-          type="button"
-          onClick={() => handleModeSwitch("client")}
-          className={`flex-1 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-            mode === "client"
-              ? "bg-white text-foreground shadow-sm"
-              : "text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          Client
-        </button>
-        <button
-          type="button"
-          onClick={() => handleModeSwitch("professional")}
-          className={`flex-1 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-            mode === "professional"
-              ? "bg-white text-foreground shadow-sm"
-              : "text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          Professionnel
-        </button>
-      </div>
+      {allowSwitch && (
+        <div className="mb-6 flex rounded-lg border border-border bg-muted/50 p-1">
+          <button
+            type="button"
+            onClick={() => handleModeSwitch("client")}
+            className={`flex-1 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+              mode === "client"
+                ? "bg-white text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            Client
+          </button>
+          <button
+            type="button"
+            onClick={() => handleModeSwitch("professional")}
+            className={`flex-1 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+              mode === "professional"
+                ? "bg-white text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            Professionnel
+          </button>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {error && (

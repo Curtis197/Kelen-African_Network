@@ -54,7 +54,7 @@ export default function TarifsPage() {
             ))}
           </ul>
           <Link
-            href="/inscription"
+            href="/pro/inscription"
             className="mt-8 block w-full rounded-xl border border-border px-4 py-3 text-center text-sm font-semibold text-foreground hover:bg-muted"
           >
             Commencer gratuitement
@@ -83,7 +83,7 @@ export default function TarifsPage() {
             ))}
           </ul>
           <Link
-            href="/inscription"
+            href="/pro/inscription"
             className="mt-8 block w-full rounded-xl bg-kelen-green-500 px-4 py-3 text-center text-sm font-semibold text-white hover:bg-kelen-green-600"
           >
             Passer au Premium
