@@ -222,26 +222,26 @@ export default async function AdminReviewPage({ params }: ReviewPageProps) {
             <h3 className="font-semibold text-foreground">Professionnel</h3>
             <div className="mt-3 space-y-2 text-sm">
               <p className="font-bold text-foreground">
-                {queueItem.professional?.business_name}
+                {(queueItem.professional as any)?.[0]?.business_name}
               </p>
               <p className="text-muted-foreground capitalize">
-                {queueItem.professional?.category}
+                {(queueItem.professional as any)?.[0]?.category}
               </p>
               <p className="text-muted-foreground">
-                {queueItem.professional?.city}, {queueItem.professional?.country}
+                {(queueItem.professional as any)?.[0]?.city}, {(queueItem.professional as any)?.[0]?.country}
               </p>
               <p className="text-muted-foreground flex items-center gap-2">
                 Statut actuel: 
                 <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
-                  queueItem.professional?.status === 'gold' ? 'bg-kelen-yellow-100 text-kelen-yellow-700' :
-                  queueItem.professional?.status === 'silver' ? 'bg-stone-100 text-stone-700' :
+                  (queueItem.professional as any)?.[0]?.status === 'gold' ? 'bg-kelen-yellow-100 text-kelen-yellow-700' :
+                  (queueItem.professional as any)?.[0]?.status === 'silver' ? 'bg-stone-100 text-stone-700' :
                   'bg-muted text-muted-foreground'
                 }`}>
-                  {queueItem.professional?.status}
+                  {(queueItem.professional as any)?.[0]?.status}
                 </span>
               </p>
               <Link
-                href={`/pro/${queueItem.professional?.slug}`}
+                href={`/pro/${(queueItem.professional as any)?.[0]?.slug}`}
                 className="mt-2 inline-block text-xs text-kelen-green-600 hover:text-kelen-green-700 font-medium"
               >
                 Voir le profil public →
