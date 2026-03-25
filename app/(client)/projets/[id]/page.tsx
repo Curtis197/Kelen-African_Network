@@ -310,28 +310,34 @@ export default function ProjectDetailPage() {
               </div>
             </div>
 
-            {/* Documents placeholder remains static or simplified */}
+            {/* Documents */}
             <div className="bg-white p-8 rounded-3xl shadow-sm border border-stone-200/50">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold text-stone-900">Documents</h3>
+                <h3 className="text-xl font-bold text-stone-900">Documents du projet</h3>
                 <span className="w-8 h-8 flex items-center justify-center bg-stone-100 rounded-lg text-stone-500">
                   <span className="material-symbols-outlined text-sm">inventory_2</span>
                 </span>
               </div>
+              
               <div className="space-y-3">
-                <div className="p-4 bg-stone-50 rounded-2xl flex items-center justify-between group cursor-not-allowed">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-red-50 text-red-600 rounded-xl flex items-center justify-center">
-                      <span className="material-symbols-outlined text-xl">picture_as_pdf</span>
+                {team.length > 0 ? (
+                  team.map((member) => (
+                    <div key={member.id} className="p-4 bg-stone-50 rounded-2xl flex items-center justify-between group">
+                      <div className="flex items-center gap-3 text-stone-400 italic text-xs">
+                        <span className="material-symbols-outlined text-sm">info</span>
+                        <span>Documents en attente de partage par {member.is_external ? member.external_name : member.professionals?.business_name}</span>
+                      </div>
                     </div>
-                    <div>
-                      <h6 className="text-xs font-bold text-stone-800">Contrat initial</h6>
-                      <p className="text-[10px] text-stone-400 uppercase font-bold tracking-tighter">Bientôt disponible</p>
-                    </div>
+                  ))
+                ) : (
+                  <div className="p-8 text-center bg-stone-50 rounded-2xl border border-dashed border-stone-200">
+                    <span className="material-symbols-outlined text-3xl text-stone-200 mb-2">description</span>
+                    <p className="text-xs text-stone-400">Aucun document n&apos;est encore lié à ce projet.</p>
                   </div>
-                </div>
+                )}
               </div>
-              <button className="w-full mt-6 py-4 text-xs font-bold text-stone-500 bg-stone-100 rounded-2xl hover:bg-stone-200 transition-all uppercase tracking-widest">
+              
+              <button className="w-full mt-6 py-4 text-xs font-bold text-kelen-green-600 bg-kelen-green-50 rounded-2xl hover:bg-kelen-green-100 transition-all uppercase tracking-widest">
                 Rejoindre le coffre-fort
               </button>
             </div>

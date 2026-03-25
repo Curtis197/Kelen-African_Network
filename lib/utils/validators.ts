@@ -57,6 +57,10 @@ export const recommendationSchema = z.object({
       message: "Vous devez confirmer l'authenticité des informations",
     }),
   }),
+  contract_url: z.string().optional(),
+  photo_urls: z.array(z.string()).optional(),
+  before_photos: z.array(z.string()).optional(),
+  after_photos: z.array(z.string()).optional(),
 });
 
 // --- Signal ---
@@ -89,6 +93,9 @@ export const signalSchema = z.object({
       message: "Vous devez comprendre que le professionnel sera notifié",
     }),
   }),
+  contract_url: z.string().optional(),
+  evidence_urls: z.array(z.string()).optional(),
+  communication_logs: z.array(z.string()).optional(),
 });
 
 // --- Review ---

@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signalSchema, type SignalFormData } from "@/lib/utils/validators";
 import { BREACH_TYPES } from "@/lib/utils/constants";
 import { createClient } from "@/lib/supabase/client";
+import { uploadFile, uploadMultipleFiles } from "@/lib/supabase/storage";
 
 interface SignalFormProps {
   professionalId: string;
@@ -48,6 +49,9 @@ export function SignalForm({
   const [isLoading, setIsLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [contractFile, setContractFile] = useState<File | null>(null);
+  const [evidenceFiles, setEvidenceFiles] = useState<File[]>([]);
+  const [logFiles, setLogFiles] = useState<File[]>([]);
 
   const {
     register,
@@ -105,7 +109,24 @@ export function SignalForm({
         return;
       }
 
-      // 3. Insert Signal
+      // 3. Upload Files
+      let contractUrl = "";
+      let evidenceUrls: string[] = [];
+      let logUrls: string[] = [];
+
+      if (contractFile) {
+        contractUrl = await uploadFile(contractFile, "contracts", `signals/${user.id}`);
+      }
+
+      if (evidenceFiles.length > 0) {
+        evidenceUrls = await uploadMultipleFiles(evidenceFiles, "evidence-photos", `signals/${user.id}`);
+      }
+
+      if (logFiles.length > 0) {
+        logUrls = await uploadMultipleFiles(logFiles, "evidence-photos", `signals/${user.id}/logs`);
+      }
+
+      // 4. Insert Signal
       const { error: insertError } = await supabase.from("signals").insert({
         professional_id: professionalId,
         professional_slug: professionalSlug,
@@ -120,6 +141,9 @@ export function SignalForm({
         agreed_end_date: data.agreed_end_date,
         timeline_deviation: data.timeline_deviation,
         budget_deviation: data.budget_deviation,
+        contract_url: contractUrl,
+        evidence_urls: evidenceUrls,
+        communication_logs: logUrls,
         status: "pending",
         verified: false,
       });
@@ -375,20 +399,109 @@ export function SignalForm({
           <div className="animate-in fade-in slide-in-from-right-2 duration-300">
             <h2 className="text-lg font-semibold text-foreground">{STEPS[3]}</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Ajoutez des pièces justificatives pour accélérer la vérification
-              (devis, contrats, photos, échanges...).
+              Ajoutez des pièces justificatives (contrat, factures, photos, échanges...).
             </p>
-            <div className="mt-4">
-              <div className="rounded-xl border-2 border-dashed border-border bg-muted/30 p-12 text-center">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-muted text-muted-foreground text-2xl">
-                  📁
+            
+            <div className="mt-6 space-y-6">
+              <div>
+                <label className="mb-2 block text-sm font-medium text-foreground">
+                  Contrat initial (obligatoire)
+                </label>
+                <div className="relative">
+                  <input
+                    type="file"
+                    accept=".pdf,image/*"
+                    onChange={(e) => setContractFile(e.target.files?.[0] || null)}
+                    className="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
+                  />
+                  <div className={`flex items-center gap-3 rounded-lg border border-dashed p-4 transition-colors ${contractFile ? "border-kelen-red-500 bg-kelen-red-50" : "border-border bg-muted/30 hover:bg-muted/50"}`}>
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-xl">
+                      {contractFile ? "📄" : "📁"}
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-foreground">
+                        {contractFile ? contractFile.name : "Cliquer pour uploader le contrat"}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        PDF ou Image, max 10MB
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <p className="mt-4 text-sm font-medium text-foreground">
-                  Bientôt disponible
-                </p>
-                <p className="mt-1 text-xs text-muted-foreground max-w-xs mx-auto">
-                  L&apos;upload de documents sera activé prochainement. Pour le moment, soumettez votre signal sans fichiers.
-                </p>
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-medium text-foreground">
+                  Photos des malfaçons / Preuves visuelles
+                </label>
+                <div className="relative">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={(e) => setEvidenceFiles(Array.from(e.target.files || []))}
+                    className="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
+                  />
+                  <div className={`flex items-center gap-3 rounded-lg border border-dashed p-4 transition-colors ${evidenceFiles.length > 0 ? "border-kelen-red-500 bg-kelen-red-50" : "border-border bg-muted/30 hover:bg-muted/50"}`}>
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-xl">
+                      {evidenceFiles.length > 0 ? "📸" : "📷"}
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-foreground">
+                        {evidenceFiles.length > 0 ? `${evidenceFiles.length} photos sélectionnées` : "Cliquer pour uploader des photos"}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Images (JPG, PNG), max 10 photos
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                {evidenceFiles.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {evidenceFiles.map((f, i) => (
+                      <div key={i} className="rounded bg-muted px-2 py-1 text-[10px] text-muted-foreground">
+                        {f.name}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-medium text-foreground">
+                  Échanges (WhatsApp, Email screenshots)
+                </label>
+                <div className="relative">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={(e) => setLogFiles(Array.from(e.target.files || []))}
+                    className="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
+                  />
+                  <div className={`flex items-center gap-3 rounded-lg border border-dashed p-4 transition-colors ${logFiles.length > 0 ? "border-kelen-red-500 bg-kelen-red-50" : "border-border bg-muted/30 hover:bg-muted/50"}`}>
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-xl">
+                      {logFiles.length > 0 ? "💬" : "📧"}
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-foreground">
+                        {logFiles.length > 0 ? `${logFiles.length} fichiers sélectionnés` : "Cliquer pour uploader des captures"}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Images, max 10 fichiers
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                {logFiles.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {logFiles.map((f, i) => (
+                      <div key={i} className="rounded bg-muted px-2 py-1 text-[10px] text-muted-foreground">
+                        {f.name}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>

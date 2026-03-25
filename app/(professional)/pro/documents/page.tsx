@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { uploadFile } from "@/lib/supabase/storage";
 import Link from "next/link";
 
 interface ProjectDocument {
@@ -66,15 +67,21 @@ export default function ProDocumentsPage() {
       .single();
 
     if (pro) {
-      const { error } = await supabase.from("project_documents").insert({
-        professional_id: pro.id,
-        project_title: file.name.split('.')[0],
-        contract_url: "https://placeholder.url/doc.pdf",
-        status: "pending_review"
-      });
+      try {
+        const fileUrl = await uploadFile(file, "project-docs", `pro/${pro.id}`);
+        
+        const { error } = await supabase.from("project_documents").insert({
+          professional_id: pro.id,
+          project_title: file.name.split('.')[0],
+          contract_url: fileUrl,
+          status: "pending_review"
+        });
 
-      if (!error) {
-        fetchDocuments();
+        if (!error) {
+          fetchDocuments();
+        }
+      } catch (err) {
+        console.error("Upload error:", err);
       }
     }
     setIsUploading(false);

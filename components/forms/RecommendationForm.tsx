@@ -9,6 +9,7 @@ import {
 } from "@/lib/utils/validators";
 import { BUDGET_RANGES } from "@/lib/utils/constants";
 import { createClient } from "@/lib/supabase/client";
+import { uploadFile, uploadMultipleFiles } from "@/lib/supabase/storage";
 
 interface RecommendationFormProps {
   professionalId: string;
@@ -20,6 +21,7 @@ const STEPS = [
   "Type de projet",
   "Détails du projet",
   "Budget & dates",
+  "Pièces jointes",
   "Confirmation",
 ];
 
@@ -32,6 +34,9 @@ export function RecommendationForm({
   const [isLoading, setIsLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [contractFile, setContractFile] = useState<File | null>(null);
+  const [photoFiles, setPhotoFiles] = useState<File[]>([]);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const {
     register,
@@ -51,6 +56,7 @@ export function RecommendationForm({
       ["project_type"],
       ["project_description"],
       ["completion_date", "budget_range", "location"],
+      [], // file step
       ["authenticity_confirmed"],
     ];
     const isValid = await trigger(fieldsPerStep[step]);
@@ -84,7 +90,19 @@ export function RecommendationForm({
         return;
       }
 
-      // 3. Insert Recommendation
+      // 3. Upload Files if any
+      let contractUrl = "";
+      let photoUrls: string[] = [];
+
+      if (contractFile) {
+        contractUrl = await uploadFile(contractFile, "contracts", `recommendations/${user.id}`);
+      }
+
+      if (photoFiles.length > 0) {
+        photoUrls = await uploadMultipleFiles(photoFiles, "evidence-photos", `recommendations/${user.id}`);
+      }
+
+      // 4. Insert Recommendation
       const { error: insertError } = await supabase.from("recommendations").insert({
         professional_id: professionalId,
         professional_slug: professionalSlug,
@@ -97,6 +115,8 @@ export function RecommendationForm({
         completion_date: data.completion_date,
         budget_range: data.budget_range,
         location: data.location,
+        contract_url: contractUrl,
+        after_photos: photoUrls,
         status: "pending",
         verified: false,
         linked: true, // Default to true if submitted via the pro's link
@@ -304,8 +324,84 @@ export function RecommendationForm({
           </div>
         )}
 
-        {/* Step 3: Confirmation */}
+        {/* Step 3: Piece Jointes */}
         {step === 3 && (
+          <div className="animate-in fade-in slide-in-from-right-2 duration-300">
+            <h2 className="text-lg font-semibold text-foreground">{STEPS[3]}</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Ajoutez des preuves de la réalisation du projet (contrat, factures, photos).
+            </p>
+            
+            <div className="mt-6 space-y-6">
+              <div>
+                <label className="mb-2 block text-sm font-medium text-foreground">
+                  Contrat ou Facture (PDF/Image)
+                </label>
+                <div className="relative">
+                  <input
+                    type="file"
+                    accept=".pdf,image/*"
+                    onChange={(e) => setContractFile(e.target.files?.[0] || null)}
+                    className="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
+                  />
+                  <div className={`flex items-center gap-3 rounded-lg border border-dashed p-4 transition-colors ${contractFile ? "border-kelen-green-500 bg-kelen-green-50" : "border-border bg-muted/30 hover:bg-muted/50"}`}>
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-xl">
+                      {contractFile ? "📄" : "📁"}
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-foreground">
+                        {contractFile ? contractFile.name : "Cliquer pour uploader le contrat"}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        PDF ou Image, max 10MB
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-medium text-foreground">
+                  Photos du projet terminé
+                </label>
+                <div className="relative">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={(e) => setPhotoFiles(Array.from(e.target.files || []))}
+                    className="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
+                  />
+                  <div className={`flex items-center gap-3 rounded-lg border border-dashed p-4 transition-colors ${photoFiles.length > 0 ? "border-kelen-green-500 bg-kelen-green-50" : "border-border bg-muted/30 hover:bg-muted/50"}`}>
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-xl">
+                      {photoFiles.length > 0 ? "📸" : "📷"}
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-foreground">
+                        {photoFiles.length > 0 ? `${photoFiles.length} photos sélectionnées` : "Cliquer pour uploader des photos"}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Images (JPG, PNG), max 5 photos
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                {photoFiles.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {photoFiles.map((f, i) => (
+                      <div key={i} className="rounded bg-muted px-2 py-1 text-[10px] text-muted-foreground">
+                        {f.name}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Step 4: Confirmation */}
+        {step === 4 && (
           <div className="animate-in fade-in slide-in-from-right-2 duration-300">
             <h2 className="text-lg font-semibold text-foreground">
               {STEPS[3]}
