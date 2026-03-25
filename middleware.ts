@@ -7,6 +7,21 @@ import { type NextRequest, NextResponse } from "next/server";
 // ============================================
 
 export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  
+  // Early return for internal paths and static assets to prevent timeouts
+  if (
+    pathname.includes("_next") || 
+    pathname.includes("favicon.ico") ||
+    pathname.includes("sso-api") ||
+    pathname.endsWith(".json") ||
+    pathname.endsWith(".png") ||
+    pathname.endsWith(".jpg") ||
+    pathname.endsWith(".svg")
+  ) {
+    return NextResponse.next();
+  }
+
   let response = NextResponse.next({
     request: {
       headers: request.headers,
@@ -41,8 +56,6 @@ export async function middleware(request: NextRequest) {
   const {
     data: { session },
   } = await supabase.auth.getSession();
-
-  const { pathname } = request.nextUrl;
 
   // 1. Define Route Protection Rules
   const isAuthPage = pathname.startsWith("/connexion") || 
