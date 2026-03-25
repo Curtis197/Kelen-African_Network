@@ -130,8 +130,8 @@ app/
 │       │   └── page.tsx            → /pro/recommandations
 │       ├── signal/
 │       │   └── page.tsx            → /pro/signal
-│       ├── credit/
-│       │   └── page.tsx            → /pro/credit
+│       ├── abonnement/
+│       │   └── page.tsx            → /pro/abonnement
 │       └── analytique/
 │           └── page.tsx            → /pro/analytique
 │
@@ -198,7 +198,7 @@ components/
 │   ├── ContactForm.tsx
 │   └── ProProfileForm.tsx
 ├── pro/
-│   ├── CreditBlock.tsx             → Real-time credit display
+│   ├── SubscriptionBlock.tsx       → Real-time subscription status
 │   ├── PendingRecommendations.tsx
 │   ├── LinkRecommendationCard.tsx
 │   ├── SignalResponseForm.tsx
@@ -262,7 +262,7 @@ These pages ship first. They represent the free validation system.
 
 | # | Page | Route | Rendering | Auth | Dependencies |
 |---|---|---|---|---|---|
-| 16 | Buy Credit | `/pro/credit` | Client | professional | `credit_transactions` table + `process-payment` Edge Function + Stripe |
+| 16 | Subscription | `/pro/abonnement` | Client | professional | `subscriptions` table + `process-payment` Edge Function + Stripe/Wave |
 | 17 | Edit Profile | `/pro/profil` | Client | professional | `professionals` table + `portfolios` bucket |
 | 18 | Analytics | `/pro/analytique` | SSR | professional | `professional_analytics_view`, `profile_views` table |
 | 19 | How It Works | `/comment-ca-marche` | SSG | No | None |
@@ -661,7 +661,7 @@ All image requests are documented in `IMAGE_REQUESTS.md` at project root. Owner 
 
 ### robots.txt exclusions
 - `/dashboard*`
-- `/pro/dashboard*`, `/pro/profil*`, `/pro/credit*`, `/pro/analytique*`
+- `/pro/dashboard*`, `/pro/profil*`, `/pro/abonnement*`, `/pro/analytique*`
 - `/admin*`
 - `/connexion`, `/inscription`, `/mot-de-passe`
 
@@ -748,7 +748,7 @@ npm install recharts @stripe/stripe-js
 - [ ] Review screen `/admin/queue/[id]`
 
 ### Phase 2 pages
-- [ ] Buy credit `/pro/credit`
+- [ ] Subscription `/pro/abonnement`
 - [ ] Edit profile `/pro/profil`
 - [ ] Analytics `/pro/analytique`
 - [ ] How it works `/comment-ca-marche`

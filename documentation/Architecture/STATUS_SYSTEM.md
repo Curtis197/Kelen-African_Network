@@ -298,9 +298,9 @@ CREATE POLICY "Admin can hide reviews"
 
 ---
 
-## Impact sur la visibilité CPM
+## Impact sur la visibilité Annuaire
 
-Le statut n'affecte pas directement la visibilité CPM (qui dépend uniquement de `credit_balance > 0`). Mais il affecte **l'attractivité** dans les résultats :
+Le statut n'affecte pas directement la visibilité de base (qui dépend uniquement de `subscription_status = 'active'`). Mais il affecte **l'attractivité** dans les résultats :
 
 - Liste Noire : n'apparaît jamais dans le browse/search, même avec crédit
 - Liste Rouge : apparaît avec badge d'alerte rouge (moins de clics attendus)

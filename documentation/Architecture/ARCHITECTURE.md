@@ -29,7 +29,7 @@ Kelen is a **permanent accountability platform** for diaspora-professional colla
 | Actor | Problem | Kelen Solution |
 |---|---|---|
 | Diaspora (users) | Sending €20k–100k with no way to verify trust | Free permanent lookup of any professional by name |
-| Professionals | Can't reach diaspora clients, reputation doesn't travel | Paid discovery via CPM model, status earned through track record |
+| Professionals | Can't reach diaspora clients, reputation doesn't travel | Paid discovery via Subscription model, status earned through track record |
 
 ---
 
@@ -43,13 +43,13 @@ Kelen is a **permanent accountability platform** for diaspora-professional colla
 - Submit evidence-based recommendations or signals
 - **Cannot be paid to remove or hide**
 
-### System 2 — Advertisement (CPM-Based Discovery)
+### System 2 — Advertisement (Subscription-Based Discovery)
 
-- Professionals pay **€5 per 1,000 profile views**
+- Professionals pay **€15 (3000 FCFA) per month**
 - Appear in browse/search/category listings
-- Contact info and portfolio visible when credit > 0
-- No subscription — pay only for actual visibility
-- Profile removed from discovery when credit = 0 (validation still works)
+- Contact info and portfolio features unlocked by subscription tier
+- Two tiers: **Free** (limited visibility/projects) and **Premium** (unlimited)
+- Profile removed from discovery if subscription expires (validation still works)
 
 ### Status Tiers (5 levels)
 
@@ -151,15 +151,13 @@ CREATE TABLE professionals (
   positive_review_pct NUMERIC(5,2),  -- % of reviews with rating >= 4
   review_count INTEGER DEFAULT 0,
 
-  -- CPM advertisement
-  credit_balance NUMERIC(10,2) DEFAULT 0.00 CHECK (credit_balance >= 0),
+  -- Subscription
+  subscription_plan TEXT DEFAULT 'free' CHECK (subscription_plan IN ('free', 'premium')),
+  subscription_status TEXT DEFAULT 'active' CHECK (subscription_status IN ('active', 'expired', 'canceled', 'past_due')),
+  subscription_expires_at TIMESTAMPTZ,
   total_views INTEGER DEFAULT 0,
-  monthly_view_cap INTEGER,        -- NULL = uncapped
   current_month_views INTEGER DEFAULT 0,
   last_view_reset TIMESTAMPTZ,
-  auto_reload_enabled BOOLEAN DEFAULT FALSE,
-  auto_reload_amount NUMERIC(10,2),
-  auto_reload_threshold NUMERIC(10,2),
 
   -- Verification
   verified BOOLEAN DEFAULT FALSE,
@@ -168,7 +166,7 @@ CREATE TABLE professionals (
 
   -- Visibility
   is_active BOOLEAN DEFAULT TRUE,
-  is_visible BOOLEAN GENERATED ALWAYS AS (credit_balance > 0 AND is_active) STORED,
+  is_visible BOOLEAN GENERATED ALWAYS AS (subscription_status = 'active' AND is_active) STORED,
 
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
@@ -283,26 +281,27 @@ CREATE TABLE signals (
 
 ---
 
-### `credit_transactions`
+### `subscriptions`
 
-Immutable financial ledger. No updates or deletes — corrections use `adjustment` type.
+Immutable financial ledger. No updates or deletes.
 
 ```sql
-CREATE TABLE credit_transactions (
+CREATE TABLE subscriptions (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   professional_id UUID NOT NULL REFERENCES professionals(id),
 
-  type TEXT NOT NULL CHECK (type IN ('purchase','deduction','refund','adjustment')),
-  amount NUMERIC(10,2) NOT NULL,        -- positive for purchase/refund, negative for deduction
-  balance_after NUMERIC(10,2) NOT NULL, -- running balance snapshot
-  description TEXT NOT NULL,
+  plan TEXT NOT NULL CHECK (plan IN ('free', 'premium')),
+  status TEXT NOT NULL,
+  amount NUMERIC(10,2) NOT NULL,
+  currency TEXT CHECK (currency IN ('EUR','XOF')),
 
   payment_method TEXT CHECK (payment_method IN ('stripe','wave','orange_money')),
   payment_id TEXT,   -- external payment reference
-  currency TEXT CHECK (currency IN ('EUR','XOF')),
+  
+  starts_at TIMESTAMPTZ NOT NULL,
+  expires_at TIMESTAMPTZ NOT NULL,
 
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  ip_address INET
+  created_at TIMESTAMPTZ DEFAULT NOW()
 );
 ```
 
@@ -324,7 +323,7 @@ CREATE TABLE profile_views (
   source TEXT NOT NULL CHECK (source IN ('search','browse','category','direct')),
   search_query TEXT,
   referrer TEXT,
-  cost_deducted NUMERIC(10,4) NOT NULL DEFAULT 0.0050,
+  cost_deducted NUMERIC(10,4) NOT NULL DEFAULT 0.0000,
   view_duration INTEGER, -- seconds, tracked client-side
 
   created_at TIMESTAMPTZ DEFAULT NOW()
@@ -398,17 +397,14 @@ Recalculates and persists the 5-tier status. Called by triggers on recommendatio
 
 ### `track_profile_view(prof_id, viewer_ip, viewer_country, source, search_query)`
 
-Atomic function: records view, deducts credit, handles cap logic.
+Atomic function: records view and handles cap logic.
 
 **Logic:**
 1. Lock professional row
-2. Abort if `credit_balance <= 0`
-3. Check monthly cap — reset counter if new month, abort if cap reached
+2. Abort if `subscription_status != 'active'`
+3. Check monthly cap (if applicable to tier) — reset counter if new month, abort if cap reached
 4. Insert into `profile_views` (IP hashed with SHA-256)
-5. Insert into `credit_transactions` (type = `deduction`, amount = -0.005)
-6. Update `credit_balance`, `total_views`, `current_month_views`
-7. Set `is_active = FALSE` if balance hits zero
-8. Trigger auto-reload check if threshold reached
+5. Update `total_views`, `current_month_views`
 
 ---
 
@@ -425,7 +421,7 @@ Cron job (nightly). Resets `current_month_views = 0` and `last_view_reset = NOW(
 | `on_recommendation_verified` | After recommendations `verified = TRUE` or `linked` changes | Call `compute_professional_status`, notify pro + submitter, mark queue complete |
 | `on_signal_verified` | After signals `verified = TRUE` | Call `compute_professional_status` → sets Red (1–2) or Black (3+), send urgent notification to pro, notify submitter |
 | `on_review_submitted` | After INSERT or UPDATE `rating`/`is_hidden` on reviews | Call `compute_professional_status` to recompute avg_rating + pct |
-| `on_credit_depleted` | After `credit_balance` drops to 0 | Set `is_active = FALSE`, send "visibility ended" email |
+| `on_subscription_expired` | After `subscription_expires_at` is reached | Set `subscription_status = 'expired'`, send notification |
 | `add_to_queue_on_recommendation` | After INSERT on recommendations | Auto-create `verification_queue` row |
 | `add_to_queue_on_signal` | After INSERT on signals | Auto-create `verification_queue` row |
 | `generate_professional_slug` | Before INSERT on professionals | Slugify `business_name + city`, append number if not unique |
@@ -457,7 +453,7 @@ Cron job (nightly). Resets `current_month_views = 0` and `last_view_reset = NOW(
 - Professional: UPDATE own (only `pro_response`, `pro_evidence_urls`, `pro_responded_at`)
 - Admins: UPDATE (to verify/reject)
 
-### `credit_transactions`
+### `subscriptions`
 - Professional: SELECT own
 - System only: INSERT (via service role from functions)
 - Admins: SELECT all
@@ -529,7 +525,7 @@ Provides: total users/professionals, Gold/Red/Grey counts, verification queue si
 | **ClamAV** | Virus scanning for file uploads |
 
 **Webhook flows:**
-- Stripe → `/api/webhooks/stripe` → add credit to `professionals.credit_balance`
+- Stripe → `/api/webhooks/stripe` → update `professionals.subscription_status`
 - Wave/Orange Money → `/api/webhooks/wave` → same
 - File upload → Supabase Edge Function → ClamAV scan
 
@@ -547,17 +543,16 @@ Provides: total users/professionals, Gold/Red/Grey counts, verification queue si
 - Public name-lookup search
 
 ### Phase 2 — Advertisement System (Weeks 3–4)
-- CPM credit system: `credit_transactions`, `profile_views`, `profile_interactions`
+- Subscription system: `subscriptions`, `profile_views`, `profile_interactions`
 - Function: `track_profile_view`
-- Trigger: `on_credit_depleted`
+- Trigger: `on_subscription_expired`
 - Stripe + Wave payment integration
 - Storage bucket: `portfolios`
-- Professional dashboard (credit, views, conversion)
+- Professional dashboard (subscription, views)
 
 ### Phase 3 — Scale & Automation (Month 2–3)
 - Materialized views + cron jobs
 - Function: `reset_monthly_views`
-- Auto-reload system
 - `verification-docs` bucket + verification badge flow
 - Edge Functions for async tasks (email, virus scan)
 - Analytics dashboard (admin)

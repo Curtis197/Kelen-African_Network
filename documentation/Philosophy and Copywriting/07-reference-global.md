@@ -112,15 +112,20 @@ La permanence des signaux est la règle la plus sensible à communiquer. Elle n'
 - Gratuit pour toujours
 - Ne peut pas être influencé par un paiement
 
-**Visibilité** (CPM, optionnel, indépendant)
-- Apparition dans les résultats de navigation
-- €5 / 1 000 vues
-- S'arrête quand le crédit est épuisé
+**Gratuit vs Abonnement** (indépendant du statut)
+*Gratuit :*
+- Recherche par nom exact (interne uniquement, non indexé Google)
+- 3 projets exposables au maximum
+
+*Abonnement (3000 FCFA / 15€ / mois) :*
+- Apparition illimitée dans les résultats de navigation
+- Pages profil indexables sur Google (SEO)
+- Projets illimités et vidéos
 - Ne change pas le statut
 - Ne change pas la position dans les résultats (hors option priorité)
 
 **La phrase à retenir :**
-> La visibilité s'achète. La réputation se construit.
+> La visibilité est un standard abordable. La réputation se prouve.
 
 ---
 

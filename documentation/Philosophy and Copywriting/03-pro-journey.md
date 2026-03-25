@@ -37,19 +37,18 @@
 
 ---
 
-### Écran 4 — La visibilité CPM
-
-> **Votre profil Kelen est gratuit. Votre visibilité dans les résultats, non.**
+### Écran 4 — L'Abonnement Visibilité
+  
+> **Votre profil Kelen est public, mais pour apparaître massivement dans les résultats de recherche, il faut être visible.**
 >
-> €5 pour 1 000 vues de profil.
-> Pas d'abonnement. Pas de commission sur vos projets.
-> Vous payez uniquement pour les vues réelles.
+> 3000 FCFA / 15€ par mois.
+> Un abonnement simple et transparent. Pas de commission sur vos projets.
 >
 > ---
 >
 > **L'arithmétique :**
 >
-> 1 000 vues = €5
+> 3000 FCFA par mois.
 > Un projet diaspora = €15 000 à €80 000 de chiffre d'affaires
 >
 > *Nous ne promettons pas de taux de conversion. L'arithmétique est la vôtre à faire.*
@@ -237,15 +236,15 @@ Votre statut actuel
 Actif sur Kelen depuis mars 2021 — 3 ans et 8 mois
 ```
 
-**Bloc visibilité :**
+**Bloc visibilité (Abonnement) :**
 ```
-Votre visibilité ce mois
+Statut de votre abonnement
 
-Solde actuel : 47,50 €          Vues restantes : ~9 500
+Statut : Actif                  Renouvellement : 24 Déc 2024
 Vues ce mois : 1 247            Contacts ce mois : 38
 Taux de contact : 3,1 %
 
-[Recharger mon compte]          [Voir les détails]
+[Gérer mon abonnement]          [Voir les détails]
 ```
 
 **Bloc actions en attente :**
@@ -348,93 +347,70 @@ Budget : 45 000 € · Livré dans les délais
 
 ---
 
-### Onglet Visibilité
+### Onglet Abonnement (Visibilité)
 
-**Titre :** Gérer votre visibilité
+**Titre :** Gérer votre abonnement
 
 **Introduction :**
-> Votre profil est visible dans les résultats de recherche tant que votre solde est positif. Vous payez uniquement pour les vues réelles de votre profil.
+> Votre profil est visible dans les résultats de recherche et listes de navigation tant que votre abonnement est actif. (3000 FCFA / 15€ par mois)
 
-**Bloc solde :**
+**Bloc Statut Abonnement :**
 ```
-Solde actuel
-47,50 €  (~9 500 vues restantes)
+Statut Actuel
+Actif (Jusqu'au 24 Décembre 2024)
 
-Recharger
-
-○ 20 € — 4 000 vues
-○ 50 € — 10 000 vues
-○ 100 € — 20 000 vues
-○ Montant personnalisé [    ] €
-
-[Recharger maintenant →]
+[Gérer l'abonnement →]
 ```
 
-**Bloc plafond mensuel :**
+**Si aucun abonnement actif :**
 ```
-Plafond mensuel
-Votre profil est actuellement : Sans plafond
-
-Définir un plafond mensuel vous permet de contrôler
-votre dépense maximale. Les vues non utilisées ne sont
-pas déduites — seules les vues réelles le sont.
-
-[Définir un plafond mensuel]
-```
-
-**Si plafond actif :**
-```
-Plafond mensuel actif : 2 000 vues (10 €/mois maximum)
-
-Vues utilisées ce mois : 1 247 / 2 000
-Solde restant pour ce mois : 753 vues
-
-[Modifier le plafond]    [Supprimer le plafond]
-```
-
-**Bloc rechargement automatique :**
-```
-Rechargement automatique
+Statut Actuel
 Inactif
 
-Activez le rechargement automatique pour maintenir votre visibilité
-sans interruption. Votre compte sera rechargé automatiquement
-lorsque votre solde atteint le seuil que vous définissez.
+S'abonner pour 3000 FCFA / 15€ par mois.
+Sans engagement, annulez quand vous voulez.
 
-[Configurer le rechargement automatique]
+[S'abonner maintenant →]
 ```
 
-**Si actif :**
+**Bloc Options supplémentaires (Add-ons optionnels) :**
 ```
-Rechargement automatique actif
+Boosts de visibilité
 
-Seuil de déclenchement : 10 €
-Montant de rechargement : 50 €
-Méthode de paiement : Visa ···· 4242
+○ Badge Vérifié (Paiement unique) — 15000 FCFA / 25€ 
+○ Portfolio Premium (Mensuel) — +2000 FCFA / 3€ / mois
+○ Classement Prioritaire (Mensuel) — +5000 FCFA / 8€ / mois
 
-[Modifier]    [Désactiver]
+[Ajouter des options]
+```
+
+**Bloc Moyen de paiement :**
+```
+Méthode de paiement principale
+Visa ···· 4242
+
+[Modifier le moyen de paiement]
 ```
 
 ---
 
-### Onglet Transactions
+### Onglet Facturation
 
 **Titre :** Historique de vos transactions
 
 ```
 Décembre 2024
 
-04/12  Recharge          +50,00 €    Solde : 97,50 €
-04/12  Vues profil (×20)  -0,10 €    Solde : 97,40 €
-03/12  Vues profil (×47)  -0,24 €    Solde : 97,64 €
+24/11  Renouvellement Abonnement    -15,00 €    Payé (Visa *4242)
+24/10  Renouvellement Abonnement    -15,00 €    Payé (Visa *4242)
 ...
 
-Novembre 2024
-[Voir novembre →]
+Télécharger vos factures
+[Voir tout l'historique →]
 ```
 
 **Note :**
-> *Toutes les transactions sont enregistrées de façon permanente. En cas de question, contactez support@kelen.com en précisant votre identifiant de transaction.*
+> *Toutes les factures et reçus sont téléchargeables. En cas de question, contactez support@kelen.com en précisant votre numéro de facture.*
 
 ---
 
@@ -452,8 +428,8 @@ Notifications
 □ M'avertir lorsqu'une recommandation est soumise
 □ M'avertir lorsqu'une recommandation est disponible à lier
 □ M'avertir lorsqu'un signal est soumis me concernant
-□ M'avertir lorsque mon solde atteint 10 €
-□ M'avertir en cas de rechargement automatique effectué ou échoué
+□ M'avertir 5 jours avant le renouvellement de mon abonnement
+□ M'avertir en cas d'échec de renouvellement d'abonnement
 □ M'envoyer un résumé mensuel de mes statistiques
 
 Méthodes de paiement
@@ -652,14 +628,14 @@ Description (optionnel)
 ### Section Portfolio
 
 **Note :**
-> Votre portfolio est visible sur votre profil public uniquement si vous avez du crédit actif.
+> La version gratuite vous permet d'ajouter un maximum de 3 projets. Passez à l'abonnement pour ajouter un nombre illimité de projets et débloquer le téléchargement de vidéos.
 
 ```
 Photos de projets
 [Zone de dépôt + aperçu des photos existantes]
 JPG, PNG — maximum 5 Mo par photo.
 
-Vidéos (optionnel)
+Vidéos (Réservé aux abonnés)
 [Zone de dépôt]
 MP4 — maximum 50 Mo par vidéo.
 ```
@@ -693,63 +669,63 @@ Les modifications sont prises en compte immédiatement.
 
 ---
 
-## Page Tarifs
+## Page Tarifs et Abonnement
 
 ### Principe en 3 lignes
 
-> Pas d'abonnement. €5 pour 1 000 vues. Crédit épuisé = profil retiré des résultats.
-> Rechargez quand vous voulez.
+> Un abonnement mensuel simple de 3000 FCFA / 15€.
+> Visibilité illimitée dans les résultats de recherche.
+> Sans engagement : annulez quand vous voulez.
 
 ---
 
-### Qu'est-ce qu'une vue ?
+### Qu'est-ce que l'abonnement inclut ?
 
-> Une vue = un utilisateur qui ouvre votre fiche complète.
-> Pas votre nom dans une liste. Un utilisateur qui a cliqué pour vous voir.
+> Vues illimitées : Votre profil apparaît pour tous les professionnels dans l'annuaire.
+> Indexation Google : Votre profil devient indexable sur Google, maximisant votre SEO.
+> Projets illimités : Exposez un nombre illimité de projets (contre 3 maximum dans la version gratuite).
+> Vidéos de projets : Ajoutez des vidéos pour présenter votre travail aux clients en haute fidélité.
 >
-> Ces personnes cherchent activement un professionnel pour un projet en Afrique.
+> L'abonnement vous maintient dans les résultats actifs de Kelen.
 
 ---
 
 ### Calcul concret
 
 ```
-€5 = 1 000 vues
+3000 FCFA / 15€ par mois.
 
-Si 1 % contactent → 10 contacts
-Si 1 % deviennent des projets → 1 projet
+Même avec 1 projet généré sur toute l'année :
+Un projet diaspora = €15 000 à €80 000 de chiffre d'affaires
 
-1 000 vues. 1 projet. €5.
+Abonnement annuel : 36 000 FCFA / 180€
 ```
 
-> *Nous ne promettons pas ces taux. L'arithmétique est la vôtre à faire.*
+> *Un tarif accessible conçu pour que la rentabilité soit évidente.*
 
 ---
 
-### Ce que le crédit ne change pas
+### Ce que l'abonnement ne change pas
 
-> - Pas votre statut
-> - Pas votre position dans les résultats (classement = pertinence, expérience, proximité)
+> - Pas votre statut (la Liste Or ne s'achète pas)
 > - Pas la suppression d'un signal
-> - Pas l'amélioration de votre réputation
+> - Pas l'amélioration de votre réputation brute (basée sur les faits)
 
 ---
 
 ### La phrase clé
 
-> **La visibilité s'achète. La réputation se construit.**
+> **La visibilité est un standard abordable. La réputation se prouve.**
 
 ---
 
 ### Pour qui
 
 > Kelen est fait pour vous si :
-> - Vous avez un historique de projets
-> - Vous voulez contrôler vos dépenses
-> - Vous souhaitez tester avec un petit budget
-> - Vous comprenez que la conversion dépend de vous
+> - Vous avez un historique de projets et êtes prêt à être vu
+> - Vous voulez une dépense fixe, sans surprise
+> - Vous comprenez que la plateforme vous apporte des prospects, la conversion dépend de vous
 >
 > Kelen n'est pas fait pour vous si :
-> - Vous cherchez une garantie de résultat
-> - Vous n'avez pas encore de projets vérifiés
+> - Vous cherchez une garantie de résultat miracle
 > - Vous êtes sur la Liste Rouge

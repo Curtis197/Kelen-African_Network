@@ -8,7 +8,7 @@ const NAV_ITEMS = [
   { href: "/pro/profil", label: "Mon profil", icon: "👤" },
   { href: "/pro/recommandations", label: "Recommandations", icon: "✓" },
   { href: "/pro/signal", label: "Signaux", icon: "⚠" },
-  { href: "/pro/credit", label: "Crédits & Visibilité", icon: "💰" },
+  { href: "/pro/abonnement", label: "Abonnement & Visibilité", icon: "💎" },
   { href: "/pro/analytique", label: "Analytique", icon: "📈" },
 ];
 

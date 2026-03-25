@@ -12,7 +12,7 @@
 |---|---|
 | Composant client (`'use client'`) | Edge Functions via `fetch`, Supabase client (SELECT/INSERT/UPDATE selon RLS) |
 | Server Action / Route Handler | Edge Functions, Supabase avec service role, SQL functions via `supabase.rpc()` |
-| Jamais depuis le client | `track_profile_view`, `compute_professional_status`, `credit_transactions` INSERT |
+| Jamais depuis le client | `track_profile_view`, `compute_professional_status`, `subscriptions` INSERT |
 
 ---
 
@@ -22,15 +22,15 @@ Base URL : `https://<project-ref>.supabase.co/functions/v1/`
 
 ---
 
-### `process-payment`
+### `process-subscription`
 
-**Quand l'appeler :** Quand le professionnel soumet le formulaire d'achat de crédit (`/pro/credit`)
+**Quand l'appeler :** Quand le professionnel s'abonne ou change de forfait (`/pro/abonnement`)
 **Qui peut l'appeler :** `professional` (JWT requis)
 **Depuis :** Server Action ou Route Handler Next.js
 
 **Appel :**
 ```typescript
-const response = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/process-payment`, {
+const response = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/process-subscription`, {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -38,9 +38,9 @@ const response = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/
   },
   body: JSON.stringify({
     professional_id: 'uuid',
-    amount_eur: 50.00,
-    payment_method: 'stripe', // 'stripe' | 'wave' | 'orange_money'
-    currency: 'EUR',          // 'EUR' | 'XOF'
+    plan: 'premium',          // 'free' | 'premium'
+    payment_method: 'stripe',  // 'stripe' | 'wave' | 'orange_money'
+    currency: 'EUR',           // 'EUR' | 'XOF'
   }),
 })
 const data = await response.json()
@@ -56,7 +56,7 @@ const data = await response.json()
 }
 ```
 
-**Après paiement :** L'utilisateur est redirigé vers `/pro/credit?success=true` ou `/pro/credit?error=true`. Le crédit est crédité automatiquement par webhook — ne pas créditer manuellement côté frontend.
+**Après paiement :** L'utilisateur est redirigé vers `/pro/abonnement?success=true`. Le statut est mis à jour par webhook.
 
 ---
 
@@ -95,7 +95,7 @@ const { data, error } = await supabase.rpc('track_profile_view', {
 
 **Retour :**
 ```typescript
-boolean // true = vue comptabilisée, false = crédit épuisé ou plafond mensuel atteint
+boolean // true = vue comptabilisée, false = abonnement expiré ou plafond mensuel atteint
 ```
 
 ---
@@ -111,7 +111,7 @@ Ces événements se produisent automatiquement après tes écritures en base. Tu
 | Admin met `recommendations.verified = TRUE` | → Statut recalculé, notifications envoyées |
 | Admin met `signals.verified = TRUE` | → Statut recalculé (Rouge/Noir), notifications urgentes |
 | INSERT ou UPDATE dans `reviews` | → Statut recalculé (avg_rating, pct) |
-| `professionals.credit_balance` tombe à 0 | → `is_active = FALSE`, email envoyé au pro |
+| L'abonnement expire | → `subscription_status = 'expired'`, email envoyé au pro |
 
 ---
 
@@ -133,12 +133,12 @@ const { data } = await supabase
 
 **Mode B — Browse (découverte CPM)**
 ```typescript
-// Uniquement les profils visibles (crédit actif) et non-black
+// Uniquement les profils visibles (abonnement actif) et non-black
 const { data } = await supabase
   .from('professionals')
   .select('id, slug, business_name, owner_name, city, country, category, status, recommendation_count, avg_rating, review_count')
   .eq('is_visible', true)
-  .neq('status', 'black')
+  .neq('subscription_status', 'expired')
   .eq('category', category)        // filtre optionnel
   .in('status', ['gold', 'silver']) // filtre optionnel "Or et Argent uniquement"
   .order('status', { ascending: false }) // gold avant silver avant white
@@ -319,7 +319,7 @@ const professionalId = profile.professional.id
 // Données du profil avec métriques (realtime)
 const { data: pro } = await supabase
   .from('professionals')
-  .select('status, recommendation_count, signal_count, avg_rating, positive_review_pct, review_count, credit_balance, total_views, current_month_views, is_visible, auto_reload_enabled, auto_reload_threshold, auto_reload_amount')
+  .select('status, recommendation_count, signal_count, avg_rating, positive_review_pct, review_count, subscription_plan, subscription_status, subscription_expires_at, total_views, current_month_views, is_visible')
   .eq('user_id', session.user.id)
   .single()
 
@@ -331,26 +331,24 @@ const { data: pendingLink } = await supabase
   .eq('verified', true)
   .eq('linked', false)
 
-// Transactions récentes
+// Transactions d'abonnement récentes
 const { data: transactions } = await supabase
-  .from('credit_transactions')
-  .select('id, type, amount, balance_after, description, created_at')
+  .from('subscriptions')
+  .select('id, plan, amount, expires_at, created_at')
   .eq('professional_id', professionalId)
   .order('created_at', { ascending: false })
   .limit(10)
 ```
 
-**Realtime (solde crédit) :**
-```typescript
 const channel = supabase
-  .channel('pro-credit')
+  .channel('pro-subscription')
   .on('postgres_changes', {
     event: 'UPDATE',
     schema: 'public',
     table: 'professionals',
     filter: `id=eq.${professionalId}`,
   }, (payload) => {
-    setCreditBalance(payload.new.credit_balance)
+    setSubscriptionStatus(payload.new.subscription_status)
     setIsVisible(payload.new.is_visible)
   })
   .subscribe()

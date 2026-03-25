@@ -13,6 +13,8 @@ export type TransactionType = "purchase" | "deduction" | "refund" | "adjustment"
 export type PaymentMethod = "stripe" | "wave" | "orange_money";
 export type InteractionType = "contact_click" | "phone_click" | "whatsapp_click" | "email_click";
 export type ViewSource = "search" | "browse" | "category" | "direct";
+export type SubscriptionPlan = "free" | "premium";
+export type SubscriptionStatus = "active" | "expired" | "canceled" | "past_due";
 
 // --- Tables ---
 
@@ -57,15 +59,13 @@ export interface Professional {
   avg_rating: number | null;
   positive_review_pct: number | null;
   review_count: number;
-  // CPM advertisement
-  credit_balance: number;
+  // Subscription & Visibility
+  subscription_plan: SubscriptionPlan;
+  subscription_status: SubscriptionStatus;
+  subscription_expires_at: string | null;
   total_views: number;
-  monthly_view_cap: number | null;
   current_month_views: number;
   last_view_reset: string | null;
-  auto_reload_enabled: boolean;
-  auto_reload_amount: number | null;
-  auto_reload_threshold: number | null;
   // Verification
   verified: boolean;
   verification_documents: string[] | null;
@@ -155,18 +155,18 @@ export interface Review {
   updated_at: string;
 }
 
-export interface CreditTransaction {
+export interface Subscription {
   id: string;
   professional_id: string;
-  type: TransactionType;
+  plan: SubscriptionPlan;
+  status: SubscriptionStatus;
   amount: number;
-  balance_after: number;
-  description: string;
+  currency: "EUR" | "XOF";
   payment_method: PaymentMethod | null;
   payment_id: string | null;
-  currency: "EUR" | "XOF" | null;
+  starts_at: string;
+  expires_at: string;
   created_at: string;
-  ip_address: string | null;
 }
 
 export interface ProfileView {

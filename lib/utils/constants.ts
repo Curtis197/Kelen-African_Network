@@ -108,17 +108,27 @@ export const STATUS_CONFIG = {
   },
 } as const;
 
-// CPM pricing
-export const CPM_RATE = 5; // €5 per 1,000 views
-export const COST_PER_VIEW = 0.005; // €0.005 per view
+// Abonnement pricing
+export const SUBSCRIPTION_MONTHLY_FCFA = 3000;
+export const SUBSCRIPTION_MONTHLY_EUR = 15;
 
-// Credit reload options
-export const CREDIT_OPTIONS = [
-  { amount: 10, views: 2000 },
-  { amount: 20, views: 4000 },
-  { amount: 50, views: 10000 },
-  { amount: 100, views: 20000 },
-] as const;
+// Tier Features
+export const TIER_FEATURES = {
+  free: {
+    label: "Version Gratuite",
+    maxProjects: 3,
+    isIndexable: false,
+    hasVideo: false,
+    price: 0,
+  },
+  premium: {
+    label: "Abonnement Premium",
+    maxProjects: Infinity,
+    isIndexable: true,
+    hasVideo: true,
+    price: 3000,
+  },
+} as const;
 
 // File upload constraints
 export const FILE_LIMITS = {

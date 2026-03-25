@@ -269,7 +269,7 @@
 
 ---
 
-### Crédits — Premier statut Or atteint
+### Abonnement — Premier statut Or atteint
 
 **Objet :** Votre profil est désormais sur la Liste Or
 
@@ -283,87 +283,84 @@
 >
 > *Ce statut n'est pas permanent — il évolue avec votre historique.*
 >
-> [Activer ma visibilité →]
+> [Gérer mon abonnement →]
 >
 > L'équipe Kelen
 
 ---
 
-### Crédits — Solde bas
+### Abonnement — Renouvellement imminent
 
-**Objet :** Votre solde Kelen est bas
+**Objet :** Votre abonnement Kelen se renouvelle bientôt
 
 > Bonjour [Prénom],
 >
-> Votre solde est de [X] €. À ce rythme, votre visibilité prendra fin dans environ [Y] jours.
+> Votre abonnement mensuel se renouvelle dans 5 jours.
 >
-> Votre statut et votre historique resteront intacts si votre solde atteint zéro. Seule votre apparition dans les résultats de navigation sera suspendue.
+> Votre visibilité restera active sans interruption si le prélèvement réussit. Dans le cas contraire, votre apparition dans les résultats de navigation sera suspendue, sans impacter votre statut.
 >
-> [Recharger mon compte →]
+> [Gérer mon abonnement →]
 >
 > L'équipe Kelen
 
 ---
 
-### Crédits — Solde épuisé
+### Abonnement — Expiré
 
 **Objet :** Votre visibilité sur Kelen a pris fin
 
 > Bonjour [Prénom],
 >
-> Votre solde est à zéro. Votre profil n'apparaît plus dans les résultats de navigation.
+> Votre abonnement est expiré. Votre profil n'apparaît plus dans les résultats de navigation.
 >
 > Votre statut [Liste Or / Liste Argent] et l'ensemble de votre historique restent intacts. Votre profil reste consultable par recherche de votre nom exact.
 >
-> Pour reprendre votre visibilité, rechargez votre compte.
+> Pour reprendre votre visibilité, réactivez votre abonnement.
 >
-> [Recharger mon compte →]
+> [Réactiver mon abonnement →]
 >
 > L'équipe Kelen
 
 ---
 
-### Rechargement automatique — Réussi
+### Renouvellement d'abonnement — Réussi
 
-**Objet :** Rechargement automatique effectué — solde mis à jour
+**Objet :** Abonnement renouvelé avec succès
 
 > Bonjour [Prénom],
 >
-> Votre solde a atteint le seuil de déclenchement que vous avez défini. Un rechargement automatique a été effectué.
+> Votre abonnement mensuel à Kelen a été renouvelé avec succès.
 >
 > **Détails de la transaction :**
-> Montant rechargé : [X] €
-> Nouveau solde : [Y] €
-> Vues disponibles : ~[Z]
+> Montant prélevé : 3000 FCFA / 15 €
+> Prochain renouvellement : [Date]
 > Méthode de paiement : [type] ···· [4 derniers chiffres]
 >
 > Votre profil reste visible sans interruption.
 >
-> [Voir mon tableau de bord →]
+> [Télécharger la facture →]
 >
-> Si vous souhaitez modifier ou désactiver le rechargement automatique, rendez-vous dans vos paramètres.
+> Si vous souhaitez modifier votre abonnement, rendez-vous dans vos paramètres de facturation.
 >
 > L'équipe Kelen
 
 ---
 
-### Rechargement automatique — Échoué
+### Renouvellement d'abonnement — Échoué
 
-**Objet :** Rechargement automatique échoué — action requise
+**Objet :** Échec du renouvellement de votre abonnement — action requise
 
 > Bonjour [Prénom],
 >
-> Votre solde a atteint le seuil de déclenchement mais le rechargement automatique a échoué.
+> Le renouvellement de votre abonnement mensuel a échoué.
 >
 > **Motif :** Paiement refusé par votre établissement bancaire.
 >
-> **Conséquence :** Si votre solde atteint zéro avant que vous rechargiez manuellement, votre profil sera retiré des résultats de navigation.
+> **Conséquence :** Votre profil vient d'être retiré des résultats de navigation. Rassurez-vous, votre statut et votre historique restent intacts.
 >
-> **Action requise :** Rechargez votre compte manuellement ou mettez à jour votre méthode de paiement.
+> **Action requise :** Mettez à jour votre méthode de paiement pour réactiver votre visibilité.
 >
-> [Recharger mon compte →]        [Mettre à jour mon paiement →]
->
-> Le rechargement automatique a été temporairement désactivé. Vous pouvez le réactiver depuis vos paramètres.
+> [Mettre à jour mon paiement →]
 >
 > L'équipe Kelen
 
@@ -388,8 +385,8 @@
 > Recommandations vérifiées : [N]
 > Signaux : 0
 >
-> **Solde actuel**
-> [€] — ~[X] vues restantes
+> **Abonnement**
+> Statut : Actif / Inactif
 >
 > [Accéder à mon tableau de bord →]
 >
@@ -414,21 +411,21 @@ Les notifications in-app sont courtes — une ligne maximum. Elles dirigent vers
 ● 2 recommandations disponibles à lier
   [Voir →]
 
-● Votre solde est bas : 8,50 €
-  [Recharger →]
+● Votre abonnement se renouvelle dans 5 jours
+  [Voir mes paramètres →]
 
-● Votre visibilité a pris fin — solde épuisé
-  [Recharger →]
+● Votre visibilité a pris fin — abonnement expiré
+  [Réactiver →]
 
 ● Un signal a été soumis concernant votre profil
   Délai de réponse : 7 jours
   [Répondre →]
 
-● Rechargement automatique effectué : +50 €
-  [Voir les détails →]
+● Abonnement renouvelé avec succès
+  [Télécharger la facture →]
 
-● Rechargement automatique échoué — action requise
-  [Voir →]
+● Échec du renouvellement — action requise pour rester visible
+  [Mettre à jour mon paiement →]
 ```
 
 ---

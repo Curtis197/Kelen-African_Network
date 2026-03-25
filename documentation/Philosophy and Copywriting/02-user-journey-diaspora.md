@@ -110,7 +110,7 @@ Amadou Kouadio · Construction résidentielle · Abidjan, Côte d'Ivoire
 🟡 Liste Or
 7 projets vérifiés · 0 manquement · Sur Kelen depuis mars 2021
 
-[Contacter] (visible uniquement si le professionnel a du crédit actif)
+[Contacter] (visible uniquement si le professionnel a un abonnement actif)
 ```
 
 ---
@@ -170,14 +170,14 @@ sérieuse tout au long du projet."
 
 ### Bloc contact
 
-**Si crédit actif :**
+**Si abonnement actif :**
 ```
 📞 +225 XX XX XX XX
 💬 WhatsApp
 ✉ contact@kouadio-construction.ci
 ```
 
-**Si pas de crédit actif :**
+**Si pas d'abonnement actif :**
 > Ce professionnel n'est pas en recherche active de clients via Kelen.
 > Si vous le connaissez déjà, contactez-le directement.
 

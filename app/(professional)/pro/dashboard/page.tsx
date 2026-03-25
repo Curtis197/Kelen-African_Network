@@ -16,7 +16,7 @@ const DEMO_PRO = {
   avg_rating: 4.8,
   review_count: 12,
   monthly_views: 342,
-  credits_remaining: 15000,
+  subscription_status: "Premium",
 };
 
 const DEMO_PENDING = [
@@ -84,9 +84,9 @@ export default function ProDashboardPage() {
           </p>
         </div>
         <div className="rounded-xl border border-border bg-white p-5">
-          <p className="text-sm text-muted-foreground">Crédits restants</p>
-          <p className="mt-1 text-2xl font-bold text-foreground">
-            {(DEMO_PRO.credits_remaining / 1000).toFixed(0)}k
+          <p className="text-sm text-muted-foreground">Abonnement</p>
+          <p className="mt-1 text-2xl font-bold text-kelen-green-600">
+            {DEMO_PRO.subscription_status}
           </p>
         </div>
       </div>

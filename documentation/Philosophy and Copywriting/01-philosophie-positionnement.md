@@ -36,11 +36,12 @@ Toute personne peut rechercher un professionnel par son nom exact et voir son hi
 
 La validation ne s'achète pas. Ne se supprime pas. Ne se dilue pas.
 
-### Visibilité (CPM, optionnel, indépendant)
+### Visibilité (Gratuit vs Abonnement)
 
-Les professionnels paient pour apparaître dans les résultats de recherche et de navigation — €5 pour 1 000 vues de profil. Ni abonnement, ni commission. Uniquement la visibilité réelle.
+**Profil Gratuit :** Recherche par nom exact (visibilité interne), limite de 3 projets affichés.
+**Profil Abonnement (3000 FCFA / 15€ par mois) :** Apparition dans les annuaires et résultats de navigation, pages indexables sur Google (SEO), nombre de projets illimité, vidéos de projets. Ni paiement à l'acte, ni commission.
 
-**La visibilité n'influence jamais le statut. Le statut n'influence jamais la visibilité dans les résultats — uniquement la confiance de l'utilisateur.**
+**L'abonnement n'influence jamais le statut. Le statut n'influence jamais la visibilité dans les résultats — uniquement la confiance de l'utilisateur.**
 
 ---
 

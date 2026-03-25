@@ -370,7 +370,7 @@ Tableau de bord — [Date du jour]
 Plateforme
 
 Utilisateurs totaux : 4 382
-Professionnels actifs (solde > 0) : 312
+Abonnements actifs : 312
 Professionnels Liste Or : 187
 Professionnels Liste Argent : 94
 Professionnels Non classés : 198

@@ -83,7 +83,7 @@
 
 ### Pourquoi nous collectons ces données
 
-> **Fonctionnement de la plateforme** — Vérification des soumissions, gestion des profils, facturation des crédits de visibilité.
+> **Fonctionnement de la plateforme** — Vérification des soumissions, gestion des profils, facturation des abonnements de visibilité.
 >
 > **Communication** — Notifications transactionnelles liées à votre activité sur la plateforme. Aucun email marketing sans consentement explicite.
 >
@@ -199,7 +199,7 @@
 
 > Les vues de profil consommées ne sont pas remboursables.
 >
-> Les crédits non utilisés sont remboursables sur demande adressée à support@kelen.com.
+> Les abonnements peuvent être annulés à tout moment. Les mois facturés et entamés ne sont pas remboursables.
 >
 > Kelen ne garantit aucun résultat en termes de contacts, demandes de devis ou projets conclus.
 
@@ -232,7 +232,7 @@
 ---
 
 > **Question sur votre compte ou facturation**
-> Problème technique, question sur votre crédit, remboursement.
+> Problème technique, question sur votre abonnement, facturation.
 > support@kelen.com
 > *Délai de réponse : 3 jours ouvrés*
 

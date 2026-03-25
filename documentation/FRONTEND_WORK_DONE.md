@@ -16,7 +16,7 @@
 | `lib/supabase/types.ts` | Complete TypeScript types for all 10 database tables + 2 materialized views |
 | `lib/supabase/client.ts` | Browser Supabase client (`createBrowserClient`) |
 | `lib/supabase/server.ts` | Server Supabase client (`createServerClient` with cookies) |
-| `lib/utils/constants.ts` | Categories, countries, budget ranges, breach types, status config, nav links, CPM pricing |
+| `lib/utils/constants.ts` | Categories, countries, budget ranges, breach types, status config, nav links, subscription pricing |
 | `lib/utils/format.ts` | French locale formatters (dates, currency, ratings, country names, tenure) |
 | `lib/utils/validators.ts` | Zod schemas for all 8 forms with French error messages + type exports |
 
@@ -73,7 +73,7 @@
 | `/pro/profil` | `app/(professional)/pro/profil/page.tsx` | Edit profile — description, services, experience, WhatsApp |
 | `/pro/recommandations` | `app/(professional)/pro/recommandations/page.tsx` | View & link recommendations to profile |
 | `/pro/signal` | `app/(professional)/pro/signal/page.tsx` | View signals & respond (15-day deadline) |
-| `/pro/credit` | `app/(professional)/pro/credit/page.tsx` | Buy credits, view balance & history |
+| `/pro/abonnement` | `app/(professional)/pro/abonnement/page.tsx` | Manage subscription (3000 FCFA / 15€), view history |
 | `/pro/analytique` | `app/(professional)/pro/analytique/page.tsx` | Views chart, traffic sources, key metrics |
 
 ### Admin (4)

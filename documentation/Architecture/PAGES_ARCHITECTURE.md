@@ -38,7 +38,7 @@ app/
 │   ├── pro/profil/        → /pro/profil (edit)
 │   ├── pro/recommandations/ → /pro/recommandations (link flow)
 │   ├── pro/signal/        → /pro/signal (respond to signal)
-│   ├── pro/credit/        → /pro/credit (buy credit)
+│   ├── pro/abonnement/    → /pro/abonnement (manage subscription)
 │   └── pro/analytique/    → /pro/analytique
 │
 └── (admin)/               → Authenticated (role: admin)
@@ -87,7 +87,7 @@ app/
 **Key sections:**
 1. The opportunity (€47B sent to Africa annually)
 2. The Gold status (built, not bought)
-3. CPM pricing (€5/1,000 views — not a subscription)
+3. Abonnement Premium (€15/mois — visibilité illimitée)
 4. What the profile contains (verified only, not editable)
 5. The standard (one breach = permanent Red)
 6. CTA to register
@@ -107,9 +107,9 @@ app/
 
 **Key sections:**
 - System 1: Validation (free, permanent, evidence-based)
-- System 2: Advertisement (CPM, optional, independent of validation)
+- System 2: Advertisement (Subscription, optional, independent of validation)
 - Verification process timeline (submit → 2–5 days → decision)
-- Status rules (3 recommendations linked + 0 signals = Gold)
+- Status rules (5 recommendations linked + 0 signals = Gold)
 - What "linked" means (professional claims the recommendation)
 
 **Supabase calls:** None.
@@ -121,15 +121,14 @@ app/
 **User:** Professionals
 **Rendering:** SSG
 
-**Purpose:** Transparent CPM pricing with examples and arithmetic. No promises of conversion rates.
+**Purpose:** Transparent subscription pricing. No hidden fees.
 
 **Key sections:**
-- Base price: €5 / 1,000 views
-- Arithmetic example (1,000 views = €5 / one project = €15k–80k revenue)
-- Capping options (uncapped vs monthly budget cap)
-- Auto-reload explanation
+- Free Tier: Internal visibility (name search), 3 projects max.
+- Premium Tier: €15 (3000 FCFA) / month.
+- Unlimited project exposure, Google SEO indexability, video uploads.
 - Payment methods (Stripe for EUR, Wave/Orange Money for XOF)
-- No subscription, no listing fee, no commission
+- No commission on projects.
 
 **Supabase calls:** None.
 
@@ -154,7 +153,7 @@ app/
 - "Is checking a professional free?" → Yes, always.
 - "What counts toward Gold status?" → Verified + linked recommendations (minimum 3).
 - "What happens if I submit a false signal?" → Account suspension + legal liability.
-- "What payment methods are accepted for credit?" → Stripe (card, SEPA), Wave, Orange Money.
+- "Can I pay for my subscription with mobile money?" → Yes, Stripe (card), Wave, Orange Money.
 - "Is my data GDPR compliant?" → Yes, Frankfurt servers, data never sold.
 
 ---
@@ -189,8 +188,8 @@ app/
 
 **Mode B — Browse (Discovery):**
 - Filter: category + country/city
-- Only shows professionals with `is_visible = TRUE` (active credit) AND `status != 'black'`
-- Optional filters: Liste Or uniquement / Liste Or et Argent
+- Only shows professionals with `subscription_status = 'active'` (Premium) AND `status != 'black'`
+- Free profiles are searchable by name but only Premium profiles appear in Browse.
 - Cards show status badge, verified project count, avg rating
 
 **Supabase calls:**
@@ -207,6 +206,7 @@ SELECT id, business_name, slug, status, recommendation_count,
        category, city, portfolio_photos
 FROM professionals
 WHERE is_visible = TRUE
+  AND subscription_status = 'active'
   AND category = :category
   AND country = :country
   AND (:gold_only = FALSE OR status = 'gold')
@@ -224,7 +224,7 @@ LIMIT 20 OFFSET :offset
 **Rendering:** SSR + ISR (revalidate on status change)
 **SEO priority:** Maximum — this is the page people share and link to
 
-**Purpose:** The professional's permanent public record. Shows everything verifiable. Contact info and portfolio only visible if `is_visible = TRUE`.
+**Purpose:** The professional's permanent public record. Shows everything verifiable. Contact info and portfolio only visible if `subscription_status = 'active'`.
 
 **Page sections:**
 
@@ -236,10 +236,11 @@ LIMIT 20 OFFSET :offset
 - Verified signals list (breach type, description, timeline deviation, professional response if any)
 - Public reviews (rating + comment, newest first, hidden reviews excluded)
 
-**Only visible if `is_visible = TRUE` (pro has active credit):**
+**Only visible if Premium (active subscription):**
 - Phone number, WhatsApp link, email
-- Portfolio photos / videos
+- Portfolio photos / videos (Unlimited)
 - Full business description
+- SEO Indexability for search engines
 
 **Liste Rouge special display:**
 - Alert banner: "Ce professionnel est sur Liste Rouge. Un manquement contractuel documenté a été vérifié."
@@ -264,7 +265,7 @@ LEFT JOIN recommendations r ON r.professional_id = p.id AND r.verified = TRUE
 LEFT JOIN signals s ON s.professional_id = p.id AND s.verified = TRUE
 WHERE p.slug = :slug
 
--- If is_visible = TRUE, also track the view:
+-- Also track the view (for analytics only, no cost deduction):
 SELECT track_profile_view(:professional_id, :viewer_ip, :country, :source, :query)
 ```
 
@@ -448,17 +449,17 @@ INSERT INTO signals (
 ### 5.1 Professional Dashboard — `/pro/dashboard`
 
 **User:** Authenticated (role: professional)
-**Rendering:** SSR + Realtime (credit balance)
+**Rendering:** SSR + Realtime (subscription status)
 
-**Purpose:** Central hub. Credit balance is prominent. Pending recommendations to link. Analytics summary.
+**Purpose:** Central hub. Subscription status is prominent. Pending recommendations to link. Analytics summary.
 
 **Sections:**
 
-**Credit block (real-time via Supabase Realtime):**
-- Current balance (€XX.XX)
-- Views remaining estimate (balance / 0.005)
+**Subscription block (real-time via Supabase Realtime):**
+- Current status (Premium / Free)
+- Expiry date (if Premium)
 - Visibility status (Active / Inactive)
-- "Ajouter du crédit" button
+- "Gérer mon abonnement" button
 
 **Pending recommendations to link:**
 - Cards for verified recommendations not yet linked
@@ -480,7 +481,7 @@ SELECT * FROM professionals WHERE user_id = auth.uid()
 SELECT * FROM recommendations WHERE professional_id = :id AND verified = TRUE AND linked = FALSE
 SELECT * FROM signals WHERE professional_id = :id AND status = 'pending'
 SELECT * FROM professional_analytics_view WHERE professional_id = :id
--- Realtime: subscribe to professionals.credit_balance
+-- Realtime: subscribe to professionals.subscription_status
 ```
 
 ---
@@ -564,37 +565,32 @@ AND professional_id = :id
 
 ---
 
-### 5.5 Buy Credit — `/pro/credit`
+### 5.5 Subscription Management — `/pro/abonnement`
 
 **User:** Authenticated (role: professional)
-**Rendering:** Client (payment flow)
+**Rendering:** Client (subscription flow)
 
-**Purpose:** Purchase credit to activate/maintain visibility.
+**Purpose:** Manage subscription plan and billing.
 
 **Sections:**
-- Current balance display
-- Amount selector (€10 / €20 / €50 / €100 / custom)
-- Views estimate (selected amount / 0.005 = X views)
-- Monthly cap option (set or remove limit)
-- Auto-reload toggle + threshold + amount
-- Payment method: Stripe (card, SEPA) or Wave/Orange Money (detected by country)
-- Transaction history (last 10)
+- Plan comparison (Free vs Premium)
+- Current status display
+- "Passer à Premium" or "Gérer mon abonnement" CTA
+- Billing history (last 10 invoices)
+- Payment method setup (Stripe, Wave, Orange Money)
 
 **Supabase calls:**
 ```
 -- Read:
-SELECT credit_balance, auto_reload_enabled, auto_reload_amount,
-       auto_reload_threshold, monthly_view_cap
+SELECT subscription_plan, subscription_status, subscription_expires_at
 FROM professionals WHERE user_id = auth.uid()
 
-SELECT * FROM credit_transactions
+SELECT * FROM subscriptions
 WHERE professional_id = :id
 ORDER BY created_at DESC LIMIT 10
 
 -- After successful Stripe/Wave webhook:
--- (handled server-side, not client-side)
-UPDATE professionals SET credit_balance = credit_balance + :amount, is_active = TRUE
-INSERT INTO credit_transactions (type='purchase', amount, balance_after, payment_method, payment_id)
+-- (handled server-side via process-subscription Edge Function)
 ```
 
 ---
@@ -611,7 +607,7 @@ INSERT INTO credit_transactions (type='purchase', amount, balance_after, payment
 - Top viewer countries (bar chart)
 - Top traffic sources (pie: search / browse / category / direct)
 - Top search queries that led to profile
-- Credit spend over time
+- Credit spend history (Legacy - hidden if balance is 0)
 
 **Supabase calls:**
 ```

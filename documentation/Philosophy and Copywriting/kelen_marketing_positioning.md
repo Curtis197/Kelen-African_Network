@@ -147,7 +147,7 @@ Si un concurrent sérieux existait dans cet espace, il serait connu pour être p
 ### Pourquoi ce vide existe — la slow monetization hypothesis
 La raison principale n'est pas que personne n'a vu le problème. C'est que le modèle économique ne correspond pas aux attentes des investisseurs traditionnels.
 
-Un marketplace prend une commission sur chaque transaction — revenus immédiats et scalables. Un registre de confiance construit de la valeur lentement, les effets réseau prennent du temps, et le modèle CPM publicitaire ne devient significatif qu'avec un trafic mature. Aucun VC ne veut attendre 4 ans pour voir les unit economics se stabiliser. Le marché est donc ignoré par défaut, pas par manque d'opportunité.
+Un marketplace prend une commission sur chaque transaction — revenus immédiats et scalables. Un registre de confiance construit de la valeur lentement, les effets réseau prennent du temps, et le modèle par abonnement ne devient significatif qu'avec une masse critique de professionnels proactifs. Aucun VC ne veut attendre 4 ans pour voir les unit economics se stabiliser. Le marché est donc ignoré par défaut, pas par manque d'opportunité.
 
 ### Pseudo-concurrents existants et leurs limites
 

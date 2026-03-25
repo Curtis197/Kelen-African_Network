@@ -63,100 +63,45 @@ This is not a review platform. This is a **professional accountability system** 
 
 ---
 
-## The CPM (Cost Per Mille) Model
+## The Subscription Model (Abonnement)
 
-**Professionals pay €5 per 1000 profile views**
+**Professionals pay a flat fee of 3000 FCFA / 15€ per month.**
 
-Not subscription. Not monthly fee. **Pay only for actual visibility.**
+It is a simple, predictable subscription model.
 
 ### How It Works:
 
-1. **Professional adds credit to account:**
-   ```
-   Deposit €50 → Buy 10,000 profile views
-   Deposit €100 → Buy 20,000 profile views
-   Deposit €500 → Buy 100,000 profile views
-   ```
-
-2. **Set your cap (optional):**
-   ```
-   Option A: UNCAPPED
-   - Profile stays visible until credit runs out
-   - Views consume credit automatically
-   - When balance hits zero → removed from discovery
-   - Can auto-reload to stay visible
+1. **Professional subscribes:**
+   - Pays 3000 FCFA / 15€ for 30 days of visibility.
+   - Profile appears in discovery for anyone browsing the platform.
    
-   Option B: CAPPED (e.g., 5,000 views/month)
-   - Profile visible up to cap
-   - After 5,000 views → removed from discovery until next month
-   - Unused credit rolls over
-   - Protects from burning through budget too fast
-   ```
+2. **Profile appears in discovery:**
+   - User searches: "Construction contractors in Abidjan"
+   - Pros with an active subscription appear in results.
+   - Unlimited profile views and contacts during the active period.
 
-3. **Profile appears in discovery:**
-   ```
-   User searches: "Construction contractors in Abidjan"
-   → Pros with active credit appear in results
-   → Each profile view = €0.005 deducted from pro's balance
-   → 1000 views = €5 deducted
-   ```
-
-4. **When credit depletes:**
-   ```
-   Balance reaches zero →
-   - Profile REMOVED from discovery/browse
-   - Still VISIBLE if someone searches exact name (validation)
-   - Pro gets notification: "Credit depleted, add funds to stay visible"
-   - Can reload immediately to resume discovery
-   ```
+3. **When subscription expires:**
+   - Profile REMOVED from discovery/browse.
+   - Still VISIBLE if someone searches exact name (validation).
+   - Pro gets notification to renew to stay visible.
 
 ---
 
-## Why CPM Instead of Subscription
+## Why Subscription
 
 ### For Professionals:
 
-**Subscription problems:**
-- Pay €5/month even if 0 views
-- Pay €15/month even if only 500 views
-- Can't control spend
-- Feels like waste if not converting
+**Subscription advantages:**
+- ✅ Fixed, predictable cost (3000 FCFA / 15€).
+- ✅ No need to constantly monitor a "credit balance".
+- ✅ Unlimited potential ROI - one fixed price regardless of how many views you get.
+- ✅ Simple to understand and budget for.
 
-**CPM advantages:**
-- ✅ Pay ONLY for actual visibility
-- ✅ Track exact ROI (€5 per 1000 views)
-- ✅ Cap spending if needed
-- ✅ Scale spending when converting well
-- ✅ Pause anytime without "canceling subscription"
-
-**Example economics for a Gold-status pro:**
-
-```
-Scenario: Construction contractor in Abidjan
-
-Monthly visibility:
-- 2,000 profile views = €10/month
-- 5% click contact button = 100 contacts
-- 2% convert to project = 2 new projects
-- Average project value = €15,000
-- Total new revenue = €30,000
-
-Cost: €10
-Revenue: €30,000
-ROI: 3000x
-
-Even at 0.1% conversion:
-- 2 contacts → maybe 1 project after 6 months
-- €15,000 revenue
-- €10 cost
-- ROI: 1500x
-```
-
-**At €5 CPM, if your profile is visible to qualified diaspora, you're profitable even at tiny conversion rates.**
+**At 3000 FCFA / 15€ per month, if your profile is visible to qualified diaspora, you're profitable even with just one project a year.**
 
 ---
 
-## The Filtering Effect (Why €5 CPM Works)
+## The Filtering Effect (Why 3000 FCFA / 15€ Works)
 
 **Not random impressions:**
 
@@ -170,118 +115,55 @@ Views come ONLY from:
 - High budget (diaspora sending life savings)
 - Pre-filtered (only see Gold-status if they want safety)
 
-**Comparison to other advertising:**
+**A pro would need to be completely incompetent to not convert projects from this highly qualified traffic.**
 
-```
-Google Ads (construction keywords):
-- €2-5 per CLICK (not view)
-- Random traffic (some just researching)
-- Low conversion (<1%)
-
-Facebook Ads (diaspora targeting):
-- €10-20 CPM
-- General awareness (not high intent)
-- Very low conversion (<0.5%)
-
-Kelen:
-- €5 per 1000 VIEWS (not clicks)
-- Pre-qualified (actively searching for contractors)
-- Higher conversion (3-5% likely)
-```
-
-**A pro would need to be completely incompetent to not convert 5 projects per year from 10,000 views.**
-
-10,000 views = €50 cost
-Even 1 project = €15,000+ revenue
-ROI = 300x minimum
+1 month subscription = 3000 FCFA / 15€ cost
+Even 1 project = HUGE revenue
+ROI = Massive
 
 ---
 
-## Pricing Tiers (Optional Add-Ons)
+## Free vs Premium Subscription (Abonnement)
 
-**Base:** €5 CPM (pay per view)
+**Profil Gratuit (Free Version):**
+- Visibilité interne uniquement (recherche par nom exact)
+- 3 projets exposables maximum sur le profil public
+- Non indexable sur Google
 
-**Add-ons professionals can buy:**
+**Profil Payant (Abonnement Mensuel) - 3000 FCFA / 15€:**
+- Visibilité illimitée dans l'annuaire Kelen et la recherche
+- Pages profil indexables sur Google (SEO public pages)
+- Exposition illimitée des projets
+- Possibilité d'insérer des vidéos de projet
+
+**Optional Add-ons professionals can buy:**
 
 ```
-PRIORITY RANKING (+€2 CPM = €7 total):
+PRIORITY RANKING (+1000 FCFA / 5€ / month):
 - Appear higher in search results
-- Get views faster
 - Worth it for competitive categories
 
-PORTFOLIO SHOWCASE (+€1 CPM = €6 total):
-- Unlimited photos (vs 10 on base)
-- Video walkthroughs
-- Project timeline displays
-- Worth it if your work is visually impressive
-
-ANALYTICS PRO (+€50 one-time):
-- See viewer countries
-- See search terms that found you
-- Track contact button clicks
-- Conversion funnel
-- Worth it once you're spending €100+/month
-
-VERIFICATION BADGE (+€100 one-time):
+VERIFICATION BADGE (+20000 FCFA / 100€ one-time):
 - Kelen staff verify business registration
 - In-person or video verification
 - "Verified Business" badge
 - Worth it for premium positioning
 ```
 
-**But core model stays:** €5 CPM, pay only for views, no subscription.
+**But core model stays:** Free base with a 3000 FCFA / 15€ monthly subscription for scaling visibility.
 
 ---
 
-## Capping Strategy (Pro's Choice)
-
-### Uncapped (Recommended for Gold-status pros):
-```
-Strategy: "Let it run until credit depletes"
-
-Advantages:
-- Maximize visibility
-- Never miss opportunities
-- Scale naturally with demand
-
-Risk management:
-- Set auto-reload at €20 remaining
-- Monitor daily (first month)
-- Adjust if burning too fast
-```
-
-### Capped (For budget control):
-```
-Strategy: "Max 2,000 views per month = €10/month"
-
-Advantages:
-- Predictable spending
-- Can't accidentally overspend
-- Good for testing
-
-Disadvantages:
-- Miss opportunities if cap hit early
-- Seasonal demand variations hurt you
-```
-
-**Most Gold pros will run uncapped** because conversion rate is so high that running out of views = leaving money on table.
-
----
-
-## What Happens When You Run Out
+## What Happens When Your Subscription Expires
 
 ```
-Credit balance: €0.05 (10 views remaining)
-↓
-Next 10 profile views
-↓
-Balance: €0.00
+Subscription expires (End of 30 days)
 ↓
 INSTANT EFFECT:
 - Profile removed from "Construction contractors Abidjan" browse
 - Profile removed from search suggestions
 - Profile removed from category listings
-- Email: "Your visibility has ended. Add €20 to resume?"
+- Email: "Your visibility has ended. Renew your subscription to resume?"
 
 BUT VALIDATION STILL WORKS:
 - Someone searches your exact name → still finds you
@@ -290,12 +172,9 @@ BUT VALIDATION STILL WORKS:
 - Your signals → still visible (if any)
 
 TO RESUME DISCOVERY:
-- Add credit (€20, €50, €100)
+- Renew subscription (3000 FCFA / 15€)
 - Profile goes live immediately
-- Views resume counting
 ```
-
-**No subscription to cancel. No monthly commitment. Just: credit in = visible, credit out = invisible.**
 
 ---
 
@@ -305,31 +184,25 @@ TO RESUME DISCOVERY:
 Conservative Year 1 Projection:
 
 500 active pros
-Average spend: €20/month (4,000 views each)
+Subscription: 15€/month
 ↓
-500 × €20 = €10,000/month revenue
-€120,000/year
+500 × 15€ = 7,500€/month revenue
+90,000€/year
 
 Optimistic Year 1:
 2,000 active pros  
-Average spend: €30/month (6,000 views each)
+Subscription: 15€/month
 ↓
-2,000 × €30 = €60,000/month revenue
-€720,000/year
+2,000 × 15€ = 30,000€/month revenue
+360,000€/year
 
 Year 2-3 (scale):
 10,000 active pros
-Average spend: €50/month
+Subscription: 15€/month
 ↓
-€500,000/month revenue
-€6M/year
+150,000€/month revenue
+1.8M€/year
 ```
-
-**Why pros will spend more over time:**
-- Initial test: €10-20/month
-- See conversion: increase to €50-100/month
-- Competition increases: some go €200+/month
-- Geographic expansion: serve multiple cities
 
 ---
 
@@ -337,23 +210,21 @@ Average spend: €50/month
 
 ### Gold-status pros:
 - WANT visibility (it converts)
-- Happy to pay €5 CPM (profitable)
-- Increase spend as they convert
-- Platform makes money when they make money
+- Happy to pay 15€ (highly profitable)
+- Platform makes predictable recurring revenue
 
 ### Red-status pros:
 - DON'T want visibility (exposes signals)
-- Won't pay (would hurt them)
+- Won't subscribe (would hurt them)
 - Self-select out
 - Platform doesn't make money from bad actors
 
 ### Grey-status pros:
-- MIGHT pay small amounts to test
+- MIGHT subscribe to bootstrap reputation
 - Build recommendations organically
-- Graduate to Gold → then spend more
-- Healthy growth path
+- Graduate to Gold
 
-**The CPM model naturally filters quality without any editorial control.**
+**The subscription model naturally filters quality without any editorial control.**
 
 ---
 
