@@ -57,6 +57,8 @@ export default function ProDocumentsPage() {
     setIsUploading(true);
     // Simulate upload for now (Storage integration pending)
     const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
     const { data: pro } = await supabase
       .from("professionals")
       .select("id")

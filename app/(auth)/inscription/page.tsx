@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { RegisterForm } from "@/components/forms/RegisterForm";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Inscription — Kelen",
   description:

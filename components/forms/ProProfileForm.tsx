@@ -144,7 +144,7 @@ export function ProProfileForm() {
           placeholder="Décrivez votre expertise, votre parcours et ce qui vous distingue..."
         />
         {errors.description && (
-          <p className="mt-1.5 text-xs font-medium text-kelen-red-500">{errors.description.message}</p>
+          <p className="mt-1.5 text-xs font-medium text-kelen-red-500">{errors.description.message?.toString()}</p>
         )}
         <div className="mt-2 flex justify-end">
           <span className={`text-[10px] font-bold uppercase tracking-widest ${

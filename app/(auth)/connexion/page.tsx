@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LoginForm } from "@/components/forms/LoginForm";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Connexion — Kelen",
   description: "Connectez-vous à votre compte Kelen.",

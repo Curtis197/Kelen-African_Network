@@ -168,7 +168,7 @@ export function RegisterForm() {
               className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors placeholder:text-muted-foreground focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
             />
             {errors.first_name && (
-              <p className="mt-1 text-xs text-kelen-red-500">{errors.first_name.message}</p>
+              <p className="mt-1 text-xs text-kelen-red-500">{errors.first_name.message?.toString()}</p>
             )}
           </div>
           <div>
@@ -183,7 +183,7 @@ export function RegisterForm() {
               className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors placeholder:text-muted-foreground focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
             />
             {errors.last_name && (
-              <p className="mt-1 text-xs text-kelen-red-500">{errors.last_name.message}</p>
+              <p className="mt-1 text-xs text-kelen-red-500">{errors.last_name.message?.toString()}</p>
             )}
           </div>
         </div>
@@ -202,7 +202,7 @@ export function RegisterForm() {
             placeholder="vous@exemple.com"
           />
           {errors.email && (
-            <p className="mt-1 text-xs text-kelen-red-500">{errors.email.message}</p>
+            <p className="mt-1 text-xs text-kelen-red-500">{errors.email.message?.toString()}</p>
           )}
         </div>
 
@@ -220,7 +220,7 @@ export function RegisterForm() {
             placeholder="8 caractères minimum"
           />
           {errors.password && (
-            <p className="mt-1 text-xs text-kelen-red-500">{errors.password.message}</p>
+            <p className="mt-1 text-xs text-kelen-red-500">{errors.password.message?.toString()}</p>
           )}
         </div>
 
@@ -242,7 +242,7 @@ export function RegisterForm() {
             ))}
           </select>
           {errors.country && (
-            <p className="mt-1 text-xs text-kelen-red-500">{errors.country.message}</p>
+            <p className="mt-1 text-xs text-kelen-red-500">{errors.country.message?.toString()}</p>
           )}
         </div>
 
@@ -264,9 +264,9 @@ export function RegisterForm() {
                 placeholder="Ex: Cabinet d&apos;avocats, Atelier XYZ, Boutique..."
                 className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors placeholder:text-muted-foreground focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
               />
-              {errors.business_name && (
-                <p className="mt-1 text-xs text-kelen-red-500">{errors.business_name.message}</p>
-              )}
+               {errors.business_name && (
+                 <p className="mt-1 text-xs text-kelen-red-500">{errors.business_name.message?.toString()}</p>
+               )}
             </div>
 
             {/* Category + City */}
@@ -287,9 +287,9 @@ export function RegisterForm() {
                     </option>
                   ))}
                 </select>
-                {errors.category && (
-                  <p className="mt-1 text-xs text-kelen-red-500">{errors.category.message}</p>
-                )}
+                 {errors.category && (
+                   <p className="mt-1 text-xs text-kelen-red-500">{errors.category.message?.toString()}</p>
+                 )}
               </div>
               <div>
                 <label htmlFor="city" className="mb-1.5 block text-sm font-medium text-foreground">
@@ -302,9 +302,9 @@ export function RegisterForm() {
                   className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors placeholder:text-muted-foreground focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
                   placeholder="Abidjan, Dakar..."
                 />
-                {errors.city && (
-                  <p className="mt-1 text-xs text-kelen-red-500">{errors.city.message}</p>
-                )}
+                 {errors.city && (
+                   <p className="mt-1 text-xs text-kelen-red-500">{errors.city.message?.toString()}</p>
+                 )}
               </div>
             </div>
 
@@ -320,9 +320,9 @@ export function RegisterForm() {
                 className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors placeholder:text-muted-foreground focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
                 placeholder="+225 07 00 00 00"
               />
-              {errors.phone && (
-                <p className="mt-1 text-xs text-kelen-red-500">{errors.phone.message}</p>
-              )}
+               {errors.phone && (
+                 <p className="mt-1 text-xs text-kelen-red-500">{errors.phone.message?.toString()}</p>
+               )}
             </div>
 
             {/* Pro checkboxes */}
@@ -338,9 +338,9 @@ export function RegisterForm() {
                   d&apos;un signalement vérifié sur mon profil public.
                 </span>
               </label>
-              {errors.signal_understood && (
-                <p className="text-xs text-kelen-red-500">{errors.signal_understood.message}</p>
-              )}
+               {errors.signal_understood && (
+                 <p className="text-xs text-kelen-red-500">{errors.signal_understood.message?.toString()}</p>
+               )}
 
               <label className="flex items-start gap-2">
                 <input
@@ -356,9 +356,9 @@ export function RegisterForm() {
                   .
                 </span>
               </label>
-              {errors.privacy_accepted && (
-                <p className="text-xs text-kelen-red-500">{errors.privacy_accepted.message}</p>
-              )}
+               {errors.privacy_accepted && (
+                 <p className="text-xs text-kelen-red-500">{errors.privacy_accepted.message?.toString()}</p>
+               )}
             </div>
           </>
         )}
@@ -378,9 +378,9 @@ export function RegisterForm() {
             .
           </span>
         </label>
-        {errors.terms_accepted && (
-          <p className="text-xs text-kelen-red-500">{errors.terms_accepted.message}</p>
-        )}
+         {errors.terms_accepted && (
+           <p className="text-xs text-kelen-red-500">{errors.terms_accepted.message?.toString()}</p>
+         )}
 
         {/* Submit */}
         <button
