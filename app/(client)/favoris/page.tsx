@@ -1,143 +1,191 @@
-import Link from 'next/link';
+"use client";
 
-export default function Page() {
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { createClient } from "@/lib/supabase/client";
+
+interface Favorite {
+  id: string;
+  professional_id: string;
+  professionals: {
+    id: string;
+    business_name: string;
+    category: string;
+    city: string;
+    country: string;
+    slug: string;
+    status: string;
+    portfolio_photos: string[] | null;
+  };
+}
+
+export default function FavoritesPage() {
+  const [favorites, setFavorites] = useState<Favorite[]>([]);
+  const [search, setSearch] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const supabase = createClient();
+
+  useEffect(() => {
+    fetchFavorites();
+  }, []);
+
+  const fetchFavorites = async () => {
+    setIsLoading(true);
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const { data, error } = await supabase
+      .from("user_favorites")
+      .select("*, professionals(*)")
+      .eq("user_id", user.id);
+
+    if (error) {
+      console.error("Error fetching favorites:", error);
+    } else {
+      setFavorites((data as any[]) || []);
+    }
+    setIsLoading(false);
+  };
+
+  const removeFavorite = async (id: string) => {
+    const { error } = await supabase.from("user_favorites").delete().eq("id", id);
+    if (!error) {
+      setFavorites((prev) => prev.filter((f) => f.id !== id));
+    }
+  };
+
+  const filteredFavorites = favorites.filter((f) => {
+    const pro = f.professionals;
+    const term = search.toLowerCase();
+    return (
+      pro.business_name.toLowerCase().includes(term) ||
+      pro.category.toLowerCase().includes(term)
+    );
+  });
+
   return (
-    <main className="min-h-screen pt-12 pb-24 px-6 md:px-8">
-      
-<div className="max-w-6xl mx-auto">
+    <main className="min-h-screen pt-12 pb-24 px-4 md:px-8">
+      <div className="max-w-6xl mx-auto">
+        <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+          <div>
+            <nav className="flex items-center gap-2 text-stone-400 text-xs font-semibold uppercase tracking-widest mb-3">
+              <span>Plateforme</span>
+              <span className="text-stone-300">/</span>
+              <span className="text-kelen-green-600">Favoris</span>
+            </nav>
+            <h1 className="text-3xl md:text-5xl font-extrabold text-stone-900 tracking-tight mb-2">
+              Professionnels sauvegardés
+            </h1>
+            <p className="text-stone-500 max-w-lg">
+              Gérez votre réseau de confiance et suivez l&apos;avancement de vos collaborations prioritaires.
+            </p>
+          </div>
 
-<header className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-<div>
-<nav className="flex items-center gap-2 text-outline text-xs font-semibold uppercase tracking-widest mb-3">
-<span>Platforme</span>
-<span className="material-symbols-outlined text-sm">chevron_right</span>
-<span className="text-primary">Favoris</span>
-</nav>
-<h1 className="text-4xl md:text-5xl font-extrabold text-on-surface tracking-tight mb-2">Professionnels sauvegardés</h1>
-<p className="text-on-surface-variant max-w-lg">Gérez votre réseau de confiance et suivez l'avancement de vos collaborations prioritaires.</p>
-</div>
+          <div className="relative w-full md:w-80 group">
+            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-stone-400 group-focus-within:text-kelen-green-600 transition-colors">
+              <span className="material-symbols-outlined text-xl">search</span>
+            </div>
+            <input
+              className="w-full pl-12 pr-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-kelen-green-500/20 focus:bg-white transition-all placeholder:text-stone-400 text-sm"
+              placeholder="Rechercher par nom ou métier..."
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+        </header>
 
-<div className="relative w-full md:w-80 group">
-<div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-outline group-focus-within:text-primary transition-colors">
-<span className="material-symbols-outlined">search</span>
-</div>
-<input className="w-full pl-12 pr-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all placeholder:text-outline/60 text-sm" placeholder="Rechercher par nom ou métier..." type="text"/>
-</div>
-</header>
+        {isLoading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="h-80 rounded-2xl bg-stone-100 animate-pulse" />
+            ))}
+          </div>
+        ) : filteredFavorites.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredFavorites.map((fav) => {
+              const pro = fav.professionals;
+              return (
+                <article
+                  key={fav.id}
+                  className="group relative bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-stone-200/50"
+                >
+                  <button
+                    onClick={() => removeFavorite(fav.id)}
+                    className="absolute top-4 right-4 z-10 p-2 bg-white/80 backdrop-blur-sm rounded-full text-kelen-red-500 hover:scale-110 active:scale-95 transition-all shadow-sm border border-stone-100"
+                    title="Retirer des favoris"
+                  >
+                    <span className="material-symbols-outlined fill-current">favorite</span>
+                  </button>
+                  <Link href={`/pro/${pro.slug}`} className="block">
+                    <div className="mb-4 aspect-video rounded-xl overflow-hidden bg-stone-100">
+                      <img
+                        alt={pro.business_name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        src={pro.portfolio_photos?.[0] || "https://images.unsplash.com/photo-1541888946425-d81bb19480c5?auto=format&fit=crop&q=80"}
+                      />
+                    </div>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className={`px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full ${
+                          pro.status === 'gold' ? 'bg-amber-100 text-amber-700' : 
+                          pro.status === 'silver' ? 'bg-slate-100 text-slate-700' :
+                          'bg-stone-100 text-stone-600'
+                        }`}>
+                          {pro.status === 'gold' ? 'Or Certifié' : pro.status === 'silver' ? 'Argent' : 'Vérifié'}
+                        </span>
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-bold text-stone-900 leading-tight group-hover:text-kelen-green-600 transition-colors">
+                          {pro.business_name}
+                        </h3>
+                        <p className="text-kelen-green-600 text-sm font-semibold">
+                          {pro.category}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2 text-stone-500 text-sm border-t border-stone-100 pt-4">
+                        <span className="material-symbols-outlined text-base">location_on</span>
+                        <span>{pro.city}, {pro.country}</span>
+                      </div>
+                    </div>
+                  </Link>
+                </article>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center py-24 text-center">
+            <div className="w-48 h-48 mb-8 bg-stone-50 rounded-full flex items-center justify-center">
+              <span className="material-symbols-outlined text-7xl text-stone-300">person_search</span>
+            </div>
+            <h2 className="text-2xl font-bold text-stone-900 mb-2">
+              {search ? "Aucun résultat trouvé" : "Aucun favori pour le moment"}
+            </h2>
+            <p className="text-stone-500 mb-8 max-w-sm mx-auto">
+              {search ? "Essayez d'autres mots-clés." : "Commencez par explorer nos professionnels certifiés pour bâtir votre équipe de projet."}
+            </p>
+            <Link
+              className="px-8 py-3 bg-kelen-green-500 text-white rounded-xl font-bold shadow-lg shadow-kelen-green-500/20 hover:bg-kelen-green-600 transition-all active:scale-95"
+              href="/recherche"
+            >
+              Découvrir des professionnels
+            </Link>
+          </div>
+        )}
 
-<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-
-<article className="group relative bg-surface-container-lowest rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-outline-variant/10">
-<button className="absolute top-4 right-4 z-10 p-2 bg-surface-container-low/50 backdrop-blur-sm rounded-full text-error hover:scale-110 active:scale-95 transition-all">
-<span className="material-symbols-outlined" >favorite</span>
-</button>
-<div className="mb-4 aspect-video rounded-xl overflow-hidden bg-surface-container">
-<img alt="Construction project" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUFeImlLKa8sDDQwzOG5lzYrIpvH59O-f7RVYLTp8TkFWvuo09MeUGMrBzFhpHyU114N9H37Jy_KfhSLE0Q7z_2BtT_fPWHReCkhNScKZKvne4U6LQqh3ed5ua06zUZKpf37OI8MetxkJ5Ej5SqcU--z9BajhBOzJ_sA_fMkjwErNIeh-rAb-bOQj8K6fecaB2GIIW1jMG9yGWjGZjeTR0b-_mA9nnjpO_juk846PFHEZAqwyKkwlsM_KqQilPGjQFoPD_UbPTPjE"/>
-</div>
-<div className="space-y-3">
-<div className="flex items-center justify-between">
-<span className="px-3 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase tracking-wider rounded-full">Or Certifié</span>
-</div>
-<div>
-<h3 className="text-lg font-bold text-on-surface leading-tight">Kouassi Construction</h3>
-<p className="text-primary text-sm font-semibold">Gros Oeuvre &amp; Maçonnerie</p>
-</div>
-<div className="flex items-center gap-2 text-on-surface-variant text-sm border-t border-outline-variant/10 pt-4">
-<span className="material-symbols-outlined text-base">location_on</span>
-<span>Dakar, Sénégal</span>
-</div>
-</div>
-</article>
-
-<article className="group relative bg-surface-container-lowest rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-outline-variant/10">
-<button className="absolute top-4 right-4 z-10 p-2 bg-surface-container-low/50 backdrop-blur-sm rounded-full text-error hover:scale-110 active:scale-95 transition-all">
-<span className="material-symbols-outlined" >favorite</span>
-</button>
-<div className="mb-4 aspect-video rounded-xl overflow-hidden bg-surface-container">
-<img alt="Electrical services" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYbB9L57TUSbba-RTZ6ov4HbKuSQEyhS8eRonDMGUotGEoQP92h9NarbRRIARquc5vyH0fuvLjnXlXQ1jZkfhoYJtkwD5Z-tXkw-5c_V7GcWfTxyMOxI6Hh5Nx4bYzmpqNPN7cK-dTkGpFEb2mlCUPrCAGUfuuqBtuYJyH0zdchTn5y8YCMiyssbDcTvRlMSPkwApQ81VjVW8bhMehyVVEGSVEgEc6H4Vg1gA-xFI6sd44XiU-u8s_3gRdj6kjxsuTwF2sqexK7_M"/>
-</div>
-<div className="space-y-3">
-<div className="flex items-center justify-between">
-<span className="px-3 py-1 bg-surface-container-high text-on-surface-variant text-[10px] font-bold uppercase tracking-wider rounded-full">Argent</span>
-</div>
-<div>
-<h3 className="text-lg font-bold text-on-surface leading-tight">Diallo Énergie</h3>
-<p className="text-primary text-sm font-semibold">Installations Photovoltaïques</p>
-</div>
-<div className="flex items-center gap-2 text-on-surface-variant text-sm border-t border-outline-variant/10 pt-4">
-<span className="material-symbols-outlined text-base">location_on</span>
-<span>Abidjan, Côte d'Ivoire</span>
-</div>
-</div>
-</article>
-
-<article className="group relative bg-surface-container-lowest rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-outline-variant/10">
-<button className="absolute top-4 right-4 z-10 p-2 bg-surface-container-low/50 backdrop-blur-sm rounded-full text-error hover:scale-110 active:scale-95 transition-all">
-<span className="material-symbols-outlined" >favorite</span>
-</button>
-<div className="mb-4 aspect-video rounded-xl overflow-hidden bg-surface-container">
-<img alt="Architect desk" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-6We1IWjZJS40nNFqt3Xn0gYPdMNokOHA6oWI0ld46Nd3O5TTQETzPxJz4Sa4jTHiYpXVYbN2X_hi3UP0GDfVDUXALZ2ALhQkj6ccXjRGlq-QXIUun9upYiFZpOOcSbHaVl0bcNeOFSAKOE31JK3o3I1B4kbooO_fSniCj3MuyV95RBDXrT0SeZvRMfaVRxhSJYyAdpejhgK7ErsOh2aDks_jAHNVoL1P0zzOBAqAoJsodQZZiV6kM9Vha2e0mDJvt0U0vP6hMKY"/>
-</div>
-<div className="space-y-3">
-<div className="flex items-center justify-between">
-<span className="px-3 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase tracking-wider rounded-full">Or Certifié</span>
-</div>
-<div>
-<h3 className="text-lg font-bold text-on-surface leading-tight">Atelier Mensah</h3>
-<p className="text-primary text-sm font-semibold">Architecture &amp; Design Intérieur</p>
-</div>
-<div className="flex items-center gap-2 text-on-surface-variant text-sm border-t border-outline-variant/10 pt-4">
-<span className="material-symbols-outlined text-base">location_on</span>
-<span>Lomé, Togo</span>
-</div>
-</div>
-</article>
-
-<article className="group relative bg-surface-container-lowest rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-outline-variant/10">
-<button className="absolute top-4 right-4 z-10 p-2 bg-surface-container-low/50 backdrop-blur-sm rounded-full text-error hover:scale-110 active:scale-95 transition-all">
-<span className="material-symbols-outlined" >favorite</span>
-</button>
-<div className="mb-4 aspect-video rounded-xl overflow-hidden bg-surface-container">
-<img alt="Plumbing infrastructure" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLluHrTOMLKLJIy0jYywluqYqvW68VMpoJ8PkAaFC75wJt7JOtTNkYxdby6X0AwgLN502solgM0zFiA0BgviHgJtvZObCvtJ9Zw6e8PRe5x-ohayVGHvOgqCApwOl0bsii-n-dS4eZDL_AIbXiGGcg72nIrf9Ev-QfdzY-UYDd65kW2GHdU0Q2RMMtTPw23e1ziKXFxALnR-gHEdjgl4SigYQhaJ537od2Ju2a9Dsyg8yPH9dyODP2o0-DAJvUHMdei5oZhK7DNgg"/>
-</div>
-<div className="space-y-3">
-<div className="flex items-center justify-between">
-<span className="px-3 py-1 bg-surface-container-high text-on-surface-variant text-[10px] font-bold uppercase tracking-wider rounded-full">Vérifié</span>
-</div>
-<div>
-<h3 className="text-lg font-bold text-on-surface leading-tight">Gaye Plomberie Pro</h3>
-<p className="text-primary text-sm font-semibold">Génie Sanitaire</p>
-</div>
-<div className="flex items-center gap-2 text-on-surface-variant text-sm border-t border-outline-variant/10 pt-4">
-<span className="material-symbols-outlined text-base">location_on</span>
-<span>Saint-Louis, Sénégal</span>
-</div>
-</div>
-</article>
-</div>
-
-<div className="hidden flex flex-col items-center justify-center py-24 text-center">
-<div className="w-48 h-48 mb-8 bg-surface-container-low rounded-full flex items-center justify-center">
-<span className="material-symbols-outlined text-7xl text-outline-variant">person_search</span>
-</div>
-<h2 className="text-2xl font-bold text-on-surface mb-2">Aucun favori pour le moment</h2>
-<p className="text-on-surface-variant mb-8 max-w-sm mx-auto">Commencez par explorer nos professionnels certifiés pour bâtir votre équipe de projet.</p>
-<Link className="px-8 py-4 bg-primary text-white rounded-xl font-bold Manrope shadow-lg hover:shadow-primary/20 transition-all active:scale-95" href="/">
-                    Découvrir des professionnels
-                </Link>
-</div>
-
-<section className="mt-20 p-8 bg-surface-container-low rounded-2xl flex flex-col md:flex-row items-center justify-between gap-8 border border-outline-variant/10">
-<div className="flex flex-col gap-2">
-<h4 className="text-xl font-bold Manrope text-on-surface">Besoin d'un expert spécifique ?</h4>
-<p className="text-on-surface-variant">Notre réseau s'agrandit chaque jour avec les meilleurs talents locaux.</p>
-</div>
-<button className="whitespace-nowrap px-6 py-3 bg-surface-container-lowest text-primary font-bold rounded-xl shadow-sm hover:bg-white transition-all border border-primary/10">
-                    Utiliser la recherche avancée
-                </button>
-</section>
-</div>
-
+        <section className="mt-20 p-8 bg-stone-50 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-8 border border-stone-200/50">
+          <div className="flex flex-col gap-1">
+            <h4 className="text-xl font-bold text-stone-900">Besoin d&apos;un expert spécifique ?</h4>
+            <p className="text-stone-500">Notre réseau s&apos;agrandit chaque jour avec les meilleurs talents locaux.</p>
+          </div>
+          <Link
+            href="/recherche"
+            className="whitespace-nowrap px-6 py-3 bg-white text-stone-700 font-bold rounded-xl shadow-sm hover:bg-stone-100 transition-all border border-stone-200"
+          >
+            Utiliser la recherche avancée
+          </Link>
+        </section>
+      </div>
     </main>
   );
 }

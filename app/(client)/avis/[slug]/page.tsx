@@ -1,16 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ReviewForm } from "@/components/forms/ReviewForm";
-
-// Demo data
-const DEMO_PRO = {
-  id: "demo-1",
-  slug: "kouadio-construction-abidjan",
-  business_name: "Kouadio Construction",
-  category: "Construction",
-  city: "Abidjan",
-  country: "Côte d'Ivoire",
-};
+import { createClient } from "@/lib/supabase/server";
 
 interface ReviewPageProps {
   params: Promise<{ slug: string }>;
@@ -20,21 +11,33 @@ export async function generateMetadata({
   params,
 }: ReviewPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const pro = slug === DEMO_PRO.slug ? DEMO_PRO : null;
+  const supabase = await createClient();
+  const { data: pro } = await supabase
+    .from("professionals")
+    .select("business_name")
+    .eq("slug", slug)
+    .single();
+
   return {
     title: pro
-      ? `Avis — ${pro.business_name} — Kelen`
+      ? `Laisser un avis — ${pro.business_name} — Kelen`
       : "Professionnel non trouvé — Kelen",
   };
 }
 
 export default async function ReviewPage({ params }: ReviewPageProps) {
   const { slug } = await params;
-  const pro = slug === DEMO_PRO.slug ? DEMO_PRO : null;
+  const supabase = await createClient();
+
+  const { data: pro } = await supabase
+    .from("professionals")
+    .select("id, business_name, category, city, country, slug")
+    .eq("slug", slug)
+    .single();
 
   if (!pro) {
     return (
-      <div className="mx-auto max-w-2xl py-12 text-center">
+      <div className="mx-auto max-w-2xl py-12 text-center px-4">
         <h1 className="text-2xl font-bold text-foreground">
           Professionnel non trouvé
         </h1>
@@ -52,10 +55,10 @@ export default async function ReviewPage({ params }: ReviewPageProps) {
   }
 
   return (
-    <div className="mx-auto max-w-lg">
+    <div className="mx-auto max-w-lg px-4 py-8">
       <Link
         href={`/pro/${pro.slug}`}
-        className="text-sm text-muted-foreground hover:text-foreground"
+        className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1"
       >
         ← Retour au profil
       </Link>
@@ -70,10 +73,11 @@ export default async function ReviewPage({ params }: ReviewPageProps) {
         </p>
       </div>
 
-      <div className="rounded-xl border border-border bg-white p-6">
+      <div className="rounded-xl border border-border bg-white p-6 shadow-sm">
         <ReviewForm
           professionalId={pro.id}
           professionalName={pro.business_name}
+          professionalSlug={pro.slug}
         />
       </div>
     </div>

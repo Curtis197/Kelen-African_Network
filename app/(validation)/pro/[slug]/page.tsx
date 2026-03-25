@@ -5,105 +5,7 @@ import { RecommendationCard } from "@/components/shared/RecommendationCard";
 import { SignalCard } from "@/components/shared/SignalCard";
 import { ReviewCard } from "@/components/shared/ReviewCard";
 import { formatTenure, formatRating, formatNumber } from "@/lib/utils/format";
-import type { ProfessionalStatus } from "@/lib/supabase/types";
-
-// Demo data — replaced by Supabase query on slug
-const DEMO_PRO = {
-  id: "demo-1",
-  slug: "kouadio-construction-abidjan",
-  business_name: "Kouadio Construction",
-  owner_name: "Moussa Kouadio",
-  category: "Construction",
-  city: "Abidjan",
-  country: "Côte d'Ivoire",
-  status: "gold" as ProfessionalStatus,
-  recommendation_count: 7,
-  signal_count: 0,
-  avg_rating: 4.8,
-  positive_review_pct: 95,
-  review_count: 12,
-  is_visible: true,
-  verified: true,
-  created_at: "2021-03-15T00:00:00Z",
-  description:
-    "Construction résidentielle et rénovation à Abidjan depuis 2009. Spécialisé dans les projets de la diaspora.",
-  services_offered: ["Construction neuve", "Rénovation complète", "Extension", "Gros œuvre"],
-  phone: "+225 07 00 00 00",
-  whatsapp: "+225 07 00 00 00",
-  email: "contact@kouadio-construction.ci",
-  years_experience: 15,
-  team_size: 12,
-};
-
-const DEMO_RECOMMENDATIONS = [
-  {
-    id: "rec-1",
-    projectType: "Construction résidentielle",
-    projectDescription:
-      "Construction d'une villa R+1 de 4 chambres à Cocody. Travaux livrés dans les délais avec une qualité irréprochable. Communication constante tout au long du projet.",
-    completionDate: "2024-12-15",
-    budgetRange: "50k-100k" as const,
-    location: "Cocody, Abidjan",
-    submitterName: "Fatou D.",
-    submitterCountry: "FR",
-    photoUrls: [],
-    linked: true,
-  },
-  {
-    id: "rec-2",
-    projectType: "Rénovation",
-    projectDescription:
-      "Rénovation complète d'un appartement de 120m². Budget respecté, délai respecté. Équipe professionnelle et réactive.",
-    completionDate: "2024-08-20",
-    budgetRange: "25k-50k" as const,
-    location: "Plateau, Abidjan",
-    submitterName: "Amadou S.",
-    submitterCountry: "BE",
-    photoUrls: [],
-    linked: true,
-  },
-];
-
-const DEMO_SIGNALS: Array<{
-  id: string;
-  breachType: "timeline" | "budget" | "quality" | "abandonment" | "fraud";
-  breachDescription: string;
-  severity: "minor" | "major" | "critical";
-  agreedStartDate: string;
-  agreedEndDate: string;
-  timelineDeviation: string | null;
-  budgetDeviation: string | null;
-  proResponse: string | null;
-  proRespondedAt: string | null;
-  createdAt: string;
-}> = [];
-
-const DEMO_REVIEWS = [
-  {
-    id: "rev-1",
-    rating: 5,
-    comment: "Excellent travail. Je recommande vivement pour tout projet de construction à Abidjan.",
-    reviewerName: "Marie K.",
-    reviewerCountry: "FR",
-    createdAt: "2024-11-10T00:00:00Z",
-  },
-  {
-    id: "rev-2",
-    rating: 5,
-    comment: "Professionnel sérieux, respecte ses engagements.",
-    reviewerName: "Jean-Pierre M.",
-    reviewerCountry: "CH",
-    createdAt: "2024-09-05T00:00:00Z",
-  },
-  {
-    id: "rev-3",
-    rating: 4,
-    comment: null,
-    reviewerName: "Aïssata T.",
-    reviewerCountry: "FR",
-    createdAt: "2024-07-18T00:00:00Z",
-  },
-];
+import { createClient } from "@/lib/supabase/server";
 
 interface ProfilePageProps {
   params: Promise<{ slug: string }>;
@@ -113,9 +15,15 @@ export async function generateMetadata({
   params,
 }: ProfilePageProps): Promise<Metadata> {
   const { slug } = await params;
-  // TODO: Fetch from Supabase
-  const pro = DEMO_PRO;
-  if (slug !== pro.slug) {
+  const supabase = await createClient();
+  
+  const { data: pro } = await supabase
+    .from("professionals")
+    .select("business_name, recommendation_count")
+    .eq("slug", slug)
+    .single();
+
+  if (!pro) {
     return { title: "Professionnel non trouvé" };
   }
   return {
@@ -126,11 +34,16 @@ export async function generateMetadata({
 
 export default async function ProfilePage({ params }: ProfilePageProps) {
   const { slug } = await params;
+  const supabase = await createClient();
 
-  // TODO: Replace with Supabase query
-  const pro = slug === DEMO_PRO.slug ? DEMO_PRO : null;
+  // 1. Fetch Professional
+  const { data: pro, error: proError } = await supabase
+    .from("professionals")
+    .select("*")
+    .eq("slug", slug)
+    .single();
 
-  if (!pro) {
+  if (proError || !pro) {
     return (
       <div className="mx-auto max-w-3xl px-4 py-24 text-center sm:px-6">
         <h1 className="text-2xl font-bold text-foreground">
@@ -148,6 +61,30 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
       </div>
     );
   }
+
+  // 2. Fetch Verified Recommendations
+  const { data: recommendations } = await supabase
+    .from("recommendations")
+    .select("*")
+    .eq("professional_id", pro.id)
+    .eq("status", "verified")
+    .order("completion_date", { ascending: false });
+
+  // 3. Fetch Verified Signals
+  const { data: signals } = await supabase
+    .from("signals")
+    .select("*")
+    .eq("professional_id", pro.id)
+    .eq("status", "verified")
+    .order("created_at", { ascending: false });
+
+  // 4. Fetch Reviews
+  const { data: reviews } = await supabase
+    .from("reviews")
+    .select("*")
+    .eq("professional_id", pro.id)
+    .eq("is_hidden", false)
+    .order("created_at", { ascending: false });
 
   const isRed = pro.status === "red";
   const isBlack = pro.status === "black";
@@ -234,13 +171,24 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
           {/* Recommendations */}
           <section>
             <h2 className="text-xl font-semibold text-foreground">
-              Recommandations vérifiées ({DEMO_RECOMMENDATIONS.length})
+              Recommandations vérifiées ({recommendations?.length || 0})
             </h2>
             <div className="mt-4 space-y-4">
-              {DEMO_RECOMMENDATIONS.map((rec) => (
-                <RecommendationCard key={rec.id} {...rec} />
+              {recommendations?.map((rec: any) => (
+                <RecommendationCard
+                  key={rec.id}
+                  projectType={rec.project_type}
+                  projectDescription={rec.project_description}
+                  completionDate={rec.completion_date}
+                  budgetRange={rec.budget_range}
+                  location={rec.location}
+                  submitterName={rec.submitter_name}
+                  submitterCountry={rec.submitter_country}
+                  photoUrls={rec.photo_urls}
+                  linked={rec.linked}
+                />
               ))}
-              {DEMO_RECOMMENDATIONS.length === 0 && (
+              {(!recommendations || recommendations.length === 0) && (
                 <p className="text-sm text-muted-foreground">
                   Aucune recommandation vérifiée pour le moment.
                 </p>
@@ -249,14 +197,26 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
           </section>
 
           {/* Signals */}
-          {DEMO_SIGNALS.length > 0 && (
+          {(signals && signals.length > 0) && (
             <section>
               <h2 className="text-xl font-semibold text-foreground">
-                Signaux vérifiés ({DEMO_SIGNALS.length})
+                Signaux vérifiés ({signals.length})
               </h2>
               <div className="mt-4 space-y-4">
-                {DEMO_SIGNALS.map((sig) => (
-                  <SignalCard key={sig.id} {...sig} />
+                {signals.map((sig: any) => (
+                  <SignalCard
+                    key={sig.id}
+                    breachType={sig.breach_type}
+                    breachDescription={sig.breach_description}
+                    severity={sig.severity}
+                    agreedStartDate={sig.agreed_start_date}
+                    agreedEndDate={sig.agreed_end_date}
+                    timelineDeviation={sig.timeline_deviation}
+                    budgetDeviation={sig.budget_deviation}
+                    proResponse={sig.pro_response}
+                    proRespondedAt={sig.pro_responded_at}
+                    createdAt={sig.created_at}
+                  />
                 ))}
               </div>
             </section>
@@ -265,13 +225,20 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
           {/* Reviews */}
           <section>
             <h2 className="text-xl font-semibold text-foreground">
-              Avis ({DEMO_REVIEWS.length})
+              Avis ({reviews?.length || 0})
             </h2>
             <div className="mt-4 space-y-4">
-              {DEMO_REVIEWS.map((rev) => (
-                <ReviewCard key={rev.id} {...rev} />
+              {reviews?.map((rev: any) => (
+                <ReviewCard
+                  key={rev.id}
+                  rating={rev.rating}
+                  comment={rev.comment}
+                  reviewerName={rev.reviewer_name}
+                  reviewerCountry={rev.reviewer_country}
+                  createdAt={rev.created_at}
+                />
               ))}
-              {DEMO_REVIEWS.length === 0 && (
+              {(!reviews || reviews.length === 0) && (
                 <p className="text-sm text-muted-foreground">
                   Aucun avis pour le moment.
                 </p>
@@ -335,7 +302,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                     Services
                   </p>
                   <div className="mt-2 flex flex-wrap gap-2">
-                    {pro.services_offered.map((service) => (
+                    {pro.services_offered.map((service: string) => (
                       <span
                         key={service}
                         className="rounded-full bg-muted px-3 py-1 text-xs text-foreground/70"

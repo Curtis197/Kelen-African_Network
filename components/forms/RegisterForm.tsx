@@ -4,6 +4,9 @@ import { useState } from "react";
 import { UserRole } from "@/lib/supabase/types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
+import { slugify } from "@/lib/utils/format";
 import {
   registerUserSchema,
   registerProfessionalSchema,
@@ -18,6 +21,8 @@ export function RegisterForm() {
   const [mode, setMode] = useState<RegisterMode>("client");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+  const supabase = createClient();
 
   const schema = mode === "client" ? registerUserSchema : registerProfessionalSchema;
 
@@ -26,7 +31,7 @@ export function RegisterForm() {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<RegisterProfessionalFormData>({
+  } = useForm<any>({
     resolver: zodResolver(schema),
   });
 
@@ -42,27 +47,71 @@ export function RegisterForm() {
     return "pro_intl";
   };
 
-  const onSubmit = async (data: RegisterUserFormData | RegisterProfessionalFormData) => {
+  const onSubmit = async (data: any) => {
     setIsLoading(true);
     setError(null);
 
     try {
-      // TODO: Replace with Supabase auth
-      // const { error } = await supabase.auth.signUp({
-      //   email: data.email,
-      //   password: data.password,
-      //   options: { data: { first_name: data.first_name, last_name: data.last_name, ... } }
-      // });
-      // Then insert into users/professionals table
-      // router.push('/dashboard');
+      // 1. Sign up with Supabase Auth
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
+        options: {
+          data: {
+            first_name: data.first_name,
+            last_name: data.last_name,
+          },
+        },
+      });
 
-      const finalRole = mode === "client" ? "client" : getProRole(data.country);
-      console.log("Register attempt:", data.email, finalRole);
+      if (authError) throw authError;
 
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setError("Inscription Supabase non configurée. Backend en cours de développement.");
-    } catch {
-      setError("Une erreur est survenue. Veuillez réessayer.");
+      if (authData.user) {
+        const finalRole = mode === "client" ? "client" : getProRole(data.country);
+        const displayName = `${data.first_name} ${data.last_name}`;
+
+        // 2. Create record in public.users table
+        const { error: userError } = await supabase.from("users").insert({
+          id: authData.user.id,
+          email: data.email,
+          display_name: displayName,
+          role: finalRole,
+          country: data.country,
+          phone: data.phone || null,
+        });
+
+        if (userError) throw userError;
+
+        // 3. If professional, create record in public.professionals table
+        if (mode === "professional") {
+          const proData = data as RegisterProfessionalFormData;
+          const { error: proError } = await supabase.from("professionals").insert({
+            user_id: authData.user.id,
+            business_name: proData.business_name,
+            owner_name: displayName,
+            slug: `${slugify(proData.business_name)}-${Math.random().toString(36).substring(2, 7)}`,
+            category: proData.category,
+            country: proData.country,
+            city: proData.city,
+            phone: proData.phone,
+            email: proData.email,
+          });
+
+          if (proError) throw proError;
+        }
+
+        // 4. Redirect based on mode
+        if (mode === "professional") {
+          router.push("/pro/dashboard");
+        } else {
+          router.push("/dashboard");
+        }
+        
+        router.refresh();
+      }
+    } catch (err: any) {
+      console.error("Registration error:", err);
+      setError(err.message || "Une erreur est survenue. Veuillez réessayer.");
     } finally {
       setIsLoading(false);
     }

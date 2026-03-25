@@ -1,126 +1,214 @@
-import type { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Signaux — Kelen Pro",
+import { useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
+
+interface Signal {
+  id: string;
+  breach_type: "timeline" | "budget" | "quality" | "abandonment" | "fraud";
+  severity: "minor" | "major" | "critical";
+  breach_description: string;
+  submitter_name: string;
+  created_at: string;
+  status: "pending" | "verified" | "rejected" | "disputed";
+  pro_response: string | null;
+  pro_responded_at: string | null;
+}
+
+const BREACH_LABELS: Record<string, string> = {
+  timeline: "Retard de livraison",
+  budget: "Dépassement budgétaire",
+  quality: "Défaut de qualité",
+  abandonment: "Abandon de chantier",
+  fraud: "Suspicion de fraude",
 };
 
-// Demo data
-const DEMO_SIGNALS = [
-  {
-    id: "sig-1",
-    breach_type: "timeline",
-    breach_label: "Non-respect des délais",
-    severity: "minor",
-    submitter_name: "Anonyme",
-    created_at: "2025-02-08T00:00:00Z",
-    status: "pending_response" as const,
-    response_deadline: "2025-02-23T00:00:00Z",
-    pro_response: null,
-  },
-];
+const SEVERITY_COLORS: Record<string, string> = {
+  minor: "bg-blue-100 text-blue-700",
+  major: "bg-amber-100 text-amber-700",
+  critical: "bg-red-100 text-red-700",
+};
 
 export default function ProSignalsPage() {
+  const [signals, setSignals] = useState<Signal[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [responseInput, setResponseInput] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState<string | null>(null);
+  const supabase = createClient();
+
+  useEffect(() => {
+    fetchSignals();
+  }, []);
+
+  const fetchSignals = async () => {
+    setIsLoading(true);
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const { data: pro } = await supabase
+      .from("professionals")
+      .select("id")
+      .eq("user_id", user.id)
+      .single();
+
+    if (pro) {
+      const { data, error } = await supabase
+        .from("signals")
+        .select("*")
+        .eq("professional_id", pro.id)
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("Error fetching signals:", error);
+      } else {
+        setSignals((data as Signal[]) || []);
+      }
+    }
+    setIsLoading(false);
+  };
+
+  const submitResponse = async (id: string) => {
+    const response = responseInput[id];
+    if (!response?.trim()) return;
+
+    setIsSubmitting(id);
+    const { error } = await supabase
+      .from("signals")
+      .update({
+        pro_response: response,
+        pro_responded_at: new Date().toISOString(),
+        status: "disputed" // Assuming responding disputes the signal
+      })
+      .eq("id", id);
+
+    if (!error) {
+      setSignals((prev) => 
+        prev.map((s) => s.id === id ? { ...s, pro_response: response, status: "disputed" } : s)
+      );
+    }
+    setIsSubmitting(null);
+  };
+
   return (
-    <div>
-      <h1 className="text-2xl font-bold text-foreground">Signaux</h1>
-      <p className="mt-1 text-muted-foreground">
-        Consultez et répondez aux signaux déposés sur votre profil.
-      </p>
+    <main className="max-w-4xl">
+      <header className="mb-8">
+        <h1 className="text-3xl font-extrabold text-stone-900 tracking-tight">Signalements & Litiges</h1>
+        <p className="mt-2 text-stone-500 font-medium">
+          Gérez les incidents rapportés par vos clients et apportez votre version des faits pour maintenir votre score de confiance.
+        </p>
+      </header>
 
-      <div className="mt-4 rounded-lg border border-kelen-yellow-500/30 bg-kelen-yellow-50 p-4 text-sm text-kelen-yellow-800">
-        Vous disposez de <strong>15 jours</strong> pour répondre à chaque
-        signal. Votre réponse sera publiée sur votre profil public.
+      <div className="mb-10 p-5 bg-amber-50 rounded-2xl border border-amber-200 flex gap-4 items-start">
+        <span className="material-symbols-outlined text-amber-600 text-2xl">info</span>
+        <div className="text-sm text-amber-900">
+          <p className="font-bold mb-1">Droit de réponse (15 jours)</p>
+          <p>Vous disposez d&apos;un délai légal de 15 jours pour répondre à tout signalement. Passé ce délai, le signalement peut être validé automatiquement par nos services.</p>
+        </div>
       </div>
 
-      <div className="mt-6 space-y-4">
-        {DEMO_SIGNALS.map((signal) => {
-          const deadline = new Date(signal.response_deadline);
-          const now = new Date();
-          const daysLeft = Math.max(
-            0,
-            Math.ceil(
-              (deadline.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
-            )
-          );
+      {isLoading ? (
+        <div className="space-y-6">
+          {[1, 2].map((i) => (
+            <div key={i} className="h-64 bg-stone-100 rounded-3xl animate-pulse" />
+          ))}
+        </div>
+      ) : signals.length > 0 ? (
+        <div className="space-y-6">
+          {signals.map((signal) => {
+            const createdAt = new Date(signal.created_at);
+            const deadline = new Date(createdAt.getTime() + 15 * 24 * 60 * 60 * 1000);
+            const now = new Date();
+            const daysLeft = Math.max(0, Math.ceil((deadline.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)));
 
-          return (
-            <div
-              key={signal.id}
-              className="rounded-xl border border-kelen-red-500/20 bg-white p-6"
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-kelen-red-500">⚠</span>
-                    <h3 className="font-semibold text-foreground">
-                      {signal.breach_label}
-                    </h3>
-                    <span className="rounded-full bg-kelen-red-100 px-2 py-0.5 text-xs font-medium text-kelen-red-700">
-                      {signal.severity === "minor"
-                        ? "Mineur"
-                        : signal.severity === "major"
-                          ? "Majeur"
-                          : "Critique"}
-                    </span>
+            return (
+              <article key={signal.id} className="bg-white rounded-3xl border border-stone-200 overflow-hidden shadow-sm flex flex-col">
+                <div className="p-8 border-b border-stone-100">
+                  <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-6">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center">
+                        <span className="material-symbols-outlined">report_problem</span>
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-bold text-stone-900">{BREACH_LABELS[signal.breach_type]}</h3>
+                        <p className="text-xs text-stone-500 font-medium">Signalé le {createdAt.toLocaleDateString('fr-FR')}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                       <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${SEVERITY_COLORS[signal.severity]}`}>
+                        {signal.severity}
+                      </span>
+                      {!signal.pro_response && (
+                        <span className="px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-[10px] font-black uppercase tracking-widest">
+                          {daysLeft}j restants
+                        </span>
+                      )}
+                    </div>
                   </div>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    Signalé le{" "}
-                    {new Date(signal.created_at).toLocaleDateString("fr-FR", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                    })}{" "}
-                    par {signal.submitter_name}
-                  </p>
-                </div>
-                {signal.status === "pending_response" && (
-                  <span className="shrink-0 rounded-full bg-kelen-yellow-50 px-2.5 py-0.5 text-xs font-medium text-kelen-yellow-700">
-                    {daysLeft} jours restants
-                  </span>
-                )}
-              </div>
-
-              {/* Response form */}
-              {signal.status === "pending_response" && !signal.pro_response && (
-                <div className="mt-4">
-                  <label className="mb-1.5 block text-sm font-medium text-foreground">
-                    Votre réponse
-                  </label>
-                  <textarea
-                    rows={4}
-                    className="w-full rounded-lg border border-border bg-white px-4 py-3 text-sm transition-colors placeholder:text-muted-foreground focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
-                    placeholder="Rédigez votre réponse de manière factuelle et professionnelle..."
-                  />
-                  <div className="mt-3 flex justify-end">
-                    <button className="rounded-lg bg-kelen-green-500 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-kelen-green-600">
-                      Envoyer ma réponse
-                    </button>
+                  
+                  <div className="bg-stone-50 rounded-2xl p-5 mb-6 border border-stone-100">
+                    <p className="text-xs font-black text-stone-400 uppercase tracking-widest mb-2 flex items-center gap-2">
+                      <span className="material-symbols-outlined text-sm">subject</span>
+                      Détails de l&apos;incident
+                    </p>
+                    <p className="text-sm text-stone-700 leading-relaxed italic">
+                      &quot;{signal.breach_description}&quot;
+                    </p>
                   </div>
-                </div>
-              )}
 
-              {signal.pro_response && (
-                <div className="mt-4 rounded-lg border border-border bg-muted/50 p-4">
-                  <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                    Votre réponse
-                  </p>
-                  <p className="text-sm text-foreground/80">
-                    {signal.pro_response}
-                  </p>
+                  {!signal.pro_response ? (
+                    <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2">
+                      <label className="block text-sm font-bold text-stone-900">
+                        Votre réponse officielle
+                      </label>
+                      <textarea
+                        value={responseInput[signal.id] || ""}
+                        onChange={(e) => setResponseInput({ ...responseInput, [signal.id]: e.target.value })}
+                        rows={4}
+                        className="w-full rounded-2xl border border-stone-200 bg-stone-50/50 px-5 py-4 text-sm focus:border-kelen-green-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-kelen-green-500/5 transition-all"
+                        placeholder="Apportez des éléments factuels pour répondre à ce signalement..."
+                      />
+                      <div className="flex justify-end">
+                        <button
+                          onClick={() => submitResponse(signal.id)}
+                          disabled={isSubmitting === signal.id || !responseInput[signal.id]?.trim()}
+                          className="px-8 py-3 bg-stone-900 text-white font-bold rounded-xl hover:bg-stone-800 transition-all active:scale-95 disabled:opacity-50 flex items-center gap-2"
+                        >
+                          {isSubmitting === signal.id ? (
+                             <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                          ) : (
+                            <span className="material-symbols-outlined text-lg">send</span>
+                          )}
+                          Envoyer ma réponse
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="bg-kelen-green-50/50 border border-kelen-green-100 rounded-2xl p-6">
+                      <p className="text-xs font-black text-kelen-green-600 uppercase tracking-widest mb-3 flex items-center gap-2">
+                        <span className="material-symbols-outlined text-sm">reply</span>
+                        Ma réponse publiée
+                      </p>
+                      <p className="text-sm text-stone-800 leading-relaxed">
+                        {signal.pro_response}
+                      </p>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          );
-        })}
-
-        {DEMO_SIGNALS.length === 0 && (
-          <div className="rounded-xl border border-border bg-white p-8 text-center">
-            <p className="text-sm text-muted-foreground">
-              Aucun signal sur votre profil.
-            </p>
+              </article>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center py-24 bg-white rounded-3xl border border-stone-200 shadow-sm">
+          <div className="w-24 h-24 bg-stone-50 rounded-full flex items-center justify-center mb-8">
+            <span className="material-symbols-outlined text-5xl text-stone-300">security</span>
           </div>
-        )}
-      </div>
-    </div>
+          <h3 className="text-2xl font-bold text-stone-900">Score de confiance impeccable</h3>
+          <p className="text-stone-500 mt-2 max-w-sm text-center">
+            Aucun signalement n&apos;a été enregistré sur votre profil. Continuez à offrir un service d&apos;excellence !
+          </p>
+        </div>
+      )}
+    </main>
   );
 }

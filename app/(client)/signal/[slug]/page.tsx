@@ -1,16 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SignalForm } from "@/components/forms/SignalForm";
-
-// Demo data
-const DEMO_PRO = {
-  id: "demo-1",
-  slug: "kouadio-construction-abidjan",
-  business_name: "Kouadio Construction",
-  category: "Construction",
-  city: "Abidjan",
-  country: "Côte d'Ivoire",
-};
+import { createClient } from "@/lib/supabase/server";
 
 interface SignalPageProps {
   params: Promise<{ slug: string }>;
@@ -20,7 +11,13 @@ export async function generateMetadata({
   params,
 }: SignalPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const pro = slug === DEMO_PRO.slug ? DEMO_PRO : null;
+  const supabase = await createClient();
+  const { data: pro } = await supabase
+    .from("professionals")
+    .select("business_name")
+    .eq("slug", slug)
+    .single();
+
   return {
     title: pro
       ? `Signaler ${pro.business_name} — Kelen`
@@ -30,11 +27,17 @@ export async function generateMetadata({
 
 export default async function SignalPage({ params }: SignalPageProps) {
   const { slug } = await params;
-  const pro = slug === DEMO_PRO.slug ? DEMO_PRO : null;
+  const supabase = await createClient();
+
+  const { data: pro } = await supabase
+    .from("professionals")
+    .select("id, business_name, category, city, country, slug")
+    .eq("slug", slug)
+    .single();
 
   if (!pro) {
     return (
-      <div className="mx-auto max-w-2xl py-12 text-center">
+      <div className="mx-auto max-w-2xl py-12 text-center px-4">
         <h1 className="text-2xl font-bold text-foreground">
           Professionnel non trouvé
         </h1>
@@ -42,22 +45,22 @@ export default async function SignalPage({ params }: SignalPageProps) {
           Ce professionnel n&apos;est pas référencé sur Kelen.
         </p>
         <Link
-          href="/signal"
+          href="/recherche"
           className="mt-4 inline-block text-sm text-kelen-green-600 hover:text-kelen-green-700"
         >
-          ← Retour à la sélection
+          ← Retour à la recherche
         </Link>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="mx-auto max-w-2xl px-4 py-8">
       <Link
-        href="/signal"
-        className="text-sm text-muted-foreground hover:text-foreground"
+        href={`/pro/${pro.slug}`}
+        className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1"
       >
-        ← Retour
+        ← Retour au profil
       </Link>
 
       <div className="mt-4 mb-6 rounded-xl border border-kelen-red-500/20 bg-kelen-red-50/30 p-4">
@@ -70,10 +73,11 @@ export default async function SignalPage({ params }: SignalPageProps) {
         </p>
       </div>
 
-      <div className="rounded-xl border border-border bg-white p-6">
+      <div className="rounded-xl border border-border bg-white p-6 shadow-sm">
         <SignalForm
           professionalId={pro.id}
           professionalName={pro.business_name}
+          professionalSlug={pro.slug}
         />
       </div>
     </div>

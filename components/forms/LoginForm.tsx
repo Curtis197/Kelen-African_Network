@@ -3,11 +3,15 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { loginSchema, type LoginFormData } from "@/lib/utils/validators";
+import { createClient } from "@/lib/supabase/client";
 
 export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+  const supabase = createClient();
 
   const {
     register,
@@ -22,94 +26,128 @@ export function LoginForm() {
     setError(null);
 
     try {
-      // TODO: Replace with Supabase auth
-      // const { error } = await supabase.auth.signInWithPassword({
-      //   email: data.email,
-      //   password: data.password,
-      // });
-      // if (error) throw error;
-      // router.push('/dashboard');
+      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+        email: data.email,
+        password: data.password,
+      });
 
-      console.log("Login attempt:", data.email);
-      // Demo: simulate a delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setError("Connexion Supabase non configurée. Backend en cours de développement.");
-    } catch {
-      setError("Email ou mot de passe incorrect.");
+      if (authError) throw authError;
+
+      if (authData.user) {
+        // Fetch user role from public.users table
+        const { data: profile, error: profileError } = await supabase
+          .from("users")
+          .select("role")
+          .eq("id", authData.user.id)
+          .single();
+
+        if (profileError) {
+          // If profile not found, maybe it's a fresh auth user without a record yet
+          console.error("Profile fetch error:", profileError);
+          router.push("/dashboard");
+        } else {
+          // Redirect based on role
+          if (profile.role === "professional") {
+            router.push("/pro/dashboard");
+          } else if (profile.role === "admin") {
+            router.push("/admin/dashboard");
+          } else {
+            router.push("/dashboard");
+          }
+        }
+        
+        router.refresh();
+      }
+    } catch (err: any) {
+      console.error("Login error:", err);
+      setError(err.message || "Email ou mot de passe incorrect.");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       {error && (
         <div className="rounded-lg border border-kelen-red-500/20 bg-kelen-red-50 p-3 text-sm text-kelen-red-700">
           {error}
         </div>
       )}
 
-      {/* Email */}
       <div>
         <label
           htmlFor="email"
           className="mb-1.5 block text-sm font-medium text-foreground"
         >
-          Adresse email
+          Email
         </label>
         <input
           id="email"
           type="email"
-          autoComplete="email"
           {...register("email")}
-          className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors placeholder:text-muted-foreground focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
-          placeholder="vous@exemple.com"
+          className="w-full rounded-lg border border-border bg-white px-4 py-2 text-sm transition-colors placeholder:text-muted-foreground focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
+          placeholder="nom@exemple.com"
         />
         {errors.email && (
-          <p className="mt-1 text-xs text-kelen-red-500">
-            {errors.email.message}
-          </p>
+          <p className="mt-1 text-xs text-kelen-red-500">{errors.email.message}</p>
         )}
       </div>
 
-      {/* Password */}
       <div>
-        <div className="mb-1.5 flex items-center justify-between">
+        <div className="flex items-center justify-between mb-1.5">
           <label
             htmlFor="password"
-            className="text-sm font-medium text-foreground"
+            className="block text-sm font-medium text-foreground"
           >
             Mot de passe
           </label>
-          <a
-            href="/mot-de-passe"
-            className="text-xs text-kelen-green-600 hover:text-kelen-green-700"
+          <button
+            type="button"
+            className="text-xs font-medium text-kelen-green-600 hover:text-kelen-green-500"
           >
             Mot de passe oublié ?
-          </a>
+          </button>
         </div>
         <input
           id="password"
           type="password"
-          autoComplete="current-password"
           {...register("password")}
-          className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors placeholder:text-muted-foreground focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
-          placeholder="Votre mot de passe"
+          className="w-full rounded-lg border border-border bg-white px-4 py-2 text-sm transition-colors placeholder:text-muted-foreground focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
+          placeholder="••••••••"
         />
         {errors.password && (
-          <p className="mt-1 text-xs text-kelen-red-500">
-            {errors.password.message}
-          </p>
+          <p className="mt-1 text-xs text-kelen-red-500">{errors.password.message}</p>
         )}
       </div>
 
-      {/* Submit */}
       <button
         type="submit"
         disabled={isLoading}
-        className="w-full rounded-lg bg-kelen-green-500 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-kelen-green-600 disabled:cursor-not-allowed disabled:opacity-50"
+        className="mt-2 w-full rounded-lg bg-kelen-green-500 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:bg-kelen-green-600 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/50 disabled:cursor-not-allowed disabled:opacity-50"
       >
-        {isLoading ? "Connexion en cours..." : "Se connecter"}
+        {isLoading ? (
+          <span className="flex items-center justify-center gap-2">
+            <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24">
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+                fill="none"
+              />
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              />
+            </svg>
+            Connexion...
+          </span>
+        ) : (
+          "Se connecter"
+        )}
       </button>
     </form>
   );

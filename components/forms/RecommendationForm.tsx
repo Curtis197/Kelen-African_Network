@@ -8,10 +8,12 @@ import {
   type RecommendationFormData,
 } from "@/lib/utils/validators";
 import { BUDGET_RANGES } from "@/lib/utils/constants";
+import { createClient } from "@/lib/supabase/client";
 
 interface RecommendationFormProps {
   professionalId: string;
   professionalName: string;
+  professionalSlug: string;
 }
 
 const STEPS = [
@@ -24,6 +26,7 @@ const STEPS = [
 export function RecommendationForm({
   professionalId,
   professionalName,
+  professionalSlug,
 }: RecommendationFormProps) {
   const [step, setStep] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -59,20 +62,52 @@ export function RecommendationForm({
   const onSubmit = async (data: RecommendationFormData) => {
     setIsLoading(true);
     setError(null);
+    const supabase = createClient();
 
     try {
-      // TODO: Replace with Supabase insert
-      // const { error } = await supabase.from('recommendations').insert({
-      //   ...data,
-      //   submitter_id: session.user.id,
-      //   status: 'pending',
-      // });
+      // 1. Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        setError("Vous devez être connecté pour soumettre une recommandation.");
+        return;
+      }
 
-      console.log("Recommendation submitted:", data);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // 2. Get user profile for metadata
+      const { data: profile } = await supabase
+        .from("users")
+        .select("first_name, last_name, country")
+        .eq("id", user.id)
+        .single();
+
+      if (!profile) {
+        setError("Impossible de récupérer votre profil.");
+        return;
+      }
+
+      // 3. Insert Recommendation
+      const { error: insertError } = await supabase.from("recommendations").insert({
+        professional_id: professionalId,
+        professional_slug: professionalSlug,
+        submitter_id: user.id,
+        submitter_name: `${profile.first_name} ${profile.last_name}`,
+        submitter_country: profile.country,
+        submitter_email: user.email!,
+        project_type: data.project_type,
+        project_description: data.project_description,
+        completion_date: data.completion_date,
+        budget_range: data.budget_range,
+        location: data.location,
+        status: "pending",
+        verified: false,
+        linked: true, // Default to true if submitted via the pro's link
+      });
+
+      if (insertError) throw insertError;
+
       setSubmitted(true);
-    } catch {
-      setError("Une erreur est survenue. Veuillez réessayer.");
+    } catch (err: any) {
+      console.error("Submission error:", err);
+      setError("Une erreur est survenue lors de l'envoi. Veuillez réessayer.");
     } finally {
       setIsLoading(false);
     }
@@ -87,25 +122,35 @@ export function RecommendationForm({
         <h2 className="text-xl font-bold text-foreground">
           Recommandation soumise
         </h2>
-        <p className="mt-2 text-muted-foreground">
+        <p className="mt-2 text-muted-foreground text-sm">
           Votre recommandation pour <strong>{professionalName}</strong> a été
           envoyée. Elle sera vérifiée par notre équipe avant publication.
         </p>
-        <p className="mt-4 text-sm text-muted-foreground">
-          Délai de vérification : 48-72 heures
-        </p>
+        <div className="mt-8 flex justify-center">
+          <Link
+            href={`/pro/${professionalSlug}`}
+            className="rounded-lg bg-kelen-green-500 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-kelen-green-600"
+          >
+            Retour au profil
+          </Link>
+        </div>
       </div>
     );
+  }
+
+  // Helper for Link fallback since it's a client component
+  function Link({ href, children, ...props }: any) {
+    return <a href={href} {...props}>{children}</a>;
   }
 
   return (
     <div>
       {/* Step indicator */}
-      <div className="mb-8 flex items-center gap-2">
+      <div className="mb-8 flex items-center justify-between">
         {STEPS.map((label, i) => (
-          <div key={label} className="flex items-center gap-2">
+          <div key={label} className="flex flex-1 items-center gap-2 last:flex-none">
             <div
-              className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-medium ${
+              className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${
                 i < step
                   ? "bg-kelen-green-500 text-white"
                   : i === step
@@ -117,7 +162,7 @@ export function RecommendationForm({
             </div>
             {i < STEPS.length - 1 && (
               <div
-                className={`hidden h-0.5 w-8 sm:block ${
+                className={`flex-1 h-0.5 min-w-[1rem] ${
                   i < step ? "bg-kelen-green-500" : "bg-border"
                 }`}
               />
@@ -133,11 +178,9 @@ export function RecommendationForm({
           </div>
         )}
 
-        <input type="hidden" {...register("professional_id")} />
-
         {/* Step 0: Project type */}
         {step === 0 && (
-          <div>
+          <div className="animate-in fade-in slide-in-from-right-2 duration-300">
             <h2 className="text-lg font-semibold text-foreground">
               {STEPS[0]}
             </h2>
@@ -162,7 +205,7 @@ export function RecommendationForm({
 
         {/* Step 1: Project description */}
         {step === 1 && (
-          <div>
+          <div className="animate-in fade-in slide-in-from-right-2 duration-300">
             <h2 className="text-lg font-semibold text-foreground">
               {STEPS[1]}
             </h2>
@@ -181,16 +224,21 @@ export function RecommendationForm({
                   {errors.project_description.message}
                 </p>
               )}
-              <p className="mt-1 text-xs text-muted-foreground">
-                {watch("project_description")?.length || 0} / 20 caractères minimum
-              </p>
+              <div className="mt-2 flex items-center justify-between">
+                <p className="text-xs text-muted-foreground">
+                  Minimum 20 caractères
+                </p>
+                <p className="text-xs font-medium text-muted-foreground">
+                  {watch("project_description")?.length || 0} caractères
+                </p>
+              </div>
             </div>
           </div>
         )}
 
         {/* Step 2: Budget, dates, location */}
         {step === 2 && (
-          <div>
+          <div className="animate-in fade-in slide-in-from-right-2 duration-300">
             <h2 className="text-lg font-semibold text-foreground">
               {STEPS[2]}
             </h2>
@@ -258,7 +306,7 @@ export function RecommendationForm({
 
         {/* Step 3: Confirmation */}
         {step === 3 && (
-          <div>
+          <div className="animate-in fade-in slide-in-from-right-2 duration-300">
             <h2 className="text-lg font-semibold text-foreground">
               {STEPS[3]}
             </h2>
@@ -266,30 +314,29 @@ export function RecommendationForm({
               Relisez les informations et confirmez.
             </p>
 
-            {/* Summary */}
-            <div className="mt-4 rounded-lg border border-border bg-muted/50 p-4 space-y-2 text-sm">
-              <p>
-                <span className="font-medium">Professionnel :</span>{" "}
-                {professionalName}
-              </p>
-              <p>
-                <span className="font-medium">Type de projet :</span>{" "}
-                {watch("project_type")}
-              </p>
-              <p>
-                <span className="font-medium">Lieu :</span>{" "}
-                {watch("location")}
-              </p>
+            <div className="mt-4 rounded-xl border border-border bg-muted/30 p-4 space-y-3 text-sm">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Professionnel :</span>
+                <span className="font-medium text-foreground">{professionalName}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Type de projet :</span>
+                <span className="font-medium text-foreground">{watch("project_type")}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Lieu :</span>
+                <span className="font-medium text-foreground">{watch("location")}</span>
+              </div>
             </div>
 
-            <div className="mt-4">
-              <label className="flex items-start gap-2">
+            <div className="mt-6">
+              <label className="flex items-start gap-3 cursor-pointer group">
                 <input
                   type="checkbox"
                   {...register("authenticity_confirmed")}
-                  className="mt-0.5 h-4 w-4 rounded border-border text-kelen-green-500 focus:ring-kelen-green-500/20"
+                  className="mt-1 h-4 w-4 rounded border-border text-kelen-green-500 focus:ring-kelen-green-500/20 transition-all cursor-pointer"
                 />
-                <span className="text-sm text-muted-foreground">
+                <span className="text-sm leading-relaxed text-muted-foreground group-hover:text-foreground transition-colors">
                   Je confirme que les informations fournies sont authentiques et
                   basées sur une expérience réelle avec ce professionnel. Je
                   comprends que de fausses recommandations entraîneront la
@@ -297,7 +344,7 @@ export function RecommendationForm({
                 </span>
               </label>
               {errors.authenticity_confirmed && (
-                <p className="mt-1 text-xs text-kelen-red-500">
+                <p className="mt-1 text-xs text-kelen-red-500 font-medium">
                   {errors.authenticity_confirmed.message}
                 </p>
               )}
@@ -306,12 +353,12 @@ export function RecommendationForm({
         )}
 
         {/* Navigation buttons */}
-        <div className="flex items-center justify-between pt-4 border-t border-border">
+        <div className="flex items-center justify-between pt-6 border-t border-border mt-8">
           {step > 0 ? (
             <button
               type="button"
               onClick={prevStep}
-              className="rounded-lg border border-border px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+              className="rounded-lg border border-border px-6 py-2.5 text-sm font-semibold text-foreground transition-all hover:bg-muted hover:border-foreground/20"
             >
               Précédent
             </button>
@@ -323,7 +370,7 @@ export function RecommendationForm({
             <button
               type="button"
               onClick={nextStep}
-              className="rounded-lg bg-kelen-green-500 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-kelen-green-600"
+              className="rounded-lg bg-kelen-green-500 px-8 py-2.5 text-sm font-semibold text-white transition-all hover:bg-kelen-green-600 shadow-sm active:scale-95"
             >
               Suivant
             </button>
@@ -331,9 +378,16 @@ export function RecommendationForm({
             <button
               type="submit"
               disabled={isLoading}
-              className="rounded-lg bg-kelen-green-500 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-kelen-green-600 disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-lg bg-kelen-green-500 px-8 py-2.5 text-sm font-semibold text-white transition-all hover:bg-kelen-green-600 shadow-sm disabled:cursor-not-allowed disabled:opacity-50 active:scale-95"
             >
-              {isLoading ? "Envoi en cours..." : "Soumettre la recommandation"}
+              {isLoading ? (
+                <span className="flex items-center gap-2">
+                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/20 border-t-white" />
+                  Envoi...
+                </span>
+              ) : (
+                "Confirmer et envoyer"
+              )}
             </button>
           )}
         </div>

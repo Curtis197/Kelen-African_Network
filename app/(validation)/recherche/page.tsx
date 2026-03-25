@@ -5,81 +5,13 @@ import { SearchBar } from "@/components/shared/SearchBar";
 import { FilterPanel } from "@/components/shared/FilterPanel";
 import { ProfessionalCard } from "@/components/shared/ProfessionalCard";
 import { EmptyState } from "@/components/shared/EmptyState";
-import type { ProfessionalStatus } from "@/lib/supabase/types";
+import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
   title: "Rechercher un professionnel",
   description:
     "Vérifiez le parcours documenté de tout professionnel référencé sur Kelen.",
 };
-
-// Demo data — replaced by Supabase queries when backend is connected
-const DEMO_PROFESSIONALS: Array<{
-  slug: string;
-  businessName: string;
-  ownerName: string;
-  category: string;
-  city: string;
-  country: string;
-  status: ProfessionalStatus;
-  recommendationCount: number;
-  signalCount: number;
-  avgRating: number | null;
-  reviewCount: number;
-}> = [
-  {
-    slug: "kouadio-construction-abidjan",
-    businessName: "Kouadio Construction",
-    ownerName: "Moussa Kouadio",
-    category: "Construction",
-    city: "Abidjan",
-    country: "Côte d'Ivoire",
-    status: "gold",
-    recommendationCount: 7,
-    signalCount: 0,
-    avgRating: 4.8,
-    reviewCount: 12,
-  },
-  {
-    slug: "diallo-batiment-dakar",
-    businessName: "Diallo Bâtiment",
-    ownerName: "Amadou Diallo",
-    category: "Construction",
-    city: "Dakar",
-    country: "Sénégal",
-    status: "silver",
-    recommendationCount: 3,
-    signalCount: 0,
-    avgRating: 4.2,
-    reviewCount: 5,
-  },
-  {
-    slug: "traore-electricite-bamako",
-    businessName: "Traoré Électricité",
-    ownerName: "Ibrahim Traoré",
-    category: "Électricité",
-    city: "Bamako",
-    country: "Mali",
-    status: "white",
-    recommendationCount: 0,
-    signalCount: 0,
-    avgRating: null,
-    reviewCount: 0,
-  },
-  {
-    slug: "bamba-renovation-abidjan",
-    businessName: "Bamba Rénovation",
-    ownerName: "Sékou Bamba",
-    category: "Rénovation",
-    city: "Abidjan",
-    country: "Côte d'Ivoire",
-    status: "red",
-    recommendationCount: 4,
-    signalCount: 1,
-    avgRating: 3.1,
-    reviewCount: 8,
-  },
-];
 
 interface SearchPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -89,44 +21,50 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   const params = await searchParams;
   const query = typeof params.q === "string" ? params.q : "";
   const mode = typeof params.mode === "string" ? params.mode : "lookup";
+  const supabase = await createClient();
 
-  // TODO: Replace with Supabase queries
-  // For now, filter demo data client-side
-  let results = DEMO_PROFESSIONALS;
+  let browserQuery = supabase
+    .from("professionals")
+    .select("*")
+    .neq("status", "black")
+    .eq("is_active", true)
+    .eq("is_visible", true);
 
+  // Text search
   if (query) {
-    const lowerQuery = query.toLowerCase();
-    results = results.filter(
-      (p) =>
-        p.businessName.toLowerCase().includes(lowerQuery) ||
-        p.ownerName.toLowerCase().includes(lowerQuery)
+    browserQuery = browserQuery.or(
+      `business_name.ilike.%${query}%,owner_name.ilike.%${query}%`
     );
   }
 
+  // Filters (browse mode)
   if (mode === "browse") {
-    // In browse mode, only show visible (would be is_visible = true in production)
     const category = typeof params.category === "string" ? params.category : "";
     const country = typeof params.country === "string" ? params.country : "";
     const statusFilter = typeof params.status === "string" ? params.status : "";
 
     if (category) {
-      results = results.filter(
-        (p) => p.category.toLowerCase() === category.toLowerCase()
-      );
+      browserQuery = browserQuery.eq("category", category);
     }
     if (country) {
-      results = results.filter((p) => p.country === country);
+      browserQuery = browserQuery.eq("country", country);
     }
     if (statusFilter) {
       const statuses = statusFilter.split(",");
-      results = results.filter((p) => statuses.includes(p.status));
+      browserQuery = browserQuery.in("status", statuses);
     }
   }
 
-  // Always exclude black list from search results
-  results = results.filter((p) => p.status !== "black");
+  const { data: results, error } = await browserQuery.order("status", {
+    ascending: false,
+  });
+
+  if (error) {
+    console.error("Search error:", error);
+  }
 
   const hasQuery = query.length > 0 || mode === "browse";
+  const finalResults = results || [];
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
@@ -155,10 +93,10 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
       {/* Results */}
       <div className="mt-8">
-        {hasQuery && results.length > 0 && (
+        {hasQuery && finalResults.length > 0 && (
           <>
             <p className="mb-4 text-sm text-muted-foreground">
-              {results.length} résultat{results.length > 1 ? "s" : ""}
+              {finalResults.length} résultat{finalResults.length > 1 ? "s" : ""}
               {query && (
                 <>
                   {" "}pour « <span className="font-medium text-foreground">{query}</span> »
@@ -166,14 +104,27 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
               )}
             </p>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {results.map((pro) => (
-                <ProfessionalCard key={pro.slug} {...pro} />
+              {finalResults.map((pro: any) => (
+                <ProfessionalCard
+                  key={pro.slug}
+                  slug={pro.slug}
+                  businessName={pro.business_name}
+                  ownerName={pro.owner_name}
+                  category={pro.category}
+                  city={pro.city}
+                  country={pro.country}
+                  status={pro.status}
+                  recommendationCount={pro.recommendation_count}
+                  signalCount={pro.signal_count}
+                  avgRating={pro.avg_rating}
+                  reviewCount={pro.review_count}
+                />
               ))}
             </div>
           </>
         )}
 
-        {hasQuery && results.length === 0 && (
+        {hasQuery && finalResults.length === 0 && (
           <EmptyState
             title="Aucun résultat"
             description="Ce professionnel n'est pas encore référencé sur Kelen. L'absence de résultat ne constitue ni une recommandation, ni un avertissement."

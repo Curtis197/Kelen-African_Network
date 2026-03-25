@@ -1,16 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { RecommendationForm } from "@/components/forms/RecommendationForm";
-
-// Demo data — replaced by Supabase query on slug
-const DEMO_PRO = {
-  id: "demo-1",
-  slug: "kouadio-construction-abidjan",
-  business_name: "Kouadio Construction",
-  category: "Construction",
-  city: "Abidjan",
-  country: "Côte d'Ivoire",
-};
+import { createClient } from "@/lib/supabase/server";
 
 interface RecommendationPageProps {
   params: Promise<{ slug: string }>;
@@ -20,7 +11,13 @@ export async function generateMetadata({
   params,
 }: RecommendationPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const pro = slug === DEMO_PRO.slug ? DEMO_PRO : null;
+  const supabase = await createClient();
+  const { data: pro } = await supabase
+    .from("professionals")
+    .select("business_name")
+    .eq("slug", slug)
+    .single();
+
   return {
     title: pro
       ? `Recommander ${pro.business_name} — Kelen`
@@ -32,11 +29,17 @@ export default async function RecommendationPage({
   params,
 }: RecommendationPageProps) {
   const { slug } = await params;
-  const pro = slug === DEMO_PRO.slug ? DEMO_PRO : null;
+  const supabase = await createClient();
+
+  const { data: pro } = await supabase
+    .from("professionals")
+    .select("id, business_name, category, city, country, slug")
+    .eq("slug", slug)
+    .single();
 
   if (!pro) {
     return (
-      <div className="mx-auto max-w-2xl py-12 text-center">
+      <div className="mx-auto max-w-2xl py-12 text-center px-4">
         <h1 className="text-2xl font-bold text-foreground">
           Professionnel non trouvé
         </h1>
@@ -44,22 +47,22 @@ export default async function RecommendationPage({
           Ce professionnel n&apos;est pas référencé sur Kelen.
         </p>
         <Link
-          href="/recommandation"
+          href="/recherche"
           className="mt-4 inline-block text-sm text-kelen-green-600 hover:text-kelen-green-700"
         >
-          ← Retour à la sélection
+          ← Retour à la recherche
         </Link>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="mx-auto max-w-2xl px-4 py-8">
       <Link
-        href="/recommandation"
-        className="text-sm text-muted-foreground hover:text-foreground"
+        href={`/pro/${pro.slug}`}
+        className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1"
       >
-        ← Retour
+        ← Retour au profil
       </Link>
 
       <div className="mt-4 mb-6 rounded-xl border border-border bg-white p-4">
@@ -72,10 +75,11 @@ export default async function RecommendationPage({
         </p>
       </div>
 
-      <div className="rounded-xl border border-border bg-white p-6">
+      <div className="rounded-xl border border-border bg-white p-6 shadow-sm">
         <RecommendationForm
           professionalId={pro.id}
           professionalName={pro.business_name}
+          professionalSlug={pro.slug}
         />
       </div>
     </div>
