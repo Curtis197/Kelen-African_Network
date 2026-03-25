@@ -121,6 +121,20 @@ export function getCountryName(code: string): string {
 }
 
 /**
+ * Create a URL-friendly slug from a string
+ */
+export function slugify(str: string): string {
+  return str
+    .toLowerCase()
+    .trim()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // Remove accents
+    .replace(/[^\w\s-]/g, "")
+    .replace(/[\s_-]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+/**
  * Calculate tenure string from creation date
  * e.g. "3 ans 8 mois"
  */
