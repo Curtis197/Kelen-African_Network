@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useMemo } from "react";
 import { Search, MapPin, Filter, Star, CheckCircle2, ChevronDown, Inbox } from "lucide-react";
 import { Professional } from "@/lib/supabase/types";

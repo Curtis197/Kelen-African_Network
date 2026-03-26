@@ -147,4 +147,8 @@ The AI's workflow is iterative, transparent, and responsive to user input.
   3. **Dependency Check:** If a new package is needed, AI runs `npm install`.
   4. **Compile & Analyze:** AI runs `npm run lint` and monitors the dev server.
   5. **Preview Check:** AI observes the browser preview for visual and runtime errors.
-  6. **Remediation/Report:** If errors are found, AI attempts automatic fixes. If unsuccessful, it reports details to the user.
+  6. **Mandatory Deployment Workflow:** After every change or group of changes, the AI MUST:
+     a. **Commit and Push**: `git add .`, `git commit -m "[desc]"`, and `git push origin [branch]`.
+     b. **Deploy to Vercel**: Run `vercel --prod` to deploy the changes.
+     c. **Check Logs**: Monitor the deployment and debug any build/runtime errors using `vercel logs`.
+  7. **Remediation/Report:** If errors are found, AI attempts automatic fixes. If unsuccessful, it reports details to the user.
