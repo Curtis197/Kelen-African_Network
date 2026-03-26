@@ -11,7 +11,12 @@ export async function GET(request: Request) {
     const { error, data } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error && data.session) {
-      // Query user role to redirect appropriately
+      // If we have a specific 'next' destination (like password reset), follow it
+      if (next.includes("/mot-de-passe/reset")) {
+        return NextResponse.redirect(`${origin}${next}`);
+      }
+
+      // Otherwise, query user role for dashboard redirection
       const { data: userRecord } = await supabase
         .from("users")
         .select("role")

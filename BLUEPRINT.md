@@ -617,7 +617,20 @@ Detailed in `documentation/Architecture/BACKEND_INVOCATION.md` — that file is 
 
 ---
 
-## 10. Copywriting Reference
+## 10. Database Seeding
+
+To facilitate development and testing, a `supabase/seed.sql` file is used to populate the database with initial data. This includes:
+- Administrative accounts.
+- Professional profiles with varying statuses (Gold, Silver, White, Red, Black).
+- Client users with sample recommendations and signals.
+- Subscription and analytic data.
+
+To apply seeds locally:
+`supabase db reset` (resets and runs seeds)
+
+---
+
+## 11. Copywriting Reference
 
 ### Language
 - Primary: French (all UI text in French)
@@ -735,7 +748,9 @@ npm install recharts @stripe/stripe-js
 - [ ] Build Navbar component
 - [ ] Build Footer component
 - [ ] Build FileUpload component
-- [x] Set up middleware.ts (live SSR auth guard & role-based redirects)
+- [ ] Build FileUpload component
+- [ ] Set up middleware.ts (live SSR auth guard & role-based redirects)
+- [/] Create initial database seeds (`supabase/seed.sql`)
 
 ### Phase 1 pages
 - [x] Home `/`

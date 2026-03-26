@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 
 export function PasswordResetForm() {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const supabase = createClient();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -16,17 +18,15 @@ export function PasswordResetForm() {
     setError(null);
 
     try {
-      // TODO: Replace with Supabase auth
-      // const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      //   redirectTo: `${window.location.origin}/mot-de-passe/reset`,
-      // });
-      // if (error) throw error;
-
-      console.log("Password reset request:", email);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+        redirectTo: `${window.location.origin}/auth/callback?next=/mot-de-passe/reset`,
+      });
+      
+      if (error) throw error;
       setSent(true);
-    } catch {
-      setError("Une erreur est survenue. Veuillez réessayer.");
+    } catch (err: any) {
+      console.error("Password reset error:", err);
+      setError(err.message || "Une erreur est survenue. Veuillez réessayer.");
     } finally {
       setIsLoading(false);
     }
