@@ -5,17 +5,18 @@ import { Star, MapPin, Verified, Phone, Mail, MessageCircle, ChevronRight, User,
 import Link from "next/link";
 
 interface Props {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
   const supabase = await createClient();
   const { data: pro } = await supabase
     .from("professionals")
     .select("business_name, description")
-    .eq("slug", params.slug)
+    .eq("slug", slug)
     .single();
 
   if (!pro) return { title: "Professionnel non trouvé | Kelen" };
@@ -27,12 +28,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ProfessionalProfilePage({ params }: Props) {
+  const { slug } = await params;
   const supabase = await createClient();
   
   const { data: pro } = await supabase
     .from("professionals")
     .select("*")
-    .eq("slug", params.slug)
+    .eq("slug", slug)
     .single();
 
   if (!pro) notFound();
@@ -141,7 +143,7 @@ export default async function ProfessionalProfilePage({ params }: Props) {
                 <>
                   {/* Featured Project */}
                   <div className="md:col-span-8 group relative overflow-hidden rounded-[2.5rem] bg-white shadow-lg transition-all duration-500 hover:shadow-2xl">
-                    <Link href={`/professionnels/${params.slug}/realisations/${portfolioItems[0].id}`}>
+                    <Link href={`/professionnels/${slug}/realisations/${portfolioItems[0].id}`}>
                       <img 
                         className="w-full h-[600px] object-cover transition-transform duration-700 group-hover:scale-110" 
                         src={portfolioItems[0].image} 
@@ -158,7 +160,7 @@ export default async function ProfessionalProfilePage({ params }: Props) {
                   <div className="md:col-span-4 grid grid-rows-2 gap-8">
                     {portfolioItems.slice(1, 3).map((item) => (
                       <div key={item.id} className="group relative overflow-hidden rounded-[2.5rem] bg-stone-100 shadow-lg transition-all duration-500 hover:shadow-2xl">
-                        <Link href={`/professionnels/${params.slug}/realisations/${item.id}`}>
+                        <Link href={`/professionnels/${slug}/realisations/${item.id}`}>
                           <img 
                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                             src={item.image} 

@@ -8,14 +8,14 @@ export const metadata: Metadata = {
 };
 
 interface EditRealizationPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function EditRealizationPage({ params }: EditRealizationPageProps) {
+  const { id } = await params;
   const supabase = await createClient();
-  const { id } = params;
   
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");

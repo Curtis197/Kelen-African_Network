@@ -19,18 +19,19 @@ import {
 import Link from "next/link";
 
 interface Props {
-  params: {
+  params: Promise<{
     slug: string;
     id: string;
-  };
+  }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
   const supabase = await createClient();
   const { data: realization } = await supabase
     .from("professional_realizations")
     .select("title, description")
-    .eq("id", params.id)
+    .eq("id", id)
     .single();
 
   if (!realization) return { title: "Réalisation non trouvée | Kelen" };
@@ -42,6 +43,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function RealizationDetailPage({ params }: Props) {
+  const { slug, id } = await params;
   const supabase = await createClient();
 
   // Fetch realization details
@@ -51,7 +53,7 @@ export default async function RealizationDetailPage({ params }: Props) {
       *,
       professional:professionals(*)
     `)
-    .eq("id", params.id)
+    .eq("id", id)
     .single();
 
   if (!realization) notFound();
@@ -95,12 +97,12 @@ export default async function RealizationDetailPage({ params }: Props) {
           <div className="flex items-center gap-2 text-sm font-medium text-[#1a1c1c]/40">
             <Link href="/professionnels" className="hover:text-[#1a1c1c] transition-colors">Experts</Link>
             <ChevronRight className="w-3 h-3" />
-            <Link href={`/professionnels/${params.slug}`} className="hover:text-[#1a1c1c] transition-colors">{pro.business_name}</Link>
+            <Link href={`/professionnels/${slug}`} className="hover:text-[#1a1c1c] transition-colors">{pro.business_name}</Link>
             <ChevronRight className="w-3 h-3" />
             <span className="text-[#1a1c1c]">{realization.title}</span>
           </div>
           <Link 
-            href={`/professionnels/${params.slug}`}
+            href={`/professionnels/${slug}`}
             className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#f3f4f3] hover:bg-[#e8e8e7] text-[#1a1c1c] font-semibold text-sm rounded-full transition-all duration-200"
           >
             <ArrowLeft className="w-4 h-4" />
