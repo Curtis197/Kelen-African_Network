@@ -1,4 +1,5 @@
-import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 
 export default function DiasporaLayout({
   children,
@@ -6,15 +7,14 @@ export default function DiasporaLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen">
-      <DashboardSidebar />
+    <div className="flex min-h-screen flex-col">
+      <Navbar />
       <main className="flex-1 bg-muted/30">
-        {/* Mobile header */}
-        <div className="flex h-16 items-center border-b border-border bg-white px-4 lg:hidden">
-          <span className="text-lg font-bold text-foreground">Kelen</span>
+        <div className="mx-auto max-w-7xl w-full">
+          <div className="p-6 lg:p-8">{children}</div>
         </div>
-        <div className="p-6 lg:p-8">{children}</div>
       </main>
+      <Footer />
     </div>
   );
 }

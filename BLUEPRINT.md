@@ -76,6 +76,32 @@ Kelen is a high-fidelity platform for connecting clients with African profession
 - [x] Implement real-time expert count on the landing page based on the `professionals` table.
 - [x] Add status-based sorting logic (Gold > Silver > White > Red) for the expert grid.
 - [x] Ensure `ProfessionalCard` components link to dynamic portfolio pages.
+### **4. Unified Navigation & Dashboard Evolution**
+- **Simplified Client Flow:** Removed the redundant client dashboard. Clients now interact with the platform directly via the global Navbar, which provides a dedicated "Gestion de projets" hub.
+- **Pro Dashboard:** Professionals retain a dedicated dashboard (`/pro/dashboard`) for business metrics, accessible via a role-aware top Navbar.
+- **Global Context:** The premium `Navbar` and `Footer` are now visible across all connected states (Client, Pro, Admin) to ensure a consistent exit path and branding.
+
+## **Implementation Log**
+
+### **Initial Migration (Phase 1)**
+- Setup base Next.js project and Tailwind configuration.
+- Implemented Landing Page with dynamic professional fetching.
+
+### **Professional Portfolio (Phase 2)**
+- Created Professional Profile page with dynamic Supabase integration.
+- Implemented `ProfileHero` and `BentoGrid` for professional projects.
+
+### **Realization Detail Page (Phase 3)**
+- Implemented the dynamic Realization Detail route.
+- Integrated `realization_images` and `realization_documents` fetching.
+- Built the "Technical Vault" and "Sticky Specs" components.
+- Linked the Professional Portfolio grid to the Realization Detail pages.
+
+### **Navigation Simplification (Phase 4 - Current)**
+- [x] Refactored `Navbar.tsx` for role-based navigation (Dashboard, Projects, Logout).
+- [x] Removed `DashboardSidebar` from the client experience.
+- [x] Redirected redundant `/dashboard` traffic to `/projets`.
+- [x] Integrated `Navbar` and `Footer` into all layout shells for consistency.
 ### Professional Dashboard & Management
 
 The professional side of the platform focuses on authority and demonstrability.
