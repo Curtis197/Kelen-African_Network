@@ -8,7 +8,7 @@
 -- Signals are permanent — pros can only respond, not remove.
 
 CREATE TABLE signals (
-  id                  UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   professional_id     UUID NOT NULL REFERENCES professionals(id) ON DELETE CASCADE,
   professional_slug   TEXT NOT NULL,   -- denormalized
 
@@ -96,5 +96,5 @@ CREATE POLICY "signals_pro_respond" ON signals
 -- Admin: full access
 CREATE POLICY "signals_admin_all" ON signals
   FOR ALL USING (
-    (SELECT role FROM users WHERE id = auth.uid()) = 'admin'
+    public.has_role('admin')
   );

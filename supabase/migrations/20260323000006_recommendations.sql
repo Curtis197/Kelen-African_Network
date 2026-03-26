@@ -7,7 +7,7 @@
 --   verified = TRUE AND linked = TRUE
 
 CREATE TABLE recommendations (
-  id                  UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   professional_id     UUID NOT NULL REFERENCES professionals(id) ON DELETE CASCADE,
   professional_slug   TEXT NOT NULL,   -- denormalized for display without join
 
@@ -85,5 +85,5 @@ CREATE POLICY "recommendations_pro_link" ON recommendations
 -- Admin: full access
 CREATE POLICY "recommendations_admin_all" ON recommendations
   FOR ALL USING (
-    (SELECT role FROM users WHERE id = auth.uid()) = 'admin'
+    public.has_role('admin')
   );

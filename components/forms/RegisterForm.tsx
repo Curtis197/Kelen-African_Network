@@ -26,6 +26,7 @@ export function RegisterForm({ defaultMode = "client", allowSwitch = true }: Reg
   const [mode, setMode] = useState<RegisterMode>(defaultMode);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
   const router = useRouter();
   const supabase = createClient();
 
@@ -57,7 +58,9 @@ export function RegisterForm({ defaultMode = "client", allowSwitch = true }: Reg
     setError(null);
 
     try {
-      // 1. Sign up with Supabase Auth
+      const finalRole = mode === "client" ? "client" : getProRole(data.country);
+      
+      // 1. Sign up with Supabase Auth (Trigger handles user and pro creation)
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
@@ -65,53 +68,32 @@ export function RegisterForm({ defaultMode = "client", allowSwitch = true }: Reg
           data: {
             first_name: data.first_name,
             last_name: data.last_name,
+            role: finalRole,
+            country: data.country,
+            phone: data.phone || null,
+            business_name: mode === "professional" ? data.business_name : null,
+            category: mode === "professional" ? data.category : null,
+            city: mode === "professional" ? data.city : null,
           },
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
       });
 
       if (authError) throw authError;
 
-      if (authData.user) {
-        const finalRole = mode === "client" ? "client" : getProRole(data.country);
-        const displayName = `${data.first_name} ${data.last_name}`;
+      // 2. Check if email confirmation is required (session is null)
+      if (authData.user && !authData.session) {
+        setSuccess(true);
+        return;
+      }
 
-        // 2. Create record in public.users table
-        const { error: userError } = await supabase.from("users").insert({
-          id: authData.user.id,
-          email: data.email,
-          display_name: displayName,
-          role: finalRole,
-          country: data.country,
-          phone: data.phone || null,
-        });
-
-        if (userError) throw userError;
-
-        // 3. If professional, create record in public.professionals table
-        if (mode === "professional") {
-          const proData = data as RegisterProfessionalFormData;
-          const { error: proError } = await supabase.from("professionals").insert({
-            user_id: authData.user.id,
-            business_name: proData.business_name,
-            owner_name: displayName,
-            slug: `${slugify(proData.business_name)}-${Math.random().toString(36).substring(2, 7)}`,
-            category: proData.category,
-            country: proData.country,
-            city: proData.city,
-            phone: proData.phone,
-            email: proData.email,
-          });
-
-          if (proError) throw proError;
-        }
-
-        // 4. Redirect based on mode
+      // 3. If session is returned (e.g. Email confirms disabled), redirect directly
+      if (authData.user && authData.session) {
         if (mode === "professional") {
           router.push("/pro/dashboard");
         } else {
           router.push("/dashboard");
         }
-        
         router.refresh();
       }
     } catch (err: any) {
@@ -123,6 +105,17 @@ export function RegisterForm({ defaultMode = "client", allowSwitch = true }: Reg
   };
 
   const countries = SUPPORTED_COUNTRIES;
+
+  if (success) {
+    return (
+      <div className="rounded-lg border border-kelen-green-200 bg-kelen-green-50 p-6 text-center shadow-sm">
+        <h3 className="mb-2 text-lg font-bold text-kelen-green-800">Inscription réussie !</h3>
+        <p className="text-kelen-green-700">
+          Veuillez vérifier votre boîte mail. Un lien de confirmation vous a été envoyé pour activer votre compte.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div>

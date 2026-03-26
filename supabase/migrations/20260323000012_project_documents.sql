@@ -10,7 +10,7 @@
 --  Elle documente des faits qui existent déjà."
 
 CREATE TABLE project_documents (
-  id                        UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id                        UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   professional_id           UUID NOT NULL REFERENCES professionals(id) ON DELETE CASCADE,
 
   -- ── Project info ───────────────────────────────────────────
@@ -78,5 +78,5 @@ CREATE POLICY "pdocs_pro_own" ON project_documents
 -- Admin: full access (review, publish, set client_email, confirm)
 CREATE POLICY "pdocs_admin_all" ON project_documents
   FOR ALL USING (
-    (SELECT role FROM users WHERE id = auth.uid()) = 'admin'
+    public.has_role('admin')
   );

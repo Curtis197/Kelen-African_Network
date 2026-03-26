@@ -8,7 +8,7 @@
 -- ── user_projects ──────────────────────────────────────────
 
 CREATE TABLE user_projects (
-  id               UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id               UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id          UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
 
   -- Description
@@ -49,7 +49,7 @@ CREATE TRIGGER set_updated_at_user_projects
 -- Links a project to a professional (Kelen or off-platform).
 
 CREATE TABLE project_professionals (
-  id                UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   project_id        UUID NOT NULL REFERENCES user_projects(id) ON DELETE CASCADE,
 
   -- ── Type: Kelen pro OR external pro ───────────────────────
@@ -102,7 +102,7 @@ CREATE TRIGGER set_updated_at_pp
 -- Private payment notes. Not real transactions.
 
 CREATE TABLE project_payments (
-  id                        UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id                        UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   project_id                UUID NOT NULL REFERENCES user_projects(id) ON DELETE CASCADE,
 
   -- Optional: link to a specific pro in this project
@@ -132,7 +132,7 @@ CREATE TRIGGER set_updated_at_project_payments
 -- Cross-project saved Kelen pros. Independent of any project.
 
 CREATE TABLE user_favorites (
-  id               UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id               UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id          UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   professional_id  UUID NOT NULL REFERENCES professionals(id) ON DELETE CASCADE,
   added_at         TIMESTAMPTZ DEFAULT NOW(),
@@ -154,7 +154,7 @@ CREATE POLICY "uprojects_own" ON user_projects
   WITH CHECK (user_id = auth.uid());
 
 CREATE POLICY "uprojects_admin" ON user_projects
-  FOR ALL USING ((SELECT role FROM users WHERE id = auth.uid()) = 'admin');
+  FOR ALL USING (public.has_role('admin'));
 
 -- project_professionals: access via parent project ownership
 CREATE POLICY "pp_own" ON project_professionals
@@ -166,7 +166,7 @@ CREATE POLICY "pp_own" ON project_professionals
   );
 
 CREATE POLICY "pp_admin" ON project_professionals
-  FOR ALL USING ((SELECT role FROM users WHERE id = auth.uid()) = 'admin');
+  FOR ALL USING (public.has_role('admin'));
 
 -- project_payments: access via parent project ownership
 CREATE POLICY "payments_own" ON project_payments
@@ -178,7 +178,7 @@ CREATE POLICY "payments_own" ON project_payments
   );
 
 CREATE POLICY "payments_admin" ON project_payments
-  FOR ALL USING ((SELECT role FROM users WHERE id = auth.uid()) = 'admin');
+  FOR ALL USING (public.has_role('admin'));
 
 -- user_favorites: client owns their own
 CREATE POLICY "favorites_own" ON user_favorites
@@ -186,4 +186,4 @@ CREATE POLICY "favorites_own" ON user_favorites
   WITH CHECK (user_id = auth.uid());
 
 CREATE POLICY "favorites_admin" ON user_favorites
-  FOR ALL USING ((SELECT role FROM users WHERE id = auth.uid()) = 'admin');
+  FOR ALL USING (public.has_role('admin'));

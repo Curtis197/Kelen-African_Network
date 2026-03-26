@@ -6,7 +6,7 @@
 -- by trigger on the subscriptions table).
 
 CREATE TABLE professionals (
-  id                     UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id                     UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id                UUID NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,
 
   -- ── Identity (set at registration, not editable by pro) ──
@@ -97,5 +97,5 @@ CREATE POLICY "professionals_update_own" ON professionals
 -- Admin: full access
 CREATE POLICY "professionals_admin_all" ON professionals
   FOR ALL USING (
-    (SELECT role FROM users WHERE id = auth.uid()) = 'admin'
+    public.has_role('admin')
   );

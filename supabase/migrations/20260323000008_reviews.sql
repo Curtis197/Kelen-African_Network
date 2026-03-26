@@ -7,7 +7,7 @@
 -- Modification history is stored in review_history for admin audit.
 
 CREATE TABLE reviews (
-  id                UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   professional_id   UUID NOT NULL REFERENCES professionals(id) ON DELETE CASCADE,
   reviewer_id       UUID NOT NULL REFERENCES users(id),
 
@@ -40,7 +40,7 @@ CREATE TRIGGER set_updated_at_reviews
 -- ── Review History (audit trail for admin) ─────────────────
 
 CREATE TABLE review_history (
-  id                UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   review_id         UUID NOT NULL REFERENCES reviews(id) ON DELETE CASCADE,
   previous_rating   INTEGER NOT NULL,
   previous_comment  TEXT,
@@ -74,11 +74,11 @@ CREATE POLICY "reviews_update_own" ON reviews
 -- Admin: full access (can hide for illegal content)
 CREATE POLICY "reviews_admin_all" ON reviews
   FOR ALL USING (
-    (SELECT role FROM users WHERE id = auth.uid()) = 'admin'
+    public.has_role('admin')
   );
 
 -- review_history: admin only
 CREATE POLICY "review_history_admin_all" ON review_history
   FOR ALL USING (
-    (SELECT role FROM users WHERE id = auth.uid()) = 'admin'
+    public.has_role('admin')
   );

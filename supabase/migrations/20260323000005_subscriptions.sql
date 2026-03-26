@@ -9,7 +9,7 @@
 -- handler (service role). Frontend only reads.
 
 CREATE TABLE subscriptions (
-  id                     UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id                     UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   professional_id        UUID NOT NULL REFERENCES professionals(id) ON DELETE CASCADE,
 
   -- Stripe references
@@ -54,7 +54,7 @@ CREATE POLICY "subscriptions_select_own" ON subscriptions
 -- Admin: full access
 CREATE POLICY "subscriptions_admin_all" ON subscriptions
   FOR ALL USING (
-    (SELECT role FROM users WHERE id = auth.uid()) = 'admin'
+    public.has_role('admin')
   );
 
 -- Note: INSERT and UPDATE are performed via service role by the Stripe webhook.

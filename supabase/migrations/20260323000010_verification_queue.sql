@@ -6,7 +6,7 @@
 -- FIFO ordering (created_at ASC) for fair review order.
 
 CREATE TABLE verification_queue (
-  id              UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   item_type       TEXT NOT NULL CHECK (item_type IN ('recommendation', 'signal')),
   item_id         UUID NOT NULL,                              -- FK to recommendations or signals
   professional_id UUID NOT NULL REFERENCES professionals(id) ON DELETE CASCADE,
@@ -39,5 +39,5 @@ ALTER TABLE verification_queue ENABLE ROW LEVEL SECURITY;
 -- Admin only — no public or pro access
 CREATE POLICY "vqueue_admin_all" ON verification_queue
   FOR ALL USING (
-    (SELECT role FROM users WHERE id = auth.uid()) = 'admin'
+    public.has_role('admin')
   );

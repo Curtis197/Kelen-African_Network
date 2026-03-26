@@ -7,7 +7,7 @@
 -- No UPDATE or DELETE is ever performed.
 
 CREATE TABLE profile_views (
-  id                UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   professional_id   UUID NOT NULL REFERENCES professionals(id) ON DELETE CASCADE,
 
   -- ── Viewer fingerprint (GDPR-compliant, no raw IP stored) ──
@@ -36,7 +36,7 @@ CREATE INDEX idx_profile_views_source       ON profile_views(source, created_at 
 -- ── Contact button clicks ──────────────────────────────────
 
 CREATE TABLE profile_interactions (
-  id                UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   professional_id   UUID NOT NULL REFERENCES professionals(id) ON DELETE CASCADE,
 
   type              TEXT NOT NULL
@@ -68,12 +68,12 @@ CREATE POLICY "interactions_pro_own" ON profile_interactions
 -- Admin: full access
 CREATE POLICY "views_admin_all" ON profile_views
   FOR ALL USING (
-    (SELECT role FROM users WHERE id = auth.uid()) = 'admin'
+    public.has_role('admin')
   );
 
 CREATE POLICY "interactions_admin_all" ON profile_interactions
   FOR ALL USING (
-    (SELECT role FROM users WHERE id = auth.uid()) = 'admin'
+    public.has_role('admin')
   );
 
 -- Note: INSERT is done via service role only (track_profile_view function).

@@ -31,7 +31,7 @@ BEGIN
   candidate := base_slug;
 
   -- Check uniqueness, append counter if needed
-  WHILE EXISTS (SELECT 1 FROM professionals WHERE slug = candidate AND id != COALESCE(NEW.id, uuid_generate_v4())) LOOP
+  WHILE EXISTS (SELECT 1 FROM professionals WHERE slug = candidate AND id != COALESCE(NEW.id, gen_random_uuid())) LOOP
     candidate := base_slug || '-' || counter;
     counter := counter + 1;
   END LOOP;

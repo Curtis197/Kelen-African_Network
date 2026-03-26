@@ -73,7 +73,7 @@ CREATE POLICY "contracts_admin" ON storage.objects
   FOR ALL TO authenticated
   USING (
     bucket_id = 'contracts'
-    AND (SELECT role FROM users WHERE id = auth.uid()) = 'admin'
+    AND public.has_role('admin')
   );
 
 -- ── evidence-photos bucket ─────────────────────────────────
@@ -94,7 +94,7 @@ CREATE POLICY "evidence_admin" ON storage.objects
   FOR ALL TO authenticated
   USING (
     bucket_id = 'evidence-photos'
-    AND (SELECT role FROM users WHERE id = auth.uid()) = 'admin'
+    AND public.has_role('admin')
   );
 
 -- ── portfolios bucket ──────────────────────────────────────
@@ -126,7 +126,7 @@ CREATE POLICY "portfolios_admin" ON storage.objects
   FOR ALL TO authenticated
   USING (
     bucket_id = 'portfolios'
-    AND (SELECT role FROM users WHERE id = auth.uid()) = 'admin'
+    AND public.has_role('admin')
   );
 
 -- ── verification-docs bucket ───────────────────────────────
@@ -144,7 +144,7 @@ CREATE POLICY "verdocs_admin" ON storage.objects
   FOR ALL TO authenticated
   USING (
     bucket_id = 'verification-docs'
-    AND (SELECT role FROM users WHERE id = auth.uid()) = 'admin'
+    AND public.has_role('admin')
   );
 
 -- ── project-docs bucket ────────────────────────────────────
@@ -169,5 +169,5 @@ CREATE POLICY "projdocs_admin" ON storage.objects
   FOR ALL TO authenticated
   USING (
     bucket_id = 'project-docs'
-    AND (SELECT role FROM users WHERE id = auth.uid()) = 'admin'
+    AND public.has_role('admin')
   );
