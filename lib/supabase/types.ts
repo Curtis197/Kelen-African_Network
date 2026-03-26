@@ -231,3 +231,33 @@ export interface PlatformMetrics {
   views_last_30_days: number;
   new_users_this_week: number;
 }
+
+export interface ProfessionalRealization {
+  id: string;
+  professional_id: string;
+  title: string;
+  description: string | null;
+  location: string | null;
+  completion_date: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface RealizationImage {
+  id: string;
+  realization_id: string;
+  url: string;
+  is_main: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface RealizationDocument {
+  id: string;
+  realization_id: string;
+  url: string;
+  title: string | null;
+  type: string | null;
+  created_at: string;
+}
+

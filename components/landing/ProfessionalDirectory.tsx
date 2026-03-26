@@ -2,64 +2,15 @@
 
 import { useState } from "react";
 import { Search, MapPin, Filter, Star, CheckCircle2, ChevronDown } from "lucide-react";
+import { Professional } from "@/lib/supabase/types";
 import { ProfessionalCard } from "@/components/shared/ProfessionalCard";
 
-const MOCK_PROS = [
-  {
-    slug: "kouassi-construction",
-    businessName: "Kouassi Construction",
-    ownerName: "Jean Kouassi",
-    category: "BTP & Architecture",
-    city: "Abidjan",
-    country: "CI",
-    status: "gold" as const,
-    recommendationCount: 42,
-    signalCount: 0,
-    avgRating: 4.9,
-    reviewCount: 128,
-  },
-  {
-    slug: "diallo-juris",
-    businessName: "Diallo Juris",
-    ownerName: "Abdou Diallo",
-    category: "Droit des Affaires",
-    city: "Dakar",
-    country: "SN",
-    status: "silver" as const,
-    recommendationCount: 26,
-    signalCount: 0,
-    avgRating: 4.7,
-    reviewCount: 84,
-  },
-  {
-    slug: "biotech-agri",
-    businessName: "BioTech Agri",
-    ownerName: "Moussa Traoré",
-    category: "Agronomie & Conseil",
-    city: "Bamako",
-    country: "ML",
-    status: "gold" as const,
-    recommendationCount: 19,
-    signalCount: 0,
-    avgRating: 5.0,
-    reviewCount: 52,
-  },
-  {
-    slug: "sodeka-logistics",
-    businessName: "Sodeka Logistics",
-    ownerName: "Koffi Mensah",
-    category: "Supply Chain",
-    city: "Lomé",
-    country: "TG",
-    status: "gold" as const,
-    recommendationCount: 75,
-    signalCount: 0,
-    avgRating: 4.8,
-    reviewCount: 210,
-  },
-];
+interface ProfessionalDirectoryProps {
+  initialPros: Professional[];
+  totalCount: number;
+}
 
-export function ProfessionalDirectory() {
+export function ProfessionalDirectory({ initialPros, totalCount }: ProfessionalDirectoryProps) {
   const [category, setCategory] = useState("Toutes les spécialités");
   const [tier, setTier] = useState("Tous");
 
@@ -78,7 +29,7 @@ export function ProfessionalDirectory() {
         </div>
         <div className="flex items-center gap-3 rounded-full bg-surface-container-low px-5 py-2.5 text-sm font-bold text-kelen-green-700">
           <span className="flex h-2 w-2 rounded-full bg-kelen-green-500" />
-          <span>1,240 experts vérifiés disponibles</span>
+          <span>{totalCount.toLocaleString()} expert{totalCount > 1 ? "s" : ""} vérifié{totalCount > 1 ? "s" : ""} disponible{totalCount > 1 ? "s" : ""}</span>
         </div>
       </div>
 
@@ -151,8 +102,21 @@ export function ProfessionalDirectory() {
 
       {/* Expert Grid */}
       <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {MOCK_PROS.map((pro) => (
-          <ProfessionalCard key={pro.slug} {...pro} />
+        {initialPros.map((pro) => (
+          <ProfessionalCard 
+            key={pro.slug} 
+            slug={pro.slug}
+            businessName={pro.business_name}
+            ownerName={pro.owner_name}
+            category={pro.category}
+            city={pro.city}
+            country={pro.country}
+            status={pro.status}
+            recommendationCount={pro.recommendation_count}
+            signalCount={pro.signal_count}
+            avgRating={pro.avg_rating}
+            reviewCount={pro.review_count}
+          />
         ))}
       </div>
 

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+
+<html lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kelen Diaspora | Gestion des Réalisations</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container-high": "#e8e8e7",
+                        "on-secondary-container": "#6d5200",
+                        "on-primary-container": "#00402a",
+                        "outline-variant": "#bbcabf",
+                        "tertiary-fixed-dim": "#ffb3af",
+                        "primary": "#006c49",
+                        "surface-tint": "#006c49",
+                        "primary-fixed": "#70fbbd",
+                        "on-secondary-fixed-variant": "#5a4300",
+                        "on-tertiary-container": "#6f1218",
+                        "on-primary-fixed": "#002113",
+                        "on-tertiary-fixed-variant": "#842325",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "secondary": "#785a00",
+                        "surface-variant": "#e2e2e2",
+                        "on-surface": "#1a1c1c",
+                        "surface-container": "#eeeeed",
+                        "primary-fixed-dim": "#50dea3",
+                        "surface-container-highest": "#e2e2e2",
+                        "primary-container": "#10b77f",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed": "#ffdad7",
+                        "surface-bright": "#f9f9f8",
+                        "on-tertiary-fixed": "#410006",
+                        "on-secondary-fixed": "#251a00",
+                        "outline": "#6c7a71",
+                        "surface-container-low": "#f3f4f3",
+                        "surface": "#f9f9f8",
+                        "error": "#ba1a1a",
+                        "secondary-fixed": "#ffdf9a",
+                        "on-error-container": "#93000a",
+                        "background": "#f9f9f8",
+                        "secondary-fixed-dim": "#f7be1d",
+                        "on-error": "#ffffff",
+                        "tertiary": "#a43a3b",
+                        "on-tertiary": "#ffffff",
+                        "inverse-primary": "#50dea3",
+                        "on-primary-fixed-variant": "#005236",
+                        "on-background": "#1a1c1c",
+                        "inverse-surface": "#2f3130",
+                        "on-surface-variant": "#3c4a42",
+                        "surface-dim": "#dadad9",
+                        "error-container": "#ffdad6",
+                        "inverse-on-surface": "#f1f1f0",
+                        "secondary-container": "#fdc425",
+                        "tertiary-container": "#f97a77"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- SideNavBar Shell -->
+<aside class="h-screen w-64 fixed left-0 top-0 overflow-y-auto bg-surface-container-low dark:bg-stone-900 flex flex-col py-8 border-r-0">
+<div class="px-6 mb-10">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white">
+<span class="material-symbols-outlined" data-icon="hub">hub</span>
+</div>
+<div>
+<h1 class="text-2xl font-bold tracking-tight text-stone-900 dark:text-stone-50">Kelen</h1>
+<p class="text-xs font-medium text-stone-500 uppercase tracking-widest">Diaspora Admin</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 px-4 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 text-stone-600 dark:text-stone-400 font-medium hover:bg-stone-200 dark:hover:bg-stone-800 transition-colors duration-200 rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#10b77f] font-bold bg-[#ffffff] dark:bg-stone-800 rounded-r-full shadow-sm" href="#">
+<span class="material-symbols-outlined" data-icon="folder_managed">folder_managed</span>
+<span>Projects</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-stone-600 dark:text-stone-400 font-medium hover:bg-stone-200 dark:hover:bg-stone-800 transition-colors duration-200 rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance">account_balance</span>
+<span>Diplomacy</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-stone-600 dark:text-stone-400 font-medium hover:bg-stone-200 dark:hover:bg-stone-800 transition-colors duration-200 rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="hub">hub</span>
+<span>Network</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-stone-600 dark:text-stone-400 font-medium hover:bg-stone-200 dark:hover:bg-stone-800 transition-colors duration-200 rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="px-6 mt-auto">
+<button class="w-full py-4 bg-gradient-to-br from-primary to-primary-container text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:scale-[0.98] active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+<span>New Initiative</span>
+</button>
+</div>
+</aside>
+<!-- TopAppBar Shell -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] z-40 bg-[#f9f9f8]/70 dark:bg-stone-950/70 backdrop-blur-xl flex justify-between items-center h-20 px-12">
+<div class="flex items-center gap-8">
+<h2 class="text-xl font-bold text-[#1a1c1c] dark:text-stone-100">Kelen Diaspora</h2>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 transition-colors duration-200" href="#">Overview</a>
+<a class="text-[#10b77f] border-b-2 border-[#10b77f] pb-1 font-medium" href="#">Analytics</a>
+<a class="text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 transition-colors duration-200" href="#">Reports</a>
+</nav>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4 mr-4">
+<button class="p-2 text-stone-500 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-stone-500 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg transition-colors">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+</div>
+<button class="px-4 py-2 bg-surface-container-high text-on-surface rounded-lg font-medium text-sm hover:bg-surface-container-highest transition-colors">
+                Invite Member
+            </button>
+<img alt="User Profile" class="w-10 h-10 rounded-full object-cover ring-2 ring-primary/20" data-alt="professional portrait of a confident male executive in a neutral studio setting with warm soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCx0Fr5VixltMHrjq_0RspwJ2QEm1LAyZywLxdE56ZIoe-8bb_2LDPg4QxAVJimKpPrq5Iss3kdubQc8K64Eqayonf_mR-Qb1x9qhjvLqBD0Y7EwNVxILtbM5L0XcKXqRJMyOe4jETaLRd2A2NR0oSY_IwT1phShdxxzWrj0-mo8dCrr7Zpl-rpdm1tlS238GTzy6YIaH7HK62g-nLdyEhg2PmqCoGWfPSfMi2SZYE9lYVj7G7Cpjr-XmgiEe_-YPYPZ_NnTwdLhk"/>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-24 px-12 pb-12">
+<!-- Dashboard Header -->
+<section class="flex justify-between items-end mb-12">
+<div>
+<h1 class="text-[2.75rem] font-bold text-on-surface leading-tight tracking-tight">Mes Réalisations</h1>
+<p class="text-on-surface-variant mt-2 text-lg">Gérez votre portfolio de projets et vos preuves de succès.</p>
+</div>
+<button class="px-8 py-4 bg-gradient-to-br from-primary to-primary-container text-white rounded-xl font-bold flex items-center gap-3 shadow-xl shadow-primary/10 hover:scale-[0.98] transition-all">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+<span>+ Nouvelle Réalisation</span>
+</button>
+</section>
+<div class="grid grid-cols-12 gap-8">
+<!-- Project Management Grid (Bento Style) -->
+<div class="col-span-12 lg:col-span-7 space-y-6">
+<div class="flex items-center justify-between mb-2">
+<h3 class="text-xl font-bold text-on-surface">Projets Récents</h3>
+<div class="flex gap-2">
+<button class="p-2 bg-surface-container-low rounded-lg text-stone-500 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="filter_list">filter_list</span>
+</button>
+<button class="p-2 bg-surface-container-low rounded-lg text-stone-500 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+</button>
+</div>
+</div>
+<!-- Realization Cards -->
+<div class="grid grid-cols-1 gap-4">
+<!-- Card 1 -->
+<div class="group bg-surface-container-lowest p-5 rounded-2xl flex items-center gap-6 hover:shadow-2xl hover:shadow-stone-200/50 transition-all duration-300">
+<div class="w-24 h-24 rounded-2xl overflow-hidden flex-shrink-0">
+<img alt="Villa Bamako" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="contemporary luxury villa architecture in Bamako Mali with clean white lines and lush tropical landscaping at dusk" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBajvKrp-UiSQhO_hHOWOn2weluEOuE2psEYvnln7rj2Xiut0F0VUc75upmdWl_1XiVZ_euS4oY4wKx3naBlSxrMbiJoMo06jP8jhLXfjH0A689nCd6bsw8SszP0stNHHoGXzDAiiIwjPDaKXqjm4gDaXpauPCJhnSN_NY4UYzXvBIvWcz38oSiGkKrrOcrNEETfQOxf35om1T42RituV2i_uXGmb1w-tyWYnhv1QBEHBgXzjrqKNsYqgkdog9sg97FekXmDXqTXII"/>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-3 mb-1">
+<h4 class="font-bold text-lg text-on-surface">Villa Bamako</h4>
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold rounded-full uppercase tracking-wider">Publié</span>
+</div>
+<div class="flex items-center gap-4 text-sm text-on-surface-variant">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm" data-icon="location_on">location_on</span> Dakar, Sénégal</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm" data-icon="calendar_today">calendar_today</span> Oct 2023</span>
+</div>
+</div>
+<div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-surface-container rounded-full text-stone-600 transition-colors"><span class="material-symbols-outlined" data-icon="edit">edit</span></button>
+<button class="p-2 hover:bg-surface-container rounded-full text-stone-600 transition-colors"><span class="material-symbols-outlined" data-icon="visibility">visibility</span></button>
+<button class="p-2 hover:bg-error-container/20 rounded-full text-error transition-colors"><span class="material-symbols-outlined" data-icon="delete">delete</span></button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group bg-surface-container-lowest p-5 rounded-2xl flex items-center gap-6 hover:shadow-2xl hover:shadow-stone-200/50 transition-all duration-300">
+<div class="w-24 h-24 rounded-2xl overflow-hidden flex-shrink-0">
+<img alt="Complexe Sédhiou" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="modern architectural complex in a rural African setting with sustainable materials and solar panels on roof" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbokSvv89EW6bEWJE0ANAoLaftUTCA694Cr-PFsnUD4vrdFeXqvlcNIH8jpktfzVrBNkdMOJ3Nkp1CdzXvN1IB7tIr3NQmmEHJGA1ao8hcacmbrlmJVnWpK9gDYDg7buf6y1rXB_hr8kplemfqsjOvle8FLm2hcu-HfCeuF_yNTJgJXARwAXs9h--h9ItTEqSXM0BON3Vz11lPt_2F5c-zULcwJHsuSsFt6aTQZ4rlmreGPjfV322W3d4bfwgXqhGLTBNP7bDi4Y4"/>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-3 mb-1">
+<h4 class="font-bold text-lg text-on-surface">Complexe Sédhiou</h4>
+<span class="px-3 py-1 bg-surface-container-high text-on-surface-variant text-[10px] font-bold rounded-full uppercase tracking-wider">Brouillon</span>
+</div>
+<div class="flex items-center gap-4 text-sm text-on-surface-variant">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm" data-icon="location_on">location_on</span> Casamance, Sénégal</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm" data-icon="calendar_today">calendar_today</span> En cours</span>
+</div>
+</div>
+<div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-surface-container rounded-full text-stone-600 transition-colors"><span class="material-symbols-outlined" data-icon="edit">edit</span></button>
+<button class="p-2 hover:bg-surface-container rounded-full text-stone-600 transition-colors"><span class="material-symbols-outlined" data-icon="visibility">visibility</span></button>
+<button class="p-2 hover:bg-error-container/20 rounded-full text-error transition-colors"><span class="material-symbols-outlined" data-icon="delete">delete</span></button>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group bg-surface-container-lowest p-5 rounded-2xl flex items-center gap-6 hover:shadow-2xl hover:shadow-stone-200/50 transition-all duration-300">
+<div class="w-24 h-24 rounded-2xl overflow-hidden flex-shrink-0">
+<img alt="Kelen Tower" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="dramatic low angle shot of a futuristic skyscraper with glass facade reflecting a vibrant sunset in a developing city" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAez7Z0mSyjAK4hxWDjg2UZod6tWu1mgbZlIaelGgmkUzuTzkpQklBlNXZR7TkgyKyAxVQZ7jKtfQiihc50qDpauigCFSnTaUebZLK51psh6uaSPdaxDiD0fXZ7MyMqGtYWWtIqzAIPyj3fNPsdPQciNWXj9qy0Lml03vsFm8-jA5Ae23XWOpBnlDW2kuM-d871-i-y8pky1dxYUEm-TRqGDWRUybwoL9xZkWJIoI8YZ0I_MU22CI0JbScMSvuqms7hnaaNlJQh0sc"/>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-3 mb-1">
+<h4 class="font-bold text-lg text-on-surface">Kelen Tower</h4>
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold rounded-full uppercase tracking-wider">Publié</span>
+</div>
+<div class="flex items-center gap-4 text-sm text-on-surface-variant">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm" data-icon="location_on">location_on</span> Abidjan, CI</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm" data-icon="calendar_today">calendar_today</span> Jan 2024</span>
+</div>
+</div>
+<div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-surface-container rounded-full text-stone-600 transition-colors"><span class="material-symbols-outlined" data-icon="edit">edit</span></button>
+<button class="p-2 hover:bg-surface-container rounded-full text-stone-600 transition-colors"><span class="material-symbols-outlined" data-icon="visibility">visibility</span></button>
+<button class="p-2 hover:bg-error-container/20 rounded-full text-error transition-colors"><span class="material-symbols-outlined" data-icon="delete">delete</span></button>
+</div>
+</div>
+</div>
+</div>
+<!-- Realization Editor (Modal-like Section) -->
+<div class="col-span-12 lg:col-span-5">
+<div class="sticky top-28 bg-surface-container-lowest rounded-2xl p-8 shadow-xl shadow-stone-200/40">
+<div class="flex items-center justify-between mb-8">
+<h3 class="text-xl font-bold text-on-surface">Éditeur de Réalisation</h3>
+<span class="text-[10px] font-bold text-primary uppercase tracking-widest px-2 py-1 bg-primary/10 rounded">Live Save</span>
+</div>
+<form class="space-y-6">
+<!-- Informations du Projet -->
+<div class="space-y-4">
+<label class="block">
+<span class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider mb-1.5 block">Titre du Projet</span>
+<input class="w-full bg-surface-container-low border-0 rounded-xl px-4 py-3 focus:ring-1 focus:ring-primary focus:bg-white transition-all text-on-surface placeholder-stone-400" placeholder="Ex: Villa Bamako" type="text"/>
+</label>
+<div class="grid grid-cols-2 gap-4">
+<label class="block">
+<span class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider mb-1.5 block">Localisation</span>
+<input class="w-full bg-surface-container-low border-0 rounded-xl px-4 py-3 focus:ring-1 focus:ring-primary focus:bg-white transition-all text-on-surface" placeholder="Dakar, Sénégal" type="text"/>
+</label>
+<label class="block">
+<span class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider mb-1.5 block">Date de Fin</span>
+<input class="w-full bg-surface-container-low border-0 rounded-xl px-4 py-3 focus:ring-1 focus:ring-primary focus:bg-white transition-all text-on-surface" type="date"/>
+</label>
+</div>
+</div>
+<!-- Expertise Vault -->
+<div class="pt-4 border-t-0">
+<span class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-3 block">Expertise Vault</span>
+<div class="border-2 border-dashed border-outline-variant/30 rounded-2xl p-8 flex flex-col items-center justify-center text-center hover:bg-surface-container-low transition-colors group cursor-pointer">
+<div class="w-12 h-12 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="cloud_upload">cloud_upload</span>
+</div>
+<p class="text-sm font-medium text-on-surface mb-1">Déposez vos plans ou PDF</p>
+<p class="text-xs text-on-surface-variant">Max 25MB par fichier</p>
+</div>
+<div class="mt-4 grid grid-cols-3 gap-2">
+<div class="aspect-square bg-surface-container-low rounded-lg relative overflow-hidden group">
+<img alt="Plan 1" class="w-full h-full object-cover" data-alt="architectural technical drawing of a residential house on blue background with white lines" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAA_foxSLA6kud9oQuxVyyd_Cch0O8rBVu_rhRcTZOlLdiW-VJCwEx38xeJdQ1hhtP3rcywmGMSbaqK2EAbPqtf9EVd0m64SRtlsR1xmfQ96ljO4tA_fJ37NU2z_Q1AKpP_0XujWwxqvwiZCEj65v6cDy70Uj5Xyi4QnMBmElsFzv0sMC2HMXM1PnWMZONqK7qsw6zH_l0ftvQy_j75G01xYRyxe310l98HTAf7yWuFF-XDeULi_oLO5DJ6eHhJ7QrBOqayFlF1HmM"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+<button class="text-white"><span class="material-symbols-outlined text-sm" data-icon="close">close</span></button>
+</div>
+</div>
+<div class="aspect-square bg-surface-container-low rounded-lg relative overflow-hidden group">
+<img alt="Plan 2" class="w-full h-full object-cover" data-alt="abstract close up of geometric building lines against a clear blue sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDoN7UIHb8jFkZZ44rsTqjuTnfRV3XfoSWgRgup5WM3oPt0W6QOIfSk7iKpgr-b77gaxjrWcXI6iOBvS_OpJDHpOo52umR8Q1bbZVYP2c5SDp92eUT5XSxcTFCaj-9q9wGbb6EwsTkbHedUUZS0DEnQ3wsDStQ88O3pqcKIW2g2aRdQA4kv_YNiSlffaNMPXyAQ2acssooZawmSNr0G3KUtGVXLSlc9uHKjK6qQNT2wqe1ZEd7aXwKnQgkgk1GZvLyhE7S6ifQHZNw"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+<button class="text-white"><span class="material-symbols-outlined text-sm" data-icon="close">close</span></button>
+</div>
+</div>
+<div class="aspect-square bg-surface-container-low rounded-lg flex items-center justify-center border border-outline-variant/20 hover:bg-surface-container-high transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-stone-400" data-icon="add">add</span>
+</div>
+</div>
+</div>
+<div class="flex gap-4 pt-4">
+<button class="flex-1 py-4 bg-surface-container-high text-on-surface rounded-xl font-bold hover:bg-surface-container-highest transition-colors" type="button">
+                                Annuler
+                            </button>
+<button class="flex-[2] py-4 bg-gradient-to-br from-primary to-primary-container text-white rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[0.98] transition-transform" type="submit">
+                                Enregistrer
+                            </button>
+</div>
+</form>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating UI elements -->
+<div class="fixed bottom-8 right-8 z-50">
+<button class="w-14 h-14 bg-on-surface text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="chat_bubble" style="font-variation-settings: 'FILL' 1;">chat_bubble</span>
+</button>
+</div>
+</body></html>

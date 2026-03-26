@@ -54,6 +54,26 @@ export default async function ProfessionalProfilePage({ params }: Props) {
 
   const currentStatus = (pro.status as keyof typeof statusColors) || "white";
 
+  const { data: realRealizations } = await supabase
+    .from("professional_realizations")
+    .select(`
+      *,
+      realization_images(*)
+    `)
+    .eq("professional_id", pro.id)
+    .order("created_at", { ascending: false });
+
+  // Use real realizations if available, otherwise fallback to placeholder logic
+  const portfolioItems = realRealizations && realRealizations.length > 0 
+    ? realRealizations.map(r => ({
+        id: r.id,
+        title: r.title,
+        description: r.description,
+        image: (r.realization_images as any[])?.find((img: any) => img.is_main)?.url || (r.realization_images as any[])?.[0]?.url || "https://images.unsplash.com/photo-1600585154340-be6199f7d209?auto=format&fit=crop&q=80",
+        location: r.location
+      }))
+    : [];
+
   return (
     <div className="bg-surface selection:bg-primary-container selection:text-on-primary-container min-h-screen">
       <main>
@@ -117,37 +137,91 @@ export default async function ProfessionalProfilePage({ params }: Props) {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-              {/* Featured Project */}
-              <div className="md:col-span-8 group relative overflow-hidden rounded-[2.5rem] bg-white shadow-lg transition-all duration-500 hover:shadow-2xl">
-                <img 
-                  className="w-full h-[600px] object-cover transition-transform duration-700 group-hover:scale-110" 
-                  src={pro.portfolio_photos?.[1] || "https://images.unsplash.com/photo-1600585154340-be6199f7d209?auto=format&fit=crop&q=80"} 
-                  alt="Réalisation majeure"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-stone-900/90 via-stone-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-12">
-                  <h3 className="text-white text-3xl font-black mb-2">Projet d&apos;Excellence</h3>
-                  <p className="text-white/80 font-medium text-lg">Conception et réalisation intégrale - Haut de gamme</p>
-                </div>
-              </div>
-
-              {/* Grid Items */}
-              <div className="md:col-span-4 grid grid-rows-2 gap-8">
-                {[2, 3].map((idx) => (
-                  <div key={idx} className="group relative overflow-hidden rounded-[2.5rem] bg-stone-100 shadow-lg transition-all duration-500 hover:shadow-2xl">
-                    <img 
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
-                      src={pro.portfolio_photos?.[idx] || `https://images.unsplash.com/photo-1600607687940-46764b36872a?auto=format&fit=crop&q=80&sig=${idx}`} 
-                      alt={`Réalisation ${idx}`}
-                    />
-                    <div className="absolute inset-0 bg-stone-900/40 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center p-8 text-center">
-                      <div className="text-white">
-                        <h3 className="text-2xl font-black mb-2">Réalisation {idx}</h3>
-                        <p className="text-sm font-bold uppercase tracking-widest text-white/70">Expertise technique</p>
+              {portfolioItems.length > 0 ? (
+                <>
+                  {/* Featured Project */}
+                  <div className="md:col-span-8 group relative overflow-hidden rounded-[2.5rem] bg-white shadow-lg transition-all duration-500 hover:shadow-2xl">
+                    <Link href={`/professionnels/${params.slug}/realisations/${portfolioItems[0].id}`}>
+                      <img 
+                        className="w-full h-[600px] object-cover transition-transform duration-700 group-hover:scale-110" 
+                        src={portfolioItems[0].image} 
+                        alt={portfolioItems[0].title}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-stone-900/90 via-stone-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-12">
+                        <h3 className="text-white text-3xl font-black mb-2">{portfolioItems[0].title}</h3>
+                        <p className="text-white/80 font-medium text-lg">{portfolioItems[0].location || 'Réalisation majeure'}</p>
                       </div>
+                    </Link>
+                  </div>
+
+                  {/* Grid Items */}
+                  <div className="md:col-span-4 grid grid-rows-2 gap-8">
+                    {portfolioItems.slice(1, 3).map((item) => (
+                      <div key={item.id} className="group relative overflow-hidden rounded-[2.5rem] bg-stone-100 shadow-lg transition-all duration-500 hover:shadow-2xl">
+                        <Link href={`/professionnels/${params.slug}/realisations/${item.id}`}>
+                          <img 
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                            src={item.image} 
+                            alt={item.title}
+                          />
+                          <div className="absolute inset-0 bg-stone-900/40 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center p-8 text-center">
+                            <div className="text-white">
+                              <h3 className="text-2xl font-black mb-2">{item.title}</h3>
+                              <p className="text-sm font-bold uppercase tracking-widest text-white/70">Détails du projet</p>
+                            </div>
+                          </div>
+                        </Link>
+                      </div>
+                    ))}
+                    {portfolioItems.length === 1 && (
+                       <div className="bg-stone-50 rounded-[2.5rem] border-4 border-dashed border-stone-100 flex items-center justify-center p-12 text-center row-span-2">
+                          <p className="text-stone-300 font-black uppercase tracking-widest text-xs">Plus de projets à venir</p>
+                       </div>
+                    )}
+                    {portfolioItems.length === 2 && (
+                       <div className="bg-stone-50 rounded-[2.5rem] border-4 border-dashed border-stone-100 flex items-center justify-center p-12 text-center">
+                          <p className="text-stone-300 font-black uppercase tracking-widest text-xs">Plus de projets à venir</p>
+                       </div>
+                    )}
+                  </div>
+                </>
+              ) : (
+                // Fallback to placeholders if no real realizations
+                <>
+                  {/* Featured Project Placeholder */}
+                  <div className="md:col-span-8 group relative overflow-hidden rounded-[2.5rem] bg-white shadow-lg transition-all duration-500 hover:shadow-2xl">
+                    <img 
+                      className="w-full h-[600px] object-cover transition-transform duration-700 group-hover:scale-110" 
+                      src={pro.portfolio_photos?.[1] || "https://images.unsplash.com/photo-1600585154340-be6199f7d209?auto=format&fit=crop&q=80"} 
+                      alt="Réalisation majeure"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-stone-900/90 via-stone-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-12">
+                      <h3 className="text-white text-3xl font-black mb-2">Projet d&apos;Excellence</h3>
+                      <p className="text-white/80 font-medium text-lg">Conception et réalisation intégrale - Haut de gamme</p>
                     </div>
                   </div>
-                ))}
-              </div>
+
+                  {/* Grid Items Placeholder */}
+                  <div className="md:col-span-4 grid grid-rows-2 gap-8">
+                    {[2, 3].map((idx) => (
+                      <div key={idx} className="group relative overflow-hidden rounded-[2.5rem] bg-stone-100 shadow-lg transition-all duration-500 hover:shadow-2xl">
+                        <img 
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                          src={pro.portfolio_photos?.[idx] || `https://images.unsplash.com/photo-1600607687940-46764b36872a?auto=format&fit=crop&q=80&sig=${idx}`} 
+                          alt={`Réalisation ${idx}`}
+                        />
+                        <div className="absolute inset-0 bg-stone-900/40 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center p-8 text-center">
+                          <div className="text-white">
+                            <h3 className="text-2xl font-black mb-2">Réalisation {idx}</h3>
+                            <p className="text-sm font-bold uppercase tracking-widest text-white/70">Expertise technique</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+
 
               {/* Secondary Grid */}
               <div className="md:col-span-4 group overflow-hidden rounded-[2.5rem] bg-white border border-stone-100 shadow-lg transition-all duration-500 hover:shadow-2xl">

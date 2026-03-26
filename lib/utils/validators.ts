@@ -125,6 +125,17 @@ export const contactSchema = z.object({
   message: z.string().min(20, "Message requis (20 caractères minimum)"),
 });
 
+// --- Realization ---
+
+export const realizationSchema = z.object({
+  title: z.string().min(5, "Le titre doit faire au moins 5 caractères"),
+  description: z.string().min(20, "La description doit faire au moins 20 caractères"),
+  location: z.string().min(2, "La localisation est requise"),
+  completion_date: z.string().min(1, "La date de réalisation est requise"),
+  images: z.array(z.any()).optional(),
+  documents: z.array(z.any()).optional(),
+});
+
 // --- Type exports ---
 
 export type LoginFormData = z.infer<typeof loginSchema>;
@@ -135,3 +146,5 @@ export type SignalFormData = z.infer<typeof signalSchema>;
 export type ReviewFormData = z.infer<typeof reviewSchema>;
 export type ProProfileFormData = z.infer<typeof proProfileSchema>;
 export type ContactFormData = z.infer<typeof contactSchema>;
+export type RealizationFormData = z.infer<typeof realizationSchema>;
+
