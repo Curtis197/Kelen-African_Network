@@ -80,7 +80,7 @@ export default async function ProfessionalProfilePage({ params }: Props) {
     <div className="bg-surface selection:bg-primary-container selection:text-on-primary-container min-h-screen">
       <main>
         {/* Hero Section */}
-        <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
+        <section className="relative min-h-[35vh] flex items-center justify-center overflow-hidden">
           <div className="absolute inset-0 z-0">
             <img 
               className="w-full h-full object-cover" 
@@ -90,35 +90,35 @@ export default async function ProfessionalProfilePage({ params }: Props) {
             <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]"></div>
           </div>
           
-          <div className="relative z-10 w-full max-w-6xl px-6">
-            <div className="bg-white/80 backdrop-blur-2xl p-10 md:p-16 rounded-[2.5rem] border border-white/20 max-w-4xl shadow-2xl">
-              <div className="flex items-center gap-3 mb-6">
-                 <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] border ${statusColors[currentStatus]}`}>
+          <div className="relative z-10 w-full max-w-6xl px-6 flex justify-center">
+            <div className="bg-white/80 backdrop-blur-2xl p-8 md:p-10 rounded-[2rem] border border-white/20 w-full md:w-[35vw] shadow-2xl">
+              <div className="flex items-center gap-3 mb-4">
+                 <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-[0.2em] border ${statusColors[currentStatus]}`}>
                     Rang {currentStatus.charAt(0).toUpperCase() + currentStatus.slice(1)}
                  </span>
                  {pro.verified && (
-                   <span className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-kelen-green-100 text-kelen-green-700 border border-kelen-green-200 text-[10px] font-black uppercase tracking-[0.2em]">
-                     <Verified className="w-3 h-3" />
-                     Vérifié par Kelen
+                   <span className="flex items-center gap-2 px-3 py-1 rounded-full bg-kelen-green-100 text-kelen-green-700 border border-kelen-green-200 text-[9px] font-black uppercase tracking-[0.2em]">
+                     <Verified className="w-2.5 h-2.5" />
+                     Vérifié
                    </span>
                  )}
               </div>
               
-              <h1 className="text-5xl md:text-8xl font-black text-stone-900 tracking-tighter leading-[0.9] mb-8">
+              <h1 className="text-3xl md:text-5xl font-black text-stone-900 tracking-tighter leading-[1.1] mb-4">
                 {pro.business_name}
               </h1>
               
-              <p className="text-xl md:text-2xl text-stone-600 font-medium mb-12 border-l-4 border-kelen-green-600 pl-8 max-w-2xl leading-relaxed">
+              <p className="text-sm md:text-base text-stone-600 font-medium mb-6 border-l-3 border-kelen-green-600 pl-4 leading-relaxed line-clamp-2">
                 {pro.description || pro.category}
               </p>
               
-              <div className="flex flex-wrap gap-4">
-                <a href="#contact" className="bg-kelen-green-600 text-white px-10 py-5 rounded-2xl font-bold flex items-center gap-3 hover:scale-[0.98] transition-all shadow-xl shadow-kelen-green-600/20">
-                  Contacter l&apos;expert
-                  <ChevronRight className="w-5 h-5" />
+              <div className="flex flex-wrap gap-3">
+                <a href="#contact" className="bg-kelen-green-600 text-white px-6 py-3 rounded-xl text-sm font-bold flex items-center gap-2 hover:scale-[0.98] transition-all shadow-lg shadow-kelen-green-600/10">
+                  Contacter
+                  <ChevronRight className="w-4 h-4" />
                 </a>
-                <a href="#portfolio" className="bg-white text-stone-900 px-10 py-5 rounded-2xl font-bold hover:bg-stone-50 transition-all border border-stone-200 shadow-sm">
-                  Voir les réalisations
+                <a href="#portfolio" className="bg-white text-stone-900 px-6 py-3 rounded-xl text-sm font-bold hover:bg-stone-50 transition-all border border-stone-200 shadow-sm">
+                  Projets
                 </a>
               </div>
             </div>

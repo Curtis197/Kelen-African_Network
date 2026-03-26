@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
 const NAV_ITEMS = [
   { href: "/pro/dashboard", label: "Tableau de bord", icon: "📊" },
@@ -15,6 +16,14 @@ const NAV_ITEMS = [
 
 export function ProSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const supabase = createClient();
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    router.push("/");
+    router.refresh();
+  };
 
   return (
     <aside className="hidden w-64 shrink-0 border-r border-border bg-white lg:block">
@@ -61,7 +70,10 @@ export function ProSidebar() {
               contact@kouadio-construction.ci
             </p>
           </div>
-          <button className="mt-2 w-full rounded-lg px-3 py-2 text-left text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+          <button 
+            onClick={handleSignOut}
+            className="mt-2 w-full rounded-lg px-3 py-2 text-left text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          >
             Se déconnecter
           </button>
         </div>

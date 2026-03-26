@@ -1,11 +1,34 @@
-"use client";
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { MARKETING_NAV } from "@/lib/utils/constants";
+import { createClient } from "@/lib/supabase/client";
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const router = useRouter();
+  const supabase = createClient();
+
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setUser(session?.user ?? null);
+    };
+    getUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [supabase.auth]);
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    router.push("/");
+    router.refresh();
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-white">
@@ -38,12 +61,29 @@ export function Navbar() {
           >
             Vérifier un pro
           </Link>
-          <Link
-            href="/connexion"
-            className="rounded-lg bg-kelen-green-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-kelen-green-600"
-          >
-            Connexion
-          </Link>
+          {user ? (
+            <div className="flex items-center gap-3">
+              <Link
+                href="/pro/dashboard"
+                className="rounded-lg bg-kelen-green-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-kelen-green-600"
+              >
+                Tableau de bord
+              </Link>
+              <button
+                onClick={handleSignOut}
+                className="text-sm font-medium text-muted-foreground hover:text-foreground"
+              >
+                Déconnexion
+              </button>
+            </div>
+          ) : (
+            <Link
+              href="/connexion"
+              className="rounded-lg bg-kelen-green-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-kelen-green-600"
+            >
+              Connexion
+            </Link>
+          )}
         </div>
 
         {/* Mobile hamburger */}
@@ -86,13 +126,34 @@ export function Navbar() {
             >
               Vérifier un pro
             </Link>
-            <Link
-              href="/connexion"
-              onClick={() => setMobileOpen(false)}
-              className="rounded-lg bg-kelen-green-500 px-4 py-2 text-center text-sm font-medium text-white"
-            >
-              Connexion
-            </Link>
+            {user ? (
+              <>
+                <Link
+                  href="/pro/dashboard"
+                  onClick={() => setMobileOpen(false)}
+                  className="rounded-lg bg-kelen-green-500 px-4 py-2 text-center text-sm font-medium text-white"
+                >
+                  Tableau de bord
+                </Link>
+                <button
+                  onClick={() => {
+                    handleSignOut();
+                    setMobileOpen(false);
+                  }}
+                  className="px-4 py-2 text-center text-sm font-medium text-muted-foreground hover:text-foreground"
+                >
+                  Déconnexion
+                </button>
+              </>
+            ) : (
+              <Link
+                href="/connexion"
+                onClick={() => setMobileOpen(false)}
+                className="rounded-lg bg-kelen-green-500 px-4 py-2 text-center text-sm font-medium text-white"
+              >
+                Connexion
+              </Link>
+            )}
           </div>
         </div>
       )}

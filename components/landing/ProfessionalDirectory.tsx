@@ -1,7 +1,5 @@
-"use client";
-
-import { useState } from "react";
-import { Search, MapPin, Filter, Star, CheckCircle2, ChevronDown } from "lucide-react";
+import { useState, useMemo } from "react";
+import { Search, MapPin, Filter, Star, CheckCircle2, ChevronDown, Inbox } from "lucide-react";
 import { Professional } from "@/lib/supabase/types";
 import { ProfessionalCard } from "@/components/shared/ProfessionalCard";
 
@@ -13,6 +11,27 @@ interface ProfessionalDirectoryProps {
 export function ProfessionalDirectory({ initialPros, totalCount }: ProfessionalDirectoryProps) {
   const [category, setCategory] = useState("Toutes les spécialités");
   const [tier, setTier] = useState("Tous");
+  const [locationQuery, setLocationQuery] = useState("");
+
+  const filteredPros = useMemo(() => {
+    return initialPros.filter((pro) => {
+      // Category filter
+      const matchesCategory = category === "Toutes les spécialités" || pro.category === category;
+      
+      // Tier filter
+      const matchesTier = tier === "Tous" || 
+        (tier === "Argent" && pro.status === "silver") || 
+        (tier === "Or" && pro.status === "gold");
+      
+      // Location filter
+      const searchStr = locationQuery.toLowerCase().trim();
+      const matchesLocation = !searchStr || 
+        pro.city.toLowerCase().includes(searchStr) || 
+        pro.country.toLowerCase().includes(searchStr);
+      
+      return matchesCategory && matchesTier && matchesLocation;
+    });
+  }, [initialPros, category, tier, locationQuery]);
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 bg-surface">
@@ -29,7 +48,7 @@ export function ProfessionalDirectory({ initialPros, totalCount }: ProfessionalD
         </div>
         <div className="flex items-center gap-3 rounded-full bg-surface-container-low px-5 py-2.5 text-sm font-bold text-kelen-green-700">
           <span className="flex h-2 w-2 rounded-full bg-kelen-green-500" />
-          <span>{totalCount.toLocaleString()} expert{totalCount > 1 ? "s" : ""} vérifié{totalCount > 1 ? "s" : ""} disponible{totalCount > 1 ? "s" : ""}</span>
+          <span>{filteredPros.length.toLocaleString()} expert{filteredPros.length > 1 ? "s" : ""} vérifié{filteredPros.length > 1 ? "s" : ""} trouvé{filteredPros.length > 1 ? "s" : ""}</span>
         </div>
       </div>
 
@@ -65,6 +84,8 @@ export function ProfessionalDirectory({ initialPros, totalCount }: ProfessionalD
               <input
                 type="text"
                 placeholder="Abidjan, Dakar..."
+                value={locationQuery}
+                onChange={(e) => setLocationQuery(e.target.value)}
                 className="w-full rounded-2xl border-none bg-surface-container-lowest py-4 pl-11 pr-4 text-sm shadow-sm transition-all focus:ring-2 focus:ring-kelen-green-500"
               />
             </div>
@@ -101,24 +122,46 @@ export function ProfessionalDirectory({ initialPros, totalCount }: ProfessionalD
       </div>
 
       {/* Expert Grid */}
-      <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {initialPros.map((pro) => (
-          <ProfessionalCard 
-            key={pro.slug} 
-            slug={pro.slug}
-            businessName={pro.business_name}
-            ownerName={pro.owner_name}
-            category={pro.category}
-            city={pro.city}
-            country={pro.country}
-            status={pro.status}
-            recommendationCount={pro.recommendation_count}
-            signalCount={pro.signal_count}
-            avgRating={pro.avg_rating}
-            reviewCount={pro.review_count}
-          />
-        ))}
-      </div>
+      {filteredPros.length > 0 ? (
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {filteredPros.map((pro) => (
+            <ProfessionalCard 
+              key={pro.slug} 
+              slug={pro.slug}
+              businessName={pro.business_name}
+              ownerName={pro.owner_name}
+              category={pro.category}
+              city={pro.city}
+              country={pro.country}
+              status={pro.status}
+              recommendationCount={pro.recommendation_count}
+              signalCount={pro.signal_count}
+              avgRating={pro.avg_rating}
+              reviewCount={pro.review_count}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+          <div className="mb-6 rounded-full bg-surface-container-low p-6">
+            <Inbox className="h-12 w-12 text-muted-foreground/50" />
+          </div>
+          <h3 className="text-2xl font-bold text-on-surface">Aucun expert trouvé</h3>
+          <p className="mt-2 text-muted-foreground max-w-md">
+            Essayez de modifier vos filtres ou de rechercher une autre ville pour trouver le professionnel qu&apos;il vous faut.
+          </p>
+          <button 
+            onClick={() => {
+              setCategory("Toutes les spécialités");
+              setTier("Tous");
+              setLocationQuery("");
+            }}
+            className="mt-8 text-sm font-black uppercase tracking-widest text-kelen-green-600 hover:text-kelen-green-700"
+          >
+            Réinitialiser les filtres
+          </button>
+        </div>
+      )}
 
       {/* Pagination / Load More */}
       <div className="mt-20 flex flex-col items-center gap-6">
