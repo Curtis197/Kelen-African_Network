@@ -32,7 +32,7 @@ export function ProfessionalCard({
 }: ProfessionalCardProps) {
   return (
     <Link
-      href={`/pro/${slug}`}
+      href={`/professionnels/${slug}`}
       className="group block rounded-2xl bg-surface-container-lowest p-6 transition-all duration-300 hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.08)] hover:-translate-y-1 hover:ring-1 hover:ring-kelen-green-100/50"
     >
       <div className="flex items-start justify-between gap-4">

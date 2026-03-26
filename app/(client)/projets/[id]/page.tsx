@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
+import ProjectTimeline, { Phase } from "@/components/shared/ProjectTimeline";
+
 interface Project {
   id: string;
   title: string;
@@ -15,7 +17,7 @@ interface Project {
   budget_currency: string;
   status: string;
   created_at: string;
-  objectives: string[];
+  objectives: Phase[];
 }
 
 interface ProjectProfessional {
@@ -181,37 +183,27 @@ export default function ProjectDetailPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">
-            {/* Timeline/Phases Placeholder */}
-            <div className="bg-white p-8 rounded-3xl shadow-sm border border-stone-200/50">
-              <div className="flex items-center justify-between mb-8">
-                <h3 className="text-xl font-bold text-stone-900">Chronologie du projet</h3>
-                <span className="text-xs font-bold text-kelen-green-600 bg-kelen-green-50 px-3 py-1 rounded-full uppercase tracking-wider">
-                  Timeline
-                </span>
-              </div>
-              <div className="relative pl-8 space-y-10 before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[2px] before:bg-stone-100">
-                <div className="relative">
-                  <div className="absolute -left-[30px] top-1 w-6 h-6 bg-kelen-green-500 text-white rounded-full flex items-center justify-center z-10 shadow-lg shadow-kelen-green-500/30">
-                    <span className="material-symbols-outlined text-sm">check</span>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-stone-900">Planification & Design</h4>
-                    <p className="text-stone-500 text-sm">Action complétée le {new Date(project.created_at).toLocaleDateString()}</p>
-                  </div>
+            {/* Project Timeline - Premium Edition */}
+            <div className="space-y-8">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-3xl font-black font-headline text-stone-900 tracking-tight">Chronologie du projet</h3>
+                  <p className="text-stone-500 font-medium mt-1">Suivez l&apos;avancement de votre chantier en temps réel.</p>
                 </div>
-                <div className="relative">
-                  <div className="absolute -left-[30px] top-1 w-6 h-6 bg-white border-2 border-kelen-green-500 rounded-full flex items-center justify-center z-10">
-                    <div className="w-2 h-2 bg-kelen-green-500 rounded-full animate-pulse" />
-                  </div>
-                  <div className="space-y-3">
-                    <h4 className="font-bold text-stone-900">Exécution en cours</h4>
-                    <div className="w-full h-2 bg-stone-100 rounded-full overflow-hidden">
-                      <div className="h-full bg-kelen-green-500 rounded-full" style={{ width: '45%' }} />
-                    </div>
-                    <p className="text-[10px] font-bold text-kelen-green-600 uppercase tracking-widest">45% complété</p>
-                  </div>
+                <div className="flex items-center gap-2 px-4 py-2 bg-kelen-green-50 rounded-full border border-kelen-green-100">
+                  <span className="w-2 h-2 rounded-full bg-kelen-green-500 animate-pulse"></span>
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-kelen-green-600">Live Sync</span>
                 </div>
               </div>
+
+              {project.objectives && project.objectives.length > 0 ? (
+                <ProjectTimeline phases={project.objectives} />
+              ) : (
+                <div className="p-12 text-center bg-stone-50 rounded-[2.5rem] border border-dashed border-stone-200">
+                  <span className="material-symbols-outlined text-4xl text-stone-300 mb-4">event_note</span>
+                  <p className="text-stone-500 font-medium italic">Aucune étape n&apos;est encore définie pour ce projet.</p>
+                </div>
+              )}
             </div>
 
             {/* Team */}

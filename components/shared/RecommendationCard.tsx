@@ -32,32 +32,41 @@ export function RecommendationCard({
   linked,
 }: RecommendationCardProps) {
   return (
-    <div className="rounded-xl border border-kelen-green-500/20 bg-kelen-green-50/30 p-6">
+    <div className="group relative overflow-hidden rounded-2xl bg-surface-container-lowest p-6 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
       <div className="flex items-start justify-between gap-4">
-        <div>
+        <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="text-kelen-green-500">✓</span>
-            <h4 className="font-semibold text-foreground">
-              {projectType} · {location}
+            <span className="material-symbols-outlined text-primary text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>
+              verified
+            </span>
+            <h4 className="font-headline font-bold text-lg text-on-surface">
+              {projectType}
             </h4>
           </div>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Terminé le {formatDate(completionDate)} · Budget : {BUDGET_LABELS[budgetRange]}
-          </p>
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-medium text-on-surface-variant/70 uppercase tracking-wider">
+            <span>{location}</span>
+            <span className="text-outline-variant/50">·</span>
+            <span>{formatDate(completionDate)}</span>
+            <span className="text-outline-variant/50">·</span>
+            <span className="text-secondary">{BUDGET_LABELS[budgetRange]}</span>
+          </div>
         </div>
         {linked && (
-          <span className="shrink-0 rounded-full bg-kelen-green-50 px-2.5 py-0.5 text-xs font-medium text-kelen-green-700 border border-kelen-green-500/20">
-            Lié au profil
+          <span className="shrink-0 rounded-full bg-primary/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-primary border border-primary/20">
+            Vérifié
           </span>
         )}
       </div>
 
-      <p className="mt-3 text-sm leading-relaxed text-foreground/80">
+      <p className="mt-4 text-sm leading-relaxed text-on-surface-variant font-body">
         {projectDescription}
       </p>
 
-      <div className="mt-4 text-xs text-muted-foreground">
-        — {submitterName}, {getCountryName(submitterCountry)}
+      <div className="mt-6 flex items-center gap-2 pt-4 border-t border-outline-variant/10 text-xs font-medium text-on-surface/60">
+        <span className="material-symbols-outlined text-sm">person</span>
+        <span>
+          {submitterName}, {getCountryName(submitterCountry)}
+        </span>
       </div>
     </div>
   );

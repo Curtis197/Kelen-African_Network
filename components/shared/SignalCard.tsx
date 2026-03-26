@@ -41,56 +41,67 @@ export function SignalCard({
   createdAt,
 }: SignalCardProps) {
   return (
-    <div className="rounded-xl border border-kelen-red-500/20 bg-kelen-red-50/30 p-6">
+    <div className="group relative overflow-hidden rounded-2xl bg-surface-container-lowest p-6 shadow-sm border-l-4 border-error transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
       <div className="flex items-start justify-between gap-4">
-        <div>
+        <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="text-kelen-red-500">⚠</span>
-            <h4 className="font-semibold text-foreground">
+            <span className="material-symbols-outlined text-error text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>
+              report
+            </span>
+            <h4 className="font-headline font-bold text-lg text-on-surface">
               {BREACH_LABELS[breachType]}
             </h4>
+          </div>
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-medium text-on-surface-variant/70 uppercase tracking-widest">
             {severity && (
-              <span className="rounded-full bg-kelen-red-100 px-2 py-0.5 text-xs font-medium text-kelen-red-700">
+              <span className="rounded-full bg-error/10 px-2.5 py-0.5 text-[10px] font-bold text-error border border-error/20">
                 {SEVERITY_LABELS[severity]}
               </span>
             )}
+            <span className="text-outline-variant/50">·</span>
+            <span>Prévu : {formatDate(agreedStartDate)} — {formatDate(agreedEndDate)}</span>
           </div>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Période prévue : {formatDate(agreedStartDate)} — {formatDate(agreedEndDate)}
-          </p>
         </div>
-        <span className="shrink-0 text-xs text-muted-foreground">
+        <span className="shrink-0 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/50">
           Signalé le {formatDate(createdAt)}
         </span>
       </div>
 
-      <p className="mt-3 text-sm leading-relaxed text-foreground/80">
+      <p className="mt-4 text-sm leading-relaxed text-on-surface-variant font-body">
         {breachDescription}
       </p>
 
-      {timelineDeviation && (
-        <p className="mt-2 text-sm text-muted-foreground">
-          <span className="font-medium">Écart de délai :</span> {timelineDeviation}
-        </p>
-      )}
-
-      {budgetDeviation && (
-        <p className="mt-1 text-sm text-muted-foreground">
-          <span className="font-medium">Écart budgétaire :</span> {budgetDeviation}
-        </p>
+      {(timelineDeviation || budgetDeviation) && (
+        <div className="mt-4 grid grid-cols-2 gap-4 rounded-xl bg-surface-container-low p-4 text-xs">
+          {timelineDeviation && (
+            <div>
+              <p className="font-bold text-on-surface-variant uppercase tracking-widest opacity-60">Écart délai</p>
+              <p className="mt-1 font-semibold text-error">{timelineDeviation}</p>
+            </div>
+          )}
+          {budgetDeviation && (
+            <div>
+              <p className="font-bold text-on-surface-variant uppercase tracking-widest opacity-60">Écart budget</p>
+              <p className="mt-1 font-semibold text-error">{budgetDeviation}</p>
+            </div>
+          )}
+        </div>
       )}
 
       {/* Professional response */}
       {proResponse && (
-        <div className="mt-4 rounded-lg border border-border bg-white p-4">
-          <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        <div className="mt-6 rounded-xl bg-surface-container-low p-5 relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-1 h-full bg-primary/30"></div>
+          <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-primary/80">
             Réponse du professionnel
             {proRespondedAt && (
-              <span className="font-normal"> · {formatDate(proRespondedAt)}</span>
+              <span className="font-medium normal-case tracking-normal text-on-surface-variant/60">
+                {" "}· {formatDate(proRespondedAt)}
+              </span>
             )}
           </p>
-          <p className="text-sm leading-relaxed text-foreground/80">
-            {proResponse}
+          <p className="text-sm leading-relaxed text-on-surface font-body italic">
+            &quot;{proResponse}&quot;
           </p>
         </div>
       )}

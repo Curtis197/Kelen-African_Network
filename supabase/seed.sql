@@ -117,35 +117,35 @@ INSERT INTO public.recommendations (professional_id, professional_slug, submitte
 VALUES 
 (
     (SELECT id FROM professionals WHERE business_name = 'Diallo Construction SARL'),
-    'diallo-construction-sarl-dakar',
+    (SELECT slug FROM professionals WHERE business_name = 'Diallo Construction SARL'),
     '10000000-0000-0000-0000-000000000001', 'Jean Dupont', 'FR', 'diaspora.user@gmail.com',
     'construction', 'Construction d''une villa R+1 à Saly.', '2024-01-15', '50k-100k', 'Saly, Sénégal',
     'contracts/demo-contract-1.pdf', ARRAY['photos/completion-1.jpg'], TRUE, TRUE, 'verified'
 ),
 (
     (SELECT id FROM professionals WHERE business_name = 'Diallo Construction SARL'),
-    'diallo-construction-sarl-dakar',
+    (SELECT slug FROM professionals WHERE business_name = 'Diallo Construction SARL'),
     '10000000-0000-0000-0000-000000000001', 'Jean Dupont', 'FR', 'diaspora.user@gmail.com',
     'construction', 'Extension terrasse et piscine.', '2024-05-20', '25k-50k', 'Dakar, Sénégal',
     'contracts/demo-contract-2.pdf', ARRAY['photos/completion-2.jpg'], TRUE, TRUE, 'verified'
 ),
 (
     (SELECT id FROM professionals WHERE business_name = 'Diallo Construction SARL'),
-    'diallo-construction-sarl-dakar',
+    (SELECT slug FROM professionals WHERE business_name = 'Diallo Construction SARL'),
     '10000000-0000-0000-0000-000000000002', 'Marie Sow', 'CI', 'investor.test@gmail.com',
     'construction', 'Rénovation complète appartement Plateau.', '2023-11-10', '10k-25k', 'Abidjan, CI',
     'contracts/demo-contract-3.pdf', ARRAY['photos/completion-3.jpg'], TRUE, TRUE, 'verified'
 ),
 (
     (SELECT id FROM professionals WHERE business_name = 'Diallo Construction SARL'),
-    'diallo-construction-sarl-dakar',
+    (SELECT slug FROM professionals WHERE business_name = 'Diallo Construction SARL'),
     '10000000-0000-0000-0000-000000000002', 'Marie Sow', 'CI', 'investor.test@gmail.com',
     'construction', 'Construction mur de clôture.', '2023-08-05', '0-10k', 'Assinie, CI',
     'contracts/demo-contract-4.pdf', ARRAY['photos/completion-4.jpg'], TRUE, TRUE, 'verified'
 ),
 (
     (SELECT id FROM professionals WHERE business_name = 'Diallo Construction SARL'),
-    'diallo-construction-sarl-dakar',
+    (SELECT slug FROM professionals WHERE business_name = 'Diallo Construction SARL'),
     '10000000-0000-0000-0000-000000000001', 'Jean Dupont', 'FR', 'diaspora.user@gmail.com',
     'construction', 'Réfection toiture hangar.', '2024-02-28', '10k-25k', 'Thies, Sénégal',
     'contracts/demo-contract-5.pdf', ARRAY['photos/completion-5.jpg'], TRUE, TRUE, 'verified'
@@ -156,14 +156,14 @@ INSERT INTO public.recommendations (professional_id, professional_slug, submitte
 VALUES 
 (
     (SELECT id FROM professionals WHERE business_name = 'Kouadio Plomberie Pro'),
-    'kouadio-plomberie-pro-abidjan',
+    (SELECT slug FROM professionals WHERE business_name = 'Kouadio Plomberie Pro'),
     '10000000-0000-0000-0000-000000000002', 'Marie Sow', 'CI', 'investor.test@gmail.com',
     'plomberie', 'Installation plomberie neuve villa.', '2024-03-10', '0-10k', 'Bingerville, CI',
     'contracts/demo-contract-6.pdf', ARRAY['photos/completion-6.jpg'], TRUE, TRUE, 'verified'
 ),
 (
     (SELECT id FROM professionals WHERE business_name = 'Kouadio Plomberie Pro'),
-    'kouadio-plomberie-pro-abidjan',
+    (SELECT slug FROM professionals WHERE business_name = 'Kouadio Plomberie Pro'),
     '10000000-0000-0000-0000-000000000001', 'Jean Dupont', 'FR', 'diaspora.user@gmail.com',
     'plomberie', 'Dépannage réseau eau chaude.', '2024-04-05', '0-10k', 'Dakar, SN',
     'contracts/demo-contract-7.pdf', ARRAY['photos/completion-7.jpg'], TRUE, TRUE, 'verified'
@@ -175,7 +175,7 @@ INSERT INTO public.signals (professional_id, professional_slug, submitter_id, su
 VALUES 
 (
     (SELECT id FROM professionals WHERE business_name = 'Sagna Design Bois'),
-    'sagna-design-bois-saint-louis',
+    (SELECT slug FROM professionals WHERE business_name = 'Sagna Design Bois'),
     '10000000-0000-0000-0000-000000000001', 'Jean Dupont', 'FR', 'diaspora.user@gmail.com',
     'quality', 'Finition des portes non conforme au devis et bois non traité.', 'minor', '2023-12-01', '2024-01-15',
     'contracts/bad-contract-1.pdf', ARRAY['evidence/defect-1.jpg'], TRUE, 'verified'
@@ -186,21 +186,21 @@ INSERT INTO public.signals (professional_id, professional_slug, submitter_id, su
 VALUES 
 (
     (SELECT id FROM professionals WHERE business_name = 'Traore Electricite'),
-    'traore-electricite-bamako',
+    (SELECT slug FROM professionals WHERE business_name = 'Traore Electricite'),
     '10000000-0000-0000-0000-000000000001', 'Jean Dupont', 'FR', 'diaspora.user@gmail.com',
     'abandonment', 'Chantier abandonné après versement de l''acompte de 50%.', 'critical', '2024-01-10', '2024-02-10',
     'contracts/bad-contract-2.pdf', ARRAY['evidence/abandon-1.jpg'], TRUE, 'verified'
 ),
 (
     (SELECT id FROM professionals WHERE business_name = 'Traore Electricite'),
-    'traore-electricite-bamako',
+    (SELECT slug FROM professionals WHERE business_name = 'Traore Electricite'),
     '10000000-0000-0000-0000-000000000002', 'Marie Sow', 'CI', 'investor.test@gmail.com',
     'fraud', 'Falsification de factures de matériel.', 'critical', '2023-09-15', '2023-10-15',
     'contracts/bad-contract-3.pdf', ARRAY['evidence/fraud-1.jpg'], TRUE, 'verified'
 ),
 (
     (SELECT id FROM professionals WHERE business_name = 'Traore Electricite'),
-    'traore-electricite-bamako',
+    (SELECT slug FROM professionals WHERE business_name = 'Traore Electricite'),
     '10000000-0000-0000-0000-000000000002', 'Marie Sow', 'CI', 'investor.test@gmail.com',
     'quality', 'Installation électrique dangereuse et non conforme aux normes.', 'major', '2023-11-20', '2023-12-20',
     'contracts/bad-contract-4.pdf', ARRAY['evidence/short-circuit-1.jpg'], TRUE, 'verified'
