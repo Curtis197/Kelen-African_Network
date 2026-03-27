@@ -142,7 +142,7 @@ export async function manageProjectProfessional(
   area: string, 
   action: 'add' | 'remove',
   isExternal: boolean = false,
-  externalData?: { name?: string; phone?: string; category?: string; location?: string }
+  externalData?: { name?: string; phone?: string; category?: string; location?: string; note?: string }
 ) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -161,6 +161,7 @@ export async function manageProjectProfessional(
       insertData.external_phone = externalData?.phone;
       insertData.external_category = externalData?.category;
       insertData.external_location = externalData?.location;
+      insertData.private_note = externalData?.note;
     } else {
       insertData.professional_id = proId;
     }

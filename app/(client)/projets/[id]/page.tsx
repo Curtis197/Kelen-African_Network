@@ -213,10 +213,13 @@ export default function ProjectDetailPage() {
                 <span className="material-symbols-outlined text-xl">share</span>
                 <span>Partager</span>
               </button>
-              <button className="px-10 py-4 bg-primary text-white font-headline font-bold rounded-2xl shadow-xl shadow-primary/10 hover:scale-[0.98] transition-all flex items-center gap-3">
+              <Link 
+                href={`/projets/nouveau?id=${projectIdStr}`}
+                className="px-10 py-4 bg-primary text-white font-headline font-bold rounded-2xl shadow-xl shadow-primary/10 hover:scale-[0.98] transition-all flex items-center gap-3"
+              >
                 <span className="material-symbols-outlined text-xl">add_task</span>
                 <span>Mise à jour</span>
-              </button>
+              </Link>
             </div>
           </div>
         </div>

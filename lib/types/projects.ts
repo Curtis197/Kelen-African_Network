@@ -12,7 +12,10 @@ export interface ProjectProfessional {
   project_id: string;
   is_external: boolean;
   external_name: string | null;
+  external_phone: string | null;
   external_category: string | null;
+  external_location: string | null;
+  private_note: string | null;
   development_area: string | null;
   rank_order: number;
   selection_status: 'candidate' | 'shortlisted' | 'finalist';

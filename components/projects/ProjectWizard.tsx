@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { upsertProject } from "@/lib/actions/projects";
+import { upsertProject, getProject } from "@/lib/actions/projects";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { clsx, type ClassValue } from "clsx";
@@ -33,7 +33,7 @@ const STEPS = [
   { id: "review", label: "Revision", icon: "verified" },
 ];
 
-export default function ProjectWizard() {
+export default function ProjectWizard({ initialId }: { initialId?: string }) {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
   const [isSaving, setIsSaving] = useState(false);
@@ -46,6 +46,29 @@ export default function ProjectWizard() {
     description: "",
     objectives: [],
   });
+
+  useEffect(() => {
+    if (initialId) {
+      const fetchProject = async () => {
+        const project = await getProject(initialId);
+        if (project) {
+          setFormData({
+            id: project.id,
+            title: project.title,
+            category: project.category,
+            location: project.location,
+            budget_total: project.budget_total || 0,
+            budget_currency: project.budget_currency || "XOF",
+            start_date: project.start_date,
+            end_date: project.end_date,
+            description: project.description || "",
+            objectives: project.objectives || [],
+          });
+        }
+      };
+      fetchProject();
+    }
+  }, [initialId]);
 
   const updateFormData = (data: Partial<ProjectData>) => {
     setFormData((prev) => ({ ...prev, ...data }));

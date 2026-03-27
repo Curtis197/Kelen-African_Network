@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useState } from "react";
 import { updateProfessionalRank, updateProfessionalSelection, manageProjectProfessional } from "@/lib/actions/projects";
+import { AddExternalProModal } from "./AddExternalProModal";
 import { ProfessionalStatus } from "@/lib/supabase/types";
 
 import { ProjectProfessional, Professional } from "@/lib/types/projects";
@@ -17,6 +18,7 @@ interface DevelopmentAreaRowProps {
 
 export function DevelopmentAreaRow({ areaName, professionals, projectId, onRefresh }: DevelopmentAreaRowProps) {
   const [isUpdating, setIsUpdating] = useState(false);
+  const [showAddExternal, setShowAddExternal] = useState(false);
 
   const handleRankUpdate = async (linkId: string, currentRank: number, direction: 'up' | 'down') => {
     setIsUpdating(true);
@@ -48,21 +50,8 @@ export function DevelopmentAreaRow({ areaName, professionals, projectId, onRefre
     setIsUpdating(false);
   };
 
-  const handleAddExternal = async () => {
-    const name = window.prompt("Nom du professionnel externe (ex: Maître Sow) :");
-    if (!name) return;
-    
-    setIsUpdating(true);
-    await manageProjectProfessional(
-      projectId,
-      null,
-      areaName,
-      'add',
-      true,
-      { name }
-    );
-    onRefresh();
-    setIsUpdating(false);
+  const handleAddExternal = () => {
+    setShowAddExternal(true);
   };
 
   return (
@@ -148,6 +137,14 @@ export function DevelopmentAreaRow({ areaName, professionals, projectId, onRefre
                     <p className="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mt-1 opacity-70">
                       {member.is_external ? member.external_category || areaName : member.professionals?.category}
                     </p>
+
+                    {member.private_note && (
+                      <div className="mt-4 p-3 bg-primary/5 rounded-xl border border-primary/5">
+                        <p className="text-[10px] text-on-surface-variant/80 leading-relaxed italic">
+                          "{member.private_note}"
+                        </p>
+                      </div>
+                    )}
                     
                     <div className="mt-4 flex flex-wrap gap-2">
                       <div className="flex items-center bg-surface-container px-2 py-1 rounded-lg">
@@ -224,6 +221,14 @@ export function DevelopmentAreaRow({ areaName, professionals, projectId, onRefre
           </div>
         )}
       </div>
+      
+      <AddExternalProModal 
+        isOpen={showAddExternal}
+        onClose={() => setShowAddExternal(false)}
+        projectId={projectId}
+        areaName={areaName}
+        onSuccess={onRefresh}
+      />
     </div>
   );
 }

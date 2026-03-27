@@ -6,14 +6,15 @@ export const metadata: Metadata = {
   description: "Créez votre nouveau projet immobilier sur Kelen.",
 };
 
-export default function NouveauProjetPage() {
+export default function NouveauProjetPage({ searchParams }: { searchParams: { id?: string } }) {
+  const id = searchParams.id;
   return (
     <div className="-m-6 lg:-m-8"> 
       {/* 
         We use negative margins to offset the padding in (client)/layout.tsx
         and take full control of the wizard layout.
       */}
-      <ProjectWizard />
+      <ProjectWizard initialId={id} />
     </div>
   );
 }
