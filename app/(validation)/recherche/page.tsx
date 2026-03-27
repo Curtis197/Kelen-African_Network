@@ -108,6 +108,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
               {finalResults.map((pro: any) => (
                 <ProfessionalCard
                   key={pro.slug}
+                  id={pro.id}
                   slug={pro.slug}
                   businessName={pro.business_name}
                   ownerName={pro.owner_name}
