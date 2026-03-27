@@ -38,7 +38,7 @@ export function ProfileHero({
               href="#contact"
               className="bg-primary text-on-primary px-8 py-4 rounded-xl font-bold flex items-center gap-2 hover:scale-[0.98] transition-transform shadow-lg shadow-primary/20"
             >
-              Consulter Expert
+              Consulter Profil
               <span className="material-symbols-outlined">arrow_forward</span>
             </a>
             <a

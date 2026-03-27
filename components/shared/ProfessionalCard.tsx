@@ -1,9 +1,13 @@
-import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { formatRating } from "@/lib/utils/format";
 import type { ProfessionalStatus } from "@/lib/supabase/types";
+import { manageProjectProfessional } from "@/lib/actions/projects";
+import { Check, Plus } from "lucide-react";
 
 interface ProfessionalCardProps {
+  id: string;
   slug: string;
   businessName: string;
   ownerName: string;
@@ -15,9 +19,14 @@ interface ProfessionalCardProps {
   signalCount: number;
   avgRating: number | null;
   reviewCount: number;
+  selectionContext?: {
+    projectId: string;
+    areaName: string;
+  };
 }
 
 export function ProfessionalCard({
+  id,
   slug,
   businessName,
   ownerName,
@@ -29,13 +38,51 @@ export function ProfessionalCard({
   signalCount,
   avgRating,
   reviewCount,
+  selectionContext,
 }: ProfessionalCardProps) {
+  const router = useRouter();
+  const [isAdding, setIsAdding] = useState(false);
+  const [added, setAdded] = useState(false);
+
+  const handleAddToProject = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!selectionContext || isAdding || added) return;
+
+    setIsAdding(true);
+    try {
+      await manageProjectProfessional(
+        selectionContext.projectId,
+        id,
+        selectionContext.areaName,
+        'add',
+        false
+      );
+      setAdded(true);
+      setTimeout(() => {
+        router.push(`/projets/${selectionContext.projectId}`);
+      }, 1500);
+    } catch (error) {
+      console.error("Failed to add professional:", error);
+      alert("Une erreur est survenue lors de l'ajout.");
+    } finally {
+      setIsAdding(false);
+    }
+  };
   return (
-    <Link
-      href={`/professionnels/${slug}`}
-      className="group block rounded-2xl bg-surface-container-lowest p-6 transition-all duration-300 hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.08)] hover:-translate-y-1 hover:ring-1 hover:ring-kelen-green-100/50"
+    <span
+      onClick={() => router.push(`/professionnels/${slug}`)}
+      className="group block cursor-pointer rounded-[2rem] bg-surface-container-lowest p-8 transition-all duration-500 hover:shadow-[0_32px_64px_-16px_rgba(0,0,0,0.12)] hover:-translate-y-2 hover:ring-1 hover:ring-kelen-green-100/50 relative overflow-hidden ring-1 ring-outline-variant/10"
     >
-      <div className="flex items-start justify-between gap-4">
+      {added && (
+        <div className="absolute inset-0 bg-kelen-green-600/90 backdrop-blur-sm z-30 flex flex-col items-center justify-center text-white animate-in fade-in duration-300">
+          <Check className="w-12 h-12 mb-4 animate-bounce" />
+          <p className="font-black uppercase tracking-widest text-[10px]">Ajouté au projet !</p>
+          <p className="text-white/60 text-[9px] mt-2">Redirection...</p>
+        </div>
+      )}
+
+      <div className="flex items-start justify-between gap-6">
         <div className="min-w-0 flex-1">
           <h3 className="truncate text-lg font-semibold text-foreground group-hover:text-kelen-green-500">
             {businessName}
@@ -82,6 +129,35 @@ export function ProfessionalCard({
           </span>
         )}
       </div>
-    </Link>
+
+      <div className="mt-8 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <span className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40 group-hover:text-kelen-green-600 transition-colors">
+            Voir le profil
+          </span>
+          <div className="w-1.5 h-1.5 rounded-full bg-outline-variant group-hover:bg-kelen-green-400 transition-colors" />
+        </div>
+
+        {selectionContext && (
+          <button
+            onClick={handleAddToProject}
+            disabled={isAdding || added}
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${
+              added ? 'bg-kelen-green-100 text-kelen-green-700' : 
+              'bg-primary text-white shadow-lg shadow-primary/20 hover:scale-105 active:scale-95'
+            }`}
+          >
+            {isAdding ? (
+              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : added ? (
+              <Check className="w-4 h-4" />
+            ) : (
+              <Plus className="w-4 h-4" />
+            )}
+            {added ? 'Ajouté' : 'Choisir'}
+          </button>
+        )}
+      </div>
+    </span>
   );
 }

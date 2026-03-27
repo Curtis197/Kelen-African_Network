@@ -34,12 +34,22 @@ The application adheres to a premium, editorial-grade design system characterize
 - **Route**: `/projets/[id]`
 - **Functionality**:
     - **Universal Comparison Engine**: Row-based layout grouping professionals by Functional Development Areas (e.g., Law, Architecture, Education).
-    - **Multi-Expert Management**: Ability to add both platform-registered and external experts for side-by-side comparison.
-    - **Ranking System**: Visual ordering of experts within a domain to prioritize candidates.
+    - **Multi-Professional Management**: Ability to add both platform-registered and external professionals for side-by-side comparison.
+    - **Add-to-Project Workflow**: Seamless assignment of professionals directly from their profile pages or the search engine.
+    - **Ranking System**: Visual ordering of professionals within a domain to prioritize candidates.
     - **Selection Workflow**: Status tracking (`Candidate`, `Shortlisted`, `Finalist`) for professional selection.
     - **Technical Vault**: Secure access to project documents.
     - **Live Timeline**: Visual progress tracking of project phases.
     - **Budget Analysis**: Circular progress visualization of fund consumption.
+
+### 4. Project Step Management (Granular Roadmap)
+- **Component**: `ProjectStepsSection.tsx`
+- **Functionality**:
+    - **Step-by-Step Tracking**: Break down project realization into discrete phases (e.g., Foundation, Walls, Roof).
+    - **Financial Granularity**: Assign individual budgets and track expenditures for each specific step.
+    - **Professional Association**: Link specialized professionals (e.g., Masons for Walls, Electricians for Wiring) directly to individual project steps.
+    - **Status Workflow**: Track progress through granular statuses (`Pending`, `In Progress`, `Completed`, `On Hold`, `Cancelled`).
+    - **Export Engine**: Generate Excel/PDF reports for project transparency.
 
 ## Technical Architecture
 - **Framework**: Next.js (App Router)
@@ -53,5 +63,9 @@ The application adheres to a premium, editorial-grade design system characterize
 - [x] Bento-style dashboard refactor.
 - [x] High-fidelity detail page implementation.
 - [x] Universal Project Comparison Engine (Row-based comparison, ranking).
-- [ ] Integration of real-time chat with experts.
-- [ ] Wallet/Payment gateway integration for project funding.
+- [x] Add-to-Project assignment workflow (direct from profile & search).
+- [x] Granular Project Step Management (Phases, Budgets, Pro-Association).
+- [ ] Backend logic for exporting project steps (PDF/Excel)
+- [ ] Financial dashboard aggregation across all project steps
+- [ ] Role-based access control (RBAC) refinements for professional assistants
+- [ ] Progressive Web App (PWA) capabilities for offline access

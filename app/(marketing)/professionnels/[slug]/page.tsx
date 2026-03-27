@@ -1,8 +1,10 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { Star, MapPin, Verified, Phone, Mail, MessageCircle, ChevronRight, User, Compass, Calendar, ShieldCheck, Award } from "lucide-react";
+import { Star, MapPin, Verified, Phone, Mail, Smartphone, ChevronRight, User, Compass, Calendar, ShieldCheck, Award } from "lucide-react";
 import Link from "next/link";
+import { getUserProjects } from "@/lib/actions/projects";
+import { AddToProjectDialog } from "@/components/projects/AddToProjectDialog";
 
 interface Props {
   params: Promise<{
@@ -38,6 +40,9 @@ export default async function ProfessionalProfilePage({ params }: Props) {
     .single();
 
   if (!pro) notFound();
+
+  const { data: { user } } = await supabase.auth.getUser();
+  const userProjects = user ? await getUserProjects() : [];
 
   // Fetch reviews (simulated or real depending on table availability)
   const { data: reviews } = await supabase
@@ -117,6 +122,13 @@ export default async function ProfessionalProfilePage({ params }: Props) {
                   Contacter
                   <ChevronRight className="w-4 h-4" />
                 </a>
+                {user && (
+                  <AddToProjectDialog 
+                    professionalId={pro.id} 
+                    professionalName={pro.business_name} 
+                    userProjects={userProjects} 
+                  />
+                )}
                 <a href="#portfolio" className="bg-white text-stone-900 px-6 py-3 rounded-xl text-sm font-bold hover:bg-stone-50 transition-all border border-stone-200 shadow-sm">
                   Projets
                 </a>
@@ -251,9 +263,9 @@ export default async function ProfessionalProfilePage({ params }: Props) {
               </div>
 
               <div className="md:col-span-4 group overflow-hidden rounded-[2.5rem] bg-stone-900 shadow-lg transition-all duration-500 hover:shadow-2xl flex flex-col justify-center items-center p-12 text-center text-white">
-                 <Award className="w-16 h-16 text-kelen-green-400 mb-6" />
-                 <h3 className="text-3xl font-black mb-4">Certifié Kelen</h3>
-                 <p className="text-white/60 font-medium mb-8">Ce professionnel a passé avec succès toutes les étapes de vérification de notre plateforme.</p>
+                <Award className="w-16 h-16 text-kelen-green-400 mb-6" />
+                <h3 className="text-3xl font-black mb-4">Certifié Kelen</h3>
+                <p className="text-white/60 font-medium mb-8">Ce professionnel a passé avec succès toutes les étapes de vérification de notre plateforme.</p>
                  <button className="bg-white/10 hover:bg-white/20 text-white px-8 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all">
                    En savoir plus
                  </button>
@@ -302,7 +314,7 @@ export default async function ProfessionalProfilePage({ params }: Props) {
                 <img 
                   className="rounded-[3rem] w-full h-[700px] object-cover relative z-10 shadow-3xl grayscale hover:grayscale-0 transition-all duration-1000 ease-out" 
                   src={pro.portfolio_photos?.[6] || "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80"} 
-                  alt="L&apos;expert au travail"
+                  alt="Le professionnel au travail"
                 />
                 <div className="absolute -bottom-10 -right-6 bg-white p-10 rounded-[2rem] shadow-2xl z-20 border border-stone-100 max-w-xs">
                   <div className="flex items-center gap-6">
@@ -360,7 +372,7 @@ export default async function ProfessionalProfilePage({ params }: Props) {
                     {pro.whatsapp && (
                       <a className="flex items-center justify-between bg-kelen-green-600 text-white px-8 py-5 rounded-2xl hover:bg-kelen-green-700 transition-all group shadow-lg shadow-kelen-green-600/20" href={`https://wa.me/${pro.whatsapp.replace(/\+/g, '')}`}>
                         <span className="flex items-center gap-4 font-black">
-                          <MessageCircle className="w-5 h-5 text-white/70" />
+                          <Smartphone className="w-5 h-5 text-white/70" />
                           WhatsApp Business
                         </span>
                         <ChevronRight className="w-5 h-5 text-white/50 group-hover:translate-x-1 transition-transform" />

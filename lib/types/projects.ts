@@ -20,3 +20,22 @@ export interface ProjectProfessional {
   professional_id: string | null;
   professionals: Professional | null;
 }
+
+export type ProjectStepStatus = 'pending' | 'in_progress' | 'completed' | 'on_hold' | 'cancelled' | 'approved' | 'rejected';
+
+export interface ProjectStep {
+  id: string;
+  project_id: string;
+  title: string;
+  comment: string | null;
+  status: ProjectStepStatus;
+  budget: number;
+  expenditure: number;
+  order_index: number;
+  created_at?: string;
+  updated_at: string;
+  associated_pros?: string[];
+  project_step_professionals?: {
+    project_professional_id: string;
+  }[];
+}

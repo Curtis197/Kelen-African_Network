@@ -56,7 +56,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
           href="/recherche"
           className="mt-6 inline-flex rounded-xl bg-primary px-8 py-3 text-sm font-bold text-on-primary shadow-lg shadow-primary/20 hover:scale-[0.98] transition-transform"
         >
-          Découvrir nos experts
+          Découvrir nos professionnels
         </Link>
       </div>
     );
@@ -123,7 +123,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                 {formatTenure(pro.created_at).split(' ')[0]}
               </span>
               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/60">
-                ANS D&apos;EXPERTISE
+                ANS D&apos;EXPÉRIENCE
               </span>
             </div>
             <div className="flex-1 min-w-[140px] pr-8">
@@ -242,7 +242,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
             
             {/* About Card */}
             <div className="bg-surface-container-low rounded-3xl p-8 shadow-sm">
-              <h3 className="font-headline font-extrabold text-xl mb-6 text-on-surface uppercase tracking-widest text-[10px] opacity-40">Identité & Expertise</h3>
+              <h3 className="font-headline font-extrabold text-xl mb-6 text-on-surface uppercase tracking-widest text-[10px] opacity-40">Identité & Profession</h3>
               <p className="font-body text-on-surface-variant leading-relaxed mb-8">
                 {pro.description || "Établissement d'excellence spécialisé dans les solutions innovantes."}
               </p>
@@ -285,7 +285,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
 
             {/* Contact CTA Card */}
             <div id="contact" className="bg-on-surface rounded-3xl p-8 shadow-xl text-surface">
-              <h3 className="font-headline font-black text-2xl mb-2">Engager l&apos;Expert</h3>
+              <h3 className="font-headline font-black text-2xl mb-2">Engager le Professionnel</h3>
               <p className="text-surface/60 text-sm mb-8">Accélérez votre projet avec une signature d&apos;excellence.</p>
               
               <div className="space-y-3">

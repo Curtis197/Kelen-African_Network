@@ -4,12 +4,14 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import ProjectTimeline, { Phase } from "@/components/shared/ProjectTimeline";
+import ProjectStepsSection from "@/components/projects/ProjectStepsSection";
 import { DevelopmentAreaRow } from "@/components/projects/DevelopmentAreaRow";
 import { DEVELOPMENT_AREAS } from "@/lib/constants/projects";
+import { ProjectProfessional, ProjectStep } from "@/lib/types/projects";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -25,18 +27,12 @@ interface Project {
   budget_currency: string;
   status: string;
   created_at: string;
-  objectives: Phase[];
+  objectives: any[];
 }
 
-import { ProjectProfessional } from "@/lib/types/projects";
+// Removed duplicate import
 
-interface Payment {
-  id: string;
-  label: string;
-  amount: number;
-  currency: string;
-  paid_at: string;
-}
+// Deleted redundant Payment interface
 
 const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
   en_preparation: { label: "Brouillon", color: "bg-surface-container-high text-on-surface-variant" },
@@ -52,7 +48,7 @@ export default function ProjectDetailPage() {
   const router = useRouter();
   const [project, setProject] = useState<Project | null>(null);
   const [team, setTeam] = useState<ProjectProfessional[]>([]);
-  const [payments, setPayments] = useState<Payment[]>([]);
+  const [steps, setSteps] = useState<ProjectStep[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showAreaSelector, setShowAreaSelector] = useState(false);
   const [activeAreas, setActiveAreas] = useState<string[]>([]);
@@ -96,16 +92,17 @@ export default function ProjectDetailPage() {
       setActiveAreas(prev => Array.from(new Set([...prev, ...existingAreas])));
     }
 
-    // Fetch Payments
-    const { data: paymentData, error: paymentError } = await supabase
-      .from("project_payments")
-      .select("*")
-      .eq("project_id", projectIdStr);
+    // Fetch Steps
+    const { data: stepsData, error: stepsError } = await supabase
+      .from("project_steps")
+      .select("*, project_step_professionals(project_professional_id)")
+      .eq("project_id", projectIdStr)
+      .order("order_index", { ascending: true });
 
-    if (paymentError) {
-      console.error("Error fetching payments:", paymentError);
+    if (stepsError) {
+      console.error("Error fetching steps:", stepsError);
     } else {
-      setPayments(paymentData as Payment[]);
+      setSteps(stepsData as ProjectStep[]);
     }
 
     setIsLoading(false);
@@ -147,7 +144,7 @@ export default function ProjectDetailPage() {
     );
   }
 
-  const totalSpent = payments.reduce((acc, p) => acc + Number(p.amount), 0);
+  const totalSpent = steps.reduce((acc, step) => acc + (step.expenditure || 0), 0);
   const spentPercent = project.budget_total > 0 ? Math.round((totalSpent / project.budget_total) * 100) : 0;
 
   return (
@@ -175,7 +172,18 @@ export default function ProjectDetailPage() {
                 <div className="relative group">
                   <select 
                     value={project.status}
-                    onChange={(e) => updateStatus(e.target.value)}
+                    onChange={(e) => {
+                      const newStatus = e.target.value;
+                      setProject(prev => prev ? { ...prev, status: newStatus } : null);
+                      supabase
+                        .from('user_projects')
+                        .update({ status: newStatus })
+                        .eq('id', projectIdStr)
+                        .then(({ error }) => {
+                          if (error) toast.error("Erreur de mise à jour");
+                          else toast.success("Statut mis à jour");
+                        });
+                    }}
                     className={cn(
                       "appearance-none px-6 py-2.5 pr-12 rounded-2xl font-headline font-bold text-xs cursor-pointer border-none transition-all shadow-sm group-hover:shadow-md",
                       STATUS_CONFIG[project.status]?.color || "bg-surface-container"
@@ -215,33 +223,13 @@ export default function ProjectDetailPage() {
 
         <div className="grid grid-cols-12 gap-10">
           <div className="col-span-12 lg:col-span-8 space-y-12">
-            {/* Project Timeline */}
-            <section className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-2xl font-headline font-bold text-on-surface">Chronologie du projet</h3>
-                  <p className="text-on-surface-variant font-medium mt-1">Suivez l&apos;avancement de votre chantier en temps réel.</p>
-                </div>
-                <button className="p-3 bg-surface-container-low rounded-xl text-on-surface-variant hover:text-primary transition-colors">
-                  <span className="material-symbols-outlined">history</span>
-                </button>
-              </div>
-
-              {project.objectives && project.objectives.length > 0 ? (
-                <ProjectTimeline phases={project.objectives} />
-              ) : (
-                <div className="p-20 text-center bg-surface-container-low rounded-[2.5rem] border-2 border-dashed border-outline-variant/30">
-                  <div className="w-16 h-16 mx-auto bg-surface-container rounded-full flex items-center justify-center mb-6">
-                    <span className="material-symbols-outlined text-3xl text-on-surface-variant opacity-30">event_note</span>
-                  </div>
-                  <h4 className="text-xl font-headline font-bold text-on-surface">Aucune étape définie</h4>
-                  <p className="text-on-surface-variant font-medium mt-2 max-w-xs mx-auto">Définissez vos objectifs pour commencer le suivi de votre réalisation.</p>
-                  <button className="mt-8 px-8 py-3 bg-primary/10 text-primary rounded-xl font-headline font-bold hover:bg-primary/20 transition-all">
-                    Configurer les étapes
-                  </button>
-                </div>
-              )}
-            </section>
+            {/* Project Roadmap & Steps */}
+            <ProjectStepsSection 
+              projectId={projectIdStr} 
+              currency={project.budget_currency} 
+              initialSteps={steps}
+              onStepsChange={fetchProjectData}
+            />
 
             {/* Team / Comparison Section */}
             <section className="space-y-12">
@@ -312,7 +300,7 @@ export default function ProjectDetailPage() {
             <section className="bg-surface-container-lowest p-10 rounded-[2.5rem] shadow-2xl shadow-surface-container-high/50">
               <div className="flex items-center justify-between mb-10">
                 <h3 className="text-xl font-headline font-bold text-on-surface">Budget</h3>
-                <span className="px-3 py-1 bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest rounded-lg">Analyzed</span>
+                <span className="px-3 py-1 bg-surface-container-high text-on-surface-variant text-[9px] font-black uppercase tracking-widest rounded-lg border border-outline-variant/30">Indicatif</span>
               </div>
               
               <div className="flex flex-col items-center">
@@ -342,7 +330,10 @@ export default function ProjectDetailPage() {
                     </span>
                   </div>
                   <div className="flex justify-between items-center p-5 bg-primary-container/20 rounded-2xl">
-                    <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">Dépensé</span>
+                    <div className="flex flex-col">
+                      <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">Dépensé</span>
+                      <span className="text-[8px] font-bold text-primary/60 uppercase tracking-[0.1em] mt-0.5">Total déclaratif</span>
+                    </div>
                     <span className="font-headline font-bold text-on-surface">
                       {totalSpent.toLocaleString()} {project.budget_currency}
                     </span>

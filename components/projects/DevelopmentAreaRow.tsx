@@ -48,8 +48,8 @@ export function DevelopmentAreaRow({ areaName, professionals, projectId, onRefre
     setIsUpdating(false);
   };
 
-  const handleAddExpert = async () => {
-    const name = window.prompt("Nom de l'expert externe (ex: Maître Sow) :");
+  const handleAddExternal = async () => {
+    const name = window.prompt("Nom du professionnel externe (ex: Maître Sow) :");
     if (!name) return;
     
     setIsUpdating(true);
@@ -72,16 +72,25 @@ export function DevelopmentAreaRow({ areaName, professionals, projectId, onRefre
           <div className="w-1.5 h-6 bg-kelen-green-500 rounded-full" />
           <h4 className="text-xl font-headline font-bold text-on-surface">{areaName}</h4>
           <span className="px-2.5 py-0.5 bg-surface-container text-on-surface-variant text-[10px] font-black uppercase tracking-widest rounded-full">
-            {professionals.length} Expert{professionals.length > 1 ? 's' : ''}
+            {professionals.length} Professionnel{professionals.length > 1 ? 's' : ''}
           </span>
         </div>
-        <button 
-          onClick={handleAddExpert}
-          className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary hover:underline"
-        >
-          <span className="material-symbols-outlined text-sm">add_circle</span>
-          Ajouter un expert
-        </button>
+        <div className="flex items-center gap-4">
+          <Link 
+            href={`/recherche?projectId=${projectId}&areaName=${encodeURIComponent(areaName)}`}
+            className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary hover:underline bg-primary/5 px-4 py-2 rounded-full border border-primary/10 transition-all hover:bg-primary/10"
+          >
+            <span className="material-symbols-outlined text-sm">search</span>
+            Trouver un professionnel
+          </Link>
+          <button 
+            onClick={handleAddExternal}
+            className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-on-surface-variant hover:text-on-surface transition-colors"
+          >
+            <span className="material-symbols-outlined text-sm">add_circle</span>
+            Ajouter un externe
+          </button>
+        </div>
       </div>
 
       <div className="flex gap-6 overflow-x-auto pb-6 px-1 scrollbar-hide snap-x">
@@ -205,13 +214,13 @@ export function DevelopmentAreaRow({ areaName, professionals, projectId, onRefre
         ) : (
           <div className="w-full py-12 text-center bg-surface-container-low/50 rounded-3xl border border-dashed border-outline-variant/30">
              <p className="text-on-surface-variant font-medium italic">Aucun profil à comparer dans ce domaine.</p>
-             <button 
-               onClick={handleAddExpert}
-               className="mt-4 text-xs font-bold text-primary hover:underline flex items-center gap-2 mx-auto"
+             <Link 
+               href={`/recherche?projectId=${projectId}&areaName=${encodeURIComponent(areaName)}`}
+               className="mt-4 text-xs font-bold text-primary hover:underline flex items-center gap-2 mx-auto justify-center"
              >
-               <span className="material-symbols-outlined text-sm">add_circle</span>
-               Ajouter un expert
-             </button>
+               <span className="material-symbols-outlined text-sm">search</span>
+               Trouver un professionnel
+             </Link>
           </div>
         )}
       </div>

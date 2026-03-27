@@ -135,20 +135,6 @@ export async function getProjectTeam(projectId: string) {
   return data;
 }
 
-export async function getProjectPayments(projectId: string) {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("project_payments")
-    .select("*")
-    .eq("project_id", projectId);
-
-  if (error) {
-    console.error("Error fetching project payments:", error);
-    return [];
-  }
-
-  return data;
-}
 
 export async function manageProjectProfessional(
   projectId: string, 
@@ -223,4 +209,24 @@ export async function updateProfessionalSelection(projectId: string, linkId: str
   
   revalidatePath(`/projets/${projectId}`);
   return { success: true };
+}
+
+export async function getUserProjects() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) return [];
+
+  const { data, error } = await supabase
+    .from("user_projects")
+    .select("id, title, category, location")
+    .eq("user_id", user.id)
+    .order("updated_at", { ascending: false });
+
+  if (error) {
+    console.error("Error fetching user projects:", error);
+    return [];
+  }
+
+  return data;
 }

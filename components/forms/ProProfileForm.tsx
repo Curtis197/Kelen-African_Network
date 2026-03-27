@@ -239,7 +239,7 @@ export function ProProfileForm() {
           Numéro WhatsApp Professionnel
         </label>
         <div className="relative">
-          <span className="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-stone-400 text-lg">chat</span>
+          <span className="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-stone-400 text-lg">smartphone</span>
           <input
             type="tel"
             {...register("whatsapp")}
