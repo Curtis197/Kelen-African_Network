@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kelen - Nouveau Projet</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-fixed": "#70fbbd",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#006c49",
+                        "on-secondary-fixed-variant": "#5a4300",
+                        "inverse-surface": "#2f3130",
+                        "primary-fixed-dim": "#50dea3",
+                        "on-error": "#ffffff",
+                        "error": "#ba1a1a",
+                        "secondary-fixed": "#ffdf9a",
+                        "secondary-container": "#fdc425",
+                        "on-background": "#1a1c1c",
+                        "on-primary": "#ffffff",
+                        "surface-dim": "#dadad9",
+                        "surface": "#f9f9f8",
+                        "inverse-on-surface": "#f1f1f0",
+                        "surface-container-high": "#e8e8e7",
+                        "secondary": "#785a00",
+                        "on-surface": "#1a1c1c",
+                        "tertiary": "#a43a3b",
+                        "secondary-fixed-dim": "#f7be1d",
+                        "on-primary-fixed": "#002113",
+                        "on-tertiary": "#ffffff",
+                        "surface-variant": "#e2e2e2",
+                        "surface-container-low": "#f3f4f3",
+                        "tertiary-container": "#f97a77",
+                        "on-tertiary-fixed": "#410006",
+                        "outline-variant": "#bbcabf",
+                        "surface-bright": "#f9f9f8",
+                        "tertiary-fixed": "#ffdad7",
+                        "inverse-primary": "#50dea3",
+                        "primary-container": "#10b77f",
+                        "on-tertiary-fixed-variant": "#842325",
+                        "on-tertiary-container": "#6f1218",
+                        "outline": "#6c7a71",
+                        "on-surface-variant": "#3c4a42",
+                        "surface-container": "#eeeeed",
+                        "on-secondary-fixed": "#251a00",
+                        "on-secondary": "#ffffff",
+                        "background": "#f9f9f8",
+                        "surface-container-highest": "#e2e2e2",
+                        "tertiary-fixed-dim": "#ffb3af",
+                        "on-primary-fixed-variant": "#005236",
+                        "on-error-container": "#93000a",
+                        "surface-tint": "#006c49",
+                        "on-secondary-container": "#6d5200",
+                        "on-primary-container": "#00402a",
+                        "error-container": "#ffdad6"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1.5rem", "3xl": "2rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-nav {
+            background: rgba(249, 249, 248, 0.7);
+            backdrop-filter: blur(12px);
+        }
+        .primary-gradient {
+            background: linear-gradient(135deg, #006c49 0%, #10b77f 100%);
+        }
+        .step-inactive { opacity: 0; display: none; }
+        .step-active { opacity: 1; display: block; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TopAppBar -->
+<nav class="fixed top-0 w-full z-50 flex justify-between items-center px-8 h-16 bg-[#f9f9f8]/70 dark:bg-stone-900/70 backdrop-blur-xl shadow-sm">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold tracking-tight text-stone-900 dark:text-stone-50 font-headline">Kelen</span>
+<div class="hidden md:flex gap-6 items-center">
+<a class="text-stone-500 dark:text-stone-400 font-medium hover:text-[#10b77f] transition-colors duration-200" href="#">Dashboard</a>
+<a class="text-[#10b77f] font-bold border-b-2 border-[#10b77f] pb-1" href="#">Projects</a>
+<a class="text-stone-500 dark:text-stone-400 font-medium hover:text-[#10b77f] transition-colors duration-200" href="#">Team</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-stone-600 hover:text-primary transition-all p-2">notifications</button>
+<button class="material-symbols-outlined text-stone-600 hover:text-primary transition-all p-2">settings</button>
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container-high">
+<img alt="User profile" data-alt="minimalist user portrait icon against a soft neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbfJPJbfdZrkMmMrVRUACTaWbB8HVb0ygoAYzD6LIeiILa3JZ2JkCD1xZngBl-C4cGzKb-emkDqoRsRmn4xuhwHUJjYvohX1ntAqL0UOs4M1IBQ-SYtJZISYtuk7QddjFosNpBJMkqGK_FUgB-yNmoieNNB5-2Oa0UcT6tXPJjVny7tjiRePR1bekDMQ-TzT5q_r3BUS1958ek_-xsC7cJAMI5zyRoKCqpKxlJmCvhdUfm3n5VpeOm-74vGD0FXezemKGhF4tJ-pw"/>
+</div>
+</div>
+</nav>
+<div class="flex min-h-screen pt-16">
+<!-- SideNavBar -->
+<aside class="hidden lg:flex flex-col w-64 fixed left-0 top-16 h-[calc(100vh-64px)] p-6 space-y-4 bg-[#f3f4f3] dark:bg-stone-900 rounded-r-[1.5rem]">
+<div class="flex items-center gap-3 mb-8 px-2">
+<div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add_business</span>
+</div>
+<div>
+<h2 class="text-sm font-bold font-headline text-stone-900">New Project</h2>
+<p class="text-[10px] text-stone-500 uppercase tracking-widest">Wizard Progress</p>
+</div>
+</div>
+<nav class="space-y-1">
+<div class="flex items-center gap-3 px-4 py-3 bg-[#ffffff] dark:bg-stone-800 text-[#10b77f] rounded-xl shadow-sm transition-all duration-300 ease-out">
+<span class="material-symbols-outlined">assignment</span>
+<span class="text-sm font-medium font-['Inter']">Overview</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 text-stone-600 dark:text-stone-400 hover:bg-stone-200 dark:hover:bg-stone-800 rounded-xl transition-all">
+<span class="material-symbols-outlined">description</span>
+<span class="text-sm font-medium font-['Inter']">Details</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 text-stone-600 dark:text-stone-400 hover:bg-stone-200 dark:hover:bg-stone-800 rounded-xl transition-all">
+<span class="material-symbols-outlined">category</span>
+<span class="text-sm font-medium font-['Inter']">Category</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 text-stone-600 dark:text-stone-400 hover:bg-stone-200 dark:hover:bg-stone-800 rounded-xl transition-all">
+<span class="material-symbols-outlined">payments</span>
+<span class="text-sm font-medium font-['Inter']">Budget</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 text-stone-600 dark:text-stone-400 hover:bg-stone-200 dark:hover:bg-stone-800 rounded-xl transition-all">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="text-sm font-medium font-['Inter']">Timeline</span>
+</div>
+</nav>
+<div class="pt-8 mt-auto">
+<button class="w-full py-3 px-4 bg-stone-200 text-on-surface font-semibold rounded-xl hover:bg-stone-300 transition-all">
+                    Save Draft
+                </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 lg:ml-64 p-8 lg:p-12 max-w-5xl mx-auto">
+<!-- Wizard Header (The Signature Scale) -->
+<header class="mb-12 flex items-baseline gap-4">
+<span class="text-6xl font-extrabold font-headline text-primary/20 leading-none">01</span>
+<div>
+<h1 class="text-3xl font-bold font-headline text-on-surface leading-tight">Identity &amp; Scope</h1>
+<p class="text-stone-500 font-medium">Définissez l'essence de votre nouveau projet.</p>
+</div>
+</header>
+<!-- Main Wizard Card -->
+<div class="bg-surface-container-lowest rounded-3xl p-8 lg:p-12 shadow-[0_32px_64px_-12px_rgba(0,0,0,0.04)]">
+<!-- Step 1: Identity & Scope -->
+<section class="step-active space-y-12" id="step-1">
+<!-- Large Editorial Input -->
+<div class="space-y-4">
+<label class="text-xs font-bold uppercase tracking-widest text-stone-400 px-1">Nom du projet</label>
+<input class="w-full text-4xl lg:text-5xl font-bold font-headline border-none bg-transparent placeholder:text-stone-200 focus:ring-0 p-0 selection:bg-primary-fixed" placeholder="Entrez le titre du projet..." type="text"/>
+<div class="h-0.5 w-24 bg-primary-container rounded-full"></div>
+</div>
+<!-- Category Picker -->
+<div class="space-y-6">
+<label class="text-xs font-bold uppercase tracking-widest text-stone-400 px-1">Catégorie</label>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Construction -->
+<button class="group p-6 rounded-2xl bg-surface-container-low text-left hover:bg-surface-container-lowest hover:shadow-xl transition-all duration-300 ring-2 ring-transparent hover:ring-primary-fixed-dim/30">
+<span class="material-symbols-outlined text-primary mb-4 block scale-125">architecture</span>
+<h3 class="font-bold text-lg font-headline group-hover:text-primary transition-colors">Construction</h3>
+<p class="text-xs text-stone-500 mt-1">Bâtiments neufs et structures.</p>
+</button>
+<!-- Rénovation -->
+<button class="group p-6 rounded-2xl bg-surface-container-low text-left hover:bg-surface-container-lowest hover:shadow-xl transition-all duration-300 ring-2 ring-transparent hover:ring-primary-fixed-dim/30">
+<span class="material-symbols-outlined text-primary mb-4 block scale-125">auto_fix_high</span>
+<h3 class="font-bold text-lg font-headline group-hover:text-primary transition-colors">Rénovation</h3>
+<p class="text-xs text-stone-500 mt-1">Modernisation et restauration.</p>
+</button>
+<!-- Immobilier -->
+<button class="group p-6 rounded-2xl bg-surface-container-low text-left hover:bg-surface-container-lowest hover:shadow-xl transition-all duration-300 ring-2 ring-transparent hover:ring-primary-fixed-dim/30">
+<span class="material-symbols-outlined text-primary mb-4 block scale-125">apartment</span>
+<h3 class="font-bold text-lg font-headline group-hover:text-primary transition-colors">Immobilier</h3>
+<p class="text-xs text-stone-500 mt-1">Investissement et gestion.</p>
+</button>
+<!-- Aménagement -->
+<button class="group p-6 rounded-2xl bg-surface-container-low text-left hover:bg-surface-container-lowest hover:shadow-xl transition-all duration-300 ring-2 ring-transparent hover:ring-primary-fixed-dim/30">
+<span class="material-symbols-outlined text-primary mb-4 block scale-125">format_paint</span>
+<h3 class="font-bold text-lg font-headline group-hover:text-primary transition-colors">Aménagement</h3>
+<p class="text-xs text-stone-500 mt-1">Design intérieur et paysages.</p>
+</button>
+</div>
+</div>
+<!-- Location Field -->
+<div class="space-y-4">
+<label class="text-xs font-bold uppercase tracking-widest text-stone-400 px-1">Emplacement</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 group-focus-within:text-primary transition-colors">location_on</span>
+<input class="w-full bg-surface-container-low border-none rounded-3xl py-4 pl-12 pr-6 focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary-container transition-all" placeholder="Cotonou, Bénin" type="text"/>
+</div>
+</div>
+</section>
+<!-- Step 2: Financial Blueprint (Visual Preview) -->
+<section class="step-inactive space-y-12" id="step-2">
+<div class="flex items-center justify-between">
+<h2 class="text-2xl font-bold font-headline">Financial Blueprint</h2>
+<div class="flex bg-surface-container-low p-1 rounded-full">
+<button class="px-4 py-2 bg-white rounded-full text-xs font-bold shadow-sm">EUR</button>
+<button class="px-4 py-2 text-xs font-bold text-stone-500">XOF</button>
+<button class="px-4 py-2 text-xs font-bold text-stone-500">USD</button>
+</div>
+</div>
+<div class="space-y-4 text-center py-12">
+<label class="text-xs font-bold uppercase tracking-widest text-stone-400">Budget estimé</label>
+<div class="flex items-center justify-center gap-4">
+<span class="text-5xl font-extrabold font-headline text-stone-300">€</span>
+<input class="w-1/2 text-center text-7xl font-extrabold font-headline bg-transparent border-none focus:ring-0 placeholder:text-stone-100" placeholder="0.00" type="number"/>
+</div>
+</div>
+</section>
+<!-- Navigation Controls -->
+<div class="mt-16 pt-12 border-t border-transparent flex justify-between items-center">
+<button class="px-8 py-4 rounded-full font-bold text-stone-400 hover:text-on-surface transition-all flex items-center gap-2">
+<span class="material-symbols-outlined">arrow_back</span>
+                        Précédent
+                    </button>
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-surface-container-highest"></div>
+<div class="w-2 h-2 rounded-full bg-surface-container-highest"></div>
+<div class="w-2 h-2 rounded-full bg-surface-container-highest"></div>
+</div>
+<button class="primary-gradient px-10 py-4 rounded-full font-bold text-white shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2">
+                        Suivant
+                        <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Contextual Insight / Help Card (Asymmetric Layout) -->
+<div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="md:col-span-2 bg-secondary-container/10 rounded-3xl p-8 flex gap-6 items-start">
+<div class="w-12 h-12 rounded-2xl bg-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-secondary-container" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
+</div>
+<div>
+<h4 class="font-bold font-headline mb-2 text-on-secondary-container">Conseil Diplomatique</h4>
+<p class="text-sm text-stone-600 leading-relaxed">
+                            Un nom de projet clair et une catégorie précise permettent à nos algorithmes de vous proposer les meilleurs prestataires locaux adaptés à votre vision.
+                        </p>
+</div>
+</div>
+<div class="bg-surface-container-high/50 rounded-3xl p-8 flex flex-col justify-center text-center">
+<span class="text-4xl font-extrabold font-headline text-primary mb-1">85%</span>
+<p class="text-[10px] uppercase font-bold tracking-widest text-stone-500">Complétion Profil</p>
+</div>
+</div>
+</main>
+</div>
+<!-- Floating Action Button (Only on Mobile-ish View) -->
+<div class="fixed bottom-8 right-8 lg:hidden">
+<button class="primary-gradient w-14 h-14 rounded-full flex items-center justify-center text-white shadow-2xl">
+<span class="material-symbols-outlined">check</span>
+</button>
+</div>
+</body></html>

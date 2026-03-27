@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-tertiary-fixed-variant": "#842325",
+              "surface-container-lowest": "#ffffff",
+              "on-primary": "#ffffff",
+              "on-secondary-fixed": "#251a00",
+              "on-primary-fixed-variant": "#005236",
+              "tertiary": "#a43a3b",
+              "secondary-fixed-dim": "#f7be1d",
+              "on-surface": "#1a1c1c",
+              "primary-fixed": "#70fbbd",
+              "outline-variant": "#bbcabf",
+              "surface-tint": "#006c49",
+              "on-error": "#ffffff",
+              "surface-container-highest": "#e2e2e2",
+              "surface-container-high": "#e8e8e7",
+              "primary-container": "#10b77f",
+              "on-primary-container": "#00402a",
+              "on-secondary": "#ffffff",
+              "inverse-on-surface": "#f1f1f0",
+              "secondary": "#785a00",
+              "error": "#ba1a1a",
+              "on-surface-variant": "#3c4a42",
+              "primary": "#006c49",
+              "tertiary-fixed": "#ffdad7",
+              "inverse-surface": "#2f3130",
+              "secondary-container": "#fdc425",
+              "surface-container-low": "#f3f4f3",
+              "on-secondary-fixed-variant": "#5a4300",
+              "primary-fixed-dim": "#50dea3",
+              "on-tertiary-fixed": "#410006",
+              "on-tertiary": "#ffffff",
+              "surface-bright": "#f9f9f8",
+              "tertiary-fixed-dim": "#ffb3af",
+              "surface-variant": "#e2e2e2",
+              "surface-dim": "#dadad9",
+              "tertiary-container": "#f97a77",
+              "secondary-fixed": "#ffdf9a",
+              "inverse-primary": "#50dea3",
+              "on-primary-fixed": "#002113",
+              "background": "#f9f9f8",
+              "on-secondary-container": "#6d5200",
+              "outline": "#6c7a71",
+              "on-background": "#1a1c1c",
+              "on-error-container": "#93000a",
+              "surface": "#f9f9f8",
+              "surface-container": "#eeeeed",
+              "error-container": "#ffdad6",
+              "on-tertiary-container": "#6f1218"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+        .glass-nav {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-[#f9f9f8]/70 dark:bg-stone-900/70 backdrop-blur-xl shadow-sm dark:shadow-none">
+<div class="flex justify-between items-center w-full px-8 py-4 max-w-[1440px] mx-auto relative">
+<div class="text-xl font-bold tracking-tight text-[#1a1c1c] dark:text-stone-50 font-['Manrope']">
+                Kelen Diaspora
+            </div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-[#1a1c1c] dark:text-stone-400 opacity-70 font-['Manrope'] font-bold text-lg hover:text-[#10b77f] transition-colors duration-200" href="#">Dashboard</a>
+<a class="text-[#10b77f] border-b-2 border-[#10b77f] pb-1 font-['Manrope'] font-bold text-lg hover:text-[#10b77f] transition-colors duration-200" href="#">Projects</a>
+<a class="text-[#1a1c1c] dark:text-stone-400 opacity-70 font-['Manrope'] font-bold text-lg hover:text-[#10b77f] transition-colors duration-200" href="#">Network</a>
+<a class="text-[#1a1c1c] dark:text-stone-400 opacity-70 font-['Manrope'] font-bold text-lg hover:text-[#10b77f] transition-colors duration-200" href="#">Resources</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-surface-container-low rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</button>
+<button class="p-2 hover:bg-surface-container-low rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">account_circle</span>
+</button>
+</div>
+<div class="bg-[#f3f4f3] dark:bg-stone-800 h-[1px] w-full absolute bottom-0 opacity-10 left-0"></div>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-[#f3f4f3] dark:bg-stone-800/50 pt-24 hidden lg:block">
+<div class="px-6 mb-8">
+<h2 class="font-['Manrope'] font-bold text-[#1a1c1c] dark:text-stone-100 text-lg">Project Wizard</h2>
+<p class="text-xs text-on-surface-variant font-medium uppercase tracking-wider">The Digital Diplomat</p>
+</div>
+<nav class="flex flex-col gap-2 p-6">
+<div class="flex items-center gap-3 p-3 text-on-surface-variant font-medium text-sm rounded-l-xl transition-all hover:bg-[#e2e2e2] dark:hover:bg-stone-700">
+<span class="material-symbols-outlined" data-icon="fingerprint">fingerprint</span>
+                Identity
+            </div>
+<div class="flex items-center gap-3 p-3 text-on-surface-variant font-medium text-sm rounded-l-xl transition-all hover:bg-[#e2e2e2] dark:hover:bg-stone-700">
+<span class="material-symbols-outlined" data-icon="architecture">architecture</span>
+                Scope
+            </div>
+<div class="flex items-center gap-3 p-3 text-on-surface-variant font-medium text-sm rounded-l-xl transition-all hover:bg-[#e2e2e2] dark:hover:bg-stone-700">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+                Timeline
+            </div>
+<div class="flex items-center gap-3 p-3 bg-white dark:bg-stone-900 text-[#10b77f] font-medium text-sm rounded-l-xl shadow-sm transition-all">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+                Budget
+            </div>
+<div class="flex items-center gap-3 p-3 text-on-surface-variant font-medium text-sm rounded-l-xl transition-all hover:bg-[#e2e2e2] dark:hover:bg-stone-700">
+<span class="material-symbols-outlined" data-icon="verified">verified</span>
+                Review
+            </div>
+</nav>
+</aside>
+<!-- Main Content Canvas -->
+<main class="lg:ml-64 pt-28 pb-32 px-6 md:px-12 max-w-5xl mx-auto">
+<!-- Header Section -->
+<header class="mb-12">
+<h1 class="text-[2.75rem] font-extrabold leading-tight tracking-tight text-on-surface mb-2">04 Objectives &amp; Narrative</h1>
+<p class="text-lg text-on-surface-variant font-body">Partagez la vision et les buts de votre projet.</p>
+</header>
+<!-- Form Sections (No-Line Principle) -->
+<div class="space-y-16">
+<!-- Bento Narrative Card -->
+<section>
+<div class="flex justify-between items-end mb-6">
+<h3 class="text-xl font-bold font-headline">Description du projet</h3>
+<span class="text-xs font-bold uppercase tracking-widest text-primary">Narrative focus</span>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-sm">
+<div class="bg-surface-container-low rounded-lg p-6 min-h-[320px] relative">
+<div class="flex gap-4 mb-4 border-b border-outline-variant/10 pb-4">
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">format_bold</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">format_italic</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">format_list_bulleted</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">link</span>
+</div>
+<p class="text-on-surface-variant leading-relaxed">Écrivez ici le récit de votre projet. Quelle est la mission ? Pourquoi maintenant ? Comment la diaspora peut-elle contribuer à ce succès ?</p>
+<div class="absolute bottom-4 right-6 text-xs text-outline font-medium">124 / 2000 words</div>
+</div>
+</div>
+</section>
+<!-- Tag Cloud Section -->
+<section>
+<div class="flex justify-between items-end mb-6">
+<h3 class="text-xl font-bold font-headline">Objectifs du projet</h3>
+<span class="text-xs font-bold uppercase tracking-widest text-primary">Key Indicators</span>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-sm">
+<p class="text-sm text-on-surface-variant mb-8 max-w-2xl">Sélectionnez les piliers fondamentaux qui guideront l'exécution et le succès de votre initiative.</p>
+<div class="flex flex-wrap gap-3">
+<!-- Active Tag -->
+<button class="px-6 py-2.5 rounded-full bg-primary-container text-on-primary-container font-semibold text-sm flex items-center gap-2 transition-all hover:brightness-105 active:scale-95 shadow-sm">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            Sustainability
+                        </button>
+<button class="px-6 py-2.5 rounded-full bg-surface-container-high text-on-surface font-semibold text-sm transition-all hover:bg-primary-container/20 active:scale-95">
+                            Innovation
+                        </button>
+<button class="px-6 py-2.5 rounded-full bg-primary-container text-on-primary-container font-semibold text-sm flex items-center gap-2 transition-all hover:brightness-105 active:scale-95 shadow-sm">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            Speed
+                        </button>
+<button class="px-6 py-2.5 rounded-full bg-surface-container-high text-on-surface font-semibold text-sm transition-all hover:bg-primary-container/20 active:scale-95">
+                            Inclusion
+                        </button>
+<button class="px-6 py-2.5 rounded-full bg-surface-container-high text-on-surface font-semibold text-sm transition-all hover:bg-primary-container/20 active:scale-95">
+                            Profitability
+                        </button>
+<button class="px-6 py-2.5 rounded-full bg-surface-container-high text-on-surface font-semibold text-sm transition-all hover:bg-primary-container/20 active:scale-95">
+                            Education
+                        </button>
+<button class="px-6 py-2.5 rounded-full bg-primary-container text-on-primary-container font-semibold text-sm flex items-center gap-2 transition-all hover:brightness-105 active:scale-95 shadow-sm">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            Community Growth
+                        </button>
+<button class="px-6 py-2.5 rounded-full bg-surface-container-high text-on-surface font-semibold text-sm transition-all hover:bg-primary-container/20 active:scale-95">
+                            Environment
+                        </button>
+<button class="px-6 py-2.5 rounded-full bg-surface-container-high text-on-surface font-semibold text-sm transition-all hover:bg-primary-container/20 active:scale-95">
+                            Technology
+                        </button>
+<button class="px-6 py-2.5 rounded-full bg-surface-container-high text-on-surface font-semibold text-sm transition-all hover:bg-primary-container/20 active:scale-95">
+                            + Autre objectif
+                        </button>
+</div>
+</div>
+</section>
+<!-- Review Aesthetic Card -->
+<section class="mt-12">
+<div class="relative overflow-hidden rounded-2xl bg-on-surface p-12 text-white">
+<div class="relative z-10 grid md:grid-cols-2 gap-12 items-center">
+<div>
+<h3 class="text-3xl font-extrabold font-headline mb-4 text-primary-fixed">Review &amp; Launch</h3>
+<p class="text-surface-container opacity-80 mb-6 leading-relaxed">
+                                Vous êtes sur le point de finaliser la structure de votre projet. Toutes les données seront compilées dans votre manifeste diplomatique digital.
+                            </p>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-container-high/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary-fixed">verified_user</span>
+</div>
+<span class="text-sm font-medium">Validé par les standards Kelen</span>
+</div>
+</div>
+<div class="hidden md:block">
+<img class="w-full h-64 object-cover rounded-xl opacity-80 mix-blend-lighten" data-alt="Modern minimalist architectural sculpture with soft lighting creating elegant shadows on a neutral stone wall background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfoRWJGAhwPszqZRQCuGSP7goxsZPElIz5V9OHy7kX38O-9CvVKhY7IMbRLA9x1JzrYDXhYPIrFVtKhQJLAW2Dlhaof8iAMoAXKzAI_9TTj_JrpVdNJFWLlbRlduFTmmNJndODVnB9W6qRdezU_Qv5YnCuTo2jGiXUNbj_wmUopp69fvXJX5pyUvhDepjPhLEpLFwFR_bWFcKoZ_isVbgxeF2tHxEviv5MKsyUJrcPq9rBzyADJIN-yK_kDDmBd_65O8ST2b3TRMQ"/>
+</div>
+</div>
+<!-- Decorative Background Element -->
+<div class="absolute -right-20 -top-20 w-80 h-80 bg-primary opacity-20 rounded-full blur-[100px]"></div>
+</div>
+</section>
+</div>
+</main>
+<!-- BottomNavBar -->
+<footer class="fixed bottom-0 w-full z-50 h-20 bg-[#f9f9f8] dark:bg-stone-950 shadow-[0_-4px_24px_rgba(0,0,0,0.04)]">
+<div class="bg-[#f3f4f3] dark:bg-stone-800 h-[1px] w-full absolute top-0"></div>
+<div class="flex justify-between items-center px-12 w-full max-w-[1440px] mx-auto h-full">
+<button class="bg-[#f3f4f3] dark:bg-stone-800 text-[#1a1c1c] dark:text-stone-300 rounded-lg px-8 py-3 font-['Manrope'] font-bold uppercase tracking-widest text-xs flex items-center gap-2 hover:brightness-110 transition-all active:scale-[0.98]">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+                Previous Step
+            </button>
+<button class="bg-gradient-to-tr from-[#006c49] to-[#10b77f] text-white rounded-lg px-12 py-3 font-['Manrope'] font-bold uppercase tracking-widest text-xs flex items-center gap-2 hover:brightness-110 transition-all active:scale-[0.98] shadow-lg shadow-primary/20">
+                Continue
+                <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</footer>
+<!-- Floating FAB for Finish (Contextual) -->
+<button class="fixed right-8 bottom-28 z-50 flex items-center gap-3 bg-gradient-to-tr from-[#006c49] to-[#10b77f] text-white pl-6 pr-8 py-4 rounded-full shadow-xl hover:scale-105 active:scale-95 transition-all group">
+<span class="material-symbols-outlined group-hover:rotate-12 transition-transform" data-icon="rocket_launch">rocket_launch</span>
+<span class="font-headline font-bold text-sm">Review &amp; Launch</span>
+</button>
+</body></html>

@@ -18,7 +18,7 @@ interface ProjectTimelineProps {
 export default function ProjectTimeline({ phases }: ProjectTimelineProps) {
   const getIcon = (title: string, status: string) => {
     const props = { className: "w-7 h-7", fill: status === 'COMPLETED' ? "currentColor" : "none" };
-    const t = title.toLowerCase();
+    const t = (title || "").toLowerCase();
     
     if (t.includes('sol') || t.includes('plan') || t.includes('étude')) return <CheckCircle2 {...props} />;
     if (t.includes('œuvre') || t.includes('chantier') || t.includes('gros') || t.includes('fondations')) return <Construction {...props} />;

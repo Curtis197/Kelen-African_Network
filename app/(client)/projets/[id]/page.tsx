@@ -2,10 +2,16 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-
+import { motion } from "framer-motion";
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 import ProjectTimeline, { Phase } from "@/components/shared/ProjectTimeline";
+
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 interface Project {
   id: string;
@@ -44,8 +50,17 @@ interface Payment {
   paid_at: string;
 }
 
+const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
+  en_preparation: { label: "Brouillon", color: "bg-surface-container-high text-on-surface-variant" },
+  en_cours: { label: "En cours", color: "bg-secondary-container text-on-secondary-container" },
+  en_pause: { label: "En pause", color: "bg-error-container/20 text-error" },
+  termine: { label: "Terminé", color: "bg-primary-container text-on-primary-container" },
+  annule: { label: "Annulé", color: "bg-surface-variant text-on-surface-variant" },
+};
+
 export default function ProjectDetailPage() {
   const { id } = useParams();
+  const router = useRouter();
   const [project, setProject] = useState<Project | null>(null);
   const [team, setTeam] = useState<ProjectProfessional[]>([]);
   const [payments, setPayments] = useState<Payment[]>([]);
@@ -111,17 +126,17 @@ export default function ProjectDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-kelen-green-200 border-t-kelen-green-600 rounded-full animate-spin" />
+      <div className="min-h-screen bg-surface flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
       </div>
     );
   }
 
   if (!project) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-8 text-center">
-        <h1 className="text-2xl font-bold mb-4">Projet introuvable</h1>
-        <Link href="/client/projets" className="text-kelen-green-600 font-bold hover:underline">
+      <div className="min-h-screen bg-surface flex flex-col items-center justify-center p-8 text-center font-body">
+        <h1 className="text-3xl font-headline font-bold text-on-surface mb-4">Projet introuvable</h1>
+        <Link href="/projets" className="text-primary font-bold hover:underline">
           Retour à mes projets
         </Link>
       </div>
@@ -132,26 +147,35 @@ export default function ProjectDetailPage() {
   const spentPercent = project.budget_total > 0 ? Math.round((totalSpent / project.budget_total) * 100) : 0;
 
   return (
-    <main className="min-h-screen pt-12 pb-24 px-4 md:px-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-10">
-          <nav className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-stone-400 mb-4">
-            <Link href="/client/projets" className="hover:text-stone-600 transition-colors">Mes Projets</Link>
-            <span className="text-stone-300">/</span>
-            <span className="text-kelen-green-600">{project.title}</span>
+    <main className="min-h-screen bg-surface font-body text-on-surface pt-12 pb-24 px-4 md:px-12">
+      <div className="max-w-[1440px] mx-auto">
+        <div className="mb-12">
+          <nav className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant mb-6">
+            <Link href="/projets" className="hover:text-primary transition-colors">Mes Réalisations</Link>
+            <span className="opacity-30">/</span>
+            <span className="text-primary">{project.title}</span>
           </nav>
           
-          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6">
-            <div className="space-y-2">
-              <h1 className="text-4xl md:text-6xl font-extrabold text-stone-900 tracking-tight leading-none">
-                {project.title}
-              </h1>
-              <div className="flex flex-wrap items-center gap-4">
-                <div className="relative inline-block">
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-10">
+            <div className="space-y-4 max-w-2xl">
+              <div className="flex items-center gap-4">
+                <h1 className="text-[3rem] md:text-[4.5rem] font-headline font-bold text-on-surface tracking-tight leading-none">
+                  {project.title}
+                </h1>
+                <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary-container/20 to-transparent rounded-full">
+                  <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-primary">Live Sync</span>
+                </div>
+              </div>
+              <div className="flex flex-wrap items-center gap-6">
+                <div className="relative group">
                   <select 
                     value={project.status}
                     onChange={(e) => updateStatus(e.target.value)}
-                    className="appearance-none bg-stone-100 text-stone-700 px-5 py-2 pr-10 rounded-xl font-bold text-xs cursor-pointer focus:ring-2 focus:ring-kelen-green-500/20 border-none transition-all"
+                    className={cn(
+                      "appearance-none px-6 py-2.5 pr-12 rounded-2xl font-headline font-bold text-xs cursor-pointer border-none transition-all shadow-sm group-hover:shadow-md",
+                      STATUS_CONFIG[project.status]?.color || "bg-surface-container"
+                    )}
                   >
                     <option value="en_preparation">En préparation</option>
                     <option value="en_cours">En cours</option>
@@ -159,180 +183,205 @@ export default function ProjectDetailPage() {
                     <option value="termine">Terminé</option>
                     <option value="annule">Annulé</option>
                   </select>
-                  <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-sm pointer-events-none">expand_more</span>
+                  <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-sm pointer-events-none opacity-50">expand_more</span>
                 </div>
-                <div className="flex items-center gap-2 text-stone-500 text-sm">
+                <div className="flex items-center gap-2 text-on-surface-variant text-sm font-medium">
                   <span className="material-symbols-outlined text-base">location_on</span>
                   <span>{project.location}</span>
+                </div>
+                <div className="flex items-center gap-2 text-on-surface-variant text-sm font-medium">
+                  <span className="material-symbols-outlined text-base">category</span>
+                  <span className="capitalize">{(project.category || 'non_defini').replace('_', ' ')}</span>
                 </div>
               </div>
             </div>
             
-            <div className="flex items-center gap-3">
-              <button className="px-6 py-3 bg-white text-stone-700 font-bold rounded-xl shadow-sm border border-stone-200 hover:bg-stone-50 transition-all flex items-center gap-2">
+            <div className="flex items-center gap-4">
+              <button className="px-8 py-4 bg-surface-container-low text-on-surface font-headline font-bold rounded-2xl border border-transparent hover:border-surface-container transition-all flex items-center gap-3">
                 <span className="material-symbols-outlined text-xl">share</span>
-                Partager
+                <span>Partager</span>
               </button>
-              <button className="px-8 py-3 bg-kelen-green-500 text-white font-bold rounded-xl shadow-lg shadow-kelen-green-500/20 hover:bg-kelen-green-600 transition-all active:scale-95 flex items-center gap-2">
-                <span className="material-symbols-outlined text-xl">add</span>
-                Ajouter une tâche
+              <button className="px-10 py-4 bg-primary text-white font-headline font-bold rounded-2xl shadow-xl shadow-primary/10 hover:scale-[0.98] transition-all flex items-center gap-3">
+                <span className="material-symbols-outlined text-xl">add_task</span>
+                <span>Mise à jour</span>
               </button>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-8">
-            {/* Project Timeline - Premium Edition */}
-            <div className="space-y-8">
+        <div className="grid grid-cols-12 gap-10">
+          <div className="col-span-12 lg:col-span-8 space-y-12">
+            {/* Project Timeline */}
+            <section className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-3xl font-black font-headline text-stone-900 tracking-tight">Chronologie du projet</h3>
-                  <p className="text-stone-500 font-medium mt-1">Suivez l&apos;avancement de votre chantier en temps réel.</p>
+                  <h3 className="text-2xl font-headline font-bold text-on-surface">Chronologie du projet</h3>
+                  <p className="text-on-surface-variant font-medium mt-1">Suivez l&apos;avancement de votre chantier en temps réel.</p>
                 </div>
-                <div className="flex items-center gap-2 px-4 py-2 bg-kelen-green-50 rounded-full border border-kelen-green-100">
-                  <span className="w-2 h-2 rounded-full bg-kelen-green-500 animate-pulse"></span>
-                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-kelen-green-600">Live Sync</span>
-                </div>
+                <button className="p-3 bg-surface-container-low rounded-xl text-on-surface-variant hover:text-primary transition-colors">
+                  <span className="material-symbols-outlined">history</span>
+                </button>
               </div>
 
               {project.objectives && project.objectives.length > 0 ? (
                 <ProjectTimeline phases={project.objectives} />
               ) : (
-                <div className="p-12 text-center bg-stone-50 rounded-[2.5rem] border border-dashed border-stone-200">
-                  <span className="material-symbols-outlined text-4xl text-stone-300 mb-4">event_note</span>
-                  <p className="text-stone-500 font-medium italic">Aucune étape n&apos;est encore définie pour ce projet.</p>
+                <div className="p-20 text-center bg-surface-container-low rounded-[2.5rem] border-2 border-dashed border-outline-variant/30">
+                  <div className="w-16 h-16 mx-auto bg-surface-container rounded-full flex items-center justify-center mb-6">
+                    <span className="material-symbols-outlined text-3xl text-on-surface-variant opacity-30">event_note</span>
+                  </div>
+                  <h4 className="text-xl font-headline font-bold text-on-surface">Aucune étape définie</h4>
+                  <p className="text-on-surface-variant font-medium mt-2 max-w-xs mx-auto">Définissez vos objectifs pour commencer le suivi de votre réalisation.</p>
+                  <button className="mt-8 px-8 py-3 bg-primary/10 text-primary rounded-xl font-headline font-bold hover:bg-primary/20 transition-all">
+                    Configurer les étapes
+                  </button>
                 </div>
               )}
-            </div>
+            </section>
 
-            {/* Team */}
-            <div className="bg-white p-8 rounded-3xl shadow-sm border border-stone-200/50">
-              <div className="flex items-center justify-between mb-8">
-                <h3 className="text-xl font-bold text-stone-900">Équipe d&apos;experts</h3>
-                <button className="text-xs font-bold text-kelen-green-600 hover:underline px-3 py-1 bg-kelen-green-50 rounded-full">
+            {/* Team Section */}
+            <section className="bg-surface-container-low p-10 rounded-[2.5rem] space-y-8">
+              <div className="flex items-center justify-between">
+                <h3 className="text-2xl font-headline font-bold text-on-surface">Équipe d&apos;experts</h3>
+                <button className="text-xs font-black uppercase tracking-widest text-primary px-5 py-2.5 bg-white rounded-full shadow-sm hover:shadow-md transition-all">
                   Inviter un expert
                 </button>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {team.map((member) => (
-                  <div key={member.id} className="p-5 bg-stone-50 rounded-2xl flex items-center gap-4 group transition-all hover:bg-stone-100 cursor-pointer">
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {team.length > 0 ? team.map((member) => (
+                  <motion.div 
+                    key={member.id} 
+                    whileHover={{ y: -4 }}
+                    className="p-6 bg-surface-container-lowest rounded-3xl flex items-center gap-5 shadow-sm hover:shadow-xl hover:shadow-surface-container-high/40 transition-all cursor-pointer group"
+                  >
                     <div className="relative">
                       {member.is_external ? (
-                        <div className="w-14 h-14 rounded-full bg-stone-200 flex items-center justify-center text-stone-500">
-                          <span className="material-symbols-outlined text-2xl">person</span>
+                        <div className="w-16 h-16 rounded-2xl bg-surface-container flex items-center justify-center text-on-surface-variant">
+                          <span className="material-symbols-outlined text-3xl">person</span>
                         </div>
                       ) : (
-                        <img 
-                          alt={member.professionals?.business_name} 
-                          className="w-14 h-14 rounded-full object-cover shadow-sm ring-2 ring-white" 
-                          src={member.professionals?.portfolio_photos?.[0] || "https://images.unsplash.com/photo-1541888946425-d81bb19480c5?auto=format&fit=crop&q=80"} 
-                        />
+                        <div className="w-16 h-16 rounded-2xl overflow-hidden ring-4 ring-white shadow-sm">
+                          <img 
+                            alt={member.professionals?.business_name} 
+                            className="w-full h-full object-cover" 
+                            src={member.professionals?.portfolio_photos?.[0] || "https://images.unsplash.com/photo-1541888946425-d81bb19480c5?auto=format&fit=crop&q=80"} 
+                          />
+                        </div>
                       )}
-                      <div className="absolute -bottom-1 -right-1 p-1 bg-white rounded-full shadow-sm">
-                        <span className={`material-symbols-outlined text-[10px] block ${member.is_external ? 'text-stone-400' : 'text-amber-500'}`}>
-                          {member.is_external ? 'person_add' : 'verified'}
-                        </span>
-                      </div>
+                      {!member.is_external && (
+                        <div className="absolute -bottom-2 -right-2 p-1.5 bg-primary rounded-full border-2 border-white shadow-sm">
+                          <span className="material-symbols-outlined text-[10px] block text-white font-bold">verified</span>
+                        </div>
+                      )}
                     </div>
                     <div className="flex-1">
-                      <h5 className="font-bold text-stone-900 text-sm">
+                      <h5 className="font-headline font-bold text-on-surface text-base">
                         {member.is_external ? member.external_name : member.professionals?.business_name}
                       </h5>
-                      <p className="text-[11px] text-stone-500 font-medium uppercase tracking-wider">
+                      <p className="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mt-1">
                         {member.is_external ? member.external_category : member.professionals?.category}
                       </p>
-                      <div className="flex gap-2 mt-2">
-                        <span className="px-2 py-0.5 bg-white text-stone-500 border border-stone-200 text-[9px] font-bold rounded-full uppercase">
+                      <div className="flex gap-2 mt-3">
+                        <span className="px-3 py-1 bg-surface-container text-on-surface-variant text-[9px] font-black uppercase tracking-widest rounded-lg">
                            {member.role}
                         </span>
                       </div>
                     </div>
                     {member.professionals?.slug && (
-                      <Link href={`/pro/${member.professionals.slug}`} className="text-stone-300 group-hover:text-stone-900 transition-colors">
-                        <span className="material-symbols-outlined text-lg">arrow_forward_ios</span>
+                      <Link href={`/pro/${member.professionals.slug}`} className="p-2 text-on-surface-variant opacity-20 group-hover:opacity-100 group-hover:text-primary transition-all">
+                        <span className="material-symbols-outlined">arrow_forward_ios</span>
                       </Link>
                     )}
+                  </motion.div>
+                )) : (
+                  <div className="col-span-2 py-12 text-center bg-surface-container p-8 rounded-3xl border border-dashed border-outline-variant/30">
+                    <p className="text-on-surface-variant font-medium italic">Aucun expert n&apos;est encore rattaché à ce projet.</p>
                   </div>
-                ))}
-                {team.length === 0 && (
-                  <p className="text-stone-400 text-sm italic col-span-2 text-center py-8 bg-stone-50 rounded-2xl border border-dashed border-stone-200">
-                    Aucun expert n&apos;est encore rattaché à ce projet.
-                  </p>
                 )}
               </div>
-            </div>
+            </section>
           </div>
 
-          <div className="space-y-8">
-            {/* Budget */}
-            <div className="bg-white p-8 rounded-3xl shadow-sm border border-stone-200/50">
-              <h3 className="text-xl font-bold text-stone-900 mb-8 border-b border-stone-100 pb-4">Suivi budgétaire</h3>
+          <div className="col-span-12 lg:col-span-4 space-y-10">
+            {/* Financial Status */}
+            <section className="bg-surface-container-lowest p-10 rounded-[2.5rem] shadow-2xl shadow-surface-container-high/50">
+              <div className="flex items-center justify-between mb-10">
+                <h3 className="text-xl font-headline font-bold text-on-surface">Budget</h3>
+                <span className="px-3 py-1 bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest rounded-lg">Analyzed</span>
+              </div>
+              
               <div className="flex flex-col items-center">
-                <div className="relative w-48 h-48 flex items-center justify-center mb-8">
+                <div className="relative w-56 h-56 flex items-center justify-center mb-10">
                   <svg className="w-full h-full transform -rotate-90">
-                    <circle className="text-stone-100" cx="96" cy="96" fill="transparent" r="88" stroke="currentColor" strokeWidth="12" />
+                    <circle className="text-surface-container" cx="112" cy="112" fill="transparent" r="100" stroke="currentColor" strokeWidth="16" />
                     <circle 
-                      className="text-kelen-green-500 transition-all duration-1000 ease-out" 
-                      cx="96" cy="96" fill="transparent" r="88" stroke="currentColor" 
-                      strokeWidth="12" 
-                      strokeDasharray={552.92}
-                      strokeDashoffset={552.92 - (552.92 * spentPercent) / 100}
+                      className="text-primary transition-all duration-1000 ease-out" 
+                      cx="112" cy="112" fill="transparent" r="100" stroke="currentColor" 
+                      strokeWidth="16" 
+                      strokeDasharray={628.3}
+                      strokeDashoffset={628.3 - (628.3 * spentPercent) / 100}
+                      strokeLinecap="round"
                     />
                   </svg>
                   <div className="absolute flex flex-col items-center">
-                    <span className="text-4xl font-black text-stone-900">{spentPercent}%</span>
-                    <span className="text-[10px] uppercase font-bold text-stone-400 tracking-[0.2em] mt-1">Engagé</span>
+                    <span className="text-5xl font-headline font-bold text-on-surface tracking-tighter">{spentPercent}%</span>
+                    <span className="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] mt-2">Investi</span>
                   </div>
                 </div>
-                <div className="w-full space-y-3">
-                  <div className="flex justify-between items-center p-4 bg-stone-50 rounded-2xl border border-stone-100">
-                    <span className="text-xs font-bold text-stone-500 uppercase tracking-widest">Total alloué</span>
-                    <span className="font-bold text-stone-900 text-sm">
+                
+                <div className="w-full space-y-4">
+                  <div className="flex justify-between items-center p-5 bg-surface-container-low rounded-2xl">
+                    <span className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.2em]">Total alloué</span>
+                    <span className="font-headline font-bold text-on-surface">
                       {project.budget_total.toLocaleString()} {project.budget_currency}
                     </span>
                   </div>
-                  <div className="flex justify-between items-center p-4 bg-kelen-green-50/50 rounded-2xl border border-kelen-green-100/50">
-                    <span className="text-xs font-bold text-kelen-green-700 uppercase tracking-widest">Dépensé</span>
-                    <span className="font-bold text-kelen-green-900 text-sm">
+                  <div className="flex justify-between items-center p-5 bg-primary-container/20 rounded-2xl">
+                    <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">Dépensé</span>
+                    <span className="font-headline font-bold text-on-surface">
                       {totalSpent.toLocaleString()} {project.budget_currency}
                     </span>
                   </div>
                 </div>
               </div>
-            </div>
+            </section>
 
-            {/* Documents */}
-            <div className="bg-white p-8 rounded-3xl shadow-sm border border-stone-200/50">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold text-stone-900">Documents du projet</h3>
-                <span className="w-8 h-8 flex items-center justify-center bg-stone-100 rounded-lg text-stone-500">
-                  <span className="material-symbols-outlined text-sm">inventory_2</span>
+            {/* Documents Vault */}
+            <section className="bg-surface-container-low p-10 rounded-[2.5rem] space-y-8">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-headline font-bold text-on-surface">Coffre-fort technique</h3>
+                <span className="w-10 h-10 flex items-center justify-center bg-white rounded-xl text-primary shadow-sm">
+                  <span className="material-symbols-outlined">verified_user</span>
                 </span>
               </div>
               
-              <div className="space-y-3">
-                {team.length > 0 ? (
-                  team.map((member) => (
-                    <div key={member.id} className="p-4 bg-stone-50 rounded-2xl flex items-center justify-between group">
-                      <div className="flex items-center gap-3 text-stone-400 italic text-xs">
-                        <span className="material-symbols-outlined text-sm">info</span>
-                        <span>Documents en attente de partage par {member.is_external ? member.external_name : member.professionals?.business_name}</span>
+              <div className="space-y-4">
+                {team.length > 0 ? team.slice(0, 3).map((member) => (
+                  <div key={member.id} className="p-5 bg-surface-container-lowest rounded-2xl flex items-center justify-between group hover:shadow-md transition-all">
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 bg-surface-container rounded-lg flex items-center justify-center text-on-surface-variant">
+                        <span className="material-symbols-outlined text-xl">description</span>
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-on-surface mb-0.5">Plans Techniques</p>
+                        <p className="text-[10px] text-on-surface-variant font-medium">Par {member.is_external ? member.external_name : member.professionals?.business_name}</p>
                       </div>
                     </div>
-                  ))
-                ) : (
-                  <div className="p-8 text-center bg-stone-50 rounded-2xl border border-dashed border-stone-200">
-                    <span className="material-symbols-outlined text-3xl text-stone-200 mb-2">description</span>
-                    <p className="text-xs text-stone-400">Aucun document n&apos;est encore lié à ce projet.</p>
+                    <span className="material-symbols-outlined text-on-surface-variant opacity-20 group-hover:opacity-100 transition-opacity">download</span>
+                  </div>
+                )) : (
+                  <div className="p-10 text-center bg-white rounded-3xl border border-dashed border-outline-variant/30">
+                    <span className="material-symbols-outlined text-4xl text-on-surface-variant opacity-20 mb-4 block">fact_check</span>
+                    <p className="text-xs text-on-surface-variant font-medium">Aucun document n&apos;est encore disponible dans le vault.</p>
                   </div>
                 )}
               </div>
               
-              <button className="w-full mt-6 py-4 text-xs font-bold text-kelen-green-600 bg-kelen-green-50 rounded-2xl hover:bg-kelen-green-100 transition-all uppercase tracking-widest">
-                Rejoindre le coffre-fort
+              <button className="w-full py-5 bg-on-surface text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-on-surface-variant transition-all mt-4">
+                Accéder au vault complet
               </button>
-            </div>
+            </section>
           </div>
         </div>
       </div>

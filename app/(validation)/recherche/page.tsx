@@ -55,7 +55,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     }
   }
 
-  const { data: results, error } = await browserQuery.order("status", {
+  // Sort by signal_count DESC to prioritize profiles needing verification/attention
+  const { data: results, error } = await browserQuery.order("signal_count", {
     ascending: false,
   });
 
