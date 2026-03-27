@@ -8,6 +8,8 @@ import { motion } from "framer-motion";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import ProjectTimeline, { Phase } from "@/components/shared/ProjectTimeline";
+import { DevelopmentAreaRow } from "@/components/projects/DevelopmentAreaRow";
+import { DEVELOPMENT_AREAS } from "@/lib/constants/projects";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -26,21 +28,7 @@ interface Project {
   objectives: Phase[];
 }
 
-interface ProjectProfessional {
-  id: string;
-  is_external: boolean;
-  external_name: string | null;
-  external_category: string | null;
-  role: string;
-  professional_id: string | null;
-  professionals: {
-    business_name: string;
-    category: string;
-    portfolio_photos: string[] | null;
-    status: string;
-    slug: string;
-  } | null;
-}
+import { ProjectProfessional } from "@/lib/types/projects";
 
 interface Payment {
   id: string;
@@ -60,16 +48,19 @@ const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
 
 export default function ProjectDetailPage() {
   const { id } = useParams();
+  const projectIdStr = Array.isArray(id) ? id[0] : id || "";
   const router = useRouter();
   const [project, setProject] = useState<Project | null>(null);
   const [team, setTeam] = useState<ProjectProfessional[]>([]);
   const [payments, setPayments] = useState<Payment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showAreaSelector, setShowAreaSelector] = useState(false);
+  const [activeAreas, setActiveAreas] = useState<string[]>([]);
   const supabase = createClient();
 
   useEffect(() => {
-    if (id) fetchProjectData();
-  }, [id]);
+    if (projectIdStr) fetchProjectData();
+  }, [projectIdStr]);
 
   const fetchProjectData = async () => {
     setIsLoading(true);
@@ -78,7 +69,7 @@ export default function ProjectDetailPage() {
     const { data: projectData, error: projectError } = await supabase
       .from("user_projects")
       .select("*")
-      .eq("id", id)
+      .eq("id", projectIdStr)
       .single();
 
     if (projectError) {
@@ -91,19 +82,25 @@ export default function ProjectDetailPage() {
     const { data: teamData, error: teamError } = await supabase
       .from("project_professionals")
       .select("*, professionals(business_name, category, portfolio_photos, status, slug)")
-      .eq("project_id", id);
+      .eq("project_id", projectIdStr)
+      .order("rank_order", { ascending: true });
 
     if (teamError) {
       console.error("Error fetching team:", teamError);
     } else {
-      setTeam(teamData as any[]);
+      const teamDataTyped = teamData as ProjectProfessional[];
+      setTeam(teamDataTyped);
+      
+      // Update active areas based on existing team members
+      const existingAreas = Array.from(new Set(teamDataTyped.map(m => m.development_area).filter(Boolean))) as string[];
+      setActiveAreas(prev => Array.from(new Set([...prev, ...existingAreas])));
     }
 
     // Fetch Payments
     const { data: paymentData, error: paymentError } = await supabase
       .from("project_payments")
       .select("*")
-      .eq("project_id", id);
+      .eq("project_id", projectIdStr);
 
     if (paymentError) {
       console.error("Error fetching payments:", paymentError);
@@ -114,11 +111,18 @@ export default function ProjectDetailPage() {
     setIsLoading(false);
   };
 
+  const addArea = (area: string) => {
+    if (!activeAreas.includes(area)) {
+      setActiveAreas([...activeAreas, area]);
+    }
+    setShowAreaSelector(false);
+  };
+
   const updateStatus = async (newStatus: string) => {
     const { error } = await supabase
       .from("user_projects")
       .update({ status: newStatus })
-      .eq("id", id);
+      .eq("id", projectIdStr);
     if (!error && project) {
       setProject({ ...project, status: newStatus });
     }
@@ -239,64 +243,64 @@ export default function ProjectDetailPage() {
               )}
             </section>
 
-            {/* Team Section */}
-            <section className="bg-surface-container-low p-10 rounded-[2.5rem] space-y-8">
+            {/* Team / Comparison Section */}
+            <section className="space-y-12">
               <div className="flex items-center justify-between">
-                <h3 className="text-2xl font-headline font-bold text-on-surface">Équipe d&apos;experts</h3>
-                <button className="text-xs font-black uppercase tracking-widest text-primary px-5 py-2.5 bg-white rounded-full shadow-sm hover:shadow-md transition-all">
-                  Inviter un expert
-                </button>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {team.length > 0 ? team.map((member) => (
-                  <motion.div 
-                    key={member.id} 
-                    whileHover={{ y: -4 }}
-                    className="p-6 bg-surface-container-lowest rounded-3xl flex items-center gap-5 shadow-sm hover:shadow-xl hover:shadow-surface-container-high/40 transition-all cursor-pointer group"
+                <div>
+                  <h3 className="text-2xl font-headline font-bold text-on-surface">Moteur de Comparaison</h3>
+                  <p className="text-on-surface-variant font-medium mt-1">Sélectionnez et classez les meilleurs experts pour chaque domaine.</p>
+                </div>
+                <div className="relative">
+                  <button 
+                    onClick={() => setShowAreaSelector(!showAreaSelector)}
+                    className="flex items-center gap-2 px-6 py-3 bg-primary text-white text-xs font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-primary/20 hover:scale-[0.98] transition-all"
                   >
-                    <div className="relative">
-                      {member.is_external ? (
-                        <div className="w-16 h-16 rounded-2xl bg-surface-container flex items-center justify-center text-on-surface-variant">
-                          <span className="material-symbols-outlined text-3xl">person</span>
-                        </div>
-                      ) : (
-                        <div className="w-16 h-16 rounded-2xl overflow-hidden ring-4 ring-white shadow-sm">
-                          <img 
-                            alt={member.professionals?.business_name} 
-                            className="w-full h-full object-cover" 
-                            src={member.professionals?.portfolio_photos?.[0] || "https://images.unsplash.com/photo-1541888946425-d81bb19480c5?auto=format&fit=crop&q=80"} 
-                          />
-                        </div>
-                      )}
-                      {!member.is_external && (
-                        <div className="absolute -bottom-2 -right-2 p-1.5 bg-primary rounded-full border-2 border-white shadow-sm">
-                          <span className="material-symbols-outlined text-[10px] block text-white font-bold">verified</span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex-1">
-                      <h5 className="font-headline font-bold text-on-surface text-base">
-                        {member.is_external ? member.external_name : member.professionals?.business_name}
-                      </h5>
-                      <p className="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mt-1">
-                        {member.is_external ? member.external_category : member.professionals?.category}
-                      </p>
-                      <div className="flex gap-2 mt-3">
-                        <span className="px-3 py-1 bg-surface-container text-on-surface-variant text-[9px] font-black uppercase tracking-widest rounded-lg">
-                           {member.role}
-                        </span>
+                    <span className="material-symbols-outlined text-base">add</span>
+                    Ajouter un domaine
+                  </button>
+                  
+                  {showAreaSelector && (
+                    <div className="absolute right-0 mt-3 w-72 bg-white rounded-2xl shadow-2xl border border-outline-variant/30 p-2 z-50">
+                      <div className="max-h-64 overflow-y-auto overflow-x-hidden scrollbar-hide">
+                        {DEVELOPMENT_AREAS.filter(a => !activeAreas.includes(a)).map((area) => (
+                          <button
+                            key={area}
+                            onClick={() => addArea(area)}
+                            className="w-full text-left px-4 py-3 text-sm font-medium hover:bg-surface-container rounded-xl transition-colors"
+                          >
+                            {area}
+                          </button>
+                        ))}
                       </div>
                     </div>
-                    {member.professionals?.slug && (
-                      <Link href={`/pro/${member.professionals.slug}`} className="p-2 text-on-surface-variant opacity-20 group-hover:opacity-100 group-hover:text-primary transition-all">
-                        <span className="material-symbols-outlined">arrow_forward_ios</span>
-                      </Link>
-                    )}
-                  </motion.div>
-                )) : (
-                  <div className="col-span-2 py-12 text-center bg-surface-container p-8 rounded-3xl border border-dashed border-outline-variant/30">
-                    <p className="text-on-surface-variant font-medium italic">Aucun expert n&apos;est encore rattaché à ce projet.</p>
+                  )}
+                </div>
+              </div>
+              
+              <div className="space-y-16">
+                {(activeAreas.length > 0 ? activeAreas : ["Architecture & Design"]).map((area) => (
+                  <DevelopmentAreaRow 
+                    key={area}
+                    areaName={area}
+                    projectId={projectIdStr}
+                    professionals={team.filter(m => m.development_area === area)}
+                    onRefresh={fetchProjectData}
+                  />
+                ))}
+                
+                {activeAreas.length === 0 && (
+                  <div className="p-20 text-center bg-surface-container-low rounded-[2.5rem] border-2 border-dashed border-outline-variant/30">
+                    <div className="w-16 h-16 mx-auto bg-surface-container rounded-full flex items-center justify-center mb-6">
+                      <span className="material-symbols-outlined text-3xl text-on-surface-variant opacity-30">diversity_3</span>
+                    </div>
+                    <h4 className="text-xl font-headline font-bold text-on-surface">Initialisez vos domaines</h4>
+                    <p className="text-on-surface-variant font-medium mt-2 max-w-xs mx-auto">Ajoutez des domaines d&apos;intervention pour commencer à comparer des professionnels.</p>
+                    <button 
+                      onClick={() => setShowAreaSelector(true)}
+                      className="mt-8 px-8 py-3 bg-primary/10 text-primary rounded-xl font-headline font-bold hover:bg-primary/20 transition-all font-body"
+                    >
+                      Choisir un premier domaine
+                    </button>
                   </div>
                 )}
               </div>

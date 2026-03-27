@@ -15,7 +15,7 @@ function cn(...inputs: ClassValue[]) {
 type ProjectData = {
   id?: string;
   title: string;
-  category: "construction" | "renovation" | "immobilier" | "amenagement" | "autre";
+  category: string;
   location: string;
   budget_total: number;
   budget_currency: "EUR" | "XOF" | "USD";
@@ -195,10 +195,14 @@ export default function ProjectWizard() {
 function Step1Identity({ formData, onChange }: { formData: ProjectData; onChange: (d: Partial<ProjectData>) => void }) {
   const categories = [
     { id: "construction", label: "Construction", icon: "architecture" },
+    { id: "design", label: "Design & Archi", icon: "draw" },
+    { id: "juridique", label: "Droit & Juridique", icon: "gavel" },
+    { id: "education", label: "Éducation", icon: "school" },
+    { id: "sante", label: "Santé & Bien-être", icon: "health_and_safety" },
     { id: "renovation", label: "Rénovation", icon: "home_repair_service" },
     { id: "immobilier", label: "Immobilier", icon: "domain" },
     { id: "amenagement", label: "Aménagement", icon: "nest_eco_leaf" },
-    { id: "autre", label: "Autre", icon: "more_horiz" },
+    { id: "autre", label: "Autre Service", icon: "more_horiz" },
   ];
 
   return (

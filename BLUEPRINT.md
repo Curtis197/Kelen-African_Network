@@ -30,17 +30,20 @@ The application adheres to a premium, editorial-grade design system characterize
     - **Real-time Stats**: Aggregated budget and active project counts.
     - **Quick Actions**: Easy access to create new initiatives.
 
-### 3. Project Detail Page
+### 3. Project Detail Page & Comparison Engine
 - **Route**: `/projets/[id]`
 - **Functionality**:
+    - **Universal Comparison Engine**: Row-based layout grouping professionals by Functional Development Areas (e.g., Law, Architecture, Education).
+    - **Multi-Expert Management**: Ability to add both platform-registered and external experts for side-by-side comparison.
+    - **Ranking System**: Visual ordering of experts within a domain to prioritize candidates.
+    - **Selection Workflow**: Status tracking (`Candidate`, `Shortlisted`, `Finalist`) for professional selection.
     - **Technical Vault**: Secure access to project documents.
-    - **Team Overview**: Interactive list of experts and professionals involved.
     - **Live Timeline**: Visual progress tracking of project phases.
     - **Budget Analysis**: Circular progress visualization of fund consumption.
 
 ## Technical Architecture
 - **Framework**: Next.js (App Router)
-- **Database**: Supabase (PostgreSQL)
+- **Database**: Supabase (PostgreSQL) with flexible schema support for universal categories.
 - **Styling**: Tailwind CSS 4 + Material Design 3 tokens
 - **Animations**: Framer Motion
 - **Validation**: Zod (Schema-driven actions)
@@ -49,5 +52,6 @@ The application adheres to a premium, editorial-grade design system characterize
 - [x] Support for incremental wizard persistence.
 - [x] Bento-style dashboard refactor.
 - [x] High-fidelity detail page implementation.
+- [x] Universal Project Comparison Engine (Row-based comparison, ranking).
 - [ ] Integration of real-time chat with experts.
 - [ ] Wallet/Payment gateway integration for project funding.

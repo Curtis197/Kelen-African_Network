@@ -8,7 +8,7 @@ import { z } from "zod";
 const projectSchema = z.object({
   id: z.string().uuid().optional(),
   title: z.string().min(1, "Le titre est requis").optional(),
-  category: z.enum(["construction", "renovation", "immobilier", "amenagement", "autre"]).optional(),
+  category: z.string().optional(),
   location: z.string().optional(),
   budget_total: z.number().min(0, "Le budget doit être positif").optional(),
   budget_currency: z.enum(["EUR", "XOF", "USD"]).optional(),
@@ -124,7 +124,8 @@ export async function getProjectTeam(projectId: string) {
   const { data, error } = await supabase
     .from("project_professionals")
     .select("*, professionals(business_name, category, portfolio_photos, status, slug)")
-    .eq("project_id", projectId);
+    .eq("project_id", projectId)
+    .order("rank_order", { ascending: true });
 
   if (error) {
     console.error("Error fetching project team:", error);
@@ -147,4 +148,79 @@ export async function getProjectPayments(projectId: string) {
   }
 
   return data;
+}
+
+export async function manageProjectProfessional(
+  projectId: string, 
+  proId: string | null, 
+  area: string, 
+  action: 'add' | 'remove',
+  isExternal: boolean = false,
+  externalData?: { name?: string; phone?: string; category?: string; location?: string }
+) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) throw new Error("Non autorisé");
+
+  if (action === 'add') {
+    const insertData: any = {
+      project_id: projectId,
+      development_area: area,
+      is_external: isExternal,
+    };
+
+    if (isExternal) {
+      insertData.external_name = externalData?.name;
+      insertData.external_phone = externalData?.phone;
+      insertData.external_category = externalData?.category;
+      insertData.external_location = externalData?.location;
+    } else {
+      insertData.professional_id = proId;
+    }
+
+    const { error } = await supabase
+      .from("project_professionals")
+      .insert([insertData]);
+
+    if (error) return { error: error.message };
+  } else {
+    const { error } = await supabase
+      .from("project_professionals")
+      .delete()
+      .eq("project_id", projectId)
+      .eq(isExternal ? "external_name" : "professional_id", isExternal ? externalData?.name : proId)
+      .eq("development_area", area);
+
+    if (error) return { error: error.message };
+  }
+
+  revalidatePath(`/projets/${projectId}`);
+  return { success: true };
+}
+
+export async function updateProfessionalRank(projectId: string, linkId: string, rank: number) {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("project_professionals")
+    .update({ rank_order: rank })
+    .eq("id", linkId);
+
+  if (error) return { error: error.message };
+  
+  revalidatePath(`/projets/${projectId}`);
+  return { success: true };
+}
+
+export async function updateProfessionalSelection(projectId: string, linkId: string, status: 'candidate' | 'shortlisted' | 'finalist') {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("project_professionals")
+    .update({ selection_status: status })
+    .eq("id", linkId);
+
+  if (error) return { error: error.message };
+  
+  revalidatePath(`/projets/${projectId}`);
+  return { success: true };
 }
