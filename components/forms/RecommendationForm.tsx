@@ -12,25 +12,25 @@ import { createClient } from "@/lib/supabase/client";
 import { uploadFile, uploadMultipleFiles } from "@/lib/supabase/storage";
 
 interface RecommendationFormProps {
-  professionalId: string;
-  professionalName: string;
-  professionalSlug: string;
+  professionalId?: string;
+  professionalName?: string;
+  professionalSlug?: string;
+  isExternal?: boolean;
 }
-
-const STEPS = [
-  "Type de projet",
-  "Détails du projet",
-  "Budget & dates",
-  "Pièces jointes",
-  "Confirmation",
-];
 
 export function RecommendationForm({
   professionalId,
   professionalName,
   professionalSlug,
+  isExternal = false,
 }: RecommendationFormProps) {
   const [step, setStep] = useState(0);
+  // If external, we add a step at the beginning to identify the professional
+  const effectiveIsExternal = isExternal || !professionalId;
+  
+  const STEPS = effectiveIsExternal 
+    ? ["Professionnel", "Type de projet", "Détails du projet", "Budget & dates", "Pièces jointes", "Confirmation"]
+    : ["Type de projet", "Détails du projet", "Budget & dates", "Pièces jointes", "Confirmation"];
   const [isLoading, setIsLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -47,18 +47,31 @@ export function RecommendationForm({
   } = useForm<RecommendationFormData>({
     resolver: zodResolver(recommendationSchema),
     defaultValues: {
-      professional_id: professionalId,
+      professional_id: professionalId || null,
+      external_name: "",
+      external_category: "",
+      external_city: "",
+      external_country: "",
     },
   });
 
   const nextStep = async () => {
-    const fieldsPerStep: (keyof RecommendationFormData)[][] = [
-      ["project_type"],
-      ["project_description"],
-      ["completion_date", "budget_range", "location"],
-      [], // file step
-      ["authenticity_confirmed"],
-    ];
+    const fieldsPerStep: (keyof RecommendationFormData)[][] = effectiveIsExternal
+      ? [
+          ["external_name", "external_category", "external_city", "external_country"],
+          ["project_type"],
+          ["project_description"],
+          ["completion_date", "budget_range", "location"],
+          [], // file step
+          ["authenticity_confirmed"],
+        ]
+      : [
+          ["project_type"],
+          ["project_description"],
+          ["completion_date", "budget_range", "location"],
+          [], // file step
+          ["authenticity_confirmed"],
+        ];
     const isValid = await trigger(fieldsPerStep[step]);
     if (isValid) setStep((s) => Math.min(s + 1, STEPS.length - 1));
   };
@@ -104,8 +117,12 @@ export function RecommendationForm({
 
       // 4. Insert Recommendation
       const { error: insertError } = await supabase.from("recommendations").insert({
-        professional_id: professionalId,
-        professional_slug: professionalSlug,
+        professional_id: data.professional_id || null,
+        professional_slug: professionalSlug || null,
+        external_name: data.external_name || null,
+        external_category: data.external_category || null,
+        external_city: data.external_city || null,
+        external_country: data.external_country || null,
         submitter_id: user.id,
         submitter_name: `${profile.first_name} ${profile.last_name}`,
         submitter_country: profile.country,
@@ -119,7 +136,7 @@ export function RecommendationForm({
         after_photos: photoUrls,
         status: "pending",
         verified: false,
-        linked: true, // Default to true if submitted via the pro's link
+        linked: !!data.professional_id,
       });
 
       if (insertError) throw insertError;
@@ -143,15 +160,15 @@ export function RecommendationForm({
           Recommandation soumise
         </h2>
         <p className="mt-2 text-muted-foreground text-sm">
-          Votre recommandation pour <strong>{professionalName}</strong> a été
+          Votre recommandation pour <strong>{professionalName || watch("external_name")}</strong> a été
           envoyée. Elle sera vérifiée par notre équipe avant publication.
         </p>
         <div className="mt-8 flex justify-center">
           <Link
-            href={`/pro/${professionalSlug}`}
+            href={professionalSlug ? `/pro/${professionalSlug}` : "/"}
             className="rounded-lg bg-kelen-green-500 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-kelen-green-600"
           >
-            Retour au profil
+            {professionalSlug ? "Retour au profil" : "Retour à l'accueil"}
           </Link>
         </div>
       </div>
@@ -198,14 +215,96 @@ export function RecommendationForm({
           </div>
         )}
 
-        {/* Step 0: Project type */}
-        {step === 0 && (
+        {/* Step 0: External Professional Identity (Only if external) */}
+        {effectiveIsExternal && step === 0 && (
           <div className="animate-in fade-in slide-in-from-right-2 duration-300">
             <h2 className="text-lg font-semibold text-foreground">
-              {STEPS[0]}
+              Identifier le professionnel
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Quel type de projet avez-vous réalisé avec {professionalName} ?
+              Saisissez les informations du professionnel que vous souhaitez recommander.
+            </p>
+            <div className="mt-6 space-y-4">
+              <div>
+                <label className="mb-1.5 block text-sm font-medium text-foreground">
+                  Nom du professionnel ou de l'entreprise
+                </label>
+                <input
+                  type="text"
+                  {...register("external_name")}
+                  className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
+                  placeholder="Ex : Jean Dupont ou SABC Construction"
+                />
+                {errors.external_name && (
+                  <p className="mt-1 text-xs text-kelen-red-500">
+                    {errors.external_name.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="mb-1.5 block text-sm font-medium text-foreground">
+                  Catégorie / Métier
+                </label>
+                <input
+                  type="text"
+                  {...register("external_category")}
+                  className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
+                  placeholder="Ex : Architecte, Maçon, Électricien..."
+                />
+                {errors.external_category && (
+                  <p className="mt-1 text-xs text-kelen-red-500">
+                    {errors.external_category.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="mb-1.5 block text-sm font-medium text-foreground">
+                    Ville
+                  </label>
+                  <input
+                    type="text"
+                    {...register("external_city")}
+                    className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
+                    placeholder="Ex : Douala"
+                  />
+                  {errors.external_city && (
+                    <p className="mt-1 text-xs text-kelen-red-500">
+                      {errors.external_city.message}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <label className="mb-1.5 block text-sm font-medium text-foreground">
+                    Pays
+                  </label>
+                  <input
+                    type="text"
+                    {...register("external_country")}
+                    className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
+                    placeholder="Ex : Cameroun"
+                  />
+                  {errors.external_country && (
+                    <p className="mt-1 text-xs text-kelen-red-500">
+                      {errors.external_country.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Project type */}
+        {step === (effectiveIsExternal ? 1 : 0) && (
+          <div className="animate-in fade-in slide-in-from-right-2 duration-300">
+            <h2 className="text-lg font-semibold text-foreground">
+              Type de projet
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Quel type de projet avez-vous réalisé avec {professionalName || watch("external_name") || "ce professionnel"} ?
             </p>
             <div className="mt-4">
               <input
@@ -223,11 +322,11 @@ export function RecommendationForm({
           </div>
         )}
 
-        {/* Step 1: Project description */}
-        {step === 1 && (
+        {/* Project description */}
+        {step === (effectiveIsExternal ? 2 : 1) && (
           <div className="animate-in fade-in slide-in-from-right-2 duration-300">
             <h2 className="text-lg font-semibold text-foreground">
-              {STEPS[1]}
+              Détails du projet
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
               Décrivez le projet réalisé et votre expérience.
@@ -256,11 +355,11 @@ export function RecommendationForm({
           </div>
         )}
 
-        {/* Step 2: Budget, dates, location */}
-        {step === 2 && (
+        {/* Budget, dates, location */}
+        {step === (effectiveIsExternal ? 3 : 2) && (
           <div className="animate-in fade-in slide-in-from-right-2 duration-300">
             <h2 className="text-lg font-semibold text-foreground">
-              {STEPS[2]}
+              Budget & dates
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
               Informations complémentaires sur le projet.
@@ -324,10 +423,10 @@ export function RecommendationForm({
           </div>
         )}
 
-        {/* Step 3: Piece Jointes */}
-        {step === 3 && (
+        {/* Piece Jointes */}
+        {step === (effectiveIsExternal ? 4 : 3) && (
           <div className="animate-in fade-in slide-in-from-right-2 duration-300">
-            <h2 className="text-lg font-semibold text-foreground">{STEPS[3]}</h2>
+            <h2 className="text-lg font-semibold text-foreground">Pièces jointes</h2>
             <p className="mt-1 text-sm text-muted-foreground">
               Ajoutez des preuves de la réalisation du projet (contrat, factures, photos).
             </p>
@@ -400,11 +499,11 @@ export function RecommendationForm({
           </div>
         )}
 
-        {/* Step 4: Confirmation */}
-        {step === 4 && (
+        {/* Confirmation */}
+        {step === (effectiveIsExternal ? 5 : 4) && (
           <div className="animate-in fade-in slide-in-from-right-2 duration-300">
             <h2 className="text-lg font-semibold text-foreground">
-              {STEPS[3]}
+              Confirmation
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
               Relisez les informations et confirmez.
@@ -413,7 +512,7 @@ export function RecommendationForm({
             <div className="mt-4 rounded-xl border border-border bg-muted/30 p-4 space-y-3 text-sm">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Professionnel :</span>
-                <span className="font-medium text-foreground">{professionalName}</span>
+                <span className="font-medium text-foreground">{professionalName || watch("external_name")}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Type de projet :</span>

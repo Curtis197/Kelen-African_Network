@@ -50,13 +50,16 @@ Kelen is a high-fidelity platform for connecting clients with African profession
 - Linked the Professional Portfolio grid to the Realization Detail pages.
 
 ## **Execution Plan (Current Task)**
-1.  **Objective:** Complete Realization Detail Page linking and data integrity.
+1.  **Objective:** Implement Universal Recommendations & Signals.
 2.  **Steps:**
-    - [x] Create `app/(marketing)/professionnels/[slug]/realisations/[id]/page.tsx`.
-    - [x] Implement server-side fetching for projects and assets.
-    - [x] Apply "Digital Diplomat" styling to the detail view.
-    - [x] Update Professional Profile to link to real projects.
-    - [x] Verify link integrity and responsive behaviors.n)
+    - [x] **Phase 1: Database Migration**: Nullable professional_id, added external fields.
+    - [x] **Phase 2: Validation Updates**: Updated Zod schemas for conditional validation.
+    - [x] **Phase 3: Form Refactoring**: Updated `RecommendationForm` and `SignalForm` with identity steps.
+    - [x] **Phase 4: UI/UX Integration**: Added CTAs and external routes.
+    - [ ] **Phase 5: Verification**: Verify submission logic for both on-platform and off-platform cases.
+
+## **Implementation Log**
+n)
 `app/(admin)/admin/queue/[id]/page.tsx`
 - **Admin Review:** High-fidelity dashboard for expert validation.
 - **Bento-Stats:** Rapid overview of signal counts and historical data.

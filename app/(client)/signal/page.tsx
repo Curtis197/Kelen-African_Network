@@ -110,6 +110,27 @@ export default function SelectProForSignalPage() {
             <p className="text-sm text-stone-400 font-medium italic">Aucun professionnel trouvé pour cette recherche.</p>
           </div>
         )}
+
+        {/* External CTA */}
+        <div className="mt-8 pt-8 border-t border-stone-100">
+          <Link
+            href="/signal/externe"
+            className="flex items-center gap-4 rounded-2xl border border-dashed border-stone-300 bg-stone-50/30 p-6 transition-all hover:border-red-500 hover:bg-red-50/30 group"
+          >
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white text-xl shadow-sm group-hover:bg-red-500 group-hover:text-white transition-colors">
+              <span className="material-symbols-outlined">person_add_disabled</span>
+            </div>
+            <div>
+              <p className="font-bold text-stone-900">Le professionnel n'est pas sur Kelen ?</p>
+              <p className="text-sm text-stone-500 font-medium">
+                Vous pouvez quand même signaler un manquement en saisissant ses informations.
+              </p>
+            </div>
+            <span className="material-symbols-outlined ml-auto text-stone-300 group-hover:text-red-500 transition-colors">
+              arrow_forward
+            </span>
+          </Link>
+        </div>
       </div>
     </div>
   );

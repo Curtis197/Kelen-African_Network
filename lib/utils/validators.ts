@@ -45,58 +45,88 @@ export const registerProfessionalSchema = registerUserSchema.extend({
 
 // --- Recommendation ---
 
-export const recommendationSchema = z.object({
-  professional_id: z.string().uuid(),
-  project_type: z.string().min(1, "Type de projet requis"),
-  project_description: z.string().min(20, "Description requise (20 caractères minimum)"),
-  completion_date: z.string().min(1, "Date de fin requise"),
-  budget_range: z.enum(["0-10k", "10k-25k", "25k-50k", "50k-100k", "100k+"]),
-  location: z.string().min(2, "Localisation requise"),
-  authenticity_confirmed: z.literal(true, {
-    errorMap: () => ({
-      message: "Vous devez confirmer l'authenticité des informations",
+export const recommendationSchema = z
+  .object({
+    professional_id: z.string().uuid().optional().nullable(),
+    external_name: z.string().min(2, "Nom du professionnel requis").optional().nullable(),
+    external_category: z.string().min(1, "Catégorie requise").optional().nullable(),
+    external_city: z.string().min(2, "Ville requise").optional().nullable(),
+    external_country: z.string().min(2, "Pays requis").optional().nullable(),
+
+    project_type: z.string().min(1, "Type de projet requis"),
+    project_description: z
+      .string()
+      .min(20, "Description requise (20 caractères minimum)"),
+    completion_date: z.string().min(1, "Date de fin requise"),
+    budget_range: z.enum(["0-10k", "10k-25k", "25k-50k", "50k-100k", "100k+"]),
+    location: z.string().min(2, "Localisation requise"),
+    authenticity_confirmed: z.literal(true, {
+      errorMap: () => ({
+        message: "Vous devez confirmer l'authenticité des informations",
+      }),
     }),
-  }),
-  contract_url: z.string().optional(),
-  photo_urls: z.array(z.string()).optional(),
-  before_photos: z.array(z.string()).optional(),
-  after_photos: z.array(z.string()).optional(),
-});
+    contract_url: z.string().optional(),
+    photo_urls: z.array(z.string()).optional(),
+    before_photos: z.array(z.string()).optional(),
+    after_photos: z.array(z.string()).optional(),
+  })
+  .refine((data) => data.professional_id || data.external_name, {
+    message: "Vous devez sélectionner un professionnel ou saisir son nom",
+    path: ["external_name"],
+  });
 
 // --- Signal ---
 
-export const signalSchema = z.object({
-  professional_id: z.string().uuid(),
-  breach_type: z.enum(["timeline", "budget", "quality", "abandonment", "fraud"]),
-  breach_description: z.string().min(100, "Description requise (100 caractères minimum)"),
-  severity: z.enum(["minor", "major", "critical"]),
-  agreed_start_date: z.string().min(1, "Date de début convenue requise"),
-  agreed_end_date: z.string().min(1, "Date de fin convenue requise"),
-  actual_start_date: z.string().optional(),
-  actual_end_date: z.string().optional(),
-  timeline_deviation: z.string().optional(),
-  agreed_budget: z.number().optional(),
-  actual_budget: z.number().optional(),
-  budget_deviation: z.string().optional(),
-  authenticity_confirmed: z.literal(true, {
-    errorMap: () => ({
-      message: "Vous devez confirmer l'authenticité des informations",
+export const signalSchema = z
+  .object({
+    professional_id: z.string().uuid().optional().nullable(),
+    external_name: z.string().min(2, "Nom du professionnel requis").optional().nullable(),
+    external_category: z.string().min(1, "Catégorie requise").optional().nullable(),
+    external_city: z.string().min(2, "Ville requise").optional().nullable(),
+    external_country: z.string().min(2, "Pays requis").optional().nullable(),
+
+    breach_type: z.enum([
+      "timeline",
+      "budget",
+      "quality",
+      "abandonment",
+      "fraud",
+    ]),
+    breach_description: z
+      .string()
+      .min(100, "Description requise (100 caractères minimum)"),
+    severity: z.enum(["minor", "major", "critical"]),
+    agreed_start_date: z.string().min(1, "Date de début convenue requise"),
+    agreed_end_date: z.string().min(1, "Date de fin convenue requise"),
+    actual_start_date: z.string().optional(),
+    actual_end_date: z.string().optional(),
+    timeline_deviation: z.string().optional(),
+    agreed_budget: z.number().optional(),
+    actual_budget: z.number().optional(),
+    budget_deviation: z.string().optional(),
+    authenticity_confirmed: z.literal(true, {
+      errorMap: () => ({
+        message: "Vous devez confirmer l'authenticité des informations",
+      }),
     }),
-  }),
-  false_signal_understood: z.literal(true, {
-    errorMap: () => ({
-      message: "Vous devez comprendre les conséquences d'un faux signal",
+    false_signal_understood: z.literal(true, {
+      errorMap: () => ({
+        message: "Vous devez comprendre les conséquences d'un faux signal",
+      }),
     }),
-  }),
-  notification_understood: z.literal(true, {
-    errorMap: () => ({
-      message: "Vous devez comprendre que le professionnel sera notifié",
+    notification_understood: z.literal(true, {
+      errorMap: () => ({
+        message: "Vous devez comprendre que le professionnel sera notifié",
+      }),
     }),
-  }),
-  contract_url: z.string().optional(),
-  evidence_urls: z.array(z.string()).optional(),
-  communication_logs: z.array(z.string()).optional(),
-});
+    contract_url: z.string().optional(),
+    evidence_urls: z.array(z.string()).optional(),
+    communication_logs: z.array(z.string()).optional(),
+  })
+  .refine((data) => data.professional_id || data.external_name, {
+    message: "Vous devez sélectionner un professionnel ou saisir son nom",
+    path: ["external_name"],
+  });
 
 // --- Review ---
 

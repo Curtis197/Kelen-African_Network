@@ -9,9 +9,10 @@ import { createClient } from "@/lib/supabase/client";
 import { uploadFile, uploadMultipleFiles } from "@/lib/supabase/storage";
 
 interface SignalFormProps {
-  professionalId: string;
-  professionalName: string;
-  professionalSlug: string;
+  professionalId?: string;
+  professionalName?: string;
+  professionalSlug?: string;
+  isExternal?: boolean;
 }
 
 const STEPS = [
@@ -44,8 +45,27 @@ export function SignalForm({
   professionalId,
   professionalName,
   professionalSlug,
+  isExternal = false,
 }: SignalFormProps) {
   const [step, setStep] = useState(0);
+  const effectiveIsExternal = isExternal || !professionalId;
+
+  const STEPS = effectiveIsExternal
+    ? [
+        "Professionnel",
+        "Type de manquement",
+        "Description",
+        "Dates & budget",
+        "Pièces jointes",
+        "Engagement légal",
+      ]
+    : [
+        "Type de manquement",
+        "Description",
+        "Dates & budget",
+        "Pièces jointes",
+        "Engagement légal",
+      ];
   const [isLoading, setIsLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -62,22 +82,39 @@ export function SignalForm({
   } = useForm<SignalFormData>({
     resolver: zodResolver(signalSchema),
     defaultValues: {
-      professional_id: professionalId,
+      professional_id: professionalId || null,
+      external_name: "",
+      external_category: "",
+      external_city: "",
+      external_country: "",
     },
   });
 
   const nextStep = async () => {
-    const fieldsPerStep: (keyof SignalFormData)[][] = [
-      ["breach_type", "severity"],
-      ["breach_description"],
-      ["agreed_start_date", "agreed_end_date"],
-      [], // file upload step
-      [
-        "authenticity_confirmed",
-        "false_signal_understood",
-        "notification_understood",
-      ],
-    ];
+    const fieldsPerStep: (keyof SignalFormData)[][] = effectiveIsExternal
+      ? [
+          ["external_name", "external_category", "external_city", "external_country"],
+          ["breach_type", "severity"],
+          ["breach_description"],
+          ["agreed_start_date", "agreed_end_date"],
+          [], // file upload step
+          [
+            "authenticity_confirmed",
+            "false_signal_understood",
+            "notification_understood",
+          ],
+        ]
+      : [
+          ["breach_type", "severity"],
+          ["breach_description"],
+          ["agreed_start_date", "agreed_end_date"],
+          [], // file upload step
+          [
+            "authenticity_confirmed",
+            "false_signal_understood",
+            "notification_understood",
+          ],
+        ];
     const isValid = await trigger(fieldsPerStep[step]);
     if (isValid) setStep((s) => Math.min(s + 1, STEPS.length - 1));
   };
@@ -128,8 +165,12 @@ export function SignalForm({
 
       // 4. Insert Signal
       const { error: insertError } = await supabase.from("signals").insert({
-        professional_id: professionalId,
-        professional_slug: professionalSlug,
+        professional_id: data.professional_id || null,
+        professional_slug: professionalSlug || null,
+        external_name: data.external_name || null,
+        external_category: data.external_category || null,
+        external_city: data.external_city || null,
+        external_country: data.external_country || null,
         submitter_id: user.id,
         submitter_name: `${profile.first_name} ${profile.last_name}`,
         submitter_country: profile.country,
@@ -167,8 +208,8 @@ export function SignalForm({
         </div>
         <h2 className="text-xl font-bold text-foreground">Signal soumis</h2>
         <p className="mt-2 text-muted-foreground text-sm">
-          Votre signal concernant <strong>{professionalName}</strong> a été
-          enregistré. Il sera vérifié par notre équipe.
+          Votre signal concernant <strong>{professionalName || watch("external_name")}</strong> a été
+          enregistré. Il sera vérifiée par notre équipe.
         </p>
         <p className="mt-4 text-sm text-muted-foreground">
           Le professionnel sera notifié et disposera de 15 jours pour répondre
@@ -176,10 +217,10 @@ export function SignalForm({
         </p>
         <div className="mt-8 flex justify-center">
           <Link
-            href={`/pro/${professionalSlug}`}
+            href={professionalSlug ? `/pro/${professionalSlug}` : "/"}
             className="rounded-lg bg-kelen-green-500 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-kelen-green-600"
           >
-            Retour au profil
+            {professionalSlug ? "Retour au profil" : "Retour à l'accueil"}
           </Link>
         </div>
       </div>
@@ -226,12 +267,94 @@ export function SignalForm({
           </div>
         )}
 
-        {/* Step 0: Breach type & severity */}
-        {step === 0 && (
+        {/* Step 0: External Professional Identity (Only if external) */}
+        {effectiveIsExternal && step === 0 && (
           <div className="animate-in fade-in slide-in-from-right-2 duration-300">
-            <h2 className="text-lg font-semibold text-foreground">{STEPS[0]}</h2>
+            <h2 className="text-lg font-semibold text-foreground">
+              Identifier le professionnel
+            </h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Quel type de manquement souhaitez-vous signaler ?
+              Saisissez les informations du professionnel que vous souhaitez signaler.
+            </p>
+            <div className="mt-6 space-y-4">
+              <div>
+                <label className="mb-1.5 block text-sm font-medium text-foreground">
+                  Nom du professionnel ou de l'entreprise
+                </label>
+                <input
+                  type="text"
+                  {...register("external_name")}
+                  className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors focus:border-kelen-red-500 focus:outline-none focus:ring-2 focus:ring-kelen-red-500/20"
+                  placeholder="Ex : Jean Dupont ou SABC Construction"
+                />
+                {errors.external_name && (
+                  <p className="mt-1 text-xs text-kelen-red-500">
+                    {errors.external_name.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="mb-1.5 block text-sm font-medium text-foreground">
+                  Catégorie / Métier
+                </label>
+                <input
+                  type="text"
+                  {...register("external_category")}
+                  className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors focus:border-kelen-red-500 focus:outline-none focus:ring-2 focus:ring-kelen-red-500/20"
+                  placeholder="Ex : Architecte, Maçon, Électricien..."
+                />
+                {errors.external_category && (
+                  <p className="mt-1 text-xs text-kelen-red-500">
+                    {errors.external_category.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="mb-1.5 block text-sm font-medium text-foreground">
+                    Ville
+                  </label>
+                  <input
+                    type="text"
+                    {...register("external_city")}
+                    className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors focus:border-kelen-red-500 focus:outline-none focus:ring-2 focus:ring-kelen-red-500/20"
+                    placeholder="Ex : Douala"
+                  />
+                  {errors.external_city && (
+                    <p className="mt-1 text-xs text-kelen-red-500">
+                      {errors.external_city.message}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <label className="mb-1.5 block text-sm font-medium text-foreground">
+                    Pays
+                  </label>
+                  <input
+                    type="text"
+                    {...register("external_country")}
+                    className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors focus:border-kelen-red-500 focus:outline-none focus:ring-2 focus:ring-kelen-red-500/20"
+                    placeholder="Ex : Cameroun"
+                  />
+                  {errors.external_country && (
+                    <p className="mt-1 text-xs text-kelen-red-500">
+                      {errors.external_country.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Breach type & severity */}
+        {step === (effectiveIsExternal ? 1 : 0) && (
+          <div className="animate-in fade-in slide-in-from-right-2 duration-300">
+            <h2 className="text-lg font-semibold text-foreground">Type de manquement</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Quel type de manquement souhaitez-vous signaler concernant {professionalName || watch("external_name") || "ce professionnel"} ?
             </p>
 
             <div className="mt-4 space-y-4">
@@ -294,10 +417,10 @@ export function SignalForm({
           </div>
         )}
 
-        {/* Step 1: Description */}
-        {step === 1 && (
+        {/* Description */}
+        {step === (effectiveIsExternal ? 2 : 1) && (
           <div className="animate-in fade-in slide-in-from-right-2 duration-300">
-            <h2 className="text-lg font-semibold text-foreground">{STEPS[1]}</h2>
+            <h2 className="text-lg font-semibold text-foreground">Description</h2>
             <p className="mt-1 text-sm text-muted-foreground">
               Décrivez le manquement en détail. Plus votre description est
               précise, plus la vérification sera rapide.
@@ -326,10 +449,10 @@ export function SignalForm({
           </div>
         )}
 
-        {/* Step 2: Dates & budget */}
-        {step === 2 && (
+        {/* Dates & budget */}
+        {step === (effectiveIsExternal ? 3 : 2) && (
           <div className="animate-in fade-in slide-in-from-right-2 duration-300">
-            <h2 className="text-lg font-semibold text-foreground">{STEPS[2]}</h2>
+            <h2 className="text-lg font-semibold text-foreground">Dates & budget</h2>
             <p className="mt-1 text-sm text-muted-foreground">
               Informations sur les délais et le budget convenus.
             </p>
@@ -394,10 +517,10 @@ export function SignalForm({
           </div>
         )}
 
-        {/* Step 3: File upload */}
-        {step === 3 && (
+        {/* File upload */}
+        {step === (effectiveIsExternal ? 4 : 3) && (
           <div className="animate-in fade-in slide-in-from-right-2 duration-300">
-            <h2 className="text-lg font-semibold text-foreground">{STEPS[3]}</h2>
+            <h2 className="text-lg font-semibold text-foreground">Pièces jointes</h2>
             <p className="mt-1 text-sm text-muted-foreground">
               Ajoutez des pièces justificatives (contrat, factures, photos, échanges...).
             </p>
@@ -507,10 +630,10 @@ export function SignalForm({
           </div>
         )}
 
-        {/* Step 4: Legal confirmation */}
-        {step === 4 && (
+        {/* Legal confirmation */}
+        {step === (effectiveIsExternal ? 5 : 4) && (
           <div className="animate-in fade-in slide-in-from-right-2 duration-300">
-            <h2 className="text-lg font-semibold text-foreground">{STEPS[4]}</h2>
+            <h2 className="text-lg font-semibold text-foreground">Engagement légal</h2>
             <p className="mt-1 text-sm text-muted-foreground">
               Veuillez lire et confirmer les engagements suivants.
             </p>
