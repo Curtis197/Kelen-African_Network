@@ -1,11 +1,21 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Check } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Pour les professionnels — Kelen",
   description:
     "Créez votre profil vérifié sur Kelen et gagnez la confiance de vos clients.",
 };
+
+const PLAN_FEATURES = [
+  "Profil public vérifié",
+  "Historique des recommandations",
+  "Droit de réponse aux signaux",
+  "Badge de statut (Or, Argent, Blanc)",
+  "Indexation dans les moteurs de recherche",
+  "Portfolios photos illimités",
+];
 
 const BENEFITS = [
   {
@@ -133,41 +143,73 @@ export default function PourLesProPage() {
 
       {/* Pricing */}
       <section className="mt-24">
-        <h2 className="text-center text-2xl font-bold text-foreground">
+        <h2 className="text-center text-3xl font-bold text-foreground">
           Tarification simple et transparente
         </h2>
-        <div className="mx-auto mt-10 max-w-md">
-          <div className="rounded-xl border border-border bg-white p-8 text-center">
-            <p className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
-              Validation
+        
+        <div className="mt-16 grid gap-8 lg:grid-cols-2 lg:items-center max-w-4xl mx-auto">
+          {/* Free Plan */}
+          <div className="rounded-3xl border border-border bg-white p-8 shadow-sm transition-all hover:shadow-md">
+            <h3 className="text-xl font-bold text-foreground">Standard</h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              L&apos;essentiel pour documenter votre fiabilité.
             </p>
-            <p className="mt-2 text-4xl font-bold text-foreground">Gratuit</p>
-            <p className="mt-1 text-sm text-muted-foreground">Pour toujours</p>
-            <ul className="mt-6 space-y-3 text-left text-sm text-muted-foreground">
-              <li className="flex items-center gap-2">
-                <span className="text-kelen-green-500">✓</span> Profil public vérifié
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="text-kelen-green-500">✓</span> Recommandations & avis
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="text-kelen-green-500">✓</span> Droit de réponse aux signaux
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="text-kelen-green-500">✓</span> Tableau de bord analytique
-              </li>
+            <p className="mt-6 flex items-baseline gap-1">
+              <span className="text-4xl font-bold tracking-tight text-foreground">Gratuit</span>
+              <span className="text-sm font-semibold text-muted-foreground">/ à vie</span>
+            </p>
+            <ul className="mt-8 space-y-4">
+              {PLAN_FEATURES.slice(0, 4).map((feature) => (
+                <li key={feature} className="flex items-center gap-3 text-sm text-muted-foreground">
+                  <Check className="h-4 w-4 text-kelen-green-600" />
+                  {feature}
+                </li>
+              ))}
             </ul>
-            <hr className="my-6 border-border" />
-            <p className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
-              Visibilité Premium
-            </p>
-            <p className="mt-2 text-2xl font-bold text-foreground">
-              15 € <span className="text-base font-normal text-muted-foreground">/ mois</span>
-            </p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Accès illimité · Visibilité maximale
-            </p>
+            <Link
+              href="/pro/inscription"
+              className="mt-8 block w-full rounded-xl border border-border px-4 py-3 text-center text-sm font-semibold text-stone-600 hover:bg-muted"
+            >
+              Commencer gratuitement
+            </Link>
           </div>
+
+          {/* Premium Plan */}
+          <div className="relative rounded-3xl border-2 border-kelen-green-500 bg-white p-8 shadow-xl shadow-kelen-green-100 transition-all hover:-translate-y-1">
+            <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-kelen-green-500 px-4 py-1 text-xs font-bold uppercase tracking-wider text-white shadow-lg">
+              Recommandé
+            </div>
+            <h3 className="text-xl font-bold text-foreground">Premium</h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Maximisez votre visibilité et votre crédibilité.
+            </p>
+            <p className="mt-6 flex items-baseline gap-1">
+              <span className="text-4xl font-bold tracking-tight text-foreground">15 €</span>
+              <span className="text-sm font-semibold text-muted-foreground">/ par mois</span>
+            </p>
+            <ul className="mt-8 space-y-4">
+              {PLAN_FEATURES.map((feature) => (
+                <li key={feature} className="flex items-center gap-3 text-sm text-muted-foreground">
+                  <Check className="h-4 w-4 text-kelen-green-600" />
+                  {feature}
+                </li>
+              ))}
+            </ul>
+            <Link
+              href="/pro/inscription"
+              className="mt-8 block w-full rounded-xl bg-kelen-green-500 px-4 py-3 text-center text-sm font-semibold text-white hover:bg-kelen-green-600"
+            >
+              Passer au Premium
+            </Link>
+          </div>
+        </div>
+
+        <div className="mt-12 text-center max-w-2xl mx-auto">
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Note : Les tarifs pour les professionnels basés en Afrique de l&apos;Ouest sont de 
+            <span className="font-bold text-foreground"> 3 000 FCFA / mois</span>. 
+            Payable via Wave, Orange Money ou MTN Mobile Money.
+          </p>
         </div>
       </section>
 

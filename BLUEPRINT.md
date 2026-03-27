@@ -52,13 +52,34 @@ Kelen is a high-fidelity platform for connecting clients with African profession
 ## **Execution Plan (Current Task)**
 1.  **Objective:** Implement Universal Recommendations & Signals.
 2.  **Steps:**
-    - [x] **Phase 1: Database Migration**: Nullable professional_id, added external fields.
-    - [x] **Phase 2: Validation Updates**: Updated Zod schemas for conditional validation.
-    - [x] **Phase 3: Form Refactoring**: Updated `RecommendationForm` and `SignalForm` with identity steps.
-    - [x] **Phase 4: UI/UX Integration**: Added CTAs and external routes.
-    - [ ] **Phase 5: Verification**: Verify submission logic for both on-platform and off-platform cases.
+    - [x] **Phase 4: Universal Recommendations & Signals**
+    - [x] Database: Nullable professional_id, added external fields.
+    - [x] Validation: Updated Zod schemas.
+    - [x] Forms: Updated `RecommendationForm` and `SignalForm`.
+    - [x] UI/UX: Integrated CTAs and routes.
+
+1.  **Objective:** Implement Client Project Creation & Management.
+2.  **Steps:**
+    - [ ] **Phase 6: Client Project Lifecycle**
+    - [ ] Create Stitch prompts for Project Creation and Management pages.
+    - [ ] Generate UI using Stitch and "The Digital Diplomat" design system.
+    - [ ] Implement `app/(client)/projets/nouveau` (Multi-step form).
+    - [ ] Implement `app/(client)/projets/[id]` (Management Dashboard).
+    - [ ] Integrate Supabase actions for project lifecycle management.
+
+- [/] **Phase 5: Navigation & Pricing Refactoring**
+    - [ ] Remove "Tarifs" from Navbar and Footer.
+    - [ ] Integrate detailed pricing cards into `/pour-les-pros` page.
+    - [ ] Remove standalone `/tarifs` route.
 
 ## **Implementation Log**
+
+### **Universal Recommendations & Signals (Phase 5)**
+- [x] Database: Nullable professional_id, added external fields.
+- [x] Validation: Updated Zod schemas.
+- [x] Forms: Updated `RecommendationForm` and `SignalForm`.
+- [x] UI/UX: Integrated CTAs and routes.
+
 n)
 `app/(admin)/admin/queue/[id]/page.tsx`
 - **Admin Review:** High-fidelity dashboard for expert validation.
@@ -123,6 +144,7 @@ The professional side of the platform focuses on authority and demonstrability.
 3. **Real-time Notifications:** Integrate Supabase real-time for project timeline updates.
 4. **Professional Portfolio Editor:** Implement a high-fidelity, editorial-style editor for professionals to manage their public profile and bento-grid realizations.
 5. **Analytics Dashboard:** Implement a basic view-counter for professional profiles.
+6. **Client Project Lifecycle:** Implement multi-step project creation and a management dashboard for clients.
 
 ## Verification Plan
 1. **Count Verification**: Confirm that the landing page expert count matches the number of non-blacklisted entries in the `professionals` table.

@@ -150,7 +150,6 @@ export const FILE_LIMITS = {
 export const MARKETING_NAV = [
   { href: "/comment-ca-marche", label: "Comment ça marche" },
   { href: "/pour-les-pros", label: "Pour les pros" },
-  { href: "/tarifs", label: "Tarifs" },
   { href: "/a-propos", label: "À propos" },
 ] as const;
 
@@ -159,7 +158,6 @@ export const FOOTER_LINKS = {
     { href: "/recherche", label: "Rechercher" },
     { href: "/comment-ca-marche", label: "Comment ça marche" },
     { href: "/pour-les-pros", label: "Pour les pros" },
-    { href: "/tarifs", label: "Tarifs" },
   ],
   legal: [
     { href: "/mentions-legales", label: "Mentions légales" },
