@@ -5,6 +5,10 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
+function log(action: string, data: Record<string, unknown>) {
+  console.log(JSON.stringify({ ts: new Date().toISOString(), action, ...data }));
+}
+
 const projectSchema = z.object({
   id: z.string().uuid().optional(),
   title: z.string().min(1, "Le titre est requis").optional(),
@@ -42,9 +46,11 @@ export async function upsertProject(data: z.infer<typeof projectSchema>) {
       .single();
 
     if (error) {
+      log("project.update.error", { userId: user.id, projectId, error: error.message });
       console.error("Error updating project:", error);
       return { error: error.message };
     }
+    log("project.update.ok", { userId: user.id, projectId, title: validatedData.title });
     return { data: updated };
   } else {
     // Create
@@ -59,10 +65,12 @@ export async function upsertProject(data: z.infer<typeof projectSchema>) {
       .single();
 
     if (error) {
+      log("project.create.error", { userId: user.id, title: validatedData.title, error: error.message });
       console.error("Error creating project:", error);
       return { error: error.message };
     }
 
+    log("project.create.ok", { userId: user.id, projectId: created.id, title: created.title });
     // Initialize default steps for new projects
     await initializeDefaultSteps(created.id);
 
@@ -196,7 +204,11 @@ export async function manageProjectProfessional(
       .from("project_professionals")
       .insert([insertData]);
 
-    if (error) return { error: error.message };
+    if (error) {
+      log("project.pro.add.error", { userId: user.id, projectId, area, isExternal, proId, error: error.message });
+      return { error: error.message };
+    }
+    log("project.pro.add.ok", { userId: user.id, projectId, area, isExternal, proId: isExternal ? null : proId, externalName: isExternal ? externalData?.name : null });
   } else {
     const { error } = await supabase
       .from("project_professionals")
@@ -205,7 +217,11 @@ export async function manageProjectProfessional(
       .eq(isExternal ? "external_name" : "professional_id", isExternal ? externalData?.name : proId)
       .eq("development_area", area);
 
-    if (error) return { error: error.message };
+    if (error) {
+      log("project.pro.remove.error", { userId: user.id, projectId, area, isExternal, proId, error: error.message });
+      return { error: error.message };
+    }
+    log("project.pro.remove.ok", { userId: user.id, projectId, area, isExternal, proId: isExternal ? null : proId });
   }
 
   revalidatePath(`/projets/${projectId}`);
@@ -219,8 +235,11 @@ export async function updateProfessionalRank(projectId: string, linkId: string, 
     .update({ rank_order: rank })
     .eq("id", linkId);
 
-  if (error) return { error: error.message };
-  
+  if (error) {
+    log("project.pro.rank.error", { projectId, linkId, rank, error: error.message });
+    return { error: error.message };
+  }
+  log("project.pro.rank.ok", { projectId, linkId, rank });
   revalidatePath(`/projets/${projectId}`);
   return { success: true };
 }
@@ -232,8 +251,11 @@ export async function updateProfessionalSelection(projectId: string, linkId: str
     .update({ selection_status: status })
     .eq("id", linkId);
 
-  if (error) return { error: error.message };
-  
+  if (error) {
+    log("project.pro.selection.error", { projectId, linkId, status, error: error.message });
+    return { error: error.message };
+  }
+  log("project.pro.selection.ok", { projectId, linkId, status });
   revalidatePath(`/projets/${projectId}`);
   return { success: true };
 }
@@ -290,7 +312,11 @@ export async function createProjectArea(projectId: string, name: string) {
     .select()
     .single();
 
-  if (error) return { error: error.message };
+  if (error) {
+    log("area.create.error", { userId: user.id, projectId, name, error: error.message });
+    return { error: error.message };
+  }
+  log("area.create.ok", { userId: user.id, projectId, areaId: data.id, name });
   revalidatePath(`/projets/${projectId}`);
   return { data };
 }
@@ -314,7 +340,11 @@ export async function deleteProjectArea(areaId: string, projectId: string) {
     .delete()
     .eq("id", areaId);
 
-  if (error) return { error: error.message };
+  if (error) {
+    log("area.delete.error", { userId: user.id, projectId, areaId, error: error.message });
+    return { error: error.message };
+  }
+  log("area.delete.ok", { userId: user.id, projectId, areaId });
   revalidatePath(`/projets/${projectId}`);
   return { success: true };
 }

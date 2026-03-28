@@ -4,6 +4,10 @@ import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
+function log(action: string, data: Record<string, unknown>) {
+  console.log(JSON.stringify({ ts: new Date().toISOString(), action, ...data }));
+}
+
 const stepSchema = z.object({
   id: z.string().uuid().optional(),
   project_id: z.string().uuid(),
@@ -79,7 +83,11 @@ export async function upsertProjectStep(data: z.infer<typeof stepSchema>) {
       .select()
       .single();
 
-    if (error) return { error: error.message };
+    if (error) {
+      log("step.update.error", { userId: user.id, projectId: validatedData.project_id, stepId, error: error.message });
+      return { error: error.message };
+    }
+    log("step.update.ok", { userId: user.id, projectId: validatedData.project_id, stepId, title: validatedData.title, status: validatedData.status });
     revalidatePath(`/projets/${validatedData.project_id}`);
     return { data: updated };
   } else {
@@ -89,7 +97,11 @@ export async function upsertProjectStep(data: z.infer<typeof stepSchema>) {
       .select()
       .single();
 
-    if (error) return { error: error.message };
+    if (error) {
+      log("step.create.error", { userId: user.id, projectId: validatedData.project_id, title: validatedData.title, error: error.message });
+      return { error: error.message };
+    }
+    log("step.create.ok", { userId: user.id, projectId: validatedData.project_id, stepId: created.id, title: validatedData.title, status: validatedData.status, orderIndex: validatedData.order_index });
     revalidatePath(`/projets/${validatedData.project_id}`);
     return { data: created };
   }
@@ -115,8 +127,12 @@ export async function deleteProjectStep(stepId: string, projectId: string) {
     .delete()
     .eq("id", stepId);
 
-  if (error) return { error: error.message };
+  if (error) {
+    log("step.delete.error", { userId: user.id, projectId, stepId, error: error.message });
+    return { error: error.message };
+  }
 
+  log("step.delete.ok", { userId: user.id, projectId, stepId });
   revalidatePath(`/projets/${projectId}`);
   return { success: true };
 }
@@ -149,7 +165,11 @@ export async function manageStepProfessional(
         project_professional_id: projectProfessionalId
       }]);
 
-    if (error) return { error: error.message };
+    if (error) {
+      log("step.pro.add.error", { userId: user.id, projectId, stepId, projectProfessionalId, error: error.message });
+      return { error: error.message };
+    }
+    log("step.pro.add.ok", { userId: user.id, projectId, stepId, projectProfessionalId });
   } else {
     const { error } = await supabase
       .from("project_step_professionals")
@@ -157,7 +177,11 @@ export async function manageStepProfessional(
       .eq("step_id", stepId)
       .eq("project_professional_id", projectProfessionalId);
 
-    if (error) return { error: error.message };
+    if (error) {
+      log("step.pro.remove.error", { userId: user.id, projectId, stepId, projectProfessionalId, error: error.message });
+      return { error: error.message };
+    }
+    log("step.pro.remove.ok", { userId: user.id, projectId, stepId, projectProfessionalId });
   }
 
   revalidatePath(`/projets/${projectId}`);
