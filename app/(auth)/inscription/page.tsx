@@ -33,6 +33,15 @@ export default function RegisterPage() {
           Se connecter
         </Link>
       </p>
+
+      <div className="mt-6 border-t border-border pt-5 text-center">
+        <p className="text-xs text-muted-foreground">
+          Vous êtes professionnel ?{" "}
+          <Link href="/pro/inscription" className="font-medium text-amber-600 hover:text-amber-700">
+            Créer un compte pro
+          </Link>
+        </p>
+      </div>
     </>
   );
 }

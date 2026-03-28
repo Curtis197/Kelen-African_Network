@@ -135,13 +135,22 @@ export function Navbar() {
               Déconnexion
             </button>
           ) : (
-            <Link
-              href="/connexion"
-              className="flex items-center gap-2 rounded-xl bg-kelen-green-500 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-kelen-green-500/20 transition-all hover:bg-kelen-green-600 hover:shadow-xl active:scale-95"
-            >
-              <span className="material-symbols-outlined text-[18px]">login</span>
-              Connexion
-            </Link>
+            <>
+              <Link
+                href="/pro/connexion"
+                className="flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2 text-sm font-bold text-amber-700 transition-all hover:bg-amber-100 hover:text-amber-800 active:scale-95"
+              >
+                <span className="material-symbols-outlined text-[18px]">business_center</span>
+                Espace Pro
+              </Link>
+              <Link
+                href="/connexion"
+                className="flex items-center gap-2 rounded-xl bg-kelen-green-500 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-kelen-green-500/20 transition-all hover:bg-kelen-green-600 hover:shadow-xl active:scale-95"
+              >
+                <span className="material-symbols-outlined text-[18px]">login</span>
+                Connexion
+              </Link>
+            </>
           )}
         </div>
 
@@ -231,14 +240,24 @@ export function Navbar() {
                 Déconnexion
               </button>
             ) : (
-              <Link
-                href="/connexion"
-                onClick={() => setMobileOpen(false)}
-                className="flex items-center justify-center gap-2 rounded-xl bg-kelen-green-500 py-3 text-base font-bold text-white shadow-lg"
-              >
-                <span className="material-symbols-outlined">login</span>
-                Connexion
-              </Link>
+              <>
+                <Link
+                  href="/pro/connexion"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center justify-center gap-2 rounded-xl border border-amber-200 bg-amber-50 py-3 text-base font-bold text-amber-700"
+                >
+                  <span className="material-symbols-outlined">business_center</span>
+                  Espace Pro
+                </Link>
+                <Link
+                  href="/connexion"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center justify-center gap-2 rounded-xl bg-kelen-green-500 py-3 text-base font-bold text-white shadow-lg"
+                >
+                  <span className="material-symbols-outlined">login</span>
+                  Connexion
+                </Link>
+              </>
             )}
           </div>
         </div>

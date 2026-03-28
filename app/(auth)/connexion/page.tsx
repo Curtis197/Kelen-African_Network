@@ -32,6 +32,15 @@ export default function LoginPage() {
           Créer un compte
         </Link>
       </p>
+
+      <div className="mt-6 border-t border-border pt-5 text-center">
+        <p className="text-xs text-muted-foreground">
+          Vous êtes professionnel ?{" "}
+          <Link href="/pro/connexion" className="font-medium text-amber-600 hover:text-amber-700">
+            Espace Pro
+          </Link>
+        </p>
+      </div>
     </>
   );
 }

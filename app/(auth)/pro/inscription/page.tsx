@@ -12,6 +12,13 @@ export const metadata: Metadata = {
 export default function ProRegisterPage() {
   return (
     <>
+      <div className="mb-6 flex items-center justify-center">
+        <span className="inline-flex items-center gap-2 rounded-full bg-amber-100 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-amber-700">
+          <span>✦</span>
+          Espace Professionnel
+        </span>
+      </div>
+
       <h1 className="text-center text-2xl font-bold text-foreground">
         Devenir Pro Kelen
       </h1>
@@ -27,11 +34,20 @@ export default function ProRegisterPage() {
         Déjà un compte pro ?{" "}
         <Link
           href="/pro/connexion"
-          className="font-medium text-kelen-green-600 hover:text-kelen-green-700"
+          className="font-medium text-amber-600 hover:text-amber-700"
         >
           Se connecter
         </Link>
       </p>
+
+      <div className="mt-6 border-t border-border pt-5 text-center">
+        <p className="text-xs text-muted-foreground">
+          Vous êtes client ?{" "}
+          <Link href="/inscription" className="font-medium text-kelen-green-600 hover:text-kelen-green-700">
+            Créer un compte client
+          </Link>
+        </p>
+      </div>
     </>
   );
 }
