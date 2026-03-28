@@ -321,6 +321,36 @@ export async function createProjectArea(projectId: string, name: string) {
   return { data };
 }
 
+export async function updateProjectArea(areaId: string, projectId: string, newName: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "Non autorisé" };
+
+  const { data: project } = await supabase
+    .from("user_projects")
+    .select("id")
+    .eq("id", projectId)
+    .eq("user_id", user.id)
+    .single();
+
+  if (!project) return { error: "Projet introuvable ou accès refusé." };
+
+  const { data, error } = await supabase
+    .from("project_areas")
+    .update({ name: newName })
+    .eq("id", areaId)
+    .select()
+    .single();
+
+  if (error) {
+    log("area.update.error", { userId: user.id, projectId, areaId, newName, error: error.message });
+    return { error: error.message };
+  }
+  log("area.update.ok", { userId: user.id, projectId, areaId, newName });
+  revalidatePath(`/projets/${projectId}`);
+  return { data };
+}
+
 export async function deleteProjectArea(areaId: string, projectId: string) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();

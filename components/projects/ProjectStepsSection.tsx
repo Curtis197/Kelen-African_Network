@@ -138,20 +138,14 @@ export default function ProjectStepsSection({
         ) : steps.length > 0 ? (
           <div className="space-y-4">
             {steps.map((step) => (
-              <div key={step.id} className="group relative">
-                <ProjectStepCard 
-                  step={step} 
-                  currency={currency} 
-                  onEdit={() => handleEdit(step)}
-                  onManagePros={() => handleManagePros(step)}
-                />
-                <button 
-                  onClick={() => handleDelete(step.id)}
-                  className="absolute top-6 right-6 p-2 text-stone-300 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-all"
-                >
-                  <span className="material-symbols-outlined text-sm">delete</span>
-                </button>
-              </div>
+              <ProjectStepCard
+                key={step.id}
+                step={step}
+                currency={currency}
+                onEdit={() => handleEdit(step)}
+                onDelete={() => handleDelete(step.id)}
+                onManagePros={() => handleManagePros(step)}
+              />
             ))}
           </div>
         ) : (

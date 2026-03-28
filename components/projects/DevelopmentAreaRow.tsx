@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useState } from "react";
-import { updateProfessionalRank, updateProfessionalSelection, manageProjectProfessional } from "@/lib/actions/projects";
+import { updateProfessionalRank, updateProfessionalSelection, manageProjectProfessional, updateProjectArea } from "@/lib/actions/projects";
 import { AddExternalProModal } from "./AddExternalProModal";
 import { ProfessionalStatus } from "@/lib/supabase/types";
 
@@ -21,6 +21,8 @@ interface DevelopmentAreaRowProps {
 export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId, onRefresh, onDelete }: DevelopmentAreaRowProps) {
   const [isUpdating, setIsUpdating] = useState(false);
   const [showAddExternal, setShowAddExternal] = useState(false);
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [editedName, setEditedName] = useState(areaName);
 
   const handleRankUpdate = async (linkId: string, currentRank: number, direction: 'up' | 'down') => {
     setIsUpdating(true);
@@ -56,12 +58,54 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
     setShowAddExternal(true);
   };
 
+  const handleRenameSubmit = async () => {
+    const trimmed = editedName.trim();
+    if (!trimmed || trimmed === areaName) {
+      setIsEditingName(false);
+      setEditedName(areaName);
+      return;
+    }
+    setIsUpdating(true);
+    await updateProjectArea(areaId, projectId, trimmed);
+    onRefresh();
+    setIsUpdating(false);
+    setIsEditingName(false);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between px-2">
         <div className="flex items-center gap-3">
           <div className="w-1.5 h-6 bg-kelen-green-500 rounded-full" />
-          <h4 className="text-xl font-headline font-bold text-on-surface">{areaName}</h4>
+          {isEditingName ? (
+            <div className="flex items-center gap-2">
+              <input
+                autoFocus
+                value={editedName}
+                onChange={(e) => setEditedName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleRenameSubmit();
+                  if (e.key === "Escape") { setIsEditingName(false); setEditedName(areaName); }
+                }}
+                className="text-xl font-headline font-bold text-on-surface bg-surface-container-low border border-primary/30 rounded-xl px-3 py-1 outline-none focus:ring-2 focus:ring-primary/20 w-48"
+              />
+              <button
+                onClick={handleRenameSubmit}
+                disabled={isUpdating}
+                className="p-1.5 text-kelen-green-600 hover:bg-kelen-green-50 rounded-lg transition-colors"
+              >
+                <span className="material-symbols-outlined text-sm">check</span>
+              </button>
+              <button
+                onClick={() => { setIsEditingName(false); setEditedName(areaName); }}
+                className="p-1.5 text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors"
+              >
+                <span className="material-symbols-outlined text-sm">close</span>
+              </button>
+            </div>
+          ) : (
+            <h4 className="text-xl font-headline font-bold text-on-surface">{areaName}</h4>
+          )}
           <span className="px-2.5 py-0.5 bg-surface-container text-on-surface-variant text-[10px] font-black uppercase tracking-widest rounded-full">
             {professionals.length} Professionnel{professionals.length > 1 ? 's' : ''}
           </span>
@@ -80,6 +124,13 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
           >
             <span className="material-symbols-outlined text-sm">add_circle</span>
             Ajouter un externe
+          </button>
+          <button
+            onClick={() => { setIsEditingName(true); setEditedName(areaName); }}
+            className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40 hover:text-primary transition-colors"
+            title="Renommer ce domaine"
+          >
+            <span className="material-symbols-outlined text-sm">edit</span>
           </button>
           <button
             onClick={onDelete}

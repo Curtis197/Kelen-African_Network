@@ -51,10 +51,11 @@ interface ProjectStepCardProps {
   step: ProjectStep;
   currency: string;
   onEdit?: () => void;
+  onDelete?: () => void;
   onManagePros?: () => void;
 }
 
-export default function ProjectStepCard({ step, currency, onEdit, onManagePros }: ProjectStepCardProps) {
+export default function ProjectStepCard({ step, currency, onEdit, onDelete, onManagePros }: ProjectStepCardProps) {
   const config = STATUS_CONFIG[step.status];
   const Icon = config.icon;
   const progress = step.budget > 0 ? Math.min(Math.round((step.expenditure / step.budget) * 100), 100) : 0;
@@ -95,11 +96,17 @@ export default function ProjectStepCard({ step, currency, onEdit, onManagePros }
             {step.status === 'in_progress' && <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />}
             {config.label}
           </div>
-          <button 
+          <button
             onClick={onEdit}
             className="p-2 hover:bg-stone-50 rounded-xl text-stone-400 hover:text-primary transition-colors"
           >
             <span className="material-symbols-outlined text-lg">edit</span>
+          </button>
+          <button
+            onClick={onDelete}
+            className="p-2 hover:bg-stone-50 rounded-xl text-stone-300 hover:text-rose-500 transition-colors"
+          >
+            <span className="material-symbols-outlined text-lg">delete</span>
           </button>
         </div>
       </div>
