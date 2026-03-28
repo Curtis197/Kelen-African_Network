@@ -54,13 +54,22 @@ export async function getProjectSteps(projectId: string) {
 export async function upsertProjectStep(data: z.infer<typeof stepSchema>) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-
   if (!user) throw new Error("Non autorisé");
 
   const validatedData = stepSchema.parse(data);
   const stepId = validatedData.id;
   const stepFields = { ...validatedData };
   delete stepFields.id;
+
+  // Verify project ownership
+  const { data: project, error: projectError } = await supabase
+    .from("user_projects")
+    .select("id")
+    .eq("id", validatedData.project_id)
+    .eq("user_id", user.id)
+    .single();
+
+  if (projectError || !project) return { error: "Projet introuvable ou accès refusé." };
 
   if (stepId) {
     const { data: updated, error } = await supabase
@@ -88,13 +97,26 @@ export async function upsertProjectStep(data: z.infer<typeof stepSchema>) {
 
 export async function deleteProjectStep(stepId: string, projectId: string) {
   const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "Non autorisé" };
+
+  // Verify project ownership
+  const { data: project, error: projectError } = await supabase
+    .from("user_projects")
+    .select("id")
+    .eq("id", projectId)
+    .eq("user_id", user.id)
+    .single();
+
+  if (projectError || !project) return { error: "Projet introuvable ou accès refusé." };
+
   const { error } = await supabase
     .from("project_steps")
     .delete()
     .eq("id", stepId);
 
   if (error) return { error: error.message };
-  
+
   revalidatePath(`/projets/${projectId}`);
   return { success: true };
 }
@@ -106,7 +128,19 @@ export async function manageStepProfessional(
   projectId: string
 ) {
   const supabase = await createClient();
-  
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "Non autorisé" };
+
+  // Verify project ownership
+  const { data: project, error: projectError } = await supabase
+    .from("user_projects")
+    .select("id")
+    .eq("id", projectId)
+    .eq("user_id", user.id)
+    .single();
+
+  if (projectError || !project) return { error: "Projet introuvable ou accès refusé." };
+
   if (action === 'add') {
     const { error } = await supabase
       .from("project_step_professionals")
@@ -114,7 +148,7 @@ export async function manageStepProfessional(
         step_id: stepId,
         project_professional_id: projectProfessionalId
       }]);
-      
+
     if (error) return { error: error.message };
   } else {
     const { error } = await supabase
@@ -122,10 +156,10 @@ export async function manageStepProfessional(
       .delete()
       .eq("step_id", stepId)
       .eq("project_professional_id", projectProfessionalId);
-      
+
     if (error) return { error: error.message };
   }
-  
+
   revalidatePath(`/projets/${projectId}`);
   return { success: true };
 }

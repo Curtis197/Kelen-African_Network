@@ -174,11 +174,12 @@ export default function ProjectStepsSection({
         )}
       </div>
 
-      <AddStepDialog 
+      <AddStepDialog
         isOpen={isAddOpen}
         onClose={() => setIsAddOpen(false)}
         projectId={projectId}
         step={editingStep}
+        nextOrderIndex={steps.length > 0 ? Math.max(...steps.map(s => s.order_index)) + 1 : 0}
         onSuccess={() => {
           if (onStepsChange) onStepsChange();
           else fetchSteps();

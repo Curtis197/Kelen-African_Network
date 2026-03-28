@@ -11,9 +11,10 @@ interface AddStepDialogProps {
   projectId: string;
   step?: ProjectStep;
   onSuccess: () => void;
+  nextOrderIndex?: number;
 }
 
-export default function AddStepDialog({ isOpen, onClose, projectId, step, onSuccess }: AddStepDialogProps) {
+export default function AddStepDialog({ isOpen, onClose, projectId, step, onSuccess, nextOrderIndex = 0 }: AddStepDialogProps) {
   const [formData, setFormData] = useState({
     title: "",
     comment: "",
@@ -22,6 +23,7 @@ export default function AddStepDialog({ isOpen, onClose, projectId, step, onSucc
     expenditure: 0,
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   useEffect(() => {
     if (step) {
@@ -46,19 +48,27 @@ export default function AddStepDialog({ isOpen, onClose, projectId, step, onSucc
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setSubmitError(null);
 
     try {
-      await upsertProjectStep({
+      const result = await upsertProjectStep({
         ...formData,
         project_id: projectId,
         id: step?.id,
         status: formData.status as any,
-        order_index: step?.order_index || 0
+        order_index: step?.order_index ?? nextOrderIndex,
       });
+
+      if (result?.error) {
+        setSubmitError(result.error);
+        return;
+      }
+
       onSuccess();
       onClose();
     } catch (err) {
       console.error(err);
+      setSubmitError("Une erreur est survenue. Veuillez réessayer.");
     } finally {
       setIsLoading(false);
     }
@@ -90,6 +100,11 @@ export default function AddStepDialog({ isOpen, onClose, projectId, step, onSucc
         </div>
 
         <form onSubmit={handleSubmit} className="p-8 space-y-6">
+          {submitError && (
+            <div className="rounded-2xl bg-rose-50 border border-rose-100 p-4 text-sm text-rose-700 font-medium">
+              {submitError}
+            </div>
+          )}
           <div className="space-y-4">
             <div className="space-y-2">
               <label className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-500 ml-1">
@@ -163,6 +178,7 @@ export default function AddStepDialog({ isOpen, onClose, projectId, step, onSucc
                 <option value="in_progress">En cours</option>
                 <option value="completed">Terminé</option>
                 <option value="on_hold">En pause</option>
+                <option value="cancelled">Annulé</option>
               </select>
             </div>
           </div>
