@@ -259,7 +259,7 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
 
                 {!member.is_external && member.professionals?.slug && (
                   <Link 
-                    href={`/pro/${member.professionals.slug}`}
+                    href={`/professionnels/${member.professionals.slug}`}
                     className="absolute bottom-6 right-6 p-2 rounded-full bg-surface-container opacity-0 group-hover:opacity-100 transition-all hover:bg-primary hover:text-white"
                   >
                     <span className="material-symbols-outlined text-sm">open_in_new</span>

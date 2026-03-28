@@ -53,13 +53,17 @@ export function ProfessionalCard({
 
     setIsAdding(true);
     try {
-      await manageProjectProfessional(
+      const result = await manageProjectProfessional(
         selectionContext.projectId,
         id,
         selectionContext.areaName,
         'add',
         false
       );
+      if (result && 'error' in result && result.error) {
+        alert(`Erreur : ${result.error}`);
+        return;
+      }
       setAdded(true);
       setTimeout(() => {
         router.push(`/projets/${selectionContext.projectId}`);
