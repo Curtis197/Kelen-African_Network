@@ -13,6 +13,7 @@ import { DevelopmentAreaRow } from "@/components/projects/DevelopmentAreaRow";
 import { DEVELOPMENT_AREAS } from "@/lib/constants/projects";
 import { ProjectProfessional, ProjectStep, ProjectArea } from "@/lib/types/projects";
 import { createProjectArea, deleteProjectArea, getProjectAreas } from "@/lib/actions/projects";
+import { getProjectSteps } from "@/lib/actions/project-steps";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -92,18 +93,9 @@ export default function ProjectDetailPage() {
     const areasData = await getProjectAreas(projectIdStr);
     setAreas(areasData as ProjectArea[]);
 
-    // Fetch Steps
-    const { data: stepsData, error: stepsError } = await supabase
-      .from("project_steps")
-      .select("*, project_step_professionals(project_professional_id)")
-      .eq("project_id", projectIdStr)
-      .order("order_index", { ascending: true });
-
-    if (stepsError) {
-      console.error("Error fetching steps:", stepsError);
-    } else {
-      setSteps(stepsData as ProjectStep[]);
-    }
+    // Fetch Steps (via server action to get associated_pros names)
+    const stepsData = await getProjectSteps(projectIdStr);
+    setSteps(stepsData as ProjectStep[]);
 
     setIsLoading(false);
   };
