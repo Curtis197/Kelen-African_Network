@@ -5,16 +5,15 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { reviewSchema, type ReviewFormData } from "@/lib/utils/validators";
 import { submitReview } from "@/lib/actions/reviews";
+import Link from "next/link";
 
 interface ReviewFormProps {
   professionalId: string;
-  professionalName: string;
   professionalSlug: string;
 }
 
 export function ReviewForm({
   professionalId,
-  professionalName,
   professionalSlug,
 }: ReviewFormProps) {
   const [isLoading, setIsLoading] = useState(false);
@@ -89,11 +88,6 @@ export function ReviewForm({
         </div>
       </div>
     );
-  }
-
-  // Link fallback
-  function Link({ href, children, ...props }: any) {
-    return <a href={href} {...props}>{children}</a>;
   }
 
   return (

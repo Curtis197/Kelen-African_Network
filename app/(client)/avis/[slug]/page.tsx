@@ -76,7 +76,6 @@ export default async function ReviewPage({ params }: ReviewPageProps) {
       <div className="rounded-xl border border-border bg-white p-6 shadow-sm">
         <ReviewForm
           professionalId={pro.id}
-          professionalName={pro.business_name}
           professionalSlug={pro.slug}
         />
       </div>
