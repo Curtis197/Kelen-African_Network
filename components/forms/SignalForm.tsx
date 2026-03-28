@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signalSchema, type SignalFormData } from "@/lib/utils/validators";
 import { BREACH_TYPES } from "@/lib/utils/constants";
 import { createClient } from "@/lib/supabase/client";
-import { uploadFile, uploadMultipleFiles } from "@/lib/supabase/storage";
+import { uploadFile, uploadMultipleFiles, type UploadResult } from "@/lib/supabase/storage";
 
 interface SignalFormProps {
   professionalId?: string;
@@ -156,11 +156,21 @@ export function SignalForm({
       }
 
       if (evidenceFiles.length > 0) {
-        evidenceUrls = await uploadMultipleFiles(evidenceFiles, "evidence-photos", `signals/${user.id}`);
+        const evidenceResults: UploadResult[] = await uploadMultipleFiles(evidenceFiles, "evidence-photos", `signals/${user.id}`);
+        const failedEvidence = evidenceResults.filter((r) => r.error !== null);
+        if (failedEvidence.length > 0) {
+          throw new Error(failedEvidence.map((r) => r.error).join(", "));
+        }
+        evidenceUrls = evidenceResults.map((r) => r.url as string);
       }
 
       if (logFiles.length > 0) {
-        logUrls = await uploadMultipleFiles(logFiles, "evidence-photos", `signals/${user.id}/logs`);
+        const logResults: UploadResult[] = await uploadMultipleFiles(logFiles, "evidence-photos", `signals/${user.id}/logs`);
+        const failedLogs = logResults.filter((r) => r.error !== null);
+        if (failedLogs.length > 0) {
+          throw new Error(failedLogs.map((r) => r.error).join(", "));
+        }
+        logUrls = logResults.map((r) => r.url as string);
       }
 
       // 4. Insert Signal

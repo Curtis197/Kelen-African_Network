@@ -9,7 +9,7 @@ import {
 } from "@/lib/utils/validators";
 import { BUDGET_RANGES } from "@/lib/utils/constants";
 import { createClient } from "@/lib/supabase/client";
-import { uploadFile, uploadMultipleFiles } from "@/lib/supabase/storage";
+import { uploadFile, uploadMultipleFiles, type UploadResult } from "@/lib/supabase/storage";
 
 interface RecommendationFormProps {
   professionalId?: string;
@@ -112,7 +112,12 @@ export function RecommendationForm({
       }
 
       if (photoFiles.length > 0) {
-        photoUrls = await uploadMultipleFiles(photoFiles, "evidence-photos", `recommendations/${user.id}`);
+        const results: UploadResult[] = await uploadMultipleFiles(photoFiles, "evidence-photos", `recommendations/${user.id}`);
+        const failed = results.filter((r) => r.error !== null);
+        if (failed.length > 0) {
+          throw new Error(failed.map((r) => r.error).join(", "));
+        }
+        photoUrls = results.map((r) => r.url as string);
       }
 
       // 4. Insert Recommendation
