@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Search, ShieldCheck, FileText, CheckCircle2 } from "lucide-react";
+import { Search, ShieldCheck, FileText, AlertTriangle } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Comment ça marche — Kelen",
@@ -123,7 +123,7 @@ export default function CommentCaMarchePage() {
       {/* === STATUS TIERS === */}
       <section className="mt-20">
         <h2 className="text-2xl font-bold text-foreground">
-          Les trois statuts
+          Les statuts
         </h2>
         <p className="mt-2 text-muted-foreground">
           Calculés automatiquement. Impossibles à acheter.
@@ -199,6 +199,24 @@ export default function CommentCaMarchePage() {
               aux côtés du signal. Cela ne change pas le statut.
             </p>
           </div>
+
+          {/* Black */}
+          <div className="rounded-xl border border-stone-800 bg-[#1A1A1A] p-6">
+            <div className="flex items-center gap-3">
+              <span className="text-xl">⚫</span>
+              <h3 className="text-lg font-bold text-white">Liste Noire</h3>
+            </div>
+            <p className="mt-2 text-sm text-white/60">
+              <strong className="text-white/80">Critères :</strong> Manquements multiples documentés ou fraude avérée. Décision de la plateforme.
+            </p>
+            <p className="mt-1 text-sm text-white/60">
+              <strong className="text-white/80">Ce que ça signifie :</strong> Ce professionnel est banni de la plateforme.
+              Il n&apos;apparaît pas dans l&apos;annuaire de découverte, mais reste consultable par nom exact.{" "}
+              <span className="font-medium text-white/80">
+                La transparence s&apos;applique dans les deux sens.
+              </span>
+            </p>
+          </div>
         </div>
       </section>
 
@@ -250,7 +268,7 @@ export default function CommentCaMarchePage() {
 
           <div className="flex gap-4">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-kelen-red-50">
-              <CheckCircle2 className="h-6 w-6 text-kelen-red-600" />
+              <AlertTriangle className="h-6 w-6 text-kelen-red-600" />
             </div>
             <div>
               <h3 className="text-xl font-bold text-foreground">Signal</h3>

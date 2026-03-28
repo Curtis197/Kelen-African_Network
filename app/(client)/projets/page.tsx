@@ -65,10 +65,10 @@ export default function ProjectsPage() {
         <section className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
           <div>
             <h1 className="text-[2.75rem] font-headline font-bold text-on-surface leading-tight tracking-tight">
-              Mes Réalisations
+              Mes Projets
             </h1>
             <p className="text-on-surface-variant mt-2 text-lg max-w-xl">
-              Gérez votre portfolio de projets et suivez chaque étape de vos investissements en temps réel.
+              Suivez l&apos;avancement de vos projets et les professionnels associés.
             </p>
           </div>
           <Link
@@ -76,7 +76,7 @@ export default function ProjectsPage() {
             className="px-8 py-4 bg-gradient-to-br from-primary to-primary-container text-white rounded-xl font-headline font-bold flex items-center gap-3 shadow-xl shadow-primary/10 hover:scale-[0.98] transition-all"
           >
             <span className="material-symbols-outlined">add_circle</span>
-            <span>+ Nouvelle Réalisation</span>
+            <span>+ Nouveau Projet</span>
           </Link>
         </section>
 
@@ -84,7 +84,7 @@ export default function ProjectsPage() {
           {/* Project List (Left/Main section) */}
           <div className="col-span-12 lg:col-span-7 space-y-6">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-xl font-headline font-bold text-on-surface">Projets Actifs</h3>
+              <h3 className="text-xl font-headline font-bold text-on-surface">Mes Projets</h3>
               <div className="flex gap-2">
                 <button className="p-2 bg-surface-container-low rounded-lg text-on-surface-variant hover:text-primary transition-colors">
                   <span className="material-symbols-outlined">filter_list</span>
@@ -153,15 +153,15 @@ export default function ProjectsPage() {
                 <div className="w-24 h-24 mx-auto bg-surface-container-lowest rounded-full flex items-center justify-center">
                   <span className="material-symbols-outlined text-5xl text-on-surface-variant opacity-20">folder_open</span>
                 </div>
-                <h3 className="text-2xl font-headline font-bold text-on-surface">Aucun projet trouvé</h3>
+                <h3 className="text-2xl font-headline font-bold text-on-surface">Aucun projet</h3>
                 <p className="text-on-surface-variant max-w-sm mx-auto">
-                  Il semblerait que vous n'ayez pas encore lancé d'initiative. Commencez par créer votre premier projet.
+                  Vous n&apos;avez pas encore créé de projet. Commencez par ajouter votre première réalisation.
                 </p>
                 <Link
                   href="/projets/nouveau"
                   className="inline-flex px-8 py-3 bg-primary text-white rounded-xl font-headline font-bold hover:scale-[0.98] transition-all"
                 >
-                  Lancer mon premier projet
+                  Créer mon premier projet
                 </Link>
               </div>
             )}
@@ -175,21 +175,21 @@ export default function ProjectsPage() {
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="p-6 bg-surface-container-low rounded-2xl space-y-2">
-                    <p className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Actifs</p>
+                    <p className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">En cours</p>
                     <p className="text-3xl font-headline font-extrabold text-primary">
                       {projects.filter(p => p.status === 'en_cours').length}
                     </p>
                   </div>
                   <div className="p-6 bg-surface-container-low rounded-2xl space-y-2">
-                    <p className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Budget Total</p>
-                    <p className="text-xl font-headline font-extrabold text-on-surface">
-                      {projects.length > 0 ? "24.5M" : "0"} <span className="text-xs">XOF</span>
+                    <p className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Terminés</p>
+                    <p className="text-3xl font-headline font-extrabold text-on-surface">
+                      {projects.filter(p => p.status === 'termine').length}
                     </p>
                   </div>
                 </div>
 
                 <div className="pt-6 border-t border-surface-container/50 space-y-4">
-                  <p className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Soutien Diplomatique</p>
+                  <p className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Garantie Kelen</p>
                   <div className="flex items-center gap-4 p-4 bg-primary/5 rounded-xl border border-primary/10">
                     <span className="material-symbols-outlined text-primary">verified_user</span>
                     <p className="text-sm font-medium text-on-surface-variant">

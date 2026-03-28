@@ -98,7 +98,7 @@ export default function AboutPage() {
                 4
               </div>
               <h3 className="mt-5 text-lg font-semibold text-foreground">
-                Construire sans mauvaise surprise
+                Construire avec certitude
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                 Avec un professionnel dont le passé est documenté, vous savez
@@ -122,7 +122,7 @@ export default function AboutPage() {
             </span>
           </p>
 
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-12 grid gap-6 grid-cols-2 lg:grid-cols-5">
             {/* Gold */}
             <div className="rounded-xl border border-kelen-yellow-500/30 bg-kelen-yellow-50/50 p-6">
               <StatusBadge
@@ -170,6 +170,15 @@ export default function AboutPage() {
                 </span>
               </p>
             </div>
+
+            {/* Black */}
+            <div className="rounded-xl border border-stone-800 bg-[#1A1A1A] p-6">
+              <StatusBadge status="black" signalCount={3} size="md" />
+              <p className="mt-4 text-sm leading-relaxed text-white/60">
+                Banni de la plateforme. N&apos;apparaît pas dans l&apos;annuaire —
+                consultable par nom exact uniquement.
+              </p>
+            </div>
           </div>
 
           <p className="mt-8 text-center text-sm text-muted-foreground">
@@ -188,7 +197,7 @@ export default function AboutPage() {
             Gratuit pour les clients. Toujours.
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-center text-muted-foreground">
-            La confiance ne se vend pas. Elle se documente.
+            La confiance ne se promet pas. Elle se documente.
           </p>
 
           <div className="mt-12 grid gap-8 lg:grid-cols-2">
@@ -209,7 +218,6 @@ export default function AboutPage() {
                   "Recherche par nom — toujours gratuite",
                   "Recommandations vérifiées avec preuves",
                   "Signaux documentés et permanents",
-                  "Aucun signal ne peut être retiré contre paiement",
                   "Historique permanent — aucune donnée supprimée à la demande",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-2 text-sm">

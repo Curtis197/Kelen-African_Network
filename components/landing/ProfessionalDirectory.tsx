@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
-import { Search, MapPin, Filter, Star, CheckCircle2, ChevronDown, Inbox, LayoutDashboard } from "lucide-react";
+import { MapPin, ChevronDown, Inbox, LayoutDashboard } from "lucide-react";
 import { Professional } from "@/lib/supabase/types";
 import { ProfessionalCard } from "@/components/shared/ProfessionalCard";
 
@@ -26,9 +26,7 @@ export function ProfessionalDirectory({ initialPros, totalCount }: ProfessionalD
       const matchesCategory = category === "Toutes les spécialités" || pro.category === category;
       
       // Tier filter
-      const matchesTier = tier === "Tous" || 
-        (tier === "Argent" && pro.status === "silver") || 
-        (tier === "Or" && pro.status === "gold");
+      const matchesTier = tier === "Tous" || (tier === "Or" && pro.status === "gold");
       
       // Location filter
       const searchStr = locationQuery.toLowerCase().trim();
@@ -83,7 +81,7 @@ export function ProfessionalDirectory({ initialPros, totalCount }: ProfessionalD
 
       {/* Advanced Filter Bar */}
       <div className="mb-16 rounded-3xl bg-surface-container-low p-6 lg:p-8">
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           <div className="space-y-2">
             <label className="mb-1 ml-1 block text-[11px] font-black uppercase tracking-widest text-muted-foreground">
               Spécialité
@@ -122,7 +120,7 @@ export function ProfessionalDirectory({ initialPros, totalCount }: ProfessionalD
 
           <div className="space-y-2">
             <label className="mb-1 ml-1 block text-[11px] font-black uppercase tracking-widest text-muted-foreground">
-              Niveau d&apos;excellence
+              Statut
             </label>
             <div className="flex gap-1 p-1 bg-surface-container-lowest rounded-2xl shadow-sm">
               {["Tous", "Or"].map((t) => (
@@ -141,12 +139,6 @@ export function ProfessionalDirectory({ initialPros, totalCount }: ProfessionalD
             </div>
           </div>
 
-          <div className="flex items-end">
-            <button className="flex w-full items-center justify-center gap-2 rounded-2xl bg-kelen-green-600 py-4 font-black text-white shadow-lg shadow-kelen-green-600/20 transition-all hover:bg-kelen-green-700 hover:shadow-xl active:scale-95">
-              <Filter className="h-5 w-5" />
-              <span>Affiner la recherche</span>
-            </button>
-          </div>
         </div>
       </div>
 

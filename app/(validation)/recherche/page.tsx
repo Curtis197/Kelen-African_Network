@@ -26,9 +26,13 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   let browserQuery = supabase
     .from("professionals")
     .select("*")
-    .neq("status", "black")
     .eq("is_active", true)
     .eq("is_visible", true);
+
+  // Black-listed professionals appear in name lookup (verification) but not in discovery
+  if (mode === "browse") {
+    browserQuery = browserQuery.neq("status", "black");
+  }
 
   // Text search
   if (query) {

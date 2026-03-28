@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import type React from "react";
 import Link from "next/link";
-import { Check } from "lucide-react";
+import { Check, Eye, Users, ShieldCheck, Globe } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Pour les professionnels — Kelen",
@@ -12,7 +13,7 @@ const PLAN_FEATURES_FREE = [
   "Profil public vérifié",
   "Historique des recommandations",
   "Droit de réponse aux signaux (15 jours)",
-  "Badge de statut (Or, Gris)",
+  "Badge de statut (Or, Argent)",
   "Recherche par nom — visible pour toujours",
 ];
 
@@ -24,27 +25,27 @@ const PLAN_FEATURES_PREMIUM = [
   "Statistiques avancées de profil",
 ];
 
-const BENEFITS = [
+const BENEFITS: { Icon: React.ElementType; title: string; description: string }[] = [
   {
-    icon: "✦",
+    Icon: Eye,
     title: "Votre travail, enfin visible",
     description:
       "Ce que vous avez livré reste. Projets réalisés, photos, délais respectés — votre historique s'accumule et parle pour vous auprès de chaque client potentiel.",
   },
   {
-    icon: "🎯",
+    Icon: Users,
     title: "Des clients déjà convaincus",
     description:
       "Les clients qui vous trouvent sur Kelen ont consulté votre profil avant de vous contacter. Ils arrivent avec un projet, un budget, et une confiance déjà établie.",
   },
   {
-    icon: "🛡",
+    Icon: ShieldCheck,
     title: "Droit de réponse garanti",
     description:
       "En cas de signal, vous êtes notifié et disposez de 15 jours pour répondre avec vos preuves. Votre réponse est publiée sur votre profil.",
   },
   {
-    icon: "🌍",
+    Icon: Globe,
     title: "Clientèle sans frontières",
     description:
       "Vos clients peuvent être à côté ou à des milliers de kilomètres. Kelen vous connecte avec ceux qui investissent sérieusement — partout.",
@@ -112,7 +113,9 @@ export default function PourLesProPage() {
               key={benefit.title}
               className="rounded-xl border border-border bg-white p-6"
             >
-              <span className="text-2xl">{benefit.icon}</span>
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-kelen-green-50">
+                <benefit.Icon className="h-5 w-5 text-kelen-green-600" />
+              </div>
               <h3 className="mt-3 text-lg font-semibold text-foreground">
                 {benefit.title}
               </h3>
@@ -193,7 +196,7 @@ export default function PourLesProPage() {
           {/* Premium Plan */}
           <div className="relative rounded-3xl border-2 border-kelen-green-500 bg-white p-8 shadow-xl shadow-kelen-green-100 transition-all hover:-translate-y-1">
             <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-kelen-green-500 px-4 py-1 text-xs font-bold uppercase tracking-wider text-white shadow-lg">
-              Recommandé
+              Découverte active
             </div>
             <h3 className="text-xl font-bold text-foreground">Premium</h3>
             <p className="mt-2 text-sm text-muted-foreground">
