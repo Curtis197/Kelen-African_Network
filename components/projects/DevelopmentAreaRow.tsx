@@ -10,13 +10,15 @@ import { ProfessionalStatus } from "@/lib/supabase/types";
 import { ProjectProfessional, Professional } from "@/lib/types/projects";
 
 interface DevelopmentAreaRowProps {
+  areaId: string;
   areaName: string;
   professionals: ProjectProfessional[];
   projectId: string;
   onRefresh: () => void;
+  onDelete: () => void;
 }
 
-export function DevelopmentAreaRow({ areaName, professionals, projectId, onRefresh }: DevelopmentAreaRowProps) {
+export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId, onRefresh, onDelete }: DevelopmentAreaRowProps) {
   const [isUpdating, setIsUpdating] = useState(false);
   const [showAddExternal, setShowAddExternal] = useState(false);
 
@@ -65,19 +67,26 @@ export function DevelopmentAreaRow({ areaName, professionals, projectId, onRefre
           </span>
         </div>
         <div className="flex items-center gap-4">
-          <Link 
-            href={`/recherche?projectId=${projectId}&areaName=${encodeURIComponent(areaName)}`}
+          <Link
+            href={`/?projectId=${projectId}&areaName=${encodeURIComponent(areaName)}`}
             className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary hover:underline bg-primary/5 px-4 py-2 rounded-full border border-primary/10 transition-all hover:bg-primary/10"
           >
             <span className="material-symbols-outlined text-sm">search</span>
             Trouver un professionnel
           </Link>
-          <button 
+          <button
             onClick={handleAddExternal}
             className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-on-surface-variant hover:text-on-surface transition-colors"
           >
             <span className="material-symbols-outlined text-sm">add_circle</span>
             Ajouter un externe
+          </button>
+          <button
+            onClick={onDelete}
+            className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40 hover:text-kelen-red-500 transition-colors"
+            title="Supprimer ce domaine"
+          >
+            <span className="material-symbols-outlined text-sm">delete</span>
           </button>
         </div>
       </div>
@@ -211,8 +220,8 @@ export function DevelopmentAreaRow({ areaName, professionals, projectId, onRefre
         ) : (
           <div className="w-full py-12 text-center bg-surface-container-low/50 rounded-3xl border border-dashed border-outline-variant/30">
              <p className="text-on-surface-variant font-medium italic">Aucun profil à comparer dans ce domaine.</p>
-             <Link 
-               href={`/recherche?projectId=${projectId}&areaName=${encodeURIComponent(areaName)}`}
+             <Link
+               href={`/?projectId=${projectId}&areaName=${encodeURIComponent(areaName)}`}
                className="mt-4 text-xs font-bold text-primary hover:underline flex items-center gap-2 mx-auto justify-center"
              >
                <span className="material-symbols-outlined text-sm">search</span>

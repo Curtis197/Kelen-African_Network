@@ -158,12 +158,13 @@ export async function getProjectTeam(projectId: string) {
 
 
 export async function manageProjectProfessional(
-  projectId: string, 
-  proId: string | null, 
-  area: string, 
+  projectId: string,
+  proId: string | null,
+  area: string,
   action: 'add' | 'remove',
   isExternal: boolean = false,
-  externalData?: { name?: string; phone?: string; category?: string; location?: string; note?: string }
+  externalData?: { name?: string; phone?: string; category?: string; location?: string; note?: string },
+  areaId?: string
 ) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -185,6 +186,10 @@ export async function manageProjectProfessional(
       insertData.private_note = externalData?.note;
     } else {
       insertData.professional_id = proId;
+    }
+
+    if (areaId) {
+      insertData.project_area_id = areaId;
     }
 
     const { error } = await supabase
@@ -251,4 +256,65 @@ export async function getUserProjects() {
   }
 
   return data;
+}
+
+export async function getProjectAreas(projectId: string) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("project_areas")
+    .select("*")
+    .eq("project_id", projectId)
+    .order("created_at", { ascending: true });
+
+  if (error) return [];
+  return data;
+}
+
+export async function createProjectArea(projectId: string, name: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "Non autorisé" };
+
+  const { data: project } = await supabase
+    .from("user_projects")
+    .select("id")
+    .eq("id", projectId)
+    .eq("user_id", user.id)
+    .single();
+
+  if (!project) return { error: "Projet introuvable ou accès refusé." };
+
+  const { data, error } = await supabase
+    .from("project_areas")
+    .insert([{ project_id: projectId, name }])
+    .select()
+    .single();
+
+  if (error) return { error: error.message };
+  revalidatePath(`/projets/${projectId}`);
+  return { data };
+}
+
+export async function deleteProjectArea(areaId: string, projectId: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "Non autorisé" };
+
+  const { data: project } = await supabase
+    .from("user_projects")
+    .select("id")
+    .eq("id", projectId)
+    .eq("user_id", user.id)
+    .single();
+
+  if (!project) return { error: "Projet introuvable ou accès refusé." };
+
+  const { error } = await supabase
+    .from("project_areas")
+    .delete()
+    .eq("id", areaId);
+
+  if (error) return { error: error.message };
+  revalidatePath(`/projets/${projectId}`);
+  return { success: true };
 }

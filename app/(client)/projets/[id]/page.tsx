@@ -11,7 +11,8 @@ import { twMerge } from "tailwind-merge";
 import ProjectStepsSection from "@/components/projects/ProjectStepsSection";
 import { DevelopmentAreaRow } from "@/components/projects/DevelopmentAreaRow";
 import { DEVELOPMENT_AREAS } from "@/lib/constants/projects";
-import { ProjectProfessional, ProjectStep } from "@/lib/types/projects";
+import { ProjectProfessional, ProjectStep, ProjectArea } from "@/lib/types/projects";
+import { createProjectArea, deleteProjectArea, getProjectAreas } from "@/lib/actions/projects";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -51,7 +52,7 @@ export default function ProjectDetailPage() {
   const [steps, setSteps] = useState<ProjectStep[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showAreaSelector, setShowAreaSelector] = useState(false);
-  const [activeAreas, setActiveAreas] = useState<string[]>([]);
+  const [areas, setAreas] = useState<ProjectArea[]>([]);
   const supabase = createClient();
 
   useEffect(() => {
@@ -84,13 +85,12 @@ export default function ProjectDetailPage() {
     if (teamError) {
       console.error("Error fetching team:", teamError);
     } else {
-      const teamDataTyped = teamData as ProjectProfessional[];
-      setTeam(teamDataTyped);
-      
-      // Update active areas based on existing team members
-      const existingAreas = Array.from(new Set(teamDataTyped.map(m => m.development_area).filter(Boolean))) as string[];
-      setActiveAreas(prev => Array.from(new Set([...prev, ...existingAreas])));
+      setTeam(teamData as ProjectProfessional[]);
     }
+
+    // Fetch Areas
+    const areasData = await getProjectAreas(projectIdStr);
+    setAreas(areasData as ProjectArea[]);
 
     // Fetch Steps
     const { data: stepsData, error: stepsError } = await supabase
@@ -108,11 +108,18 @@ export default function ProjectDetailPage() {
     setIsLoading(false);
   };
 
-  const addArea = (area: string) => {
-    if (!activeAreas.includes(area)) {
-      setActiveAreas([...activeAreas, area]);
+  const addArea = async (area: string) => {
+    const result = await createProjectArea(projectIdStr, area);
+    if (result?.data) {
+      setAreas(prev => [...prev, result.data as ProjectArea]);
     }
     setShowAreaSelector(false);
+  };
+
+  const removeArea = async (areaId: string) => {
+    if (!confirm("Supprimer ce domaine et retirer tous ses professionnels ?")) return;
+    await deleteProjectArea(areaId, projectIdStr);
+    setAreas(prev => prev.filter(a => a.id !== areaId));
   };
 
   const updateStatus = async (newStatus: string) => {
@@ -253,7 +260,7 @@ export default function ProjectDetailPage() {
                   {showAreaSelector && (
                     <div className="absolute right-0 mt-3 w-72 bg-white rounded-2xl shadow-2xl border border-outline-variant/30 p-2 z-50">
                       <div className="max-h-64 overflow-y-auto overflow-x-hidden scrollbar-hide">
-                        {DEVELOPMENT_AREAS.filter(a => !activeAreas.includes(a)).map((area) => (
+                        {DEVELOPMENT_AREAS.filter(a => !areas.some(pa => pa.name === a)).map((area) => (
                           <button
                             key={area}
                             onClick={() => addArea(area)}
@@ -269,24 +276,26 @@ export default function ProjectDetailPage() {
               </div>
               
               <div className="space-y-16">
-                {(activeAreas.length > 0 ? activeAreas : ["Architecture & Design"]).map((area) => (
-                  <DevelopmentAreaRow 
-                    key={area}
-                    areaName={area}
+                {areas.map((area) => (
+                  <DevelopmentAreaRow
+                    key={area.id}
+                    areaId={area.id}
+                    areaName={area.name}
                     projectId={projectIdStr}
-                    professionals={team.filter(m => m.development_area === area)}
+                    professionals={team.filter(m => m.development_area === area.name)}
                     onRefresh={fetchProjectData}
+                    onDelete={() => removeArea(area.id)}
                   />
                 ))}
-                
-                {activeAreas.length === 0 && (
+
+                {areas.length === 0 && (
                   <div className="p-20 text-center bg-surface-container-low rounded-[2.5rem] border-2 border-dashed border-outline-variant/30">
                     <div className="w-16 h-16 mx-auto bg-surface-container rounded-full flex items-center justify-center mb-6">
                       <span className="material-symbols-outlined text-3xl text-on-surface-variant opacity-30">diversity_3</span>
                     </div>
                     <h4 className="text-xl font-headline font-bold text-on-surface">Initialisez vos domaines</h4>
                     <p className="text-on-surface-variant font-medium mt-2 max-w-xs mx-auto">Ajoutez des domaines d&apos;intervention pour commencer à comparer des professionnels.</p>
-                    <button 
+                    <button
                       onClick={() => setShowAreaSelector(true)}
                       className="mt-8 px-8 py-3 bg-primary/10 text-primary rounded-xl font-headline font-bold hover:bg-primary/20 transition-all font-body"
                     >

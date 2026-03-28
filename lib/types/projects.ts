@@ -42,3 +42,10 @@ export interface ProjectStep {
     project_professional_id: string;
   }[];
 }
+
+export interface ProjectArea {
+  id: string;
+  project_id: string;
+  name: string;
+  created_at: string;
+}
