@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { reviewSchema, type ReviewFormData } from "@/lib/utils/validators";
-import { createClient } from "@/lib/supabase/client";
+import { submitReview } from "@/lib/actions/reviews";
 
 interface ReviewFormProps {
   professionalId: string;
@@ -46,43 +46,21 @@ export function ReviewForm({
 
     setIsLoading(true);
     setError(null);
-    const supabase = createClient();
 
     try {
-      // 1. Get current user
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        setError("Vous devez être connecté pour laisser un avis.");
-        return;
-      }
-
-      // 2. Get user profile
-      const { data: profile } = await supabase
-        .from("users")
-        .select("first_name, last_name, country")
-        .eq("id", user.id)
-        .single();
-
-      if (!profile) {
-        setError("Impossible de récupérer votre profil.");
-        return;
-      }
-
-      // 3. Insert Review
-      const { error: insertError } = await supabase.from("reviews").insert({
-        professional_id: professionalId,
-        reviewer_id: user.id,
-        reviewer_name: `${profile.first_name} ${profile.last_name}`,
-        reviewer_country: profile.country,
+      const result = await submitReview({
+        professional_id: data.professional_id,
         rating: data.rating,
         comment: data.comment,
-        is_hidden: false,
       });
 
-      if (insertError) throw insertError;
+      if (!result.success) {
+        setError(result.error);
+        return;
+      }
 
       setSubmitted(true);
-    } catch (err: any) {
+    } catch (err) {
       console.error("Review submission error:", err);
       setError("Une erreur est survenue lors de l'envoi. Veuillez réessayer.");
     } finally {
