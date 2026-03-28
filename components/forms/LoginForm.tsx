@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -93,12 +94,12 @@ export function LoginForm({ defaultRole }: LoginFormProps) {
           >
             Mot de passe
           </label>
-          <button
-            type="button"
+          <Link
+            href="/mot-de-passe"
             className="text-xs font-medium text-kelen-green-600 hover:text-kelen-green-500"
           >
             Mot de passe oublié ?
-          </button>
+          </Link>
         </div>
         <input
           id="password"
