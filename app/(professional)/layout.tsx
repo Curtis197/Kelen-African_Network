@@ -13,17 +13,10 @@ export default function ProfessionalLayout({
       <div className="flex flex-1">
         <ProSidebar />
         <main className="flex-1 bg-muted/30">
-          {/* Mobile header */}
-          <div className="flex h-16 items-center border-b border-border bg-white px-4 lg:hidden">
-            <span className="text-lg font-bold text-foreground text-kelen-green-500">Kelen</span>
-            <span className="ml-2 rounded bg-kelen-green-50 px-1.5 py-0.5 text-xs font-medium text-kelen-green-700 font-bold tracking-wider uppercase">
-              Pro
-            </span>
-          </div>
-          <div className="p-6 lg:p-8">{children}</div>
+          <div className="p-4 pb-24 lg:p-8 lg:pb-8">{children}</div>
         </main>
       </div>
-      <Footer />
+      <div className="hidden lg:block"><Footer /></div>
     </div>
   );
 }

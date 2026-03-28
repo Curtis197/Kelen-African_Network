@@ -122,7 +122,7 @@ export default function AboutPage() {
             </span>
           </p>
 
-          <div className="mt-12 grid gap-6 grid-cols-2 lg:grid-cols-5">
+          <div className="mt-12 grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-5">
             {/* Gold */}
             <div className="rounded-xl border border-kelen-yellow-500/30 bg-kelen-yellow-50/50 p-6">
               <StatusBadge

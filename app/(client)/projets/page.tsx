@@ -60,11 +60,11 @@ export default function ProjectsPage() {
 
   return (
     <div className="min-h-screen bg-surface font-body text-on-surface pb-24">
-      <div className="max-w-[1440px] mx-auto px-8 lg:px-12 pt-12">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12 pt-6 sm:pt-12">
         {/* Dashboard Header */}
         <section className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
           <div>
-            <h1 className="text-[2.75rem] font-headline font-bold text-on-surface leading-tight tracking-tight">
+            <h1 className="text-2xl sm:text-[2.75rem] font-headline font-bold text-on-surface leading-tight tracking-tight">
               Mes Projets
             </h1>
             <p className="text-on-surface-variant mt-2 text-lg max-w-xl">
@@ -109,7 +109,7 @@ export default function ProjectsPage() {
                   >
                     <Link
                       href={`/projets/${project.id}`}
-                      className="group bg-surface-container-lowest p-5 rounded-2xl flex items-center gap-6 hover:shadow-2xl hover:shadow-surface-container-high/50 transition-all duration-300 border border-transparent hover:border-surface-container"
+                      className="group bg-surface-container-lowest p-4 sm:p-5 rounded-2xl flex items-center gap-4 sm:gap-6 hover:shadow-2xl hover:shadow-surface-container-high/50 transition-all duration-300 border border-transparent hover:border-surface-container"
                     >
                       <div className="w-24 h-24 rounded-2xl overflow-hidden flex-shrink-0 bg-surface-container-low flex items-center justify-center">
                         <span className="material-symbols-outlined text-4xl text-on-surface-variant opacity-40">

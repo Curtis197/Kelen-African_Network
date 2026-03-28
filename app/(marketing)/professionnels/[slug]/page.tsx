@@ -95,8 +95,8 @@ export default async function ProfessionalProfilePage({ params }: Props) {
             <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]"></div>
           </div>
           
-          <div className="relative z-10 w-full max-w-6xl px-6 flex justify-center">
-            <div className="bg-white/80 backdrop-blur-2xl p-8 md:p-10 rounded-[2rem] border border-white/20 w-full md:w-[35vw] shadow-2xl">
+          <div className="relative z-10 w-full max-w-6xl px-4 sm:px-6 flex justify-center">
+            <div className="bg-white/80 backdrop-blur-2xl p-5 sm:p-8 md:p-10 rounded-[1.5rem] md:rounded-[2rem] border border-white/20 w-full md:w-[35vw] shadow-2xl">
               <div className="flex items-center gap-3 mb-4">
                  <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-[0.2em] border ${statusColors[currentStatus]}`}>
                     Rang {currentStatus.charAt(0).toUpperCase() + currentStatus.slice(1)}
@@ -138,7 +138,7 @@ export default async function ProfessionalProfilePage({ params }: Props) {
         </section>
 
         {/* Portfolio Section (Bento Grid) */}
-        <section className="py-32 px-6 lg:px-12 bg-surface" id="portfolio">
+        <section className="py-16 px-4 sm:px-6 md:py-32 lg:px-12 bg-surface" id="portfolio">
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
               <div>
@@ -157,7 +157,7 @@ export default async function ProfessionalProfilePage({ params }: Props) {
                   <div className="md:col-span-8 group relative overflow-hidden rounded-[2.5rem] bg-white shadow-lg transition-all duration-500 hover:shadow-2xl">
                     <Link href={`/professionnels/${slug}/realisations/${portfolioItems[0].id}`}>
                       <img 
-                        className="w-full h-[600px] object-cover transition-transform duration-700 group-hover:scale-110" 
+                        className="w-full h-[280px] sm:h-[400px] md:h-[600px] object-cover transition-transform duration-700 group-hover:scale-110" 
                         src={portfolioItems[0].image} 
                         alt={portfolioItems[0].title}
                       />
@@ -205,7 +205,7 @@ export default async function ProfessionalProfilePage({ params }: Props) {
                   {/* Featured Project Placeholder */}
                   <div className="md:col-span-8 group relative overflow-hidden rounded-[2.5rem] bg-white shadow-lg transition-all duration-500 hover:shadow-2xl">
                     <img 
-                      className="w-full h-[600px] object-cover transition-transform duration-700 group-hover:scale-110" 
+                      className="w-full h-[280px] sm:h-[400px] md:h-[600px] object-cover transition-transform duration-700 group-hover:scale-110" 
                       src={pro.portfolio_photos?.[1] || "https://images.unsplash.com/photo-1600585154340-be6199f7d209?auto=format&fit=crop&q=80"} 
                       alt="Réalisation majeure"
                     />
@@ -275,9 +275,9 @@ export default async function ProfessionalProfilePage({ params }: Props) {
         </section>
 
         {/* Philosophy Section */}
-        <section className="py-32 bg-stone-50" id="about">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="grid md:grid-cols-2 gap-24 items-center">
+        <section className="py-16 md:py-32 bg-stone-50" id="about">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="grid md:grid-cols-2 gap-10 md:gap-24 items-center">
               <div className="space-y-10">
                 <div>
                   <span className="text-kelen-green-600 font-black tracking-[0.3em] uppercase text-xs">Notre Philosophie</span>
@@ -311,12 +311,12 @@ export default async function ProfessionalProfilePage({ params }: Props) {
 
               <div className="relative">
                 <div className="absolute -top-10 -left-10 w-40 h-40 bg-kelen-green-500/10 rounded-full blur-3xl z-0"></div>
-                <img 
-                  className="rounded-[3rem] w-full h-[700px] object-cover relative z-10 shadow-3xl grayscale hover:grayscale-0 transition-all duration-1000 ease-out" 
+                <img
+                  className="rounded-[2rem] md:rounded-[3rem] w-full h-[350px] sm:h-[450px] md:h-[700px] object-cover relative z-10 shadow-3xl grayscale hover:grayscale-0 transition-all duration-1000 ease-out"
                   src={pro.portfolio_photos?.[6] || "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80"} 
                   alt="Le professionnel au travail"
                 />
-                <div className="absolute -bottom-10 -right-6 bg-white p-10 rounded-[2rem] shadow-2xl z-20 border border-stone-100 max-w-xs">
+                <div className="hidden sm:block absolute -bottom-10 -right-6 bg-white p-6 md:p-10 rounded-[2rem] shadow-2xl z-20 border border-stone-100 max-w-xs">
                   <div className="flex items-center gap-6">
                     <div className="bg-amber-100 p-4 rounded-2xl">
                       <Award className="w-8 h-8 text-amber-600" />
@@ -333,9 +333,9 @@ export default async function ProfessionalProfilePage({ params }: Props) {
         </section>
 
         {/* Contact Section */}
-        <section className="py-32 px-6 bg-white" id="contact">
+        <section className="py-16 px-4 sm:px-6 md:py-32 bg-white" id="contact">
           <div className="max-w-4xl mx-auto">
-            <div className="bg-stone-50 rounded-[3rem] p-12 md:p-20 shadow-xl border border-stone-100 text-center relative overflow-hidden">
+            <div className="bg-stone-50 rounded-[2rem] md:rounded-[3rem] p-6 sm:p-10 md:p-20 shadow-xl border border-stone-100 text-center relative overflow-hidden">
                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-kelen-green-400 via-kelen-green-600 to-kelen-green-400"></div>
               
               <h2 className="text-4xl md:text-5xl font-black text-stone-900 mb-6 tracking-tight">Prêt à démarrer ?</h2>
@@ -343,7 +343,7 @@ export default async function ProfessionalProfilePage({ params }: Props) {
                 Prenez contact dès aujourd&apos;hui pour une étude personnalisée de votre projet avec {pro.business_name}.
               </p>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-16 text-left mb-16">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 text-left mb-8 md:mb-16">
                 <div className="space-y-8">
                   <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-kelen-green-600">Informations Professionnelles</h4>
                   <div className="space-y-4">

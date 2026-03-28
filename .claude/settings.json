@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \".claude/scripts/deploy-pipeline.sh\"",
+            "asyncRewake": true,
+            "statusMessage": "Committing, pushing and deploying to Vercel...",
+            "timeout": 300
+          }
+        ]
+      }
+    ]
+  }
+}

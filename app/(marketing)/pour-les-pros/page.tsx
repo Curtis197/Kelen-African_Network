@@ -233,7 +233,7 @@ export default function PourLesProPage() {
       </section>
 
       {/* CTA */}
-      <section className="mt-24 rounded-2xl bg-kelen-green-500 p-12 text-center">
+      <section className="mt-24 rounded-2xl bg-kelen-green-500 p-6 sm:p-12 text-center">
         <h2 className="text-2xl font-bold text-white sm:text-3xl">
           Votre prochain client vous cherche.
         </h2>

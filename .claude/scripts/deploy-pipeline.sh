@@ -59,11 +59,12 @@ ERROR_LINES=$(vercel logs "$DEPLOY_URL" --level error 2>/dev/null | head -5)
 
 if [ -n "$ERROR_LINES" ]; then
   LOG_STATUS="⚠️ errors detected — fix needed"
-  EXTRA="\\nErrors:\\n$ERROR_LINES"
+  EXTRA="\\nErrors: $ERROR_LINES"
+  # Exit 2 = asyncRewake: wakes Claude to investigate and fix
+  echo "{\"systemMessage\": \"🚀 Deployed ($TARGET) but errors found\\n• URL: $DEPLOY_URL\\n• Commit: $COMMIT_MSG\\n• $LOG_STATUS$EXTRA\"}"
+  exit 2
 else
   LOG_STATUS="✓ clean"
-  EXTRA=""
+  echo "{\"systemMessage\": \"🚀 Pipeline complete ($TARGET)\\n• URL: $DEPLOY_URL\\n• Commit: $COMMIT_MSG\\n• Logs: $LOG_STATUS\"}"
+  exit 0
 fi
-
-# ── 7. Report ─────────────────────────────────────────────────────────────────
-echo "{\"systemMessage\": \"🚀 Pipeline complete ($TARGET)\\n• Commit: $COMMIT_MSG\\n• URL: $DEPLOY_URL\\n• Logs: $LOG_STATUS$EXTRA\"}"

@@ -11,7 +11,7 @@ export default function DiasporaLayout({
       <Navbar />
       <main className="flex-1 bg-muted/30">
         <div className="mx-auto max-w-7xl w-full">
-          <div className="p-6 lg:p-8">{children}</div>
+          <div className="p-4 lg:p-8">{children}</div>
         </div>
       </main>
       <Footer />

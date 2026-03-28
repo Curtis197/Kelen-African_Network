@@ -74,7 +74,7 @@ export function ProfessionalCard({
   return (
     <span
       onClick={() => router.push(`/professionnels/${slug}`)}
-      className="group block cursor-pointer rounded-[2rem] bg-surface-container-lowest p-8 transition-all duration-500 hover:shadow-[0_32px_64px_-16px_rgba(0,0,0,0.12)] hover:-translate-y-2 hover:ring-1 hover:ring-kelen-green-100/50 relative overflow-hidden ring-1 ring-outline-variant/10"
+      className="group block cursor-pointer rounded-[1.5rem] sm:rounded-[2rem] bg-surface-container-lowest p-5 sm:p-8 transition-all duration-500 hover:shadow-[0_32px_64px_-16px_rgba(0,0,0,0.12)] hover:-translate-y-2 hover:ring-1 hover:ring-kelen-green-100/50 relative overflow-hidden ring-1 ring-outline-variant/10"
     >
       {added && (
         <div className="absolute inset-0 bg-kelen-green-600/90 backdrop-blur-sm z-30 flex flex-col items-center justify-center text-white animate-in fade-in duration-300">
