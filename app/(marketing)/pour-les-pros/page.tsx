@@ -5,59 +5,66 @@ import { Check } from "lucide-react";
 export const metadata: Metadata = {
   title: "Pour les professionnels — Kelen",
   description:
-    "Créez votre profil vérifié sur Kelen et gagnez la confiance de vos clients.",
+    "Votre travail, enfin visible. Rejoignez Kelen et accédez à des clients qui vous font confiance avant de vous appeler.",
 };
 
-const PLAN_FEATURES = [
+const PLAN_FEATURES_FREE = [
   "Profil public vérifié",
   "Historique des recommandations",
-  "Droit de réponse aux signaux",
-  "Badge de statut (Or, Argent, Blanc)",
-  "Indexation dans les moteurs de recherche",
-  "Portfolios photos illimités",
+  "Droit de réponse aux signaux (15 jours)",
+  "Badge de statut (Or, Gris)",
+  "Recherche par nom — visible pour toujours",
+];
+
+const PLAN_FEATURES_PREMIUM = [
+  "Tout le plan Standard",
+  "Visible dans la découverte par catégorie",
+  "Portfolios photos et vidéos illimités",
+  "Indexation Google (SEO)",
+  "Statistiques avancées de profil",
 ];
 
 const BENEFITS = [
   {
-    icon: "✓",
-    title: "Profil vérifié gratuit",
+    icon: "✦",
+    title: "Votre travail, enfin visible",
     description:
-      "Chaque recommandation vérifiée renforce votre crédibilité. Plus vous avez de projets documentés, plus votre statut progresse.",
+      "Ce que vous avez livré reste. Projets réalisés, photos, délais respectés — votre historique s'accumule et parle pour vous auprès de chaque client potentiel.",
+  },
+  {
+    icon: "🎯",
+    title: "Des clients déjà convaincus",
+    description:
+      "Les clients qui vous trouvent sur Kelen ont consulté votre profil avant de vous contacter. Ils arrivent avec un projet, un budget, et une confiance déjà établie.",
   },
   {
     icon: "🛡",
     title: "Droit de réponse garanti",
     description:
-      "En cas de signal, vous êtes notifié et disposez de 15 jours pour répondre. Votre réponse est publiée sur votre profil.",
+      "En cas de signal, vous êtes notifié et disposez de 15 jours pour répondre avec vos preuves. Votre réponse est publiée sur votre profil.",
   },
   {
-    icon: "📊",
-    title: "Visibilité internationale",
+    icon: "🌍",
+    title: "Clientèle sans frontières",
     description:
-      "Les clients consultent Kelen avant de mandater un professionnel. Soyez visible là où ils cherchent.",
-  },
-  {
-    icon: "💰",
-    title: "Abonnement simple",
-    description:
-      "Bénéficiez d'une visibilité illimitée pour 15 € par mois. Pas d'engagement, résiliez à tout moment.",
+      "Vos clients peuvent être à côté ou à des milliers de kilomètres. Kelen vous connecte avec ceux qui investissent sérieusement — partout.",
   },
 ];
 
 const STATUS_TIERS = [
   {
-    name: "White",
-    condition: "Profil créé, aucune recommandation vérifiée",
-    color: "bg-white border-border text-foreground",
+    name: "Non classé",
+    condition: "Profil créé, aucune recommandation vérifiée encore",
+    color: "bg-stone-50 border-stone-200 text-stone-600",
   },
   {
-    name: "Silver",
-    condition: "1-2 recommandations vérifiées, note ≥ 3.5",
-    color: "bg-gray-100 border-gray-300 text-gray-800",
+    name: "Argent",
+    condition: "1–2 recommandations vérifiées, 0 signal",
+    color: "bg-stone-100 border-stone-300 text-stone-700",
   },
   {
-    name: "Gold",
-    condition: "3+ recommandations vérifiées, note ≥ 4.0, 0 signal",
+    name: "Or",
+    condition: "3+ recommandations vérifiées, 0 signal",
     color: "bg-kelen-yellow-50 border-kelen-yellow-500 text-kelen-yellow-800",
   },
 ];
@@ -68,13 +75,15 @@ export default function PourLesProPage() {
       {/* Hero */}
       <div className="text-center">
         <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-          Construisez votre réputation.
+          Votre travail, enfin visible.
           <br />
-          <span className="text-kelen-green-600">Documentez votre fiabilité.</span>
+          <span className="text-kelen-green-600">
+            Des clients qui vous font confiance avant de vous appeler.
+          </span>
         </h1>
         <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
-          Kelen permet aux professionnels de confiance de se démarquer grâce à
-          un système de vérification transparent et impartial.
+          Kelen donne à votre travail la visibilité qu&apos;il mérite. Chaque projet
+          livré devient une preuve. Chaque preuve construit votre réputation.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-4">
           <Link
@@ -95,7 +104,7 @@ export default function PourLesProPage() {
       {/* Benefits */}
       <section className="mt-24">
         <h2 className="text-center text-2xl font-bold text-foreground">
-          Pourquoi rejoindre Kelen ?
+          Ce que Kelen change pour vous
         </h2>
         <div className="mt-10 grid gap-8 sm:grid-cols-2">
           {BENEFITS.map((benefit) => (
@@ -118,11 +127,11 @@ export default function PourLesProPage() {
       {/* Status tiers */}
       <section className="mt-24">
         <h2 className="text-center text-2xl font-bold text-foreground">
-          Le système de statuts
+          Un statut qui se construit
         </h2>
         <p className="mx-auto mt-3 max-w-xl text-center text-muted-foreground">
-          Votre statut est calculé automatiquement en fonction de vos
-          recommandations vérifiées, de votre note moyenne et de vos signaux.
+          Votre statut est calculé automatiquement à partir de vos projets
+          vérifiés. Il ne peut pas être acheté. Il se mérite.
         </p>
         <div className="mt-10 grid gap-4 sm:grid-cols-3">
           {STATUS_TIERS.map((tier) => (
@@ -136,30 +145,37 @@ export default function PourLesProPage() {
           ))}
         </div>
         <p className="mt-6 text-center text-sm text-muted-foreground">
-          Les statuts Rouge et Noir sont attribués en cas de signaux vérifiés.
-          Chaque professionnel dispose d&apos;un droit de réponse.
+          Un signal vérifié entraîne un statut Rouge — permanent, irrévocable,
+          quelle que soit la liste atteinte auparavant.
+          Chaque professionnel dispose d&apos;un droit de réponse de 15 jours.{" "}
+          <Link href="/comment-ca-marche" className="font-medium text-kelen-green-600 hover:underline">
+            Comprendre les critères →
+          </Link>
         </p>
       </section>
 
       {/* Pricing */}
       <section className="mt-24">
         <h2 className="text-center text-3xl font-bold text-foreground">
-          Tarification simple et transparente
+          Tarification simple
         </h2>
-        
+        <p className="mx-auto mt-3 max-w-xl text-center text-muted-foreground">
+          Documenter votre fiabilité est gratuit. Être découvert par de nouveaux clients est payant.
+        </p>
+
         <div className="mt-16 grid gap-8 lg:grid-cols-2 lg:items-center max-w-4xl mx-auto">
           {/* Free Plan */}
           <div className="rounded-3xl border border-border bg-white p-8 shadow-sm transition-all hover:shadow-md">
             <h3 className="text-xl font-bold text-foreground">Standard</h3>
             <p className="mt-2 text-sm text-muted-foreground">
-              L&apos;essentiel pour documenter votre fiabilité.
+              Votre profil vérifié, accessible à quiconque cherche votre nom.
             </p>
             <p className="mt-6 flex items-baseline gap-1">
               <span className="text-4xl font-bold tracking-tight text-foreground">Gratuit</span>
               <span className="text-sm font-semibold text-muted-foreground">/ à vie</span>
             </p>
             <ul className="mt-8 space-y-4">
-              {PLAN_FEATURES.slice(0, 4).map((feature) => (
+              {PLAN_FEATURES_FREE.map((feature) => (
                 <li key={feature} className="flex items-center gap-3 text-sm text-muted-foreground">
                   <Check className="h-4 w-4 text-kelen-green-600" />
                   {feature}
@@ -181,14 +197,14 @@ export default function PourLesProPage() {
             </div>
             <h3 className="text-xl font-bold text-foreground">Premium</h3>
             <p className="mt-2 text-sm text-muted-foreground">
-              Maximisez votre visibilité et votre crédibilité.
+              Soyez découvert par des clients qui cherchent votre spécialité maintenant.
             </p>
             <p className="mt-6 flex items-baseline gap-1">
               <span className="text-4xl font-bold tracking-tight text-foreground">15 €</span>
               <span className="text-sm font-semibold text-muted-foreground">/ par mois</span>
             </p>
             <ul className="mt-8 space-y-4">
-              {PLAN_FEATURES.map((feature) => (
+              {PLAN_FEATURES_PREMIUM.map((feature) => (
                 <li key={feature} className="flex items-center gap-3 text-sm text-muted-foreground">
                   <Check className="h-4 w-4 text-kelen-green-600" />
                   {feature}
@@ -206,9 +222,9 @@ export default function PourLesProPage() {
 
         <div className="mt-12 text-center max-w-2xl mx-auto">
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Note : Les tarifs pour les professionnels basés en Afrique de l&apos;Ouest sont de 
-            <span className="font-bold text-foreground"> 3 000 FCFA / mois</span>. 
-            Payable via Wave, Orange Money ou MTN Mobile Money.
+            Professionnels basés en Afrique de l&apos;Ouest :{" "}
+            <span className="font-bold text-foreground">3 000 FCFA / mois</span>{" "}
+            via Wave, Orange Money ou MTN Mobile Money.
           </p>
         </div>
       </section>
@@ -216,11 +232,11 @@ export default function PourLesProPage() {
       {/* CTA */}
       <section className="mt-24 rounded-2xl bg-kelen-green-500 p-12 text-center">
         <h2 className="text-2xl font-bold text-white sm:text-3xl">
-          Prêt à documenter votre fiabilité ?
+          Votre prochain client vous cherche.
         </h2>
         <p className="mx-auto mt-3 max-w-lg text-kelen-green-100">
-          Rejoignez Kelen et montrez à vos clients que vous êtes un
-          professionnel de confiance.
+          Rejoignez Kelen. Montrez ce que vous avez livré.
+          Laissez votre travail convaincre à votre place.
         </p>
         <Link
           href="/pro/inscription"

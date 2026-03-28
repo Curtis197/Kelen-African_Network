@@ -6,8 +6,8 @@ export const metadata: Metadata = {
   description: "Créez votre nouveau projet immobilier sur Kelen.",
 };
 
-export default function NouveauProjetPage({ searchParams }: { searchParams: { id?: string } }) {
-  const id = searchParams.id;
+export default async function NouveauProjetPage({ searchParams }: { searchParams: Promise<{ id?: string }> }) {
+  const { id } = await searchParams;
   return (
     <div className="-m-6 lg:-m-8"> 
       {/* 

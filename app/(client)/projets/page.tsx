@@ -207,7 +207,7 @@ export default function ProjectsPage() {
                 <div className="relative z-10 space-y-4">
                   <h4 className="text-xl font-headline font-bold">Le Réseau Kelen</h4>
                   <p className="text-sm opacity-70 leading-relaxed">
-                    Accédez à la base de données exclusive des professionnels certifiés de la diaspora.
+                    Accédez à l&apos;annuaire des professionnels vérifiés et comparez-les pour votre projet.
                   </p>
                   <button className="text-xs font-bold uppercase tracking-widest bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg transition-colors">
                     Explorer le réseau

@@ -1,10 +1,16 @@
 # Kelen — Updated Offer Summary
 
+> For strategic positioning, market definition, and tone principles, see `kelen_positioning.md`.
+
 ## What Kelen Is
 
-A professional discovery and verification platform connecting the African diaspora in Europe with service providers in Francophone Africa. The core problem: diaspora members invest €20k–100k in construction and renovation projects with no reliable way to evaluate professionals remotely.
+A professional visibility and trust platform. Professionals showcase their work and build credibility. Clients find, compare, and choose with confidence.
 
-Kelen gives every professional a free mini website. The quality of presentation is identical for all — what changes is the depth of content and Google visibility.
+**Entry market:** Individuals managing construction and renovation projects between Europe and Africa — large sums, remote supervision, limited legal recourse. This is where the pain is most acute.
+
+**Product scope:** Any professional with work to show and trust to build. Any client who needs to choose and rely on a professional for work they can't fully supervise themselves.
+
+Kelen gives every professional a free profile. The quality of presentation is identical for all — what changes is the depth of content and Google visibility.
 
 ---
 
@@ -84,29 +90,37 @@ Only paid profiles appear in the sitemap. Gratuitous profiles are accessible but
 
 ---
 
-## Verification System (The Trust Layer)
+## Verification System (The Trust Foundation)
 
 Independent of the commercial profile. Cannot be influenced by payment.
 
-- **Gold status** — 5+ verified recommendations linked to contracts
+- **Gold status** — 3+ verified recommendations linked to contracts, zero signals
 - **Grey status** — Default, no verified history yet
 - **Red status** — 1 verified signal of contract breach — permanent, irreversible
 
-The status badge appears in the contact section. Kelen never says "this professional is reliable" — it shows the documented evidence and lets the user conclude.
+The status badge appears on the profile. Kelen never says "this professional is reliable" — it shows documented evidence and lets the user conclude.
 
-Zero tolerance: one verified contract breach ends a professional's credibility on the platform permanently.
+Zero tolerance: one verified contract breach permanently marks a professional on the platform.
 
 ---
 
 ## Revenue Model
 
-**Phase 1 (Months 1–6):** Free for professionals. Google Ads on all pages covers partial infrastructure. Focus on SEO content accumulation.
+**Revenue:** Professional subscriptions only.
+- 3,000 XOF/month (West Africa — Wave, Orange Money, MTN Mobile Money)
+- €15/month (Europe — Stripe)
 
-**Phase 2 (Months 6–12):** Professional subscriptions activated (3,000 XOF / €15). Google Ads continues. At 50k monthly visitors, transition to direct advertising sales targeting diaspora-specific services (money transfers, banks, construction materials, airlines).
+**Not a revenue model:** Google Ads, CPM, charging clients, charging for trust.
+
+**The incentive logic:**
+- Clients are free → maximum reach, maximum credibility
+- Validation is free → cannot be gamed or purchased
+- Visibility is paid → only professionals with something to show will pay
 
 **Geographic rollout:**
 - Launch: Francophone Africa (Senegal, Côte d'Ivoire, Mali, Cameroon, Gabon, Congo)
-- Months 6–12: Francophone Europe (France, Belgium, Switzerland, Luxembourg)
+- Phase 2: Francophone Europe (France, Belgium, Switzerland, Luxembourg)
+- Long term: any market with professional-client trust problems
 
 ---
 
@@ -126,8 +140,10 @@ Zero tolerance: one verified contract breach ends a professional's credibility o
 
 Bark says "trust us, we'll match you." Kelen says "here's everything, decide yourself."
 
-Bark serves convenience — cleaning, design, low-stakes services. Kelen serves legitimate fear — construction, renovation, real estate, irreversible cross-border investments.
+Bark serves convenience — cleaning, design, low-stakes services. Kelen serves high-stakes decisions — construction, renovation, any engagement where a wrong choice is expensive and hard to reverse.
 
-The portfolio is not a supporting feature. It's the core value proposition. High-quality portfolio presentation at this level of quality doesn't exist at scale for African artisans — not on Instagram (unstructured), not on personal websites (expensive), not on directories (no galleries).
+**For the professional:** Kelen is the only place where silent work becomes visible proof. High-quality portfolio presentation at scale doesn't exist for most professionals — not on Instagram (unstructured), not on personal websites (expensive), not on directories (no verified history).
 
-Kelen equalizes that. Not by saying it — by making it visible.
+**For the client:** Kelen is the only place where past delivery is documented, verified, and permanent. Not reviews. Evidence.
+
+Kelen equalizes access to credibility. Not by claiming it — by documenting it.

@@ -1,7 +1,13 @@
-# Kelen Diaspora - Blueprint
+# Kelen - Blueprint
 
 ## Project Overview
-Kelen is a high-fidelity platform designed for the African diaspora to manage investment projects (construction, architecture, etc.) with professional oversight and "Digital Diplomat" grade transparency.
+Kelen is a professional visibility and trust platform. Clients find and compare professionals with verified track records. Professionals showcase their work and grow their client base.
+
+**Entry market:** Individuals managing construction and renovation projects between Europe and Africa — large investments, remote supervision, limited legal recourse.
+
+**Product scope:** Any professional-client relationship where the client pays for work they can't fully supervise. Any profession, any geography.
+
+The platform is built with "Digital Diplomat" grade design: editorial-quality, premium, and transparent.
 
 ## Design System: "Digital Diplomat"
 The application adheres to a premium, editorial-grade design system characterized by:

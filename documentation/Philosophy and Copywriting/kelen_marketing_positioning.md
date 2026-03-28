@@ -1,6 +1,8 @@
 # Kelen — Marketing & Positionnement
 *Résumé de conversation — Février 2026*
 
+> **Note de mise à jour (2026-03-28) :** Ce document couvre la stratégie de distribution et de contenu pour le **marché d'entrée** (Europe–Afrique, construction/rénovation). Ce marché reste la cible de lancement. Le produit lui-même est universel — voir `kelen_positioning.md` pour la distinction marché d'entrée / portée produit. Éviter "diaspora" comme identité dans les copies publiques — utiliser le langage de la situation.
+
 ---
 
 ## Stratégie de distribution

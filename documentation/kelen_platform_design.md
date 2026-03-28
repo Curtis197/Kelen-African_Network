@@ -1,13 +1,18 @@
 # Kelen - Platform Design Document
 
+> For strategic positioning, market definition, and tone principles, see `kelen_positioning.md`.
+
 ## Core Philosophy
 
 **"One mistake can end your career. Choose your clients. Keep every conversation."**
 
-This is not a review platform. This is a **professional accountability system** where:
-- Signals (contract violations) = permanent disqualification
+This is not a review platform. This is a **professional trust platform** where:
+- Signals (contract violations) = permanent accountability
 - Recommendations (proven delivery) = career asset
-- The standard is perfection, because the stakes are life savings
+- The foundation is immutable because the stakes are real
+
+**The product:** Visibility for professionals who have earned it. Tools for clients to build with confidence.
+**The foundation:** A verification system that cannot be bought, gamed, or appealed away.
 
 ---
 
@@ -53,13 +58,13 @@ This is not a review platform. This is a **professional accountability system** 
 
 ---
 
-### System 2: ADVERTISEMENT (CPM-Based Discovery)
+### System 2: VISIBILITY (Subscription-Based Discovery)
 
-**What it is:** Pay-per-visibility discovery system - completely independent of validation
+**What it is:** Monthly subscription for professional profile discovery — completely independent of validation
 
 **Critical Distinction:**
-- **Validation = Lookup only** (search by exact name to check - FREE forever)
-- **Advertisement = Discovery** (browse, find, be recommended - PAY per view)
+- **Validation = Lookup only** (search by exact name to check — FREE forever)
+- **Visibility = Discovery** (browse, find, be contacted — 3,000 XOF / €15 per month)
 
 ---
 
@@ -332,32 +337,31 @@ Subscription: 15€/month
 
 ---
 
-### Journey 2: DISCOVERING (CPM-Based Visibility)
+### Journey 2: DISCOVERING (Subscription Visibility)
 
 **User story:**
-"I need a construction contractor in Abidjan. I don't know anyone. I want to find Gold-status professionals."
+"I need a construction contractor in Abidjan. I don't know anyone. I want to find reliable professionals."
 
 **Flow:**
 1. Go to Kelen.com
 2. Browse: "Construction contractors in Abidjan"
-3. See list of professionals who have ACTIVE CREDIT (paying €5 per 1000 views)
+3. See professionals with an active subscription
 4. Filter by:
    - Gold status only (0 signals)
-   - Number of recommendations
+   - Number of verified recommendations
    - Location
    - Specialty
 5. View portfolios, contact info
 6. Choose one
-7. **(Behind the scenes: Pro gets charged €0.005 for this profile view)**
 
-**Cost for USER:** FREE (browsing)
-**Cost for PRO:** €5 per 1000 profile views (only when visible)
+**Cost for USER:** FREE (browsing, always)
+**Cost for PRO:** 3,000 XOF / €15 per month flat subscription
 
 **What you get:**
 - Vetted list of professionals
-- All have validation history (Gold/Red/Grey)
-- Contact info, portfolios, analytics
-- Can compare multiple pros
+- All have validation history (Gold/Grey/Red)
+- Contact info, portfolios, verified project history
+- Can compare multiple professionals
 
 ---
 
@@ -441,18 +445,20 @@ You're absolutely right: **This platform doesn't exist even in Western countries
 - Can't dilute with fake reviews (evidence required)
 - Can't pay to remove (validation is free/permanent)
 
-### Why It Works for client First
+### Why the Entry Market Works First
+
+**Entry market:** Individuals managing construction and renovation projects between Europe and Africa. Not a cultural identity — a concrete situation: large sums, remote supervision, limited legal recourse.
 
 **Lower barriers to launch:**
-- client already desperate for solution (€50k at stake)
+- Pain is acute (€50k at stake, no legal recourse)
 - Scam rate higher (enforcement weaker)
 - Social proof spreads faster (tight communities)
 - Fewer legal complexities (operating in African jurisdiction initially)
 
 **But the model is universal:**
 - Any market where contract breaches are common
-- Any market where one-time clients can't verify reputation
-- Any market where stakes are high (renovations, construction, eldercare)
+- Any professional-client relationship where the client pays for work they can't fully supervise
+- Any market where stakes are high (construction, renovation, eldercare, legal services)
 
 ### The Philosophical Core
 
@@ -551,20 +557,20 @@ Not "requires explanation."
 
 Why this standard?
 
-Because you're asking for access to client life savings.
-Money earned through years of sacrifice in foreign countries.
+Because you're asking for access to someone's life savings.
+Money earned through years of work.
 Money that cannot be recovered if you fail.
 
 **The choice is yours:**
 
-✓ Don't work with client clients
+✓ Don't work with distant clients managing large investments
   → Don't join Kelen
   → Continue working locally
   → No risk to you
 
-✓ Work with client clients
+✓ Work with clients who need to trust you from a distance
   → Join Kelen
-  → Accept perfection as the standard
+  → Accept the standard
   → Build a Gold record that becomes your most valuable asset
 
 **If you choose to join:**
@@ -662,22 +668,22 @@ Just prove validation works.
 
 ## Why This Will Work (And Spread)
 
-### In Africa/client First:
-- Desperate need (€50k losses common)
-- Weak legal recourse
+### In the Entry Market First:
+- Desperate need (€50k losses common, remote supervision impossible)
+- Weak legal recourse (cross-border enforcement near zero)
 - Tight communities (word spreads fast)
 - High trust premium (Gold status worth a lot)
 
-### Then Western Countries:
-- Same problems exist (contractor scams)
-- Higher legal standards (easier to operate)
-- Wealthier clients (willing to pay for verification)
-- Bigger market (millions of home renovations/year)
+### Then Any Market:
+- Same problems exist everywhere (contractor scams, blue-collar fraud)
+- A French, English, or American client has the same problem when hiring a professional for work they can't control themselves
+- Bigger markets, higher legal standards, wealthier clients
+- Kelen works for any profession: construction, legal, coaching, catering, design, mechanics
 
 **Kelen becomes:**
-- The global standard for high-stakes contract work
-- A career-defining certification (Gold status)
-- A permanent accountability system
+- The standard for professional trust in any high-stakes engagement
+- A career-defining credential (Gold status)
+- A permanent accountability layer that self-selects for quality
 
 ---
 
@@ -696,15 +702,10 @@ professionals (
   status, -- computed: gold/red/grey
   recommendation_count, signal_count,
   
-  -- CPM Advertisement
-  credit_balance, -- in euros (e.g., 47.50)
-  total_views, -- lifetime profile views
-  monthly_view_cap, -- null = uncapped, number = capped
-  current_month_views, -- resets monthly if capped
-  last_view_reset, -- timestamp of last monthly reset
-  auto_reload_enabled, -- boolean
-  auto_reload_amount, -- euros to reload when depleted
-  auto_reload_threshold, -- reload when balance drops below this
+  -- Subscription / Visibility
+  subscription_active, -- boolean: is monthly subscription active?
+  subscription_expires_at, -- timestamp of next renewal
+  subscription_tier, -- 'free' | 'premium'
   
   created_at, updated_at
 )
@@ -730,32 +731,24 @@ signals (
   created_at
 )
 
--- ADVERTISEMENT SYSTEM (CPM-based)
+-- VISIBILITY SYSTEM (subscription-based)
 
-credit_transactions (
+subscriptions (
   id, professional_id,
-  type, -- purchase/deduction/refund
-  amount, -- euros (e.g., 50.00 purchase, -0.005 deduction)
-  balance_after, -- running balance
-  description, -- "Purchased 10,000 views" or "Profile view deduction"
-  stripe_payment_id, -- if purchase
+  status, -- 'active' | 'expired' | 'cancelled'
+  started_at, expires_at,
+  price_xof, price_eur,
+  payment_provider, -- 'stripe' | 'wave' | 'orange_money' | 'mtn'
+  stripe_subscription_id,
   created_at
 )
 
+-- Track profile views for analytics (no billing per view)
 profile_views (
   id, professional_id,
   viewer_ip, viewer_country,
-  source, -- search/browse/category/recommendation
-  search_query, -- what they searched for
-  cost_deducted, -- €0.005
-  created_at
-)
-
--- Track clicks/conversions (optional, for analytics)
-profile_interactions (
-  id, professional_id,
-  interaction_type, -- contact_click/phone_click/whatsapp_click
-  viewer_ip, viewer_country,
+  source, -- search/browse/category/direct
+  search_query,
   created_at
 )
 ```

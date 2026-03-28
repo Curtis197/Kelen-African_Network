@@ -85,7 +85,6 @@ export function FilterPanel() {
           >
             <option value="">Tous statuts</option>
             <option value="gold">Liste Or uniquement</option>
-            <option value="gold,silver">Or et Argent</option>
           </select>
         </>
       )}

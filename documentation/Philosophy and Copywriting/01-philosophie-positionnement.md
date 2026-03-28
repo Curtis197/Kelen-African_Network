@@ -1,6 +1,10 @@
 # Kelen — Philosophie & Positionnement
 *Document de référence — Version 1.0*
 
+> **Note de mise à jour (2026-03-28) :** Le document de positionnement maître est désormais `kelen_positioning.md` à la racine du projet. Ce document reste valide pour le fond philosophique. Pour le marché cible, le ton, et les règles de copywriting à jour, consulter `kelen_positioning.md`.
+>
+> Points clés de l'évolution : (1) "client africaine" ou "diaspora" comme identité = remplacé par langage situationnel ("vous gérez un projet à distance", "vous investissez depuis l'Europe"). (2) 5 statuts conservés : Or / Argent / Non classé / Rouge / Noir. (3) Le modèle CPM est abandonné — abonnement mensuel uniquement.
+
 ---
 
 ## La phrase fondatrice

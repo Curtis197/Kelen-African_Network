@@ -6,97 +6,103 @@ export default function AboutPage() {
     <>
       {/* ===== HERO ===== */}
       <section className="relative overflow-hidden bg-white">
-        {/* Subtle decorative accent */}
         <div className="absolute right-0 top-0 -z-10 h-96 w-96 rounded-full bg-kelen-green-50 opacity-60 blur-3xl" />
         <div className="absolute bottom-0 left-0 -z-10 h-64 w-64 rounded-full bg-kelen-yellow-50 opacity-60 blur-3xl" />
 
         <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
           <div className="max-w-3xl">
             <h1 className="text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-              Vous menez des projets à distance.{" "}
+              Un annuaire de professionnels{" "}
               <span className="text-kelen-green-500">
-                Vérifiez les professionnels avant de payer.
+                que vous pouvez consulter en confiance.
               </span>
             </h1>
             <p className="mt-6 text-lg leading-relaxed text-muted-foreground sm:text-xl">
-              Kelen documente l&apos;historique des professionnels. Contrats, résultats,
-              délais —{" "}
+              Kelen documente ce que les professionnels ont réellement livré.
+              Trouvez le bon professionnel pour votre projet.{" "}
               <span className="font-medium text-kelen-yellow-700">
-                chaque service laisse une trace permanente et vérifiée.
-              </span>{" "}
-              Cherchez un nom. Consultez l&apos;historique. Décidez.
+                Comparez leur travail. Décidez sur des faits.
+              </span>
             </p>
 
-            {/* Two equal CTAs */}
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
               <Link
                 href="/recherche"
                 className="inline-flex items-center justify-center rounded-lg bg-kelen-green-500 px-8 py-4 text-base font-semibold text-white shadow-sm transition-colors hover:bg-kelen-green-600"
               >
-                Vérifier un professionnel
+                Trouver un professionnel
               </Link>
               <Link
-                href="/recherche?mode=browse"
+                href="/comment-ca-marche"
                 className="inline-flex items-center justify-center rounded-lg border-2 border-kelen-green-500 px-8 py-4 text-base font-semibold text-kelen-green-500 transition-colors hover:bg-kelen-green-50"
               >
-                Trouver un professionnel
+                Comment ça marche
               </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ===== HOW IT WORKS ===== */}
+      {/* ===== WHAT THE PLATFORM ENABLES ===== */}
       <section className="bg-muted py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-center text-3xl font-bold text-foreground sm:text-4xl">
-            Comment ça marche
+            Ce que Kelen vous permet de faire
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-center text-muted-foreground">
-            Un système simple. Des faits vérifiés.{" "}
-            <span className="font-medium text-kelen-yellow-700">Une confiance documentée.</span>
+            Que votre projet soit à côté ou à l&apos;autre bout du monde.
           </p>
 
-          <div className="mt-12 grid gap-8 sm:grid-cols-3">
-            {/* Step 1 */}
+          <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             <div className="rounded-xl bg-white p-8 shadow-sm">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-kelen-green-50 text-xl font-bold text-kelen-green-500">
                 1
               </div>
               <h3 className="mt-5 text-lg font-semibold text-foreground">
-                Un client soumet un dossier
+                Trouver le bon professionnel
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                Contrat signé, photos du projet, dates respectées ou non.
-                Chaque dossier est accompagné de preuves.
+                Parcourez notre annuaire par spécialité et localisation. Chaque
+                profil affiche ce qui a été réellement livré.
               </p>
             </div>
 
-            {/* Step 2 */}
             <div className="rounded-xl bg-white p-8 shadow-sm">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-kelen-yellow-50 text-xl font-bold text-kelen-yellow-700">
                 2
               </div>
               <h3 className="mt-5 text-lg font-semibold text-foreground">
-                Kelen vérifie les preuves
+                Comparer sur des critères objectifs
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                Notre équipe examine contrats, photos et chronologie.{" "}
-                <span className="font-medium text-kelen-yellow-700">Rien n&apos;est publié sans vérification.</span>
+                Qualité du travail, respect des délais, budget tenu — comparez
+                plusieurs professionnels avant de décider.
               </p>
             </div>
 
-            {/* Step 3 */}
             <div className="rounded-xl bg-white p-8 shadow-sm">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-kelen-green-50 text-xl font-bold text-kelen-green-500">
                 3
               </div>
               <h3 className="mt-5 text-lg font-semibold text-foreground">
-                Vous consultez l&apos;historique documenté
+                Impliquer votre entourage
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                Cherchez n&apos;importe quel professionnel par nom. Son
-                historique vérifié apparaît. Vous décidez.
+                Partagez les profils, discutez les choix, construisez votre
+                projet avec les personnes de confiance autour de vous.
+              </p>
+            </div>
+
+            <div className="rounded-xl bg-white p-8 shadow-sm">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-kelen-yellow-50 text-xl font-bold text-kelen-yellow-700">
+                4
+              </div>
+              <h3 className="mt-5 text-lg font-semibold text-foreground">
+                Construire sans mauvaise surprise
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                Avec un professionnel dont le passé est documenté, vous savez
+                à qui vous faites confiance avant de payer.
               </p>
             </div>
           </div>
@@ -111,7 +117,9 @@ export default function AboutPage() {
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-center text-muted-foreground">
             Le statut d&apos;un professionnel reflète son historique documenté.{" "}
-            <span className="font-medium text-kelen-red-600">Il ne peut être ni acheté, ni modifié.</span>
+            <span className="font-medium text-kelen-red-600">
+              Il ne peut être ni acheté, ni modifié.
+            </span>
           </p>
 
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -124,23 +132,22 @@ export default function AboutPage() {
                 size="md"
               />
               <p className="mt-4 text-sm leading-relaxed text-foreground/70">
-                Plusieurs projets vérifiés, aucun signal, satisfaction
-                exemplaire. L&apos;identité professionnelle la plus documentée
-                sur Kelen. Référence pour tout client exigeant.
+                3 projets vérifiés ou plus, aucun signal. L&apos;historique le
+                plus solide sur Kelen.
               </p>
             </div>
 
             {/* Silver */}
-            <div className="rounded-xl border border-stone-200 bg-stone-50/50 p-6">
+            <div className="rounded-xl border border-stone-300 bg-stone-50/50 p-6">
               <StatusBadge
                 status="silver"
-                recommendationCount={3}
+                recommendationCount={2}
                 avgRating={4.2}
                 size="md"
               />
               <p className="mt-4 text-sm leading-relaxed text-foreground/70">
-                Premiers projets vérifiés, historique en construction.
-                Professionnel sérieux, pas encore au niveau Or.
+                1 à 2 projets vérifiés, aucun signal. Historique en
+                construction. Professionnel sérieux.
               </p>
             </div>
 
@@ -148,33 +155,41 @@ export default function AboutPage() {
             <div className="rounded-xl border border-stone-200 bg-stone-50/30 p-6">
               <StatusBadge status="white" size="md" />
               <p className="mt-4 text-sm leading-relaxed text-foreground/70">
-                Aucun historique sur Kelen. Ni recommandation, ni signal.
-                Procédez avec les précautions habituelles.
+                Aucun historique vérifié sur Kelen. Ni recommandation, ni
+                signal. Procédez avec les précautions habituelles.
               </p>
             </div>
 
             {/* Red */}
             <div className="rounded-xl border border-kelen-red-500/30 bg-kelen-red-50/50 p-6">
-              <StatusBadge
-                status="red"
-                signalCount={1}
-                size="md"
-              />
+              <StatusBadge status="red" signalCount={1} size="md" />
               <p className="mt-4 text-sm leading-relaxed text-foreground/70">
                 Un manquement contractuel vérifié et documenté avec preuves.{" "}
-                <span className="font-medium text-kelen-red-600">Ce signal ne peut être ni retiré, ni effacé.</span>
+                <span className="font-medium text-kelen-red-600">
+                  Permanent. Ne peut être ni retiré, ni effacé.
+                </span>
               </p>
             </div>
           </div>
+
+          <p className="mt-8 text-center text-sm text-muted-foreground">
+            Pour comprendre les critères exacts de chaque statut,{" "}
+            <Link href="/comment-ca-marche" className="font-medium text-kelen-green-600 hover:underline">
+              consultez comment fonctionne la vérification →
+            </Link>
+          </p>
         </div>
       </section>
 
-      {/* ===== TWO SYSTEMS ===== */}
+      {/* ===== TWO LAYERS ===== */}
       <section className="bg-muted py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-center text-3xl font-bold text-foreground sm:text-4xl">
-            Deux systèmes indépendants
+            Gratuit pour les clients. Toujours.
           </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-center text-muted-foreground">
+            La confiance ne se vend pas. Elle se documente.
+          </p>
 
           <div className="mt-12 grid gap-8 lg:grid-cols-2">
             {/* Validation */}
@@ -183,19 +198,19 @@ export default function AboutPage() {
                 Gratuit
               </div>
               <h3 className="mt-4 text-2xl font-bold text-foreground">
-                Validation
+                Vérification
               </h3>
               <p className="mt-2 text-muted-foreground">
-                Recherchez n&apos;importe quel professionnel par nom exact.
-                Voyez son historique vérifié, ses recommandations, ses signaux.
+                Cherchez n&apos;importe quel professionnel par nom. Son historique
+                vérifié est accessible à tous, pour toujours.
               </p>
               <ul className="mt-6 space-y-3">
                 {[
                   "Recherche par nom — toujours gratuite",
                   "Recommandations vérifiées avec preuves",
                   "Signaux documentés et permanents",
-                  "Ne peut être payé pour retirer un signal",
-                  "Historique permanent — aucune donnée ne peut être supprimée à la demande",
+                  "Aucun signal ne peut être retiré contre paiement",
+                  "Historique permanent — aucune donnée supprimée à la demande",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-2 text-sm">
                     <span className="mt-0.5 text-kelen-green-500">✓</span>
@@ -205,10 +220,10 @@ export default function AboutPage() {
               </ul>
             </div>
 
-            {/* Advertisement */}
+            {/* Visibility */}
             <div className="rounded-xl bg-white p-8 shadow-sm">
               <div className="inline-flex items-center gap-2 rounded-full bg-kelen-yellow-50 px-4 py-1.5 text-sm font-semibold text-kelen-yellow-700">
-                Premium
+                Pour les professionnels
               </div>
               <h3 className="mt-4 text-2xl font-bold text-foreground">
                 Visibilité
@@ -216,7 +231,9 @@ export default function AboutPage() {
               <p className="mt-2 text-muted-foreground">
                 Les professionnels s&apos;abonnent pour être découverts dans les
                 recherches par catégorie.{" "}
-                <span className="font-semibold text-kelen-yellow-700">3 000 FCFA / 15 € par mois.</span>
+                <span className="font-semibold text-kelen-yellow-700">
+                  3 000 FCFA / 15 € par mois.
+                </span>
               </p>
               <ul className="mt-6 space-y-3">
                 {[
@@ -243,11 +260,8 @@ export default function AboutPage() {
             Vous êtes un professionnel ?
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-white/80">
-            Accédez à une clientèle internationale. Prouvez que vous le méritez.
-            La visibilité se mérite. La réputation se construit.
-          </p>
-          <p className="mx-auto mt-2 max-w-xl text-base text-white/60">
-            Inscription gratuite pendant la phase de lancement.
+            Votre travail parle pour vous — encore faut-il qu&apos;on puisse le voir.
+            Kelen vous donne la visibilité que votre travail mérite.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
@@ -266,7 +280,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ===== FOUNDING PHRASE ===== */}
+      {/* ===== ORIGIN + FOUNDING PHRASE ===== */}
       <section className="bg-white py-16 sm:py-20">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
           <p className="text-2xl font-semibold leading-relaxed text-foreground sm:text-3xl">
@@ -275,9 +289,19 @@ export default function AboutPage() {
             <span className="text-kelen-green-500">Elle se documente.</span> »
           </p>
           <p className="mt-6 text-sm text-muted-foreground">
+            Kelen est né d&apos;un constat simple : des personnes investissent des
+            sommes importantes dans des projets qu&apos;elles ne peuvent pas
+            superviser directement, sans aucun moyen fiable d&apos;évaluer les
+            professionnels à qui elles font confiance.
+          </p>
+          <p className="mt-4 text-sm text-muted-foreground">
+            Ce problème n&apos;est pas propre à une géographie ou à une identité.
+            Il touche quiconque doit payer pour un travail qu&apos;il ne peut pas
+            contrôler lui-même. Kelen y répond — pour tout le monde.
+          </p>
+          <p className="mt-6 text-xs text-muted-foreground/60">
             Kelen signifie « un » en bambara et dioula.
-            <br />
-            Un contrat. Une parole.{" "}
+            Un contrat.{" "}
             <span className="font-medium text-kelen-red-600">Un manquement suffit.</span>
           </p>
         </div>

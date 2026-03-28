@@ -67,11 +67,12 @@ export function ProfessionalDirectory({ initialPros, totalCount }: ProfessionalD
       <div className="mb-14 flex flex-col md:flex-row md:items-end justify-between gap-8">
         <div className="max-w-3xl">
           <h1 className="text-4xl font-extrabold tracking-tight text-on-surface sm:text-5xl lg:text-6xl font-display">
-            Trouvez votre professionnel de confiance
+            Trouvez le bon professionnel.
+            <br />Construisez en confiance.
           </h1>
           <p className="mt-4 text-xl text-muted-foreground leading-relaxed">
-            Parcourez notre réseau de professionnels qualifiés pour accompagner vos projets au pays. 
-            Vérifiés, transparents, et engagés.
+            Des professionnels avec un historique vérifié. Comparez leur travail,
+            consultez leurs références, décidez sur des faits.
           </p>
         </div>
         <div className="flex items-center gap-3 rounded-full bg-surface-container-low px-5 py-2.5 text-sm font-bold text-kelen-green-700">
@@ -124,7 +125,7 @@ export function ProfessionalDirectory({ initialPros, totalCount }: ProfessionalD
               Niveau d&apos;excellence
             </label>
             <div className="flex gap-1 p-1 bg-surface-container-lowest rounded-2xl shadow-sm">
-              {[ "Argent", "Or", "Tous"].map((t) => (
+              {["Tous", "Or"].map((t) => (
                 <button
                   key={t}
                   onClick={() => setTier(t)}

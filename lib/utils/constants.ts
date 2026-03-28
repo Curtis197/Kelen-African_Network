@@ -93,7 +93,7 @@ export const STATUS_CONFIG = {
     textClass: "text-stone-700",
   },
   white: {
-    label: "Liste Blanche",
+    label: "Non classé",
     emoji: "🤍",
     bgClass: "bg-stone-50",
     borderClass: "border-stone-200",

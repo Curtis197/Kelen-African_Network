@@ -8,7 +8,7 @@ This document outlines the necessary backend architecture and tasks required to 
 *   **Database:** Supabase (PostgreSQL)
 *   **Authentication:** Supabase Auth
 *   **File Storage:** Supabase Storage
-*   **Payments:** Stripe (for CPM credits)
+*   **Payments:** Stripe (for monthly subscriptions — EUR) + Wave/Orange Money (XOF)
 
 ---
 

@@ -37,6 +37,7 @@ export default function ProjectWizard({ initialId }: { initialId?: string }) {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
   const [isSaving, setIsSaving] = useState(false);
+  const [isLoadingData, setIsLoadingData] = useState(!!initialId);
   const [formData, setFormData] = useState<ProjectData>({
     title: "",
     category: "construction",
@@ -50,20 +51,27 @@ export default function ProjectWizard({ initialId }: { initialId?: string }) {
   useEffect(() => {
     if (initialId) {
       const fetchProject = async () => {
-        const project = await getProject(initialId);
-        if (project) {
-          setFormData({
-            id: project.id,
-            title: project.title,
-            category: project.category,
-            location: project.location,
-            budget_total: project.budget_total || 0,
-            budget_currency: project.budget_currency || "XOF",
-            start_date: project.start_date,
-            end_date: project.end_date,
-            description: project.description || "",
-            objectives: project.objectives || [],
-          });
+        setIsLoadingData(true);
+        try {
+          const project = await getProject(initialId);
+          if (project) {
+            setFormData({
+              id: project.id,
+              title: project.title,
+              category: project.category,
+              location: project.location,
+              budget_total: project.budget_total || 0,
+              budget_currency: project.budget_currency || "XOF",
+              start_date: project.start_date,
+              end_date: project.end_date,
+              description: project.description || "",
+              objectives: project.objectives || [],
+            });
+          }
+        } catch (err) {
+          toast.error("Erreur lors du chargement du projet");
+        } finally {
+          setIsLoadingData(false);
         }
       };
       fetchProject();
@@ -125,7 +133,7 @@ export default function ProjectWizard({ initialId }: { initialId?: string }) {
                 className={cn(
                   "flex items-center gap-3 px-4 py-3 transition-all rounded-xl cursor-default",
                   isActive 
-                    ? "bg-surface-container-lowest text-primary shadow-sm rounded-l-xl" 
+                    ? "bg-surface-container-lowest text-primary shadow-sm" 
                     : "text-on-surface opacity-60 hover:bg-surface-container"
                 )}
               >
@@ -146,34 +154,41 @@ export default function ProjectWizard({ initialId }: { initialId?: string }) {
 
       {/* Main Content */}
       <main className="lg:pl-64 pt-24 pb-32 min-h-screen w-full">
-        <div className="max-w-5xl mx-auto px-8 lg:px-12 py-12">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentStep}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            >
-              {currentStep === 1 && (
-                <Step1Identity formData={formData} onChange={updateFormData} />
-              )}
-              {currentStep === 2 && (
-                <Step2Financial formData={formData} onChange={updateFormData} />
-              )}
-              {currentStep === 3 && (
-                <Step3Timeline formData={formData} onChange={updateFormData} />
-              )}
-              {currentStep === 4 && (
-                <Step4Objectives formData={formData} onChange={updateFormData} />
-              )}
-              {currentStep === 5 && (
-                <Step5Review formData={formData} />
-              )}
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      </main>
+          {isLoadingData ? (
+            <div className="flex flex-col items-center justify-center py-32 space-y-6">
+              <div className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
+              <p className="text-on-surface-variant font-headline font-bold uppercase tracking-widest text-xs">Chargement du projet...</p>
+            </div>
+          ) : (
+            <div className="max-w-5xl mx-auto px-8 lg:px-12 py-12">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentStep}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  {currentStep === 1 && (
+                    <Step1Identity formData={formData} onChange={updateFormData} />
+                  )}
+                  {currentStep === 2 && (
+                    <Step2Financial formData={formData} onChange={updateFormData} />
+                  )}
+                  {currentStep === 3 && (
+                    <Step3Timeline formData={formData} onChange={updateFormData} />
+                  )}
+                  {currentStep === 4 && (
+                    <Step4Objectives formData={formData} onChange={updateFormData} />
+                  )}
+                  {currentStep === 5 && (
+                    <Step5Review formData={formData} />
+                  )}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          )}
+        </main>
 
       {/* Footer Navigation */}
       <footer className="fixed bottom-0 w-full z-50 h-24 bg-surface/80 backdrop-blur-xl shadow-[0_-4px_24px_rgba(0,0,0,0.04)]">
