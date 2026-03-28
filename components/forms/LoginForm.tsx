@@ -38,29 +38,16 @@ export function LoginForm({ defaultRole }: LoginFormProps) {
       if (authError) throw authError;
 
       if (authData.user) {
-        // Fetch user role from public.users table
-        const { data: profile, error: profileError } = await supabase
-          .from("users")
-          .select("role")
-          .eq("id", authData.user.id)
-          .single();
+        const role = authData.user.user_metadata?.role as string | undefined;
 
-        if (profileError) {
-          console.error("Profile fetch error:", profileError);
-          router.push("/dashboard");
+        if (role?.startsWith("pro_")) {
+          router.push("/pro/dashboard");
+        } else if (role === "admin") {
+          router.push("/admin/dashboard");
         } else {
-          // Redirect based on role
-          const isPro = profile.role.startsWith("pro_");
-          
-          if (isPro) {
-            router.push("/pro/dashboard");
-          } else if (profile.role === "admin") {
-            router.push("/admin/dashboard");
-          } else {
-            router.push("/dashboard");
-          }
+          router.push("/dashboard");
         }
-        
+
         router.refresh();
       }
     } catch (err: any) {

@@ -11,32 +11,22 @@ export async function GET(request: Request) {
     const { error, data } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error && data.session) {
-      // If we have a specific 'next' destination (like password reset), follow it
       if (next.includes("/mot-de-passe/reset")) {
         return NextResponse.redirect(`${origin}${next}`);
       }
 
-      // Otherwise, query user role for dashboard redirection
-      const { data: userRecord } = await supabase
-        .from("users")
-        .select("role")
-        .eq("id", data.session.user.id)
-        .single();
+      const role = data.session.user.user_metadata?.role as string | undefined;
 
-      if (userRecord) {
-        if (userRecord.role.startsWith("pro_")) {
-          return NextResponse.redirect(`${origin}/pro/dashboard`);
-        } else if (userRecord.role === "admin") {
-          return NextResponse.redirect(`${origin}/admin`);
-        } else {
-          return NextResponse.redirect(`${origin}/dashboard`);
-        }
+      if (role?.startsWith("pro_")) {
+        return NextResponse.redirect(`${origin}/pro/dashboard`);
+      } else if (role === "admin") {
+        return NextResponse.redirect(`${origin}/admin`);
+      } else {
+        return NextResponse.redirect(`${origin}/dashboard`);
       }
-      return NextResponse.redirect(`${origin}${next}`);
     }
   }
 
-  // Return the user to an error page with instructions
   return NextResponse.redirect(
     `${origin}/connexion?error=Impossible_de_verifier_votre_email`
   );
