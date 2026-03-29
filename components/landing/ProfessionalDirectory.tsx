@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { MapPin, ChevronDown, Inbox, LayoutDashboard } from "lucide-react";
 import { Professional } from "@/lib/supabase/types";
 import { ProfessionalCard } from "@/components/shared/ProfessionalCard";
@@ -13,6 +13,7 @@ interface ProfessionalDirectoryProps {
 
 export function ProfessionalDirectory({ initialPros, totalCount }: ProfessionalDirectoryProps) {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const projectId = searchParams.get("projectId");
   const areaName = searchParams.get("areaName");
 
@@ -52,11 +53,11 @@ export function ProfessionalDirectory({ initialPros, totalCount }: ProfessionalD
               <p className="text-white/80 font-medium">Ajout direct au domaine <span className="text-white font-bold underline underline-offset-4">{areaName}</span></p>
             </div>
           </div>
-          <button 
-            onClick={() => window.history.replaceState({}, '', '/recherche')}
+          <button
+            onClick={() => router.push(`/projets/${projectId}`)}
             className="px-6 py-2 rounded-full bg-white/10 hover:bg-white/20 text-xs font-black uppercase tracking-widest transition-all"
           >
-            Annuler la sélection
+            ← Retour au projet
           </button>
         </div>
       )}
