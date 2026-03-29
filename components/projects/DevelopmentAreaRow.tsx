@@ -23,6 +23,7 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
   const [showAddExternal, setShowAddExternal] = useState(false);
   const [isEditingName, setIsEditingName] = useState(false);
   const [editedName, setEditedName] = useState(areaName);
+  const [editingMember, setEditingMember] = useState<{ id: string; data: { name: string; phone: string; category: string; location: string; note: string } } | null>(null);
 
   const handleRankUpdate = async (linkId: string, currentRank: number, direction: 'up' | 'down') => {
     setIsUpdating(true);
@@ -232,7 +233,7 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
 
                 <div className="mt-6 pt-6 border-t border-outline-variant/20 flex items-center gap-3">
                   <div className="flex-1 flex gap-2">
-                    <button 
+                    <button
                       onClick={() => handleStatusUpdate(member.id, 'shortlisted')}
                       className={`flex-1 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
                         member.selection_status === 'shortlisted' ? 'bg-secondary-container text-on-secondary-container shadow-md' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
@@ -240,7 +241,7 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
                     >
                       Shortlist
                     </button>
-                    <button 
+                    <button
                       onClick={() => handleStatusUpdate(member.id, 'finalist')}
                       className={`flex-1 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
                         member.selection_status === 'finalist' ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-primary/10 text-primary hover:bg-primary/20'
@@ -249,22 +250,43 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
                       Finaliser
                     </button>
                   </div>
-                  <button 
-                    onClick={() => handleRemove(member)}
-                    className="p-2.5 text-on-surface-variant/40 hover:text-kelen-red-500 transition-colors"
-                  >
-                    <span className="material-symbols-outlined text-xl">delete</span>
-                  </button>
+                  <div className="flex items-center gap-1">
+                    {member.is_external ? (
+                      <button
+                        onClick={() => setEditingMember({
+                          id: member.id,
+                          data: {
+                            name: member.external_name || "",
+                            phone: (member as any).external_phone || "",
+                            category: member.external_category || areaName,
+                            location: (member as any).external_location || "",
+                            note: member.private_note || "",
+                          }
+                        })}
+                        className="p-2.5 text-on-surface-variant/40 hover:text-primary transition-colors"
+                        title="Modifier ce contact"
+                      >
+                        <span className="material-symbols-outlined text-xl">edit</span>
+                      </button>
+                    ) : (
+                      member.professionals?.slug && (
+                        <Link
+                          href={`/professionnels/${member.professionals.slug}`}
+                          className="p-2.5 text-on-surface-variant/40 hover:text-primary transition-colors"
+                          title="Voir le profil"
+                        >
+                          <span className="material-symbols-outlined text-xl">open_in_new</span>
+                        </Link>
+                      )
+                    )}
+                    <button
+                      onClick={() => handleRemove(member)}
+                      className="p-2.5 text-on-surface-variant/40 hover:text-kelen-red-500 transition-colors"
+                    >
+                      <span className="material-symbols-outlined text-xl">delete</span>
+                    </button>
+                  </div>
                 </div>
-
-                {!member.is_external && member.professionals?.slug && (
-                  <Link 
-                    href={`/professionnels/${member.professionals.slug}`}
-                    className="absolute bottom-6 right-6 p-2 rounded-full bg-surface-container opacity-0 group-hover:opacity-100 transition-all hover:bg-primary hover:text-white"
-                  >
-                    <span className="material-symbols-outlined text-sm">open_in_new</span>
-                  </Link>
-                )}
               </div>
             </motion.div>
           ))
@@ -282,12 +304,22 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
         )}
       </div>
       
-      <AddExternalProModal 
+      <AddExternalProModal
         isOpen={showAddExternal}
         onClose={() => setShowAddExternal(false)}
         projectId={projectId}
         areaName={areaName}
         onSuccess={onRefresh}
+      />
+
+      <AddExternalProModal
+        isOpen={!!editingMember}
+        onClose={() => setEditingMember(null)}
+        projectId={projectId}
+        areaName={areaName}
+        onSuccess={() => { setEditingMember(null); onRefresh(); }}
+        editLinkId={editingMember?.id}
+        initialData={editingMember?.data}
       />
     </div>
   );

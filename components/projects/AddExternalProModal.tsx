@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { manageProjectProfessional } from "@/lib/actions/projects";
+import { manageProjectProfessional, updateExternalProfessional } from "@/lib/actions/projects";
 import { toast } from "sonner";
 
 interface AddExternalProModalProps {
@@ -11,17 +11,26 @@ interface AddExternalProModalProps {
   projectId: string;
   areaName: string;
   onSuccess: () => void;
+  editLinkId?: string;
+  initialData?: { name: string; phone: string; category: string; location: string; note: string };
 }
 
-export function AddExternalProModal({ isOpen, onClose, projectId, areaName, onSuccess }: AddExternalProModalProps) {
+export function AddExternalProModal({ isOpen, onClose, projectId, areaName, onSuccess, editLinkId, initialData }: AddExternalProModalProps) {
+  const isEditMode = !!editLinkId;
   const [isSaving, setIsSaving] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState(initialData || {
     name: "",
     phone: "",
     category: areaName,
     location: "",
     note: ""
   });
+
+  useEffect(() => {
+    if (isOpen) {
+      setFormData(initialData || { name: "", phone: "", category: areaName, location: "", note: "" });
+    }
+  }, [isOpen, editLinkId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,34 +41,38 @@ export function AddExternalProModal({ isOpen, onClose, projectId, areaName, onSu
 
     setIsSaving(true);
     try {
-      const result = await manageProjectProfessional(
-        projectId,
-        null,
-        areaName,
-        'add',
-        true,
-        {
+      let result;
+      if (isEditMode && editLinkId) {
+        result = await updateExternalProfessional(editLinkId, projectId, {
           name: formData.name,
           phone: formData.phone,
           category: formData.category,
           location: formData.location,
-          note: formData.note
-        }
-      );
+          note: formData.note,
+        });
+      } else {
+        result = await manageProjectProfessional(
+          projectId,
+          null,
+          areaName,
+          'add',
+          true,
+          {
+            name: formData.name,
+            phone: formData.phone,
+            category: formData.category,
+            location: formData.location,
+            note: formData.note
+          }
+        );
+      }
 
-      if (result.error) {
+      if (result?.error) {
         toast.error(result.error);
       } else {
-        toast.success("Professionnel externe ajouté");
+        toast.success(isEditMode ? "Professionnel externe mis à jour" : "Professionnel externe ajouté");
         onSuccess();
         onClose();
-        setFormData({
-          name: "",
-          phone: "",
-          category: areaName,
-          location: "",
-          note: ""
-        });
       }
     } catch (err) {
       toast.error("Une erreur est survenue");
@@ -93,8 +106,8 @@ export function AddExternalProModal({ isOpen, onClose, projectId, areaName, onSu
                     <span className="material-symbols-outlined text-sm">public</span>
                     Contact Externe
                   </div>
-                  <h2 className="text-3xl font-headline font-bold text-on-surface tracking-tight">Ajouter un expert</h2>
-                  <p className="text-on-surface-variant text-sm mt-1">Enregistrez un professionnel qui n'est pas encore sur la plateforme.</p>
+                  <h2 className="text-3xl font-headline font-bold text-on-surface tracking-tight">{isEditMode ? "Modifier l'expert" : "Ajouter un expert"}</h2>
+                  <p className="text-on-surface-variant text-sm mt-1">{isEditMode ? "Mettez à jour les informations de ce contact externe." : "Enregistrez un professionnel qui n'est pas encore sur la plateforme."}</p>
                 </div>
                 <button 
                   onClick={onClose}
@@ -174,7 +187,7 @@ export function AddExternalProModal({ isOpen, onClose, projectId, areaName, onSu
                     disabled={isSaving}
                     className="flex-[2] py-4 bg-primary text-white font-headline font-bold uppercase tracking-widest text-xs rounded-2xl shadow-xl shadow-primary/20 hover:scale-[0.98] transition-all disabled:opacity-50"
                   >
-                    {isSaving ? "Enregistrement..." : "Ajouter au projet"}
+                    {isSaving ? "Enregistrement..." : isEditMode ? "Enregistrer les modifications" : "Ajouter au projet"}
                   </button>
                 </div>
               </form>

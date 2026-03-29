@@ -321,6 +321,38 @@ export async function createProjectArea(projectId: string, name: string) {
   return { data };
 }
 
+export async function updateExternalProfessional(
+  linkId: string,
+  projectId: string,
+  data: { name?: string; phone?: string; category?: string; location?: string; note?: string }
+) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "Non autorisé" };
+
+  const { data: updated, error } = await supabase
+    .from("project_professionals")
+    .update({
+      external_name: data.name,
+      external_phone: data.phone,
+      external_category: data.category,
+      external_location: data.location,
+      private_note: data.note,
+    })
+    .eq("id", linkId)
+    .eq("is_external", true)
+    .select()
+    .single();
+
+  if (error) {
+    log("project.pro.external.update.error", { userId: user.id, projectId, linkId, error: error.message });
+    return { error: error.message };
+  }
+  log("project.pro.external.update.ok", { userId: user.id, projectId, linkId });
+  revalidatePath(`/projets/${projectId}`);
+  return { data: updated };
+}
+
 export async function updateProjectArea(areaId: string, projectId: string, newName: string) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
