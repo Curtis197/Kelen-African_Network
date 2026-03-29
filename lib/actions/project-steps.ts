@@ -26,15 +26,12 @@ export async function getProjectSteps(projectId: string) {
     .from("project_steps")
     .select(`
       *,
-      project_step_professionals (
-        project_professional_id,
-        project_professionals (
-          id,
-          is_external,
-          external_name,
-          professionals (
-            business_name
-          )
+      project_professionals!project_professionals_project_step_id_fkey (
+        id,
+        is_external,
+        external_name,
+        professionals (
+          business_name
         )
       )
     `)
@@ -48,8 +45,8 @@ export async function getProjectSteps(projectId: string) {
 
   return data.map(step => ({
     ...step,
-    associated_pros: step.project_step_professionals.map((psp: any) => {
-      const pro = psp.project_professionals;
+    step_pros: (step as any).project_professionals || [],
+    associated_pros: ((step as any).project_professionals || []).map((pro: any) => {
       return pro.is_external ? pro.external_name : pro.professionals?.business_name;
     }).filter(Boolean)
   }));
@@ -159,11 +156,9 @@ export async function manageStepProfessional(
 
   if (action === 'add') {
     const { error } = await supabase
-      .from("project_step_professionals")
-      .insert([{
-        step_id: stepId,
-        project_professional_id: projectProfessionalId
-      }]);
+      .from("project_professionals")
+      .update({ project_step_id: stepId })
+      .eq("id", projectProfessionalId);
 
     if (error) {
       log("step.pro.add.error", { userId: user.id, projectId, stepId, projectProfessionalId, error: error.message });
@@ -172,10 +167,10 @@ export async function manageStepProfessional(
     log("step.pro.add.ok", { userId: user.id, projectId, stepId, projectProfessionalId });
   } else {
     const { error } = await supabase
-      .from("project_step_professionals")
-      .delete()
-      .eq("step_id", stepId)
-      .eq("project_professional_id", projectProfessionalId);
+      .from("project_professionals")
+      .update({ project_step_id: null })
+      .eq("id", projectProfessionalId)
+      .eq("project_step_id", stepId);
 
     if (error) {
       log("step.pro.remove.error", { userId: user.id, projectId, stepId, projectProfessionalId, error: error.message });

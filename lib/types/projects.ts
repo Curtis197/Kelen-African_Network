@@ -26,6 +26,13 @@ export interface ProjectProfessional {
 
 export type ProjectStepStatus = 'pending' | 'in_progress' | 'completed' | 'on_hold' | 'cancelled' | 'approved' | 'rejected';
 
+export interface StepPro {
+  id: string;
+  is_external: boolean;
+  external_name: string | null;
+  professionals: { business_name: string } | null;
+}
+
 export interface ProjectStep {
   id: string;
   project_id: string;
@@ -38,9 +45,7 @@ export interface ProjectStep {
   created_at?: string;
   updated_at: string;
   associated_pros?: string[];
-  project_step_professionals?: {
-    project_professional_id: string;
-  }[];
+  step_pros?: StepPro[];
 }
 
 export interface ProjectArea {

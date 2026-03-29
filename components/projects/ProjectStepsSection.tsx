@@ -185,7 +185,7 @@ export default function ProjectStepsSection({
         onClose={() => setIsAssignOpen(false)}
         projectId={projectId}
         stepId={assigningStep?.id || ""}
-        currentProIds={assigningStep ? (assigningStep as any).project_step_professionals?.map((p: any) => p.project_professional_id) || [] : []}
+        currentProIds={assigningStep ? (assigningStep.step_pros || []).map((p) => p.id) : []}
         onSuccess={() => {
           if (onStepsChange) onStepsChange();
           else fetchSteps();
