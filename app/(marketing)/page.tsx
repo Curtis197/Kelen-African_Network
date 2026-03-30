@@ -1,8 +1,14 @@
 import { Suspense } from "react";
 import { ProfessionalDirectory } from "@/components/landing/ProfessionalDirectory";
 import { createClient } from "@/lib/supabase/server";
+import { getAreas, getAllProfessions } from "@/lib/actions/taxonomy";
 
-export default async function SearchHubPage() {
+interface SearchHubPageProps {
+  searchParams: Promise<{ areaId?: string; professionId?: string; projectId?: string; areaName?: string }>;
+}
+
+export default async function SearchHubPage({ searchParams }: SearchHubPageProps) {
+  const params = await searchParams;
   const supabase = await createClient();
   
   // Fetch only non-blacklisted professionals for the initial grid
@@ -35,11 +41,18 @@ export default async function SearchHubPage() {
     .select("*", { count: "exact", head: true })
     .neq("status", "black");
 
+  const [areas, allProfessions] = await Promise.all([getAreas(), getAllProfessions()]);
+
   return (
     <main className="min-h-screen bg-surface">
-      <ProfessionalDirectory 
-        initialPros={professionals || []} 
+      <ProfessionalDirectory
+        initialPros={professionals || []}
         totalCount={count || 0}
+        areas={areas}
+        allProfessions={allProfessions}
+        initialAreaId={params.areaId}
+        initialProfessionId={params.professionId}
+        initialProjectId={params.projectId}
       />
     </main>
   );

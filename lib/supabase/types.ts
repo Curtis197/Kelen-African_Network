@@ -38,8 +38,10 @@ export interface Professional {
   business_name: string;
   owner_name: string;
   slug: string;
-  category: string;
+  category: string; // legacy — kept for backward compat
   subcategories: string[] | null;
+  area_id: string | null;
+  profession_id: string | null;
   country: string;
   city: string;
   address: string | null;

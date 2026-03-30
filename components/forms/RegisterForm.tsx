@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { UserRole } from "@/lib/supabase/types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,7 +13,9 @@ import {
   type RegisterUserFormData,
   type RegisterProfessionalFormData,
 } from "@/lib/utils/validators";
-import { SUPPORTED_COUNTRIES, CATEGORIES, AFRICA_COUNTRIES, EUROPE_COUNTRIES } from "@/lib/utils/constants";
+import { SUPPORTED_COUNTRIES, AFRICA_COUNTRIES, EUROPE_COUNTRIES } from "@/lib/utils/constants";
+import { getAreas, getProfessionsByArea } from "@/lib/actions/taxonomy";
+import type { ProfessionalArea, Profession } from "@/lib/types/taxonomy";
 
 type RegisterMode = "client" | "professional";
 
@@ -27,8 +29,25 @@ export function RegisterForm({ defaultMode = "client", allowSwitch = true }: Reg
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [areas, setAreas] = useState<ProfessionalArea[]>([]);
+  const [professions, setProfessions] = useState<Profession[]>([]);
+  const [selectedAreaId, setSelectedAreaId] = useState("");
+  const [selectedProfessionId, setSelectedProfessionId] = useState("");
   const router = useRouter();
   const supabase = createClient();
+
+  useEffect(() => {
+    getAreas().then(setAreas);
+  }, []);
+
+  useEffect(() => {
+    if (selectedAreaId) {
+      getProfessionsByArea(selectedAreaId).then(setProfessions);
+      setSelectedProfessionId("");
+    } else {
+      setProfessions([]);
+    }
+  }, [selectedAreaId]);
 
   const schema = mode === "client" ? registerUserSchema : registerProfessionalSchema;
 
@@ -72,7 +91,9 @@ export function RegisterForm({ defaultMode = "client", allowSwitch = true }: Reg
             country: data.country,
             phone: data.phone || null,
             business_name: mode === "professional" ? data.business_name : null,
-            category: mode === "professional" ? data.category : null,
+            category: mode === "professional" ? (areas.find(a => a.id === selectedAreaId)?.slug || "autre") : null,
+            area_id: mode === "professional" ? (selectedAreaId || null) : null,
+            profession_id: mode === "professional" ? (selectedProfessionId || null) : null,
             city: mode === "professional" ? data.city : null,
           },
           emailRedirectTo: `${window.location.origin}/auth/callback`,
@@ -269,43 +290,58 @@ export function RegisterForm({ defaultMode = "client", allowSwitch = true }: Reg
                )}
             </div>
 
-            {/* Category + City */}
+            {/* Area + Profession (cascading) */}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label htmlFor="category" className="mb-1.5 block text-sm font-medium text-foreground">
-                  Catégorie
+                <label htmlFor="area_id" className="mb-1.5 block text-sm font-medium text-foreground">
+                  Domaine d&apos;activité
                 </label>
                 <select
-                  id="category"
-                  {...register("category")}
+                  id="area_id"
+                  value={selectedAreaId}
+                  onChange={(e) => setSelectedAreaId(e.target.value)}
                   className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
                 >
-                  <option value="">Choisir</option>
-                  {CATEGORIES.map((c) => (
-                    <option key={c.value} value={c.value}>
-                      {c.label}
-                    </option>
+                  <option value="">Sélectionner un domaine</option>
+                  {areas.map((a) => (
+                    <option key={a.id} value={a.id}>{a.name}</option>
                   ))}
                 </select>
-                 {errors.category && (
-                   <p className="mt-1 text-xs text-kelen-red-500">{errors.category.message?.toString()}</p>
-                 )}
               </div>
               <div>
-                <label htmlFor="city" className="mb-1.5 block text-sm font-medium text-foreground">
-                  Ville
+                <label htmlFor="profession_id" className="mb-1.5 block text-sm font-medium text-foreground">
+                  Profession
                 </label>
-                <input
-                  id="city"
-                  type="text"
-                  {...register("city")}
-                  className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors placeholder:text-muted-foreground focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
-                  placeholder="Abidjan, Dakar..."
-                />
-                 {errors.city && (
-                   <p className="mt-1 text-xs text-kelen-red-500">{errors.city.message?.toString()}</p>
-                 )}
+                <select
+                  id="profession_id"
+                  value={selectedProfessionId}
+                  onChange={(e) => setSelectedProfessionId(e.target.value)}
+                  disabled={!selectedAreaId}
+                  className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20 disabled:opacity-40"
+                >
+                  <option value="">Sélectionner une profession</option>
+                  {professions.map((p) => (
+                    <option key={p.id} value={p.id}>{p.name}</option>
+                  ))}
+                </select>
               </div>
+            </div>
+
+            {/* City */}
+            <div>
+              <label htmlFor="city" className="mb-1.5 block text-sm font-medium text-foreground">
+                Ville
+              </label>
+              <input
+                id="city"
+                type="text"
+                {...register("city")}
+                className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors placeholder:text-muted-foreground focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
+                placeholder="Abidjan, Dakar..."
+              />
+              {errors.city && (
+                <p className="mt-1 text-xs text-kelen-red-500">{errors.city.message?.toString()}</p>
+              )}
             </div>
 
             {/* Phone */}

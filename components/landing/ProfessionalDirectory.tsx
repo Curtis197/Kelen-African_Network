@@ -1,48 +1,83 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { MapPin, ChevronDown, Inbox, LayoutDashboard } from "lucide-react";
 import { Professional } from "@/lib/supabase/types";
 import { ProfessionalCard } from "@/components/shared/ProfessionalCard";
+import type { ProfessionalArea, Profession } from "@/lib/types/taxonomy";
 
 interface ProfessionalDirectoryProps {
   initialPros: Professional[];
   totalCount: number;
+  areas: ProfessionalArea[];
+  allProfessions: Profession[];
+  initialAreaId?: string;
+  initialProfessionId?: string;
+  initialProjectId?: string;
 }
 
-export function ProfessionalDirectory({ initialPros, totalCount }: ProfessionalDirectoryProps) {
-  const searchParams = useSearchParams();
+export function ProfessionalDirectory({
+  initialPros,
+  totalCount,
+  areas,
+  allProfessions,
+  initialAreaId,
+  initialProfessionId,
+  initialProjectId,
+}: ProfessionalDirectoryProps) {
   const router = useRouter();
-  const projectId = searchParams.get("projectId");
-  const areaName = searchParams.get("areaName");
 
-  const [category, setCategory] = useState("Toutes les spécialités");
+  // Selection mode (coming from a project area)
+  const projectId = initialProjectId;
+
+  const [selectedAreaId, setSelectedAreaId] = useState(initialAreaId || "");
+  const [selectedProfessionId, setSelectedProfessionId] = useState(initialProfessionId || "");
   const [tier, setTier] = useState("Tous");
   const [locationQuery, setLocationQuery] = useState("");
 
+  // Professions filtered to the selected area
+  const professionsForArea = useMemo(() => {
+    if (!selectedAreaId) return [];
+    return allProfessions.filter((p) => p.area_id === selectedAreaId);
+  }, [allProfessions, selectedAreaId]);
+
+  // Area name for selection mode banner
+  const selectedAreaName = useMemo(
+    () => areas.find((a) => a.id === selectedAreaId)?.name || "",
+    [areas, selectedAreaId]
+  );
+
   const filteredPros = useMemo(() => {
     return initialPros.filter((pro) => {
-      // Category filter
-      const matchesCategory = category === "Toutes les spécialités" || pro.category === category;
-      
-      // Tier filter
+      const matchesArea = !selectedAreaId || pro.area_id === selectedAreaId;
+      const matchesProfession = !selectedProfessionId || pro.profession_id === selectedProfessionId;
       const matchesTier = tier === "Tous" || (tier === "Or" && pro.status === "gold");
-      
-      // Location filter
       const searchStr = locationQuery.toLowerCase().trim();
-      const matchesLocation = !searchStr || 
-        pro.city.toLowerCase().includes(searchStr) || 
+      const matchesLocation =
+        !searchStr ||
+        pro.city.toLowerCase().includes(searchStr) ||
         pro.country.toLowerCase().includes(searchStr);
-      
-      return matchesCategory && matchesTier && matchesLocation;
+      return matchesArea && matchesProfession && matchesTier && matchesLocation;
     });
-  }, [initialPros, category, tier, locationQuery]);
+  }, [initialPros, selectedAreaId, selectedProfessionId, tier, locationQuery]);
+
+  const handleAreaChange = (areaId: string) => {
+    setSelectedAreaId(areaId);
+    setSelectedProfessionId("");
+  };
+
+  const resetFilters = () => {
+    setSelectedAreaId(initialAreaId || "");
+    setSelectedProfessionId("");
+    setTier("Tous");
+    setLocationQuery("");
+  };
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 bg-surface">
       {/* Selection Mode Banner */}
-      {projectId && areaName && (
+      {projectId && selectedAreaName && (
         <div className="mb-10 p-6 rounded-[2rem] bg-kelen-green-600 text-white flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl shadow-kelen-green-600/20 border border-white/10 animate-in slide-in-from-top-4 duration-500">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-md">
@@ -50,7 +85,9 @@ export function ProfessionalDirectory({ initialPros, totalCount }: ProfessionalD
             </div>
             <div>
               <h3 className="text-lg font-black tracking-tight">Mode Sélection de Professionnel</h3>
-              <p className="text-white/80 font-medium">Ajout direct au domaine <span className="text-white font-bold underline underline-offset-4">{areaName}</span></p>
+              <p className="text-white/80 font-medium">
+                Ajout direct au domaine <span className="text-white font-bold underline underline-offset-4">{selectedAreaName}</span>
+              </p>
             </div>
           </div>
           <button
@@ -76,33 +113,57 @@ export function ProfessionalDirectory({ initialPros, totalCount }: ProfessionalD
         </div>
         <div className="flex items-center gap-3 rounded-full bg-surface-container-low px-5 py-2.5 text-sm font-bold text-kelen-green-700">
           <span className="flex h-2 w-2 rounded-full bg-kelen-green-500" />
-          <span>{filteredPros.length.toLocaleString()} professionnel{filteredPros.length > 1 ? "s" : ""} vérifié{filteredPros.length > 1 ? "s" : ""} trouvé{filteredPros.length > 1 ? "s" : ""}</span>
+          <span>
+            {filteredPros.length.toLocaleString()} professionnel{filteredPros.length > 1 ? "s" : ""} vérifié{filteredPros.length > 1 ? "s" : ""} trouvé{filteredPros.length > 1 ? "s" : ""}
+          </span>
         </div>
       </div>
 
-      {/* Advanced Filter Bar */}
+      {/* Filter Bar */}
       <div className="mb-16 rounded-3xl bg-surface-container-low p-6 lg:p-8">
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {/* Area */}
           <div className="space-y-2">
             <label className="mb-1 ml-1 block text-[11px] font-black uppercase tracking-widest text-muted-foreground">
-              Spécialité
+              Domaine
             </label>
             <div className="relative group">
               <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
+                value={selectedAreaId}
+                onChange={(e) => handleAreaChange(e.target.value)}
                 className="w-full appearance-none rounded-2xl border-none bg-surface-container-lowest p-4 text-sm shadow-sm transition-all focus:ring-2 focus:ring-kelen-green-500"
               >
-                <option>Toutes les spécialités</option>
-                <option>Construction & Immobilier</option>
-                <option>Conseil Juridique</option>
-                <option>Technologie & IT</option>
-                <option>Agriculture</option>
+                <option value="">Tous les domaines</option>
+                {areas.map((a) => (
+                  <option key={a.id} value={a.id}>{a.name}</option>
+                ))}
               </select>
               <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             </div>
           </div>
 
+          {/* Profession (cascading) */}
+          <div className="space-y-2">
+            <label className="mb-1 ml-1 block text-[11px] font-black uppercase tracking-widest text-muted-foreground">
+              Profession
+            </label>
+            <div className="relative group">
+              <select
+                value={selectedProfessionId}
+                onChange={(e) => setSelectedProfessionId(e.target.value)}
+                disabled={!selectedAreaId}
+                className="w-full appearance-none rounded-2xl border-none bg-surface-container-lowest p-4 text-sm shadow-sm transition-all focus:ring-2 focus:ring-kelen-green-500 disabled:opacity-40"
+              >
+                <option value="">Toutes les professions</option>
+                {professionsForArea.map((p) => (
+                  <option key={p.id} value={p.id}>{p.name}</option>
+                ))}
+              </select>
+              <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            </div>
+          </div>
+
+          {/* Location */}
           <div className="space-y-2">
             <label className="mb-1 ml-1 block text-[11px] font-black uppercase tracking-widest text-muted-foreground">
               Localisation
@@ -119,6 +180,7 @@ export function ProfessionalDirectory({ initialPros, totalCount }: ProfessionalD
             </div>
           </div>
 
+          {/* Status */}
           <div className="space-y-2">
             <label className="mb-1 ml-1 block text-[11px] font-black uppercase tracking-widest text-muted-foreground">
               Statut
@@ -139,7 +201,6 @@ export function ProfessionalDirectory({ initialPros, totalCount }: ProfessionalD
               ))}
             </div>
           </div>
-
         </div>
       </div>
 
@@ -147,8 +208,8 @@ export function ProfessionalDirectory({ initialPros, totalCount }: ProfessionalD
       {filteredPros.length > 0 ? (
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filteredPros.map((pro) => (
-            <ProfessionalCard 
-              key={pro.slug} 
+            <ProfessionalCard
+              key={pro.slug}
               id={pro.id}
               slug={pro.slug}
               businessName={pro.business_name}
@@ -161,10 +222,11 @@ export function ProfessionalDirectory({ initialPros, totalCount }: ProfessionalD
               signalCount={pro.signal_count}
               avgRating={pro.avg_rating}
               reviewCount={pro.review_count}
-              selectionContext={projectId && areaName ? { 
-                projectId, 
-                areaName 
-              } : undefined}
+              selectionContext={
+                projectId && selectedAreaName
+                  ? { projectId, areaName: selectedAreaName }
+                  : undefined
+              }
             />
           ))}
         </div>
@@ -177,12 +239,8 @@ export function ProfessionalDirectory({ initialPros, totalCount }: ProfessionalD
           <p className="mt-2 text-muted-foreground max-w-md">
             Essayez de modifier vos filtres ou de rechercher une autre ville pour trouver le professionnel qu&apos;il vous faut.
           </p>
-          <button 
-            onClick={() => {
-              setCategory("Toutes les spécialités");
-              setTier("Tous");
-              setLocationQuery("");
-            }}
+          <button
+            onClick={resetFilters}
             className="mt-8 text-sm font-black uppercase tracking-widest text-kelen-green-600 hover:text-kelen-green-700"
           >
             Réinitialiser les filtres
@@ -196,7 +254,7 @@ export function ProfessionalDirectory({ initialPros, totalCount }: ProfessionalD
           <span>Voir plus de professionnels qualifiés</span>
           <ChevronDown className="h-5 w-5" />
         </button>
-        
+
         <div className="flex items-center gap-3">
           <button className="h-12 w-12 rounded-full bg-kelen-green-600 text-sm font-black text-white shadow-md shadow-kelen-green-600/20">1</button>
           <button className="h-12 w-12 rounded-full text-sm font-bold text-muted-foreground hover:bg-muted transition-colors">2</button>
