@@ -78,38 +78,45 @@ export function RegisterForm({ defaultMode = "client", allowSwitch = true }: Reg
 
     try {
       const finalRole = mode === "client" ? "client" : getProRole(data.country);
-      
+      const metadata = {
+        first_name: data.first_name,
+        last_name: data.last_name,
+        role: finalRole,
+        country: data.country,
+        phone: data.phone || null,
+        business_name: mode === "professional" ? data.business_name : null,
+        category: mode === "professional" ? (areas.find(a => a.id === selectedAreaId)?.slug || "autre") : null,
+        area_id: mode === "professional" ? (selectedAreaId || null) : null,
+        profession_id: mode === "professional" ? (selectedProfessionId || null) : null,
+        city: mode === "professional" ? data.city : null,
+      };
+
+      console.log("[Register] Step 1 — submitting signup", { mode, email: data.email, metadata });
+
       // 1. Sign up with Supabase Auth (Trigger handles user and pro creation)
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
         options: {
-          data: {
-            first_name: data.first_name,
-            last_name: data.last_name,
-            role: finalRole,
-            country: data.country,
-            phone: data.phone || null,
-            business_name: mode === "professional" ? data.business_name : null,
-            category: mode === "professional" ? (areas.find(a => a.id === selectedAreaId)?.slug || "autre") : null,
-            area_id: mode === "professional" ? (selectedAreaId || null) : null,
-            profession_id: mode === "professional" ? (selectedProfessionId || null) : null,
-            city: mode === "professional" ? data.city : null,
-          },
+          data: metadata,
           emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
       });
+
+      console.log("[Register] Step 2 — auth response", { authData, authError });
 
       if (authError) throw authError;
 
       // 2. Check if email confirmation is required (session is null)
       if (authData.user && !authData.session) {
+        console.log("[Register] Step 3 — email confirmation required, user:", authData.user.id);
         setSuccess(true);
         return;
       }
 
       // 3. If session is returned (e.g. Email confirms disabled), redirect directly
       if (authData.user && authData.session) {
+        console.log("[Register] Step 3 — session active, redirecting", mode === "professional" ? "/pro/dashboard" : "/dashboard");
         if (mode === "professional") {
           router.push("/pro/dashboard");
         } else {
@@ -118,7 +125,7 @@ export function RegisterForm({ defaultMode = "client", allowSwitch = true }: Reg
         router.refresh();
       }
     } catch (err: any) {
-      console.error("Registration error:", err);
+      console.error("[Register] ERROR", err);
       setError(err.message || "Une erreur est survenue. Veuillez réessayer.");
     } finally {
       setIsLoading(false);
