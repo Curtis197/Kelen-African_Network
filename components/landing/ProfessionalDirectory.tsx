@@ -222,6 +222,7 @@ export function ProfessionalDirectory({
               signalCount={pro.signal_count}
               avgRating={pro.avg_rating}
               reviewCount={pro.review_count}
+              profilePictureUrl={pro.portfolio_photos?.[0]}
               selectionContext={
                 projectId && selectedAreaName
                   ? { projectId, areaName: selectedAreaName }

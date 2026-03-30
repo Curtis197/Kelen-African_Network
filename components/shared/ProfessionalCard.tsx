@@ -21,6 +21,7 @@ interface ProfessionalCardProps {
   signalCount: number;
   avgRating: number | null;
   reviewCount: number;
+  profilePictureUrl?: string | null;
   selectionContext?: {
     projectId: string;
     areaName: string;
@@ -40,6 +41,7 @@ export function ProfessionalCard({
   signalCount,
   avgRating,
   reviewCount,
+  profilePictureUrl,
   selectionContext,
 }: ProfessionalCardProps) {
   const router = useRouter();
@@ -87,6 +89,22 @@ export function ProfessionalCard({
           <p className="text-white/60 text-[9px] mt-2">Redirection...</p>
         </div>
       )}
+
+      <div className="mb-5">
+        <div className="w-16 h-16 rounded-2xl overflow-hidden bg-surface-container ring-2 ring-outline-variant/20 flex items-center justify-center text-on-surface-variant">
+          {profilePictureUrl ? (
+            <img
+              src={profilePictureUrl}
+              alt={businessName}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <span className="text-2xl font-black text-on-surface-variant/30">
+              {businessName.charAt(0).toUpperCase()}
+            </span>
+          )}
+        </div>
+      </div>
 
       <div className="flex items-start justify-between gap-6">
         <div className="min-w-0 flex-1">
