@@ -26,7 +26,6 @@ export const registerUserSchema = z.object({
 
 export const registerProfessionalSchema = registerUserSchema.extend({
   business_name: z.string().min(2, "Nom de l'entreprise requis"),
-  category: z.string().min(1, "Catégorie requise"),
   city: z.string().min(2, "Ville requise"),
   phone: z.string().min(8, "Numéro de téléphone requis"),
   whatsapp: z.string().optional(),
