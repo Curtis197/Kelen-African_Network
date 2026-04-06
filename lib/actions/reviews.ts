@@ -33,7 +33,7 @@ export async function submitReview(
 
   const { data: profile, error: profileError } = await supabase
     .from("users")
-    .select("first_name, last_name, country")
+    .select("display_name, country")
     .eq("id", user.id)
     .single();
 
@@ -44,7 +44,7 @@ export async function submitReview(
   const { error: insertError } = await supabase.from("reviews").insert({
     professional_id,
     reviewer_id: user.id,
-    reviewer_name: `${profile.first_name} ${profile.last_name}`,
+    reviewer_name: profile.display_name,
     reviewer_country: profile.country,
     rating,
     comment,

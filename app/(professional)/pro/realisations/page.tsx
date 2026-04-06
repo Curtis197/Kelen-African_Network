@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Plus, LayoutGrid, List } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
-import { RealizationCard } from "@/components/pro/RealizationCard";
+import { ProjectDocumentCard } from "@/components/pro/RealizationCard";
 import { EmptyState } from "@/components/shared/EmptyState";
-import type { ProfessionalRealization, RealizationImage, RealizationDocument } from "@/lib/supabase/types";
+import type { ProjectDocument } from "@/lib/supabase/types";
 
 export const metadata: Metadata = {
   title: "Mes réalisations — Kelen Pro",
@@ -14,7 +14,6 @@ export const metadata: Metadata = {
 export default async function ProRealisationsPage() {
   const supabase = await createClient();
   
-  // 1. Get the current user
   const { data: { user } } = await supabase.auth.getUser();
   
   if (!user) {
@@ -25,7 +24,6 @@ export default async function ProRealisationsPage() {
     );
   }
 
-  // 2. Get the professional record
   const { data: professional } = await supabase
     .from("professionals")
     .select("id, business_name")
@@ -49,26 +47,16 @@ export default async function ProRealisationsPage() {
     );
   }
 
-  // 3. Get realizations with details
-  // Note: We'll fetch them and then aggregate counts for images/docs
-  const { data: realizationsData } = await supabase
-    .from("professional_realizations")
-    .select(`
-      *,
-      images:realization_images(id, url, is_main),
-      documents:realization_documents(id)
-    `)
+  const { data: documents } = await supabase
+    .from("project_documents")
+    .select("*")
     .eq("professional_id", professional.id)
-    .order("completion_date", { ascending: false });
+    .order("created_at", { ascending: false });
 
-  const realizations = (realizationsData || []) as (ProfessionalRealization & { 
-    images: RealizationImage[]; 
-    documents: RealizationDocument[]; 
-  })[];
+  const projectDocs = (documents || []) as ProjectDocument[];
 
   return (
     <div className="mx-auto max-w-7xl">
-      {/* Header Section */}
       <div className="mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <div className="space-y-1">
           <h1 className="font-headline text-3xl font-bold tracking-tight text-on-surface lg:text-4xl">
@@ -90,10 +78,9 @@ export default async function ProRealisationsPage() {
         </div>
       </div>
 
-      {/* Grid Controls (Optional, for future filters) */}
       <div className="mb-8 flex items-center justify-between">
         <div className="flex items-center gap-4 text-sm font-medium text-on-surface-variant">
-           <span>{realizations.length} projet{realizations.length > 1 ? 's' : ''} au total</span>
+           <span>{projectDocs.length} projet{projectDocs.length > 1 ? 's' : ''} au total</span>
         </div>
         
         <div className="flex items-center gap-1 rounded-lg bg-surface-container-low p-1">
@@ -106,16 +93,12 @@ export default async function ProRealisationsPage() {
         </div>
       </div>
 
-      {/* Main Content Grid */}
-      {realizations.length > 0 ? (
+      {projectDocs.length > 0 ? (
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:gap-10">
-          {realizations.map((item) => (
-            <RealizationCard 
-              key={item.id}
-              realization={item}
-              mainImage={item.images.find(img => img.is_main)?.url || item.images[0]?.url}
-              imagesCount={item.images.length}
-              documentsCount={item.documents.length}
+          {projectDocs.map((doc) => (
+            <ProjectDocumentCard 
+              key={doc.id}
+              document={doc}
             />
           ))}
         </div>

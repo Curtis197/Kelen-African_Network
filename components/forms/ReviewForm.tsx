@@ -98,15 +98,18 @@ export function ReviewForm({
         </div>
       )}
 
-      <div>
-        <label className="block text-sm font-medium text-foreground mb-3">
+      <fieldset className="border-0 p-0">
+        <legend className="block text-sm font-medium text-foreground mb-3">
           Votre note
-        </label>
-        <div className="flex items-center gap-1">
+        </legend>
+        <div className="flex items-center gap-1" role="radiogroup" aria-label="Note sur 5 étoiles">
           {[1, 2, 3, 4, 5].map((star) => (
             <button
               key={star}
               type="button"
+              role="radio"
+              aria-checked={star === rating}
+              aria-label={`${star} étoile${star > 1 ? "s" : ""} sur 5`}
               className="p-1 transition-all hover:scale-110 active:scale-95"
               onMouseEnter={() => setHoverRating(star)}
               onMouseLeave={() => setHoverRating(0)}
@@ -135,24 +138,49 @@ export function ReviewForm({
             {errors.rating.message}
           </p>
         )}
-      </div>
+      </fieldset>
 
-      <div>
-        <label className="block text-sm font-medium text-foreground mb-1.5">
-          Commentaire (optionnel)
-        </label>
-        <textarea
-          {...register("comment")}
-          rows={5}
-          className="w-full rounded-lg border border-border bg-white px-4 py-3 text-sm transition-colors placeholder:text-muted-foreground focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
-          placeholder="Racontez votre expérience..."
-        />
-        {errors.comment && (
+      <fieldset className="border-0 p-0">
+        <legend className="block text-sm font-medium text-foreground mb-3">
+          Votre note
+        </legend>
+        <div className="flex items-center gap-1" role="radiogroup" aria-label="Note sur 5 étoiles">
+          {[1, 2, 3, 4, 5].map((star) => (
+            <button
+              key={star}
+              type="button"
+              role="radio"
+              aria-checked={star === rating}
+              aria-label={`${star} étoile${star > 1 ? "s" : ""} sur 5`}
+              className="p-1 transition-all hover:scale-110 active:scale-95"
+              onMouseEnter={() => setHoverRating(star)}
+              onMouseLeave={() => setHoverRating(0)}
+              onClick={() => {
+                setValue("rating", star);
+                if (error) setError(null);
+              }}
+            >
+              <span
+                className={`text-3xl ${
+                  star <= (hoverRating || rating)
+                    ? "text-kelen-yellow-500"
+                    : "text-stone-200"
+                }`}
+              >
+                ★
+              </span>
+            </button>
+          ))}
+          <span className="ml-3 text-sm font-medium text-muted-foreground">
+            {rating > 0 ? `${rating} / 5` : ""}
+          </span>
+        </div>
+        {errors.rating && (
           <p className="mt-1 text-xs text-kelen-red-500">
-            {errors.comment.message}
+            {errors.rating.message}
           </p>
         )}
-      </div>
+      </fieldset>
 
       <button
         type="submit"

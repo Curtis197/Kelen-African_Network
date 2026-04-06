@@ -67,7 +67,7 @@ export function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-white/80 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
@@ -174,7 +174,7 @@ export function Navbar() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="border-t border-border bg-white px-4 py-6 md:hidden">
+        <div className="border-t border-border bg-background px-4 py-6 md:hidden">
           <div className="flex flex-col gap-4">
             {!user ? (
               // Marketing Nav for Guest

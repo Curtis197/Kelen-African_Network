@@ -3,21 +3,60 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { useState, useEffect } from "react";
+import {
+  LayoutDashboard,
+  User,
+  Briefcase,
+  Award,
+  AlertTriangle,
+  Gem,
+  BarChart3,
+  LogOut,
+} from "lucide-react";
 
 const NAV_ITEMS = [
-  { href: "/pro/dashboard", label: "Tableau de bord", mobileLabel: "Dashboard", icon: "📊" },
-  { href: "/pro/profil", label: "Mon profil", mobileLabel: "Profil", icon: "👤" },
-  { href: "/pro/realisations", label: "Mes réalisations", mobileLabel: "Projets", icon: "🏗️" },
-  { href: "/pro/recommandations", label: "Recommandations", mobileLabel: "Recomm.", icon: "✓" },
-  { href: "/pro/signal", label: "Signaux", mobileLabel: "Signaux", icon: "⚠️" },
-  { href: "/pro/abonnement", label: "Abonnement & Visibilité", mobileLabel: "Abo.", icon: "💎" },
-  { href: "/pro/analytique", label: "Analytique", mobileLabel: "Stats", icon: "📈" },
+  { href: "/pro/dashboard", label: "Tableau de bord", mobileLabel: "Dashboard", icon: LayoutDashboard },
+  { href: "/pro/profil", label: "Mon profil", mobileLabel: "Profil", icon: User },
+  { href: "/pro/realisations", label: "Mes réalisations", mobileLabel: "Projets", icon: Briefcase },
+  { href: "/pro/recommandations", label: "Recommandations", mobileLabel: "Recomm.", icon: Award },
+  { href: "/pro/signal", label: "Signaux", mobileLabel: "Signaux", icon: AlertTriangle },
+  { href: "/pro/abonnement", label: "Abonnement & Visibilité", mobileLabel: "Abo.", icon: Gem },
+  { href: "/pro/analytique", label: "Analytique", mobileLabel: "Stats", icon: BarChart3 },
+];
+
+const MOBILE_NAV_ITEMS = [
+  { href: "/pro/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/pro/profil", label: "Profil", icon: User },
+  { href: "/pro/realisations", label: "Projets", icon: Briefcase },
+  { href: "/pro/recommandations", label: "Recomm.", icon: Award },
+  { href: "/pro/abonnement", label: "Abo.", icon: Gem },
 ];
 
 export function ProSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [businessName, setBusinessName] = useState<string>("Pro");
+
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        setUserEmail(session.user.email ?? null);
+        const { data: profile } = await supabase
+          .from("professionals")
+          .select("business_name")
+          .eq("user_id", session.user.id)
+          .single();
+        if (profile?.business_name) {
+          setBusinessName(profile.business_name);
+        }
+      }
+    };
+    getUser();
+  }, [supabase.auth]);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -28,7 +67,7 @@ export function ProSidebar() {
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden w-64 shrink-0 border-r border-border bg-white lg:block">
+      <aside className="hidden w-64 shrink-0 border-r border-border bg-surface lg:block">
         <div className="sticky top-0 flex h-screen flex-col">
           {/* Brand */}
           <div className="flex h-16 items-center border-b border-border px-6">
@@ -45,6 +84,7 @@ export function ProSidebar() {
             {NAV_ITEMS.map((item) => {
               const isActive =
                 pathname === item.href || pathname.startsWith(item.href + "/");
+              const Icon = item.icon;
               return (
                 <Link
                   key={item.href}
@@ -55,7 +95,7 @@ export function ProSidebar() {
                       : "text-muted-foreground hover:bg-muted hover:text-foreground"
                   }`}
                 >
-                  <span>{item.icon}</span>
+                  <Icon className="h-4 w-4" />
                   {item.label}
                 </Link>
               );
@@ -66,10 +106,10 @@ export function ProSidebar() {
           <div className="border-t border-border p-4">
             <div className="rounded-lg bg-muted/50 p-3">
               <p className="text-xs font-medium text-foreground">
-                Kouadio Construction
+                {businessName}
               </p>
               <p className="mt-0.5 text-xs text-muted-foreground">
-                contact@kouadio-construction.ci
+                {userEmail ?? "Chargement..."}
               </p>
             </div>
             <button
@@ -82,23 +122,24 @@ export function ProSidebar() {
         </div>
       </aside>
 
-      {/* Mobile bottom navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-white/95 backdrop-blur-sm lg:hidden" style={{ paddingBottom: "env(safe-area-inset-bottom)" }}>
-        <div className="flex overflow-x-auto" style={{ scrollbarWidth: "none" }}>
-          {NAV_ITEMS.map((item) => {
+      {/* Mobile bottom navigation - max 5 items */}
+      <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-surface/95 backdrop-blur-sm lg:hidden" style={{ paddingBottom: "env(safe-area-inset-bottom)" }}>
+        <div className="flex">
+          {MOBILE_NAV_ITEMS.map((item) => {
             const isActive =
               pathname === item.href || pathname.startsWith(item.href + "/");
+            const Icon = item.icon;
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex min-w-[64px] flex-1 flex-col items-center gap-0.5 px-2 py-3 transition-colors ${
+                className={`flex flex-1 flex-col items-center gap-0.5 px-2 py-3 transition-colors ${
                   isActive ? "text-kelen-green-600" : "text-muted-foreground"
                 }`}
               >
-                <span className="text-base leading-none">{item.icon}</span>
-                <span className="text-[9px] font-bold leading-tight text-center" style={{ maxWidth: 56 }}>
-                  {item.mobileLabel}
+                <Icon className="h-5 w-5" />
+                <span className="text-[10px] font-bold leading-tight text-center max-w-[56px] truncate">
+                  {item.label}
                 </span>
               </Link>
             );

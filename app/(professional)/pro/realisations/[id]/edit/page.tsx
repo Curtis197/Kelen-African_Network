@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
-import { RealizationForm } from "@/components/forms/RealizationForm";
+import { ProjectDocumentForm } from "@/components/forms/RealizationForm";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
@@ -28,25 +28,20 @@ export default async function EditRealizationPage({ params }: EditRealizationPag
 
   if (!professional) redirect("/pro/profil");
 
-  // Fetch realization with all assets
-  const { data: realization } = await supabase
-    .from("professional_realizations")
-    .select(`
-      *,
-      images:realization_images(*),
-      documents:realization_documents(*)
-    `)
+  const { data: document } = await supabase
+    .from("project_documents")
+    .select("*")
     .eq("id", id)
     .eq("professional_id", professional.id)
     .single();
 
-  if (!realization) notFound();
+  if (!document) notFound();
 
   return (
     <div className="mx-auto max-w-5xl">
       <div className="mb-10">
         <h1 className="font-headline text-3xl font-bold tracking-tight text-on-surface lg:text-4xl">
-          Modifier : {realization.title}
+          Modifier : {document.project_title}
         </h1>
         <p className="mt-2 text-on-surface-variant/70">
           Mettez à jour les informations et les médias de votre projet.
@@ -54,9 +49,9 @@ export default async function EditRealizationPage({ params }: EditRealizationPag
       </div>
 
       <div className="rounded-[2.5rem] bg-white p-8 shadow-sm lg:p-12">
-        <RealizationForm 
+        <ProjectDocumentForm 
           professionalId={professional.id} 
-          initialData={realization} 
+          initialData={document} 
         />
       </div>
     </div>

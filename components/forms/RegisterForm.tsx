@@ -69,7 +69,7 @@ export function RegisterForm({ defaultMode = "client", allowSwitch = true }: Reg
   const getProRole = (country: string): UserRole => {
     if ((AFRICA_COUNTRIES as unknown as string[]).includes(country)) return "pro_africa";
     if ((EUROPE_COUNTRIES as unknown as string[]).includes(country)) return "pro_europe";
-    return "pro_intl";
+    return "pro_africa";
   };
 
   const onSubmit = async (data: any) => {
@@ -79,8 +79,7 @@ export function RegisterForm({ defaultMode = "client", allowSwitch = true }: Reg
     try {
       const finalRole = mode === "client" ? "client" : getProRole(data.country);
       const metadata = {
-        first_name: data.first_name,
-        last_name: data.last_name,
+        display_name: data.display_name,
         role: finalRole,
         country: data.country,
         phone: data.phone || null,
@@ -182,38 +181,22 @@ export function RegisterForm({ defaultMode = "client", allowSwitch = true }: Reg
           </div>
         )}
 
-        {/* Name row */}
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label htmlFor="first_name" className="mb-1.5 block text-sm font-medium text-foreground">
-              Prénom
-            </label>
-            <input
-              id="first_name"
-              type="text"
-              autoComplete="given-name"
-              {...register("first_name")}
-              className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors placeholder:text-muted-foreground focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
-            />
-            {errors.first_name && (
-              <p className="mt-1 text-xs text-kelen-red-500">{errors.first_name.message?.toString()}</p>
-            )}
-          </div>
-          <div>
-            <label htmlFor="last_name" className="mb-1.5 block text-sm font-medium text-foreground">
-              Nom
-            </label>
-            <input
-              id="last_name"
-              type="text"
-              autoComplete="family-name"
-              {...register("last_name")}
-              className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors placeholder:text-muted-foreground focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
-            />
-            {errors.last_name && (
-              <p className="mt-1 text-xs text-kelen-red-500">{errors.last_name.message?.toString()}</p>
-            )}
-          </div>
+        {/* Name */}
+        <div>
+          <label htmlFor="display_name" className="mb-1.5 block text-sm font-medium text-foreground">
+            Nom complet
+          </label>
+          <input
+            id="display_name"
+            type="text"
+            autoComplete="name"
+            {...register("display_name")}
+            placeholder="Ex: Kouadio Konan"
+            className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors placeholder:text-muted-foreground focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
+          />
+          {errors.display_name && (
+            <p className="mt-1 text-xs text-kelen-red-500">{errors.display_name.message?.toString()}</p>
+          )}
         </div>
 
         {/* Email */}

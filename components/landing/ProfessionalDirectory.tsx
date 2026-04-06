@@ -129,8 +129,10 @@ export function ProfessionalDirectory({
             </label>
             <div className="relative group">
               <select
+                id="directory-area"
                 value={selectedAreaId}
                 onChange={(e) => handleAreaChange(e.target.value)}
+                aria-label="Filtrer par domaine"
                 className="w-full appearance-none rounded-2xl border-none bg-surface-container-lowest p-4 text-sm shadow-sm transition-all focus:ring-2 focus:ring-kelen-green-500"
               >
                 <option value="">Tous les domaines</option>
@@ -149,9 +151,11 @@ export function ProfessionalDirectory({
             </label>
             <div className="relative group">
               <select
+                id="directory-profession"
                 value={selectedProfessionId}
                 onChange={(e) => setSelectedProfessionId(e.target.value)}
                 disabled={!selectedAreaId}
+                aria-label="Filtrer par profession"
                 className="w-full appearance-none rounded-2xl border-none bg-surface-container-lowest p-4 text-sm shadow-sm transition-all focus:ring-2 focus:ring-kelen-green-500 disabled:opacity-40"
               >
                 <option value="">Toutes les professions</option>
@@ -171,10 +175,12 @@ export function ProfessionalDirectory({
             <div className="relative group">
               <MapPin className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground group-focus-within:text-kelen-green-500" />
               <input
+                id="directory-location"
                 type="text"
                 placeholder="Abidjan, Dakar..."
                 value={locationQuery}
                 onChange={(e) => setLocationQuery(e.target.value)}
+                aria-label="Filtrer par localisation"
                 className="w-full rounded-2xl border-none bg-surface-container-lowest py-4 pl-11 pr-4 text-sm shadow-sm transition-all focus:ring-2 focus:ring-kelen-green-500"
               />
             </div>
@@ -251,17 +257,36 @@ export function ProfessionalDirectory({
 
       {/* Pagination / Load More */}
       <div className="mt-20 flex flex-col items-center gap-6">
-        <button className="flex items-center gap-3 rounded-[1.5rem] bg-white px-10 py-5 font-black text-foreground shadow-lg shadow-black/5 ring-1 ring-border transition-all hover:bg-kelen-green-50 hover:text-kelen-green-700 hover:ring-kelen-green-200 active:scale-95">
+        <button 
+          className="flex items-center gap-3 rounded-[1.5rem] bg-surface-container-lowest px-6 md:px-10 py-4 md:py-5 font-black text-foreground shadow-lg shadow-black/5 ring-1 ring-border transition-all hover:bg-kelen-green-50 hover:text-kelen-green-700 hover:ring-kelen-green-200 active:scale-95 text-sm md:text-base"
+          aria-label="Charger plus de professionnels"
+        >
           <span>Voir plus de professionnels qualifiés</span>
           <ChevronDown className="h-5 w-5" />
         </button>
 
-        <div className="flex items-center gap-3">
-          <button className="h-12 w-12 rounded-full bg-kelen-green-600 text-sm font-black text-white shadow-md shadow-kelen-green-600/20">1</button>
-          <button className="h-12 w-12 rounded-full text-sm font-bold text-muted-foreground hover:bg-muted transition-colors">2</button>
-          <button className="h-12 w-12 rounded-full text-sm font-bold text-muted-foreground hover:bg-muted transition-colors">3</button>
-          <span className="px-4 text-muted-foreground font-black tracking-widest">...</span>
-          <button className="h-12 w-12 rounded-full text-sm font-bold text-muted-foreground hover:bg-muted transition-colors">12</button>
+        <div className="flex items-center gap-2 md:gap-3" role="navigation" aria-label="Pagination">
+          {[1, 2, 3].map((page) => (
+            <button
+              key={page}
+              className={`h-10 w-10 md:h-12 md:w-12 rounded-full text-xs md:text-sm font-bold transition-colors ${
+                page === 1
+                  ? "bg-kelen-green-600 text-white shadow-md shadow-kelen-green-600/20"
+                  : "text-muted-foreground hover:bg-muted"
+              }`}
+              aria-current={page === 1 ? "page" : undefined}
+              aria-label={`Page ${page}`}
+            >
+              {page}
+            </button>
+          ))}
+          <span className="px-2 md:px-4 text-muted-foreground font-black tracking-widest text-xs md:text-sm">...</span>
+          <button
+            className="h-10 w-10 md:h-12 md:w-12 rounded-full text-xs md:text-sm font-bold text-muted-foreground hover:bg-muted transition-colors"
+            aria-label="Page 12"
+          >
+            12
+          </button>
         </div>
       </div>
     </section>

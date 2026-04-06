@@ -4,23 +4,17 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { MapPin, Calendar, FileText, ImageIcon, Edit2, Trash2, Loader2 } from "lucide-react";
-import { deleteRealization } from "@/lib/actions/realisations";
+import { deleteProjectDocument } from "@/lib/actions/realisations";
 import { useState } from "react";
-import type { ProfessionalRealization } from "@/lib/supabase/types";
+import type { ProjectDocument } from "@/lib/supabase/types";
 
-interface RealizationCardProps {
-  realization: ProfessionalRealization;
-  mainImage?: string;
-  imagesCount: number;
-  documentsCount: number;
+interface ProjectDocumentCardProps {
+  document: ProjectDocument;
 }
 
-export function RealizationCard({
-  realization,
-  mainImage,
-  imagesCount,
-  documentsCount,
-}: RealizationCardProps) {
+export function ProjectDocumentCard({
+  document: doc,
+}: ProjectDocumentCardProps) {
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -28,11 +22,11 @@ export function RealizationCard({
     e.preventDefault();
     e.stopPropagation();
 
-    if (!confirm("Êtes-vous sûr de vouloir supprimer cette réalisation ?")) return;
+    if (!confirm("Êtes-vous sûr de vouloir supprimer ce projet ?")) return;
 
     setIsDeleting(true);
     try {
-      await deleteRealization(realization.id);
+      await deleteProjectDocument(doc.id);
       router.refresh();
     } catch (error) {
       console.error("Error deleting:", error);
@@ -42,14 +36,26 @@ export function RealizationCard({
     }
   };
 
+  const statusLabels: Record<string, string> = {
+    pending_review: "En attente",
+    published: "Publié",
+    rejected: "Rejeté",
+  };
+
+  const statusColors: Record<string, string> = {
+    pending_review: "bg-kelen-yellow-500/10 text-kelen-yellow-700",
+    published: "bg-kelen-green-500/10 text-kelen-green-700",
+    rejected: "bg-kelen-red-500/10 text-kelen-red-700",
+  };
+
   return (
     <div className={`group relative flex flex-col overflow-hidden rounded-[1.5rem] bg-surface-container-lowest transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_24px_48px_-12px_rgba(26,28,28,0.04)] ${isDeleting ? 'opacity-50 pointer-events-none' : ''}`}>
       {/* Image Preview */}
       <div className="relative aspect-[16/10] w-full overflow-hidden bg-surface-container-low">
-        {mainImage ? (
+        {doc.photo_urls && doc.photo_urls.length > 0 ? (
           <Image
-            src={mainImage}
-            alt={realization.title}
+            src={doc.photo_urls[0]}
+            alt={doc.project_title}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
@@ -59,27 +65,30 @@ export function RealizationCard({
           </div>
         ) }
         
-        {/* Badges Overlay */}
+        {/* Status Badge */}
         <div className="absolute bottom-4 left-4 flex gap-2">
-          {imagesCount > 0 && (
+          <div className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium backdrop-blur-md ${statusColors[doc.status] || 'bg-surface/90 text-on-surface'}`}>
+            {statusLabels[doc.status] || doc.status}
+          </div>
+          {doc.photo_urls && doc.photo_urls.length > 0 && (
             <div className="flex items-center gap-1.5 rounded-full bg-surface/90 px-3 py-1 text-xs font-medium text-on-surface backdrop-blur-md">
               <ImageIcon size={12} />
-              {imagesCount}
+              {doc.photo_urls.length}
             </div>
           )}
-          {documentsCount > 0 && (
+          {doc.contract_url && (
             <div className="flex items-center gap-1.5 rounded-full bg-surface/90 px-3 py-1 text-xs font-medium text-on-surface backdrop-blur-md">
               <FileText size={12} />
-              {documentsCount}
+              Contrat
             </div>
           )}
         </div>
 
-        {/* Action Menu (Hidden by default, visible on hover) */}
+        {/* Action Menu */}
         <div className="absolute top-4 right-4 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
            <div className="flex gap-2">
               <Link 
-                href={`/pro/realisations/${realization.id}/edit`}
+                href={`/pro/realisations/${doc.id}/edit`}
                 className="flex h-8 w-8 items-center justify-center rounded-full bg-surface/90 text-on-surface shadow-sm hover:bg-white transition-colors"
                 title="Modifier"
                 onClick={(e) => e.stopPropagation()}
@@ -101,29 +110,28 @@ export function RealizationCard({
       <div className="flex flex-1 flex-col p-6">
         <div className="mb-2 flex items-start justify-between">
           <h3 className="font-headline text-lg font-bold leading-tight text-on-surface">
-            {realization.title}
+            {doc.project_title}
           </h3>
         </div>
 
         <p className="mb-6 line-clamp-2 text-sm leading-relaxed text-on-surface-variant/80">
-          {realization.description || "Aucune description fournie."}
+          {doc.project_description || "Aucune description fournie."}
         </p>
 
         {/* Footer Metadata */}
         <div className="mt-auto flex flex-wrap items-center gap-4 border-t border-transparent pt-4">
-          {realization.location && (
-            <div className="flex items-center gap-1.5 text-xs text-on-surface-variant">
-              <MapPin size={14} className="text-kelen-green-600" />
-              {realization.location}
-            </div>
-          )}
-          {realization.completion_date && (
+          {doc.project_date && (
             <div className="flex items-center gap-1.5 text-xs text-on-surface-variant">
               <Calendar size={14} className="text-kelen-yellow-700" />
-              {new Date(realization.completion_date).toLocaleDateString('fr-FR', {
+              {new Date(doc.project_date).toLocaleDateString('fr-FR', {
                 month: 'short',
                 year: 'numeric'
               })}
+            </div>
+          )}
+          {doc.project_amount && (
+            <div className="flex items-center gap-1.5 text-xs text-on-surface-variant">
+              {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(doc.project_amount)}
             </div>
           )}
         </div>
@@ -131,11 +139,10 @@ export function RealizationCard({
     
       {/* Click layer */}
       <Link 
-        href={`/pro/realisations/${realization.id}`}
+        href={`/pro/realisations/${doc.id}`}
         className="absolute inset-0 z-0"
-        aria-label={`Voir les détails de ${realization.title}`}
+        aria-label={`Voir les détails de ${doc.project_title}`}
       />
     </div>
   );
 }
-

@@ -62,22 +62,19 @@ export default async function ProfessionalProfilePage({ params }: Props) {
   const currentStatus = (pro.status as keyof typeof statusColors) || "white";
 
   const { data: realRealizations } = await supabase
-    .from("professional_realizations")
-    .select(`
-      *,
-      realization_images(*)
-    `)
+    .from("project_documents")
+    .select("*")
     .eq("professional_id", pro.id)
+    .eq("status", "published")
     .order("created_at", { ascending: false });
 
-  // Use real realizations if available, otherwise fallback to placeholder logic
   const portfolioItems = realRealizations && realRealizations.length > 0 
     ? realRealizations.map(r => ({
         id: r.id,
-        title: r.title,
-        description: r.description,
-        image: (r.realization_images as any[])?.find((img: any) => img.is_main)?.url || (r.realization_images as any[])?.[0]?.url || "https://images.unsplash.com/photo-1600585154340-be6199f7d209?auto=format&fit=crop&q=80",
-        location: r.location
+        title: r.project_title,
+        description: r.project_description,
+        image: r.photo_urls?.[0] || "https://images.unsplash.com/photo-1600585154340-be6199f7d209?auto=format&fit=crop&q=80",
+        location: r.project_date
       }))
     : [];
 

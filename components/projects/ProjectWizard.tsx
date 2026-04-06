@@ -5,12 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { upsertProject, getProject } from "@/lib/actions/projects";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
+import { cn } from "@/lib/utils";
 
 type ProjectData = {
   id?: string;
@@ -191,8 +186,8 @@ export default function ProjectWizard({ initialId }: { initialId?: string }) {
         </main>
 
       {/* Footer Navigation */}
-      <footer className="fixed bottom-0 w-full z-50 h-24 bg-surface/80 backdrop-blur-xl shadow-[0_-4px_24px_rgba(0,0,0,0.04)]">
-        <div className="flex justify-between items-center px-12 h-full w-full max-w-[1440px] mx-auto relative">
+      <footer className="fixed bottom-0 w-full z-50 h-16 md:h-24 bg-surface/80 backdrop-blur-xl shadow-[0_-4px_24px_rgba(0,0,0,0.04)]">
+        <div className="flex justify-between items-center px-4 md:px-12 h-full w-full max-w-7xl mx-auto relative">
           <button
             onClick={handleBack}
             disabled={currentStep === 1 || isSaving}
@@ -246,15 +241,15 @@ function Step1Identity({ formData, onChange }: { formData: ProjectData; onChange
   return (
     <div className="space-y-12">
       <header className="mb-16 space-y-4">
-        <h1 className="font-headline font-extrabold text-5xl lg:text-6xl text-on-surface tracking-tight">
+        <h1 className="font-headline font-extrabold text-3xl md:text-4xl lg:text-5xl text-on-surface tracking-tight">
           01 Identité du Projet
         </h1>
-        <p className="text-xl text-on-surface-variant opacity-80 max-w-2xl font-body leading-relaxed">
+        <p className="text-base md:text-xl text-on-surface-variant opacity-80 max-w-2xl font-body leading-relaxed">
           Commençons par les bases. Comment souhaitez-vous nommer votre vision et dans quelle catégorie s'inscrit-elle ?
         </p>
       </header>
 
-      <div className="bg-surface-container-lowest rounded-[2rem] p-8 lg:p-16 shadow-sm relative overflow-hidden">
+      <div className="bg-surface-container-lowest rounded-[2rem] p-6 md:p-8 lg:p-16 shadow-sm relative overflow-hidden">
         <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
         <div className="relative z-10 space-y-16">
           <div className="space-y-4">
@@ -264,7 +259,7 @@ function Step1Identity({ formData, onChange }: { formData: ProjectData; onChange
               value={formData.title}
               onChange={(e) => onChange({ title: e.target.value })}
               placeholder="Ex: Villa de la Teranga"
-              className="text-4xl lg:text-5xl font-headline font-extrabold border-none p-0 focus:ring-0 w-full bg-transparent text-on-surface placeholder:text-surface-container-highest"
+              className="text-2xl md:text-4xl lg:text-5xl font-headline font-extrabold border-none p-0 focus:ring-0 w-full bg-transparent text-on-surface placeholder:text-surface-container-highest"
             />
             <div className="h-[2px] w-full bg-surface-container-high relative overflow-hidden">
               <div className={cn("absolute inset-0 bg-primary transition-all duration-500", formData.title ? "w-full" : "w-0")}></div>
@@ -409,10 +404,10 @@ function Step4Objectives({ formData, onChange }: { formData: ProjectData; onChan
   return (
     <div className="space-y-12">
       <header className="mb-16 space-y-4">
-        <h1 className="font-headline font-extrabold text-5xl lg:text-6xl text-on-surface tracking-tight">
-          04 Objectifs & Récit
+        <h1 className="font-headline font-extrabold text-3xl md:text-4xl lg:text-5xl text-on-surface tracking-tight">
+          01 Identité du Projet
         </h1>
-        <p className="text-xl text-on-surface-variant opacity-80 max-w-2xl font-body leading-relaxed">
+        <p className="text-base md:text-xl text-on-surface-variant opacity-80 max-w-2xl font-body leading-relaxed">
           Décrivez votre projet en quelques mots et listez les jalons clés que vous souhaitez atteindre.
         </p>
       </header>

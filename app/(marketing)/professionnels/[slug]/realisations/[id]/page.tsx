@@ -6,12 +6,9 @@ import {
   ArrowLeft, 
   MapPin, 
   Calendar, 
-  Euro, 
   ShieldCheck, 
   Download, 
-  PencilRuler, 
   FileText, 
-  Layers, 
   Mail, 
   MessageCircle,
   Clock
@@ -28,17 +25,17 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const supabase = await createClient();
-  const { data: realization } = await supabase
-    .from("professional_realizations")
-    .select("title, description")
+  const { data: doc } = await supabase
+    .from("project_documents")
+    .select("project_title, project_description")
     .eq("id", id)
     .single();
 
-  if (!realization) return { title: "Réalisation non trouvée | Kelen" };
+  if (!doc) return { title: "Réalisation non trouvée | Kelen" };
 
   return {
-    title: `${realization.title} | Réalisation Kelen`,
-    description: realization.description || "Consultez le détail de cette réalisation sur Kelen.",
+    title: `${doc.project_title} | Réalisation Kelen`,
+    description: doc.project_description || "Consultez le détail de cette réalisation sur Kelen.",
   };
 }
 
@@ -46,9 +43,8 @@ export default async function RealizationDetailPage({ params }: Props) {
   const { slug, id } = await params;
   const supabase = await createClient();
 
-  // Fetch realization details
-  const { data: realization } = await supabase
-    .from("professional_realizations")
+  const { data: document } = await supabase
+    .from("project_documents")
     .select(`
       *,
       professional:professionals(*)
@@ -56,29 +52,15 @@ export default async function RealizationDetailPage({ params }: Props) {
     .eq("id", id)
     .single();
 
-  if (!realization) notFound();
+  if (!document) notFound();
 
-  const pro = realization.professional;
+  const pro = document.professional;
 
-  // Fetch images
-  const { data: images } = await supabase
-    .from("realization_images")
-    .select("*")
-    .eq("realization_id", realization.id)
-    .order("is_main", { ascending: false });
-
-  // Fetch documents
-  const { data: documents } = await supabase
-    .from("realization_documents")
-    .select("*")
-    .eq("realization_id", realization.id);
-
-  const mainImage = images?.find(img => img.is_main)?.url || images?.[0]?.url || "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80";
-  const galleryImages = images ? images.filter(img => img.url !== mainImage) : [];
+  const mainImage = document.photo_urls?.[0] || "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80";
+  const galleryImages = document.photo_urls ? document.photo_urls.slice(1) : [];
 
   return (
     <div className="bg-[#f9f9f8] font-sans text-[#1a1c1c] antialiased min-h-screen">
-      {/* Top Navigation Anchor / Breadcrumbs */}
       <nav className="fixed top-0 w-full z-50 bg-[#f9f9f8]/70 backdrop-blur-xl border-b border-[#bbcabf]/15 shadow-sm">
         <div className="flex items-center justify-between px-8 py-4 w-full max-w-[1440px] mx-auto">
           <div className="flex items-center gap-8">
@@ -92,14 +74,13 @@ export default async function RealizationDetailPage({ params }: Props) {
       </nav>
 
       <main className="pt-24 pb-20 max-w-[1440px] mx-auto px-8">
-        {/* Breadcrumb & Back */}
         <div className="mb-12 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-sm font-medium text-[#1a1c1c]/40">
             <Link href="/professionnels" className="hover:text-[#1a1c1c] transition-colors">Experts</Link>
             <ChevronRight className="w-3 h-3" />
             <Link href={`/professionnels/${slug}`} className="hover:text-[#1a1c1c] transition-colors">{pro.business_name}</Link>
             <ChevronRight className="w-3 h-3" />
-            <span className="text-[#1a1c1c]">{realization.title}</span>
+            <span className="text-[#1a1c1c]">{document.project_title}</span>
           </div>
           <Link 
             href={`/professionnels/${slug}`}
@@ -110,11 +91,10 @@ export default async function RealizationDetailPage({ params }: Props) {
           </Link>
         </div>
 
-        {/* Hero Section */}
         <section className="relative w-full aspect-[21/9] rounded-[2rem] overflow-hidden mb-16 shadow-xl border border-white/20">
           <img 
             src={mainImage} 
-            alt={realization.title} 
+            alt={document.project_title} 
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-12">
@@ -123,37 +103,34 @@ export default async function RealizationDetailPage({ params }: Props) {
                 {pro.category}
               </span>
               <span className="bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] text-white border border-white/20 flex items-center gap-2">
-                <MapPin className="w-3 h-3" /> {realization.location || pro.city}
+                <MapPin className="w-3 h-3" /> {pro.city}
               </span>
             </div>
             <h1 className="font-bold text-6xl md:text-8xl text-white tracking-tighter leading-none max-w-4xl drop-shadow-2xl">
-              {realization.title}
+              {document.project_title}
             </h1>
           </div>
         </section>
 
-        {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-10 gap-16">
-          {/* Left Column: Narrative & Gallery */}
           <div className="lg:col-span-7 space-y-16">
             <section>
               <h2 className="text-3xl font-black mb-8 text-[#1a1c1c] tracking-tight">Vision & Exécution</h2>
               <div className="space-y-6 text-xl leading-relaxed text-[#3c4a42] font-medium max-w-3xl border-l-4 border-[#10b77f] pl-8">
-                <p>{realization.description}</p>
+                <p>{document.project_description}</p>
               </div>
             </section>
 
-            {/* Bento Gallery */}
             {galleryImages.length > 0 && (
               <section className="grid grid-cols-2 md:grid-cols-4 auto-rows-[300px] gap-6">
-                {galleryImages.map((img, i) => (
+                {galleryImages.map((img: string, i: number) => (
                   <div 
-                    key={img.id} 
+                    key={i} 
                     className={`${i === 0 ? 'col-span-2 row-span-2' : ''} rounded-2xl overflow-hidden group shadow-lg border border-white/20`}
                   >
                     <img 
-                      src={img.url} 
-                      alt={`${realization.title} - image ${i + 1}`} 
+                      src={img} 
+                      alt={`${document.project_title} - image ${i + 1}`} 
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
                   </div>
@@ -162,10 +139,8 @@ export default async function RealizationDetailPage({ params }: Props) {
             )}
           </div>
 
-          {/* Right Column: Specs Card */}
           <div className="lg:col-span-3">
             <div className="sticky top-32 space-y-8">
-              {/* Project Specs */}
               <div className="bg-white p-10 rounded-[2.5rem] shadow-2xl border border-white relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-2 bg-[#10b77f]"></div>
                 <h3 className="text-xl font-black mb-10 text-[#1a1c1c] border-b border-[#f3f4f3] pb-6 uppercase tracking-[0.1em]">Spécifications</h3>
@@ -176,7 +151,7 @@ export default async function RealizationDetailPage({ params }: Props) {
                     </div>
                     <div>
                       <p className="text-[10px] font-black text-[#1a1c1c]/40 uppercase tracking-[0.2em]">Localisation</p>
-                      <p className="text-[#1a1c1c] font-bold text-lg">{realization.location || pro.city}</p>
+                      <p className="text-[#1a1c1c] font-bold text-lg">{pro.city}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-4">
@@ -184,9 +159,9 @@ export default async function RealizationDetailPage({ params }: Props) {
                       <Calendar className="w-5 h-5" />
                     </div>
                     <div>
-                      <p className="text-[10px] font-black text-[#1a1c1c]/40 uppercase tracking-[0.2em]">Livraison</p>
+                      <p className="text-[10px] font-black text-[#1a1c1c]/40 uppercase tracking-[0.2em]">Date du projet</p>
                       <p className="text-[#1a1c1c] font-bold text-lg">
-                        {realization.completion_date ? new Date(realization.completion_date).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }) : 'Récemment'}
+                        {document.project_date ? new Date(document.project_date).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }) : 'Récemment'}
                       </p>
                     </div>
                   </div>
@@ -197,15 +172,16 @@ export default async function RealizationDetailPage({ params }: Props) {
                     <div>
                       <p className="text-[10px] font-black text-[#1a1c1c]/40 uppercase tracking-[0.2em]">Status</p>
                       <div className="flex items-center gap-2">
-                        <p className="text-[#1a1c1c] font-bold text-lg text-nowrap">Réalisation Vérifiée</p>
-                        <span className="w-2 h-2 rounded-full bg-[#10b77f] flex-shrink-0"></span>
+                        <p className="text-[#1a1c1c] font-bold text-lg text-nowrap">
+                          {document.status === 'published' ? 'Vérifié' : document.status === 'pending_review' ? 'En attente' : 'Rejeté'}
+                        </p>
+                        <span className={`w-2 h-2 rounded-full flex-shrink-0 ${document.status === 'published' ? 'bg-[#10b77f]' : document.status === 'pending_review' ? 'bg-yellow-500' : 'bg-red-500'}`}></span>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Map Teaser */}
               <div className="rounded-[2rem] overflow-hidden h-48 bg-[#e2e2e2] relative group cursor-pointer shadow-lg border border-white/20">
                 <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors z-10"></div>
                 <img 
@@ -223,48 +199,41 @@ export default async function RealizationDetailPage({ params }: Props) {
           </div>
         </div>
 
-        {/* Technical Vault */}
         <section className="mt-32">
           <div className="flex items-end justify-between mb-12">
             <div>
               <p className="text-[#10b77f] font-black tracking-[0.3em] uppercase text-xs mb-4">Documentation Technique</p>
               <h2 className="text-4xl font-black text-[#1a1c1c] tracking-tight leading-tight">Le Technical Vault</h2>
             </div>
-            <div className="hidden md:block">
-              <span className="text-[10px] font-black text-[#1a1c1c]/30 uppercase tracking-[0.4em]">Accès Expert Authentifié</span>
-            </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {documents && documents.length > 0 ? documents.map((doc) => (
-              <div key={doc.id} className="group bg-white p-8 rounded-[2rem] hover:shadow-2xl transition-all duration-500 border border-[#f3f4f3] border-transparent hover:border-[#10b77f]/20">
+            {document.contract_url ? (
+              <div className="group bg-white p-8 rounded-[2rem] hover:shadow-2xl transition-all duration-500 border border-[#f3f4f3] border-transparent hover:border-[#10b77f]/20">
                 <div className="flex justify-between items-start mb-12">
                   <div className="bg-[#f3f4f3] p-4 rounded-2xl text-[#10b77f] group-hover:bg-[#10b77f] group-hover:text-white transition-all">
-                    {doc.type === 'blueprint' ? <PencilRuler className="w-8 h-8" /> : <Layers className="w-8 h-8" />}
+                    <FileText className="w-8 h-8" />
                   </div>
-                  <Download className="w-6 h-6 text-[#1a1c1c]/20 group-hover:text-[#10b77f] transition-colors" />
+                  <a href={document.contract_url} target="_blank" rel="noopener noreferrer">
+                    <Download className="w-6 h-6 text-[#1a1c1c]/20 group-hover:text-[#10b77f] transition-colors" />
+                  </a>
                 </div>
                 <div>
-                  <p className="text-[10px] font-black text-[#10b77f] uppercase tracking-[0.2em] mb-2">{doc.type || 'Document'}</p>
-                  <h4 className="font-bold text-xl text-[#1a1c1c] tracking-tight">{doc.title}</h4>
-                  <p className="text-sm text-[#3c4a42]/60 mt-3 font-semibold">Accès réservé - PDF Document</p>
+                  <p className="text-[10px] font-black text-[#10b77f] uppercase tracking-[0.2em] mb-2">Contrat</p>
+                  <h4 className="font-bold text-xl text-[#1a1c1c] tracking-tight">Contrat signé</h4>
+                  <p className="text-sm text-[#3c4a42]/60 mt-3 font-semibold">PDF Document</p>
                 </div>
               </div>
-            )) : (
-              // Empty state placeholders from mockup
-              <>
-                <div className="bg-white/50 p-8 rounded-[2rem] border-2 border-dashed border-[#bbcabf]/20 flex flex-col justify-center items-center text-center opacity-70">
-                   <Clock className="w-10 h-10 text-[#bbcabf] mb-4" />
-                   <p className="text-xs font-black uppercase tracking-widest text-[#bbcabf]">Aucun document lié</p>
-                </div>
-              </>
+            ) : (
+              <div className="bg-white/50 p-8 rounded-[2rem] border-2 border-dashed border-[#bbcabf]/20 flex flex-col justify-center items-center text-center opacity-70">
+                 <Clock className="w-10 h-10 text-[#bbcabf] mb-4" />
+                 <p className="text-xs font-black uppercase tracking-widest text-[#bbcabf]">Aucun document lié</p>
+              </div>
             )}
           </div>
         </section>
 
-        {/* Expert CTA Section */}
         <section className="mt-40">
           <div className="bg-[#1a1c1c] rounded-[3.5rem] p-12 md:p-24 overflow-hidden flex flex-col md:flex-row items-center gap-16 relative shadow-3xl">
-            {/* Background Decorative Gradient */}
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#10b77f] rounded-full blur-[150px] -mr-64 -mt-64 opacity-20 pointer-events-none"></div>
             
             <div className="relative z-10 w-40 h-40 md:w-64 md:h-64 flex-shrink-0">
@@ -299,7 +268,6 @@ export default async function RealizationDetailPage({ params }: Props) {
         </section>
       </main>
 
-      {/* Footer */}
       <footer className="bg-[#f3f4f3] border-t border-[#bbcabf]/15 py-20 mt-40">
         <div className="max-w-[1440px] mx-auto px-8 flex flex-col md:flex-row justify-between items-center gap-12 text-center md:text-left">
           <div className="space-y-4">

@@ -34,16 +34,18 @@ export function SearchBar({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="relative w-full">
+    <form onSubmit={handleSubmit} className="relative w-full min-w-[280px]">
       <input
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder={placeholder}
+        aria-label="Rechercher un professionnel"
         className={`w-full rounded-xl border border-border bg-white pr-24 shadow-sm transition-colors placeholder:text-muted-foreground focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20 ${sizeClasses[size]}`}
       />
       <button
         type="submit"
+        aria-label="Lancer la recherche"
         className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg bg-kelen-green-500 px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-kelen-green-600"
       >
         Rechercher

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { RealizationForm } from "@/components/forms/RealizationForm";
+import { ProjectDocumentForm } from "@/components/forms/RealizationForm";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
@@ -34,7 +34,7 @@ export default async function AddRealizationPage() {
       </div>
 
       <div className="rounded-[2.5rem] bg-white p-8 shadow-sm lg:p-12">
-        <RealizationForm professionalId={professional.id} />
+        <ProjectDocumentForm professionalId={professional.id} />
       </div>
     </div>
   );

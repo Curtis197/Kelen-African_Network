@@ -3,17 +3,30 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { useState, useEffect } from "react";
+import { LayoutDashboard, ListChecks, ScrollText, LogOut, Shield } from "lucide-react";
 
 const NAV_ITEMS = [
-  { href: "/admin", label: "Vue d'ensemble", mobileLabel: "Overview", icon: "📊", exact: true },
-  { href: "/admin/queue", label: "File de vérification", mobileLabel: "File", icon: "📋", exact: false },
-  { href: "/admin/journal", label: "Journal d'activité", mobileLabel: "Journal", icon: "📜", exact: false },
+  { href: "/admin", label: "Vue d'ensemble", mobileLabel: "Overview", icon: LayoutDashboard, exact: true },
+  { href: "/admin/queue", label: "File de vérification", mobileLabel: "File", icon: ListChecks, exact: false },
+  { href: "/admin/journal", label: "Journal d'activité", mobileLabel: "Journal", icon: ScrollText, exact: false },
 ];
 
 export function AdminSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        setUserEmail(session.user.email ?? null);
+      }
+    };
+    getUser();
+  }, [supabase.auth]);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -24,14 +37,15 @@ export function AdminSidebar() {
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden w-64 shrink-0 border-r border-border bg-white lg:block">
+      <aside className="hidden w-64 shrink-0 border-r border-border bg-surface lg:block">
         <div className="sticky top-0 flex h-screen flex-col">
           {/* Brand */}
           <div className="flex h-16 items-center border-b border-border px-6">
             <Link href="/" className="text-xl font-bold text-foreground">
               Kelen
             </Link>
-            <span className="ml-2 rounded bg-kelen-red-50 px-1.5 py-0.5 text-xs font-medium text-kelen-red-700">
+            <span className="ml-2 flex items-center gap-1 rounded bg-kelen-red-50 px-1.5 py-0.5 text-xs font-medium text-kelen-red-700">
+              <Shield className="h-3 w-3" />
               Admin
             </span>
           </div>
@@ -42,6 +56,7 @@ export function AdminSidebar() {
               const isActive = item.exact
                 ? pathname === item.href
                 : pathname.startsWith(item.href);
+              const Icon = item.icon;
               return (
                 <Link
                   key={item.href}
@@ -52,7 +67,7 @@ export function AdminSidebar() {
                       : "text-muted-foreground hover:bg-muted hover:text-foreground"
                   }`}
                 >
-                  <span>{item.icon}</span>
+                  <Icon className="h-4 w-4" />
                   {item.label}
                 </Link>
               );
@@ -64,13 +79,14 @@ export function AdminSidebar() {
             <div className="rounded-lg bg-muted/50 p-3">
               <p className="text-xs font-medium text-foreground">Administrateur</p>
               <p className="mt-0.5 text-xs text-muted-foreground">
-                admin@kelen.africa
+                {userEmail ?? "Chargement..."}
               </p>
             </div>
             <button
               onClick={handleSignOut}
-              className="mt-2 w-full rounded-lg px-3 py-2 text-left text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              className="mt-2 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             >
+              <LogOut className="h-4 w-4" />
               Se déconnecter
             </button>
           </div>
@@ -78,12 +94,13 @@ export function AdminSidebar() {
       </aside>
 
       {/* Mobile bottom navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-white/95 backdrop-blur-sm lg:hidden" style={{ paddingBottom: "env(safe-area-inset-bottom)" }}>
+      <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-surface/95 backdrop-blur-sm lg:hidden" style={{ paddingBottom: "env(safe-area-inset-bottom)" }}>
         <div className="flex">
           {NAV_ITEMS.map((item) => {
             const isActive = item.exact
               ? pathname === item.href
               : pathname.startsWith(item.href);
+            const Icon = item.icon;
             return (
               <Link
                 key={item.href}
@@ -92,8 +109,8 @@ export function AdminSidebar() {
                   isActive ? "text-kelen-green-600" : "text-muted-foreground"
                 }`}
               >
-                <span className="text-base leading-none">{item.icon}</span>
-                <span className="text-[10px] font-bold leading-tight text-center">
+                <Icon className="h-5 w-5" />
+                <span className="text-[10px] font-bold leading-tight text-center max-w-[56px] truncate">
                   {item.mobileLabel}
                 </span>
               </Link>

@@ -208,11 +208,18 @@ export default function ProjectDetailPage() {
             </div>
             
             <div className="flex items-center gap-4">
+              <Link
+                href={`/projets/${projectIdStr}/journal`}
+                className="px-8 py-4 bg-surface-container-low text-on-surface font-headline font-bold rounded-2xl border border-transparent hover:border-surface-container transition-all flex items-center gap-3"
+              >
+                <span className="material-symbols-outlined text-xl">book</span>
+                <span>Journal</span>
+              </Link>
               <button className="px-8 py-4 bg-surface-container-low text-on-surface font-headline font-bold rounded-2xl border border-transparent hover:border-surface-container transition-all flex items-center gap-3">
                 <span className="material-symbols-outlined text-xl">share</span>
                 <span>Partager</span>
               </button>
-              <Link 
+              <Link
                 href={`/projets/nouveau?id=${projectIdStr}`}
                 className="px-10 py-4 bg-primary text-white font-headline font-bold rounded-2xl shadow-xl shadow-primary/10 hover:scale-[0.98] transition-all flex items-center gap-3"
               >
