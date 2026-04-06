@@ -9,9 +9,24 @@ function log(action: string, data: Record<string, unknown>) {
   console.log(JSON.stringify({ ts: new Date().toISOString(), action, ...data }));
 }
 
+async function getProfessionalId(): Promise<string | null> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return null;
+
+  const { data } = await supabase
+    .from("professionals")
+    .select("id")
+    .eq("user_id", user.id)
+    .single();
+
+  return data?.id || null;
+}
+
 const logSchema = z.object({
   id: z.string().uuid().optional(),
   projectId: z.string().uuid(),
+  isProProject: z.boolean().optional().default(false),
   stepId: z.string().uuid().nullable().optional(),
   logDate: z.string(),
   title: z.string().min(1, "Le titre est requis").max(200),
@@ -36,18 +51,7 @@ export async function createLog(data: z.infer<typeof logSchema>): Promise<{ data
 
   const validated = logSchema.parse(data);
 
-  // Verify project access
-  const { data: project } = await supabase
-    .from("user_projects")
-    .select("id")
-    .eq("id", validated.projectId)
-    .single();
-
-  if (!project) {
-    return { error: "Projet introuvable" };
-  }
-
-  // Determine author role
+  // Determine author role and project access
   const { data: profile } = await supabase
     .from("users")
     .select("role")
@@ -56,13 +60,43 @@ export async function createLog(data: z.infer<typeof logSchema>): Promise<{ data
 
   const authorRole = profile?.role === 'pro_africa' || profile?.role === 'pro_europe' ? 'professional' : 'client';
 
-  // Verify professional has access if author is professional
-  if (authorRole === 'professional') {
+  let targetProjectId: string;
+
+  if (validated.isProProject) {
+    // Pro-owned project
+    const proId = await getProfessionalId();
+    if (!proId) return { error: "Professionnel introuvable" };
+
+    const { data: proProject } = await supabase
+      .from("pro_projects")
+      .select("id")
+      .eq("id", validated.projectId)
+      .eq("professional_id", proId)
+      .single();
+
+    if (!proProject) return { error: "Projet introuvable" };
+    targetProjectId = validated.projectId;
+  } else {
+    // Client-owned project
+    const { data: project } = await supabase
+      .from("user_projects")
+      .select("id")
+      .eq("id", validated.projectId)
+      .single();
+
+    if (!project) return { error: "Projet introuvable" };
+    targetProjectId = validated.projectId;
+  }
+
+  // For pro projects, we don't need to verify client access
+  if (!validated.isProProject && authorRole === 'professional') {
+    // Verify professional has access to client project
+    const proId = await getProfessionalId();
     const { data: proAccess } = await supabase
       .from("project_professionals")
       .select("id")
       .eq("project_id", validated.projectId)
-      .eq("professional_id", user.id)
+      .eq("professional_id", proId)
       .single();
 
     if (!proAccess) {
@@ -70,25 +104,32 @@ export async function createLog(data: z.infer<typeof logSchema>): Promise<{ data
     }
   }
 
+  const insertData: Record<string, unknown> = {
+    project_id: targetProjectId,
+    step_id: validated.stepId || null,
+    author_id: user.id,
+    author_role: authorRole,
+    log_date: validated.logDate,
+    title: validated.title,
+    description: validated.description,
+    money_spent: validated.moneySpent,
+    money_currency: validated.moneyCurrency,
+    payment_id: validated.paymentId || null,
+    issues: validated.issues || null,
+    next_steps: validated.nextSteps || null,
+    weather: validated.weather || null,
+    gps_latitude: validated.gpsLatitude,
+    gps_longitude: validated.gpsLongitude,
+  };
+
+  // For pro projects, set pro_project_id instead
+  if (validated.isProProject) {
+    insertData.pro_project_id = validated.projectId;
+  }
+
   const { data: newLog, error } = await supabase
     .from("project_logs")
-    .insert([{
-      project_id: validated.projectId,
-      step_id: validated.stepId || null,
-      author_id: user.id,
-      author_role: authorRole,
-      log_date: validated.logDate,
-      title: validated.title,
-      description: validated.description,
-      money_spent: validated.moneySpent,
-      money_currency: validated.moneyCurrency,
-      payment_id: validated.paymentId || null,
-      issues: validated.issues || null,
-      next_steps: validated.nextSteps || null,
-      weather: validated.weather || null,
-      gps_latitude: validated.gpsLatitude,
-      gps_longitude: validated.gpsLongitude,
-    }])
+    .insert([insertData])
     .select()
     .single();
 
@@ -97,8 +138,13 @@ export async function createLog(data: z.infer<typeof logSchema>): Promise<{ data
     return { error: error.message };
   }
 
-  log("log.create.ok", { userId: user.id, projectId: validated.projectId, logId: newLog.id });
-  revalidatePath(`/projets/${validated.projectId}/journal`);
+  log("log.create.ok", { userId: user.id, projectId: validated.projectId, logId: newLog.id, isProProject: validated.isProProject });
+  
+  if (validated.isProProject) {
+    revalidatePath(`/pro/projets/${validated.projectId}/journal`);
+  } else {
+    revalidatePath(`/projets/${validated.projectId}/journal`);
+  }
   return { data: newLog };
 }
 

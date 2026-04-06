@@ -11,19 +11,24 @@ import MoneyDisplay from './MoneyDisplay';
 interface LogCardProps {
   log: ProjectLog;
   projectId: string;
+  proProjectId?: string;
   primaryPhotoUrl?: string;
   photoCount: number;
 }
 
-export default function LogCard({ log, projectId, primaryPhotoUrl, photoCount }: LogCardProps) {
+export default function LogCard({ log, projectId, proProjectId, primaryPhotoUrl, photoCount }: LogCardProps) {
   const authorLabel = log.author_role === 'professional' ? 'Pro' : 'Client';
   const dateStr = format(new Date(log.log_date), 'd MMMM yyyy', { locale: fr });
   const timeStr = format(new Date(log.created_at), 'HH:mm');
   const relativeTime = formatDistanceToNow(new Date(log.created_at), { locale: fr, addSuffix: true });
 
+  const href = proProjectId
+    ? `/pro/projets/${proProjectId}/journal/${log.id}`
+    : `/projets/${projectId}/journal/${log.id}`;
+
   return (
     <Link
-      href={`/projets/${projectId}/journal/${log.id}`}
+      href={href}
       className="block group"
       aria-label={`Rapport du ${dateStr}: ${log.title}`}
     >

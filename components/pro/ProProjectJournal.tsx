@@ -1,0 +1,168 @@
+"use client";
+
+import { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
+import { ArrowLeft, Plus, BookOpen } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
+import type { ProProject } from "@/lib/types/pro-projects";
+import type { ProjectLog } from "@/lib/types/daily-logs";
+import { getMediaUrl } from "@/lib/actions/log-media";
+import LogTimeline from '@/components/journal/LogTimeline';
+import LogForm from '@/components/journal/LogForm';
+import { toast } from "sonner";
+
+interface ProProjectJournalProps {
+  project: ProProject;
+}
+
+export function ProProjectJournal({ project }: ProProjectJournalProps) {
+  const router = useRouter();
+  const [logs, setLogs] = useState<ProjectLog[]>([]);
+  const [photoUrls, setPhotoUrls] = useState<Record<string, Record<string, string>>>({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [showNewLog, setShowNewLog] = useState(false);
+  const supabase = createClient();
+
+  const loadLogs = useCallback(async () => {
+    setIsLoading(true);
+    const { data, error } = await supabase
+      .from("project_logs")
+      .select(`
+        *,
+        media:project_log_media(*)
+      `)
+      .eq("pro_project_id", project.id)
+      .order("log_date", { ascending: false })
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Error loading pro project logs:", error);
+    } else {
+      setLogs(data || []);
+
+      // Load signed URLs for photos
+      const urls: Record<string, Record<string, string>> = {};
+      if (data) {
+        for (const log of data) {
+          if (log.media && log.media.length > 0) {
+            urls[log.id] = {};
+            for (const media of log.media) {
+              const signedUrl = await getMediaUrl(media.storage_path);
+              if (signedUrl) {
+                urls[log.id][media.storage_path] = signedUrl;
+              }
+            }
+          }
+        }
+      }
+      setPhotoUrls(urls);
+    }
+    setIsLoading(false);
+  }, [project.id, supabase]);
+
+  useEffect(() => {
+    loadLogs();
+  }, [loadLogs]);
+
+  // Real-time subscription
+  useEffect(() => {
+    const channel = supabase
+      .channel(`pro-journal:${project.id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "project_logs",
+          filter: `pro_project_id=eq.${project.id}`,
+        },
+        () => {
+          loadLogs();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [project.id, loadLogs, supabase]);
+
+  if (showNewLog) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => setShowNewLog(false)}
+            className="p-2 rounded-xl hover:bg-surface-container transition-colors"
+            aria-label="Retour au journal"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </button>
+          <div>
+            <h1 className="text-2xl font-bold text-on-surface">Nouveau rapport</h1>
+            <p className="text-sm text-on-surface-variant mt-1">{project.title}</p>
+          </div>
+        </div>
+        <LogForm
+          projectId={project.id}
+          proProjectId={project.id}
+          projectCurrency={project.currency || "XOF"}
+          onSaved={() => {
+            setShowNewLog(false);
+            loadLogs();
+          }}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <Link
+            href={`/pro/projets/${project.id}`}
+            className="p-2 rounded-xl hover:bg-surface-container transition-colors"
+            aria-label="Retour au projet"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </Link>
+          <div className="flex items-center gap-3">
+            <BookOpen className="w-5 h-5 text-on-surface-variant" />
+            <div>
+              <h1 className="text-xl font-bold text-on-surface">Journal</h1>
+              <p className="text-sm text-on-surface-variant">{project.title}</p>
+            </div>
+          </div>
+        </div>
+
+        <button
+          onClick={() => setShowNewLog(true)}
+          className="inline-flex items-center gap-2 px-5 py-3 bg-primary text-on-primary rounded-xl font-semibold text-sm hover:opacity-90 transition-opacity"
+        >
+          <Plus className="w-4 h-4" />
+          Nouveau rapport
+        </button>
+      </div>
+
+      {/* Loading state */}
+      {isLoading ? (
+        <div className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="bg-surface-container-low rounded-2xl p-6 h-48 animate-pulse" />
+          ))}
+        </div>
+      ) : (
+        <LogTimeline
+          logs={logs}
+          projectId={project.id}
+          proProjectId={project.id}
+          photoUrls={photoUrls}
+          onCreateFirst={() => setShowNewLog(true)}
+        />
+      )}
+    </div>
+  );
+}

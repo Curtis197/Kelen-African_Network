@@ -9,11 +9,12 @@ import LogEmptyState from './LogEmptyState';
 interface LogTimelineProps {
   logs: ProjectLog[];
   projectId: string;
+  proProjectId?: string;
   photoUrls: Record<string, Record<string, string>>; // logId -> { storage_path: url }
   onCreateFirst?: () => void;
 }
 
-export default function LogTimeline({ logs, projectId, photoUrls, onCreateFirst }: LogTimelineProps) {
+export default function LogTimeline({ logs, projectId, proProjectId, photoUrls, onCreateFirst }: LogTimelineProps) {
   if (logs.length === 0) {
     return <LogEmptyState onCreateFirst={onCreateFirst} />;
   }
@@ -50,6 +51,7 @@ export default function LogTimeline({ logs, projectId, photoUrls, onCreateFirst 
                   key={log.id}
                   log={log}
                   projectId={projectId}
+                  proProjectId={proProjectId}
                   primaryPhotoUrl={primaryPhotoUrl}
                   photoCount={photoCount}
                 />

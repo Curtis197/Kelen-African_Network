@@ -17,8 +17,9 @@ import {
 
 const NAV_ITEMS = [
   { href: "/pro/dashboard", label: "Tableau de bord", mobileLabel: "Dashboard", icon: LayoutDashboard },
+  { href: "/pro/projets", label: "Mes projets", mobileLabel: "Projets", icon: Briefcase },
   { href: "/pro/profil", label: "Mon profil", mobileLabel: "Profil", icon: User },
-  { href: "/pro/realisations", label: "Mes réalisations", mobileLabel: "Projets", icon: Briefcase },
+  { href: "/pro/realisations", label: "Mes réalisations", mobileLabel: "Réalis.", icon: Award },
   { href: "/pro/recommandations", label: "Recommandations", mobileLabel: "Recomm.", icon: Award },
   { href: "/pro/signal", label: "Signaux", mobileLabel: "Signaux", icon: AlertTriangle },
   { href: "/pro/abonnement", label: "Abonnement & Visibilité", mobileLabel: "Abo.", icon: Gem },
@@ -27,9 +28,9 @@ const NAV_ITEMS = [
 
 const MOBILE_NAV_ITEMS = [
   { href: "/pro/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/pro/projets", label: "Projets", icon: Briefcase },
   { href: "/pro/profil", label: "Profil", icon: User },
-  { href: "/pro/realisations", label: "Projets", icon: Briefcase },
-  { href: "/pro/recommandations", label: "Recomm.", icon: Award },
+  { href: "/pro/realisations", label: "Réalis.", icon: Award },
   { href: "/pro/abonnement", label: "Abo.", icon: Gem },
 ];
 

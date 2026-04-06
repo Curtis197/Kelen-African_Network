@@ -16,8 +16,10 @@ import { toast } from 'sonner';
 
 interface LogFormProps {
   projectId: string;
+  proProjectId?: string;
   stepId?: string;
   projectCurrency: 'XOF' | 'EUR' | 'USD';
+  onSaved?: () => void;
 }
 
 const defaultFormData = (currency: 'XOF' | 'EUR' | 'USD'): LogFormData => ({
@@ -36,7 +38,7 @@ const defaultFormData = (currency: 'XOF' | 'EUR' | 'USD'): LogFormData => ({
   photos: [],
 });
 
-export default function LogForm({ projectId, stepId, projectCurrency }: LogFormProps) {
+export default function LogForm({ projectId, proProjectId, stepId, projectCurrency, onSaved }: LogFormProps) {
   const router = useRouter();
   const isOnline = useOnlineStatus();
   const [formData, setFormData] = useState<LogFormData>(defaultFormData(projectCurrency));
@@ -124,7 +126,8 @@ export default function LogForm({ projectId, stepId, projectCurrency }: LogFormP
     try {
       // Create log entry
       const result = await createLog({
-        projectId,
+        projectId: proProjectId || projectId,
+        isProProject: !!proProjectId,
         stepId,
         logDate: formData.logDate,
         title: formData.title,
@@ -164,8 +167,13 @@ export default function LogForm({ projectId, stepId, projectCurrency }: LogFormP
       }
 
       toast.success('Rapport publié avec succès');
-      router.push(`/projets/${projectId}/journal`);
-      router.refresh();
+      
+      if (onSaved) {
+        onSaved();
+      } else {
+        router.push(`/projets/${projectId}/journal`);
+        router.refresh();
+      }
     } catch (err) {
       toast.error('Erreur inattendue');
       console.error(err);
