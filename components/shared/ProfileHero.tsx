@@ -13,40 +13,45 @@ export function ProfileHero({
   const bgImage = backgroundImage || "https://lh3.googleusercontent.com/aida-public/AB6AXuBhy_lQ8urtFRkZBPEwxM8LcMKZG30YLGgnjunfOdnas-7oKII6-WB19KJ0PKVqxQKxjmED8J2rcBY8gLNz1Iaf4fXVxdAcrcG0XrFx63OFiNUnpXy_FblWyQTRZ48jopoPInCi7fgO8YKjiDN6lHDPzyWq5O8wyRpiRysgpS-o23wlIr9aIVVmMK0vgDoy9-kNtTZHbo-dAQqkWiGVFgE-QkSQwsVxhbkhyORAv7zL3JIN2r-WO4tOtO7eBlfvavPMAUba843ZdO4";
 
   return (
-    <section className="relative min-h-[85vh] flex items-center justify-center pt-16 overflow-hidden">
+    <section className="relative min-h-[60vh] md:min-h-[80vh] flex items-center pt-16 overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <img
           className="w-full h-full object-cover"
           src={bgImage}
-          alt={businessName}
+          alt=""
+          loading="eager"
         />
-        <div className="absolute inset-0 bg-on-surface/40"></div>
+        {/* Gradient overlay — darker on left, lighter on right so image shows */}
+        <div className="absolute inset-0 bg-gradient-to-r from-on-surface/70 via-on-surface/40 to-transparent"></div>
       </div>
 
-      {/* Hero Content Card (Glassmorphism) */}
-      <div className="relative z-10 w-full max-w-5xl px-8">
-        <div className="bg-surface/70 backdrop-blur-2xl p-12 md:p-20 rounded-2xl border border-outline-variant/15 max-w-3xl shadow-2xl">
-          <h1 className="font-headline font-extrabold text-5xl md:text-7xl tracking-tighter text-on-surface mb-6 leading-tight">
-            {businessName}
-          </h1>
-          <p className="font-body text-xl md:text-2xl text-on-surface-variant font-medium mb-10 border-l-4 border-primary pl-6">
-            {tagline}
-          </p>
-          <div className="flex flex-wrap gap-4">
-            <a
-              href="#contact"
-              className="bg-primary text-on-primary px-8 py-4 rounded-xl font-bold flex items-center gap-2 hover:scale-[0.98] transition-transform shadow-lg shadow-primary/20"
-            >
-              Consulter Profil
-              <span className="material-symbols-outlined">arrow_forward</span>
-            </a>
-            <a
-              href="#portfolio"
-              className="bg-surface-container-high text-on-surface px-8 py-4 rounded-xl font-bold hover:bg-surface-container-highest transition-colors"
-            >
-              Voir Réalisations
-            </a>
+      {/* Hero Content — compact card anchored to the left */}
+      <div className="relative z-10 w-full px-4 md:px-12 lg:px-20">
+        <div className="max-w-md md:max-w-lg">
+          {/* Compact glass card */}
+          <div className="bg-surface/60 backdrop-blur-xl p-6 md:p-8 rounded-2xl border border-outline-variant/10 shadow-xl">
+            <h1 className="font-headline font-bold text-2xl md:text-4xl tracking-tight text-on-surface leading-tight">
+              {businessName}
+            </h1>
+            <p className="font-body text-sm md:text-lg text-on-surface-variant/90 font-medium mt-3 mb-6 border-l-2 border-primary pl-4">
+              {tagline}
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href="#contact"
+                className="bg-primary text-on-primary px-5 py-3 rounded-xl text-sm font-bold flex items-center gap-2 hover:opacity-90 transition-opacity shadow-md shadow-primary/20"
+              >
+                Consulter Profil
+                <span className="material-symbols-outlined text-sm">arrow_forward</span>
+              </a>
+              <a
+                href="#portfolio"
+                className="bg-surface-container-high/80 backdrop-blur text-on-surface px-5 py-3 rounded-xl text-sm font-bold hover:bg-surface-container-high transition-colors"
+              >
+                Voir Réalisations
+              </a>
+            </div>
           </div>
         </div>
       </div>

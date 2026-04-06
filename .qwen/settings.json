@@ -4,7 +4,10 @@
       "Bash(npm install *)",
       "Bash(npm run *)",
       "Bash(findstr *)",
-      "Bash(npx *)"
+      "Bash(npx *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(vercel *)"
     ]
   },
   "$version": 3

@@ -84,14 +84,14 @@ export default async function ProfessionalProfilePage({ params }: Props) {
         {/* Hero Section */}
         <section className="relative min-h-[35vh] flex items-center justify-center overflow-hidden">
           <div className="absolute inset-0 z-0">
-            <img 
-              className="w-full h-full object-cover" 
-              src={pro.portfolio_photos?.[0] || "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80"} 
-              alt={pro.business_name}
+            <img
+              className="w-full h-full object-cover"
+              src={pro.hero_image_url || pro.portfolio_photos?.[0] || "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80"}
+              alt=""
             />
             <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]"></div>
           </div>
-          
+
           <div className="relative z-10 w-full max-w-6xl px-4 sm:px-6 flex justify-center">
             <div className="bg-white/80 backdrop-blur-2xl p-5 sm:p-8 md:p-10 rounded-[1.5rem] md:rounded-[2rem] border border-white/20 w-full md:w-[35vw] shadow-2xl">
               <div className="flex items-center gap-3 mb-4">
@@ -105,25 +105,25 @@ export default async function ProfessionalProfilePage({ params }: Props) {
                    </span>
                  )}
               </div>
-              
+
               <h1 className="text-3xl md:text-5xl font-black text-stone-900 tracking-tighter leading-[1.1] mb-4">
                 {pro.business_name}
               </h1>
-              
+
               <p className="text-sm md:text-base text-stone-600 font-medium mb-6 border-l-3 border-kelen-green-600 pl-4 leading-relaxed line-clamp-2">
-                {pro.description || pro.category}
+                {pro.hero_tagline || pro.description || pro.category}
               </p>
-              
+
               <div className="flex flex-wrap gap-3">
                 <a href="#contact" className="bg-kelen-green-600 text-white px-6 py-3 rounded-xl text-sm font-bold flex items-center gap-2 hover:scale-[0.98] transition-all shadow-lg shadow-kelen-green-600/10">
                   Contacter
                   <ChevronRight className="w-4 h-4" />
                 </a>
                 {user && (
-                  <AddToProjectDialog 
-                    professionalId={pro.id} 
-                    professionalName={pro.business_name} 
-                    userProjects={userProjects} 
+                  <AddToProjectDialog
+                    professionalId={pro.id}
+                    professionalName={pro.business_name}
+                    userProjects={userProjects}
                   />
                 )}
                 <a href="#portfolio" className="bg-white text-stone-900 px-6 py-3 rounded-xl text-sm font-bold hover:bg-stone-50 transition-all border border-stone-200 shadow-sm">
@@ -280,14 +280,20 @@ export default async function ProfessionalProfilePage({ params }: Props) {
                   <span className="text-kelen-green-600 font-black tracking-[0.3em] uppercase text-xs">Notre Philosophie</span>
                   <h2 className="text-4xl md:text-5xl font-black mt-4 text-stone-900 tracking-tight leading-tight">Expertise & Engagement</h2>
                 </div>
-                
+
                 <div className="space-y-8 text-xl text-stone-600 leading-relaxed font-medium">
-                  <p>
-                    Avec plus de {pro.years_experience || "10"} ans d&apos;expérience dans le secteur de {pro.category.toLowerCase()}, nous accompagnons nos clients dans la réalisation de projets complexes avec une rigueur absolue.
-                  </p>
-                  <p>
-                    Notre approche repose sur trois piliers fondamentaux : l&apos;innovation technique, le respect scrupuleux des normes de sécurité et une écoute attentive des besoins spécifiques de chaque maître d&apos;ouvrage.
-                  </p>
+                  {pro.about_text ? (
+                    <p className="whitespace-pre-wrap">{pro.about_text}</p>
+                  ) : (
+                    <>
+                      <p>
+                        Avec plus de {pro.years_experience || "10"} ans d&apos;expérience dans le secteur de {pro.category.toLowerCase()}, nous accompagnons nos clients dans la réalisation de projets complexes avec une rigueur absolue.
+                      </p>
+                      <p>
+                        Notre approche repose sur trois piliers fondamentaux : l&apos;innovation technique, le respect scrupuleux des normes de sécurité et une écoute attentive des besoins spécifiques de chaque maître d&apos;ouvrage.
+                      </p>
+                    </>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-3 gap-8 pt-12 border-t border-stone-200">
@@ -310,20 +316,35 @@ export default async function ProfessionalProfilePage({ params }: Props) {
                 <div className="absolute -top-10 -left-10 w-40 h-40 bg-kelen-green-500/10 rounded-full blur-3xl z-0"></div>
                 <img
                   className="rounded-[2rem] md:rounded-[3rem] w-full h-[350px] sm:h-[450px] md:h-[700px] object-cover relative z-10 shadow-3xl grayscale hover:grayscale-0 transition-all duration-1000 ease-out"
-                  src={pro.portfolio_photos?.[6] || "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80"} 
+                  src={pro.portfolio_photos?.[6] || "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80"}
                   alt="Le professionnel au travail"
                 />
-                <div className="hidden sm:block absolute -bottom-10 -right-6 bg-white p-6 md:p-10 rounded-[2rem] shadow-2xl z-20 border border-stone-100 max-w-xs">
-                  <div className="flex items-center gap-6">
-                    <div className="bg-amber-100 p-4 rounded-2xl">
-                      <Award className="w-8 h-8 text-amber-600" />
-                    </div>
+                {pro.profile_picture_url && (
+                  <div className="hidden sm:block absolute -bottom-10 -right-6 bg-white p-4 md:p-6 rounded-[2rem] shadow-2xl z-20 border border-stone-100 flex items-center gap-4 max-w-xs">
+                    <img
+                      src={pro.profile_picture_url}
+                      alt={pro.business_name}
+                      className="w-12 h-12 rounded-full object-cover"
+                    />
                     <div>
-                      <p className="font-black text-stone-900 text-lg">Hautement Qualifié</p>
-                      <p className="text-sm text-stone-500 font-bold uppercase tracking-widest mt-1">Status {currentStatus}</p>
+                      <p className="font-bold text-stone-900 text-sm">{pro.business_name}</p>
+                      <p className="text-xs text-stone-500 font-medium">Status {currentStatus}</p>
                     </div>
                   </div>
-                </div>
+                )}
+                {!pro.profile_picture_url && (
+                  <div className="hidden sm:block absolute -bottom-10 -right-6 bg-white p-6 md:p-10 rounded-[2rem] shadow-2xl z-20 border border-stone-100 max-w-xs">
+                    <div className="flex items-center gap-6">
+                      <div className="bg-amber-100 p-4 rounded-2xl">
+                        <Award className="w-8 h-8 text-amber-600" />
+                      </div>
+                      <div>
+                        <p className="font-black text-stone-900 text-lg">Hautement Qualifié</p>
+                        <p className="text-sm text-stone-500 font-bold uppercase tracking-widest mt-1">Status {currentStatus}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
