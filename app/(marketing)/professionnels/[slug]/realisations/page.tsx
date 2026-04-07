@@ -45,12 +45,36 @@ export default async function RealisationsListPage({ params }: Props) {
     .from("professional_realizations")
     .select(`
       *,
-      images:realization_images(*),
-      likes:realization_likes(count),
-      comments:realization_comments(count, filter=status.eq.approved)
+      images:realization_images(*)
     `)
     .eq("professional_id", pro.id)
     .order("created_at", { ascending: false });
+
+  // Fetch like and comment counts for each realization
+  const realizationIds = realizations?.map(r => r.id) || [];
+  const likesData = realizationIds.length > 0 ? await Promise.all(
+    realizationIds.map(async (id) => {
+      const { count } = await supabase
+        .from("realization_likes")
+        .select("*", { count: "exact", head: true })
+        .eq("realization_id", id);
+      return { id, count: count || 0 };
+    })
+  ) : [];
+
+  const commentsData = realizationIds.length > 0 ? await Promise.all(
+    realizationIds.map(async (id) => {
+      const { count } = await supabase
+        .from("realization_comments")
+        .select("*", { count: "exact", head: true })
+        .eq("realization_id", id)
+        .eq("status", "approved");
+      return { id, count: count || 0 };
+    })
+  ) : [];
+
+  const likesMap = Object.fromEntries(likesData.map(l => [l.id, l.count]));
+  const commentsMap = Object.fromEntries(commentsData.map(c => [c.id, c.count]));
 
   const portfolioItems = realizations && realizations.length > 0
     ? realizations.map(r => {
@@ -63,8 +87,8 @@ export default async function RealisationsListPage({ params }: Props) {
           location: r.location,
           price: r.price,
           currency: r.currency || "XOF",
-          likeCount: r.likes?.[0]?.count || 0,
-          commentCount: r.comments?.[0]?.count || 0
+          likeCount: likesMap[r.id] || 0,
+          commentCount: commentsMap[r.id] || 0
         };
       })
     : [];
