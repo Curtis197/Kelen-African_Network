@@ -61,22 +61,42 @@ export default async function ProfessionalProfilePage({ params }: Props) {
 
   const currentStatus = (pro.status as keyof typeof statusColors) || "white";
 
-  const { data: realRealizations } = await supabase
-    .from("project_documents")
+  // Fetch professional portfolio (about_text, hero content, etc.)
+  const { data: portfolio } = await supabase
+    .from("professional_portfolio")
     .select("*")
     .eq("professional_id", pro.id)
-    .eq("status", "published")
+    .single();
+
+  // Fetch realizations with their images
+  const { data: realizations } = await supabase
+    .from("professional_realizations")
+    .select(`
+      *,
+      images:realization_images(*)
+    `)
+    .eq("professional_id", pro.id)
     .order("created_at", { ascending: false });
 
-  const portfolioItems = realRealizations && realRealizations.length > 0 
-    ? realRealizations.map(r => ({
-        id: r.id,
-        title: r.project_title,
-        description: r.project_description,
-        image: r.photo_urls?.[0] || "https://images.unsplash.com/photo-1600585154340-be6199f7d209?auto=format&fit=crop&q=80",
-        location: r.project_date
-      }))
+  // Map realizations to portfolio items format
+  const portfolioItems = realizations && realizations.length > 0
+    ? realizations.map(r => {
+        const mainImage = r.images?.find((img: any) => img.is_main) || r.images?.[0];
+        return {
+          id: r.id,
+          title: r.title,
+          description: r.description || "",
+          image: mainImage?.url || "https://images.unsplash.com/photo-1600585154340-be6199f7d209?auto=format&fit=crop&q=80",
+          location: r.location
+        };
+      })
     : [];
+
+  // Use portfolio data for hero and about sections
+  const heroImage = portfolio?.hero_image_url || pro.portfolio_photos?.[0] || "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80";
+  const heroTagline = portfolio?.hero_title || pro.hero_tagline || pro.description || pro.category;
+  const aboutText = portfolio?.about_text;
+  const aboutImage = portfolio?.about_image_url;
 
   return (
     <div className="bg-surface selection:bg-primary-container selection:text-on-primary-container min-h-screen">
@@ -86,7 +106,7 @@ export default async function ProfessionalProfilePage({ params }: Props) {
           <div className="absolute inset-0 z-0">
             <img
               className="w-full h-full object-cover"
-              src={pro.hero_image_url || pro.portfolio_photos?.[0] || "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80"}
+              src={heroImage}
               alt=""
             />
             <div className="absolute inset-0 bg-black/20"></div>
@@ -111,7 +131,7 @@ export default async function ProfessionalProfilePage({ params }: Props) {
               </h1>
 
               <p className="text-sm md:text-lg text-stone-600 font-medium mb-4 md:mb-8 border-l-4 border-kelen-green-600 pl-3 md:pl-4 leading-relaxed line-clamp-2 md:line-clamp-none">
-                {pro.hero_tagline || pro.description || pro.category}
+                {heroTagline}
               </p>
 
               <div className="flex flex-wrap gap-2 md:gap-3">
@@ -199,7 +219,7 @@ export default async function ProfessionalProfilePage({ params }: Props) {
         )}
 
         {/* Philosophy Section - Only shown if about_text exists */}
-        {pro.about_text && (
+        {aboutText && (
         <section className="py-16 md:py-32 bg-stone-50 rounded-t-[3rem] md:rounded-none" id="about">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <div className="grid md:grid-cols-2 gap-10 md:gap-24 items-center">
@@ -210,7 +230,7 @@ export default async function ProfessionalProfilePage({ params }: Props) {
                 </div>
 
                 <div className="space-y-8 text-lg text-stone-600 leading-relaxed font-medium">
-                  <p className="whitespace-pre-wrap">{pro.about_text}</p>
+                  <p className="whitespace-pre-wrap">{aboutText}</p>
                 </div>
 
                 <div className="grid grid-cols-3 gap-4 md:gap-8 pt-8 md:pt-12">
@@ -233,7 +253,7 @@ export default async function ProfessionalProfilePage({ params }: Props) {
                 <div className="absolute -top-10 -left-10 w-40 h-40 bg-kelen-green-500/10 rounded-full blur-3xl z-0"></div>
                 <img
                   className="rounded-[2rem] md:rounded-[3rem] w-full h-[350px] sm:h-[450px] md:h-[700px] object-cover relative z-10 shadow-3xl grayscale hover:grayscale-0 transition-all duration-1000 ease-out"
-                  src={pro.portfolio_photos?.[6] || "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80"}
+                  src={aboutImage || "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80"}
                   alt="Le professionnel au travail"
                 />
                 {pro.profile_picture_url && (

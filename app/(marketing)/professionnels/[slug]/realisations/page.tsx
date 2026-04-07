@@ -39,21 +39,27 @@ export default async function RealisationsListPage({ params }: Props) {
 
   if (!pro) notFound();
 
-  const { data: realRealizations } = await supabase
-    .from("project_documents")
-    .select("*")
+  // Fetch realizations with their images
+  const { data: realizations } = await supabase
+    .from("professional_realizations")
+    .select(`
+      *,
+      images:realization_images(*)
+    `)
     .eq("professional_id", pro.id)
-    .eq("status", "published")
     .order("created_at", { ascending: false });
 
-  const portfolioItems = realRealizations && realRealizations.length > 0
-    ? realRealizations.map(r => ({
-        id: r.id,
-        title: r.project_title,
-        description: r.project_description,
-        image: r.photo_urls?.[0] || "https://images.unsplash.com/photo-1600585154340-be6199f7d209?auto=format&fit=crop&q=80",
-        location: r.project_date
-      }))
+  const portfolioItems = realizations && realizations.length > 0
+    ? realizations.map(r => {
+        const mainImage = r.images?.find((img: any) => img.is_main) || r.images?.[0];
+        return {
+          id: r.id,
+          title: r.title,
+          description: r.description || "",
+          image: mainImage?.url || "https://images.unsplash.com/photo-1600585154340-be6199f7d209?auto=format&fit=crop&q=80",
+          location: r.location
+        };
+      })
     : [];
 
   return (
