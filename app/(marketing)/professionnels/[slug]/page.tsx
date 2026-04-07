@@ -143,9 +143,10 @@ export default async function ProfessionalProfilePage({ params }: Props) {
                 <span className="text-kelen-green-600 font-black tracking-[0.3em] uppercase text-xs">Excellence & Savoir-faire</span>
                 <h2 className="text-4xl md:text-5xl font-black mt-4 text-stone-900 tracking-tight">Portfolio de Projets</h2>
               </div>
-              <p className="text-stone-500 max-w-sm font-medium italic text-lg leading-relaxed">
-                Une sélection rigoureuse de réalisations témoignant d&apos;une précision technique et d&apos;un engagement envers la qualité.
-              </p>
+              <Link href={`/professionnels/${slug}/realisations`} className="text-kelen-green-600 font-semibold flex items-center gap-2 hover:gap-3 transition-all duration-300 group">
+                Voir toutes les réalisations
+                <span className="material-symbols-outlined text-base">arrow_forward</span>
+              </Link>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8">
