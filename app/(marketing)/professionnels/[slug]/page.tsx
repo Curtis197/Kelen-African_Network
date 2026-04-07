@@ -5,6 +5,8 @@ import { Star, MapPin, Verified, Phone, Mail, Smartphone, ChevronRight, User, Co
 import Link from "next/link";
 import { getUserProjects } from "@/lib/actions/projects";
 import { AddToProjectDialog } from "@/components/projects/AddToProjectDialog";
+import RecommandationScrollRow from "@/components/recommandations/RecommandationScrollRow";
+import { getLatestRecommandations, getRecommandationCount } from "@/lib/actions/professional-recommandations";
 
 interface Props {
   params: Promise<{
@@ -99,6 +101,10 @@ export default async function ProfessionalProfilePage({ params }: Props) {
   const heroTagline = portfolio?.hero_title || pro.hero_tagline || pro.description || pro.category;
   const aboutText = portfolio?.about_text;
   const aboutImage = portfolio?.about_image_url;
+
+  // Fetch recommendations for social proof
+  const recommandationCount = await getRecommandationCount(pro.id);
+  const latestRecommandations = await getLatestRecommandations(pro.id, 5);
 
   return (
     <div className="bg-surface selection:bg-primary-container selection:text-on-primary-container min-h-screen">
@@ -285,6 +291,24 @@ export default async function ProfessionalProfilePage({ params }: Props) {
                   </div>
                 )}
               </div>
+            </div>
+          </div>
+        </section>
+        )}
+
+        {/* Recommandations Section - Social Proof */}
+        {recommandationCount > 0 && (
+        <section className="py-16 px-4 sm:px-6 md:py-32 bg-stone-50">
+          <div className="max-w-7xl mx-auto">
+            <RecommandationScrollRow 
+              recommandations={latestRecommandations}
+              totalCount={recommandationCount}
+            />
+            <div className="mt-8 text-center">
+              <Link href={`/professionnels/${slug}/recommandations`} className="text-kelen-green-600 font-semibold flex items-center justify-center gap-2 hover:gap-3 transition-all duration-300 group">
+                Voir toutes les recommandations
+                <span className="material-symbols-outlined text-base">arrow_forward</span>
+              </Link>
             </div>
           </div>
         </section>
