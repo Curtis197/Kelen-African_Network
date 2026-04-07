@@ -86,24 +86,24 @@ export default function ProjectStepsSection({
   };
 
   return (
-    <section className="space-y-8">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+    <section className="space-y-4 sm:space-y-6 lg:space-y-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6">
         <div>
-          <h3 className="text-2xl font-black text-stone-900 tracking-tight">Roadmap de Réalisation</h3>
-          <p className="text-sm text-stone-500 font-medium pt-1 italic">
+          <h3 className="text-lg sm:text-xl lg:text-2xl font-black text-stone-900 tracking-tight">Roadmap de Réalisation</h3>
+          <p className="text-xs sm:text-sm text-stone-500 font-medium pt-1 italic">
             Gérez les phases d&apos;intervention et les budgets associés.
           </p>
         </div>
-        
-        <div className="flex items-center gap-3">
+
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
           <div className="relative">
-            <button 
+            <button
               onClick={() => setIsExportOpen(!isExportOpen)}
-              className="flex items-center gap-2 px-6 py-3 bg-stone-50 hover:bg-stone-100 rounded-xl text-stone-600 font-black uppercase tracking-widest text-[10px] transition-all border border-stone-100 shadow-sm"
+              className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-6 py-2 sm:py-3 bg-stone-50 hover:bg-stone-100 rounded-lg sm:rounded-xl text-stone-600 font-black uppercase tracking-widest text-[8px] sm:text-[10px] transition-all border border-stone-100 shadow-sm"
             >
-              <Download className="w-4 h-4" />
+              <Download className="w-3 h-3 sm:w-4 sm:h-4" />
               <span>Exporter</span>
-              <ChevronDown className={`w-4 h-4 transition-transform ${isExportOpen ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`w-3 h-3 sm:w-4 sm:h-4 transition-transform ${isExportOpen ? 'rotate-180' : ''}`} />
             </button>
             
             {isExportOpen && (
@@ -120,23 +120,24 @@ export default function ProjectStepsSection({
             )}
           </div>
 
-          <button 
+          <button
             onClick={handleAdd}
-            className="flex items-center gap-3 px-8 py-3 bg-kelen-green-600 text-white rounded-xl font-black uppercase tracking-widest text-[10px] shadow-xl shadow-kelen-green-600/20 hover:scale-[0.98] transition-all"
+            className="flex items-center gap-2 sm:gap-3 px-4 sm:px-8 py-2 sm:py-3 bg-kelen-green-600 text-white rounded-lg sm:rounded-xl font-black uppercase tracking-widest text-[8px] sm:text-[10px] shadow-xl shadow-kelen-green-600/20 hover:scale-[0.98] transition-all"
           >
-            <PlusCircle className="w-4 h-4" />
-            <span>Nouvelle Étape</span>
+            <PlusCircle className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span className="hidden xs:inline">Nouvelle Étape</span>
+            <span className="xs:hidden">Étape</span>
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 relative">
+      <div className="grid grid-cols-1 gap-4 sm:gap-6 relative">
         {isLoading ? (
-          <div className="p-24 flex items-center justify-center bg-stone-50 rounded-[2.5rem] border-2 border-dashed border-stone-100">
-            <Loader2 className="w-12 h-12 text-stone-200 animate-spin" />
+          <div className="p-12 sm:p-24 flex items-center justify-center bg-stone-50 rounded-xl sm:rounded-[2.5rem] border-2 border-dashed border-stone-100">
+            <Loader2 className="w-8 h-8 sm:w-12 sm:h-12 text-stone-200 animate-spin" />
           </div>
         ) : steps.length > 0 ? (
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {steps.map((step) => (
               <ProjectStepCard
                 key={step.id}
@@ -149,19 +150,19 @@ export default function ProjectStepsSection({
             ))}
           </div>
         ) : (
-          <div className="p-24 text-center bg-stone-50 rounded-[2.5rem] border-2 border-dashed border-stone-100">
-            <div className="w-20 h-20 mx-auto bg-white rounded-full flex items-center justify-center mb-8 shadow-sm">
-              <span className="material-symbols-outlined text-4xl text-stone-200">alt_route</span>
+          <div className="p-12 sm:p-24 text-center bg-stone-50 rounded-xl sm:rounded-[2.5rem] border-2 border-dashed border-stone-100">
+            <div className="w-14 h-14 sm:w-20 sm:h-20 mx-auto bg-white rounded-full flex items-center justify-center mb-4 sm:mb-8 shadow-sm">
+              <span className="material-symbols-outlined text-2xl sm:text-4xl text-stone-200">alt_route</span>
             </div>
-            <h4 className="text-2xl font-black text-stone-900 tracking-tight">Initialisez votre roadmap</h4>
-            <p className="text-stone-500 font-medium mt-3 max-w-sm mx-auto leading-relaxed">
+            <h4 className="text-lg sm:text-2xl font-black text-stone-900 tracking-tight">Initialisez votre roadmap</h4>
+            <p className="text-stone-500 font-medium mt-2 sm:mt-3 max-w-sm mx-auto leading-relaxed text-xs sm:text-sm">
               Découpez votre projet en étapes clés pour suivre son avancement, vos paiements et vos experts précisément.
             </p>
-            <button 
+            <button
               onClick={handleAdd}
-              className="mt-10 px-10 py-4 bg-stone-900 text-white rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-stone-900/10 hover:scale-[0.98] transition-all inline-flex items-center gap-2"
+              className="mt-6 sm:mt-10 px-6 sm:px-10 py-3 sm:py-4 bg-stone-900 text-white rounded-xl sm:rounded-2xl font-black uppercase tracking-widest text-[9px] sm:text-xs shadow-xl shadow-stone-900/10 hover:scale-[0.98] transition-all inline-flex items-center gap-2"
             >
-              <PlusCircle className="w-4 h-4" />
+              <PlusCircle className="w-3 h-3 sm:w-4 sm:h-4" />
               Créer la première étape
             </button>
           </div>

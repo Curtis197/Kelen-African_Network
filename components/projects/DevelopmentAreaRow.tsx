@@ -74,12 +74,12 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between px-2">
-        <div className="flex items-center gap-3">
-          <div className="w-1.5 h-6 bg-kelen-green-500 rounded-full" />
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-1 sm:px-2">
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+          <div className="w-1 sm:w-1.5 h-5 sm:h-6 bg-kelen-green-500 rounded-full flex-shrink-0" />
           {isEditingName ? (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-1 min-w-0">
               <input
                 autoFocus
                 value={editedName}
@@ -88,54 +88,55 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
                   if (e.key === "Enter") handleRenameSubmit();
                   if (e.key === "Escape") { setIsEditingName(false); setEditedName(areaName); }
                 }}
-                className="text-xl font-headline font-bold text-on-surface bg-surface-container-low border border-primary/30 rounded-xl px-3 py-1 outline-none focus:ring-2 focus:ring-primary/20 w-48"
+                className="text-base sm:text-xl font-headline font-bold text-on-surface bg-surface-container-low border border-primary/30 rounded-lg px-2 sm:px-3 py-1 outline-none focus:ring-2 focus:ring-primary/20 w-full sm:w-48"
               />
               <button
                 onClick={handleRenameSubmit}
                 disabled={isUpdating}
-                className="p-1.5 text-kelen-green-600 hover:bg-kelen-green-50 rounded-lg transition-colors"
+                className="p-1 sm:p-1.5 text-kelen-green-600 hover:bg-kelen-green-50 rounded-lg transition-colors flex-shrink-0"
               >
                 <span className="material-symbols-outlined text-sm">check</span>
               </button>
               <button
                 onClick={() => { setIsEditingName(false); setEditedName(areaName); }}
-                className="p-1.5 text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors"
+                className="p-1 sm:p-1.5 text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors flex-shrink-0"
               >
                 <span className="material-symbols-outlined text-sm">close</span>
               </button>
             </div>
           ) : (
-            <h4 className="text-xl font-headline font-bold text-on-surface">{areaName}</h4>
+            <h4 className="text-base sm:text-xl font-headline font-bold text-on-surface break-words">{areaName}</h4>
           )}
-          <span className="px-2.5 py-0.5 bg-surface-container text-on-surface-variant text-[10px] font-black uppercase tracking-widest rounded-full">
-            {professionals.length} Professionnel{professionals.length > 1 ? 's' : ''}
+          <span className="px-2 sm:px-2.5 py-0.5 bg-surface-container text-on-surface-variant text-[8px] sm:text-[10px] font-black uppercase tracking-widest rounded-full flex-shrink-0">
+            {professionals.length} Pro{professionals.length > 1 ? 's' : ''}
           </span>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap pl-3 sm:pl-0">
           <Link
             href={`/?projectId=${projectId}&areaName=${encodeURIComponent(areaName)}`}
-            className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary hover:underline bg-primary/5 px-4 py-2 rounded-full border border-primary/10 transition-all hover:bg-primary/10"
+            className="flex items-center gap-1 sm:gap-2 text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-primary hover:underline bg-primary/5 px-2 sm:px-4 py-1.5 sm:py-2 rounded-full border border-primary/10 transition-all hover:bg-primary/10"
           >
-            <span className="material-symbols-outlined text-sm">search</span>
-            Trouver un professionnel
+            <span className="material-symbols-outlined text-xs sm:text-sm">search</span>
+            <span className="hidden xs:inline">Trouver un pro</span>
+            <span className="xs:hidden">Trouver</span>
           </Link>
           <button
             onClick={handleAddExternal}
-            className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-on-surface-variant hover:text-on-surface transition-colors"
+            className="flex items-center gap-1 sm:gap-2 text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-on-surface-variant hover:text-on-surface transition-colors"
           >
-            <span className="material-symbols-outlined text-sm">add_circle</span>
-            Ajouter un externe
+            <span className="material-symbols-outlined text-xs sm:text-sm">add</span>
+            <span className="hidden sm:inline">Externe</span>
           </button>
           <button
             onClick={() => { setIsEditingName(true); setEditedName(areaName); }}
-            className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40 hover:text-primary transition-colors"
+            className="p-1.5 text-on-surface-variant/40 hover:text-primary transition-colors"
             title="Renommer ce domaine"
           >
             <span className="material-symbols-outlined text-sm">edit</span>
           </button>
           <button
             onClick={onDelete}
-            className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40 hover:text-kelen-red-500 transition-colors"
+            className="p-1.5 text-on-surface-variant/40 hover:text-kelen-red-500 transition-colors"
             title="Supprimer ce domaine"
           >
             <span className="material-symbols-outlined text-sm">delete</span>
@@ -143,7 +144,7 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
         </div>
       </div>
 
-      <div className="flex gap-6 overflow-x-auto pb-6 px-1 scrollbar-hide snap-x">
+      <div className="flex gap-3 sm:gap-6 overflow-x-auto pb-4 sm:pb-6 px-1 scrollbar-hide snap-x">
         {professionals.length > 0 ? (
           professionals.map((member, index) => (
             <motion.div
@@ -152,12 +153,12 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="min-w-[320px] md:min-w-[400px] snap-start"
+              className="min-w-[280px] sm:min-w-[320px] md:min-w-[400px] snap-start"
             >
-              <div className="bg-surface-container-lowest p-6 rounded-[2rem] border border-outline-variant/30 shadow-sm hover:shadow-xl transition-all group relative overflow-hidden">
+              <div className="bg-surface-container-lowest p-4 sm:p-6 rounded-xl sm:rounded-[2rem] border border-outline-variant/30 shadow-sm hover:shadow-xl transition-all group relative overflow-hidden">
                 {/* Selection Badge */}
-                <div className="absolute top-4 right-4 z-10">
-                  <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest shadow-sm ${
+                <div className="absolute top-3 sm:top-4 right-3 sm:right-4 z-10">
+                  <span className={`px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-[7px] sm:text-[9px] font-black uppercase tracking-widest shadow-sm ${
                     member.selection_status === 'finalist' ? 'bg-primary text-white' :
                     member.selection_status === 'shortlisted' ? 'bg-secondary-container text-on-secondary-container' :
                     'bg-surface-container text-on-surface-variant'
@@ -166,11 +167,11 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
                   </span>
                 </div>
 
-                <div className="flex gap-5">
+                <div className="flex gap-3 sm:gap-5">
                   <div className="relative shrink-0">
-                    <div className="w-20 h-20 rounded-2xl overflow-hidden bg-surface-container ring-4 ring-white shadow-sm flex items-center justify-center text-on-surface-variant">
+                    <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-xl sm:rounded-2xl overflow-hidden bg-surface-container ring-2 sm:ring-4 ring-white shadow-sm flex items-center justify-center text-on-surface-variant">
                       {member.is_external ? (
-                        <span className="material-symbols-outlined text-4xl opacity-20">person</span>
+                        <span className="material-symbols-outlined text-2xl sm:text-3xl md:text-4xl opacity-20">person</span>
                       ) : (
                         <img
                           src={member.professionals?.portfolio_photos?.[0] || "https://images.unsplash.com/photo-1541888946425-d81bb19480c5?auto=format&fit=crop&q=80"}
@@ -180,62 +181,62 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
                       )}
                     </div>
                     {member.selection_status === 'finalist' && (
-                      <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-primary rounded-full flex items-center justify-center border-4 border-white shadow-lg">
-                        <span className="material-symbols-outlined text-white text-base font-bold">check</span>
+                      <div className="absolute -bottom-1.5 sm:-bottom-2 -right-1.5 sm:-right-2 w-6 h-6 sm:w-8 sm:h-8 bg-primary rounded-full flex items-center justify-center border-2 sm:border-4 border-white shadow-lg">
+                        <span className="material-symbols-outlined text-white text-xs sm:text-base font-bold">check</span>
                       </div>
                     )}
                   </div>
 
                   <div className="flex-1 min-w-0 pt-1">
-                    <div className="flex items-center gap-2">
-                      <h5 className="font-headline font-bold text-lg text-on-surface truncate max-w-[150px] text-balance leading-tight">
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                      <h5 className="font-headline font-bold text-sm sm:text-lg text-on-surface truncate max-w-[120px] sm:max-w-[150px] text-balance leading-tight">
                         {member.is_external ? member.external_name : member.professionals?.business_name}
                       </h5>
                       {member.is_external && (
-                        <span className="material-symbols-outlined text-sm text-on-surface-variant/40" title="Profil externe">public</span>
+                        <span className="material-symbols-outlined text-xs sm:text-sm text-on-surface-variant/40" title="Profil externe">public</span>
                       )}
                     </div>
-                    <p className="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mt-1 opacity-70">
+                    <p className="text-[8px] sm:text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mt-0.5 sm:mt-1 opacity-70">
                       {member.is_external ? member.external_category || areaName : member.professionals?.category}
                     </p>
 
                     {member.private_note && (
-                      <div className="mt-4 p-3 bg-primary/5 rounded-xl border border-primary/5">
-                        <p className="text-[10px] text-on-surface-variant/80 leading-relaxed italic">
+                      <div className="mt-2 sm:mt-4 p-2 sm:p-3 bg-primary/5 rounded-lg sm:rounded-xl border border-primary/5">
+                        <p className="text-[8px] sm:text-[10px] text-on-surface-variant/80 leading-relaxed italic">
                           "{member.private_note}"
                         </p>
                       </div>
                     )}
-                    
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      <div className="flex items-center bg-surface-container px-2 py-1 rounded-lg">
-                        <span className="text-[10px] font-bold text-on-surface-variant">Rang #{member.rank_order + 1}</span>
+
+                    <div className="mt-2 sm:mt-4 flex flex-wrap gap-1.5 sm:gap-2">
+                      <div className="flex items-center bg-surface-container px-1.5 sm:px-2 py-1 rounded-lg">
+                        <span className="text-[8px] sm:text-[10px] font-bold text-on-surface-variant">Rang #{member.rank_order + 1}</span>
                       </div>
-                      <div className="flex gap-1">
-                         <button 
+                      <div className="flex gap-0.5 sm:gap-1">
+                         <button
                            onClick={() => handleRankUpdate(member.id, member.rank_order, 'up')}
                            disabled={member.rank_order === 0 || isUpdating}
-                           className="w-7 h-7 flex items-center justify-center bg-surface-container hover:bg-surface-container-high rounded-full disabled:opacity-30 transition-colors"
+                           className="w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center bg-surface-container hover:bg-surface-container-high rounded-full disabled:opacity-30 transition-colors"
                          >
-                           <span className="material-symbols-outlined text-[14px]">arrow_upward</span>
+                           <span className="material-symbols-outlined text-xs sm:text-[14px]">arrow_upward</span>
                          </button>
-                         <button 
+                         <button
                            onClick={() => handleRankUpdate(member.id, member.rank_order, 'down')}
                            disabled={isUpdating}
-                           className="w-7 h-7 flex items-center justify-center bg-surface-container hover:bg-surface-container-high rounded-full disabled:opacity-30 transition-colors"
+                           className="w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center bg-surface-container hover:bg-surface-container-high rounded-full disabled:opacity-30 transition-colors"
                          >
-                           <span className="material-symbols-outlined text-[14px]">arrow_downward</span>
+                           <span className="material-symbols-outlined text-xs sm:text-[14px]">arrow_downward</span>
                          </button>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="mt-6 pt-6 border-t border-outline-variant/20 flex items-center gap-3">
-                  <div className="flex-1 flex gap-2">
+                <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-outline-variant/20 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
+                  <div className="flex-1 flex gap-1.5 sm:gap-2">
                     <button
                       onClick={() => handleStatusUpdate(member.id, 'shortlisted')}
-                      className={`flex-1 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                      className={`flex-1 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-[8px] sm:text-[10px] font-black uppercase tracking-widest transition-all ${
                         member.selection_status === 'shortlisted' ? 'bg-secondary-container text-on-secondary-container shadow-md' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
                       }`}
                     >
@@ -243,14 +244,14 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
                     </button>
                     <button
                       onClick={() => handleStatusUpdate(member.id, 'finalist')}
-                      className={`flex-1 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                      className={`flex-1 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-[8px] sm:text-[10px] font-black uppercase tracking-widest transition-all ${
                         member.selection_status === 'finalist' ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-primary/10 text-primary hover:bg-primary/20'
                       }`}
                     >
                       Finaliser
                     </button>
                   </div>
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-0.5 sm:gap-1">
                     {member.is_external ? (
                       <button
                         onClick={() => setEditingMember({
@@ -263,27 +264,27 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
                             note: member.private_note || "",
                           }
                         })}
-                        className="p-2.5 text-on-surface-variant/40 hover:text-primary transition-colors"
+                        className="p-2 sm:p-2.5 text-on-surface-variant/40 hover:text-primary transition-colors"
                         title="Modifier ce contact"
                       >
-                        <span className="material-symbols-outlined text-xl">edit</span>
+                        <span className="material-symbols-outlined text-base sm:text-xl">edit</span>
                       </button>
                     ) : (
                       member.professionals?.slug && (
                         <Link
                           href={`/professionnels/${member.professionals.slug}`}
-                          className="p-2.5 text-on-surface-variant/40 hover:text-primary transition-colors"
+                          className="p-2 sm:p-2.5 text-on-surface-variant/40 hover:text-primary transition-colors"
                           title="Voir le profil"
                         >
-                          <span className="material-symbols-outlined text-xl">open_in_new</span>
+                          <span className="material-symbols-outlined text-base sm:text-xl">open_in_new</span>
                         </Link>
                       )
                     )}
                     <button
                       onClick={() => handleRemove(member)}
-                      className="p-2.5 text-on-surface-variant/40 hover:text-kelen-red-500 transition-colors"
+                      className="p-2 sm:p-2.5 text-on-surface-variant/40 hover:text-kelen-red-500 transition-colors"
                     >
-                      <span className="material-symbols-outlined text-xl">delete</span>
+                      <span className="material-symbols-outlined text-base sm:text-xl">delete</span>
                     </button>
                   </div>
                 </div>
@@ -291,14 +292,14 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
             </motion.div>
           ))
         ) : (
-          <div className="w-full py-12 text-center bg-surface-container-low/50 rounded-3xl border border-dashed border-outline-variant/30">
-             <p className="text-on-surface-variant font-medium italic">Aucun profil à comparer dans ce domaine.</p>
+          <div className="w-full py-8 sm:py-12 text-center bg-surface-container-low/50 rounded-xl sm:rounded-3xl border border-dashed border-outline-variant/30">
+             <p className="text-on-surface-variant font-medium italic text-xs sm:text-sm">Aucun profil à comparer dans ce domaine.</p>
              <Link
                href={`/?projectId=${projectId}&areaName=${encodeURIComponent(areaName)}`}
-               className="mt-4 text-xs font-bold text-primary hover:underline flex items-center gap-2 mx-auto justify-center"
+               className="mt-2 sm:mt-4 text-[10px] sm:text-xs font-bold text-primary hover:underline flex items-center gap-1.5 sm:gap-2 mx-auto justify-center"
              >
-               <span className="material-symbols-outlined text-sm">search</span>
-               Trouver un professionnel
+               <span className="material-symbols-outlined text-xs sm:text-sm">search</span>
+               Trouver un pro
              </Link>
           </div>
         )}
