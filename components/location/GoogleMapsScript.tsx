@@ -38,20 +38,22 @@ export function GoogleMapsScriptProvider({ apiKey, children }: GoogleMapsScriptP
       return () => clearInterval(checkInterval);
     }
 
-    // Load the Google Maps script
+    // Load the Google Maps script with async loading pattern
     const script = document.createElement("script");
     script.id = "google-maps-script";
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&v=weekly`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&v=weekly&loading=async&callback=initGoogleMaps`;
     script.async = true;
     script.defer = true;
-    script.onload = () => {
-      // Wait a bit for initialization
+    
+    // Create global init callback
+    (window as any).initGoogleMaps = () => {
       setTimeout(() => {
         if (window.google?.maps) {
           setIsLoaded(true);
         }
       }, 100);
     };
+    
     script.onerror = () => setHasError(true);
 
     document.head.appendChild(script);

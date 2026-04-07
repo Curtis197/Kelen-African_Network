@@ -46,7 +46,7 @@ export function LocationSearch({ value, onChange, placeholder = "Rechercher une 
       return;
     }
 
-    // Poll every 500ms until Google is loaded
+    // Poll every 200ms until Google is loaded
     checkInterval.current = setInterval(() => {
       if (window.google?.maps?.places) {
         setIsGoogleLoaded(true);
@@ -55,7 +55,7 @@ export function LocationSearch({ value, onChange, placeholder = "Rechercher une 
         placesService.current = new google.maps.places.PlacesService(dummyDiv);
         if (checkInterval.current) clearInterval(checkInterval.current);
       }
-    }, 500);
+    }, 200);
 
     return () => {
       if (checkInterval.current) clearInterval(checkInterval.current);
