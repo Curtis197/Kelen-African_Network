@@ -206,39 +206,6 @@ export default async function RealizationDetailPage({ params }: Props) {
           </div>
         </div>
 
-        <section className="mt-32">
-          <div className="flex items-end justify-between mb-12">
-            <div>
-              <p className="text-[#10b77f] font-black tracking-[0.3em] uppercase text-xs mb-4">Documentation Technique</p>
-              <h2 className="text-4xl font-black text-[#1a1c1c] tracking-tight leading-tight">Le Technical Vault</h2>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {document.contract_url ? (
-              <div className="group bg-white p-8 rounded-[2rem] hover:shadow-2xl transition-all duration-500 border border-[#f3f4f3] border-transparent hover:border-[#10b77f]/20">
-                <div className="flex justify-between items-start mb-12">
-                  <div className="bg-[#f3f4f3] p-4 rounded-2xl text-[#10b77f] group-hover:bg-[#10b77f] group-hover:text-white transition-all">
-                    <FileText className="w-8 h-8" />
-                  </div>
-                  <a href={document.contract_url} target="_blank" rel="noopener noreferrer">
-                    <Download className="w-6 h-6 text-[#1a1c1c]/20 group-hover:text-[#10b77f] transition-colors" />
-                  </a>
-                </div>
-                <div>
-                  <p className="text-[10px] font-black text-[#10b77f] uppercase tracking-[0.2em] mb-2">Contrat</p>
-                  <h4 className="font-bold text-xl text-[#1a1c1c] tracking-tight">Contrat signé</h4>
-                  <p className="text-sm text-[#3c4a42]/60 mt-3 font-semibold">PDF Document</p>
-                </div>
-              </div>
-            ) : (
-              <div className="bg-white/50 p-8 rounded-[2rem] border-2 border-dashed border-[#bbcabf]/20 flex flex-col justify-center items-center text-center opacity-70">
-                 <Clock className="w-10 h-10 text-[#bbcabf] mb-4" />
-                 <p className="text-xs font-black uppercase tracking-widest text-[#bbcabf]">Aucun document lié</p>
-              </div>
-            )}
-          </div>
-        </section>
-
         <section className="mt-40">
           <div className="bg-[#1a1c1c] rounded-[3.5rem] p-12 md:p-24 overflow-hidden flex flex-col md:flex-row items-center gap-16 relative shadow-3xl">
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#10b77f] rounded-full blur-[150px] -mr-64 -mt-64 opacity-20 pointer-events-none"></div>
