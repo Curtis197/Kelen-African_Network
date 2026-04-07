@@ -126,9 +126,9 @@ export default async function ProfessionalProfilePage({ params }: Props) {
                     userProjects={userProjects}
                   />
                 )}
-                <a href="#portfolio" className="bg-surface-container-high text-stone-900 px-4 md:px-6 py-2.5 md:py-3 rounded-xl text-xs md:text-sm font-bold hover:bg-surface-container-highest transition-all shadow-sm">
+                <Link href={`/professionnels/${slug}/realisations`} className="bg-surface-container-high text-stone-900 px-4 md:px-6 py-2.5 md:py-3 rounded-xl text-xs md:text-sm font-bold hover:bg-surface-container-highest transition-all shadow-sm">
                   Voir Réalisations
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -198,7 +198,8 @@ export default async function ProfessionalProfilePage({ params }: Props) {
         </section>
         )}
 
-        {/* Philosophy Section */}
+        {/* Philosophy Section - Only shown if about_text exists */}
+        {pro.about_text && (
         <section className="py-16 md:py-32 bg-stone-50 rounded-t-[3rem] md:rounded-none" id="about">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <div className="grid md:grid-cols-2 gap-10 md:gap-24 items-center">
@@ -209,18 +210,7 @@ export default async function ProfessionalProfilePage({ params }: Props) {
                 </div>
 
                 <div className="space-y-8 text-lg text-stone-600 leading-relaxed font-medium">
-                  {pro.about_text ? (
-                    <p className="whitespace-pre-wrap">{pro.about_text}</p>
-                  ) : (
-                    <>
-                      <p>
-                        Avec plus de {pro.years_experience || "10"} ans d&apos;expérience dans le secteur de {pro.category.toLowerCase()}, nous accompagnons nos clients dans la réalisation de projets complexes avec une rigueur absolue.
-                      </p>
-                      <p>
-                        Notre approche repose sur trois piliers fondamentaux : l&apos;innovation technique, le respect scrupuleux des normes de sécurité et une écoute attentive des besoins spécifiques de chaque maître d&apos;ouvrage.
-                      </p>
-                    </>
-                  )}
+                  <p className="whitespace-pre-wrap">{pro.about_text}</p>
                 </div>
 
                 <div className="grid grid-cols-3 gap-4 md:gap-8 pt-8 md:pt-12">
@@ -276,6 +266,7 @@ export default async function ProfessionalProfilePage({ params }: Props) {
             </div>
           </div>
         </section>
+        )}
 
         {/* Contact Section */}
         <section className="py-16 px-4 sm:px-6 md:py-32 bg-white" id="contact">
