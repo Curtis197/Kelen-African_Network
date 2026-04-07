@@ -251,10 +251,10 @@ export async function getProjectLogs(projectId: string): Promise<ProjectLog[]> {
   return data || [];
 }
 
-export async function getLogById(logId: string): Promise<ProjectLog | null> {
+export async function getLogById(logId: string, projectId?: string): Promise<ProjectLog | null> {
   const supabase = await createClient();
 
-  const { data, error } = await supabase
+  let query = supabase
     .from("project_logs")
     .select(`
       *,
@@ -264,8 +264,14 @@ export async function getLogById(logId: string): Promise<ProjectLog | null> {
         author:users(first_name, last_name)
       )
     `)
-    .eq("id", logId)
-    .single();
+    .eq("id", logId);
+
+  // Filter by project if provided to satisfy RLS
+  if (projectId) {
+    query = query.eq("project_id", projectId);
+  }
+
+  const { data, error } = await query.single();
 
   if (error) {
     console.error("Error fetching log:", error);

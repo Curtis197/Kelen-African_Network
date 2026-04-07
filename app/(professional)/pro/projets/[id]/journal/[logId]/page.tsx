@@ -19,11 +19,13 @@ import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import type { ProjectLog, LogComment } from '@/lib/types/daily-logs';
 
-export default function LogDetailPage() {
+export default function ProLogDetailPage() {
   const params = useParams();
   const router = useRouter();
   const projectId = params.id as string;
   const logId = params.logId as string;
+  // For pro, the projectId in the URL is the user's project ID that links to the pro's work
+  const proProjectId = projectId; 
 
   const [log, setLog] = useState<ProjectLog | null>(null);
   const [comments, setComments] = useState<LogComment[]>([]);
@@ -34,8 +36,8 @@ export default function LogDetailPage() {
   const loadData = useCallback(async () => {
     setIsLoading(true);
 
-    // Pass projectId to satisfy RLS
-    const logData = await getLogById(logId, projectId);
+    // Use proProjectId to fetch log
+    const logData = await getLogById(logId, proProjectId);
     if (logData) {
       setLog(logData);
 
@@ -56,7 +58,7 @@ export default function LogDetailPage() {
     setComments(commentsData);
 
     setIsLoading(false);
-  }, [logId]);
+  }, [logId, proProjectId]);
 
   useEffect(() => {
     loadData();
@@ -84,7 +86,7 @@ export default function LogDetailPage() {
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-2xl font-bold text-on-surface mb-4">Rapport introuvable</h1>
           <button
-            onClick={() => router.push(`/projets/${projectId}/journal`)}
+            onClick={() => router.push(`/pro/projets/${projectId}/journal`)}
             className="px-6 py-3 bg-primary text-on-primary rounded-xl font-semibold text-sm"
           >
             Retour au journal
@@ -106,7 +108,7 @@ export default function LogDetailPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <button
-            onClick={() => router.push(`/projets/${projectId}/journal`)}
+            onClick={() => router.push(`/pro/projets/${projectId}/journal`)}
             className="p-2 rounded-xl hover:bg-surface-container transition-colors"
             aria-label="Retour au journal"
           >
