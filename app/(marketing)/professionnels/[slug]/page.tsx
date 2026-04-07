@@ -263,9 +263,9 @@ export default async function ProfessionalProfilePage({ params }: Props) {
                 <Award className="w-12 h-12 md:w-16 md:h-16 text-kelen-green-400 mb-4 md:mb-6" />
                 <h3 className="text-2xl md:text-3xl font-black mb-3 md:mb-4">Certifié Kelen</h3>
                 <p className="text-white/60 font-medium text-sm md:text-base mb-6 md:mb-8">Ce professionnel a passé avec succès toutes les étapes de vérification de notre plateforme.</p>
-                 <button className="bg-white/10 hover:bg-white/20 text-white px-6 md:px-8 py-2.5 md:py-3 rounded-full text-[10px] md:text-xs font-black uppercase tracking-widest transition-all">
+                 <Link href="/a-propos" className="bg-white/10 hover:bg-white/20 text-white px-6 md:px-8 py-2.5 md:py-3 rounded-full text-[10px] md:text-xs font-black uppercase tracking-widest transition-all inline-block">
                    En savoir plus
-                 </button>
+                 </Link>
               </div>
             </div>
           </div>

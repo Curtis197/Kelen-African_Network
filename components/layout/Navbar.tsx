@@ -78,19 +78,19 @@ export function Navbar() {
 
         {/* Desktop nav */}
         <div className="hidden items-center gap-6 md:flex">
-          {!user ? (
-            // Marketing Nav for Guest
-            MARKETING_NAV.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="text-sm font-medium text-foreground/70 transition-colors hover:text-kelen-green-600"
-              >
-                {item.label}
-              </Link>
-            ))
-          ) : (
-            // Connected Nav for Users
+          {/* Marketing Nav - Always Visible */}
+          {MARKETING_NAV.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="text-sm font-medium text-foreground/70 transition-colors hover:text-kelen-green-600"
+            >
+              {item.label}
+            </Link>
+          ))}
+
+          {/* Additional links for connected users */}
+          {user && (
             <>
               {CONNECTED_NAV.map((item) => (
                 <Link
@@ -102,7 +102,7 @@ export function Navbar() {
                   {item.label}
                 </Link>
               ))}
-              
+
               {isPro && (
                 <Link
                   href="/pro/dashboard"
@@ -176,20 +176,20 @@ export function Navbar() {
       {mobileOpen && (
         <div className="border-t border-border bg-background px-4 py-6 md:hidden">
           <div className="flex flex-col gap-4">
-            {!user ? (
-              // Marketing Nav for Guest
-              MARKETING_NAV.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setMobileOpen(false)}
-                  className="text-base font-medium text-foreground/70 transition-colors hover:text-kelen-green-600"
-                >
-                  {item.label}
-                </Link>
-              ))
-            ) : (
-              // Connected Nav for Users
+            {/* Marketing Nav - Always Visible */}
+            {MARKETING_NAV.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setMobileOpen(false)}
+                className="text-base font-medium text-foreground/70 transition-colors hover:text-kelen-green-600"
+              >
+                {item.label}
+              </Link>
+            ))}
+
+            {/* Additional links for connected users */}
+            {user && (
               <>
                 {CONNECTED_NAV.map((item) => (
                   <Link
@@ -202,7 +202,7 @@ export function Navbar() {
                     {item.label}
                   </Link>
                 ))}
-                
+
                 {isPro && (
                   <Link
                     href="/pro/dashboard"
