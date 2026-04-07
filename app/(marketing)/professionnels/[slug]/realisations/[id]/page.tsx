@@ -6,12 +6,8 @@ import {
   ArrowLeft,
   MapPin,
   Calendar,
-  ShieldCheck,
-  Download,
-  FileText,
   Mail,
-  MessageCircle,
-  Clock
+  MessageCircle
 } from "lucide-react";
 import Link from "next/link";
 import PriceDisplay from "@/components/projects/PriceDisplay";
