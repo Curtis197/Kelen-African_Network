@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Menu, X, LayoutDashboard, Award, AlertTriangle, Search, LogOut, User } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -19,6 +19,7 @@ export function DashboardSidebar() {
   const supabase = createClient();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const drawerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const getUser = async () => {
@@ -29,6 +30,63 @@ export function DashboardSidebar() {
     };
     getUser();
   }, [supabase.auth]);
+
+  // Escape key handler
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && mobileOpen) {
+        setMobileOpen(false);
+      }
+    };
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [mobileOpen]);
+
+  // Body scroll lock
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
+
+  // Focus trap
+  useEffect(() => {
+    if (mobileOpen && drawerRef.current) {
+      const focusableElements = drawerRef.current.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      const firstElement = focusableElements[0] as HTMLElement;
+      const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+
+      firstElement?.focus();
+
+      const handleTabKey = (e: KeyboardEvent) => {
+        if (e.key !== "Tab") return;
+
+        if (e.shiftKey) {
+          if (document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement?.focus();
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement?.focus();
+          }
+        }
+      };
+
+      drawerRef.current.addEventListener("keydown", handleTabKey);
+      return () => {
+        drawerRef.current?.removeEventListener("keydown", handleTabKey);
+      };
+    }
+  }, [mobileOpen]);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -101,12 +159,17 @@ export function DashboardSidebar() {
 
       {/* Mobile drawer overlay */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden">
+        <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label="Menu de navigation">
           <div
             className="fixed inset-0 bg-black/40"
             onClick={() => setMobileOpen(false)}
+            aria-hidden="true"
           />
-          <div className="fixed inset-y-0 right-0 w-72 bg-surface shadow-xl">
+          <div
+            ref={drawerRef}
+            className="fixed inset-y-0 right-0 w-72 bg-surface shadow-xl overflow-y-auto"
+            tabIndex={-1}
+          >
             <div className="flex h-16 items-center justify-between border-b border-border px-6">
               <span className="text-lg font-bold text-foreground">Menu</span>
               <button

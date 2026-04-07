@@ -147,29 +147,34 @@ export default function ProjectDetailPage() {
   const spentPercent = project.budget_total > 0 ? Math.round((totalSpent / project.budget_total) * 100) : 0;
 
   return (
-    <main className="min-h-screen bg-surface font-body text-on-surface pt-12 pb-24 px-4 md:px-12">
-      <div className="max-w-[1440px] mx-auto">
-        <div className="mb-12">
-          <nav className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant mb-6">
-            <Link href="/projets" className="hover:text-primary transition-colors">Mes Réalisations</Link>
-            <span className="opacity-30">/</span>
-            <span className="text-primary">{project.title}</span>
-          </nav>
-          
-          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-10">
-            <div className="space-y-4 max-w-2xl">
-              <div className="flex items-center gap-4">
-                <h1 className="text-[3rem] md:text-[4.5rem] font-headline font-bold text-on-surface tracking-tight leading-none">
+    <main className="min-h-screen bg-surface font-body text-on-surface">
+      <div className="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 lg:pt-12">
+        {/* Breadcrumb */}
+        <nav className="flex items-center gap-2 text-[10px] sm:text-xs font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] text-on-surface-variant mb-4 sm:mb-6">
+          <Link href="/projets" className="hover:text-primary transition-colors truncate">Mes Réalisations</Link>
+          <span className="opacity-30 flex-shrink-0">/</span>
+          <span className="text-primary truncate">{project.title}</span>
+        </nav>
+
+        {/* Header Section */}
+        <div className="mb-8 sm:mb-12">
+          <div className="flex flex-col gap-6 sm:gap-8 lg:gap-10">
+            {/* Title and Status */}
+            <div className="space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[3rem] font-headline font-bold text-on-surface tracking-tight leading-tight">
                   {project.title}
                 </h1>
-                <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary-container/20 to-transparent rounded-full">
+                <div className="hidden lg:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary-container/20 to-transparent rounded-full flex-shrink-0">
                   <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
                   <span className="text-[10px] font-black uppercase tracking-widest text-primary">Live Sync</span>
                 </div>
               </div>
-              <div className="flex flex-wrap items-center gap-6">
+
+              {/* Meta info */}
+              <div className="flex flex-wrap items-center gap-3 sm:gap-4 lg:gap-6">
                 <div className="relative group">
-                  <select 
+                  <select
                     value={project.status}
                     onChange={(e) => {
                       const newStatus = e.target.value;
@@ -184,7 +189,7 @@ export default function ProjectDetailPage() {
                         });
                     }}
                     className={cn(
-                      "appearance-none px-6 py-2.5 pr-12 rounded-2xl font-headline font-bold text-xs cursor-pointer border-none transition-all shadow-sm group-hover:shadow-md",
+                      "appearance-none px-4 sm:px-6 py-2 sm:py-2.5 pr-10 sm:pr-12 rounded-xl sm:rounded-2xl font-headline font-bold text-xs cursor-pointer border-none transition-all shadow-sm group-hover:shadow-md",
                       STATUS_CONFIG[project.status]?.color || "bg-surface-container"
                     )}
                   >
@@ -194,70 +199,74 @@ export default function ProjectDetailPage() {
                     <option value="termine">Terminé</option>
                     <option value="annule">Annulé</option>
                   </select>
-                  <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-sm pointer-events-none opacity-50">expand_more</span>
+                  <span className="material-symbols-outlined absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 text-sm pointer-events-none opacity-50">expand_more</span>
                 </div>
-                <div className="flex items-center gap-2 text-on-surface-variant text-sm font-medium">
-                  <span className="material-symbols-outlined text-base">location_on</span>
-                  <span>{project.location}</span>
+                <div className="flex items-center gap-2 text-on-surface-variant text-xs sm:text-sm font-medium">
+                  <span className="material-symbols-outlined text-base flex-shrink-0">location_on</span>
+                  <span className="truncate">{project.location}</span>
                 </div>
-                <div className="flex items-center gap-2 text-on-surface-variant text-sm font-medium">
-                  <span className="material-symbols-outlined text-base">category</span>
-                  <span className="capitalize">{(project.category || 'non_defini').replace('_', ' ')}</span>
+                <div className="flex items-center gap-2 text-on-surface-variant text-xs sm:text-sm font-medium">
+                  <span className="material-symbols-outlined text-base flex-shrink-0">category</span>
+                  <span className="capitalize truncate">{(project.category || 'non_defini').replace('_', ' ')}</span>
                 </div>
               </div>
             </div>
-            
-            <div className="flex items-center gap-4">
+
+            {/* Action Buttons */}
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4">
               <Link
                 href={`/projets/${projectIdStr}/journal`}
-                className="px-8 py-4 bg-surface-container-low text-on-surface font-headline font-bold rounded-2xl border border-transparent hover:border-surface-container transition-all flex items-center gap-3"
+                className="flex-1 sm:flex-none px-4 sm:px-6 lg:px-8 py-3 sm:py-4 bg-surface-container-low text-on-surface font-headline font-bold rounded-xl sm:rounded-2xl border border-transparent hover:border-surface-container transition-all flex items-center justify-center gap-2 sm:gap-3 text-xs sm:text-sm"
               >
-                <span className="material-symbols-outlined text-xl">book</span>
+                <span className="material-symbols-outlined text-lg sm:text-xl">book</span>
                 <span>Journal</span>
               </Link>
-              <button className="px-8 py-4 bg-surface-container-low text-on-surface font-headline font-bold rounded-2xl border border-transparent hover:border-surface-container transition-all flex items-center gap-3">
-                <span className="material-symbols-outlined text-xl">share</span>
+              <button className="flex-1 sm:flex-none px-4 sm:px-6 lg:px-8 py-3 sm:py-4 bg-surface-container-low text-on-surface font-headline font-bold rounded-xl sm:rounded-2xl border border-transparent hover:border-surface-container transition-all flex items-center justify-center gap-2 sm:gap-3 text-xs sm:text-sm">
+                <span className="material-symbols-outlined text-lg sm:text-xl">share</span>
                 <span>Partager</span>
               </button>
               <Link
                 href={`/projets/nouveau?id=${projectIdStr}`}
-                className="px-10 py-4 bg-primary text-white font-headline font-bold rounded-2xl shadow-xl shadow-primary/10 hover:scale-[0.98] transition-all flex items-center gap-3"
+                className="flex-1 sm:flex-none px-6 sm:px-8 lg:px-10 py-3 sm:py-4 bg-primary text-white font-headline font-bold rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl shadow-primary/10 hover:scale-[0.98] transition-all flex items-center justify-center gap-2 sm:gap-3 text-xs sm:text-sm"
               >
-                <span className="material-symbols-outlined text-xl">add_task</span>
+                <span className="material-symbols-outlined text-lg sm:text-xl">add_task</span>
                 <span>Mise à jour</span>
               </Link>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-12 gap-10">
-          <div className="col-span-12 lg:col-span-8 space-y-12">
+        {/* Main Content Grid */}
+        <div className="flex flex-col lg:grid lg:grid-cols-12 gap-8 sm:gap-10">
+          {/* Left Column - Main Content */}
+          <div className="lg:col-span-8 space-y-8 sm:space-y-10 lg:space-y-12">
             {/* Project Roadmap & Steps */}
-            <ProjectStepsSection 
-              projectId={projectIdStr} 
-              currency={project.budget_currency} 
+            <ProjectStepsSection
+              projectId={projectIdStr}
+              currency={project.budget_currency}
               initialSteps={steps}
               onStepsChange={fetchProjectData}
             />
 
             {/* Team / Comparison Section */}
-            <section className="space-y-12">
-              <div className="flex items-center justify-between">
+            <section className="space-y-6 sm:space-y-8 lg:space-y-12">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                  <h3 className="text-2xl font-headline font-bold text-on-surface">Moteur de Comparaison</h3>
-                  <p className="text-on-surface-variant font-medium mt-1">Sélectionnez et classez les meilleurs experts pour chaque domaine.</p>
+                  <h3 className="text-lg sm:text-xl lg:text-2xl font-headline font-bold text-on-surface">Moteur de Comparaison</h3>
+                  <p className="text-on-surface-variant font-medium mt-1 text-xs sm:text-sm lg:text-base">Sélectionnez et classez les meilleurs experts pour chaque domaine.</p>
                 </div>
                 <div className="relative">
-                  <button 
+                  <button
                     onClick={() => setShowAreaSelector(!showAreaSelector)}
-                    className="flex items-center gap-2 px-6 py-3 bg-primary text-white text-xs font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-primary/20 hover:scale-[0.98] transition-all"
+                    className="flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-primary text-white text-[10px] sm:text-xs font-black uppercase tracking-widest rounded-xl sm:rounded-2xl shadow-lg shadow-primary/20 hover:scale-[0.98] transition-all"
                   >
                     <span className="material-symbols-outlined text-base">add</span>
-                    Ajouter un domaine
+                    <span className="hidden sm:inline">Ajouter un domaine</span>
+                    <span className="sm:hidden">Ajouter</span>
                   </button>
-                  
+
                   {showAreaSelector && (
-                    <div className="absolute right-0 mt-3 w-72 bg-white rounded-2xl shadow-2xl border border-outline-variant/30 p-2 z-50">
+                    <div className="absolute right-0 mt-3 w-64 sm:w-72 bg-white rounded-2xl shadow-2xl border border-outline-variant/30 p-2 z-50">
                       <div className="max-h-64 overflow-y-auto overflow-x-hidden scrollbar-hide">
                         {DEVELOPMENT_AREAS.filter(a => !areas.some(pa => pa.name === a)).map((area) => (
                           <button
@@ -273,8 +282,8 @@ export default function ProjectDetailPage() {
                   )}
                 </div>
               </div>
-              
-              <div className="space-y-16">
+
+              <div className="space-y-8 sm:space-y-12 lg:space-y-16">
                 {areas.map((area) => (
                   <DevelopmentAreaRow
                     key={area.id}
@@ -288,15 +297,15 @@ export default function ProjectDetailPage() {
                 ))}
 
                 {areas.length === 0 && (
-                  <div className="p-20 text-center bg-surface-container-low rounded-[2.5rem] border-2 border-dashed border-outline-variant/30">
-                    <div className="w-16 h-16 mx-auto bg-surface-container rounded-full flex items-center justify-center mb-6">
-                      <span className="material-symbols-outlined text-3xl text-on-surface-variant opacity-30">diversity_3</span>
+                  <div className="p-8 sm:p-12 lg:p-20 text-center bg-surface-container-low rounded-2xl sm:rounded-3xl lg:rounded-[2.5rem] border-2 border-dashed border-outline-variant/30">
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto bg-surface-container rounded-full flex items-center justify-center mb-4 sm:mb-6">
+                      <span className="material-symbols-outlined text-2xl sm:text-3xl text-on-surface-variant opacity-30">diversity_3</span>
                     </div>
-                    <h4 className="text-xl font-headline font-bold text-on-surface">Initialisez vos domaines</h4>
-                    <p className="text-on-surface-variant font-medium mt-2 max-w-xs mx-auto">Ajoutez des domaines d&apos;intervention pour commencer à comparer des professionnels.</p>
+                    <h4 className="text-lg sm:text-xl font-headline font-bold text-on-surface">Initialisez vos domaines</h4>
+                    <p className="text-on-surface-variant font-medium mt-2 text-xs sm:text-sm max-w-xs mx-auto">Ajoutez des domaines d&apos;intervention pour commencer à comparer des professionnels.</p>
                     <button
                       onClick={() => setShowAreaSelector(true)}
-                      className="mt-8 px-8 py-3 bg-primary/10 text-primary rounded-xl font-headline font-bold hover:bg-primary/20 transition-all font-body"
+                      className="mt-6 sm:mt-8 px-6 sm:px-8 py-3 bg-primary/10 text-primary rounded-xl font-headline font-bold hover:bg-primary/20 transition-all font-body text-xs sm:text-sm"
                     >
                       Choisir un premier domaine
                     </button>
@@ -306,46 +315,47 @@ export default function ProjectDetailPage() {
             </section>
           </div>
 
-          <div className="col-span-12 lg:col-span-4 space-y-10">
+          {/* Right Column - Sidebar */}
+          <div className="lg:col-span-4 space-y-6 sm:space-y-8 lg:space-y-10">
             {/* Financial Status */}
-            <section className="bg-surface-container-lowest p-10 rounded-[2.5rem] shadow-2xl shadow-surface-container-high/50">
-              <div className="flex items-center justify-between mb-10">
-                <h3 className="text-xl font-headline font-bold text-on-surface">Budget</h3>
-                <span className="px-3 py-1 bg-surface-container-high text-on-surface-variant text-[9px] font-black uppercase tracking-widest rounded-lg border border-outline-variant/30">Indicatif</span>
+            <section className="bg-surface-container-lowest p-6 sm:p-8 lg:p-10 rounded-2xl sm:rounded-3xl lg:rounded-[2.5rem] shadow-xl sm:shadow-2xl shadow-surface-container-high/50">
+              <div className="flex items-center justify-between mb-6 sm:mb-8 lg:mb-10">
+                <h3 className="text-base sm:text-lg lg:text-xl font-headline font-bold text-on-surface">Budget</h3>
+                <span className="px-2 sm:px-3 py-1 bg-surface-container-high text-on-surface-variant text-[8px] sm:text-[9px] font-black uppercase tracking-widest rounded-lg border border-outline-variant/30">Indicatif</span>
               </div>
-              
+
               <div className="flex flex-col items-center">
-                <div className="relative w-56 h-56 flex items-center justify-center mb-10">
+                <div className="relative w-40 h-40 sm:w-48 sm:h-48 lg:w-56 lg:h-56 flex items-center justify-center mb-6 sm:mb-8 lg:mb-10">
                   <svg className="w-full h-full transform -rotate-90">
                     <circle className="text-surface-container" cx="112" cy="112" fill="transparent" r="100" stroke="currentColor" strokeWidth="16" />
-                    <circle 
-                      className="text-primary transition-all duration-1000 ease-out" 
-                      cx="112" cy="112" fill="transparent" r="100" stroke="currentColor" 
-                      strokeWidth="16" 
+                    <circle
+                      className="text-primary transition-all duration-1000 ease-out"
+                      cx="112" cy="112" fill="transparent" r="100" stroke="currentColor"
+                      strokeWidth="16"
                       strokeDasharray={628.3}
                       strokeDashoffset={628.3 - (628.3 * spentPercent) / 100}
                       strokeLinecap="round"
                     />
                   </svg>
                   <div className="absolute flex flex-col items-center">
-                    <span className="text-5xl font-headline font-bold text-on-surface tracking-tighter">{spentPercent}%</span>
-                    <span className="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] mt-2">Investi</span>
+                    <span className="text-3xl sm:text-4xl lg:text-5xl font-headline font-bold text-on-surface tracking-tighter">{spentPercent}%</span>
+                    <span className="text-[8px] sm:text-[9px] lg:text-[10px] uppercase font-black text-on-surface-variant tracking-[0.15em] sm:tracking-[0.2em] mt-1 sm:mt-2">Investi</span>
                   </div>
                 </div>
-                
-                <div className="w-full space-y-4">
-                  <div className="flex justify-between items-center p-5 bg-surface-container-low rounded-2xl">
-                    <span className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.2em]">Total alloué</span>
-                    <span className="font-headline font-bold text-on-surface">
+
+                <div className="w-full space-y-3 sm:space-y-4">
+                  <div className="flex justify-between items-center p-4 sm:p-5 bg-surface-container-low rounded-xl sm:rounded-2xl">
+                    <span className="text-[8px] sm:text-[9px] lg:text-[10px] font-black text-on-surface-variant uppercase tracking-[0.15em] sm:tracking-[0.2em]">Total alloué</span>
+                    <span className="font-headline font-bold text-on-surface text-xs sm:text-sm">
                       {project.budget_total.toLocaleString()} {project.budget_currency}
                     </span>
                   </div>
-                  <div className="flex justify-between items-center p-5 bg-primary-container/20 rounded-2xl">
+                  <div className="flex justify-between items-center p-4 sm:p-5 bg-primary-container/20 rounded-xl sm:rounded-2xl">
                     <div className="flex flex-col">
-                      <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">Dépensé</span>
-                      <span className="text-[8px] font-bold text-primary/60 uppercase tracking-[0.1em] mt-0.5">Total déclaratif</span>
+                      <span className="text-[8px] sm:text-[9px] lg:text-[10px] font-black text-primary uppercase tracking-[0.15em] sm:tracking-[0.2em]">Dépensé</span>
+                      <span className="text-[7px] sm:text-[8px] font-bold text-primary/60 uppercase tracking-[0.1em] mt-0.5">Total déclaratif</span>
                     </div>
-                    <span className="font-headline font-bold text-on-surface">
+                    <span className="font-headline font-bold text-on-surface text-xs sm:text-sm">
                       {totalSpent.toLocaleString()} {project.budget_currency}
                     </span>
                   </div>
@@ -354,37 +364,37 @@ export default function ProjectDetailPage() {
             </section>
 
             {/* Documents Vault */}
-            <section className="bg-surface-container-low p-10 rounded-[2.5rem] space-y-8">
+            <section className="bg-surface-container-low p-6 sm:p-8 lg:p-10 rounded-2xl sm:rounded-3xl lg:rounded-[2.5rem] space-y-6 sm:space-y-8">
               <div className="flex items-center justify-between">
-                <h3 className="text-xl font-headline font-bold text-on-surface">Coffre-fort technique</h3>
-                <span className="w-10 h-10 flex items-center justify-center bg-white rounded-xl text-primary shadow-sm">
-                  <span className="material-symbols-outlined">verified_user</span>
+                <h3 className="text-base sm:text-lg lg:text-xl font-headline font-bold text-on-surface">Coffre-fort technique</h3>
+                <span className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center bg-white rounded-lg sm:rounded-xl text-primary shadow-sm">
+                  <span className="material-symbols-outlined text-lg sm:text-xl">verified_user</span>
                 </span>
               </div>
-              
-              <div className="space-y-4">
+
+              <div className="space-y-3 sm:space-y-4">
                 {team.length > 0 ? team.slice(0, 3).map((member) => (
-                  <div key={member.id} className="p-5 bg-surface-container-lowest rounded-2xl flex items-center justify-between group hover:shadow-md transition-all">
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 bg-surface-container rounded-lg flex items-center justify-center text-on-surface-variant">
-                        <span className="material-symbols-outlined text-xl">description</span>
+                  <div key={member.id} className="p-4 sm:p-5 bg-surface-container-lowest rounded-xl sm:rounded-2xl flex items-center justify-between group hover:shadow-md transition-all">
+                    <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-surface-container rounded-lg flex items-center justify-center text-on-surface-variant flex-shrink-0">
+                        <span className="material-symbols-outlined text-base sm:text-xl">description</span>
                       </div>
-                      <div>
-                        <p className="text-xs font-bold text-on-surface mb-0.5">Plans Techniques</p>
-                        <p className="text-[10px] text-on-surface-variant font-medium">Par {member.is_external ? member.external_name : member.professionals?.business_name}</p>
+                      <div className="min-w-0">
+                        <p className="text-xs font-bold text-on-surface mb-0.5 truncate">Plans Techniques</p>
+                        <p className="text-[10px] text-on-surface-variant font-medium truncate">Par {member.is_external ? member.external_name : member.professionals?.business_name}</p>
                       </div>
                     </div>
-                    <span className="material-symbols-outlined text-on-surface-variant opacity-20 group-hover:opacity-100 transition-opacity">download</span>
+                    <span className="material-symbols-outlined text-on-surface-variant opacity-20 group-hover:opacity-100 transition-opacity flex-shrink-0 ml-2">download</span>
                   </div>
                 )) : (
-                  <div className="p-10 text-center bg-white rounded-3xl border border-dashed border-outline-variant/30">
-                    <span className="material-symbols-outlined text-4xl text-on-surface-variant opacity-20 mb-4 block">fact_check</span>
+                  <div className="p-6 sm:p-8 lg:p-10 text-center bg-white rounded-2xl sm:rounded-3xl border border-dashed border-outline-variant/30">
+                    <span className="material-symbols-outlined text-3xl sm:text-4xl text-on-surface-variant opacity-20 mb-3 sm:mb-4 block">fact_check</span>
                     <p className="text-xs text-on-surface-variant font-medium">Aucun document n&apos;est encore disponible dans le vault.</p>
                   </div>
                 )}
               </div>
-              
-              <button className="w-full py-5 bg-on-surface text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-on-surface-variant transition-all mt-4">
+
+              <button className="w-full py-4 sm:py-5 bg-on-surface text-white text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] rounded-xl sm:rounded-2xl hover:bg-on-surface-variant transition-all mt-2 sm:mt-4">
                 Accéder au vault complet
               </button>
             </section>
