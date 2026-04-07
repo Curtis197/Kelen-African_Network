@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-tertiary-fixed-variant": "#842325",
+              "surface-container-lowest": "#ffffff",
+              "on-primary": "#ffffff",
+              "on-secondary-fixed": "#251a00",
+              "on-primary-fixed-variant": "#005236",
+              "tertiary": "#a43a3b",
+              "secondary-fixed-dim": "#f7be1d",
+              "on-surface": "#1a1c1c",
+              "primary-fixed": "#70fbbd",
+              "outline-variant": "#bbcabf",
+              "surface-tint": "#006c49",
+              "on-error": "#ffffff",
+              "surface-container-highest": "#e2e2e2",
+              "surface-container-high": "#e8e8e7",
+              "primary-container": "#10b77f",
+              "on-primary-container": "#00402a",
+              "on-secondary": "#ffffff",
+              "inverse-on-surface": "#f1f1f0",
+              "secondary": "#785a00",
+              "error": "#ba1a1a",
+              "on-surface-variant": "#3c4a42",
+              "primary": "#006c49",
+              "tertiary-fixed": "#ffdad7",
+              "inverse-surface": "#2f3130",
+              "secondary-container": "#fdc425",
+              "surface-container-low": "#f3f4f3",
+              "on-secondary-fixed-variant": "#5a4300",
+              "primary-fixed-dim": "#50dea3",
+              "on-tertiary-fixed": "#410006",
+              "on-tertiary": "#ffffff",
+              "surface-bright": "#f9f9f8",
+              "tertiary-fixed-dim": "#ffb3af",
+              "surface-variant": "#e2e2e2",
+              "surface-dim": "#dadad9",
+              "tertiary-container": "#f97a77",
+              "secondary-fixed": "#ffdf9a",
+              "inverse-primary": "#50dea3",
+              "on-primary-fixed": "#002113",
+              "background": "#f9f9f8",
+              "on-secondary-container": "#6d5200",
+              "outline": "#6c7a71",
+              "on-background": "#1a1c1c",
+              "on-error-container": "#93000a",
+              "surface": "#f9f9f8",
+              "surface-container": "#eeeeed",
+              "error-container": "#ffdad6",
+              "on-tertiary-container": "#6f1218"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-effect {
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<nav class="fixed top-0 w-full z-50 bg-[#f9f9f8]/70 dark:bg-[#1a1c1c]/70 backdrop-blur-xl border-b border-[#bbcabf]/15 shadow-sm dark:shadow-none">
+<div class="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
+<div class="flex items-center gap-4">
+<button class="text-[#10b77f] dark:text-[#10b77f] scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">close</span>
+</button>
+<h1 class="font-['Manrope'] font-bold text-2xl tracking-tight text-[#1a1c1c] dark:text-[#f9f9f8]">Project Creator</h1>
+</div>
+<div class="hidden md:flex gap-8 items-center">
+<span class="text-[#1a1c1c]/60 dark:text-[#f9f9f8]/60 font-medium cursor-pointer transition-colors duration-200 hover:text-[#10b77f]">Identity</span>
+<span class="text-[#1a1c1c]/60 dark:text-[#f9f9f8]/60 font-medium cursor-pointer transition-colors duration-200 hover:text-[#10b77f]">Finance</span>
+<span class="text-[#10b77f] font-bold cursor-pointer">Timeline</span>
+<span class="text-[#1a1c1c]/60 dark:text-[#f9f9f8]/60 font-medium cursor-pointer transition-colors duration-200 hover:text-[#10b77f]">Narrative</span>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="pt-24 pb-32 px-6 max-w-xl mx-auto min-h-screen">
+<!-- Header Section -->
+<header class="mb-12">
+<div class="flex items-center gap-2 mb-4">
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase">Étape 3 sur 4</span>
+</div>
+<h2 class="font-headline text-4xl font-extrabold text-on-surface tracking-tight mb-3">Time Horizon</h2>
+<p class="text-on-surface-variant text-lg leading-relaxed">Définissez la portée temporelle de votre vision pour structurer l'élan collectif.</p>
+</header>
+<!-- Form Section -->
+<div class="space-y-8">
+<!-- Date de début -->
+<section class="bg-surface-container-low p-1 rounded-2xl">
+<div class="bg-surface-container-lowest p-6 rounded-[22px] shadow-sm">
+<label class="block text-sm font-semibold text-on-surface-variant mb-4 font-label tracking-wide uppercase">Date de début</label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-primary">
+<span class="material-symbols-outlined">calendar_today</span>
+</div>
+<input class="w-full pl-12 pr-4 py-4 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all text-on-surface font-medium" placeholder="Sélectionnez une date" readonly="" type="text" value="12 Septembre 2024"/>
+<div class="absolute inset-y-0 right-4 flex items-center pointer-events-none text-on-surface-variant/40">
+<span class="material-symbols-outlined">expand_more</span>
+</div>
+</div>
+<!-- Premium Calendar Preview (Simulated) -->
+<div class="mt-6 grid grid-cols-7 gap-1 text-center">
+<div class="text-[10px] font-bold text-on-surface-variant/50 mb-2">L</div>
+<div class="text-[10px] font-bold text-on-surface-variant/50 mb-2">M</div>
+<div class="text-[10px] font-bold text-on-surface-variant/50 mb-2">M</div>
+<div class="text-[10px] font-bold text-on-surface-variant/50 mb-2">J</div>
+<div class="text-[10px] font-bold text-on-surface-variant/50 mb-2">V</div>
+<div class="text-[10px] font-bold text-on-surface-variant/50 mb-2">S</div>
+<div class="text-[10px] font-bold text-on-surface-variant/50 mb-2">D</div>
+<div class="p-2 text-sm text-on-surface-variant/30">9</div>
+<div class="p-2 text-sm text-on-surface-variant/30">10</div>
+<div class="p-2 text-sm text-on-surface-variant/30">11</div>
+<div class="p-2 text-sm font-bold bg-primary-container text-white rounded-full flex items-center justify-center">12</div>
+<div class="p-2 text-sm font-medium">13</div>
+<div class="p-2 text-sm font-medium">14</div>
+<div class="p-2 text-sm font-medium">15</div>
+</div>
+</div>
+</section>
+<!-- Date de fin estimée -->
+<section class="bg-surface-container-low p-1 rounded-2xl">
+<div class="bg-surface-container-lowest p-6 rounded-[22px] shadow-sm">
+<label class="block text-sm font-semibold text-on-surface-variant mb-4 font-label tracking-wide uppercase">Date de fin estimée</label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-primary">
+<span class="material-symbols-outlined">event_upcoming</span>
+</div>
+<input class="w-full pl-12 pr-4 py-4 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all text-on-surface font-medium" placeholder="Choisir l'échéance" type="text"/>
+<div class="absolute inset-y-0 right-4 flex items-center pointer-events-none text-on-surface-variant/40">
+<span class="material-symbols-outlined">calendar_month</span>
+</div>
+</div>
+<div class="mt-4 flex flex-wrap gap-2">
+<button class="px-4 py-2 bg-surface-container-low hover:bg-surface-container-high text-on-surface-variant text-xs font-bold rounded-full transition-colors uppercase tracking-tight">Dans 6 mois</button>
+<button class="px-4 py-2 bg-surface-container-low hover:bg-surface-container-high text-on-surface-variant text-xs font-bold rounded-full transition-colors uppercase tracking-tight">Dans 1 an</button>
+<button class="px-4 py-2 bg-surface-container-low hover:bg-surface-container-high text-on-surface-variant text-xs font-bold rounded-full transition-colors uppercase tracking-tight">Indéfini</button>
+</div>
+</div>
+</section>
+<!-- Summary Visual Card -->
+<div class="relative overflow-hidden rounded-2xl h-48 group">
+<img class="w-full h-full object-cover" data-alt="minimalist abstract sculpture representing time with circular stone textures and soft architectural lighting in a museum setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3F91IVK0OWF9i2CL_X_7uUxIl-PIcK2tSyt-CyOz3wMo5cjicjztg4HkbRpxU0UYjxCA-XUOU365g53Yvy7EZaCvqlu2hGDhgvRo-D0t5bYT0mUEtPCk7vnDWXq5GrpclW6gNTQrpuV31dRF3niMQGA578Cap_Xf8Azxejv85Ey8HjDH-vO70yZw7zs01cudcFEgVbea-GNd1E7FjwuawXV71m3BSMUuQsY4SyqC05LvzgXaBhtmkq83yF9-WDPDUxaENo-7UJHE"/>
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/80 to-transparent flex flex-col justify-end p-6">
+<p class="text-white/70 text-xs font-bold tracking-widest uppercase mb-1">Impact Prévu</p>
+<h4 class="text-white font-headline text-xl">Cycle de réalisation de 18 mois</h4>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Navigation Controls -->
+<div class="fixed bottom-8 left-0 right-0 z-50 px-6 flex justify-between items-center max-w-xl mx-auto">
+<button class="h-14 w-14 glass-effect bg-surface-container-low/80 rounded-full flex items-center justify-center text-on-surface shadow-lg active:scale-90 transition-transform">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<button class="h-14 px-8 glass-effect bg-gradient-to-br from-[#006c49] to-[#10b77f] rounded-full flex items-center justify-center text-white font-headline font-bold text-lg shadow-xl shadow-primary/20 active:scale-95 transition-all">
+            Continuer
+            <span class="material-symbols-outlined ml-2">arrow_forward</span>
+</button>
+</div>
+<!-- BottomNavBar (Hidden on desktop via md:hidden logic from rules if needed, but present as per prompt instructions) -->
+<div class="fixed bottom-8 left-0 right-0 flex justify-center items-center z-40 md:hidden pointer-events-none">
+<nav class="bg-[#ffffff]/80 dark:bg-[#1a1c1c]/80 backdrop-blur-md shadow-[0_8px_32px_rgba(26,28,28,0.08)] rounded-full px-6 py-1 flex items-center gap-2 pointer-events-auto">
+<div class="flex flex-col items-center justify-center text-[#1a1c1c]/50 dark:text-[#f9f9f8]/50 p-3 hover:text-[#10b77f] transition-all">
+<span class="material-symbols-outlined">fingerprint</span>
+<span class="font-['Inter'] font-medium text-[10px] uppercase tracking-widest mt-1">Identity</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#1a1c1c]/50 dark:text-[#f9f9f8]/50 p-3 hover:text-[#10b77f] transition-all">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-['Inter'] font-medium text-[10px] uppercase tracking-widest mt-1">Finance</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-gradient-to-br from-[#006c49] to-[#10b77f] text-white rounded-full p-3 shadow-lg">
+<span class="material-symbols-outlined">event_note</span>
+<span class="font-['Inter'] font-medium text-[10px] uppercase tracking-widest mt-1">Timeline</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#1a1c1c]/50 dark:text-[#f9f9f8]/50 p-3 hover:text-[#10b77f] transition-all">
+<span class="material-symbols-outlined">auto_stories</span>
+<span class="font-['Inter'] font-medium text-[10px] uppercase tracking-widest mt-1">Narrative</span>
+</div>
+</nav>
+</div>
+</body></html>

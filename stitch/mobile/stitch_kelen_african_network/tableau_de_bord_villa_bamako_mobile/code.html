@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Construction Villa Bamako | Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-container": "#fdc425",
+              "on-tertiary": "#ffffff",
+              "on-error-container": "#93000a",
+              "surface-tint": "#006c49",
+              "surface-container-highest": "#e2e2e2",
+              "primary-fixed": "#70fbbd",
+              "on-surface-variant": "#3c4a42",
+              "tertiary-fixed-dim": "#ffb3af",
+              "outline-variant": "#bbcabf",
+              "tertiary": "#a43a3b",
+              "secondary": "#785a00",
+              "on-surface": "#1a1c1c",
+              "on-primary-fixed-variant": "#005236",
+              "primary": "#006c49",
+              "on-tertiary-fixed": "#410006",
+              "on-error": "#ffffff",
+              "inverse-on-surface": "#f1f1f0",
+              "tertiary-container": "#f97a77",
+              "outline": "#6c7a71",
+              "on-primary-fixed": "#002113",
+              "surface-container-lowest": "#ffffff",
+              "on-tertiary-fixed-variant": "#842325",
+              "on-secondary-container": "#6d5200",
+              "secondary-fixed-dim": "#f7be1d",
+              "on-secondary-fixed-variant": "#5a4300",
+              "on-tertiary-container": "#6f1218",
+              "inverse-primary": "#50dea3",
+              "background": "#f9f9f8",
+              "surface-container-low": "#f3f4f3",
+              "on-background": "#1a1c1c",
+              "surface-container-high": "#e8e8e7",
+              "surface-dim": "#dadad9",
+              "on-secondary": "#ffffff",
+              "on-primary-container": "#00402a",
+              "primary-container": "#10b77f",
+              "on-primary": "#ffffff",
+              "error": "#ba1a1a",
+              "surface": "#f9f9f8",
+              "secondary-fixed": "#ffdf9a",
+              "primary-fixed-dim": "#50dea3",
+              "on-secondary-fixed": "#251a00",
+              "surface-container": "#eeeeed",
+              "tertiary-fixed": "#ffdad7",
+              "inverse-surface": "#2f3130",
+              "surface-variant": "#e2e2e2",
+              "error-container": "#ffdad6",
+              "surface-bright": "#f9f9f8"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1.5rem", "3xl": "2rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-card {
+        background: rgba(249, 249, 248, 0.7);
+        backdrop-filter: blur(12px);
+      }
+      ::-webkit-scrollbar { width: 6px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: #e2e2e2; border-radius: 10px; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-[#f9f9f8]/70 dark:bg-stone-900/70 backdrop-blur-xl flex justify-between items-center px-6 py-4 w-full">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-stone-900 dark:text-stone-50 p-2 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors rounded-xl scale-95 active:duration-150">menu</button>
+<h1 class="text-xl font-headline font-bold tracking-tight text-stone-900 dark:text-stone-50">Villa Bamako</h1>
+</div>
+<div class="hidden md:flex gap-8 items-center">
+<a class="text-[#10b77f] font-bold font-label uppercase text-[11px] tracking-widest" href="#">Overview</a>
+<a class="text-stone-500 dark:text-stone-400 font-semibold font-label uppercase text-[11px] tracking-widest hover:text-[#10b77f] transition-colors" href="#">Vault</a>
+<a class="text-stone-500 dark:text-stone-400 font-semibold font-label uppercase text-[11px] tracking-widest hover:text-[#10b77f] transition-colors" href="#">Experts</a>
+<a class="text-stone-500 dark:text-stone-400 font-semibold font-label uppercase text-[11px] tracking-widest hover:text-[#10b77f] transition-colors" href="#">Milestones</a>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container-high border-2 border-primary/20">
+<img alt="Avatar" data-alt="Close-up professional portrait of a project director with a confident expression in a bright modern office setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD63D9MATn7-82u6A_VFddmutm89D1pAS1Q-JcuRxx-igHjtsjab5cPcYnhb1nd4O9ISdyxh5wlMVi-OClQ-NlBJim3jHIO8x62KX0XuR6CfhkvKccwijJZCjE9DmJkfqgHT3al63_spKOu-c9FQmxgVcCyFMvopZ4PVO8LPSdKC9tdvoDQ2evkiPxiHnCFj5nqh9Sqn9PADc_0aMgRttCRrtZTJMy70QOmxdOHsenTIy3nvQrVi0kO2JK122ik3jPrtvKPZUyHEVM"/>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-32 px-6 max-w-7xl mx-auto space-y-8">
+<!-- Project Hero Section -->
+<section class="relative overflow-hidden rounded-3xl bg-surface-container-lowest p-8 md:p-12 space-y-6">
+<div class="absolute top-0 right-0 w-1/3 h-full opacity-10 pointer-events-none">
+<img class="object-cover h-full w-full" data-alt="abstract architectural blueprint lines and geometric shapes on a light grey background with soft shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCH9AFOCCtitabO3s4NBfO-H3PPBCvyzM7ZwkngOhQQTvttZZos8L4nnchQRcwKhTXzj6emQXfX16RhfIXdjHPtG5pfh7U262huw9nBzyGhM54iFdAKkJB8c9c3IluSBxTOrz56qIbP09Ex9DtoTB4Htk1iUP2y-4h1Lo32a_zK9zqLs8Mb1c_UfHDpwZe1evwxxi5foTnzE2677Q4JjfFX3Iez3NE_QMIiGmK7HD6H6KA45HdvxLIHuXPq7Uw-hU3PQbL_Fw2FA9E"/>
+</div>
+<div class="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div class="space-y-2">
+<div class="inline-flex items-center px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-xs font-bold tracking-wide uppercase">
+                        En cours - Phase Fondations
+                    </div>
+<h2 class="text-4xl md:text-5xl font-headline font-extrabold text-on-surface tracking-tight">Construction Villa Bamako</h2>
+<div class="flex items-center text-on-surface-variant font-medium">
+<span class="material-symbols-outlined mr-2 text-primary" style="font-variation-settings: 'opsz' 20">location_on</span>
+                        Abidjan, Côte d'Ivoire
+                    </div>
+</div>
+<div class="w-full md:w-80 space-y-3">
+<div class="flex justify-between text-sm font-bold text-on-surface-variant">
+<span>Progression Globale</span>
+<span class="text-primary">25%</span>
+</div>
+<div class="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-inverse-primary w-1/4 rounded-full"></div>
+</div>
+</div>
+</div>
+</section>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Left Column: Bento Grid Executive Metrics -->
+<div class="lg:col-span-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
+<!-- Financial Health -->
+<div class="bg-surface-container-lowest p-6 rounded-3xl flex flex-col justify-between aspect-square lg:aspect-auto min-h-[180px]">
+<div class="flex justify-between items-start">
+<span class="p-3 bg-primary/10 rounded-2xl text-primary material-symbols-outlined">payments</span>
+<span class="text-xs font-bold text-on-surface-variant uppercase tracking-tighter">Budget</span>
+</div>
+<div class="mt-4">
+<div class="text-3xl font-headline font-bold">60%</div>
+<p class="text-sm text-on-surface-variant">Santé Financière</p>
+</div>
+<div class="mt-4 w-full h-1 bg-surface-container-low rounded-full">
+<div class="h-full bg-primary w-[60%] rounded-full"></div>
+</div>
+</div>
+<!-- Team Capacity -->
+<div class="bg-surface-container-lowest p-6 rounded-3xl flex flex-col justify-between aspect-square lg:aspect-auto min-h-[180px]">
+<div class="flex justify-between items-start">
+<span class="p-3 bg-secondary-container/20 rounded-2xl text-secondary material-symbols-outlined">engineering</span>
+<span class="text-xs font-bold text-on-surface-variant uppercase tracking-tighter">Equipe</span>
+</div>
+<div class="mt-4">
+<div class="text-3xl font-headline font-bold">5 Pros</div>
+<p class="text-sm text-on-surface-variant">Experts vérifiés actifs</p>
+</div>
+</div>
+<!-- Timeline Progress -->
+<div class="bg-surface-container-lowest p-6 rounded-3xl flex flex-col justify-between aspect-square lg:aspect-auto min-h-[180px]">
+<div class="flex justify-between items-start">
+<span class="p-3 bg-surface-container-high rounded-2xl text-on-surface-variant material-symbols-outlined">schedule</span>
+<span class="text-xs font-bold text-on-surface-variant uppercase tracking-tighter">Délai</span>
+</div>
+<div class="mt-4">
+<div class="text-3xl font-headline font-bold">45 jours</div>
+<p class="text-sm text-on-surface-variant">Temps écoulé sur site</p>
+</div>
+</div>
+<!-- Priority Signal -->
+<div class="bg-error-container p-6 rounded-3xl flex flex-col justify-between aspect-square lg:aspect-auto min-h-[180px]">
+<div class="flex justify-between items-start">
+<span class="p-3 bg-error text-on-error rounded-2xl material-symbols-outlined">warning</span>
+<span class="text-xs font-bold text-on-error-container uppercase tracking-tighter">Alerte</span>
+</div>
+<div class="mt-4">
+<div class="text-lg font-bold text-on-error-container leading-tight">Retard livraison béton</div>
+<p class="text-sm text-on-error-container/70 mt-1">Impact: Phase Fondations (+2j)</p>
+</div>
+</div>
+</div>
+<!-- Right Column: Partners & Technicals -->
+<div class="lg:col-span-8 space-y-8">
+<!-- Experts & Partners -->
+<section class="space-y-4">
+<h3 class="text-xl font-headline font-bold px-2">Experts &amp; Partenaires</h3>
+<div class="space-y-3">
+<div class="group flex items-center justify-between p-4 rounded-2xl bg-surface-container-low hover:bg-surface-container-high transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest overflow-hidden">
+<img alt="M. Koffi" data-alt="Portrait of an experienced African civil engineer wearing a white hard hat and safety vest, looking professional" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuZaxh6doXUxlx6e-mTDjJwQKZg7qrypaRteaHC9j8q1QKT5QaO2dDVCVEcH152F9ZoRkJeLM9s8BnZjlVTqnCU00iXSJxzvgZouKJMLHruWVg9Hxt9gkVPmKs6OIJa9ag3wEDgvyteVjp25KN22wRaT3uGneyFZScS7mmNE7vgDcyJ7qStcq3xy9zarkJuVbQaF8PEiapDaQDUSKu1oiof4T0fMQILhwPDoTi7FALaT14dNmzIynMgplFCI7pS0nvyT72ftrlS-8"/>
+</div>
+<div>
+<h4 class="font-bold text-on-surface">M. Koffi</h4>
+<span class="inline-block px-2 py-0.5 rounded-lg bg-surface-container-highest text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">Ingénieur</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-10 h-10 rounded-xl bg-secondary-container/20 flex items-center justify-center text-secondary shadow-[0_0_15px_rgba(253,196,37,0.2)]">
+<span class="material-symbols-outlined">chat</span>
+</div>
+</div>
+</div>
+<div class="group flex items-center justify-between p-4 rounded-2xl bg-surface-container-lowest hover:bg-surface-container-high transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest overflow-hidden">
+<img alt="Mme Diallo" data-alt="Portrait of a female African architect in a stylish minimalist studio, holding a tablet" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrfZT9j3B2iOKkgu6MV12yBdGFyhXnv0bC1N4vU8AYz-K4cssGsGLhvjhwwAk7ycqeQuEWd288uN3CtmLD3uPT4eRmPQelbfdKicFBMqI9_bb_xVmy0dxlDxlfIOJjkGMSudrkf__SmlBgaZKIp-ycQJlZJ99oquPcBwI-YcXyffQAc2LwTrkrQZk12u5D0pn5h5n9bxTkOchuYVy3hX0DZT2nm4zXKncdYQDMmznI9ilJD8R5wIowdT7_VSZbKv5V-OIfPPkB0xI"/>
+</div>
+<div>
+<h4 class="font-bold text-on-surface">Mme Diallo</h4>
+<span class="inline-block px-2 py-0.5 rounded-lg bg-surface-container-highest text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">Architecte</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-10 h-10 rounded-xl bg-secondary-container/20 flex items-center justify-center text-secondary shadow-[0_0_15px_rgba(253,196,37,0.2)]">
+<span class="material-symbols-outlined">chat</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Technical Vault -->
+<section class="space-y-4">
+<h3 class="text-xl font-headline font-bold px-2">Coffre-fort Technique</h3>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div class="bg-surface-container-lowest p-6 rounded-3xl group cursor-pointer hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined text-4xl text-primary mb-4" style="font-variation-settings: 'FILL' 1">description</span>
+<h4 class="font-bold text-lg">Plans de Coffrage</h4>
+<p class="text-sm text-on-surface-variant">V3 - Validé par le bureau technique</p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-3xl group cursor-pointer hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined text-4xl text-primary mb-4" style="font-variation-settings: 'FILL' 1">file_present</span>
+<h4 class="font-bold text-lg">Devis Descriptif</h4>
+<p class="text-sm text-on-surface-variant">Détails des matériaux et coûts</p>
+</div>
+</div>
+</section>
+<!-- Milestone Narrative -->
+<section class="bg-surface-container-low p-8 rounded-3xl space-y-6">
+<h3 class="text-xl font-headline font-bold">Chronologie du Projet</h3>
+<div class="relative pl-8 space-y-8 before:content-[''] before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-0.5 before:bg-outline-variant">
+<!-- Milestone 1 -->
+<div class="relative">
+<div class="absolute -left-8 top-1.5 w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-[16px] font-bold">check</span>
+</div>
+<div>
+<h4 class="font-bold text-on-surface">Terrassement</h4>
+<p class="text-sm text-on-surface-variant">Terminé le 12 Octobre 2023</p>
+</div>
+</div>
+<!-- Milestone 2 -->
+<div class="relative">
+<div class="absolute -left-8 top-1.5 w-6 h-6 rounded-full bg-primary-container border-4 border-white dark:border-stone-900 shadow-sm"></div>
+<div>
+<h4 class="font-bold text-primary">Élévation des Murs</h4>
+<p class="text-sm text-on-surface-variant">En cours - 40% réalisé</p>
+</div>
+</div>
+<!-- Milestone 3 -->
+<div class="relative opacity-50">
+<div class="absolute -left-8 top-1.5 w-6 h-6 rounded-full bg-surface-container-highest"></div>
+<div>
+<h4 class="font-bold text-on-surface">Coulage de la Dalle</h4>
+<p class="text-sm text-on-surface-variant">Planifié pour Novembre</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+<!-- Support Floating Action -->
+<div class="fixed bottom-28 right-6 z-40">
+<button class="glass-card flex items-center gap-3 px-6 py-4 rounded-3xl border border-white/20 shadow-xl hover:scale-105 transition-transform group">
+<span class="w-10 h-10 rounded-2xl bg-primary flex items-center justify-center text-white">
+<span class="material-symbols-outlined">support_agent</span>
+</span>
+<span class="font-bold text-primary">Contact Support</span>
+</button>
+</div>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-[#ffffff] dark:bg-stone-950 z-50 rounded-t-3xl shadow-[0_-4px_24px_rgba(0,0,0,0.04)] md:hidden">
+<div class="flex flex-col items-center justify-center text-[#10b77f] bg-[#f3f4f3] dark:bg-stone-800 rounded-xl px-4 py-2 ease-out duration-200">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-['Inter'] text-[11px] font-semibold tracking-wide uppercase mt-1">Overview</span>
+</div>
+<div class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 px-4 py-2 hover:text-[#10b77f] transition-all">
+<span class="material-symbols-outlined">folder_open</span>
+<span class="font-['Inter'] text-[11px] font-semibold tracking-wide uppercase mt-1">Vault</span>
+</div>
+<div class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 px-4 py-2 hover:text-[#10b77f] transition-all">
+<span class="material-symbols-outlined">engineering</span>
+<span class="font-['Inter'] text-[11px] font-semibold tracking-wide uppercase mt-1">Experts</span>
+</div>
+<div class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 px-4 py-2 hover:text-[#10b77f] transition-all">
+<span class="material-symbols-outlined">event_available</span>
+<span class="font-['Inter'] text-[11px] font-semibold tracking-wide uppercase mt-1">Milestones</span>
+</div>
+</nav>
+</body></html>

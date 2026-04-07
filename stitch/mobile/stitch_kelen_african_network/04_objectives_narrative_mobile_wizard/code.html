@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Project Creator - Etape 4</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-tertiary-fixed-variant": "#842325",
+              "surface-container-lowest": "#ffffff",
+              "on-primary": "#ffffff",
+              "on-secondary-fixed": "#251a00",
+              "on-primary-fixed-variant": "#005236",
+              "tertiary": "#a43a3b",
+              "secondary-fixed-dim": "#f7be1d",
+              "on-surface": "#1a1c1c",
+              "primary-fixed": "#70fbbd",
+              "outline-variant": "#bbcabf",
+              "surface-tint": "#006c49",
+              "on-error": "#ffffff",
+              "surface-container-highest": "#e2e2e2",
+              "surface-container-high": "#e8e8e7",
+              "primary-container": "#10b77f",
+              "on-primary-container": "#00402a",
+              "on-secondary": "#ffffff",
+              "inverse-on-surface": "#f1f1f0",
+              "secondary": "#785a00",
+              "error": "#ba1a1a",
+              "on-surface-variant": "#3c4a42",
+              "primary": "#006c49",
+              "tertiary-fixed": "#ffdad7",
+              "inverse-surface": "#2f3130",
+              "secondary-container": "#fdc425",
+              "surface-container-low": "#f3f4f3",
+              "on-secondary-fixed-variant": "#5a4300",
+              "primary-fixed-dim": "#50dea3",
+              "on-tertiary-fixed": "#410006",
+              "on-tertiary": "#ffffff",
+              "surface-bright": "#f9f9f8",
+              "tertiary-fixed-dim": "#ffb3af",
+              "surface-variant": "#e2e2e2",
+              "surface-dim": "#dadad9",
+              "tertiary-container": "#f97a77",
+              "secondary-fixed": "#ffdf9a",
+              "inverse-primary": "#50dea3",
+              "on-primary-fixed": "#002113",
+              "background": "#f9f9f8",
+              "on-secondary-container": "#6d5200",
+              "outline": "#6c7a71",
+              "on-background": "#1a1c1c",
+              "on-error-container": "#93000a",
+              "surface": "#f9f9f8",
+              "surface-container": "#eeeeed",
+              "error-container": "#ffdad6",
+              "on-tertiary-container": "#6f1218"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-morphism {
+        background: rgba(249, 249, 248, 0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+      .gradient-primary {
+        background: linear-gradient(135deg, #006c49 0%, #10b77f 100%);
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface antialiased min-h-screen pb-40">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-[#f9f9f8]/70 dark:bg-[#1a1c1c]/70 backdrop-blur-xl border-b border-[#bbcabf]/15 shadow-sm dark:shadow-none">
+<div class="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
+<div class="flex items-center gap-3">
+<button class="text-[#10b77f] scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+<h1 class="font-['Manrope'] font-bold text-2xl tracking-tight text-[#1a1c1c] dark:text-[#f9f9f8]">Project Creator</h1>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold text-primary bg-primary/10 px-3 py-1 rounded-full uppercase tracking-tighter">Étape 4 sur 4</span>
+</div>
+</div>
+</header>
+<main class="pt-24 px-5 max-w-lg mx-auto space-y-8">
+<!-- Header Section -->
+<section class="space-y-2">
+<h2 class="font-headline font-extrabold text-3xl text-on-surface tracking-tight leading-tight">Objectifs &amp; Narrative</h2>
+<p class="text-on-surface-variant text-sm leading-relaxed">Façonnez l'histoire de votre projet pour inspirer votre communauté.</p>
+</section>
+<!-- Narrative Card -->
+<section class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm">
+<label class="block font-headline font-bold text-lg mb-4 text-on-surface">Description du projet</label>
+<div class="relative group">
+<textarea class="w-full min-h-[220px] bg-surface-container-low border-none rounded-xl p-4 text-on-surface placeholder:text-on-surface-variant/40 focus:ring-1 focus:ring-primary focus:bg-surface-container-lowest transition-all resize-none leading-relaxed" placeholder="Il était une fois un projet qui..."></textarea>
+<div class="absolute bottom-4 right-4 text-[10px] font-medium text-on-surface-variant/50 uppercase tracking-widest">
+                    840 mots restants
+                </div>
+</div>
+</section>
+<!-- Objectives Card -->
+<section class="bg-surface-container-low rounded-2xl p-6">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline font-bold text-lg text-on-surface">Objectifs du projet</h3>
+<button class="bg-surface-container-lowest p-2 rounded-full shadow-sm text-primary active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+</div>
+<!-- Tag Cloud -->
+<div class="flex flex-wrap gap-2">
+<div class="flex items-center gap-2 bg-primary-container text-on-primary-container px-4 py-2 rounded-full font-medium text-xs shadow-sm">
+                    Impact Social
+                    <span class="material-symbols-outlined text-sm" data-icon="close">close</span>
+</div>
+<div class="flex items-center gap-2 bg-secondary-container text-on-secondary-container px-4 py-2 rounded-full font-medium text-xs shadow-sm">
+                    Éducation
+                    <span class="material-symbols-outlined text-sm" data-icon="close">close</span>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-lowest text-on-surface-variant px-4 py-2 rounded-full font-medium text-xs shadow-sm">
+                    Technologie
+                    <span class="material-symbols-outlined text-sm" data-icon="close">close</span>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-lowest text-on-surface-variant px-4 py-2 rounded-full font-medium text-xs shadow-sm">
+                    Diaspora Connect
+                    <span class="material-symbols-outlined text-sm" data-icon="close">close</span>
+</div>
+<div class="flex items-center gap-2 bg-primary-container text-on-primary-container px-4 py-2 rounded-full font-medium text-xs shadow-sm">
+                    Innovation
+                    <span class="material-symbols-outlined text-sm" data-icon="close">close</span>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-lowest border border-outline-variant/30 text-on-surface-variant/60 px-4 py-2 rounded-full font-medium text-xs italic">
+                    Ajouter un tag...
+                </div>
+</div>
+</section>
+<!-- Illustration / Mood -->
+<section class="rounded-2xl overflow-hidden aspect-[16/9] relative group">
+<img alt="Creative Workspace" class="w-full h-full object-cover grayscale-[20%] group-hover:scale-105 transition-transform duration-700" data-alt="Modern collaborative workspace with natural light, plants, and high-end stationery on a stone desk, editorial aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAif3sIrMpYfFReir8Qq95xBxhWzErXv76_RIFDy2M-epmcb1DbpbgilabFxg4u5OkzpVnVvt7lOtnfPjOSJfnkU9ar0QhNagr-6YGg0XbStjGh4YD_-xeiSlquMVMBjGBOesqjivUtNQCZIor62envcqtsIVtNWHwXCVOls0ixYDx4yMahGx1Ox977qQJa7LtyLlWekiZZhcr9j73pEI8pJe7mOCOm-PiUb511054U_ORwC8tE7r6pDM_9z6J0nIe0xUlWHXM8ODw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/60 to-transparent flex flex-col justify-end p-6">
+<span class="text-white/70 text-[10px] uppercase tracking-[0.2em] font-medium mb-1">Inspiration</span>
+<p class="text-white font-headline font-bold text-lg leading-tight">Racontez votre vision avec clarté et passion.</p>
+</div>
+</section>
+</main>
+<!-- Floating Navigation -->
+<nav class="fixed bottom-8 left-0 right-0 flex justify-center items-center z-50">
+<div class="w-[92%] max-w-md glass-morphism rounded-full px-4 py-4 flex items-center justify-between shadow-[0_8px_32px_rgba(26,28,28,0.08)] border border-white/20">
+<button class="flex items-center gap-2 px-6 py-3 rounded-full font-label text-xs uppercase tracking-widest text-on-surface/60 hover:text-on-surface transition-all active:scale-95">
+<span class="material-symbols-outlined text-sm" data-icon="arrow_back">arrow_back</span>
+                Précédent
+            </button>
+<button class="gradient-primary text-white flex items-center gap-3 px-8 py-4 rounded-full font-headline font-bold text-sm shadow-lg shadow-primary/20 active:scale-95 transition-transform">
+                Review &amp; Launch
+                <span class="material-symbols-outlined" data-icon="rocket_launch">rocket_launch</span>
+</button>
+</div>
+</nav>
+<!-- BottomNavBar (Hidden on this transactional page as per rules, but showing the active state logic for Narrative) -->
+<div class="hidden">
+<!-- Narrative is active -->
+<div class="bg-gradient-to-br from-[#006c49] to-[#10b77f] text-white rounded-full p-3">
+<span class="material-symbols-outlined" data-icon="auto_stories">auto_stories</span>
+<span class="font-['Inter'] font-medium text-[10px] uppercase tracking-widest">Narrative</span>
+</div>
+</div>
+</body></html>

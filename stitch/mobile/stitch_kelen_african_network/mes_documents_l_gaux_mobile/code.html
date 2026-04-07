@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-bright": "#f9f9f8",
+              "inverse-on-surface": "#f1f1f0",
+              "surface": "#f9f9f8",
+              "tertiary-fixed": "#ffdad7",
+              "outline-variant": "#bbcabf",
+              "on-error-container": "#93000a",
+              "tertiary-fixed-dim": "#ffb3af",
+              "on-error": "#ffffff",
+              "primary-container": "#10b77f",
+              "on-primary-container": "#00402a",
+              "secondary": "#785a00",
+              "background": "#f9f9f8",
+              "surface-tint": "#006c49",
+              "on-tertiary-fixed": "#410006",
+              "on-surface": "#1a1c1c",
+              "on-tertiary-container": "#6f1218",
+              "secondary-fixed-dim": "#f7be1d",
+              "on-secondary-fixed-variant": "#5a4300",
+              "error": "#ba1a1a",
+              "on-primary-fixed-variant": "#005236",
+              "on-secondary-fixed": "#251a00",
+              "surface-dim": "#dadad9",
+              "primary": "#006c49",
+              "on-secondary-container": "#6d5200",
+              "secondary-fixed": "#ffdf9a",
+              "on-primary-fixed": "#002113",
+              "inverse-surface": "#2f3130",
+              "on-surface-variant": "#3c4a42",
+              "on-tertiary-fixed-variant": "#842325",
+              "surface-container": "#eeeeed",
+              "secondary-container": "#fdc425",
+              "inverse-primary": "#50dea3",
+              "surface-container-low": "#f3f4f3",
+              "error-container": "#ffdad6",
+              "surface-container-high": "#e8e8e7",
+              "tertiary-container": "#f97a77",
+              "primary-fixed": "#70fbbd",
+              "on-secondary": "#ffffff",
+              "on-primary": "#ffffff",
+              "surface-container-highest": "#e2e2e2",
+              "surface-container-lowest": "#ffffff",
+              "primary-fixed-dim": "#50dea3",
+              "surface-variant": "#e2e2e2",
+              "outline": "#6c7a71",
+              "on-tertiary": "#ffffff",
+              "on-background": "#1a1c1c",
+              "tertiary": "#a43a3b"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "3xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-[#f9f9f8]/70 backdrop-blur-xl flex justify-between items-center px-6 h-16 w-full">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="Professional headshot of a businessman in a light grey suit against a clean studio background, soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsK3WA-1tb0fD743aYJg4UGhKWrUehFVuMNvh9h0yUgnnXXv06PLmRh-1Fh1Br4r6T3YXigDS_1qBiAGXtiooX4WyQXyNWUrXYaLjuDbN59tjMG81YrKl7QP8f8d0-Oc4SB6eP274XqlO0B66VWMm-3lIKzqCdWlyvsFSGmHQuaskvxyPON1f9HaL0A7JFPPc4Z3FMsEReDIudbXBfEu-nd3M7p7zgw8DTrY5DkAtFwv-J4HZv_tNYbwqeibjMdV5sXZr4yZJJb7I"/>
+</div>
+<span class="text-lg font-bold tracking-widest text-[#1a1c1c] uppercase">DIPLOMAT</span>
+</div>
+<button class="text-[#10b77f] active:scale-95 duration-200 transition-opacity hover:opacity-80">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="bg-[#f3f4f3] h-[1px] w-full absolute bottom-0 opacity-10"></div>
+</header>
+<main class="pt-20 px-6 space-y-8">
+<!-- Hero Section -->
+<section class="mt-4">
+<h1 class="text-[2.25rem] font-bold tracking-tight leading-tight text-on-surface">Mes Documents Légaux</h1>
+<p class="text-on-surface-variant text-sm mt-2 font-medium">Gérez vos justificatifs et suivez leur validation en temps réel.</p>
+</section>
+<!-- Large Upload Area -->
+<section>
+<div class="relative group active:scale-[0.98] transition-all duration-300">
+<div class="absolute inset-0 bg-gradient-to-br from-primary to-primary-container opacity-5 rounded-3xl"></div>
+<div class="border-2 border-dashed border-outline-variant/30 rounded-3xl p-8 flex flex-col items-center justify-center text-center space-y-4 bg-surface-container-lowest/50 backdrop-blur-sm">
+<div class="w-16 h-16 rounded-full bg-primary-container/10 flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-4xl" data-icon="cloud_upload">cloud_upload</span>
+</div>
+<div>
+<h3 class="text-lg font-bold text-on-surface">Ajouter un document</h3>
+<p class="text-xs text-on-surface-variant mt-1">PDF, JPG ou PNG (max. 10 Mo)</p>
+</div>
+<button class="bg-gradient-to-r from-primary to-primary-container text-on-primary px-8 py-3 rounded-xl font-bold text-sm shadow-sm active:scale-95 transition-transform">
+                        Parcourir les fichiers
+                    </button>
+</div>
+</div>
+</section>
+<!-- Filter / Stats Tonal Row -->
+<section class="flex gap-3 overflow-x-auto pb-2 -mx-6 px-6 no-scrollbar">
+<div class="flex-shrink-0 bg-surface-container-lowest px-4 py-3 rounded-2xl flex items-center gap-3 shadow-sm">
+<span class="material-symbols-outlined text-primary-container" data-icon="verified_user">verified_user</span>
+<div>
+<p class="text-[10px] uppercase tracking-wider font-bold text-on-surface-variant">Vérifiés</p>
+<p class="text-lg font-bold leading-none">12</p>
+</div>
+</div>
+<div class="flex-shrink-0 bg-surface-container-low px-4 py-3 rounded-2xl flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary" data-icon="pending">pending</span>
+<div>
+<p class="text-[10px] uppercase tracking-wider font-bold text-on-surface-variant">En attente</p>
+<p class="text-lg font-bold leading-none">03</p>
+</div>
+</div>
+<div class="flex-shrink-0 bg-surface-container-low px-4 py-3 rounded-2xl flex items-center gap-3">
+<span class="material-symbols-outlined text-error" data-icon="gpp_bad">gpp_bad</span>
+<div>
+<p class="text-[10px] uppercase tracking-wider font-bold text-on-surface-variant">Refusés</p>
+<p class="text-lg font-bold leading-none">01</p>
+</div>
+</div>
+</section>
+<!-- Document List -->
+<section class="space-y-4 pb-12">
+<div class="flex justify-between items-end">
+<h2 class="text-xl font-bold tracking-tight">Documents récents</h2>
+<button class="text-primary text-xs font-bold uppercase tracking-widest">Tout voir</button>
+</div>
+<div class="space-y-3">
+<!-- Verified Item -->
+<div class="bg-surface-container-lowest rounded-2xl p-4 flex items-center justify-between group transition-all duration-200">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-surface-container-low flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+</div>
+<div>
+<h4 class="font-bold text-sm text-on-surface">Passeport_John_Doe.pdf</h4>
+<p class="text-[10px] text-on-surface-variant font-medium">Ajouté le 12 Oct 2023 • 2.4 MB</p>
+</div>
+</div>
+<span class="bg-primary-container/10 text-on-primary-container px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Verified</span>
+</div>
+<!-- Pending Item -->
+<div class="bg-surface-container-lowest rounded-2xl p-4 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-surface-container-low flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="article">article</span>
+</div>
+<div>
+<h4 class="font-bold text-sm text-on-surface">Justificatif_Domicile.jpg</h4>
+<p class="text-[10px] text-on-surface-variant font-medium">Ajouté le 14 Oct 2023 • 1.1 MB</p>
+</div>
+</div>
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Pending</span>
+</div>
+<!-- Refused Item -->
+<div class="bg-surface-container-lowest rounded-2xl p-4 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-surface-container-low flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="assignment">assignment</span>
+</div>
+<div>
+<h4 class="font-bold text-sm text-on-surface">Contrat_Travail_Signed.pdf</h4>
+<p class="text-[10px] text-on-surface-variant font-medium">Ajouté le 10 Oct 2023 • 4.8 MB</p>
+</div>
+</div>
+<span class="bg-error-container text-on-error-container px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Refused</span>
+</div>
+<!-- Verified Item 2 -->
+<div class="bg-surface-container-lowest rounded-2xl p-4 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-surface-container-low flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="badge">badge</span>
+</div>
+<div>
+<h4 class="font-bold text-sm text-on-surface">Permis_Conduire_A.png</h4>
+<p class="text-[10px] text-on-surface-variant font-medium">Ajouté le 05 Oct 2023 • 890 KB</p>
+</div>
+</div>
+<span class="bg-primary-container/10 text-on-primary-container px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Verified</span>
+</div>
+</div>
+</section>
+<!-- Storage Card Asymmetric Layout -->
+<section>
+<div class="bg-inverse-surface text-inverse-on-surface p-6 rounded-3xl relative overflow-hidden">
+<div class="relative z-10 flex flex-col justify-between h-full space-y-4">
+<div>
+<p class="text-[10px] uppercase tracking-widest font-bold opacity-60">Utilisation Stockage</p>
+<h3 class="text-2xl font-extrabold mt-1">45.2 GB <span class="text-sm font-normal opacity-40">/ 100 GB</span></h3>
+</div>
+<div class="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary-container to-inverse-primary w-[45%] rounded-full"></div>
+</div>
+<p class="text-[10px] font-medium opacity-60">Votre espace est sécurisé par un cryptage de bout en bout.</p>
+</div>
+<!-- Decorative element -->
+<div class="absolute -right-10 -bottom-10 w-40 h-40 bg-primary/20 rounded-full blur-3xl"></div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full h-20 bg-[#f9f9f8]/80 backdrop-blur-md flex justify-around items-center px-4 pb-2 z-50 rounded-t-3xl shadow-[0_-4px_20px_0_rgba(26,28,28,0.04)]">
+<a class="flex flex-col items-center justify-center text-[#1a1c1c]/60 px-4 py-2 hover:text-[#10b77f] transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-['Manrope'] font-bold text-[10px] uppercase tracking-wider mt-1">Dashboard</span>
+</a>
+<!-- ACTIVE TAB: Projects (as it represents documents/files management) -->
+<a class="flex flex-col items-center justify-center text-[#10b77f] bg-[#10b77f]/10 rounded-xl px-4 py-2 active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="folder_managed">folder_managed</span>
+<span class="font-['Manrope'] font-bold text-[10px] uppercase tracking-wider mt-1">Projects</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#1a1c1c]/60 px-4 py-2 hover:text-[#10b77f] transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="chat_bubble">chat_bubble</span>
+<span class="font-['Manrope'] font-bold text-[10px] uppercase tracking-wider mt-1">Messages</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#1a1c1c]/60 px-4 py-2 hover:text-[#10b77f] transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-['Manrope'] font-bold text-[10px] uppercase tracking-wider mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

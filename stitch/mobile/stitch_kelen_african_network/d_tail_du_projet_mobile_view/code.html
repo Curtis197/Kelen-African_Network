@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-bright": "#f9f9f8",
+              "inverse-on-surface": "#f1f1f0",
+              "surface": "#f9f9f8",
+              "tertiary-fixed": "#ffdad7",
+              "outline-variant": "#bbcabf",
+              "on-error-container": "#93000a",
+              "tertiary-fixed-dim": "#ffb3af",
+              "on-error": "#ffffff",
+              "primary-container": "#10b77f",
+              "on-primary-container": "#00402a",
+              "secondary": "#785a00",
+              "background": "#f9f9f8",
+              "surface-tint": "#006c49",
+              "on-tertiary-fixed": "#410006",
+              "on-surface": "#1a1c1c",
+              "on-tertiary-container": "#6f1218",
+              "secondary-fixed-dim": "#f7be1d",
+              "on-secondary-fixed-variant": "#5a4300",
+              "error": "#ba1a1a",
+              "on-primary-fixed-variant": "#005236",
+              "on-secondary-fixed": "#251a00",
+              "surface-dim": "#dadad9",
+              "primary": "#006c49",
+              "on-secondary-container": "#6d5200",
+              "secondary-fixed": "#ffdf9a",
+              "on-primary-fixed": "#002113",
+              "inverse-surface": "#2f3130",
+              "on-surface-variant": "#3c4a42",
+              "on-tertiary-fixed-variant": "#842325",
+              "surface-container": "#eeeeed",
+              "secondary-container": "#fdc425",
+              "inverse-primary": "#50dea3",
+              "surface-container-low": "#f3f4f3",
+              "error-container": "#ffdad6",
+              "surface-container-high": "#e8e8e7",
+              "tertiary-container": "#f97a77",
+              "primary-fixed": "#70fbbd",
+              "on-secondary": "#ffffff",
+              "on-primary": "#ffffff",
+              "surface-container-highest": "#e2e2e2",
+              "surface-container-lowest": "#ffffff",
+              "primary-fixed-dim": "#50dea3",
+              "surface-variant": "#e2e2e2",
+              "outline": "#6c7a71",
+              "on-tertiary": "#ffffff",
+              "on-background": "#1a1c1c",
+              "tertiary": "#a43a3b"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.35s;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+        body {
+            background-color: #f9f9f8;
+            color: #1a1c1c;
+            font-family: 'Inter', sans-serif;
+        }
+        .editorial-header {
+            font-family: 'Manrope', sans-serif;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="pb-24">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-[#f9f9f8]/70 backdrop-blur-xl flex justify-between items-center px-6 h-16 w-full">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Professional headshot of a project manager in a minimalist studio setting with soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCe8fFfR3LdtJpml6kA0O3WD6DQxJAX8yBReShMPQ4AOU6_Xs7ExpKB7VuGIhhPqw4AF5QycaNnct-NeBwQUmb08tbvEjUHB3ZO5sFNMLo1YxCGAlBk_VZegCWDC84F1QfSUfxbON1OsDMHs6jBTOTrCTLMymUBOzDGh40vgQr0lloeDptiaBXz4X3fmdeMz1OjQYMO63haERUaDQ9jnJSQ5LF2WGsj7wmfzMY56NOos60FpFLuA4dmN-7Iz7By2cCOrmSQAqJUFEM"/>
+</div>
+<span class="text-lg font-bold tracking-widest text-[#1a1c1c] editorial-header">DIPLOMAT</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-[#1a1c1c] active:scale-95 duration-200">notifications</button>
+<button class="material-symbols-outlined text-[#1a1c1c] active:scale-95 duration-200">more_vert</button>
+</div>
+<div class="bg-[#f3f4f3] h-[1px] w-full absolute bottom-0 opacity-10"></div>
+</header>
+<main class="mt-20 px-6 space-y-8">
+<!-- Hero Section -->
+<section class="space-y-4">
+<div class="flex flex-col gap-1">
+<span class="text-primary font-bold text-xs uppercase tracking-widest font-label">Residential Excellence</span>
+<h1 class="text-3xl font-extrabold editorial-header tracking-tight leading-tight">Villa Bamako</h1>
+<p class="text-on-surface-variant text-sm font-body max-w-[80%]">Contemporary luxury estate in the heart of Mali, focusing on sustainable materials and panoramic views.</p>
+</div>
+<div class="flex items-center justify-between bg-surface-container-lowest p-4 rounded-xl shadow-sm">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="font-bold text-sm">Construction Phase</span>
+</div>
+<button class="flex items-center gap-1 text-primary text-sm font-bold">
+                    Ongoing
+                    <span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+</div>
+</section>
+<!-- Bento Grid Stats & Budget -->
+<section class="grid grid-cols-1 gap-4">
+<!-- Budget Overview Card -->
+<div class="bg-surface-container-lowest p-6 rounded-xl relative overflow-hidden flex items-center justify-between">
+<div class="space-y-2 z-10">
+<p class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">Budget Total</p>
+<p class="text-2xl font-extrabold editorial-header">450.000 €</p>
+<div class="flex items-center gap-2 mt-2">
+<span class="text-xs font-semibold px-2 py-1 bg-primary/10 text-primary rounded-full">65% Consumed</span>
+</div>
+</div>
+<!-- Progress Ring -->
+<div class="relative flex items-center justify-center">
+<svg class="w-24 h-24">
+<circle class="text-surface-container-highest" cx="48" cy="48" fill="transparent" r="38" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-primary progress-ring__circle" cx="48" cy="48" fill="transparent" r="38" stroke="currentColor" stroke-dasharray="238.76" stroke-dashoffset="83.56" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">payments</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Vertical Timeline -->
+<section class="space-y-6">
+<h2 class="text-xl font-bold editorial-header px-1">Timeline</h2>
+<div class="relative pl-6 space-y-8 before:content-[''] before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[2px] before:bg-surface-container-high">
+<!-- Timeline Item 1 (Past) -->
+<div class="relative">
+<div class="absolute -left-[21px] top-1 w-4 h-4 rounded-full border-4 border-surface bg-primary z-10"></div>
+<div class="space-y-1">
+<div class="flex justify-between items-center">
+<h3 class="font-bold text-sm">Foundations &amp; Slab</h3>
+<span class="text-[10px] font-bold text-on-surface-variant uppercase">Mar 12, 2024</span>
+</div>
+<p class="text-xs text-on-surface-variant">Completed. Structural integrity verified by Bureau Veritas.</p>
+</div>
+</div>
+<!-- Timeline Item 2 (Active) -->
+<div class="relative">
+<div class="absolute -left-[21px] top-1 w-4 h-4 rounded-full border-4 border-surface bg-secondary-container z-10 animate-pulse"></div>
+<div class="space-y-2">
+<div class="flex justify-between items-center">
+<h3 class="font-bold text-sm text-primary">Structural Walls</h3>
+<span class="text-[10px] font-bold text-primary uppercase">In Progress</span>
+</div>
+<p class="text-xs text-on-surface-variant">Laying high-density thermal bricks on the first floor.</p>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-primary-container w-[72%]"></div>
+</div>
+</div>
+</div>
+<!-- Timeline Item 3 (Future) -->
+<div class="relative">
+<div class="absolute -left-[21px] top-1 w-4 h-4 rounded-full border-4 border-surface bg-surface-container-highest z-10"></div>
+<div class="space-y-1 opacity-60">
+<div class="flex justify-between items-center">
+<h3 class="font-bold text-sm">Roofing &amp; Sealing</h3>
+<span class="text-[10px] font-bold uppercase">May 20, 2024</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Professionals -->
+<section class="space-y-6">
+<div class="flex justify-between items-end px-1">
+<h2 class="text-xl font-bold editorial-header">Experts Engaged</h2>
+<button class="text-primary text-xs font-bold uppercase tracking-wider">View All</button>
+</div>
+<div class="space-y-3">
+<!-- Professional 1 -->
+<div class="flex items-center gap-4 bg-surface-container-low p-4 rounded-xl">
+<div class="relative">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="Portrait of an architect in a modern office, wearing glasses and a dark blazer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfNJCbAQ-hvdTV9cyrnCFX6xKAUKboj6T4FHsEzvGpCElFVMgcyxBAQeFn8osrgOfjrb-_GasP08w2xtI-y1ducczEtybKbm_SDpyS7Pch_Qc8VcSL6-Kro8pS0bg4VUUvY2kIJMALK_SY7anNsZaT20O0UTtaYrftrUBurjMb4Y2fYdG99eQYxzBlLyGKbVt_VBojAwhTJHIoSEihrDp3O4FfL5LxF2i1ymoPb7-m915OZqGhoEC8R3LkGrOXwO3K3uo8UTtjGRQ"/>
+<div class="absolute -bottom-1 -right-1 bg-primary text-white p-0.5 rounded-full border-2 border-surface-container-low">
+<span class="material-symbols-outlined text-[10px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div class="flex-1">
+<p class="font-bold text-sm">Jean-Luc Diarra</p>
+<p class="text-xs text-on-surface-variant">Lead Architect • A.D.A Studio</p>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant">chat_bubble</button>
+</div>
+<!-- Professional 2 -->
+<div class="flex items-center gap-4 bg-surface-container-low p-4 rounded-xl">
+<div class="relative">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="Close up of a female civil engineer wearing a white hard hat with site equipment in background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvf-1JD0tTMzEKSm4r_x0pzTmu5sBolhh2Ui7mh4s-KV9jOH_pWdToL8yHBUieMWcOdeImtFWrxNDck5r3T5JlthW6ApBIN8VwqX9XheBwje3teUJfePu5rPZ-v4YYqQyBEALOGdWIQsdGSzmFqJATkrfXPAC7-AHGL_kbR56RlC9AUGeJZ2IsRgxdpKe2uVKrMMa1U2b4JBCEmm8c9CRiqRLkulkFP1NGgZc63GmhN_6XO1R33Oj9QKBQav103Vn8BdzyuRqVO9g"/>
+<div class="absolute -bottom-1 -right-1 bg-primary text-white p-0.5 rounded-full border-2 border-surface-container-low">
+<span class="material-symbols-outlined text-[10px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div class="flex-1">
+<p class="font-bold text-sm">Aminata Traoré</p>
+<p class="text-xs text-on-surface-variant">Structural Engineer • BuildSmart</p>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant">chat_bubble</button>
+</div>
+</div>
+</section>
+<!-- Document Quick Links -->
+<section class="space-y-4">
+<h2 class="text-xl font-bold editorial-header px-1">Vault Documents</h2>
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant/5">
+<span class="material-symbols-outlined text-primary mb-2">description</span>
+<p class="font-bold text-xs">Technical Specs</p>
+<p class="text-[10px] text-on-surface-variant">PDF • 12.4 MB</p>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant/5">
+<span class="material-symbols-outlined text-secondary mb-2">image</span>
+<p class="font-bold text-xs">Site Photos</p>
+<p class="text-[10px] text-on-surface-variant">JPG • 24 Files</p>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant/5">
+<span class="material-symbols-outlined text-primary mb-2">contract</span>
+<p class="font-bold text-xs">Permits</p>
+<p class="text-[10px] text-on-surface-variant">PDF • 3.1 MB</p>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant/5">
+<span class="material-symbols-outlined text-tertiary mb-2">architecture</span>
+<p class="font-bold text-xs">Blueprints</p>
+<p class="text-[10px] text-on-surface-variant">DWG • 45.2 MB</p>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full h-20 bg-[#f9f9f8]/80 backdrop-blur-md flex justify-around items-center px-4 pb-2 z-50 rounded-t-3xl shadow-[0_-4px_20px_0_rgba(26,28,28,0.04)]">
+<div class="flex flex-col items-center justify-center text-[#1a1c1c]/60 px-4 py-2 transition-colors hover:text-[#10b77f] active:scale-90 duration-200">
+<span class="material-symbols-outlined mb-1">dashboard</span>
+<span class="font-['Manrope'] font-bold text-[10px] uppercase tracking-wider">Dashboard</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#10b77f] bg-[#10b77f]/10 rounded-xl px-4 py-2 active:scale-90 duration-200">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">folder_managed</span>
+<span class="font-['Manrope'] font-bold text-[10px] uppercase tracking-wider">Projects</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#1a1c1c]/60 px-4 py-2 transition-colors hover:text-[#10b77f] active:scale-90 duration-200">
+<span class="material-symbols-outlined mb-1">chat_bubble</span>
+<span class="font-['Manrope'] font-bold text-[10px] uppercase tracking-wider">Messages</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#1a1c1c]/60 px-4 py-2 transition-colors hover:text-[#10b77f] active:scale-90 duration-200">
+<span class="material-symbols-outlined mb-1">person</span>
+<span class="font-['Manrope'] font-bold text-[10px] uppercase tracking-wider">Profile</span>
+</div>
+</nav>
+</body></html>

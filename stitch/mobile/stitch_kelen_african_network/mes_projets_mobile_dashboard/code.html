@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-bright": "#f9f9f8",
+              "inverse-on-surface": "#f1f1f0",
+              "surface": "#f9f9f8",
+              "tertiary-fixed": "#ffdad7",
+              "outline-variant": "#bbcabf",
+              "on-error-container": "#93000a",
+              "tertiary-fixed-dim": "#ffb3af",
+              "on-error": "#ffffff",
+              "primary-container": "#10b77f",
+              "on-primary-container": "#00402a",
+              "secondary": "#785a00",
+              "background": "#f9f9f8",
+              "surface-tint": "#006c49",
+              "on-tertiary-fixed": "#410006",
+              "on-surface": "#1a1c1c",
+              "on-tertiary-container": "#6f1218",
+              "secondary-fixed-dim": "#f7be1d",
+              "on-secondary-fixed-variant": "#5a4300",
+              "error": "#ba1a1a",
+              "on-primary-fixed-variant": "#005236",
+              "on-secondary-fixed": "#251a00",
+              "surface-dim": "#dadad9",
+              "primary": "#006c49",
+              "on-secondary-container": "#6d5200",
+              "secondary-fixed": "#ffdf9a",
+              "on-primary-fixed": "#002113",
+              "inverse-surface": "#2f3130",
+              "on-surface-variant": "#3c4a42",
+              "on-tertiary-fixed-variant": "#842325",
+              "surface-container": "#eeeeed",
+              "secondary-container": "#fdc425",
+              "inverse-primary": "#50dea3",
+              "surface-container-low": "#f3f4f3",
+              "error-container": "#ffdad6",
+              "surface-container-high": "#e8e8e7",
+              "tertiary-container": "#f97a77",
+              "primary-fixed": "#70fbbd",
+              "on-secondary": "#ffffff",
+              "on-primary": "#ffffff",
+              "surface-container-highest": "#e2e2e2",
+              "surface-container-lowest": "#ffffff",
+              "primary-fixed-dim": "#50dea3",
+              "surface-variant": "#e2e2e2",
+              "outline": "#6c7a71",
+              "on-tertiary": "#ffffff",
+              "on-background": "#1a1c1c",
+              "tertiary": "#a43a3b"
+            },
+            fontFamily: {
+              "headline": ["Manrope", "sans-serif"],
+              "body": ["Inter", "sans-serif"],
+              "label": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "3xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full z-50 bg-[#f9f9f8]/70 backdrop-blur-xl">
+<div class="flex justify-between items-center px-6 h-16 w-full relative">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="professional portrait of a confident african businessman in a soft lit office setting with neutral tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5b_Fr-KJ_09tUuXVoJG8tu3-6fTPhOJqpOutUExF2q6qaFHrlxm7vMfsHIn42td6fwRDhJz6DKFjRCpTX4cf4aXLLCuKhypLH1dR7XOuveiPfDwjuFsRdoWrEpqy8DElnGsuTv4fal6kXJAsRdR3dH58NOJHPdCEJrzktD5eSGsKPuqOsH_eKKEDK5rkcvVNQiN5ZHLIZ2rD1tz9IevKqt5DgkjYiwGSP_JOiIzPr3vSfYRgPRB8Y_ZtcbZHx_ohLlQcXso6-0KU"/>
+</div>
+<span class="text-lg font-['Manrope'] font-bold tracking-widest text-[#1a1c1c]">DIPLOMAT</span>
+</div>
+<button class="text-[#1a1c1c] active:scale-95 duration-200 transition-opacity hover:opacity-80">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="bg-[#f3f4f3] h-[1px] w-full absolute bottom-0 opacity-10"></div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="pt-24 pb-32 px-6">
+<!-- Dashboard Header Section -->
+<section class="mb-8">
+<span class="text-primary font-bold text-xs uppercase tracking-widest mb-2 block">Vue d'ensemble</span>
+<h1 class="font-headline font-extrabold text-3xl tracking-tight text-on-surface mb-2">Mes Projets</h1>
+<p class="text-on-surface-variant text-sm leading-relaxed max-w-[80%]">Gérez vos investissements et suivez l'évolution de vos chantiers en temps réel.</p>
+</section>
+<!-- Project Filtering / Tabs (No-line design) -->
+<div class="flex gap-2 mb-8 overflow-x-auto hide-scrollbar">
+<button class="px-5 py-2.5 bg-primary-container text-on-primary-container rounded-full text-xs font-bold font-headline transition-all active:scale-95 whitespace-nowrap">Tous (12)</button>
+<button class="px-5 py-2.5 bg-surface-container-low text-on-surface-variant rounded-full text-xs font-bold font-headline transition-all active:scale-95 whitespace-nowrap">En cours</button>
+<button class="px-5 py-2.5 bg-surface-container-low text-on-surface-variant rounded-full text-xs font-bold font-headline transition-all active:scale-95 whitespace-nowrap">Terminés</button>
+<button class="px-5 py-2.5 bg-surface-container-low text-on-surface-variant rounded-full text-xs font-bold font-headline transition-all active:scale-95 whitespace-nowrap">En pause</button>
+</div>
+<!-- Project List (Bento-style editorial cards) -->
+<div class="flex flex-col gap-6">
+<!-- Project Card 1: Featured -->
+<div class="bg-surface-container-lowest rounded-3xl overflow-hidden group active:scale-[0.98] transition-all duration-300">
+<div class="relative h-56 w-full">
+<img alt="Villa Project" class="w-full h-full object-cover" data-alt="ultra-modern luxury villa architecture in Dakar with clean white lines, large glass windows, and lush tropical greenery during sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8JSF7puvbKNRqmubjpPMKrC2YNhIUAg3rkHf3dSXHj0shyP9Hi_RMkMzpCUX6zHeFDcSx6Tetmf8fZ5ZDJDapA1sw2BuznxFiy2WdZ3196OGTr0_QfBUzf9e8WYd06v00AP3SZ3qvv4SNpe-U6VTLauesXogUiAirkRMcZkCRnhgsbujPsKhGI0X3x5J9hLF_5_ht13J7VOkv9VzO37UIXtZURmkOceLOE7GmjYyLQaWqxfJVbVsUJqNukgB3hqp7Db_5JQ1tMQM"/>
+<div class="absolute top-4 right-4">
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full text-[10px] font-bold uppercase tracking-wider">En Cours</span>
+</div>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="font-headline font-bold text-xl mb-1 text-on-surface">Villa Océane</h3>
+<div class="flex items-center text-on-surface-variant gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="location_on">location_on</span>
+<span class="text-xs font-medium">Almadies, Dakar</span>
+</div>
+</div>
+<div class="h-10 w-10 bg-surface-container-low rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="trending_up">trending_up</span>
+</div>
+</div>
+<div class="space-y-4">
+<div>
+<div class="flex justify-between items-end mb-2">
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Budget Consommé</span>
+<span class="text-sm font-bold font-headline text-primary">65%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-primary-container rounded-full" style="width: 65%;"></div>
+</div>
+</div>
+<div class="flex justify-between pt-2">
+<div class="flex -space-x-2">
+<div class="w-7 h-7 rounded-full border-2 border-surface-container-lowest overflow-hidden">
+<img alt="Avatar" class="w-full h-full object-cover" data-alt="portrait of a young female architect wearing glasses and a focused expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0P2fcXSf4AusoGvcQPI1GhqxOx9BynMXtQVUFwe89vSTWLbGKdOqvNU8Ho6Q6HJzeuZc8UG6nQPexmSY97g_S7DQVkaNX5fiIoLkHz1F4pN7pf_KEzXuNbog9hDI2saynzyaZF5K-W2uk3C_Ktb7-iAgMfk5azrhG8ZlsRUyAicqMIw1dU-GOAnWsOdjVJrc9HwexSNajSuqYiCCAJNmLHa5WzQtndkdw2OZnvQvWFHTQcsbA6JMVdxiDAZlz5_dZdNLeB-Dyq-E"/>
+</div>
+<div class="w-7 h-7 rounded-full border-2 border-surface-container-lowest overflow-hidden">
+<img alt="Avatar" class="w-full h-full object-cover" data-alt="portrait of a male construction manager in a high-visibility vest and hard hat" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkLZJtMre-JlxcETpcfs69OAEFZRARPbJ_KSd1ynGNchcawtgU-RWILTarT_ELA481wf5rB7u0C1Otgbr1am9Zyv_sEfUIloayKlS-GcyZoBu5aqU6mYjcClMRAjrE2NN5bybPUM5I2SCi-56rJ5VljIsW90MC--0hDhwzL642EaSH_ITCoppF4uKe1VD9rLLTXufvAsEuuOM0WC_VAjNn6ZYzb9f4Oo9N22O-Ii08HSQ_JJe6pnKCQASMrVsyjIBJs53Ou6t5JU0"/>
+</div>
+<div class="w-7 h-7 rounded-full border-2 border-surface-container-lowest bg-surface-container-high flex items-center justify-center text-[8px] font-bold">+3</div>
+</div>
+<span class="text-[10px] font-bold text-on-surface-variant/60 uppercase self-center tracking-tighter">Mise à jour il y a 2h</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Project Card 2: Minimalist -->
+<div class="bg-surface-container-low rounded-3xl p-6 active:scale-[0.98] transition-all duration-300">
+<div class="flex gap-4 items-start">
+<div class="w-20 h-20 rounded-2xl overflow-hidden flex-shrink-0">
+<img alt="Commercial" class="w-full h-full object-cover" data-alt="contemporary eco-friendly commercial building with vertical wood slats and glass facade in an urban setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2pbuG7aQ3WG_8V00NbPijA0GUZLDHdMt5UpUCkCxNlSzFAKMktZmZUS0buzI_jCiGZXCiTFxJ5w9ay7h1A14xohj839-jS_NTubTnsSPjCrH-pYZAbXn5h9Xhzxf928R-yskDuHcxyLk8qu0laFx-MoPET5-5KQXgwIiVtcWtkNyV75cy1mJBXoNE-K2qvD8jx_K_eNXz_R1NZJ1GYoi9PUXqAxiNo11a2EY-aJKtxpR6gYAh1iCWqdnJZBgLKNAlAhZmj06l_Ls"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h3 class="font-headline font-bold text-lg text-on-surface">Complexe Horizon</h3>
+<span class="px-2 py-0.5 bg-surface-container-highest text-on-surface-variant rounded-full text-[9px] font-bold uppercase tracking-wider">Planification</span>
+</div>
+<div class="flex items-center text-on-surface-variant gap-1 mb-3">
+<span class="material-symbols-outlined text-xs" data-icon="location_on">location_on</span>
+<span class="text-[11px] font-medium">Abidjan, Zone 4</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Avancement</div>
+<div class="text-xs font-bold font-headline">12%</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Project Card 3: Minimalist -->
+<div class="bg-surface-container-low rounded-3xl p-6 active:scale-[0.98] transition-all duration-300">
+<div class="flex gap-4 items-start">
+<div class="w-20 h-20 rounded-2xl overflow-hidden flex-shrink-0">
+<img alt="Apartment" class="w-full h-full object-cover" data-alt="interior view of a luxury minimalist apartment living room with high ceilings, large windows and warm wood accents" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcpR0W94ESlXTTLbslUugjI5rr3Q-sTJpfi2a0B1MDxKZX4wGwvF0tb6lktZhG4oEE5z-Pc4tmtFpNR0o_MA1W9TpINJnZ5j-WVqhME0PHwXCtYObI4bKJEaKQ_rYcbMbcprYaR5dvGs_0TI0H45IraMjcjcW-cHW9qT2y9XUA-Ijg4OUSv88BI1YnN3pXLUYZQqgojda1ZIWV3q0IeZaxFLcloY5x0qZvVwEjagnCSH4JW7nVKznqmeCsJk8sdSkT9bkYvnk92_g"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h3 class="font-headline font-bold text-lg text-on-surface">Résidence Palm</h3>
+<span class="px-2 py-0.5 bg-primary/10 text-primary rounded-full text-[9px] font-bold uppercase tracking-wider">Finalisé</span>
+</div>
+<div class="flex items-center text-on-surface-variant gap-1 mb-3">
+<span class="material-symbols-outlined text-xs" data-icon="location_on">location_on</span>
+<span class="text-[11px] font-medium">Bambous, Maurice</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Avancement</div>
+<div class="text-xs font-bold font-headline">100%</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- FAB for New Project -->
+<button class="fixed bottom-24 right-6 w-14 h-14 bg-gradient-to-br from-primary to-primary-container text-white rounded-2xl shadow-lg shadow-primary/20 flex items-center justify-center active:scale-90 transition-transform z-40">
+<span class="material-symbols-outlined text-3xl" data-icon="add">add</span>
+</button>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full h-20 bg-[#f9f9f8]/80 backdrop-blur-md flex justify-around items-center px-4 pb-2 z-50 rounded-t-3xl shadow-[0_-4px_20px_0_rgba(26,28,28,0.04)]">
+<a class="flex flex-col items-center justify-center text-[#1a1c1c]/60 px-4 py-2 hover:text-[#10b77f] transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="dashboard">dashboard</span>
+<span class="font-['Manrope'] font-bold text-[10px] uppercase tracking-wider">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#10b77f] bg-[#10b77f]/10 rounded-xl px-4 py-2 active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="folder_managed">folder_managed</span>
+<span class="font-['Manrope'] font-bold text-[10px] uppercase tracking-wider">Projects</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#1a1c1c]/60 px-4 py-2 hover:text-[#10b77f] transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="chat_bubble">chat_bubble</span>
+<span class="font-['Manrope'] font-bold text-[10px] uppercase tracking-wider">Messages</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#1a1c1c]/60 px-4 py-2 hover:text-[#10b77f] transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="person">person</span>
+<span class="font-['Manrope'] font-bold text-[10px] uppercase tracking-wider">Profile</span>
+</a>
+</nav>
+</body></html>

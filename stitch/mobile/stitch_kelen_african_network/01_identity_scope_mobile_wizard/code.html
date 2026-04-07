@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Création de Projet - Étape 1</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-tertiary-fixed-variant": "#842325",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed": "#251a00",
+                        "on-primary-fixed-variant": "#005236",
+                        "tertiary": "#a43a3b",
+                        "secondary-fixed-dim": "#f7be1d",
+                        "on-surface": "#1a1c1c",
+                        "primary-fixed": "#70fbbd",
+                        "outline-variant": "#bbcabf",
+                        "surface-tint": "#006c49",
+                        "on-error": "#ffffff",
+                        "surface-container-highest": "#e2e2e2",
+                        "surface-container-high": "#e8e8e7",
+                        "primary-container": "#10b77f",
+                        "on-primary-container": "#00402a",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#f1f1f0",
+                        "secondary": "#785a00",
+                        "error": "#ba1a1a",
+                        "on-surface-variant": "#3c4a42",
+                        "primary": "#006c49",
+                        "tertiary-fixed": "#ffdad7",
+                        "inverse-surface": "#2f3130",
+                        "secondary-container": "#fdc425",
+                        "surface-container-low": "#f3f4f3",
+                        "on-secondary-fixed-variant": "#5a4300",
+                        "primary-fixed-dim": "#50dea3",
+                        "on-tertiary-fixed": "#410006",
+                        "on-tertiary": "#ffffff",
+                        "surface-bright": "#f9f9f8",
+                        "tertiary-fixed-dim": "#ffb3af",
+                        "surface-variant": "#e2e2e2",
+                        "surface-dim": "#dadad9",
+                        "tertiary-container": "#f97a77",
+                        "secondary-fixed": "#ffdf9a",
+                        "inverse-primary": "#50dea3",
+                        "on-primary-fixed": "#002113",
+                        "background": "#f9f9f8",
+                        "on-secondary-container": "#6d5200",
+                        "outline": "#6c7a71",
+                        "on-background": "#1a1c1c",
+                        "on-error-container": "#93000a",
+                        "surface": "#f9f9f8",
+                        "surface-container": "#eeeeed",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-container": "#6f1218"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1.5rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .soft-glow-selection {
+            box-shadow: 0 0 20px rgba(16, 183, 127, 0.15);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface min-h-screen pb-32">
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 w-full z-50 bg-[#f9f9f8]/70 backdrop-blur-xl border-b border-[#bbcabf]/15">
+<div class="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
+<button class="text-[#10b77f] transition-transform active:scale-90">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+<h1 class="font-headline font-bold text-2xl tracking-tight text-[#10b77f]">Project Creator</h1>
+<div class="w-6"></div> <!-- Spacer for symmetry -->
+</div>
+</nav>
+<main class="pt-24 px-6 max-w-lg mx-auto">
+<!-- Step Indicator -->
+<div class="flex items-center gap-2 mb-8">
+<div class="h-1.5 w-12 rounded-full bg-gradient-to-r from-primary to-primary-container"></div>
+<div class="h-1.5 w-12 rounded-full bg-surface-container-highest"></div>
+<div class="h-1.5 w-12 rounded-full bg-surface-container-highest"></div>
+<div class="h-1.5 w-12 rounded-full bg-surface-container-highest"></div>
+</div>
+<!-- Editorial Header Section -->
+<header class="mb-10">
+<p class="text-primary font-label text-[10px] uppercase tracking-[0.2em] mb-2">Étape 01</p>
+<h2 class="font-headline font-bold text-4xl text-on-surface leading-tight">Identity &amp; <br/><span class="text-primary">Scope.</span></h2>
+</header>
+<!-- Project Name Input (Editorial Style) -->
+<section class="mb-12">
+<label class="block font-headline font-bold text-lg mb-4" for="project-name">Nom du projet</label>
+<div class="relative">
+<input class="w-full bg-transparent border-none p-0 text-3xl font-headline font-extrabold text-on-surface placeholder:text-surface-container-highest focus:ring-0" id="project-name" placeholder="Ex: Villa Horizon" type="text"/>
+<div class="h-[2px] w-full bg-surface-container-high mt-2"></div>
+</div>
+</section>
+<!-- Category Picker (Custom Cards) -->
+<section class="mb-12">
+<h3 class="font-headline font-bold text-lg mb-6">Catégorie</h3>
+<div class="grid grid-cols-2 gap-4">
+<!-- Selected Card -->
+<button class="flex flex-col items-start p-6 bg-surface-container-lowest rounded-2xl border-2 border-primary soft-glow-selection text-left transition-all active:scale-95">
+<span class="material-symbols-outlined text-primary mb-4" data-icon="architecture" style="font-variation-settings: 'FILL' 1;">architecture</span>
+<span class="font-headline font-bold text-sm">Construction</span>
+</button>
+<!-- Inactive Cards -->
+<button class="flex flex-col items-start p-6 bg-surface-container-low rounded-2xl text-left hover:bg-surface-container-high transition-all active:scale-95">
+<span class="material-symbols-outlined text-on-surface-variant mb-4" data-icon="home_repair_service">home_repair_service</span>
+<span class="font-headline font-bold text-sm">Rénovation</span>
+</button>
+<button class="flex flex-col items-start p-6 bg-surface-container-low rounded-2xl text-left hover:bg-surface-container-high transition-all active:scale-95">
+<span class="material-symbols-outlined text-on-surface-variant mb-4" data-icon="apartment">apartment</span>
+<span class="font-headline font-bold text-sm">Immobilier</span>
+</button>
+<button class="flex flex-col items-start p-6 bg-surface-container-low rounded-2xl text-left hover:bg-surface-container-high transition-all active:scale-95">
+<span class="material-symbols-outlined text-on-surface-variant mb-4" data-icon="format_paint">format_paint</span>
+<span class="font-headline font-bold text-sm">Aménagement</span>
+</button>
+</div>
+</section>
+<!-- Location Field -->
+<section class="mb-8">
+<h3 class="font-headline font-bold text-lg mb-4">Localisation</h3>
+<div class="flex items-center gap-4 p-5 bg-surface-container-low rounded-2xl group focus-within:bg-surface-container-lowest focus-within:ring-1 focus-within:ring-primary/30 transition-all">
+<span class="material-symbols-outlined text-on-surface-variant group-focus-within:text-primary" data-icon="location_on">location_on</span>
+<input class="bg-transparent border-none p-0 w-full font-body text-on-surface placeholder:text-on-surface-variant/50 focus:ring-0" placeholder="Saisissez une adresse..." type="text"/>
+</div>
+<!-- Map Preview (Aesthetic) -->
+<div class="mt-4 w-full h-32 rounded-2xl overflow-hidden relative">
+<img alt="Map view" class="w-full h-full object-cover grayscale opacity-40 brightness-110" data-alt="minimalist architectural map with clean lines and soft cream and grey color palette for urban planning visualization" data-location="Paris" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCblZpx3oZgiZSc6aSNukAT9oQneHIAkPJ5RmpPana8IboQ3gJbOE-oCuyypl3RDzBhKzVGgq72Lr-nuA4f8hjx8S87XqNc0RFXqkcUH9oSkBzDarCCHu5ba2iexukEREA0OtyOdx-KeNy8eGD7cXwcsx2T_7gJYUZFcici_E_AvFoPhTgkIyXxeZbdivHe_cm_4yNBrZ9lYxMhpPuHUhqS9wN-3mJP5-5pse9PypFR5L1yxndA7VGbD8unwFfL7yaEqckXxaFoOjI"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface/80 to-transparent"></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+<div class="w-3 h-3 rounded-full bg-primary shadow-lg"></div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Floating Next Button -->
+<div class="fixed bottom-8 left-0 right-0 flex justify-center items-center px-6 z-50">
+<button class="w-full max-w-md bg-gradient-to-br from-[#006c49] to-[#10b77f] text-white rounded-full py-5 px-8 font-headline font-bold flex items-center justify-center gap-3 shadow-[0_8px_32px_rgba(16,183,127,0.3)] backdrop-blur-md transition-transform hover:translate-y-[-2px] active:scale-95">
+            Suivant
+            <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<!-- Bottom Navigation Bar (Contextual Suppression Check: Active for main wizard steps) -->
+<nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-md rounded-full px-6 py-2 bg-[#ffffff]/80 backdrop-blur-md shadow-[0_8px_32px_rgba(26,28,28,0.08)] flex justify-between items-center z-40">
+<div class="flex flex-col items-center justify-center bg-gradient-to-br from-[#006c49] to-[#10b77f] text-white rounded-full p-3">
+<span class="material-symbols-outlined" data-icon="fingerprint">fingerprint</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#1a1c1c]/50 p-3 hover:text-[#10b77f] transition-all">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#1a1c1c]/50 p-3 hover:text-[#10b77f] transition-all">
+<span class="material-symbols-outlined" data-icon="event_note">event_note</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#1a1c1c]/50 p-3 hover:text-[#10b77f] transition-all">
+<span class="material-symbols-outlined" data-icon="auto_stories">auto_stories</span>
+</div>
+</nav>
+</body></html>

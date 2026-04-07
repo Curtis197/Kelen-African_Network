@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-tertiary-fixed-variant": "#842325",
+              "surface-container-lowest": "#ffffff",
+              "on-primary": "#ffffff",
+              "on-secondary-fixed": "#251a00",
+              "on-primary-fixed-variant": "#005236",
+              "tertiary": "#a43a3b",
+              "secondary-fixed-dim": "#f7be1d",
+              "on-surface": "#1a1c1c",
+              "primary-fixed": "#70fbbd",
+              "outline-variant": "#bbcabf",
+              "surface-tint": "#006c49",
+              "on-error": "#ffffff",
+              "surface-container-highest": "#e2e2e2",
+              "surface-container-high": "#e8e8e7",
+              "primary-container": "#10b77f",
+              "on-primary-container": "#00402a",
+              "on-secondary": "#ffffff",
+              "inverse-on-surface": "#f1f1f0",
+              "secondary": "#785a00",
+              "error": "#ba1a1a",
+              "on-surface-variant": "#3c4a42",
+              "primary": "#006c49",
+              "tertiary-fixed": "#ffdad7",
+              "inverse-surface": "#2f3130",
+              "secondary-container": "#fdc425",
+              "surface-container-low": "#f3f4f3",
+              "on-secondary-fixed-variant": "#5a4300",
+              "primary-fixed-dim": "#50dea3",
+              "on-tertiary-fixed": "#410006",
+              "on-tertiary": "#ffffff",
+              "surface-bright": "#f9f9f8",
+              "tertiary-fixed-dim": "#ffb3af",
+              "surface-variant": "#e2e2e2",
+              "surface-dim": "#dadad9",
+              "tertiary-container": "#f97a77",
+              "secondary-fixed": "#ffdf9a",
+              "inverse-primary": "#50dea3",
+              "on-primary-fixed": "#002113",
+              "background": "#f9f9f8",
+              "on-secondary-container": "#6d5200",
+              "outline": "#6c7a71",
+              "on-background": "#1a1c1c",
+              "on-error-container": "#93000a",
+              "surface": "#f9f9f8",
+              "surface-container": "#eeeeed",
+              "error-container": "#ffdad6",
+              "on-tertiary-container": "#6f1218"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-nav {
+            background: rgba(249, 249, 248, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .tonal-gradient {
+            background: linear-gradient(135deg, #006c49 0%, #10b77f 100%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top Navigation Anchor -->
+<header class="fixed top-0 w-full z-50 bg-[#f9f9f8]/70 backdrop-blur-xl border-b border-[#bbcabf]/15">
+<div class="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
+<button class="text-[#10b77f] hover:bg-[#f3f4f3] transition-colors duration-200 p-2 rounded-full scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+<h1 class="font-headline font-bold text-2xl tracking-tight text-[#1a1c1c]">Project Creator</h1>
+<div class="w-10"></div> <!-- Balance spacer -->
+</div>
+</header>
+<main class="pt-24 pb-32 px-6 min-h-screen">
+<!-- Progress Indicator -->
+<div class="mb-10">
+<div class="flex justify-between items-end mb-2">
+<span class="font-headline font-bold text-headline-sm text-primary">02</span>
+<span class="font-label text-[10px] uppercase tracking-[0.2em] text-on-surface-variant opacity-60">Step 2 of 4</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full w-1/2 tonal-gradient rounded-full"></div>
+</div>
+</div>
+<!-- Header Section: Signature Scale -->
+<section class="mb-12">
+<h2 class="font-headline font-extrabold text-[2.75rem] leading-[1.1] tracking-tight mb-4">Financial Blueprint</h2>
+<p class="text-on-surface-variant font-body leading-relaxed max-w-[280px]">Define the economic foundations of your vision.</p>
+</section>
+<!-- Currency Selector: Tonal Shift Separation -->
+<section class="mb-10 bg-surface-container-low rounded-2xl p-2 flex gap-1">
+<button class="flex-1 py-3 px-4 rounded-xl font-headline font-bold text-sm bg-surface-container-lowest text-on-surface shadow-sm transition-all">
+                EUR
+            </button>
+<button class="flex-1 py-3 px-4 rounded-xl font-headline font-bold text-sm text-on-surface-variant hover:bg-surface-container-high transition-all">
+                XOF
+            </button>
+<button class="flex-1 py-3 px-4 rounded-xl font-headline font-bold text-sm text-on-surface-variant hover:bg-surface-container-high transition-all">
+                USD
+            </button>
+</section>
+<!-- Budget Input Area: Large Typography Focus -->
+<section class="space-y-8">
+<div class="bg-surface-container-lowest rounded-2xl p-8 shadow-[0_8px_32px_rgba(26,28,28,0.04)]">
+<label class="block font-label text-[10px] uppercase tracking-widest text-on-surface-variant mb-6 opacity-70">Budget estimé</label>
+<div class="relative">
+<input class="w-full bg-transparent border-none p-0 font-headline font-extrabold text-6xl tracking-tighter text-on-surface focus:ring-0" placeholder="0" type="text" value="45.000"/>
+<span class="absolute right-0 bottom-2 font-headline font-bold text-2xl text-primary">€</span>
+</div>
+</div>
+<!-- Expense Breakdown Bento-style -->
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-low rounded-2xl p-5 flex flex-col justify-between aspect-square">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="account_balance_wallet">account_balance_wallet</span>
+<div>
+<p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant mb-1">Operating</p>
+<p class="font-headline font-bold text-xl text-on-surface">12.5k</p>
+</div>
+</div>
+<div class="bg-surface-container-low rounded-2xl p-5 flex flex-col justify-between aspect-square">
+<span class="material-symbols-outlined text-secondary text-3xl" data-icon="savings">savings</span>
+<div>
+<p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant mb-1">Reserve</p>
+<p class="font-headline font-bold text-xl text-on-surface">5.0k</p>
+</div>
+</div>
+</div>
+<!-- Contextual Info Card -->
+<div class="bg-primary/5 rounded-2xl p-6 border border-primary/10 flex gap-4 items-start">
+<div class="bg-primary-container p-2 rounded-lg text-white">
+<span class="material-symbols-outlined text-sm" data-icon="lightbulb">lightbulb</span>
+</div>
+<div>
+<h4 class="font-headline font-bold text-sm mb-1">Smart Allocation</h4>
+<p class="text-on-surface-variant text-sm leading-snug">Projects in your sector typically require 15% more for initial logistics.</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Floating Action Navigation (Glassmorphism Shell) -->
+<div class="fixed bottom-8 left-0 right-0 flex justify-center items-center z-50 px-6">
+<div class="glass-nav w-full max-w-md rounded-full px-4 py-3 shadow-[0_8px_48px_rgba(26,28,28,0.12)] border border-white/20 flex items-center justify-between">
+<!-- Previous Button (Tertiary/Ghost) -->
+<button class="flex items-center gap-2 px-6 py-3 text-on-surface-variant font-headline font-bold text-sm active:scale-95 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="arrow_back">arrow_back</span>
+                Précédent
+            </button>
+<!-- Next Button (Primary Gradient) -->
+<button class="tonal-gradient flex items-center gap-3 px-8 py-3 rounded-full text-white font-headline font-bold text-sm shadow-[0_4px_20px_rgba(16,183,127,0.3)] active:scale-95 transition-all">
+                Suivant
+                <span class="material-symbols-outlined text-lg" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Bottom Navigation Shell (BottomNavBar) -->
+<nav class="fixed bottom-8 left-0 right-0 flex justify-center items-center z-40 pointer-events-none opacity-0 md:hidden">
+<!-- Hidden by default as per 'Contextual FAB/Action Suppression' rule for Transactional Screens -->
+<div class="bg-[#ffffff]/80 backdrop-blur-md shadow-[0_8px_32px_rgba(26,28,28,0.08)] rounded-full px-6 py-3 flex gap-8">
+<div class="flex flex-col items-center justify-center text-[#1a1c1c]/50 p-3">
+<span class="material-symbols-outlined" data-icon="fingerprint">fingerprint</span>
+<span class="font-label text-[10px] uppercase tracking-widest">Identity</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-gradient-to-br from-[#006c49] to-[#10b77f] text-white rounded-full p-3">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="font-label text-[10px] uppercase tracking-widest">Finance</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#1a1c1c]/50 p-3">
+<span class="material-symbols-outlined" data-icon="event_note">event_note</span>
+<span class="font-label text-[10px] uppercase tracking-widest">Timeline</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#1a1c1c]/50 p-3">
+<span class="material-symbols-outlined" data-icon="auto_stories">auto_stories</span>
+<span class="font-label text-[10px] uppercase tracking-widest">Narrative</span>
+</div>
+</div>
+</nav>
+</body></html>

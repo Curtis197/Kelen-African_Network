@@ -10,7 +10,7 @@ export default function ProfessionalLayout({
       <div className="flex flex-1">
         <ProSidebar />
         <main className="flex-1 bg-surface">
-          <div className="p-4 pb-24 lg:p-8 lg:pb-8">{children}</div>
+          <div className="p-4 lg:p-8">{children}</div>
         </main>
       </div>
     </div>

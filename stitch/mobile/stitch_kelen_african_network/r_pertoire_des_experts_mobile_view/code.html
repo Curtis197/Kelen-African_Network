@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "on-tertiary-fixed-variant": "#842325",
+                "on-primary-fixed-variant": "#005236",
+                "secondary-fixed-dim": "#f7be1d",
+                "secondary": "#785a00",
+                "outline": "#6c7a71",
+                "tertiary-container": "#f97a77",
+                "tertiary": "#a43a3b",
+                "on-secondary-fixed": "#251a00",
+                "surface": "#f9f9f8",
+                "on-error-container": "#93000a",
+                "on-error": "#ffffff",
+                "on-secondary-fixed-variant": "#5a4300",
+                "primary": "#006c49",
+                "on-primary-container": "#00402a",
+                "inverse-surface": "#2f3130",
+                "surface-variant": "#e2e2e2",
+                "secondary-container": "#fdc425",
+                "surface-container": "#eeeeed",
+                "outline-variant": "#bbcabf",
+                "surface-dim": "#dadad9",
+                "on-primary": "#ffffff",
+                "inverse-on-surface": "#f1f1f0",
+                "surface-container-high": "#e8e8e7",
+                "on-surface": "#1a1c1c",
+                "inverse-primary": "#50dea3",
+                "surface-container-lowest": "#ffffff",
+                "on-background": "#1a1c1c",
+                "on-secondary-container": "#6d5200",
+                "surface-tint": "#006c49",
+                "surface-container-highest": "#e2e2e2",
+                "secondary-fixed": "#ffdf9a",
+                "on-tertiary-container": "#6f1218",
+                "error": "#ba1a1a",
+                "error-container": "#ffdad6",
+                "primary-fixed": "#70fbbd",
+                "primary-container": "#10b77f",
+                "on-secondary": "#ffffff",
+                "on-tertiary": "#ffffff",
+                "on-primary-fixed": "#002113",
+                "background": "#f9f9f8",
+                "tertiary-fixed-dim": "#ffb3af",
+                "on-surface-variant": "#3c4a42",
+                "tertiary-fixed": "#ffdad7",
+                "primary-fixed-dim": "#50dea3",
+                "on-tertiary-fixed": "#410006",
+                "surface-bright": "#f9f9f8",
+                "surface-container-low": "#f3f4f3"
+              },
+              fontFamily: {
+                "headline": ["Manrope"],
+                "body": ["Inter"],
+                "label": ["Inter"]
+              },
+              borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "3xl": "1.5rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .fill-icon { font-variation-settings: 'FILL' 1 !important; }
+        .tonal-shift-from-surface-to-white {
+            background: linear-gradient(to bottom, #f9f9f8, #ffffff);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<!-- Top Navigation Anchor -->
+<header class="fixed top-0 w-full z-50 bg-[#f9f9f8]/70 backdrop-blur-xl border-b border-[#bbcabf]/15">
+<div class="flex justify-between items-center px-6 py-4 w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary text-2xl cursor-pointer hover:bg-[#f3f4f3] p-2 rounded-full transition-colors">menu</span>
+<span class="text-primary font-bold text-xl uppercase tracking-widest font-headline">Répertoire des Experts</span>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-primary font-bold font-headline transition-colors duration-200" href="#">Explorer</a>
+<a class="text-on-surface opacity-70 hover:opacity-100 transition-colors duration-200" href="#">Mes Projets</a>
+<a class="text-on-surface opacity-70 hover:opacity-100 transition-colors duration-200" href="#">Messages</a>
+</nav>
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container p-0.5">
+<img alt="Expert Avatar" class="w-full h-full object-cover rounded-full" data-alt="professional male consultant headshot with a friendly smile, clean corporate attire, neutral studio background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdmLJEoiD594pHJIf9z_vUYy_tihmRk0Y1fojdOxaVHRRfyEMwSpE6zP0A-F-k2vhSSaM_AbAq4RupnWNQWxhtqygH21hG_MGpj3wCgO8LcGPZrLnY92XzCyUpqmCEiWnvzra5IihV0cG08-6P4KizExQvZsE81v8d7WlGj2EGQUyIjYQWbKPDxhUAeHCjgpnYGWdZ1lrH7Lb5EuNyJmVOF7GOaMt6D_yEZVy5X18WVkju0LWuLJgHmi8--Xl5PVZ6IUAcG64YXoY"/>
+</div>
+</div>
+</div>
+</header>
+<main class="pt-28 pb-24 px-6 max-w-7xl mx-auto">
+<!-- Header Section -->
+<section class="mb-12 text-center md:text-left">
+<h1 class="font-headline font-extrabold text-4xl md:text-5xl text-on-surface tracking-tight mb-4">
+                Trouvez l'expertise qu'il vous faut
+            </h1>
+<p class="text-on-surface-variant text-lg max-w-2xl leading-relaxed">
+                Des professionnels vérifiés, classés par excellence et proximité. Collaborez avec les meilleurs talents de la diaspora et locaux.
+            </p>
+</section>
+<!-- Search & Filter Bar -->
+<section class="mb-12">
+<div class="bg-surface-container-lowest p-4 md:p-6 rounded-3xl shadow-[0_8px_32px_rgba(26,28,28,0.04)] flex flex-col gap-6">
+<!-- Main Filters Row -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+<!-- Category -->
+<div class="relative group">
+<label class="block text-xs font-semibold text-on-surface-variant mb-1.5 ml-1">Spécialité</label>
+<div class="flex items-center bg-surface-container-low px-4 py-3 rounded-2xl group-hover:ring-2 ring-primary-container/20 transition-all cursor-pointer">
+<span class="material-symbols-outlined text-primary-container mr-3">architecture</span>
+<span class="flex-grow text-sm font-medium">Architecte</span>
+<span class="material-symbols-outlined text-outline">expand_more</span>
+</div>
+</div>
+<!-- Location -->
+<div class="relative group">
+<label class="block text-xs font-semibold text-on-surface-variant mb-1.5 ml-1">Localisation</label>
+<div class="flex items-center bg-surface-container-low px-4 py-3 rounded-2xl group-hover:ring-2 ring-primary-container/20 transition-all cursor-pointer">
+<span class="material-symbols-outlined text-primary-container mr-3">location_on</span>
+<span class="flex-grow text-sm font-medium">Dakar, Sénégal</span>
+<span class="material-symbols-outlined text-outline">expand_more</span>
+</div>
+</div>
+<!-- Tier Filter -->
+<div class="relative group">
+<label class="block text-xs font-semibold text-on-surface-variant mb-1.5 ml-1">Niveau d'Excellence</label>
+<div class="flex items-center bg-surface-container-low px-4 py-3 rounded-2xl group-hover:ring-2 ring-primary-container/20 transition-all cursor-pointer">
+<span class="material-symbols-outlined text-secondary mr-3 fill-icon" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+<span class="flex-grow text-sm font-medium">Rang Or</span>
+<span class="material-symbols-outlined text-outline">expand_more</span>
+</div>
+</div>
+<!-- Sort -->
+<div class="relative group">
+<label class="block text-xs font-semibold text-on-surface-variant mb-1.5 ml-1">Trier par</label>
+<div class="flex items-center bg-surface-container-low px-4 py-3 rounded-2xl group-hover:ring-2 ring-primary-container/20 transition-all cursor-pointer">
+<span class="material-symbols-outlined text-primary-container mr-3">sort</span>
+<span class="flex-grow text-sm font-medium">Mieux notés</span>
+<span class="material-symbols-outlined text-outline">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Quick Badges Row -->
+<div class="flex flex-wrap items-center gap-3 border-t border-outline-variant/10 pt-4">
+<span class="text-sm font-medium text-on-surface-variant mr-2">Filtres rapides:</span>
+<button class="bg-secondary-container text-on-secondary-container px-4 py-1.5 rounded-full text-xs font-bold shadow-sm transition-transform active:scale-95">Or</button>
+<button class="bg-surface-container-high text-on-surface px-4 py-1.5 rounded-full text-xs font-semibold transition-all hover:bg-surface-container-highest">Argent</button>
+<button class="bg-surface-container-high text-on-surface px-4 py-1.5 rounded-full text-xs font-semibold transition-all hover:bg-surface-container-highest">Bronze</button>
+<div class="h-4 w-px bg-outline-variant/30 mx-2"></div>
+<button class="bg-primary/10 text-primary px-4 py-1.5 rounded-full text-xs font-bold border border-primary/20">Vérifié uniquement</button>
+</div>
+</div>
+</section>
+<!-- Professional Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Professional Card 1 -->
+<article class="group bg-surface-container-lowest rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(26,28,28,0.08)] flex flex-col">
+<div class="relative h-56 overflow-hidden">
+<img alt="Kouassi Construction Project" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="luxury modern architectural villa in Ivory Coast with large glass windows and lush tropical landscaping at dusk" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnkugUKXA5KHHDBe53ZRsST7kRERJpUM_B6BPSl0KkiOB9sjtNX1qlsIC-UeWUvtFO-SI85ObDpCS47EPN-61Yt30tLVzpBVKaH16qjW5uIcfuyzg0lMM0FJSXZqVyxw1wMPnoOd1K340HVlYSe8-FL-7cJhYfqdQP9QKW6PKsW2SBVv8t5aZk9QbRZybIQi6-kO_jmoqSizYfztIv-_D8D02NDEEKugdV3gbwMLmrOk6SMUf_kDjYSmVzvWAGq5Va-6mf7W6XVkQ"/>
+<div class="absolute top-4 left-4 bg-secondary-container text-on-secondary-container text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest shadow-lg">Rang Or</div>
+<div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur-md p-2 rounded-2xl shadow-sm">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[#f9bf15] text-lg fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-sm font-bold text-on-surface">4.9</span>
+</div>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-2">
+<div>
+<h3 class="font-headline font-bold text-xl text-on-surface flex items-center gap-2">
+                                Kouassi Construction
+                                <span class="material-symbols-outlined text-[#10b77f] text-lg font-bold" title="Vérifié">verified</span>
+</h3>
+<p class="text-sm text-on-surface-variant font-medium">Abidjan, Côte d'Ivoire</p>
+</div>
+</div>
+<div class="flex gap-2 my-4">
+<span class="bg-surface-container-low text-on-surface-variant text-[11px] font-semibold px-3 py-1 rounded-lg">Gros œuvre</span>
+<span class="bg-surface-container-low text-on-surface-variant text-[11px] font-semibold px-3 py-1 rounded-lg">Résidentiel</span>
+</div>
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary text-sm">inventory_2</span>
+<span class="text-xs font-semibold text-on-surface-variant">24 projets vérifiés</span>
+</div>
+<button class="mt-auto w-full py-4 bg-gradient-to-r from-primary to-primary-container text-white font-bold rounded-2xl transition-all active:scale-[0.98] shadow-lg shadow-primary/10">
+                        Consulter le profil
+                    </button>
+</div>
+</article>
+<!-- Professional Card 2 -->
+<article class="group bg-surface-container-lowest rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(26,28,28,0.08)] flex flex-col">
+<div class="relative h-56 overflow-hidden">
+<img alt="Atelier Mensah Project" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="contemporary interior design showroom featuring minimalist African-inspired furniture and natural wood textures" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDR64M_9IDrzeFgLBohmMQLEqpyDy5ARNyBYUkZeRb17GdinvW0egN_TL_Z43Y6kjZV0CCDHAOtbCUHnOPQwRqdXmAy3FzhJkhKbTmbUuO8mdPdAX8dmzh0VE9cHLmJ7Fb0luICrDib8NnHdWVqHCIoOuzMVIhECom8Lxa0F0QnrpMfjGAwJgPbgvSNZJytdyrSwTZQ7NXoMrdlPOJ6Vw54BU-TWrANXwLupnSg5vRJFuThoI7D5VhAvam7wJf8arEOosSOfB3HDuE"/>
+<div class="absolute top-4 left-4 bg-surface-container-highest text-on-surface text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest shadow-lg">Rang Argent</div>
+<div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur-md p-2 rounded-2xl shadow-sm">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[#f9bf15] text-lg fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-sm font-bold text-on-surface">4.7</span>
+</div>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-2">
+<div>
+<h3 class="font-headline font-bold text-xl text-on-surface flex items-center gap-2">
+                                Atelier Mensah
+                                <span class="material-symbols-outlined text-[#10b77f] text-lg font-bold">verified</span>
+</h3>
+<p class="text-sm text-on-surface-variant font-medium">Accra, Ghana</p>
+</div>
+</div>
+<div class="flex gap-2 my-4">
+<span class="bg-surface-container-low text-on-surface-variant text-[11px] font-semibold px-3 py-1 rounded-lg">Architecture d'Intérieur</span>
+<span class="bg-surface-container-low text-on-surface-variant text-[11px] font-semibold px-3 py-1 rounded-lg">Luxe</span>
+</div>
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary text-sm">inventory_2</span>
+<span class="text-xs font-semibold text-on-surface-variant">12 projets vérifiés</span>
+</div>
+<button class="mt-auto w-full py-4 bg-gradient-to-r from-primary to-primary-container text-white font-bold rounded-2xl transition-all active:scale-[0.98] shadow-lg shadow-primary/10">
+                        Consulter le profil
+                    </button>
+</div>
+</article>
+<!-- Professional Card 3 -->
+<article class="group bg-surface-container-lowest rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(26,28,28,0.08)] flex flex-col">
+<div class="relative h-56 overflow-hidden">
+<img alt="Diallo Énergie Project" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="renewable energy installation with solar panels on a commercial building roof under a clear blue sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPMqO-oowXHCnOb4GzJ4n3ds3lrUA1x5jckzsdW2h_j_wrq7OMWIbRIZNUNu0F2CQpU4XV_Z1RDYe4jH5irU5TynlWjE8vDdb3tdYiGhOx2f4dE4JpL7P8ZaXYUm7FPjAbEVfnNlFjRsfiWx3gzSuYRJ3pr8XpSfXw55dvW5x18b8RanBbwaJ1sQDy1b9C1vebPogavaqLks53I1JbKDZJ66avy1ysNKLj1MEUWmryHjTfJuZtSc-VEUd951O5p2zZWFjjfRQ6UNw"/>
+<div class="absolute top-4 left-4 bg-secondary-container text-on-secondary-container text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest shadow-lg">Rang Or</div>
+<div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur-md p-2 rounded-2xl shadow-sm">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[#f9bf15] text-lg fill-icon" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-sm font-bold text-on-surface">5.0</span>
+</div>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-2">
+<div>
+<h3 class="font-headline font-bold text-xl text-on-surface flex items-center gap-2">
+                                Diallo Énergie
+                                <span class="material-symbols-outlined text-[#10b77f] text-lg font-bold">verified</span>
+</h3>
+<p class="text-sm text-on-surface-variant font-medium">Dakar, Sénégal</p>
+</div>
+</div>
+<div class="flex gap-2 my-4">
+<span class="bg-surface-container-low text-on-surface-variant text-[11px] font-semibold px-3 py-1 rounded-lg">Solaire</span>
+<span class="bg-surface-container-low text-on-surface-variant text-[11px] font-semibold px-3 py-1 rounded-lg">Installation BTP</span>
+</div>
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary text-sm">inventory_2</span>
+<span class="text-xs font-semibold text-on-surface-variant">31 projets vérifiés</span>
+</div>
+<button class="mt-auto w-full py-4 bg-gradient-to-r from-primary to-primary-container text-white font-bold rounded-2xl transition-all active:scale-[0.98] shadow-lg shadow-primary/10">
+                        Consulter le profil
+                    </button>
+</div>
+</article>
+</section>
+<!-- Load More Section -->
+<div class="mt-16 flex justify-center">
+<button class="px-10 py-4 bg-surface-container-high text-on-surface font-bold rounded-2xl hover:bg-surface-container-highest transition-colors flex items-center gap-3 active:scale-95">
+                Voir plus de professionnels
+                <span class="material-symbols-outlined">expand_more</span>
+</button>
+</div>
+</main>
+<!-- Bottom Navigation Bar for Mobile -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center py-3 px-4 pb-safe bg-white z-50 rounded-t-3xl shadow-[0_-4px_24px_rgba(26,28,28,0.04)]">
+<div class="flex flex-col items-center justify-center text-[#10b77f] bg-[#10b77f]/10 rounded-xl px-3 py-1">
+<span class="material-symbols-outlined fill-icon" style="font-variation-settings: 'FILL' 1;">search</span>
+<span class="font-body text-xs font-semibold">Explorer</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface/60">
+<span class="material-symbols-outlined">grade</span>
+<span class="font-body text-xs font-semibold">Favoris</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface/60">
+<span class="material-symbols-outlined">chat_bubble</span>
+<span class="font-body text-xs font-semibold">Messages</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface/60">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="font-body text-xs font-semibold">Profil</span>
+</div>
+</nav>
+</body></html>
