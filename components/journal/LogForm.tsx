@@ -8,7 +8,6 @@ import { createLog } from '@/lib/actions/daily-logs';
 import { uploadLogMedia } from '@/lib/actions/log-media';
 import { saveDraft, getFormState, clearFormState, markDraftPendingSync, saveFormState } from '@/lib/utils/daily-log-drafts';
 import PhotoUpload from './PhotoUpload';
-import GPSInput from './GPSInput';
 import WeatherIcon from './WeatherIcon';
 import OfflineIndicator from './OfflineIndicator';
 import { useOnlineStatus } from '@/hooks/use-online-status';
@@ -116,10 +115,7 @@ export default function LogForm({ projectId, proProjectId, stepId, projectCurren
       toast.error('La description doit contenir au moins 50 caractères');
       return;
     }
-    if (!formData.gpsLatitude || !formData.gpsLongitude) {
-      toast.error('La localisation GPS est requise');
-      return;
-    }
+    // GPS is now optional - will come from photo EXIF
 
     setIsSubmitting(true);
 
@@ -245,14 +241,6 @@ export default function LogForm({ projectId, proProjectId, stepId, projectCurren
             {formData.description.length}/50 caractères minimum
           </p>
         </div>
-
-        {/* GPS */}
-        <GPSInput
-          onGPSChange={handleGPSChange}
-          initialLat={formData.gpsLatitude || undefined}
-          initialLng={formData.gpsLongitude || undefined}
-          initialSource={formData.gpsSource || undefined}
-        />
 
         {/* Money */}
         <div>
