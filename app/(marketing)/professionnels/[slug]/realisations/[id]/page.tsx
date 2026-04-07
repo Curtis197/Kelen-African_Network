@@ -1,19 +1,20 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { 
-  ChevronRight, 
-  ArrowLeft, 
-  MapPin, 
-  Calendar, 
-  ShieldCheck, 
-  Download, 
-  FileText, 
-  Mail, 
+import {
+  ChevronRight,
+  ArrowLeft,
+  MapPin,
+  Calendar,
+  ShieldCheck,
+  Download,
+  FileText,
+  Mail,
   MessageCircle,
   Clock
 } from "lucide-react";
 import Link from "next/link";
+import PriceDisplay from "@/components/projects/PriceDisplay";
 
 interface Props {
   params: Promise<{
@@ -25,17 +26,17 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const supabase = await createClient();
-  const { data: doc } = await supabase
-    .from("project_documents")
-    .select("project_title, project_description")
+  const { data: realization } = await supabase
+    .from("professional_realizations")
+    .select("title, description, professional_id")
     .eq("id", id)
     .single();
 
-  if (!doc) return { title: "Réalisation non trouvée | Kelen" };
+  if (!realization) return { title: "Réalisation non trouvée | Kelen" };
 
   return {
-    title: `${doc.project_title} | Réalisation Kelen`,
-    description: doc.project_description || "Consultez le détail de cette réalisation sur Kelen.",
+    title: `${realization.title} | Réalisation Kelen`,
+    description: realization.description || "Consultez le détail de cette réalisation sur Kelen.",
   };
 }
 
@@ -43,21 +44,24 @@ export default async function RealizationDetailPage({ params }: Props) {
   const { slug, id } = await params;
   const supabase = await createClient();
 
-  const { data: document } = await supabase
-    .from("project_documents")
+  const { data: realization } = await supabase
+    .from("professional_realizations")
     .select(`
       *,
-      professional:professionals(*)
+      professional:professionals(*),
+      images:realization_images(*)
     `)
     .eq("id", id)
     .single();
 
-  if (!document) notFound();
+  if (!realization) notFound();
 
-  const pro = document.professional;
+  const pro = realization.professional;
 
-  const mainImage = document.photo_urls?.[0] || "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80";
-  const galleryImages = document.photo_urls ? document.photo_urls.slice(1) : [];
+  // Get main image (is_main=true) or first image
+  const mainImageObj = realization.images?.find((img: any) => img.is_main) || realization.images?.[0];
+  const mainImage = mainImageObj?.url || "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80";
+  const galleryImages = realization.images ? realization.images.filter((img: any) => img.id !== mainImageObj?.id).map((img: any) => img.url) : [];
 
   return (
     <div className="bg-[#f9f9f8] font-sans text-[#1a1c1c] antialiased min-h-screen">
@@ -80,7 +84,7 @@ export default async function RealizationDetailPage({ params }: Props) {
             <ChevronRight className="w-3 h-3" />
             <Link href={`/professionnels/${slug}`} className="hover:text-[#1a1c1c] transition-colors">{pro.business_name}</Link>
             <ChevronRight className="w-3 h-3" />
-            <span className="text-[#1a1c1c]">{document.project_title}</span>
+            <span className="text-[#1a1c1c]">{realization.title}</span>
           </div>
           <Link 
             href={`/professionnels/${slug}`}
@@ -92,9 +96,9 @@ export default async function RealizationDetailPage({ params }: Props) {
         </div>
 
         <section className="relative w-full aspect-[21/9] rounded-[2rem] overflow-hidden mb-16 shadow-xl border border-white/20">
-          <img 
-            src={mainImage} 
-            alt={document.project_title} 
+          <img
+            src={mainImage}
+            alt={realization.title}
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-12">
@@ -103,11 +107,11 @@ export default async function RealizationDetailPage({ params }: Props) {
                 {pro.category}
               </span>
               <span className="bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] text-white border border-white/20 flex items-center gap-2">
-                <MapPin className="w-3 h-3" /> {pro.city}
+                <MapPin className="w-3 h-3" /> {realization.location || pro.city}
               </span>
             </div>
             <h1 className="font-bold text-6xl md:text-8xl text-white tracking-tighter leading-none max-w-4xl drop-shadow-2xl">
-              {document.project_title}
+              {realization.title}
             </h1>
           </div>
         </section>
@@ -117,20 +121,20 @@ export default async function RealizationDetailPage({ params }: Props) {
             <section>
               <h2 className="text-3xl font-black mb-8 text-[#1a1c1c] tracking-tight">Vision & Exécution</h2>
               <div className="space-y-6 text-xl leading-relaxed text-[#3c4a42] font-medium max-w-3xl border-l-4 border-[#10b77f] pl-8">
-                <p>{document.project_description}</p>
+                <p>{realization.description}</p>
               </div>
             </section>
 
             {galleryImages.length > 0 && (
               <section className="grid grid-cols-2 md:grid-cols-4 auto-rows-[300px] gap-6">
                 {galleryImages.map((img: string, i: number) => (
-                  <div 
-                    key={i} 
+                  <div
+                    key={i}
                     className={`${i === 0 ? 'col-span-2 row-span-2' : ''} rounded-2xl overflow-hidden group shadow-lg border border-white/20`}
                   >
-                    <img 
-                      src={img} 
-                      alt={`${document.project_title} - image ${i + 1}`} 
+                    <img
+                      src={img}
+                      alt={`${realization.title} - image ${i + 1}`}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
                   </div>
@@ -145,40 +149,43 @@ export default async function RealizationDetailPage({ params }: Props) {
                 <div className="absolute top-0 left-0 w-full h-2 bg-[#10b77f]"></div>
                 <h3 className="text-xl font-black mb-10 text-[#1a1c1c] border-b border-[#f3f4f3] pb-6 uppercase tracking-[0.1em]">Spécifications</h3>
                 <div className="space-y-8">
+                  {/* Price Display */}
+                  {realization.price && (
+                    <div className="flex items-start gap-4">
+                      <div className="bg-[#10b77f]/10 p-3 rounded-2xl text-[#10b77f]">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-black text-[#1a1c1c]/40 uppercase tracking-[0.2em]">Budget Projet</p>
+                        <PriceDisplay amount={realization.price} currency={realization.currency || 'XOF'} className="text-2xl" />
+                      </div>
+                    </div>
+                  )}
+                  
                   <div className="flex items-start gap-4">
                     <div className="bg-[#f3f4f3] p-3 rounded-2xl text-[#10b77f]">
                       <MapPin className="w-5 h-5" />
                     </div>
                     <div>
                       <p className="text-[10px] font-black text-[#1a1c1c]/40 uppercase tracking-[0.2em]">Localisation</p>
-                      <p className="text-[#1a1c1c] font-bold text-lg">{pro.city}</p>
+                      <p className="text-[#1a1c1c] font-bold text-lg">{realization.location || pro.city}</p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-4">
-                    <div className="bg-[#f3f4f3] p-3 rounded-2xl text-[#10b77f]">
-                      <Calendar className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <p className="text-[10px] font-black text-[#1a1c1c]/40 uppercase tracking-[0.2em]">Date du projet</p>
-                      <p className="text-[#1a1c1c] font-bold text-lg">
-                        {document.project_date ? new Date(document.project_date).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }) : 'Récemment'}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <div className="bg-[#f3f4f3] p-3 rounded-2xl text-[#10b77f]">
-                      <ShieldCheck className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <p className="text-[10px] font-black text-[#1a1c1c]/40 uppercase tracking-[0.2em]">Status</p>
-                      <div className="flex items-center gap-2">
-                        <p className="text-[#1a1c1c] font-bold text-lg text-nowrap">
-                          {document.status === 'published' ? 'Vérifié' : document.status === 'pending_review' ? 'En attente' : 'Rejeté'}
+                  {realization.completion_date && (
+                    <div className="flex items-start gap-4">
+                      <div className="bg-[#f3f4f3] p-3 rounded-2xl text-[#10b77f]">
+                        <Calendar className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-black text-[#1a1c1c]/40 uppercase tracking-[0.2em]">Date de réalisation</p>
+                        <p className="text-[#1a1c1c] font-bold text-lg">
+                          {new Date(realization.completion_date).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}
                         </p>
-                        <span className={`w-2 h-2 rounded-full flex-shrink-0 ${document.status === 'published' ? 'bg-[#10b77f]' : document.status === 'pending_review' ? 'bg-yellow-500' : 'bg-red-500'}`}></span>
                       </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
 

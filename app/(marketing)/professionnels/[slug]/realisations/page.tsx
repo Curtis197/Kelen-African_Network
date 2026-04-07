@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import PriceDisplay from "@/components/projects/PriceDisplay";
 
 interface Props {
   params: Promise<{
@@ -57,7 +58,9 @@ export default async function RealisationsListPage({ params }: Props) {
           title: r.title,
           description: r.description || "",
           image: mainImage?.url || "https://images.unsplash.com/photo-1600585154340-be6199f7d209?auto=format&fit=crop&q=80",
-          location: r.location
+          location: r.location,
+          price: r.price,
+          currency: r.currency || "XOF"
         };
       })
     : [];
@@ -104,9 +107,12 @@ export default async function RealisationsListPage({ params }: Props) {
                       <h3 className="text-xl font-black text-stone-900 mb-2 group-hover:text-kelen-green-600 transition-colors">
                         {item.title}
                       </h3>
-                      <p className="text-stone-500 text-sm line-clamp-2">
+                      <p className="text-stone-500 text-sm line-clamp-2 mb-3">
                         {item.description}
                       </p>
+                      {item.price && (
+                        <PriceDisplay amount={item.price} currency={item.currency} />
+                      )}
                     </div>
                   </Link>
                 ))}

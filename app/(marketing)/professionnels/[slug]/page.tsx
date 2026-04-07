@@ -87,7 +87,9 @@ export default async function ProfessionalProfilePage({ params }: Props) {
           title: r.title,
           description: r.description || "",
           image: mainImage?.url || "https://images.unsplash.com/photo-1600585154340-be6199f7d209?auto=format&fit=crop&q=80",
-          location: r.location
+          location: r.location,
+          price: r.price,
+          currency: r.currency || "XOF"
         };
       })
     : [];
