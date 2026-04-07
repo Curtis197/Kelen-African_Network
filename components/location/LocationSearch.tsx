@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Loader2, MapPin, X, Navigation } from "lucide-react";
 
 export interface LocationData {
@@ -26,19 +26,40 @@ export function LocationSearch({ value, onChange, placeholder = "Rechercher une 
   const [isLoading, setIsLoading] = useState(false);
   const [isGettingLocation, setIsGettingLocation] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isGoogleLoaded, setIsGoogleLoaded] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const autocompleteService = useRef<google.maps.places.AutocompleteService | null>(null);
   const placesService = useRef<google.maps.places.PlacesService | null>(null);
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
+  const checkInterval = useRef<NodeJS.Timeout | null>(null);
 
-  // Initialize Google Places services
+  // Poll for Google Maps availability
   useEffect(() => {
-    if (typeof window !== "undefined" && window.google) {
+    if (typeof window === "undefined") return;
+
+    // Check if already loaded
+    if (window.google?.maps?.places) {
+      setIsGoogleLoaded(true);
       autocompleteService.current = new google.maps.places.AutocompleteService();
-      // Create a dummy div for PlacesService (it requires a DOM element)
       const dummyDiv = document.createElement("div");
       placesService.current = new google.maps.places.PlacesService(dummyDiv);
+      return;
     }
+
+    // Poll every 500ms until Google is loaded
+    checkInterval.current = setInterval(() => {
+      if (window.google?.maps?.places) {
+        setIsGoogleLoaded(true);
+        autocompleteService.current = new google.maps.places.AutocompleteService();
+        const dummyDiv = document.createElement("div");
+        placesService.current = new google.maps.places.PlacesService(dummyDiv);
+        if (checkInterval.current) clearInterval(checkInterval.current);
+      }
+    }, 500);
+
+    return () => {
+      if (checkInterval.current) clearInterval(checkInterval.current);
+    };
   }, []);
 
   // Update input when value changes externally
@@ -50,42 +71,65 @@ export function LocationSearch({ value, onChange, placeholder = "Rechercher une 
     }
   }, [value]);
 
+  // Extract city name from address components
+  const extractCityName = (addressComponents: google.maps.GeocoderAddressComponent[]): string => {
+    // Try locality first (most cities)
+    const locality = addressComponents.find(c => c.types.includes("locality"));
+    if (locality) return locality.long_name;
+    
+    // Try administrative_area_level_2 (some regions)
+    const area2 = addressComponents.find(c => c.types.includes("administrative_area_level_2"));
+    if (area2) return area2.long_name;
+    
+    // Try sublocality (neighborhoods/districts)
+    const sublocality = addressComponents.find(c => c.types.includes("sublocality"));
+    if (sublocality) return sublocality.long_name;
+    
+    // Fallback to first component
+    return addressComponents[0]?.long_name || "Position actuelle";
+  };
+
   // Fetch place details when a suggestion is selected
-  const fetchPlaceDetails = async (placeId: string) => {
-    if (!placesService.current) return;
+  const fetchPlaceDetails = useCallback((placeId: string) => {
+    if (!placesService.current) {
+      setError("Service Google Maps non disponible");
+      return;
+    }
 
     setIsLoading(true);
     setError(null);
+    setShowSuggestions(false);
 
-    try {
-      placesService.current.getDetails({ placeId, fields: ["name", "formatted_address", "geometry", "address_components"] }, (place, status) => {
+    placesService.current.getDetails(
+      { placeId, fields: ["name", "formatted_address", "geometry", "address_components"] },
+      (place, status) => {
+        setIsLoading(false);
+        
         if (status === google.maps.places.PlacesServiceStatus.OK && place) {
+          const country = place.address_components?.find(c => c.types.includes("country"));
+          const city = place.address_components?.find(c => c.types.includes("locality"));
+          
           const locationData: LocationData = {
-            name: place.name || "",
+            name: city?.long_name || place.name || "",
             formatted_address: place.formatted_address || "",
             lat: place.geometry?.location?.lat() || 0,
             lng: place.geometry?.location?.lng() || 0,
-            country: place.address_components?.find(c => c.types.includes("country"))?.long_name,
-            city: place.address_components?.find(c => c.types.includes("locality"))?.long_name,
+            country: country?.long_name,
+            city: city?.long_name,
           };
+          
           onChange(locationData);
           setInputValue(place.formatted_address || "");
         } else {
+          console.error("Place details error:", status);
           setError("Impossible de récupérer les détails du lieu");
         }
-        setIsLoading(false);
-        setShowSuggestions(false);
-      });
-    } catch (err) {
-      console.error("Error fetching place details:", err);
-      setError("Erreur lors de la récupération des données");
-      setIsLoading(false);
-      setShowSuggestions(false);
-    }
-  };
+      }
+    );
+  }, [onChange]);
 
   // Handle input change with debounce
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
     setInputValue(query);
     setError(null);
@@ -103,12 +147,17 @@ export function LocationSearch({ value, onChange, placeholder = "Rechercher une 
     }
 
     debounceTimer.current = setTimeout(() => {
-      if (autocompleteService.current && query.length >= 2) {
+      if (!isGoogleLoaded || !autocompleteService.current) {
+        console.warn("Google Maps not loaded yet");
+        return;
+      }
+
+      if (query.length >= 2) {
         setIsLoading(true);
-        autocompleteService.current.getPlacePredictions(
+        autocompleteService.current!.getPlacePredictions(
           {
             input: query,
-            types: ["(cities)"], // Prioritize cities, but can be expanded
+            types: ["(cities)"],
           },
           (predictions, status) => {
             setIsLoading(false);
@@ -123,10 +172,10 @@ export function LocationSearch({ value, onChange, placeholder = "Rechercher une 
         );
       }
     }, 300);
-  };
+  }, [isGoogleLoaded, onChange]);
 
   // Get user's current location
-  const handleGetCurrentLocation = () => {
+  const handleGetCurrentLocation = useCallback(() => {
     if (!navigator.geolocation) {
       setError("La géolocalisation n'est pas supportée par votre navigateur");
       return;
@@ -138,55 +187,35 @@ export function LocationSearch({ value, onChange, placeholder = "Rechercher une 
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
-        
-        // Reverse geocoding to get address from coordinates
-        if (placesService.current) {
-          placesService.current.getDetails(
-            { placeId: "ChIJd8BlQ2BZwokRAFUEcm_qrcA" }, // Dummy, we'll use geocoder instead
-            (place, status) => {
-              // Fallback to creating location data from coords
-              const locationData: LocationData = {
-                name: `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`,
-                formatted_address: `Position GPS (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`,
-                lat: latitude,
-                lng: longitude,
-              };
-              onChange(locationData);
-              setInputValue(locationData.formatted_address);
-              setIsGettingLocation(false);
-            }
-          );
-        }
-        
-        // Better approach: use Geocoder
+
+        // Use Geocoder to get address from coordinates
         const geocoder = new google.maps.Geocoder();
         const latlng = { lat: latitude, lng: longitude };
-        
+
         geocoder.geocode({ location: latlng }, (results, status) => {
-          if (status === "OK" && results?.[0]) {
+          setIsGettingLocation(false);
+
+          if (status === "OK" && results && results[0]) {
             const result = results[0];
+            const addressComponents = result.address_components || [];
+            const cityName = extractCityName(addressComponents);
+            const country = addressComponents.find(c => c.types.includes("country"));
+
             const locationData: LocationData = {
-              name: result.formatted_address.split(",")[0],
+              name: cityName,
               formatted_address: result.formatted_address,
               lat: latitude,
               lng: longitude,
-              country: result.address_components?.find(c => c.types.includes("country"))?.long_name,
-              city: result.address_components?.find(c => c.types.includes("locality"))?.long_name,
+              country: country?.long_name,
+              city: cityName,
             };
+
             onChange(locationData);
             setInputValue(result.formatted_address);
           } else {
-            // Fallback to raw coordinates
-            const locationData: LocationData = {
-              name: `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`,
-              formatted_address: `Position GPS (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`,
-              lat: latitude,
-              lng: longitude,
-            };
-            onChange(locationData);
-            setInputValue(locationData.formatted_address);
+            console.error("Geocoding error:", status);
+            setError("Impossible de déterminer votre position");
           }
-          setIsGettingLocation(false);
         });
       },
       (err) => {
@@ -196,30 +225,29 @@ export function LocationSearch({ value, onChange, placeholder = "Rechercher une 
       },
       { enableHighAccuracy: true, timeout: 10000 }
     );
-  };
+  }, [onChange]);
 
   // Clear selection
-  const handleClear = () => {
+  const handleClear = useCallback(() => {
     setInputValue("");
     setSuggestions([]);
     setShowSuggestions(false);
     onChange(null);
     setError(null);
     inputRef.current?.focus();
-  };
+  }, [onChange]);
 
   // Handle input focus
-  const handleFocus = () => {
+  const handleFocus = useCallback(() => {
     if (suggestions.length > 0 && inputValue.length >= 2) {
       setShowSuggestions(true);
     }
-  };
+  }, [suggestions.length, inputValue.length]);
 
   // Handle input blur (close suggestions)
-  const handleBlur = () => {
-    // Delay to allow click on suggestions
+  const handleBlur = useCallback(() => {
     setTimeout(() => setShowSuggestions(false), 200);
-  };
+  }, []);
 
   return (
     <div className={`relative ${className}`}>

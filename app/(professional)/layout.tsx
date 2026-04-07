@@ -1,4 +1,5 @@
-import { ProSidebar } from "@/components/layout/ProSidebar";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 
 export default function ProfessionalLayout({
   children,
@@ -7,12 +8,13 @@ export default function ProfessionalLayout({
 }) {
   return (
     <div className="flex min-h-screen flex-col">
-      <div className="flex flex-1">
-        <ProSidebar />
-        <main className="flex-1 bg-surface">
-          <div className="p-4 lg:p-8">{children}</div>
-        </main>
-      </div>
+      <Navbar />
+      <main className="flex-1 bg-surface">
+        <div className="mx-auto max-w-7xl w-full">
+          <div className="p-4 sm:p-6 lg:p-8">{children}</div>
+        </div>
+      </main>
+      <Footer />
     </div>
   );
 }

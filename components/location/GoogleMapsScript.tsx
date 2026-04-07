@@ -25,18 +25,39 @@ export function GoogleMapsScriptProvider({ apiKey, children }: GoogleMapsScriptP
       return;
     }
 
+    // Prevent duplicate script loads
+    const existingScript = document.querySelector('script[src*="maps.googleapis.com/maps/api/js"]');
+    if (existingScript) {
+      // Script already exists, wait for it to load
+      const checkInterval = setInterval(() => {
+        if (window.google?.maps) {
+          setIsLoaded(true);
+          clearInterval(checkInterval);
+        }
+      }, 100);
+      return () => clearInterval(checkInterval);
+    }
+
     // Load the Google Maps script
     const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
+    script.id = "google-maps-script";
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&v=weekly`;
     script.async = true;
     script.defer = true;
-    script.onload = () => setIsLoaded(true);
+    script.onload = () => {
+      // Wait a bit for initialization
+      setTimeout(() => {
+        if (window.google?.maps) {
+          setIsLoaded(true);
+        }
+      }, 100);
+    };
     script.onerror = () => setHasError(true);
 
     document.head.appendChild(script);
 
     return () => {
-      // Don't remove script on cleanup, it should stay loaded
+      // Don't remove script on cleanup
     };
   }, [apiKey]);
 
