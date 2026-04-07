@@ -84,33 +84,33 @@ export default function AssignStepProDialog({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 sm:p-0">
-      <div 
-        className="absolute inset-0 bg-stone-900/40 backdrop-blur-sm transition-opacity" 
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 md:p-6">
+      <div
+        className="absolute inset-0 bg-stone-900/40 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
-      
-      <div className="relative w-full max-w-md bg-white rounded-[2.5rem] shadow-3xl border border-stone-100 overflow-hidden animate-in fade-in zoom-in duration-300">
-        <div className="p-8 pb-4 flex items-center justify-between border-b border-stone-50">
-          <div>
-            <h2 className="text-2xl font-black text-stone-900 tracking-tight flex items-center gap-3">
-              <Users className="w-6 h-6 text-kelen-green-600" />
-              Assigner des experts
+
+      <div className="relative w-full max-w-md bg-white rounded-2xl sm:rounded-3xl lg:rounded-[2.5rem] shadow-3xl border border-stone-100 overflow-hidden animate-in fade-in zoom-in duration-300 max-h-[90vh] flex flex-col">
+        <div className="p-4 sm:p-6 lg:p-8 pb-3 sm:pb-4 flex items-center justify-between border-b border-stone-50 flex-shrink-0">
+          <div className="flex-1 min-w-0 pr-4">
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-black text-stone-900 tracking-tight flex items-center gap-2 sm:gap-3">
+              <Users className="w-5 h-5 sm:w-6 sm:h-6 text-kelen-green-600 flex-shrink-0" />
+              <span className="truncate">Assigner des experts</span>
             </h2>
-            <p className="text-sm text-stone-500 font-medium pt-1">Experts impliqués dans cette étape</p>
+            <p className="text-xs sm:text-sm text-stone-500 font-medium pt-1 truncate">Experts impliqués dans cette étape</p>
           </div>
-          <button 
+          <button
             onClick={onClose}
-            className="p-3 rounded-full hover:bg-stone-50 text-stone-400 hover:text-stone-900 transition-colors"
+            className="p-2 sm:p-3 rounded-full hover:bg-stone-50 text-stone-400 hover:text-stone-900 transition-colors flex-shrink-0"
           >
-            <X className="w-6 h-6" />
+            <X className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
         </div>
 
-        <div className="p-8 space-y-4 max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
+        <div className="p-4 sm:p-6 lg:p-8 space-y-3 sm:space-y-4 overflow-y-auto flex-1">
           {isFetching ? (
-            <div className="flex justify-center p-12">
-              <Loader2 className="w-8 h-8 animate-spin text-stone-200" />
+            <div className="flex justify-center p-8 sm:p-12">
+              <Loader2 className="w-6 h-6 sm:w-8 sm:h-8 animate-spin text-stone-200" />
             </div>
           ) : team.length > 0 ? (
             team.map((member) => {
@@ -119,38 +119,38 @@ export default function AssignStepProDialog({
                 <button
                   key={member.id}
                   onClick={() => toggleId(member.id)}
-                  className={`w-full flex items-center gap-4 p-4 rounded-2xl border transition-all ${
+                  className={`w-full flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl sm:rounded-2xl border transition-all ${
                     isSelected ? 'bg-stone-900 border-stone-900 text-white' : 'bg-stone-50 border-transparent hover:bg-stone-100 text-stone-900'
                   }`}
                 >
-                  <div className="flex-1 text-left">
-                    <p className="font-bold">{member.is_external ? member.external_name : member.professionals?.business_name}</p>
-                    <p className={`text-[10px] font-black uppercase tracking-widest mt-0.5 ${isSelected ? 'text-stone-400' : 'text-stone-400'}`}>
+                  <div className="flex-1 text-left min-w-0">
+                    <p className="font-bold text-sm sm:text-base truncate">{member.is_external ? member.external_name : member.professionals?.business_name}</p>
+                    <p className={`text-[8px] sm:text-[10px] font-black uppercase tracking-widest mt-0.5 truncate ${isSelected ? 'text-stone-400' : 'text-stone-400'}`}>
                       {member.development_area || member.is_external ? member.external_category : member.professionals?.category}
                     </p>
                   </div>
-                  {isSelected ? <CheckCircle2 className="w-5 h-5" /> : <Circle className="w-5 h-5 text-stone-300" />}
+                  {isSelected ? <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" /> : <Circle className="w-4 h-4 sm:w-5 sm:h-5 text-stone-300 flex-shrink-0" />}
                 </button>
               );
             })
           ) : (
-            <div className="text-center py-12 bg-stone-50 rounded-3xl border-2 border-dashed border-stone-100">
-              <p className="text-stone-400 font-medium px-8 italic text-sm">Aucun professionnel dans l&apos;équipe pour le moment.</p>
+            <div className="text-center py-8 sm:py-12 bg-stone-50 rounded-xl sm:rounded-3xl border-2 border-dashed border-stone-100">
+              <p className="text-stone-400 font-medium px-4 sm:px-8 italic text-xs sm:text-sm">Aucun professionnel dans l&apos;équipe pour le moment.</p>
             </div>
           )}
         </div>
 
-        <div className="p-8 pt-4 flex gap-4">
+        <div className="p-4 sm:p-6 lg:p-8 pt-3 sm:pt-4 flex gap-2 sm:gap-4 flex-shrink-0">
           <button
             onClick={onClose}
-            className="flex-1 py-4 text-stone-400 font-black uppercase tracking-widest text-xs hover:text-stone-900 transition-all"
+            className="flex-1 py-3 sm:py-4 text-stone-400 font-black uppercase tracking-widest text-[10px] sm:text-xs hover:text-stone-900 transition-all"
           >
             Annuler
           </button>
           <button
             disabled={isLoading || isFetching}
             onClick={handleSubmit}
-            className="flex-[2] bg-kelen-green-600 text-white py-4 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-kelen-green-600/20 hover:scale-[0.98] transition-all flex items-center justify-center gap-2"
+            className="flex-[2] bg-kelen-green-600 text-white py-3 sm:py-4 rounded-xl sm:rounded-2xl font-black uppercase tracking-widest text-[10px] sm:text-xs shadow-xl shadow-kelen-green-600/20 hover:scale-[0.98] transition-all flex items-center justify-center gap-2"
           >
             {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Enregistrer"}
           </button>

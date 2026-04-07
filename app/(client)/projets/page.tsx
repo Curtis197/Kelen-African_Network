@@ -16,6 +16,10 @@ interface Project {
   title: string;
   category: string;
   location: string;
+  location_lat?: number;
+  location_lng?: number;
+  location_country?: string;
+  location_formatted?: string;
   status: "en_preparation" | "en_cours" | "en_pause" | "termine" | "annule";
   budget_total: number;
   budget_currency: string;
@@ -131,7 +135,7 @@ export default function ProjectsPage() {
                         <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-on-surface-variant">
                           <span className="flex items-center gap-1 min-w-0">
                             <span className="material-symbols-outlined text-sm flex-shrink-0">location_on</span>
-                            <span className="truncate">{project.location}</span>
+                            <span className="truncate">{project.location_formatted || project.location}</span>
                           </span>
                           <span className="flex items-center gap-1">
                             <span className="material-symbols-outlined text-sm flex-shrink-0">payments</span>

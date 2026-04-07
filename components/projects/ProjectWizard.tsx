@@ -6,12 +6,17 @@ import { upsertProject, getProject } from "@/lib/actions/projects";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { LocationSearch, type LocationData } from "@/components/location/LocationSearch";
 
 type ProjectData = {
   id?: string;
   title: string;
   category: string;
   location: string;
+  location_lat?: number;
+  location_lng?: number;
+  location_country?: string;
+  location_formatted?: string;
   budget_total: number;
   budget_currency: "EUR" | "XOF" | "USD";
   start_date?: string;
@@ -251,7 +256,7 @@ function Step1Identity({ formData, onChange }: { formData: ProjectData; onChange
 
       <div className="bg-surface-container-lowest rounded-[2rem] p-6 md:p-8 lg:p-16 shadow-sm relative overflow-hidden">
         <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
-        <div className="relative z-10 space-y-16">
+        <div className="relative z-10 space-y-12">
           <div className="space-y-4">
             <label className="font-headline font-bold text-sm tracking-widest uppercase text-on-surface-variant/60 block">Nom du Projet</label>
             <input
@@ -266,6 +271,43 @@ function Step1Identity({ formData, onChange }: { formData: ProjectData; onChange
             </div>
           </div>
 
+          <div className="space-y-4">
+            <label className="font-headline font-bold text-sm tracking-widest uppercase text-on-surface-variant/60 block">Localisation du Projet</label>
+            <LocationSearch
+              value={
+                formData.location_lat && formData.location_lng
+                  ? {
+                      name: formData.location,
+                      formatted_address: formData.location_formatted || formData.location,
+                      lat: formData.location_lat,
+                      lng: formData.location_lng,
+                      country: formData.location_country,
+                    }
+                  : null
+              }
+              onChange={(loc: LocationData | null) => {
+                if (loc) {
+                  onChange({
+                    location: loc.name,
+                    location_lat: loc.lat,
+                    location_lng: loc.lng,
+                    location_country: loc.country,
+                    location_formatted: loc.formatted_address,
+                  });
+                } else {
+                  onChange({
+                    location: "Sénégal",
+                    location_lat: undefined,
+                    location_lng: undefined,
+                    location_country: undefined,
+                    location_formatted: undefined,
+                  });
+                }
+              }}
+              placeholder="Rechercher une ville, un pays..."
+            />
+          </div>
+
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             {categories.map((cat) => (
               <button
@@ -273,8 +315,8 @@ function Step1Identity({ formData, onChange }: { formData: ProjectData; onChange
                 onClick={() => onChange({ category: cat.id as any })}
                 className={cn(
                   "p-6 rounded-2xl flex flex-col items-center gap-4 transition-all duration-200 border-2",
-                  formData.category === cat.id 
-                    ? "bg-primary-container/10 border-primary text-primary" 
+                  formData.category === cat.id
+                    ? "bg-primary-container/10 border-primary text-primary"
                     : "bg-surface-container-low border-transparent hover:border-surface-container-highest"
                 )}
               >

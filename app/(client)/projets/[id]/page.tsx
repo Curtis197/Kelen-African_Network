@@ -25,6 +25,10 @@ interface Project {
   description: string;
   category: string;
   location: string;
+  location_lat?: number;
+  location_lng?: number;
+  location_country?: string;
+  location_formatted?: string;
   budget_total: number;
   budget_currency: string;
   status: string;
@@ -210,7 +214,7 @@ export default function ProjectDetailPage() {
                 </div>
                 <div className="flex items-center gap-1.5 sm:gap-2 text-on-surface-variant text-[10px] sm:text-sm font-medium">
                   <span className="material-symbols-outlined text-sm sm:text-base flex-shrink-0">location_on</span>
-                  <span className="truncate">{project.location}</span>
+                  <span className="truncate">{project.location_formatted || project.location}</span>
                 </div>
                 <div className="flex items-center gap-1.5 sm:gap-2 text-on-surface-variant text-[10px] sm:text-sm font-medium">
                   <span className="material-symbols-outlined text-sm sm:text-base flex-shrink-0">category</span>
@@ -333,7 +337,7 @@ export default function ProjectDetailPage() {
 
               <div className="flex flex-col items-center">
                 <div className="relative w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48 flex items-center justify-center mb-4 sm:mb-6 lg:mb-8">
-                  <svg className="w-full h-full transform -rotate-90">
+                  <svg className="w-full h-full transform -rotate-90" viewBox="0 0 224 224">
                     <circle className="text-surface-container" cx="112" cy="112" fill="transparent" r="100" stroke="currentColor" strokeWidth="16" />
                     <circle
                       className="text-primary transition-all duration-1000 ease-out"

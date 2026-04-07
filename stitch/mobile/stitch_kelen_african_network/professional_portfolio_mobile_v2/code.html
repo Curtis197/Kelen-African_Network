@@ -3,9 +3,8 @@
 <html class="light" lang="fr"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Jean-Baptiste Dupont | Digital Diplomat Portfolio</title>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script id="tailwind-config">
@@ -13,77 +12,84 @@
         darkMode: "class",
         theme: {
           extend: {
-            colors: {
-              "on-tertiary": "#ffffff",
-              "on-primary": "#ffffff",
-              "surface-tint": "#006c49",
-              "on-primary-container": "#00402a",
-              "surface-variant": "#e2e2e2",
-              "on-error": "#ffffff",
-              "primary-container": "#10b77f",
-              "tertiary-fixed": "#ffdad7",
-              "tertiary": "#a43a3b",
-              "on-background": "#1a1c1c",
-              "surface": "#f9f9f8",
-              "on-surface": "#1a1c1c",
-              "surface-container-lowest": "#ffffff",
-              "surface-container-high": "#e8e8e7",
-              "on-error-container": "#93000a",
-              "secondary-container": "#fdc425",
-              "surface-bright": "#f9f9f8",
-              "on-tertiary-fixed": "#410006",
-              "inverse-surface": "#2f3130",
-              "surface-dim": "#dadad9",
-              "surface-container-low": "#f3f4f3",
-              "primary-fixed-dim": "#50dea3",
-              "inverse-primary": "#50dea3",
-              "primary": "#006c49",
-              "inverse-on-surface": "#f1f1f0",
-              "on-secondary-container": "#6d5200",
-              "on-primary-fixed-variant": "#005236",
-              "surface-container-highest": "#e2e2e2",
-              "error-container": "#ffdad6",
-              "on-secondary-fixed-variant": "#5a4300",
-              "outline": "#6c7a71",
-              "on-tertiary-fixed-variant": "#842325",
-              "surface-container": "#eeeeed",
-              "primary-fixed": "#70fbbd",
-              "on-tertiary-container": "#6f1218",
-              "secondary": "#785a00",
-              "on-surface-variant": "#3c4a42",
-              "on-primary-fixed": "#002113",
-              "error": "#ba1a1a",
-              "secondary-fixed": "#ffdf9a",
-              "on-secondary": "#ffffff",
-              "secondary-fixed-dim": "#f7be1d",
-              "outline-variant": "#bbcabf",
-              "tertiary-container": "#f97a77",
-              "tertiary-fixed-dim": "#ffb3af",
-              "on-secondary-fixed": "#251a00",
-              "background": "#f9f9f8"
+            "colors": {
+                    "surface-tint": "#006c49",
+                    "tertiary-fixed": "#ffdad7",
+                    "surface-container-low": "#f3f4f3",
+                    "primary": "#006c49",
+                    "on-error": "#ffffff",
+                    "tertiary-fixed-dim": "#ffb3af",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-bright": "#f9f9f8",
+                    "surface-variant": "#e2e2e2",
+                    "inverse-surface": "#2f3130",
+                    "surface-container-high": "#e8e8e7",
+                    "secondary-fixed": "#ffdf9a",
+                    "primary-container": "#10b77f",
+                    "on-primary-fixed-variant": "#005236",
+                    "inverse-primary": "#50dea3",
+                    "secondary-container": "#fdc425",
+                    "on-tertiary-container": "#6f1218",
+                    "on-primary": "#ffffff",
+                    "secondary": "#785a00",
+                    "on-primary-fixed": "#002113",
+                    "error": "#ba1a1a",
+                    "error-container": "#ffdad6",
+                    "primary-fixed-dim": "#50dea3",
+                    "outline-variant": "#bbcabf",
+                    "primary-fixed": "#70fbbd",
+                    "background": "#f9f9f8",
+                    "tertiary-container": "#f97a77",
+                    "on-secondary": "#ffffff",
+                    "surface-dim": "#dadad9",
+                    "on-surface-variant": "#3c4a42",
+                    "secondary-fixed-dim": "#f7be1d",
+                    "on-tertiary-fixed": "#410006",
+                    "on-secondary-fixed": "#251a00",
+                    "on-secondary-container": "#6d5200",
+                    "surface-container": "#eeeeed",
+                    "on-primary-container": "#00402a",
+                    "inverse-on-surface": "#f1f1f0",
+                    "on-secondary-fixed-variant": "#5a4300",
+                    "outline": "#6c7a71",
+                    "on-surface": "#1a1c1c",
+                    "surface": "#f9f9f8",
+                    "on-tertiary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "on-tertiary-fixed-variant": "#842325",
+                    "on-background": "#1a1c1c",
+                    "tertiary": "#a43a3b",
+                    "surface-container-highest": "#e2e2e2"
             },
-            fontFamily: {
-              "headline": ["Manrope"],
-              "body": ["Inter"],
-              "label": ["Inter"]
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "2xl": "1.5rem",
+                    "3xl": "2rem",
+                    "full": "9999px"
             },
-            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            "fontFamily": {
+                    "headline": ["Manrope", "sans-serif"],
+                    "body": ["Inter", "sans-serif"],
+                    "label": ["Inter", "sans-serif"]
+            }
           },
         },
       }
     </script>
 <style>
-      .material-symbols-outlined {
-        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-      }
-      .glass-card {
-        background: rgba(249, 249, 248, 0.7);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-      }
-      .primary-gradient {
-        background: linear-gradient(135deg, #006c49 0%, #10b77f 100%);
-      }
+        .glass-card {
+            background: rgba(249, 249, 248, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .primary-gradient {
+            background: linear-gradient(135deg, #006c49 0%, #10b77f 100%);
+        }
     </style>
 <style>
     body {
@@ -93,143 +99,146 @@
   </head>
 <body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
 <!-- TopAppBar -->
-<nav class="fixed top-0 w-full z-50 bg-stone-50/70 dark:bg-stone-900/70 backdrop-blur-xl border-b border-stone-200/10 flex justify-between items-center px-6 py-4 shadow-sm">
+<nav class="fixed top-0 w-full z-50 bg-[#f9f9f8]/70 dark:bg-[#1a1c1c]/70 backdrop-blur-xl border-b border-[#bbcabf]/15 shadow-sm">
+<div class="flex justify-between items-center px-6 h-16 w-full max-w-7xl mx-auto">
 <div class="flex items-center gap-3">
-<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container-high">
-<img alt="Jean-Baptiste Dupont" class="w-full h-full object-cover" data-alt="Close-up professional portrait of a consultant with a confident expression, soft studio lighting, neutral background, high-end editorial style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvVmJkfYdom_5VWRV5KJSduPy1MmdcSSzd96030XRmjojHZFEviABiF4HxzSSj9p0zVjJVoWOD0p-It3DZSgGBqiuSckvw3_v-ETOOR_Dgwy5NWR1ed_1RIDO8gVXyecmjbGoq-L8WbLDKr6OzWUGnXdP4dOQKLbJV73LhsGpDUlbNVP9v8jBj7DMQmHFdHo756XSTIr1pbkZHhln3afXjzFR7OpNiAXf2gn2iLSDI6xyo9d5EgaHhQUCn6VqwXWLKthhRW4CLUYk"/>
+<span class="material-symbols-outlined text-[#10b77f]">menu</span>
+<span class="text-lg font-bold tracking-tight text-[#1a1c1c] font-headline">The Digital Diplomat</span>
 </div>
-<span class="font-headline font-bold text-stone-900 text-lg tracking-tight">Digital Diplomat</span>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden">
+<img alt="consultant profile photo" class="w-full h-full object-cover" data-alt="close-up portrait of a professional man in a tailored charcoal suit, soft studio lighting, high-end corporate aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9qfmIh6Ej6sCcbANQaAX28xctIWWIdS3bPymzJ0HkptL7Y7TGNSlHR9_5MoW1T-msSfW55Z-aYmV5QPZd3KDwYaBezQk6KbMnXbad7y9fWTT4hrHmk-ElpL24IUQ93KK42zlx9mbJs33jLVg4mEB1h667sSqe5eRQwEw6F0mMYiWJBgIjXi-Q30MQ_F7L7U-BtVDN8R7gB1Rxy4QPgEAuT1na_jWWqZLltYnFG5mStP9mlygz3_4ELLmqrFVjIkhSE1ACrI5OQQE"/>
 </div>
-<button class="text-emerald-600 p-2 active:scale-95 transition-transform duration-200">
-<span class="material-symbols-outlined" data-icon="menu">menu</span>
-</button>
+</div>
 </nav>
 <main class="pt-16 pb-32">
 <!-- Hero Section -->
-<section class="relative h-[751px] w-full overflow-hidden">
-<img alt="Modern Architecture" class="absolute inset-0 w-full h-full object-cover" data-alt="Wide angle shot of a stunning modern glass building with clean lines at sunset, reflecting a warm orange and purple sky, professional architectural photography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCr3fHTzaUXLlx5LOokBr6a2syNI0xg6H6wLhjzkao2DpnBSBEZNgHu1nWGyjm9Sbj5YZeOzefptm-kjk-qn6FQN-h2p0dP66sgh7GZ7FIDRxvzgRv797lY6NefODgwcTP0DHm3bgjunRUmfDTLaa0sZvVgTTzYHcG_qgrDjAVzopLJ9gLTwub6qaXnxX0dbyXCRrZeDk0Si5U43cU1RBUN9SMWqosyZnPx2xWGIfzn23qi04t5Hcs34acOgWgkzZbvW22hTl2SrrE"/>
-<div class="absolute inset-0 bg-gradient-to-t from-on-surface/60 to-transparent"></div>
-<div class="absolute bottom-12 left-6 right-6 p-8 rounded-[2rem] glass-card border border-outline-variant/10">
-<h1 class="font-headline font-extrabold text-3xl text-on-surface tracking-tight mb-3">
-                    Jean-Baptiste Dupont
-                </h1>
-<p class="text-on-surface-variant text-lg leading-relaxed font-medium">
-                    Bâtir votre vision avec rigueur et excellence.
-                </p>
-<div class="mt-6 flex gap-2">
-<span class="h-1 w-12 bg-primary rounded-full"></span>
-<span class="h-1 w-4 bg-primary/30 rounded-full"></span>
+<section class="relative h-[751px] w-full overflow-hidden px-4 pt-4">
+<div class="relative h-full w-full rounded-3xl overflow-hidden">
+<img alt="high-end architectural photo" class="absolute inset-0 w-full h-full object-cover" data-alt="modern minimalist glass and concrete skyscraper reflecting a soft orange sunset, hyper-realistic architectural photography, sharp angles, clean lines" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0yvkoaROQ_wEI1monTpOzMS5aO-WkBDxwyG0yY2Q4x7qb8rkNeVt7EVqVAteKji_c-sU46D5rbn31aYn1l9K_nC1qDaBGoJnlLEUDMS-hT9K8NtSRAc6UQdR0xAo_4_N1SwK3SAHtlaxUQY0wPZYHlaC3gMHZaHc1CdNwV5e0wHtJgkVWnqPcHkn9oSDeJDroSl0ufkLnyOsY47ZA3mpENmtHVhiK9cpTVO2r6NuyJpqdPVEe_5V80v_GRoT8T0fFEAti5NXYlfM"/>
+<div class="absolute inset-0 bg-black/10"></div>
+<!-- Hero Glass Overlay -->
+<div class="absolute bottom-8 left-4 right-4 glass-card p-8 rounded-2xl border border-white/20">
+<h1 class="font-headline font-extrabold text-3xl tracking-tight text-on-surface mb-2">Jean-Baptiste Dupont</h1>
+<p class="text-on-surface-variant font-medium text-lg leading-relaxed">Bâtir votre vision avec rigueur et excellence.</p>
 </div>
 </div>
 </section>
-<!-- Portfolio Section -->
-<section class="px-6 py-12 bg-surface">
-<div class="flex justify-between items-end mb-8">
+<!-- Nos Réalisations Section -->
+<section class="mt-12 px-6">
+<div class="flex items-center justify-between mb-8">
 <h2 class="font-headline font-bold text-2xl text-on-surface">Nos Réalisations</h2>
 <span class="text-primary font-semibold text-sm">Voir tout</span>
 </div>
-<div class="grid grid-cols-1 gap-6">
-<!-- Project 1 -->
-<div class="group relative overflow-hidden rounded-[1.5rem] bg-surface-container-lowest shadow-sm">
-<img alt="Project 1" class="w-full aspect-[4/3] object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Minimalist luxury villa interior with large windows, natural wood elements, and soft morning light hitting the polished floor" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjTKFjidT3GM2eND4g_0fEFvQGtkOSDTGdJYD9M6rK9uYuLcl8pJG3oRfrtoZwSCe1x8QXbk36bc1TtBuPFEVbFuSvlTf8U1p-RC9_RemS0GxKpXMd4_64OR8yWPIyicO19aUL1tDPZhg-PhiM5zoVSd5W2pJUbIte88WX7Ipz4unwuIIHfMQ8nvUJJisElyW3-i3PyxeuRtTEp3-ahKMv4zDSX6dNjlt4UC_wamQZumqaZwf9ZIGIhu3M9QGpZ_8FkFY0x92l7oU"/>
-<div class="p-5">
-<span class="text-[10px] font-bold uppercase tracking-widest text-primary mb-1 block">Résidentiel</span>
-<h3 class="font-headline font-bold text-lg">Résidence L'Émeraude</h3>
+<div class="space-y-8">
+<!-- Project Card 1 -->
+<div class="group">
+<div class="relative aspect-[4/3] rounded-3xl overflow-hidden bg-surface-container-low shadow-sm transition-transform duration-300 active:scale-95">
+<img alt="Project Villa Riviera" class="w-full h-full object-cover" data-alt="luxury contemporary villa with infinity pool and large glass windows overlooking a Mediterranean coast, golden hour lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFXu3QzatHvhr3Ikg9WrsGUYAb5do5WtOoMVfjjf37yCcGMxG9aZkppIBbXzhOEBfWQ7BJDn5rBKg0-imECOZqWwG9d407GzESTyjiF8Xs9hkQUet9euihDWnmSYMf-WXMF2Qz0-erpwr1Mts2ga_waI_VWD-Ey3Upp8-LGBl2r4Wf1JbjQIJ9loUdMb-wslMoCAOkV1gmqeNHqC-srN7HHJo8dP5sTqUuOt84Auq_ChncqzdIp2WNpZ5vMLhZhROP4gagcaKpa5M"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+<div class="absolute bottom-6 left-6 text-white">
+<h3 class="font-headline font-bold text-xl">Villa Riviera</h3>
+<div class="flex items-center gap-1 opacity-90 text-sm">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span>Nice, France</span>
 </div>
 </div>
-<!-- Project 2 -->
-<div class="group relative overflow-hidden rounded-[1.5rem] bg-surface-container-lowest shadow-sm">
-<img alt="Project 2" class="w-full aspect-[4/3] object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Exterior of a modern corporate office building with a unique geometric facade and lush landscaping under a clear blue sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6ugXChrhxqABUGT8Gp9ctgdajdLMdxxYMcysDhPcZUcQk4oswFa01JljNlhNqs3OyqZQr6sL5Gqxkr2-M8yvBztqKIbLCiLhdO4a9ny_C7nsxNb8qE3R6lXSao6vCqqbVz72ty3g4wUTOpqD3_ysh2QXzO3WXx8Bb1bm7kLjchEvK9SQ7dWYt3OAAJaVVpt9TW3Urw1VprKPvkAmeWyHJIfH_Zxm8kEs8pMIQHfK9_Kq3v6xndQAvWgPKGtu3x26Kg5lehLEfVFc"/>
-<div class="p-5">
-<span class="text-[10px] font-bold uppercase tracking-widest text-primary mb-1 block">Commercial</span>
-<h3 class="font-headline font-bold text-lg">Centre d'Affaires Zenith</h3>
+</div>
+</div>
+<!-- Project Card 2 -->
+<div class="group">
+<div class="relative aspect-[4/3] rounded-3xl overflow-hidden bg-surface-container-low shadow-sm transition-transform duration-300 active:scale-95">
+<img alt="Résidence L'Héritage" class="w-full h-full object-cover" data-alt="interior shot of a minimalist luxury loft with high ceilings, exposed brick, and bespoke wooden cabinetry, soft natural light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfMrw837BD6nkhSDrYxNmKSdZWXU82f9EbkiHDm5tJJmpZ3Fkuhp5yWd7s4Jh2SMM755vxGP33wvJP23IZk9T6gk4XSHGvePiP472IL71_GB904fWVNMQ1v2CnhezdDh136_76SVtGqJryEENJZ0bVa2sbTp6aTLtenJcgG52Qx_FIIvb_9xFoNHZliwlnZ83NnzszaL1laWxby6o_SXpgRG0-IWVfBLlMAssqJQaj9i5bHxhE5UmxtH1EPAvK15YkRradTnRzTzg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+<div class="absolute bottom-6 left-6 text-white">
+<h3 class="font-headline font-bold text-xl">Résidence L'Héritage</h3>
+<div class="flex items-center gap-1 opacity-90 text-sm">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span>Paris, France</span>
+</div>
+</div>
 </div>
 </div>
 </div>
 </section>
-<!-- About Section -->
-<section class="px-6 py-16 bg-surface-container-low">
-<h2 class="font-headline font-bold text-2xl mb-6 text-on-surface">À propos</h2>
-<p class="text-on-surface-variant leading-relaxed mb-10 text-lg italic">
-                Expert en gestion de projets d'envergure, j'accompagne la Diaspora dans la concrétisation de leurs ambitions immobilières. Mon approche allie savoir-faire technique et diplomatie pour garantir des résultats d'exception.
-            </p>
+<!-- À propos Section -->
+<section class="mt-16 py-16 px-6 bg-surface-container-low rounded-t-[3rem]">
+<div class="max-w-md mx-auto">
+<h2 class="font-headline font-bold text-2xl text-on-surface mb-6">À propos</h2>
+<p class="text-on-surface-variant leading-relaxed mb-10 text-lg">
+                    Expert en gestion de projets architecturaux pour la diaspora, j'allie la rigueur européenne à la compréhension profonde des défis locaux pour concrétiser vos ambitions immobilières.
+                </p>
 <div class="grid grid-cols-3 gap-4">
-<div class="flex flex-col items-center text-center p-4 rounded-2xl bg-surface-container-lowest shadow-sm">
-<span class="material-symbols-outlined text-secondary mb-2 text-3xl" data-icon="verified">verified</span>
-<span class="font-headline font-bold text-[10px] uppercase tracking-tighter">Honneur</span>
+<div class="flex flex-col items-center gap-3 p-4 bg-surface-container-lowest rounded-2xl">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="shield">shield</span>
+<span class="font-headline font-bold text-xs uppercase tracking-wider text-on-surface">Honneur</span>
 </div>
-<div class="flex flex-col items-center text-center p-4 rounded-2xl bg-surface-container-lowest shadow-sm">
-<span class="material-symbols-outlined text-primary mb-2 text-3xl" data-icon="architecture">architecture</span>
-<span class="font-headline font-bold text-[10px] uppercase tracking-tighter">Rigueur</span>
+<div class="flex flex-col items-center gap-3 p-4 bg-surface-container-lowest rounded-2xl">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="architecture">architecture</span>
+<span class="font-headline font-bold text-xs uppercase tracking-wider text-on-surface">Rigueur</span>
 </div>
-<div class="flex flex-col items-center text-center p-4 rounded-2xl bg-surface-container-lowest shadow-sm">
-<span class="material-symbols-outlined text-emerald-500 mb-2 text-3xl" data-icon="schedule">schedule</span>
-<span class="font-headline font-bold text-[10px] uppercase tracking-tighter">Ponctualité</span>
+<div class="flex flex-col items-center gap-3 p-4 bg-surface-container-lowest rounded-2xl">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="schedule">schedule</span>
+<span class="font-headline font-bold text-xs uppercase tracking-wider text-on-surface">Ponctualité</span>
+</div>
 </div>
 </div>
 </section>
-<!-- Contact & Trust Section -->
-<section class="px-6 py-16 bg-surface">
-<div class="bg-surface-container-lowest rounded-[2.5rem] p-8 flex flex-col items-center text-center shadow-sm border border-outline-variant/10">
-<div class="relative mb-6">
-<div class="w-24 h-24 rounded-full overflow-hidden ring-4 ring-primary/10">
-<img alt="Portrait Professional" class="w-full h-full object-cover" data-alt="Professional headshot of Jean-Baptiste Dupont, wearing a charcoal suit, friendly smile, high-end photography aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMXcxs9qx_9r-4ai8TM7InQKoaneAjrzZkRQa3-0rGDhNvjQ7kDOWRIbESclg0TEzOM5RfcwBWYtbGyVYa1kzNHqlac6pnQ7gpeHWYowtuUq6pO3wEO4OUlWlomha8IC9VIKkG2RsZ_5SUqxyQd6Qt-fyx61YS6XJtntvj-k5qxvgQNdDScNwUnxMNIt7BTFLAeqD5OGfAmvFD6IA4VvvfPnqoqOfAjxAjFtz-ZU1veAVio1RrU2j8OAXBnm08xY1ipPIt1dSBGHM"/>
+<!-- Contact & Trust Card -->
+<section class="mt-12 px-6">
+<div class="bg-surface-container-lowest p-8 rounded-3xl shadow-[0_4px_24px_rgba(0,0,0,0.04)] relative overflow-hidden">
+<div class="flex items-center gap-6 mb-8">
+<div class="relative">
+<div class="w-20 h-20 rounded-2xl overflow-hidden ring-4 ring-primary-container/20">
+<img alt="Jean-Baptiste Dupont portrait" class="w-full h-full object-cover" data-alt="professional headshot of Jean-Baptiste Dupont, confident expression, architectural background out of focus" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjY7CAnm0F6DoUPtODWwwZ3kQiA9huJ7yhiDMArx178E_H25YmVzRgtlJ--MsfJshxL5xgJaRhU5tyXxFt84frsDQE_514xVDE8rSrZ3rFM-gT_whMMSqvxIuW60uk33fQq_xaP-0OSqan2vWvOYV2drk8cK3Y6WwNSLYjsOpjejfFr8R3Ptn5t6Hn7eCFKoPjC9x9uiSPv8XJmIjkOQ9MQPol0t99LaVsb9OSUtGaZ4Lb3X7WyxmEYnDevMEbX1ez3A5p_LGRO3c"/>
 </div>
-<div class="absolute -bottom-2 -right-2 bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-[10px] font-bold flex items-center gap-1 shadow-md">
-<span class="material-symbols-outlined text-sm" data-icon="stars" style="font-variation-settings: 'FILL' 1;">stars</span>
-                        VÉRIFIÉ
-                    </div>
+<div class="absolute -bottom-2 -right-2 bg-secondary-container text-on-secondary-container p-1 rounded-lg shadow-sm">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
 </div>
-<h3 class="font-headline font-extrabold text-2xl text-on-surface">Jean-Baptiste Dupont</h3>
-<p class="text-primary font-semibold tracking-wide uppercase text-xs mt-1 mb-8">Consultant Principal en Architecture</p>
-<div class="w-full space-y-4">
-<a class="primary-gradient w-full py-4 rounded-xl flex items-center justify-center gap-3 text-white font-bold active:scale-95 transition-all shadow-lg shadow-primary/20" href="#">
-<span class="material-symbols-outlined" data-icon="chat">chat</span>
-                        WhatsApp
+</div>
+<div>
+<h3 class="font-headline font-bold text-xl text-on-surface leading-tight">Jean-Baptiste Dupont</h3>
+<p class="text-on-surface-variant font-medium text-sm">Consultant Principal</p>
+<div class="mt-2 inline-flex items-center gap-1.5 bg-secondary-container/15 text-on-secondary-container px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+                            Professionnel Vérifié
+                        </div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="space-y-3">
+<a class="primary-gradient text-white w-full py-4 rounded-2xl flex items-center justify-center gap-3 font-bold transition-transform active:scale-95" href="#">
+<span class="material-symbols-outlined">chat_bubble</span>
+                        WhatsApp Professional
                     </a>
-<div class="grid grid-cols-2 gap-4">
-<a class="bg-surface-container-high py-4 rounded-xl flex items-center justify-center gap-2 text-on-surface font-semibold active:scale-95 transition-all" href="#">
-<span class="material-symbols-outlined text-primary" data-icon="call">call</span>
-                            Appeler
-                        </a>
-<a class="bg-surface-container-high py-4 rounded-xl flex items-center justify-center gap-2 text-on-surface font-semibold active:scale-95 transition-all" href="#">
-<span class="material-symbols-outlined text-primary" data-icon="mail">mail</span>
-                            Email
-                        </a>
-</div>
+<a class="bg-surface-container-high text-on-surface w-full py-4 rounded-2xl flex items-center justify-center gap-3 font-bold transition-transform active:scale-95" href="#">
+<span class="material-symbols-outlined">call</span>
+                        Appel Direct
+                    </a>
+<a class="bg-surface-container-high text-on-surface w-full py-4 rounded-2xl flex items-center justify-center gap-3 font-bold transition-transform active:scale-95" href="#">
+<span class="material-symbols-outlined">mail</span>
+                        Email Professionnel
+                    </a>
 </div>
 </div>
 </section>
 </main>
-<!-- Footer -->
-<footer class="bg-stone-100 w-full mt-auto flex flex-col items-center gap-4 px-8 py-12 mb-24 text-center">
-<div class="font-headline font-bold text-stone-900 text-xl">Digital Diplomat</div>
-<div class="flex gap-6 text-stone-500 text-xs font-inter">
-<a class="hover:text-emerald-600" href="#">Privacy Policy</a>
-<a class="hover:text-emerald-600" href="#">Terms of Service</a>
-<a class="hover:text-emerald-600" href="#">LinkedIn</a>
-</div>
-<div class="font-inter text-xs text-stone-500 mt-2">
-            © 2024 Digital Diplomat. All rights reserved.
-        </div>
-</footer>
 <!-- BottomNavBar -->
-<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-white/80 backdrop-blur-md rounded-t-3xl z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
-<a class="flex flex-col items-center justify-center bg-emerald-50 text-emerald-700 rounded-xl px-3 py-1.5 active:scale-90 transition-all duration-200" href="#">
-<span class="material-symbols-outlined" data-icon="home" style="font-variation-settings: 'FILL' 1;">home</span>
-<span class="font-inter text-[10px] font-semibold uppercase tracking-wider mt-1">Home</span>
-</a>
-<a class="flex flex-col items-center justify-center text-stone-500 px-3 py-1.5 hover:text-emerald-600 active:scale-90 transition-all duration-200" href="#">
-<span class="material-symbols-outlined" data-icon="business_center">business_center</span>
-<span class="font-inter text-[10px] font-semibold uppercase tracking-wider mt-1">Services</span>
-</a>
-<a class="flex flex-col items-center justify-center text-stone-500 px-3 py-1.5 hover:text-emerald-600 active:scale-90 transition-all duration-200" href="#">
-<span class="material-symbols-outlined" data-icon="collections_bookmark">collections_bookmark</span>
-<span class="font-inter text-[10px] font-semibold uppercase tracking-wider mt-1">Portfolio</span>
-</a>
-<a class="flex flex-col items-center justify-center text-stone-500 px-3 py-1.5 hover:text-emerald-600 active:scale-90 transition-all duration-200" href="#">
-<span class="material-symbols-outlined" data-icon="mail">mail</span>
-<span class="font-inter text-[10px] font-semibold uppercase tracking-wider mt-1">Contact</span>
-</a>
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-6 bg-[#f9f9f8] dark:bg-[#1a1c1c] shadow-[0_-4px_24px_rgba(0,0,0,0.04)] rounded-t-3xl">
+<div class="flex flex-col items-center justify-center text-[#1a1c1c]/60 dark:text-[#f9f9f8]/60 px-5 py-2 hover:text-[#10b77f] transition-all active:scale-95">
+<span class="material-symbols-outlined">psychology</span>
+<span class="font-inter font-medium text-[10px] uppercase tracking-widest mt-1">Expertise</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-[#fdc425] text-[#1a1c1c] rounded-2xl px-5 py-2 active:scale-95 duration-200">
+<span class="material-symbols-outlined">work</span>
+<span class="font-inter font-medium text-[10px] uppercase tracking-widest mt-1">Case Studies</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#1a1c1c]/60 dark:text-[#f9f9f8]/60 px-5 py-2 hover:text-[#10b77f] transition-all active:scale-95">
+<span class="material-symbols-outlined">star</span>
+<span class="font-inter font-medium text-[10px] uppercase tracking-widest mt-1">Testimonials</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#1a1c1c]/60 dark:text-[#f9f9f8]/60 px-5 py-2 hover:text-[#10b77f] transition-all active:scale-95">
+<span class="material-symbols-outlined">mail</span>
+<span class="font-inter font-medium text-[10px] uppercase tracking-widest mt-1">Contact</span>
+</div>
 </nav>
 </body></html>

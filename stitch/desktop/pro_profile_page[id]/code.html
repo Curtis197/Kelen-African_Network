@@ -7,7 +7,6 @@
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
       tailwind.config = {
         darkMode: "class",
@@ -101,25 +100,25 @@
 </nav>
 <main>
 <!-- Hero Section -->
-<section class="relative min-h-screen flex items-center justify-center pt-16 overflow-hidden">
+<section class="relative min-h-screen flex items-center justify-start pt-16 overflow-hidden">
 <div class="absolute inset-0 z-0">
 <img class="w-full h-full object-cover" data-alt="Modern minimalist skyscraper glass facade reflecting a clear blue sky with sharp architectural lines and premium aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhy_lQ8urtFRkZBPEwxM8LcMKZG30YLGgnjunfOdnas-7oKII6-WB19KJ0PKVqxQKxjmED8J2rcBY8gLNz1Iaf4fXVxdAcrcG0XrFx63OFiNUnpXy_FblWyQTRZ48jopoPInCi7fgO8YKjiDN6lHDPzyWq5O8wyRpiRysgpS-o23wlIr9aIVVmMK0vgDoy9-kNtTZHbo-dAQqkWiGVFgE-QkSQwsVxhbkhyORAv7zL3JIN2r-WO4tOtO7eBlfvavPMAUba843ZdO4"/>
-<div class="absolute inset-0 bg-on-surface/40"></div>
+<div class="absolute inset-0 bg-on-surface/20"></div>
 </div>
-<div class="relative z-10 w-full max-w-5xl px-8">
-<div class="bg-surface/70 backdrop-blur-2xl p-12 md:p-20 rounded-xl border border-outline-variant/15 max-w-3xl">
-<h1 class="font-headline font-extrabold text-5xl md:text-7xl tracking-tighter text-on-surface mb-6 leading-tight">
+<div class="relative z-10 w-full max-w-7xl mx-auto px-8">
+<div class="bg-surface/70 backdrop-blur-2xl p-8 md:p-12 rounded-xl border border-outline-variant/20 max-w-2xl">
+<h1 class="font-headline font-extrabold text-4xl md:text-6xl tracking-tighter text-on-surface mb-4 leading-tight">
                         Jean-Baptiste Dupont
                     </h1>
-<p class="font-body text-xl md:text-2xl text-on-surface-variant font-medium mb-10 border-l-4 border-primary pl-6">
+<p class="font-body text-lg md:text-xl text-on-surface-variant font-medium mb-8 border-l-4 border-primary pl-4">
                         Bâtir votre vision avec rigueur et excellence.
                     </p>
 <div class="flex flex-wrap gap-4">
-<a class="bg-primary text-on-primary px-8 py-4 rounded-md font-bold flex items-center gap-2 hover:scale-[0.98] transition-transform" href="#contact">
+<a class="bg-primary text-on-primary px-6 py-3 rounded-md font-bold flex items-center gap-2 hover:scale-[0.98] transition-transform text-sm" href="#contact">
                             Consulter Expert
-                            <span class="material-symbols-outlined">arrow_forward</span>
+                            <span class="material-symbols-outlined text-base">arrow_forward</span>
 </a>
-<a class="bg-surface-container-high text-on-surface px-8 py-4 rounded-md font-bold hover:bg-surface-container-highest transition-colors" href="#portfolio">
+<a class="bg-surface-container-high text-on-surface px-6 py-3 rounded-md font-bold hover:bg-surface-container-highest transition-colors text-sm" href="#portfolio">
                             Voir Réalisations
                         </a>
 </div>
@@ -135,7 +134,10 @@
 <h2 class="font-headline font-bold text-4xl mt-2 text-on-surface">Nos Réalisations</h2>
 </div>
 <div class="h-px flex-grow bg-outline-variant/20 mx-8 hidden md:block"></div>
-<p class="text-on-surface-variant max-w-xs font-medium italic">Une sélection de projets d'exception alliant précision technique et esthétique contemporaine.</p>
+<a class="text-primary font-semibold flex items-center gap-2 hover:gap-3 transition-all duration-300 group" href="#portfolio">
+  Voir tous les projets
+  <span class="material-symbols-outlined text-base">arrow_forward</span>
+</a>
 </div>
 <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
 <!-- Featured Project -->
