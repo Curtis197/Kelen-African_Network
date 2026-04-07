@@ -64,8 +64,9 @@ export function LocationSearch({ value, onChange, placeholder = "Rechercher une 
 
   // Update input when value changes externally
   useEffect(() => {
-    if (value?.formatted_address) {
-      setInputValue(value.formatted_address);
+    if (value?.city) {
+      // Show city name instead of full address
+      setInputValue(value.city);
     } else {
       setInputValue("");
     }
@@ -119,7 +120,8 @@ export function LocationSearch({ value, onChange, placeholder = "Rechercher une 
           };
           
           onChange(locationData);
-          setInputValue(place.formatted_address || "");
+          // Show only city name in the input
+          setInputValue(city?.long_name || place.name || "");
         } else {
           console.error("Place details error:", status);
           setError("Impossible de récupérer les détails du lieu");
@@ -211,7 +213,8 @@ export function LocationSearch({ value, onChange, placeholder = "Rechercher une 
             };
 
             onChange(locationData);
-            setInputValue(result.formatted_address);
+            // Show only city name in the input
+            setInputValue(cityName);
           } else {
             console.error("Geocoding error:", status);
             setError("Impossible de déterminer votre position");
@@ -252,10 +255,10 @@ export function LocationSearch({ value, onChange, placeholder = "Rechercher une 
   return (
     <div className={`relative ${className}`}>
       <div className="relative">
-        <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
-          <MapPin className="w-5 h-5 text-stone-400" />
+        <div className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 pointer-events-none z-10">
+          <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-stone-400" />
         </div>
-        
+
         <input
           ref={inputRef}
           type="text"
@@ -264,7 +267,7 @@ export function LocationSearch({ value, onChange, placeholder = "Rechercher une 
           onFocus={handleFocus}
           onBlur={handleBlur}
           placeholder={placeholder}
-          className="w-full bg-stone-50 border-none rounded-xl sm:rounded-2xl p-3 sm:p-4 pl-12 pr-24 text-sm sm:text-base text-stone-900 focus:ring-2 focus:ring-kelen-green-500 transition-all font-medium"
+          className="w-full bg-stone-50 border-none rounded-xl sm:rounded-2xl p-3 sm:p-4 pl-10 sm:pl-12 pr-24 text-sm sm:text-base text-stone-900 focus:ring-2 focus:ring-kelen-green-500 transition-all font-medium"
           autoComplete="off"
         />
 
