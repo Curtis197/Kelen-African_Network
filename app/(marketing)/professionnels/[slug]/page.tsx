@@ -134,7 +134,8 @@ export default async function ProfessionalProfilePage({ params }: Props) {
           </div>
         </section>
 
-        {/* Portfolio Section (Bento Grid) */}
+        {/* Portfolio Section (Bento Grid) - Only shown if realizations exist */}
+        {portfolioItems.length > 0 && (
         <section className="py-16 px-4 sm:px-6 md:py-32 lg:px-12 bg-surface" id="portfolio">
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
@@ -148,128 +149,53 @@ export default async function ProfessionalProfilePage({ params }: Props) {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8">
-              {portfolioItems.length > 0 ? (
-                <>
-                  {/* Featured Project */}
-                  <div className="md:col-span-8 group relative overflow-hidden rounded-2xl md:rounded-[2.5rem] bg-white shadow-sm transition-all duration-500 hover:shadow-2xl">
-                    <Link href={`/professionnels/${slug}/realisations/${portfolioItems[0].id}`}>
-                      <img
-                        className="w-full aspect-[4/3] md:aspect-auto md:h-[600px] object-cover transition-transform duration-700 group-hover:scale-110"
-                        src={portfolioItems[0].image}
-                        alt={portfolioItems[0].title}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-stone-900/90 via-stone-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-6 md:p-12">
-                        <h3 className="text-white text-xl md:text-3xl font-black mb-2">{portfolioItems[0].title}</h3>
-                        <p className="text-white/80 font-medium text-sm md:text-lg">{portfolioItems[0].location || 'Réalisation majeure'}</p>
-                      </div>
-                    </Link>
+              {/* Featured Project - Always show first item */}
+              <div className={`${portfolioItems.length === 1 ? 'md:col-span-12' : 'md:col-span-8'} group relative overflow-hidden rounded-2xl md:rounded-[2.5rem] bg-white shadow-sm transition-all duration-500 hover:shadow-2xl`}>
+                <Link href={`/professionnels/${slug}/realisations/${portfolioItems[0].id}`}>
+                  <img
+                    className="w-full aspect-[4/3] md:aspect-auto md:h-[600px] object-cover transition-transform duration-700 group-hover:scale-110"
+                    src={portfolioItems[0].image}
+                    alt={portfolioItems[0].title}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-stone-900/90 via-stone-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-6 md:p-12">
+                    <h3 className="text-white text-xl md:text-3xl font-black mb-2">{portfolioItems[0].title}</h3>
+                    <p className="text-white/80 font-medium text-sm md:text-lg">{portfolioItems[0].location || 'Réalisation majeure'}</p>
                   </div>
+                </Link>
+              </div>
 
-                  {/* Grid Items */}
-                  <div className="md:col-span-4 grid grid-rows-2 gap-6 md:gap-8">
-                    {portfolioItems.slice(1, 3).map((item) => (
-                      <div key={item.id} className="group relative overflow-hidden rounded-2xl md:rounded-[2.5rem] bg-stone-100 shadow-sm transition-all duration-500 hover:shadow-2xl">
-                        <Link href={`/professionnels/${slug}/realisations/${item.id}`}>
-                          <img
-                            className="w-full aspect-[4/3] md:aspect-auto md:h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                            src={item.image}
-                            alt={item.title}
-                          />
-                          <div className="absolute inset-0 bg-stone-900/40 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center p-6 md:p-8 text-center">
-                            <div className="text-white">
-                              <h3 className="text-lg md:text-2xl font-black mb-2">{item.title}</h3>
-                              <p className="text-xs md:text-sm font-bold uppercase tracking-widest text-white/70">Détails du projet</p>
-                            </div>
-                          </div>
-                        </Link>
-                      </div>
-                    ))}
-                    {portfolioItems.length === 1 && (
-                       <div className="bg-stone-50 rounded-2xl md:rounded-[2.5rem] border-4 border-dashed border-stone-100 flex items-center justify-center p-8 md:p-12 text-center row-span-2">
-                          <p className="text-stone-300 font-black uppercase tracking-widest text-xs">Plus de projets à venir</p>
-                       </div>
-                    )}
-                    {portfolioItems.length === 2 && (
-                       <div className="bg-stone-50 rounded-2xl md:rounded-[2.5rem] border-4 border-dashed border-stone-100 flex items-center justify-center p-8 md:p-12 text-center">
-                          <p className="text-stone-300 font-black uppercase tracking-widest text-xs">Plus de projets à venir</p>
-                       </div>
-                    )}
-                  </div>
-                </>
-              ) : (
-                // Fallback to placeholders if no real realizations
-                <>
-                  {/* Featured Project Placeholder */}
-                  <div className="md:col-span-8 group relative overflow-hidden rounded-2xl md:rounded-[2.5rem] bg-white shadow-sm transition-all duration-500 hover:shadow-2xl">
-                    <img
-                      className="w-full aspect-[4/3] md:aspect-auto md:h-[600px] object-cover transition-transform duration-700 group-hover:scale-110"
-                      src={pro.portfolio_photos?.[1] || "https://images.unsplash.com/photo-1600585154340-be6199f7d209?auto=format&fit=crop&q=80"}
-                      alt="Réalisation majeure"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-stone-900/90 via-stone-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-6 md:p-12">
-                      <h3 className="text-white text-xl md:text-3xl font-black mb-2">Projet d&apos;Excellence</h3>
-                      <p className="text-white/80 font-medium text-sm md:text-lg">Conception et réalisation intégrale - Haut de gamme</p>
-                    </div>
-                  </div>
-
-                  {/* Grid Items Placeholder */}
-                  <div className="md:col-span-4 grid grid-rows-2 gap-6 md:gap-8">
-                    {[2, 3].map((idx) => (
-                      <div key={idx} className="group relative overflow-hidden rounded-2xl md:rounded-[2.5rem] bg-stone-100 shadow-sm transition-all duration-500 hover:shadow-2xl">
+              {/* Secondary Projects Grid - Only show if more than 1 */}
+              {portfolioItems.length > 1 && (
+                <div className="md:col-span-4 grid grid-rows-2 gap-6 md:gap-8">
+                  {portfolioItems.slice(1, 3).map((item) => (
+                    <div key={item.id} className="group relative overflow-hidden rounded-2xl md:rounded-[2.5rem] bg-stone-100 shadow-sm transition-all duration-500 hover:shadow-2xl">
+                      <Link href={`/professionnels/${slug}/realisations/${item.id}`}>
                         <img
                           className="w-full aspect-[4/3] md:aspect-auto md:h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                          src={pro.portfolio_photos?.[idx] || `https://images.unsplash.com/photo-1600607687940-46764b36872a?auto=format&fit=crop&q=80&sig=${idx}`}
-                          alt={`Réalisation ${idx}`}
+                          src={item.image}
+                          alt={item.title}
                         />
                         <div className="absolute inset-0 bg-stone-900/40 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center p-6 md:p-8 text-center">
                           <div className="text-white">
-                            <h3 className="text-lg md:text-2xl font-black mb-2">Réalisation {idx}</h3>
-                            <p className="text-xs md:text-sm font-bold uppercase tracking-widest text-white/70">Expertise technique</p>
+                            <h3 className="text-lg md:text-2xl font-black mb-2">{item.title}</h3>
+                            <p className="text-xs md:text-sm font-bold uppercase tracking-widest text-white/70">Détails du projet</p>
                           </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
-                </>
+                      </Link>
+                    </div>
+                  ))}
+                  {/* Only show placeholder if exactly 2 items */}
+                  {portfolioItems.length === 2 && (
+                     <div className="bg-stone-50 rounded-2xl md:rounded-[2.5rem] flex items-center justify-center">
+                        <p className="text-stone-300 font-black uppercase tracking-widest text-xs p-8 text-center">Plus de projets à venir</p>
+                     </div>
+                  )}
+                </div>
               )}
-
-
-              {/* Secondary Grid */}
-              <div className="md:col-span-4 group overflow-hidden rounded-2xl md:rounded-[2.5rem] bg-white shadow-sm transition-all duration-500 hover:shadow-2xl">
-                 <div className="p-6 md:p-10">
-                    <h3 className="text-xl md:text-2xl font-black text-stone-900 mb-2">Projet Récents</h3>
-                    <p className="text-stone-500 font-medium text-sm md:text-base">Bénéficiez d&apos;une expertise reconnue sur le terrain.</p>
-                 </div>
-                 <img
-                   className="w-full aspect-[4/3] md:h-64 object-cover"
-                   src={pro.portfolio_photos?.[4] || "https://images.unsplash.com/photo-1541888946425-d81bb19480c5?auto=format&fit=crop&q=80"}
-                   alt="Dernières réalisations"
-                 />
-              </div>
-
-              <div className="md:col-span-4 group overflow-hidden rounded-2xl md:rounded-[2.5rem] bg-white shadow-sm transition-all duration-500 hover:shadow-2xl">
-                 <div className="p-6 md:p-10">
-                    <h3 className="text-xl md:text-2xl font-black text-stone-900 mb-2">Engagements</h3>
-                    <p className="text-stone-500 font-medium text-sm md:text-base">Qualité, délais et transparence garantis par contrat.</p>
-                 </div>
-                 <img
-                   className="w-full aspect-[4/3] md:h-64 object-cover"
-                   src={pro.portfolio_photos?.[5] || "https://images.unsplash.com/photo-1503387762-592dea58ef23?auto=format&fit=crop&q=80"}
-                   alt="Qualité d'exécution"
-                 />
-              </div>
-
-              <div className="md:col-span-4 group overflow-hidden rounded-2xl md:rounded-[2.5rem] bg-stone-900 shadow-sm transition-all duration-500 hover:shadow-2xl flex flex-col justify-center items-center p-8 md:p-12 text-center text-white">
-                <Award className="w-12 h-12 md:w-16 md:h-16 text-kelen-green-400 mb-4 md:mb-6" />
-                <h3 className="text-2xl md:text-3xl font-black mb-3 md:mb-4">Certifié Kelen</h3>
-                <p className="text-white/60 font-medium text-sm md:text-base mb-6 md:mb-8">Ce professionnel a passé avec succès toutes les étapes de vérification de notre plateforme.</p>
-                 <Link href="/a-propos" className="bg-white/10 hover:bg-white/20 text-white px-6 md:px-8 py-2.5 md:py-3 rounded-full text-[10px] md:text-xs font-black uppercase tracking-widest transition-all inline-block">
-                   En savoir plus
-                 </Link>
-              </div>
             </div>
           </div>
         </section>
+        )}
 
         {/* Philosophy Section */}
         <section className="py-16 md:py-32 bg-stone-50 rounded-t-[3rem] md:rounded-none" id="about">
