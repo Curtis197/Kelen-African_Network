@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Heart, MessageCircle } from "lucide-react";
 import Link from "next/link";
 import PriceDisplay from "@/components/projects/PriceDisplay";
 
@@ -45,7 +45,9 @@ export default async function RealisationsListPage({ params }: Props) {
     .from("professional_realizations")
     .select(`
       *,
-      images:realization_images(*)
+      images:realization_images(*),
+      likes:realization_likes(count),
+      comments:realization_comments(count, filter=status.eq.approved)
     `)
     .eq("professional_id", pro.id)
     .order("created_at", { ascending: false });
@@ -60,7 +62,9 @@ export default async function RealisationsListPage({ params }: Props) {
           image: mainImage?.url || "https://images.unsplash.com/photo-1600585154340-be6199f7d209?auto=format&fit=crop&q=80",
           location: r.location,
           price: r.price,
-          currency: r.currency || "XOF"
+          currency: r.currency || "XOF",
+          likeCount: r.likes?.[0]?.count || 0,
+          commentCount: r.comments?.[0]?.count || 0
         };
       })
     : [];
@@ -111,8 +115,18 @@ export default async function RealisationsListPage({ params }: Props) {
                         {item.description}
                       </p>
                       {item.price && (
-                        <PriceDisplay amount={item.price} currency={item.currency} />
+                        <PriceDisplay amount={item.price} currency={item.currency} className="mb-3" />
                       )}
+                      <div className="flex items-center gap-4 text-sm text-stone-400">
+                        <span className="inline-flex items-center gap-1">
+                          <Heart className="w-4 h-4" />
+                          {item.likeCount}
+                        </span>
+                        <span className="inline-flex items-center gap-1">
+                          <MessageCircle className="w-4 h-4" />
+                          {item.commentCount}
+                        </span>
+                      </div>
                     </div>
                   </Link>
                 ))}

@@ -11,6 +11,10 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import PriceDisplay from "@/components/projects/PriceDisplay";
+import LikeButton from "@/components/interactions/LikeButton";
+import RealizationCommentThread from "@/components/interactions/RealizationCommentThread";
+import { getRealizationLikeStatus } from "@/lib/actions/realization-likes";
+import { getRealizationComments } from "@/lib/actions/realization-comments";
 
 interface Props {
   params: Promise<{
@@ -58,6 +62,10 @@ export default async function RealizationDetailPage({ params }: Props) {
   const mainImageObj = realization.images?.find((img: any) => img.is_main) || realization.images?.[0];
   const mainImage = mainImageObj?.url || "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80";
   const galleryImages = realization.images ? realization.images.filter((img: any) => img.id !== mainImageObj?.id).map((img: any) => img.url) : [];
+
+  // Fetch like status and comments
+  const likeStatus = await getRealizationLikeStatus(id);
+  const comments = await getRealizationComments(id);
 
   return (
     <div className="bg-[#f9f9f8] font-sans text-[#1a1c1c] antialiased min-h-screen">
@@ -112,95 +120,101 @@ export default async function RealizationDetailPage({ params }: Props) {
           </div>
         </section>
 
-        <div className="grid grid-cols-1 lg:grid-cols-10 gap-16">
-          <div className="lg:col-span-7 space-y-16">
-            <section>
-              <h2 className="text-3xl font-black mb-8 text-[#1a1c1c] tracking-tight">Vision & Exécution</h2>
-              <div className="space-y-6 text-xl leading-relaxed text-[#3c4a42] font-medium max-w-3xl border-l-4 border-[#10b77f] pl-8">
-                <p>{realization.description}</p>
-              </div>
-            </section>
-
-            {galleryImages.length > 0 && (
-              <section className="grid grid-cols-2 md:grid-cols-4 auto-rows-[300px] gap-6">
-                {galleryImages.map((img: string, i: number) => (
-                  <div
-                    key={i}
-                    className={`${i === 0 ? 'col-span-2 row-span-2' : ''} rounded-2xl overflow-hidden group shadow-lg border border-white/20`}
-                  >
-                    <img
-                      src={img}
-                      alt={`${realization.title} - image ${i + 1}`}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
-                  </div>
-                ))}
-              </section>
-            )}
+        <section className="mt-16">
+          {/* Like Button */}
+          <div className="mb-12">
+            <LikeButton
+              realizationId={realization.id}
+              initialLiked={likeStatus.liked}
+              initialCount={likeStatus.count}
+              size="lg"
+            />
           </div>
 
-          <div className="lg:col-span-3">
-            <div className="sticky top-32 space-y-8">
-              <div className="bg-white p-10 rounded-[2.5rem] shadow-2xl border border-white relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-2 bg-[#10b77f]"></div>
-                <h3 className="text-xl font-black mb-10 text-[#1a1c1c] border-b border-[#f3f4f3] pb-6 uppercase tracking-[0.1em]">Spécifications</h3>
-                <div className="space-y-8">
-                  {/* Price Display */}
-                  {realization.price && (
-                    <div className="flex items-start gap-4">
-                      <div className="bg-[#10b77f]/10 p-3 rounded-2xl text-[#10b77f]">
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
+          <div className="grid grid-cols-1 lg:grid-cols-10 gap-16">
+            <div className="lg:col-span-7 space-y-16">
+              <section>
+                <h2 className="text-3xl font-black mb-8 text-[#1a1c1c] tracking-tight">Vision & Exécution</h2>
+                <div className="space-y-6 text-xl leading-relaxed text-[#3c4a42] font-medium max-w-3xl border-l-4 border-[#10b77f] pl-8">
+                  <p>{realization.description}</p>
+                </div>
+              </section>
+
+              {galleryImages.length > 0 && (
+                <section className="grid grid-cols-2 md:grid-cols-4 auto-rows-[300px] gap-6">
+                  {galleryImages.map((img: string, i: number) => (
+                    <div
+                      key={i}
+                      className={`${i === 0 ? 'col-span-2 row-span-2' : ''} rounded-2xl overflow-hidden group shadow-lg border border-white/20`}
+                    >
+                      <img
+                        src={img}
+                        alt={`${realization.title} - image ${i + 1}`}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
+                    </div>
+                  ))}
+                </section>
+              )}
+
+              {/* Comments Section */}
+              <section className="border-t border-[#bbcabf]/20 pt-12">
+                <RealizationCommentThread
+                  realizationId={realization.id}
+                  initialComments={comments}
+                />
+              </section>
+            </div>
+
+            <div className="lg:col-span-3">
+              <div className="sticky top-32 space-y-8">
+                <div className="bg-white p-10 rounded-[2.5rem] shadow-2xl border border-white relative overflow-hidden">
+                  <div className="absolute top-0 left-0 w-full h-2 bg-[#10b77f]"></div>
+                  <h3 className="text-xl font-black mb-10 text-[#1a1c1c] border-b border-[#f3f4f3] pb-6 uppercase tracking-[0.1em]">Spécifications</h3>
+                  <div className="space-y-8">
+                    {/* Price Display */}
+                    {realization.price && (
+                      <div className="flex items-start gap-4">
+                        <div className="bg-[#10b77f]/10 p-3 rounded-2xl text-[#10b77f]">
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-black text-[#1a1c1c]/40 uppercase tracking-[0.2em]">Budget Projet</p>
+                          <PriceDisplay amount={realization.price} currency={realization.currency || 'XOF'} className="text-2xl" />
+                        </div>
                       </div>
-                      <div>
-                        <p className="text-[10px] font-black text-[#1a1c1c]/40 uppercase tracking-[0.2em]">Budget Projet</p>
-                        <PriceDisplay amount={realization.price} currency={realization.currency || 'XOF'} className="text-2xl" />
-                      </div>
-                    </div>
-                  )}
-                  
-                  <div className="flex items-start gap-4">
-                    <div className="bg-[#f3f4f3] p-3 rounded-2xl text-[#10b77f]">
-                      <MapPin className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <p className="text-[10px] font-black text-[#1a1c1c]/40 uppercase tracking-[0.2em]">Localisation</p>
-                      <p className="text-[#1a1c1c] font-bold text-lg">{realization.location || pro.city}</p>
-                    </div>
-                  </div>
-                  {realization.completion_date && (
+                    )}
+                    
                     <div className="flex items-start gap-4">
                       <div className="bg-[#f3f4f3] p-3 rounded-2xl text-[#10b77f]">
-                        <Calendar className="w-5 h-5" />
+                        <MapPin className="w-5 h-5" />
                       </div>
                       <div>
-                        <p className="text-[10px] font-black text-[#1a1c1c]/40 uppercase tracking-[0.2em]">Date de réalisation</p>
-                        <p className="text-[#1a1c1c] font-bold text-lg">
-                          {new Date(realization.completion_date).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}
-                        </p>
+                        <p className="text-[10px] font-black text-[#1a1c1c]/40 uppercase tracking-[0.2em]">Localisation</p>
+                        <p className="text-[#1a1c1c] font-bold text-lg">{realization.location || pro.city}</p>
                       </div>
                     </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="rounded-[2rem] overflow-hidden h-48 bg-[#e2e2e2] relative group cursor-pointer shadow-lg border border-white/20">
-                <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors z-10"></div>
-                <img 
-                  alt="Terrain Map" 
-                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" 
-                  src="https://images.unsplash.com/photo-1526772662000-3f88f10405ff?auto=format&fit=crop&q=80"
-                />
-                <div className="absolute bottom-6 left-6 z-20">
-                  <span className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] text-[#1a1c1c] flex items-center gap-2 shadow-sm">
-                    <MapPin className="w-3 h-3" /> Voir le Terrain
-                  </span>
+                    {realization.completion_date && (
+                      <div className="flex items-start gap-4">
+                        <div className="bg-[#f3f4f3] p-3 rounded-2xl text-[#10b77f]">
+                          <Calendar className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-black text-[#1a1c1c]/40 uppercase tracking-[0.2em]">Date de réalisation</p>
+                          <p className="text-[#1a1c1c] font-bold text-lg">
+                            {new Date(realization.completion_date).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
         <section className="mt-40">
           <div className="bg-[#1a1c1c] rounded-[3.5rem] p-12 md:p-24 overflow-hidden flex flex-col md:flex-row items-center gap-16 relative shadow-3xl">

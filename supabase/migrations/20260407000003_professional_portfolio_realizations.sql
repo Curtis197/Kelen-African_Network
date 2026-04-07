@@ -36,8 +36,6 @@ CREATE TABLE IF NOT EXISTS professional_realizations (
 
 -- Indexes
 CREATE INDEX IF NOT EXISTS idx_realizations_professional_id ON professional_realizations(professional_id);
-CREATE INDEX IF NOT EXISTS idx_realizations_featured ON professional_realizations(professional_id, is_featured) WHERE is_featured = TRUE;
-CREATE INDEX IF NOT EXISTS idx_realizations_order ON professional_realizations(professional_id, order_index);
 CREATE INDEX IF NOT EXISTS idx_portfolio_professional_id ON professional_portfolio(professional_id);
 
 -- Auto-update triggers
