@@ -44,7 +44,7 @@ export function LoginForm({ defaultRole }: LoginFormProps) {
         if (role?.startsWith("pro_")) {
           router.push("/pro/dashboard");
         } else if (role === "admin") {
-          router.push("/admin/dashboard");
+          router.push("/admin");
         } else {
           router.push("/dashboard");
         }

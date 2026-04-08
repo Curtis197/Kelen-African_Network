@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The Diaspora | Project Realization</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-container": "#10b77f",
+              "error-container": "#ffdad6",
+              "surface-tint": "#006c49",
+              "on-tertiary-fixed": "#410006",
+              "on-primary-fixed": "#002113",
+              "on-secondary-fixed-variant": "#5a4300",
+              "on-secondary-fixed": "#251a00",
+              "surface-variant": "#e2e2e2",
+              "secondary-fixed-dim": "#f7be1d",
+              "on-secondary": "#ffffff",
+              "error": "#ba1a1a",
+              "on-primary-fixed-variant": "#005236",
+              "on-error-container": "#93000a",
+              "surface": "#f9f9f8",
+              "on-secondary-container": "#6d5200",
+              "on-tertiary": "#ffffff",
+              "inverse-on-surface": "#f1f1f0",
+              "surface-container-low": "#f3f4f3",
+              "outline-variant": "#bbcabf",
+              "secondary-container": "#fdc425",
+              "surface-dim": "#dadad9",
+              "surface-container-high": "#e8e8e7",
+              "tertiary": "#a43a3b",
+              "outline": "#6c7a71",
+              "on-surface-variant": "#3c4a42",
+              "tertiary-fixed": "#ffdad7",
+              "primary-fixed-dim": "#50dea3",
+              "tertiary-container": "#f97a77",
+              "surface-container-lowest": "#ffffff",
+              "primary-fixed": "#70fbbd",
+              "inverse-primary": "#50dea3",
+              "tertiary-fixed-dim": "#ffb3af",
+              "surface-container": "#eeeeed",
+              "surface-bright": "#f9f9f8",
+              "on-error": "#ffffff",
+              "on-background": "#1a1c1c",
+              "inverse-surface": "#2f3130",
+              "secondary-fixed": "#ffdf9a",
+              "on-tertiary-fixed-variant": "#842325",
+              "surface-container-highest": "#e2e2e2",
+              "on-tertiary-container": "#6f1218",
+              "on-primary": "#ffffff",
+              "secondary": "#785a00",
+              "primary": "#006c49",
+              "on-primary-container": "#00402a",
+              "on-surface": "#1a1c1c",
+              "background": "#f9f9f8"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(249, 249, 248, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<!-- Top Navigation Anchor -->
+<nav class="fixed top-0 w-full z-50 bg-[#f9f9f8]/70 backdrop-blur-xl border-b border-[#bbcabf]/15 shadow-sm">
+<div class="flex items-center justify-between px-8 py-4 w-full max-w-[1440px] mx-auto">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold tracking-tighter text-[#1a1c1c]">The Diaspora</span>
+<div class="hidden md:flex items-center gap-6 font-headline font-bold text-sm tracking-tight">
+<a class="text-[#1a1c1c]/60 hover:text-[#10b77f] transition-all duration-200" href="#">Discover</a>
+<a class="text-[#10b77f] border-b-2 border-[#10b77f] pb-1" href="#">Projects</a>
+<a class="text-[#1a1c1c]/60 hover:text-[#10b77f] transition-all duration-200" href="#">Vault</a>
+<a class="text-[#1a1c1c]/60 hover:text-[#10b77f] transition-all duration-200" href="#">Studio</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:opacity-80 transition-opacity">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:opacity-80 transition-opacity">account_circle</span>
+</div>
+</div>
+</nav>
+<main class="pt-24 pb-20 max-w-[1440px] mx-auto px-8">
+<!-- Breadcrumb & Back -->
+<div class="mb-12 flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex items-center gap-2 text-sm font-medium text-on-surface-variant/60">
+<span>Experts</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span>Elena Rossi</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-on-surface">The Marrow Pavilion</span>
+</div>
+<a class="inline-flex items-center gap-2 px-6 py-2.5 bg-surface-container-low hover:bg-surface-container-high text-on-surface font-semibold text-sm rounded-full transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-lg">arrow_back</span>
+            Back to Portfolio
+        </a>
+</div>
+<!-- Hero Section -->
+<section class="relative w-full aspect-[21/9] rounded-2xl overflow-hidden mb-16 shadow-lg">
+<img alt="The Marrow Pavilion Hero" class="w-full h-full object-cover" data-alt="luxury modern architectural villa with minimalist concrete walls and floor-to-ceiling glass at sunset with warm ambient lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwxcHV3scrotPl6s2dNdjfWPQoskp68nSTO9aiwfJOR8WEBtLzkwLpnfx2xkb-xxalve7SmkNl099-7SHL0099mFFJcghmQ_9UUgl-1gma2FlaZFF8OBCwUZvVtEO8HXfmcOZJfYUEIdCAqzkbi-aHDPfXbYbWHhASYBkHUnDBmp8HpCq4K5h_eQrKDVxVQpMwHoACrPFNy-81OouLRBc0_mxRe_aVZGSOs4G3E2pMB2O1nvjXtUck564UkjQzCGqYQtT4pJqdPDE"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex flex-col justify-end p-12">
+<div class="flex flex-wrap gap-3 mb-6">
+<span class="glass-card px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest text-on-surface border border-white/20">Residential Architecture</span>
+<span class="glass-card px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest text-on-surface border border-white/20 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">location_on</span> Tuscany, Italy
+                </span>
+</div>
+<h1 class="font-headline font-extrabold text-7xl md:text-8xl text-white tracking-tighter leading-none max-w-4xl">
+                The Marrow Pavilion
+            </h1>
+</div>
+</section>
+<!-- Main Content Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-10 gap-16">
+<!-- Left Column: Narrative & Gallery -->
+<div class="lg:col-span-7 space-y-16">
+<section>
+<h2 class="font-headline font-bold text-3xl mb-6 text-on-surface">Description</h2>
+<div class="space-y-6 text-lg leading-relaxed text-on-surface-variant font-light max-w-3xl">
+<p>
+                        Nestled within the undulating hills of the Val d’Orcia, <span class="text-primary font-medium">The Marrow Pavilion</span> represents a radical departure from traditional Tuscan vernacular. Our objective was to create a structure that didn't just sit on the land, but emerged from it as a geological extension. 
+                    </p>
+<p>
+                        Using a proprietary blend of local stone dust and high-performance carbon-neutral concrete, we achieved a "bone-white" finish that reflects the harsh Mediterranean sun while providing exceptional thermal mass. The interior philosophy revolves around "The Void"—a central atrium that acts as a natural lung, drawing cool air from the subterranean wine cellar through the upper living quarters.
+                    </p>
+</div>
+</section>
+<!-- Bento Gallery -->
+<section class="bento-grid">
+<div class="rounded-2xl overflow-hidden group aspect-[4/3] shadow-sm">
+<img alt="Interior View 1" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="interior view of a minimalist living room with white curved walls and large windows overlooking a valley" src="https://lh3.googleusercontent.com/aida-public/AB6AXuClsS_jcl504ZHz8hWakMfc5yEQQxD-O6jpZzEvpsp1THxiRxe2DMEelSrUhOrJ7dHsKbqAVd06sOOfcb0R39dDhlQrIJ-4wZslRXbMm6j1CNL5VKTpfnkdatBP-NuawOXpCw5jxdDm36Iwk6v4wcDdoz3gRvex8Se3i76Wp_jctdiGc6c4YIoaViO32K5fn3WJTkjzAfxgzh17vEo5r7NTnnxpO6x9TOYcJbShFezNR_hhfEQwyCiot0__cB15YWhwKA53Uq92ke4"/>
+</div>
+<div class="rounded-2xl overflow-hidden group aspect-[4/3] shadow-sm">
+<img alt="Interior View 2" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="detail of a stone staircase with soft shadows and minimalist handrail in a modern house" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCj3yuA28dYpuvHuVEFmSuzXD7eLfan7A9HJcXXMVO5fptCLd3oui_6OOv0cduIekS0aGAM63s2UFX42KiBtk3I4W5TjIGMNO33F0x8-H8y7MbVrPOQ4FuvVECiGvGO1RFYh-dKrRPZrs12jVeJxE1DzwIuGeBomO17_uBkcqjL2SBciSfvZ1L6cIf_sjaOVnA8M0fPF6X24ZB4YE8Zd2xPyhRIBjaRNvzDhxPUmxnwRQ6Q7WPlVd_yj66p9iHaQYGKO3yqzTx8fpA"/>
+</div>
+<div class="rounded-2xl overflow-hidden group aspect-[4/3] shadow-sm">
+<img alt="Interior View 3" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="modern kitchen with marble island and integrated appliances in a bright open space" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7XsPpjYXW2ttlgfBKsGP03LMiqEVuDP133JJ3ThFtxkj4Cu0vtx-Y2qy0iEI-3A_Fe2aht36Qg7BuD32mk08KHScPYWM6RlR97gtpDk1MAIm_xDqmNcoNFholuILJPApTSxHydD-QpBtIYQzlRMEPmaxSW8Ob5keWGskR4la5EoFRK9MNgdER67w4NVZz2uUDvO1VG_SXCHut0Gxr0TIJ7HLQbYSkn0OryA9iNveNI3ANU6SnNYT7USNmfa9_bPnJLp1aIdwPuX8"/>
+</div>
+<div class="rounded-2xl overflow-hidden group aspect-[4/3] shadow-sm">
+<img alt="Exterior View 2" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="outdoor infinity pool reflecting the blue sky at twilight with minimalist landscaping" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGZTqh6QfsdbtRBkXUAe_yt2SyOi5dC9IIW8wX2Y4AsjRHFpP--xYmKoAsKR2tRifxAh99g_n7KPjfXgka6o92oK0SSdqDfG4FuL4yIzXsuGc7GZojiTXI4SAbNmgccmEwuZdNaTC5jyq1zHXKQcVLoEOhCK7vBshvG_KjeMKs4RZYnuDnRGL-PP1A1ShOnTvPJd219lroy8KY9H-ehyoeyxV2LE1mT0yyyZ2Hy6w2G49o6Knmef-cHmZkFPh9OQ_XOwDTQuQ0D3c"/>
+</div>
+</section>
+</div>
+<!-- Right Column: Specs Card -->
+<div class="lg:col-span-3">
+<div class="sticky top-32 space-y-8">
+<!-- Project Specs -->
+<div class="bg-surface-container-lowest p-8 rounded-2xl shadow-sm border border-outline-variant/10">
+<h3 class="font-headline font-bold text-xl mb-8 border-b border-outline-variant/15 pb-4">Project Specs</h3>
+<div class="space-y-6">
+<div class="flex items-start gap-4">
+<div class="bg-surface-container-low p-2 rounded-lg">
+<span class="material-symbols-outlined text-primary">location_on</span>
+</div>
+<div>
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Location</p>
+<p class="text-on-surface font-semibold">Siena, Val d'Orcia, IT</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="bg-surface-container-low p-2 rounded-lg">
+<span class="material-symbols-outlined text-primary">calendar_today</span>
+</div>
+<div>
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Completed</p>
+<p class="text-on-surface font-semibold">October 2023</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="bg-surface-container-low p-2 rounded-lg">
+<span class="material-symbols-outlined text-primary">payments</span>
+</div>
+<div>
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Budget Range</p>
+<p class="text-on-surface font-semibold">€2.4M - €3.1M</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="bg-surface-container-low p-2 rounded-lg">
+<span class="material-symbols-outlined text-primary">verified_user</span>
+</div>
+<div>
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Status</p>
+<div class="flex items-center gap-2">
+<span class="text-on-surface font-semibold">Verified Realization</span>
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Map/Location Teaser -->
+<div class="rounded-2xl overflow-hidden h-48 bg-surface-container-highest relative group cursor-pointer">
+<div class="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors z-10"></div>
+<img alt="Project Location Map" class="w-full h-full object-cover" data-alt="abstract stylized topographical map of rolling hills in Tuscany" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCujlGdRbrwFoeQI28xeVVOwJsfTUSGigEHP-8govooUrgBxcAu1UmULljHB33svR_7defJhtBuF0BuDyh0xaPotpD8_qUt-7oGmka1OzqBPrF7EMzWJkS2uwwMzC-oqq6ohRYeM5y5Tj7Wj-XcBw-vACxXX1RgCr-g3bk2zcq4i9DrO30t50Ti35tcT1Y8OusDBi5wICJsLrOPTHHLxhzpQfcmMa6s5haZPWHOv-0x4C3Gb1QZQM0oCAbeQ4qGiauXvbqJ_rQi61c"/>
+<div class="absolute bottom-4 left-4 z-20">
+<span class="bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-on-surface flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-xs">map</span> View Terrain Map
+                        </span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Commentaires et Retours Section -->
+<section class="mt-24">
+<div class="flex items-end justify-between mb-12">
+<div>
+<h2 class="font-headline font-bold text-4xl mb-4 tracking-tight">Ce qu'en disent nos partenaires</h2>
+<div class="h-1 w-20 bg-primary-container rounded-full"></div>
+</div>
+<div class="hidden md:flex items-center gap-2 text-primary font-bold text-sm tracking-wide uppercase">
+<span class="material-symbols-outlined">verified</span> 
+                Témoignages Vérifiés
+            </div>
+</div>
+<div class="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
+<!-- Testimonial 1 -->
+<div class="break-inside-avoid bg-surface-container-low p-8 rounded-2xl border border-outline-variant/10 shadow-sm hover:shadow-md transition-shadow duration-300">
+<p class="text-on-surface-variant leading-relaxed mb-6 italic">
+                    "La précision technique d'Elena sur The Marrow Pavilion a redéfini nos standards de collaboration. L'intégration de la pierre locale dans une structure aussi moderne est une prouesse technique rare."
+                </p>
+<div class="flex items-center gap-4 border-t border-outline-variant/15 pt-6">
+<div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center text-primary font-bold">ML</div>
+<div>
+<h4 class="font-headline font-bold text-on-surface">Marc Laurent</h4>
+<p class="text-xs text-on-surface-variant/70 font-medium uppercase tracking-wider">Directeur Technique, BuildStone Group</p>
+</div>
+</div>
+</div>
+<!-- Testimonial 2 -->
+<div class="break-inside-avoid bg-surface-container-low p-8 rounded-2xl border border-outline-variant/10 shadow-sm hover:shadow-md transition-shadow duration-300">
+<p class="text-on-surface-variant leading-relaxed mb-6 italic">
+                    "Une vision esthétique qui ne sacrifie jamais la durabilité. Travailler sur ce projet nous a permis d'explorer de nouvelles textures de béton bas carbone."
+                </p>
+<div class="flex items-center gap-4 border-t border-outline-variant/15 pt-6">
+<div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center text-primary font-bold">SB</div>
+<div>
+<h4 class="font-headline font-bold text-on-surface">Sophie Bernard</h4>
+<p class="text-xs text-on-surface-variant/70 font-medium uppercase tracking-wider">Consultante LEED &amp; Durabilité</p>
+</div>
+</div>
+</div>
+<!-- Testimonial 3 -->
+<div class="break-inside-avoid bg-surface-container-low p-8 rounded-2xl border border-outline-variant/10 shadow-sm hover:shadow-md transition-shadow duration-300">
+<p class="text-on-surface-variant leading-relaxed mb-6 italic">
+                    "Le respect des délais et du budget sur un chantier aussi complexe que The Marrow Pavilion témoigne du professionnalisme exceptionnel de l'équipe d'Elena Rossi."
+                </p>
+<div class="flex items-center gap-4 border-t border-outline-variant/15 pt-6">
+<div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center text-primary font-bold">PV</div>
+<div>
+<h4 class="font-headline font-bold text-on-surface">Pietro Volpe</h4>
+<p class="text-xs text-on-surface-variant/70 font-medium uppercase tracking-wider">Investisseur Immobilier High-End</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Expert CTA Section -->
+<section class="mt-32 relative">
+<div class="bg-inverse-surface rounded-[2rem] p-12 md:p-16 overflow-hidden flex flex-col md:flex-row items-center gap-12 relative">
+<!-- Background Decorative Pattern -->
+<div class="absolute inset-0 opacity-10 pointer-events-none">
+<div class="absolute top-0 right-0 w-96 h-96 bg-primary rounded-full blur-[100px] -mr-48 -mt-48"></div>
+</div>
+<div class="relative z-10 w-32 h-32 md:w-48 md:h-48 flex-shrink-0">
+<img alt="Expert Avatar" class="w-full h-full object-cover rounded-full border-4 border-primary-container shadow-2xl" data-alt="professional portrait of a middle-aged woman architect with glasses and a friendly, confident expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDav0ao8yhYVuyrb2KUH5Zi7BvGP0dWt47aAXfxCfORa5B_vFQ2wgYitAwLkh_0ZHmd6MsfYRfgsO5-LiDbfAH0nx1bHJso3fQT_5JKwuWWgT1m7Z9ijJXq_4ejwOCSzDlI12ljVSk6ki6HoI4ZAKtX7vM5FbxileOzo0WO1bzYFWm4ffmn4KDXhzq1am6DNA3TGw9uutuf8EoiqRvkp2Hqr9h6vQA88Pt2912iNV62VkEsnrUJddGpZlSTkaLH5vccGyP-TClfR94"/>
+</div>
+<div class="relative z-10 flex-grow text-center md:text-left">
+<h2 class="font-headline font-bold text-4xl md:text-5xl text-inverse-on-surface mb-4">Start a realization like this.</h2>
+<p class="text-lg text-inverse-on-surface/70 mb-8 max-w-xl">
+                    Interested in Elena Rossi's architectural approach? Contact her directly to discuss your project requirements and vision.
+                </p>
+<div class="flex flex-wrap justify-center md:justify-start gap-4">
+<button class="bg-primary-container hover:opacity-90 transition-all duration-200 text-on-primary-container px-8 py-4 rounded-xl font-bold flex items-center gap-3 shadow-lg active:scale-95">
+<span class="material-symbols-outlined">mail</span>
+                        Request Consultation
+                    </button>
+<button class="bg-[#ffffff]/10 hover:bg-[#ffffff]/20 transition-all duration-200 text-white px-8 py-4 rounded-xl font-bold flex items-center gap-3 backdrop-blur-md active:scale-95">
+<span class="material-symbols-outlined">chat</span>
+                        Message via WhatsApp
+                    </button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Simple Footer -->
+<footer class="bg-surface-container-low border-t border-outline-variant/10 py-12">
+<div class="max-w-[1440px] mx-auto px-8 flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex flex-col gap-2 items-center md:items-start">
+<span class="text-xl font-bold tracking-tighter text-[#1a1c1c]">The Diaspora</span>
+<p class="text-xs text-on-surface-variant font-medium tracking-wide">© 2024 DIASPORA GLOBAL. ALL RIGHTS RESERVED.</p>
+</div>
+<div class="flex items-center gap-8 text-sm font-bold text-on-surface-variant uppercase tracking-widest">
+<a class="hover:text-primary transition-colors" href="#">Privacy</a>
+<a class="hover:text-primary transition-colors" href="#">Terms</a>
+<a class="hover:text-primary transition-colors" href="#">Contact</a>
+</div>
+</div>
+</footer>
+</body></html>

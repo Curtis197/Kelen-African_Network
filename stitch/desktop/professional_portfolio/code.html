@@ -66,7 +66,17 @@
               "body": ["Inter"],
               "label": ["Inter"]
             },
-            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            borderRadius: {
+              "DEFAULT": "0.25rem",
+              "lg": "0.5rem",
+              "xl": "0.75rem",
+              "2xl": "1.5rem",
+              "full": "9999px"
+            },
+            boxShadow: {
+              'lifting': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 40px 60px -12px rgba(0, 0, 0, 0.15)',
+              'soft': '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+            }
           },
         },
       }
@@ -86,7 +96,7 @@
 </head>
 <body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
 <!-- Top Navigation Bar -->
-<nav class="fixed top-0 w-full z-50 bg-surface/70 backdrop-blur-xl flex justify-between items-center px-8 py-4 max-w-full mx-auto">
+<nav class="fixed top-0 w-full z-50 bg-surface/70 backdrop-blur-xl flex justify-between items-center px-8 py-4 max-w-full mx-auto border-b border-outline-variant/10">
 <div class="font-manrope font-extrabold text-xl tracking-tighter text-on-surface">SERVICEX</div>
 <div class="hidden md:flex gap-8 items-center">
 <a class="font-manrope font-bold tracking-tight text-sm text-on-surface border-b-2 border-primary pb-1" href="#portfolio">Portfolio</a>
@@ -100,83 +110,105 @@
 </nav>
 <main>
 <!-- Hero Section -->
-<section class="relative min-h-screen flex items-center justify-start pt-16 overflow-hidden">
+<section class="relative h-[80vh] flex items-center justify-center overflow-hidden">
 <div class="absolute inset-0 z-0">
-<img class="w-full h-full object-cover" data-alt="Modern minimalist skyscraper glass facade reflecting a clear blue sky with sharp architectural lines and premium aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhy_lQ8urtFRkZBPEwxM8LcMKZG30YLGgnjunfOdnas-7oKII6-WB19KJ0PKVqxQKxjmED8J2rcBY8gLNz1Iaf4fXVxdAcrcG0XrFx63OFiNUnpXy_FblWyQTRZ48jopoPInCi7fgO8YKjiDN6lHDPzyWq5O8wyRpiRysgpS-o23wlIr9aIVVmMK0vgDoy9-kNtTZHbo-dAQqkWiGVFgE-QkSQwsVxhbkhyORAv7zL3JIN2r-WO4tOtO7eBlfvavPMAUba843ZdO4"/>
-<div class="absolute inset-0 bg-on-surface/20"></div>
-</div>
-<div class="relative z-10 w-full max-w-7xl mx-auto px-8">
-<div class="bg-surface/70 backdrop-blur-2xl p-8 md:p-12 rounded-xl border border-outline-variant/20 max-w-2xl">
-<h1 class="font-headline font-extrabold text-4xl md:text-6xl tracking-tighter text-on-surface mb-4 leading-tight">
-                        Jean-Baptiste Dupont
-                    </h1>
-<p class="font-body text-lg md:text-xl text-on-surface-variant font-medium mb-8 border-l-4 border-primary pl-4">
-                        Bâtir votre vision avec rigueur et excellence.
-                    </p>
-<div class="flex flex-wrap gap-4">
-<a class="bg-primary text-on-primary px-6 py-3 rounded-md font-bold flex items-center gap-2 hover:scale-[0.98] transition-transform text-sm" href="#contact">
-                            Consulter Expert
-                            <span class="material-symbols-outlined text-base">arrow_forward</span>
-</a>
-<a class="bg-surface-container-high text-on-surface px-6 py-3 rounded-md font-bold hover:bg-surface-container-highest transition-colors text-sm" href="#portfolio">
-                            Voir Réalisations
-                        </a>
-</div>
-</div>
+<img alt="Modern minimalist skyscraper glass facade" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhy_lQ8urtFRkZBPEwxM8LcMKZG30YLGgnjunfOdnas-7oKII6-WB19KJ0PKVqxQKxjmED8J2rcBY8gLNz1Iaf4fXVxdAcrcG0XrFx63OFiNUnpXy_FblWyQTRZ48jopoPInCi7fgO8YKjiDN6lHDPzyWq5O8wyRpiRysgpS-o23wlIr9aIVVmMK0vgDoy9-kNtTZHbo-dAQqkWiGVFgE-QkSQwsVxhbkhyORAv7zL3JIN2r-WO4tOtO7eBlfvavPMAUba843ZdO4"/>
+<div class="absolute inset-0 bg-on-surface/30"></div>
 </div>
 </section>
-<!-- Portfolio Section (Bento Grid) -->
-<section class="py-24 px-8 bg-surface" id="portfolio">
-<div class="max-w-7xl mx-auto">
+<!-- Hero Card -->
+<!-- Logic for 20% overlap: Card is shifted up by 20% of hero height (16vh since hero is 80vh) -->
+<div class="relative z-20 -mt-[16vh] px-8">
+<div class="max-w-5xl mx-auto">
+<div class="bg-surface-container-lowest p-10 md:p-16 rounded-2xl shadow-lifting border border-outline-variant/10 text-center md:text-left">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-10">
+<div class="flex-1">
+<h1 class="font-headline font-extrabold text-4xl md:text-6xl tracking-tighter text-on-surface mb-4 leading-tight">
+                                Jean-Baptiste Dupont
+                            </h1>
+<p class="font-body text-lg md:text-xl text-on-surface-variant font-medium mb-8 border-l-4 border-primary pl-6">
+                                Bâtir votre vision avec rigueur et excellence.
+                            </p>
+<div class="flex flex-wrap justify-center md:justify-start gap-4">
+<a class="bg-primary text-on-primary px-8 py-4 rounded-md font-bold flex items-center gap-2 hover:scale-[0.98] transition-transform" href="#contact">
+                                    Consulter Expert
+                                    <span class="material-symbols-outlined">arrow_forward</span>
+</a>
+<a class="bg-surface-container-high text-on-surface px-8 py-4 rounded-md font-bold hover:bg-surface-container-highest transition-colors" href="#portfolio">
+                                    Voir Réalisations
+                                </a>
+</div>
+</div>
+<div class="hidden lg:grid grid-cols-2 gap-6 p-8 bg-surface-container-low rounded-xl">
+<div class="space-y-1">
+<p class="text-[10px] uppercase font-bold tracking-widest text-primary">Expérience</p>
+<p class="font-headline font-bold text-on-surface">15+ Ans</p>
+</div>
+<div class="space-y-1">
+<p class="text-[10px] uppercase font-bold tracking-widest text-primary">Localisation</p>
+<p class="font-headline font-bold text-on-surface">Abidjan, CI</p>
+</div>
+<div class="space-y-1">
+<p class="text-[10px] uppercase font-bold tracking-widest text-primary">Spécialité</p>
+<p class="font-headline font-bold text-on-surface">BTP &amp; Génie Civil</p>
+</div>
+<div class="space-y-1">
+<p class="text-[10px] uppercase font-bold tracking-widest text-primary">Statut</p>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
+<p class="font-headline font-bold text-on-surface">Expert Vérifié</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Portfolio Section (Refactored Layout) -->
+<section class="py-24 bg-surface" id="portfolio">
+<div class="max-w-7xl mx-auto px-8">
 <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
 <div>
 <span class="text-primary font-bold tracking-widest uppercase text-xs">Excellence en Construction</span>
 <h2 class="font-headline font-bold text-4xl mt-2 text-on-surface">Nos Réalisations</h2>
 </div>
 <div class="h-px flex-grow bg-outline-variant/20 mx-8 hidden md:block"></div>
-<a class="text-primary font-semibold flex items-center gap-2 hover:gap-3 transition-all duration-300 group" href="#portfolio">
-  Voir tous les projets
-  <span class="material-symbols-outlined text-base">arrow_forward</span>
-</a>
+<p class="text-on-surface-variant max-w-xs font-medium italic">Une sélection de projets d'exception alliant précision technique et esthétique contemporaine.</p>
 </div>
-<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
-<!-- Featured Project -->
-<div class="md:col-span-8 group relative overflow-hidden rounded-xl bg-surface-container-lowest shadow-sm hover:shadow-xl transition-all duration-300">
-<img class="w-full h-[500px] object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Luxury modern villa exterior with large windows, stone textures, and manicured landscaping at twilight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEA_AIl8QrbhWAu23hCxYKnLXryG5UHs0zWY2tfmQ85ktaWqwGlWVizulyhx_NACI1aGlHfC4ADa2d7K9GtlFW_v7oSTHfhvrMPoxfZPA4UOUFYEiDjXxhaiax-zVV-3JTyEJ70mLOYPE5OWwl4AL_5Abf89CqwygZLuc3R5eWUI-40Fx7MTrdBmqZgj8QtfIdLlvtDYF5sctWyOBjySQxvFD5vcdvXB1EqdWPhtosZZXWoI-XFei0CYiTFsuQsCahwIEcL0Ss-Iw"/>
-<div class="absolute inset-0 bg-gradient-to-t from-on-surface/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8">
-<h3 class="text-white font-headline font-bold text-2xl">Résidence Onyx</h3>
-<p class="text-white/80 font-body">Rénovation complète haut de gamme</p>
-</div>
-</div>
-<!-- Secondary Projects -->
-<div class="md:col-span-4 group relative overflow-hidden rounded-xl bg-surface-container-lowest shadow-sm hover:shadow-xl transition-all duration-300">
-<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Sleek corporate office interior with glass partitions and minimalist furniture in shades of gray" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-xDBLsVjBTYtjsZ5Kdy2GoLtJPbeCBI0LD8n1pg-zoJGOPxmu0gdS7f4Cf6CR3tiTsOrOARvnBZbftkoNOnZkC2g5WyhPyNUXz4zEFsqVPdfRNgaHTmg6Rt5a26T8ABV6KU2L8nD1VCx1yA9K7homKxeb6cJNhrmJxR4GQJ51Amso070zvNeqKdsnXGBts7WcmA3eEApd-dXVrlWe_VTSN08WSl6ODqp3YhOaiinh4d50QH7i_lbM2FYIMN_4CQhO_VoXINICK60"/>
-<div class="absolute inset-0 bg-on-surface/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-6 text-center">
-<div class="text-white">
-<h3 class="font-headline font-bold text-xl mb-2">Centre d'Affaires</h3>
-<p class="text-sm">Espaces de travail premium</p>
+<!-- Projects Stack -->
+<div class="space-y-8">
+<!-- Featured Project (100% Width) -->
+<div class="group relative h-[500px] md:h-[600px] overflow-hidden rounded-2xl shadow-lifting bg-surface-container-lowest">
+<img alt="Luxury modern villa exterior" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEA_AIl8QrbhWAu23hCxYKnLXryG5UHs0zWY2tfmQ85ktaWqwGlWVizulyhx_NACI1aGlHfC4ADa2d7K9GtlFW_v7oSTHfhvrMPoxfZPA4UOUFYEiDjXxhaiax-zVV-3JTyEJ70mLOYPE5OWwl4AL_5Abf89CqwygZLuc3R5eWUI-40Fx7MTrdBmqZgj8QtfIdLlvtDYF5sctWyOBjySQxvFD5vcdvXB1EqdWPhtosZZXWoI-XFei0CYiTFsuQsCahwIEcL0Ss-Iw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/90 via-on-surface/20 to-transparent flex flex-col justify-end p-8 md:p-12">
+<div class="max-w-2xl">
+<span class="bg-primary text-on-primary px-3 py-1 rounded text-xs font-bold uppercase tracking-widest mb-4 inline-block">Projet Phare</span>
+<h3 class="text-white font-headline font-extrabold text-4xl md:text-5xl mb-4 leading-tight">Résidence Onyx</h3>
+<p class="text-white/80 font-body text-lg leading-relaxed">Une rénovation complète haut de gamme redéfinissant les standards de l'architecture résidentielle moderne avec des matériaux nobles et une domotique intégrée.</p>
 </div>
 </div>
 </div>
-<div class="md:col-span-4 group relative overflow-hidden rounded-xl bg-surface-container-lowest shadow-sm hover:shadow-xl transition-all duration-300">
-<img class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Exterior of a contemporary white house with flat roof and minimalist geometric architecture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpODTKwC2e4maFrQCLyal1pvmqA20S4pb9uYxsRpmySE2xDlBoigl1tfE1fi7tOk9jyObOweXOVrqknk-FTPS9Y6Ww-J3TY-Zxpha6euJRtljAQdBuMGgHiQ9LShokd-kU1LaapfInIXjBz5FfD962SDSTJHIQvZNzcb11t2YjLkbSQyuiZLJSAM_--Tq_3VtkbQTp7F48lirG_2gFJ2XAK3CE8ENNrjrwkPkl3YTsvYEDnlY15UsPCmsstAj7Wz0t5R-pKKPxnhg"/>
-<div class="p-6">
-<h3 class="font-headline font-bold text-lg text-on-surface">Projet Horizon</h3>
-<p class="text-on-surface-variant text-sm mt-1">Construction neuve résidentielle</p>
+<!-- Secondary Projects (50/50 Grid) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Project 2 -->
+<div class="group bg-surface-container-lowest rounded-2xl shadow-soft border border-outline-variant/10 overflow-hidden flex flex-col hover:shadow-xl transition-all duration-300">
+<div class="h-80 overflow-hidden">
+<img alt="Office interior" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-xDBLsVjBTYtjsZ5Kdy2GoLtJPbeCBI0LD8n1pg-zoJGOPxmu0gdS7f4Cf6CR3tiTsOrOARvnBZbftkoNOnZkC2g5WyhPyNUXz4zEFsqVPdfRNgaHTmg6Rt5a26T8ABV6KU2L8nD1VCx1yA9K7homKxeb6cJNhrmJxR4GQJ51Amso070zvNeqKdsnXGBts7WcmA3eEApd-dXVrlWe_VTSN08WSl6ODqp3YhOaiinh4d50QH7i_lbM2FYIMN_4CQhO_VoXINICK60"/>
+</div>
+<div class="p-8 flex-grow">
+<h4 class="font-headline font-bold text-2xl text-on-surface mb-3">Centre Business</h4>
+<p class="text-on-surface-variant font-body leading-relaxed">Conception d'espaces de travail premium et ergonomiques favorisant la productivité et le bien-être au coeur du quartier d'affaires.</p>
 </div>
 </div>
-<div class="md:col-span-4 group relative overflow-hidden rounded-xl bg-surface-container-lowest shadow-sm hover:shadow-xl transition-all duration-300">
-<img class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Interior of a modern high-end renovation featuring exposed structural elements and luxury materials" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdW0TfruJ5L0zB3nk2aNZfPYyRbYWThzjoyVxEMKgMYnWnuWeatGNfiZRU8IrLWXm9ojhw8bhvERfUmLV-DQktPS_8oBkLcnkRXqGGH7bG1YsTEnp9Upt6H51PuBCMRE98m89K4Wb5vuShq3rGaqJ0f_9pB51YcpraHIP3oDE8e-uRoqSXM3iEvAtePgTdwUtsP2vY5GY1fXqjQNCKTqy8H7nIcLYYMlOzjQOmcu5T8HG14LlabFR6YMy-kAGYiOPzk3T7tpizhvQ"/>
-<div class="p-6">
-<h3 class="font-headline font-bold text-lg text-on-surface">Loft Industriel</h3>
-<p class="text-on-surface-variant text-sm mt-1">Réhabilitation technique</p>
+<!-- Project 3 -->
+<div class="group bg-surface-container-lowest rounded-2xl shadow-soft border border-outline-variant/10 overflow-hidden flex flex-col hover:shadow-xl transition-all duration-300">
+<div class="h-80 overflow-hidden">
+<img alt="Modern house exterior" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpODTKwC2e4maFrQCLyal1pvmqA20S4pb9uYxsRpmySE2xDlBoigl1tfE1fi7tOk9jyObOweXOVrqknk-FTPS9Y6Ww-J3TY-Zxpha6euJRtljAQdBuMGgHiQ9LShokd-kU1LaapfInIXjBz5FfD962SDSTJHIQvZNzcb11t2YjLkbSQyuiZLJSAM_--Tq_3VtkbQTp7F48lirG_2gFJ2XAK3CE8ENNrjrwkPkl3YTsvYEDnlY15UsPCmsstAj7Wz0t5R-pKKPxnhg"/>
 </div>
+<div class="p-8 flex-grow">
+<h4 class="font-headline font-bold text-2xl text-on-surface mb-3">Projet Horizon</h4>
+<p class="text-on-surface-variant font-body leading-relaxed">Une construction neuve résidentielle à énergie positive intégrant les dernières innovations en matière de durabilité environnementale.</p>
 </div>
-<div class="md:col-span-4 group relative overflow-hidden rounded-xl bg-surface-container-lowest shadow-sm hover:shadow-xl transition-all duration-300">
-<img class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Close-up of construction detail showing precision engineering and high-quality concrete finish" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSs5nr9r4GstoQ_DuvFie7fzrCJIOTHwcU7_FxZVm8HieStSGOneIskvtpZ3A5_o_78KueB6n4YGYSxBLL77EQ-IPoUnTx-Nm-8Vtt6F894Zix3OXLISpKo0NL7O--3h0LKMFPb2Zyf7Jhpg2tjatH8l7IZWcSfjqZAehaTAPhnyMym7AM9Gl4UVFh4-9cwshUxBgMmBvGP76qaAs5r6KPkfBZn_3OBHsF4er_QtSf1idp21exleach7-JZrpvjKcD6ZBoDLf1FSM"/>
-<div class="p-6">
-<h3 class="font-headline font-bold text-lg text-on-surface">Infrastructure</h3>
-<p class="text-on-surface-variant text-sm mt-1">Expertise gros œuvre</p>
 </div>
 </div>
 </div>
@@ -216,7 +248,7 @@
 </div>
 <div class="relative">
 <div class="absolute -top-4 -left-4 w-24 h-24 bg-primary/10 rounded-full z-0"></div>
-<img class="rounded-xl w-full h-[600px] object-cover relative z-10 shadow-2xl grayscale hover:grayscale-0 transition-all duration-700" data-alt="Professional headshot of a confident man in a neutral gray background, clean and sober lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDyezhAHBxbwLl16o8uOM6LL8gw-C84raf7u4x__qZRfeXOCPodecIeuZMehuHomb67w9G9cDt6LUeOPt4NFhbIX4RIUAywkv_u8_u9bT41xTnpC0Mb0z9BFF0twWSeq4oMKoZS1XxF5pIsagxTjRUZrbNI_OBoqr6HJY3wBpoeUuW90EE-KC3GcvtDgpOQE5FlgK0F7FZY7UK5V4AvONlz8PBAMr93v6MTLbnwF8ppDXgU36B65yscZLvATzkLEn8vqIUoIxd_bU"/>
+<img alt="Professional headshot of Jean-Baptiste Dupont" class="rounded-2xl w-full h-[600px] object-cover relative z-10 shadow-2xl grayscale hover:grayscale-0 transition-all duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDyezhAHBxbwLl16o8uOM6LL8gw-C84raf7u4x__qZRfeXOCPodecIeuZMehuHomb67w9G9cDt6LUeOPt4NFhbIX4RIUAywkv_u8_u9bT41xTnpC0Mb0z9BFF0twWSeq4oMKoZS1XxF5pIsagxTjRUZrbNI_OBoqr6HJY3wBpoeUuW90EE-KC3GcvtDgpOQE5FlgK0F7FZY7UK5V4AvONlz8PBAMr93v6MTLbnwF8ppDXgU36B65yscZLvATzkLEn8vqIUoIxd_bU"/>
 <div class="absolute -bottom-6 -right-6 bg-surface-container-lowest p-8 rounded-xl shadow-lg z-20 border border-outline-variant/10">
 <div class="flex items-center gap-4">
 <div class="bg-secondary-container p-3 rounded-full">
@@ -285,16 +317,16 @@
 </section>
 </main>
 <!-- Footer -->
-<footer class="bg-surface-container-low dark:bg-stone-950 w-full py-12 px-8">
+<footer class="bg-surface-container-low w-full py-12 px-8 border-t border-outline-variant/10">
 <div class="flex flex-col md:flex-row justify-between items-center w-full max-w-7xl mx-auto gap-6">
-<div class="font-manrope font-bold text-stone-900 dark:text-stone-100 text-lg">SERVICEX</div>
+<div class="font-manrope font-bold text-on-surface text-lg">SERVICEX</div>
 <div class="flex flex-wrap justify-center gap-8">
-<a class="font-inter text-xs font-medium uppercase tracking-widest text-stone-500 hover:text-primary transition-colors" href="#">Privacy Policy</a>
-<a class="font-inter text-xs font-medium uppercase tracking-widest text-stone-500 hover:text-primary transition-colors" href="#">Terms of Service</a>
-<a class="font-inter text-xs font-medium uppercase tracking-widest text-stone-500 hover:text-primary transition-colors" href="#">LinkedIn</a>
-<a class="font-inter text-xs font-medium uppercase tracking-widest text-stone-500 hover:text-primary transition-colors" href="#">Accessibility</a>
+<a class="font-inter text-xs font-medium uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="font-inter text-xs font-medium uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="font-inter text-xs font-medium uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors" href="#">LinkedIn</a>
+<a class="font-inter text-xs font-medium uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors" href="#">Accessibility</a>
 </div>
-<p class="font-inter text-xs font-medium uppercase tracking-widest text-stone-500">
+<p class="font-inter text-xs font-medium uppercase tracking-widest text-on-surface-variant">
                 © 2024 Professional Services Global. All rights reserved.
             </p>
 </div>

@@ -60,16 +60,23 @@ export async function middleware(request: NextRequest) {
     } = await supabase.auth.getSession();
 
     // 1. Define Route Protection Rules
-    const isAuthPage = pathname.startsWith("/connexion") || 
-                       pathname.startsWith("/inscription") ||
-                       pathname.startsWith("/pro/connexion") ||
-                       pathname.startsWith("/pro/inscription");
+    // Auth pages for clients
+    const isClientAuthPage = pathname.startsWith("/connexion") || 
+                             pathname.startsWith("/inscription");
+    
+    // Auth pages for professionals
+    const isProAuthPage = pathname.startsWith("/pro/connexion") || 
+                          pathname.startsWith("/pro/inscription");
+    
+    const isAuthPage = isClientAuthPage || isProAuthPage;
 
-    const isClientRoute = pathname === "/dashboard" || 
+    const isClientRoute = pathname === "/dashboard" ||
+                          pathname.startsWith("/dashboard/") ||
                           pathname.startsWith("/projets") ||
                           pathname.startsWith("/recommandation") ||
                           pathname.startsWith("/signal") ||
-                          pathname.startsWith("/avis");
+                          pathname.startsWith("/avis") ||
+                          pathname.startsWith("/favoris");
 
     const isProRoute = pathname.startsWith("/pro/") && !isAuthPage;
     const isAdminRoute = pathname.startsWith("/admin");
@@ -77,7 +84,11 @@ export async function middleware(request: NextRequest) {
     // 2. Handle Authentication
     if (!session) {
       if (isClientRoute || isProRoute || isAdminRoute) {
-        const redirectUrl = new URL(isProRoute ? "/pro/connexion" : "/connexion", request.url);
+        // Redirect to the appropriate login page based on route type
+        const redirectUrl = new URL(
+          isProRoute ? "/pro/connexion" : "/connexion", 
+          request.url
+        );
         redirectUrl.searchParams.set("redirect", pathname);
         return NextResponse.redirect(redirectUrl);
       }
@@ -103,7 +114,18 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
 
-    // Cross-role protection
+    // STRICT CROSS-ROLE PROTECTION
+    // Clients cannot access professional routes
+    if (isClientRoute && isPro) {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
+    
+    // Professionals cannot access client routes
+    if (isProRoute && isClient) {
+      return NextResponse.redirect(new URL("/pro/dashboard", request.url));
+    }
+    
+    // Admins can access both client and pro routes
     if (isClientRoute && !isClient && !isAdmin) {
       return NextResponse.redirect(new URL("/pro/dashboard", request.url));
     }
@@ -131,6 +153,7 @@ export const config = {
     "/recommandation/:path*",
     "/signal/:path*",
     "/avis/:path*",
+    "/favoris/:path*",
     "/pro/:path*",
     "/admin/:path*",
     "/connexion/:path*",

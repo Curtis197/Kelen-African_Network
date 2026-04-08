@@ -58,9 +58,12 @@ export function Navbar() {
     router.refresh();
   };
 
-  const isPro = userRole?.startsWith("pro_") || userRole === "admin";
+  const isPro = userRole?.startsWith("pro_");
+  const isAdmin = userRole === "admin";
+  const isClient = userRole === "client";
 
-  const CONNECTED_NAV = [
+  // Client-only navigation links
+  const CLIENT_NAV = [
     { href: "/recommandation", label: "Recommander", icon: "award_star" },
     { href: "/signal", label: "Signaler", icon: "gavel" },
     { href: "/projets", label: "Mes projets", icon: "account_tree" },
@@ -92,7 +95,8 @@ export function Navbar() {
           {/* Additional links for connected users */}
           {user && (
             <>
-              {CONNECTED_NAV.map((item) => (
+              {/* Show client-only links to clients */}
+              {isClient && CLIENT_NAV.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
@@ -103,6 +107,7 @@ export function Navbar() {
                 </Link>
               ))}
 
+              {/* Show pro dashboard link to pros */}
               {isPro && (
                 <Link
                   href="/pro/dashboard"
@@ -191,7 +196,8 @@ export function Navbar() {
             {/* Additional links for connected users */}
             {user && (
               <>
-                {CONNECTED_NAV.map((item) => (
+                {/* Show client-only links to clients */}
+                {isClient && CLIENT_NAV.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
@@ -203,6 +209,7 @@ export function Navbar() {
                   </Link>
                 ))}
 
+                {/* Show pro dashboard link to pros */}
                 {isPro && (
                   <Link
                     href="/pro/dashboard"
