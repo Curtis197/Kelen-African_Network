@@ -1,56 +1,46 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { StatusBadge } from "@/components/shared/StatusBadge";
+import { getProDashboardStats } from "@/lib/actions/dashboard-stats";
 import type { ProfessionalStatus } from "@/lib/supabase/types";
 
 export const metadata: Metadata = {
   title: "Tableau de bord Pro — Kelen",
 };
 
-// Demo data
-const DEMO_PRO = {
-  business_name: "Kouadio Construction",
-  status: "gold" as ProfessionalStatus,
-  recommendation_count: 7,
-  signal_count: 0,
-  avg_rating: 4.8,
-  review_count: 12,
-  monthly_views: 342,
-  subscription_status: "Premium",
-};
+export default async function ProDashboardPage() {
+  const stats = await getProDashboardStats();
 
-const DEMO_PENDING = [
-  {
-    id: "1",
-    type: "recommendation" as const,
-    submitter_name: "Fatou D.",
-    created_at: "2025-02-10T00:00:00Z",
-    status: "pending_link" as const,
-  },
-  {
-    id: "2",
-    type: "signal" as const,
-    submitter_name: "Anonyme",
-    created_at: "2025-02-08T00:00:00Z",
-    status: "pending_response" as const,
-  },
-];
+  if (!stats.professionalId) {
+    return (
+      <div className="text-center py-16">
+        <p className="text-muted-foreground">Profil professionnel introuvable. Veuillez compléter votre profil.</p>
+        <Link
+          href="/pro/profil"
+          className="mt-4 inline-block rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+        >
+          Compléter mon profil
+        </Link>
+      </div>
+    );
+  }
 
-export default function ProDashboardPage() {
+  const hasPendingActions = stats.pendingRecommendations > 0 || stats.pendingSignals > 0;
+
   return (
     <div>
       {/* Header */}
       <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">
-            {DEMO_PRO.business_name}
+            {stats.businessName || "Mon profil"}
           </h1>
           <div className="mt-2">
             <StatusBadge
-              status={DEMO_PRO.status}
-              recommendationCount={DEMO_PRO.recommendation_count}
-              signalCount={DEMO_PRO.signal_count}
-              avgRating={DEMO_PRO.avg_rating}
+              status={(stats.status as ProfessionalStatus) || "white"}
+              recommendationCount={stats.recommendationCount}
+              signalCount={stats.signalCount}
+              avgRating={stats.avgRating}
               size="md"
             />
           </div>
@@ -68,25 +58,25 @@ export default function ProDashboardPage() {
         <div className="rounded-xl border border-border bg-surface-container-low p-5">
           <p className="text-sm text-muted-foreground">Recommandations</p>
           <p className="mt-1 text-2xl font-bold text-foreground">
-            {DEMO_PRO.recommendation_count}
+            {stats.recommendationCount}
           </p>
         </div>
         <div className="rounded-xl border border-border bg-surface-container-low p-5">
           <p className="text-sm text-muted-foreground">Note moyenne</p>
           <p className="mt-1 text-2xl font-bold text-foreground">
-            {DEMO_PRO.avg_rating} / 5
+            {stats.avgRating > 0 ? `${stats.avgRating} / 5` : "—"}
           </p>
         </div>
         <div className="rounded-xl border border-border bg-surface-container-low p-5">
           <p className="text-sm text-muted-foreground">Vues ce mois</p>
           <p className="mt-1 text-2xl font-bold text-foreground">
-            {DEMO_PRO.monthly_views}
+            {stats.monthlyViews}
           </p>
         </div>
         <div className="rounded-xl border border-border bg-surface-container-low p-5">
           <p className="text-sm text-muted-foreground">Abonnement</p>
           <p className="mt-1 text-2xl font-bold text-kelen-green-600 dark:text-kelen-green-400">
-            {DEMO_PRO.subscription_status}
+            {stats.subscriptionStatus}
           </p>
         </div>
       </div>
@@ -97,43 +87,46 @@ export default function ProDashboardPage() {
           <h2 className="font-semibold text-foreground">Actions requises</h2>
         </div>
         <div className="divide-y divide-border">
-          {DEMO_PENDING.map((item) => (
-            <div
-              key={item.id}
-              className="flex items-center justify-between gap-4 px-6 py-4"
-            >
-              <div>
-                <p className="text-sm font-medium text-foreground">
-                  {item.type === "recommendation"
-                    ? "Nouvelle recommandation à lier"
-                    : "Signal — réponse requise"}
-                </p>
-                <p className="mt-0.5 text-xs text-muted-foreground">
-                  De {item.submitter_name} ·{" "}
-                  {new Date(item.created_at).toLocaleDateString("fr-FR", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  })}
-                </p>
-              </div>
-              <Link
-                href={
-                  item.type === "recommendation"
-                    ? "/pro/recommandations"
-                    : "/pro/signal"
-                }
-                className={`shrink-0 rounded-lg px-4 py-2 text-xs font-medium transition-colors ${
-                  item.type === "signal"
-                    ? "bg-kelen-red-50 text-kelen-red-700 hover:bg-kelen-red-100 dark:bg-kelen-red-900/30 dark:text-kelen-red-400 dark:hover:bg-kelen-red-900/50"
-                    : "bg-kelen-green-50 text-kelen-green-700 hover:bg-kelen-green-100 dark:bg-kelen-green-900/30 dark:text-kelen-green-400 dark:hover:bg-kelen-green-900/50"
-                }`}
-              >
-                {item.type === "recommendation" ? "Voir" : "Répondre"}
-              </Link>
-            </div>
-          ))}
-          {DEMO_PENDING.length === 0 && (
+          {hasPendingActions ? (
+            <>
+              {stats.pendingRecommendations > 0 && (
+                <div className="flex items-center justify-between gap-4 px-6 py-4">
+                  <div>
+                    <p className="text-sm font-medium text-foreground">
+                      {stats.pendingRecommendations} recommandation{stats.pendingRecommendations > 1 ? "s" : ""} en attente
+                    </p>
+                    <p className="mt-0.5 text-xs text-muted-foreground">
+                      Des témoignages clients nécessitent votre validation
+                    </p>
+                  </div>
+                  <Link
+                    href="/pro/recommandations"
+                    className="shrink-0 rounded-lg px-4 py-2 text-xs font-medium transition-colors bg-kelen-green-50 text-kelen-green-700 hover:bg-kelen-green-100 dark:bg-kelen-green-900/30 dark:text-kelen-green-400 dark:hover:bg-kelen-green-900/50"
+                  >
+                    Voir
+                  </Link>
+                </div>
+              )}
+              {stats.pendingSignals > 0 && (
+                <div className="flex items-center justify-between gap-4 px-6 py-4">
+                  <div>
+                    <p className="text-sm font-medium text-foreground">
+                      {stats.pendingSignals} signalement{stats.pendingSignals > 1 ? "s" : ""} en attente
+                    </p>
+                    <p className="mt-0.5 text-xs text-muted-foreground">
+                      Répondez dans les 15 jours pour préserver votre réputation
+                    </p>
+                  </div>
+                  <Link
+                    href="/pro/signal"
+                    className="shrink-0 rounded-lg px-4 py-2 text-xs font-medium transition-colors bg-kelen-red-50 text-kelen-red-700 hover:bg-kelen-red-100 dark:bg-kelen-red-900/30 dark:text-kelen-red-400 dark:hover:bg-kelen-red-900/50"
+                  >
+                    Répondre
+                  </Link>
+                </div>
+              )}
+            </>
+          ) : (
             <div className="px-6 py-8 text-center text-sm text-muted-foreground">
               Aucune action requise pour le moment.
             </div>

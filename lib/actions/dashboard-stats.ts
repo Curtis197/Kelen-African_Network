@@ -1,0 +1,145 @@
+"use server";
+
+import { createClient } from "@/lib/supabase/server";
+
+async function getProfessionalId(): Promise<string | null> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return null;
+
+  const { data } = await supabase
+    .from("professionals")
+    .select("id")
+    .eq("user_id", user.id)
+    .single();
+
+  return data?.id || null;
+}
+
+export interface DashboardStats {
+  professionalId: string | null;
+  businessName: string | null;
+  status: string | null;
+  recommendationCount: number;
+  signalCount: number;
+  avgRating: number;
+  reviewCount: number;
+  monthlyViews: number;
+  subscriptionStatus: string;
+  pendingRecommendations: number;
+  pendingSignals: number;
+}
+
+export async function getProDashboardStats(): Promise<DashboardStats> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    return {
+      professionalId: null,
+      businessName: null,
+      status: null,
+      recommendationCount: 0,
+      signalCount: 0,
+      avgRating: 0,
+      reviewCount: 0,
+      monthlyViews: 0,
+      subscriptionStatus: "Gratuit",
+      pendingRecommendations: 0,
+      pendingSignals: 0,
+    };
+  }
+
+  // Get professional profile
+  const { data: pro } = await supabase
+    .from("professionals")
+    .select("id, business_name, status")
+    .eq("user_id", user.id)
+    .single();
+
+  if (!pro) {
+    return {
+      professionalId: null,
+      businessName: null,
+      status: null,
+      recommendationCount: 0,
+      signalCount: 0,
+      avgRating: 0,
+      reviewCount: 0,
+      monthlyViews: 0,
+      subscriptionStatus: "Gratuit",
+      pendingRecommendations: 0,
+      pendingSignals: 0,
+    };
+  }
+
+  // Count recommendations
+  const { count: recommendationCount } = await supabase
+    .from("recommendations")
+    .select("*", { count: "exact", head: true })
+    .eq("professional_id", pro.id);
+
+  // Count signals
+  const { count: signalCount } = await supabase
+    .from("signals")
+    .select("*", { count: "exact", head: true })
+    .eq("professional_id", pro.id);
+
+  // Calculate average rating from reviews
+  const { data: reviews } = await supabase
+    .from("reviews")
+    .select("rating")
+    .eq("professional_id", pro.id);
+
+  const avgRating = reviews && reviews.length > 0
+    ? Math.round((reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / reviews.length) * 10) / 10
+    : 0;
+
+  const reviewCount = reviews?.length || 0;
+
+  // Monthly views (last 30 days)
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+  const { count: monthlyViews } = await supabase
+    .from("profile_views")
+    .select("*", { count: "exact", head: true })
+    .eq("professional_id", pro.id)
+    .gte("created_at", thirtyDaysAgo.toISOString());
+
+  // Subscription status
+  const { data: subscription } = await supabase
+    .from("subscriptions")
+    .select("status")
+    .eq("professional_id", pro.id)
+    .single();
+
+  const subscriptionStatus = subscription?.status === "active" ? "Premium" : "Gratuit";
+
+  // Pending items (for verification queue / actions required)
+  const { count: pendingRecommendations } = await supabase
+    .from("recommendations")
+    .select("*", { count: "exact", head: true })
+    .eq("professional_id", pro.id)
+    .eq("status", "pending");
+
+  const { count: pendingSignals } = await supabase
+    .from("signals")
+    .select("*", { count: "exact", head: true })
+    .eq("professional_id", pro.id)
+    .eq("status", "pending");
+
+  return {
+    professionalId: pro.id,
+    businessName: pro.business_name,
+    status: pro.status,
+    recommendationCount: recommendationCount || 0,
+    signalCount: signalCount || 0,
+    avgRating,
+    reviewCount,
+    monthlyViews: monthlyViews || 0,
+    subscriptionStatus,
+    pendingRecommendations: pendingRecommendations || 0,
+    pendingSignals: pendingSignals || 0,
+  };
+}

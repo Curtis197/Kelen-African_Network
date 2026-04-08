@@ -1,10 +1,9 @@
-"use client";
-
 import Link from "next/link";
-import { ArrowLeft, BookOpen, MapPin, Calendar, DollarSign, User } from "lucide-react";
+import { ArrowLeft, BookOpen, MapPin, Calendar, DollarSign, User, FileText, Coins, Image, CalendarDays } from "lucide-react";
 import type { ProProject } from "@/lib/types/pro-projects";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+import { getProjectJournalStats } from "@/lib/actions/journal-stats";
 
 interface ProProjectDetailProps {
   project: ProProject;
@@ -18,13 +17,20 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 const STATUS_COLORS: Record<string, string> = {
-  in_progress: "bg-blue-100 text-blue-700",
-  completed: "bg-green-100 text-green-700",
-  paused: "bg-amber-100 text-amber-700",
-  cancelled: "bg-red-100 text-red-700",
+  in_progress: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
+  completed: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
+  paused: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
+  cancelled: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
 };
 
-export function ProProjectDetail({ project }: ProProjectDetailProps) {
+export async function ProProjectDetail({ project }: ProProjectDetailProps) {
+  const journalStats = await getProjectJournalStats(project.id, true);
+
+  const formatMoney = (amount: number, currency: string) => {
+    if (currency === "XOF") return `${amount.toLocaleString('fr-FR')} ${currency}`;
+    return `${amount.toFixed(2)} ${currency}`;
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -44,7 +50,7 @@ export function ProProjectDetail({ project }: ProProjectDetailProps) {
                 {STATUS_LABELS[project.status]}
               </span>
               {project.is_public && (
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-700">
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
                   Portfolio
                 </span>
               )}
@@ -146,25 +152,64 @@ export function ProProjectDetail({ project }: ProProjectDetailProps) {
         )}
       </div>
 
-      {/* Quick Stats Placeholder */}
+      {/* Journal Stats */}
       <div className="bg-surface-container-low rounded-2xl p-6">
         <h3 className="text-base font-bold text-on-surface mb-4">Résumé du journal</h3>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {[
-            { label: "Rapports", value: "—" },
-            { label: "Dépenses totales", value: "—" },
-            { label: "Photos", value: "—" },
-            { label: "Jours travaillés", value: "—" },
-          ].map((stat) => (
-            <div key={stat.label} className="text-center">
-              <p className="text-2xl font-bold text-on-surface">{stat.value}</p>
-              <p className="text-xs text-on-surface-variant mt-1">{stat.label}</p>
+        {journalStats.logCount > 0 ? (
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div className="text-center">
+              <div className="flex justify-center mb-2">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <FileText className="w-5 h-5 text-primary" />
+                </div>
+              </div>
+              <p className="text-2xl font-bold text-on-surface">{journalStats.logCount}</p>
+              <p className="text-xs text-on-surface-variant mt-1">Rapports</p>
             </div>
-          ))}
-        </div>
-        <p className="text-xs text-on-surface-variant/60 mt-4 text-center">
-          Les statistiques seront disponibles après la création de rapports
-        </p>
+            <div className="text-center">
+              <div className="flex justify-center mb-2">
+                <div className="w-10 h-10 rounded-xl bg-green-50 dark:bg-green-900/20 flex items-center justify-center">
+                  <Coins className="w-5 h-5 text-green-600 dark:text-green-400" />
+                </div>
+              </div>
+              <p className="text-lg font-bold text-on-surface">{formatMoney(journalStats.totalSpent, journalStats.currency)}</p>
+              <p className="text-xs text-on-surface-variant mt-1">Dépenses totales</p>
+            </div>
+            <div className="text-center">
+              <div className="flex justify-center mb-2">
+                <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
+                  <Image className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                </div>
+              </div>
+              <p className="text-2xl font-bold text-on-surface">{journalStats.photoCount}</p>
+              <p className="text-xs text-on-surface-variant mt-1">Photos</p>
+            </div>
+            <div className="text-center">
+              <div className="flex justify-center mb-2">
+                <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center">
+                  <CalendarDays className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+                </div>
+              </div>
+              <p className="text-2xl font-bold text-on-surface">{journalStats.daysWorked}</p>
+              <p className="text-xs text-on-surface-variant mt-1">Jours travaillés</p>
+            </div>
+          </div>
+        ) : (
+          <div className="text-center py-8">
+            <FileText className="w-8 h-8 mx-auto text-on-surface-variant/40 mb-3" />
+            <p className="text-sm text-on-surface-variant mb-2">Aucun rapport publié</p>
+            <p className="text-xs text-on-surface-variant/60">
+              Les statistiques apparaîtront après la création de rapports
+            </p>
+            <Link
+              href={`/pro/projets/${project.id}/journal/nouveau`}
+              className="mt-4 inline-flex items-center gap-2 px-5 py-3 bg-primary text-on-primary rounded-xl font-semibold text-sm hover:opacity-90 transition-opacity"
+            >
+              <BookOpen className="w-4 h-4" />
+              Créer le premier rapport
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );
