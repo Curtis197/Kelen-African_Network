@@ -3,13 +3,15 @@
 import { useState, useEffect } from "react";
 import { ProjectStep } from "@/lib/types/projects";
 import { getProjectSteps, deleteProjectStep } from "@/lib/actions/project-steps";
+import { getProjectExportData } from "@/lib/actions/export-data";
+import { downloadProjectPdf, downloadProjectExcel } from "@/lib/utils/project-export";
 import ProjectStepCard from "./ProjectStepCard";
 import AddStepDialog from "./AddStepDialog";
 import AssignStepProDialog from "./AssignStepProDialog";
-import { 
-  PlusCircle, 
-  Search, 
-  Filter, 
+import {
+  PlusCircle,
+  Search,
+  Filter,
   ArrowUpDown,
   FileSpreadsheet,
   Download,
@@ -17,6 +19,7 @@ import {
   Loader2,
   TableProperties
 } from "lucide-react";
+import { toast } from "sonner";
 
 interface ProjectStepsSectionProps {
   projectId: string;
@@ -38,6 +41,7 @@ export default function ProjectStepsSection({
   const [editingStep, setEditingStep] = useState<ProjectStep | undefined>();
   const [assigningStep, setAssigningStep] = useState<ProjectStep | undefined>();
   const [isExportOpen, setIsExportOpen] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
 
   useEffect(() => {
     if (initialSteps) {
@@ -85,12 +89,38 @@ export default function ProjectStepsSection({
     }
   };
 
+  const handleExport = async (format: 'pdf' | 'xlsx') => {
+    setIsExporting(true);
+    setIsExportOpen(false);
+
+    try {
+      const data = await getProjectExportData(projectId);
+      if (!data) {
+        toast.error("Projet introuvable");
+        return;
+      }
+
+      if (format === 'pdf') {
+        downloadProjectPdf(data);
+        toast.success("Rapport PDF téléchargé");
+      } else {
+        downloadProjectExcel(data);
+        toast.success("Tableau Excel téléchargé");
+      }
+    } catch (err) {
+      console.error('Export error:', err);
+      toast.error("Erreur lors de l'export");
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   return (
     <section className="space-y-4 sm:space-y-6 lg:space-y-8">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6">
         <div>
-          <h3 className="text-lg sm:text-xl lg:text-2xl font-black text-stone-900 tracking-tight">Roadmap de Réalisation</h3>
-          <p className="text-xs sm:text-sm text-stone-500 font-medium pt-1 italic">
+          <h3 className="text-lg sm:text-xl lg:text-2xl font-black text-on-surface tracking-tight">Roadmap de Réalisation</h3>
+          <p className="text-xs sm:text-sm text-on-surface-variant font-medium pt-1 italic">
             Gérez les phases d&apos;intervention et les budgets associés.
           </p>
         </div>
@@ -108,13 +138,21 @@ export default function ProjectStepsSection({
             
             {isExportOpen && (
               <div className="absolute top-full mt-2 right-0 w-56 bg-white rounded-2xl shadow-3xl border border-stone-100 py-3 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                <button className="w-full flex items-center gap-3 px-6 py-3 text-left hover:bg-stone-50 text-stone-900 transition-all font-bold text-xs">
+                <button
+                  onClick={() => handleExport('xlsx')}
+                  disabled={isExporting}
+                  className="w-full flex items-center gap-3 px-6 py-3 text-left hover:bg-stone-50 text-stone-900 transition-all font-bold text-xs disabled:opacity-50"
+                >
                   <FileSpreadsheet className="w-4 h-4 text-kelen-green-600" />
-                  Tableau Excel (.xlsx)
+                  {isExporting ? 'Génération...' : 'Tableau Excel (.xlsx)'}
                 </button>
-                <button className="w-full flex items-center gap-3 px-6 py-3 text-left hover:bg-stone-50 text-stone-900 transition-all font-bold text-xs border-t border-stone-50">
+                <button
+                  onClick={() => handleExport('pdf')}
+                  disabled={isExporting}
+                  className="w-full flex items-center gap-3 px-6 py-3 text-left hover:bg-stone-50 text-stone-900 transition-all font-bold text-xs border-t border-stone-50 disabled:opacity-50"
+                >
                   <TableProperties className="w-4 h-4 text-kelen-green-600" />
-                  Rapport PDF (.pdf)
+                  {isExporting ? 'Génération...' : 'Rapport PDF (.pdf)'}
                 </button>
               </div>
             )}
@@ -133,8 +171,8 @@ export default function ProjectStepsSection({
 
       <div className="grid grid-cols-1 gap-4 sm:gap-6 relative">
         {isLoading ? (
-          <div className="p-12 sm:p-24 flex items-center justify-center bg-stone-50 rounded-xl sm:rounded-[2.5rem] border-2 border-dashed border-stone-100">
-            <Loader2 className="w-8 h-8 sm:w-12 sm:h-12 text-stone-200 animate-spin" />
+          <div className="p-12 sm:p-24 flex items-center justify-center bg-surface-container rounded-xl sm:rounded-[2.5rem] border-2 border-dashed border-border">
+            <Loader2 className="w-8 h-8 sm:w-12 sm:h-12 text-on-surface-variant/30 animate-spin" />
           </div>
         ) : steps.length > 0 ? (
           <div className="space-y-3 sm:space-y-4">
@@ -150,17 +188,17 @@ export default function ProjectStepsSection({
             ))}
           </div>
         ) : (
-          <div className="p-12 sm:p-24 text-center bg-stone-50 rounded-xl sm:rounded-[2.5rem] border-2 border-dashed border-stone-100">
-            <div className="w-14 h-14 sm:w-20 sm:h-20 mx-auto bg-white rounded-full flex items-center justify-center mb-4 sm:mb-8 shadow-sm">
-              <span className="material-symbols-outlined text-2xl sm:text-4xl text-stone-200">alt_route</span>
+          <div className="p-12 sm:p-24 text-center bg-surface-container rounded-xl sm:rounded-[2.5rem] border-2 border-dashed border-border">
+            <div className="w-14 h-14 sm:w-20 sm:h-20 mx-auto bg-surface-container-low rounded-full flex items-center justify-center mb-4 sm:mb-8 shadow-sm">
+              <span className="material-symbols-outlined text-2xl sm:text-4xl text-on-surface-variant/30">alt_route</span>
             </div>
-            <h4 className="text-lg sm:text-2xl font-black text-stone-900 tracking-tight">Initialisez votre roadmap</h4>
-            <p className="text-stone-500 font-medium mt-2 sm:mt-3 max-w-sm mx-auto leading-relaxed text-xs sm:text-sm">
+            <h4 className="text-lg sm:text-2xl font-black text-on-surface tracking-tight">Initialisez votre roadmap</h4>
+            <p className="text-on-surface-variant font-medium mt-2 sm:mt-3 max-w-sm mx-auto leading-relaxed text-xs sm:text-sm">
               Découpez votre projet en étapes clés pour suivre son avancement, vos paiements et vos experts précisément.
             </p>
             <button
               onClick={handleAdd}
-              className="mt-6 sm:mt-10 px-6 sm:px-10 py-3 sm:py-4 bg-stone-900 text-white rounded-xl sm:rounded-2xl font-black uppercase tracking-widest text-[9px] sm:text-xs shadow-xl shadow-stone-900/10 hover:scale-[0.98] transition-all inline-flex items-center gap-2"
+              className="mt-6 sm:mt-10 px-6 sm:px-10 py-3 sm:py-4 bg-stone-900 dark:bg-white text-white dark:text-stone-900 rounded-xl sm:rounded-2xl font-black uppercase tracking-widest text-[9px] sm:text-xs shadow-xl shadow-stone-900/10 dark:shadow-stone-200/20 hover:scale-[0.98] transition-all inline-flex items-center gap-2"
             >
               <PlusCircle className="w-3 h-3 sm:w-4 sm:h-4" />
               Créer la première étape
