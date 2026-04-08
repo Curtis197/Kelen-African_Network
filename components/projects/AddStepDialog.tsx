@@ -83,17 +83,17 @@ export default function AddStepDialog({ isOpen, onClose, projectId, step, onSucc
         onClick={onClose}
       />
 
-      <div className="relative w-full max-w-xl bg-white rounded-2xl sm:rounded-3xl lg:rounded-[2.5rem] shadow-3xl border border-stone-100 overflow-hidden animate-in fade-in zoom-in duration-300 max-h-[90vh] flex flex-col">
-        <div className="p-4 sm:p-6 lg:p-8 pb-3 sm:pb-4 flex items-center justify-between border-b border-stone-50 flex-shrink-0">
+      <div className="relative w-full max-w-xl bg-surface-container-low dark:bg-surface-container-low rounded-2xl sm:rounded-3xl lg:rounded-[2.5rem] shadow-3xl border border-border overflow-hidden animate-in fade-in zoom-in duration-300 max-h-[90vh] flex flex-col">
+        <div className="p-4 sm:p-6 lg:p-8 pb-3 sm:pb-4 flex items-center justify-between border-b border-border flex-shrink-0">
           <div className="flex-1 min-w-0 pr-4">
-            <h2 className="text-lg sm:text-xl lg:text-2xl font-black text-stone-900 tracking-tight">
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-black text-on-surface tracking-tight">
               {step ? "Modifier l'étape" : "Nouvelle étape"}
             </h2>
-            <p className="text-xs sm:text-sm text-stone-500 font-medium pt-1 truncate">Structurez votre roadmap projet</p>
+            <p className="text-xs sm:text-sm text-on-surface-variant font-medium pt-1 truncate">Structurez votre roadmap projet</p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 sm:p-3 rounded-full hover:bg-stone-50 text-stone-400 hover:text-stone-900 transition-colors flex-shrink-0"
+            className="p-2 sm:p-3 rounded-full hover:bg-surface-container text-on-surface-variant/60 hover:text-on-surface transition-colors flex-shrink-0"
           >
             <X className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
@@ -101,13 +101,13 @@ export default function AddStepDialog({ isOpen, onClose, projectId, step, onSucc
 
         <form onSubmit={handleSubmit} className="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 overflow-y-auto flex-1">
           {submitError && (
-            <div className="rounded-xl sm:rounded-2xl bg-rose-50 border border-rose-100 p-3 sm:p-4 text-xs sm:text-sm text-rose-700 font-medium">
+            <div className="rounded-xl sm:rounded-2xl bg-rose-50 dark:bg-rose-900/20 border border-rose-100 dark:border-rose-800 p-3 sm:p-4 text-xs sm:text-sm text-rose-700 dark:text-rose-300 font-medium">
               {submitError}
             </div>
           )}
           <div className="space-y-3 sm:space-y-4">
             <div className="space-y-2">
-              <label className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] text-stone-500 ml-1">
+              <label className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] text-on-surface-variant/60 ml-1">
                 Titre de l&apos;étape
               </label>
               <input
@@ -116,12 +116,12 @@ export default function AddStepDialog({ isOpen, onClose, projectId, step, onSucc
                 value={formData.title}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, title: e.target.value })}
                 placeholder="Ex: Fondation & Gros œuvre"
-                className="w-full bg-stone-50 border-none rounded-xl sm:rounded-2xl p-3 sm:p-4 text-sm sm:text-base text-stone-900 focus:ring-2 focus:ring-kelen-green-500 transition-all font-medium"
+                className="w-full bg-surface-container border-none rounded-xl sm:rounded-2xl p-3 sm:p-4 text-sm sm:text-base text-on-surface focus:ring-2 focus:ring-kelen-green-500 transition-all font-medium placeholder:text-on-surface-variant/40"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] text-stone-500 ml-1">
+              <label className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] text-on-surface-variant/60 ml-1">
                 Commentaires / Notes
               </label>
               <textarea
@@ -129,13 +129,13 @@ export default function AddStepDialog({ isOpen, onClose, projectId, step, onSucc
                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFormData({ ...formData, comment: e.target.value })}
                 placeholder="Détails sur l'avancement ou points d'attention..."
                 rows={3}
-                className="w-full bg-stone-50 border-none rounded-xl sm:rounded-2xl p-3 sm:p-4 text-sm sm:text-base text-stone-900 focus:ring-2 focus:ring-kelen-green-500 transition-all font-medium resize-none"
+                className="w-full bg-surface-container border-none rounded-xl sm:rounded-2xl p-3 sm:p-4 text-sm sm:text-base text-on-surface focus:ring-2 focus:ring-kelen-green-500 transition-all font-medium resize-none placeholder:text-on-surface-variant/40"
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div className="space-y-2">
-                <label className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] text-stone-500 ml-1">
+                <label className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] text-on-surface-variant/60 ml-1">
                   Budget Alloué
                 </label>
                 <div className="relative">
@@ -143,14 +143,14 @@ export default function AddStepDialog({ isOpen, onClose, projectId, step, onSucc
                     type="number"
                     value={formData.budget}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, budget: Number(e.target.value) })}
-                    className="w-full bg-stone-50 border-none rounded-xl sm:rounded-2xl p-3 sm:p-4 text-sm sm:text-base text-stone-900 focus:ring-2 focus:ring-kelen-green-500 transition-all font-medium"
+                    className="w-full bg-surface-container border-none rounded-xl sm:rounded-2xl p-3 sm:p-4 text-sm sm:text-base text-on-surface focus:ring-2 focus:ring-kelen-green-500 transition-all font-medium"
                   />
-                  <Calculator className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 w-3 h-3 sm:w-4 sm:h-4 text-stone-300" />
+                  <Calculator className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 w-3 h-3 sm:w-4 sm:h-4 text-on-surface-variant/30" />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] text-stone-500 ml-1">
+                <label className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] text-on-surface-variant/60 ml-1">
                   Dépense Réelle
                 </label>
                 <div className="relative">
@@ -158,21 +158,21 @@ export default function AddStepDialog({ isOpen, onClose, projectId, step, onSucc
                     type="number"
                     value={formData.expenditure}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, expenditure: Number(e.target.value) })}
-                    className="w-full bg-stone-50 border-none rounded-xl sm:rounded-2xl p-3 sm:p-4 text-sm sm:text-base text-stone-900 focus:ring-2 focus:ring-kelen-green-500 transition-all font-medium"
+                    className="w-full bg-surface-container border-none rounded-xl sm:rounded-2xl p-3 sm:p-4 text-sm sm:text-base text-on-surface focus:ring-2 focus:ring-kelen-green-500 transition-all font-medium"
                   />
-                  <Check className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 w-3 h-3 sm:w-4 sm:h-4 text-stone-300" />
+                  <Check className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 w-3 h-3 sm:w-4 sm:h-4 text-on-surface-variant/30" />
                 </div>
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] text-stone-500 ml-1">
+              <label className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] text-on-surface-variant/60 ml-1">
                 Statut actuel
               </label>
               <select
                 value={formData.status}
                 onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData({ ...formData, status: e.target.value as any })}
-                className="w-full bg-stone-50 border-none rounded-xl sm:rounded-2xl p-3 sm:p-4 text-sm sm:text-base text-stone-900 focus:ring-2 focus:ring-kelen-green-500 transition-all font-medium appearance-none"
+                className="w-full bg-surface-container border-none rounded-xl sm:rounded-2xl p-3 sm:p-4 text-sm sm:text-base text-on-surface focus:ring-2 focus:ring-kelen-green-500 transition-all font-medium appearance-none"
               >
                 <option value="pending">En attente</option>
                 <option value="in_progress">En cours</option>

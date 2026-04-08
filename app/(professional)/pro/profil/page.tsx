@@ -13,7 +13,7 @@ export default function ProProfilePage() {
         Modifiez les informations visibles sur votre profil public.
       </p>
 
-      <div className="mt-6 rounded-xl border border-border bg-white p-6">
+      <div className="mt-6 rounded-xl border border-border bg-surface-container-low p-6">
         <ProProfileForm />
       </div>
     </div>

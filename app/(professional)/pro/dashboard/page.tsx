@@ -65,34 +65,34 @@ export default function ProDashboardPage() {
 
       {/* Stats grid */}
       <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-xl border border-border bg-white p-5">
+        <div className="rounded-xl border border-border bg-surface-container-low p-5">
           <p className="text-sm text-muted-foreground">Recommandations</p>
           <p className="mt-1 text-2xl font-bold text-foreground">
             {DEMO_PRO.recommendation_count}
           </p>
         </div>
-        <div className="rounded-xl border border-border bg-white p-5">
+        <div className="rounded-xl border border-border bg-surface-container-low p-5">
           <p className="text-sm text-muted-foreground">Note moyenne</p>
           <p className="mt-1 text-2xl font-bold text-foreground">
             {DEMO_PRO.avg_rating} / 5
           </p>
         </div>
-        <div className="rounded-xl border border-border bg-white p-5">
+        <div className="rounded-xl border border-border bg-surface-container-low p-5">
           <p className="text-sm text-muted-foreground">Vues ce mois</p>
           <p className="mt-1 text-2xl font-bold text-foreground">
             {DEMO_PRO.monthly_views}
           </p>
         </div>
-        <div className="rounded-xl border border-border bg-white p-5">
+        <div className="rounded-xl border border-border bg-surface-container-low p-5">
           <p className="text-sm text-muted-foreground">Abonnement</p>
-          <p className="mt-1 text-2xl font-bold text-kelen-green-600">
+          <p className="mt-1 text-2xl font-bold text-kelen-green-600 dark:text-kelen-green-400">
             {DEMO_PRO.subscription_status}
           </p>
         </div>
       </div>
 
       {/* Pending actions */}
-      <div className="rounded-xl border border-border bg-white">
+      <div className="rounded-xl border border-border bg-surface-container-low">
         <div className="border-b border-border px-6 py-4">
           <h2 className="font-semibold text-foreground">Actions requises</h2>
         </div>
@@ -125,8 +125,8 @@ export default function ProDashboardPage() {
                 }
                 className={`shrink-0 rounded-lg px-4 py-2 text-xs font-medium transition-colors ${
                   item.type === "signal"
-                    ? "bg-kelen-red-50 text-kelen-red-700 hover:bg-kelen-red-100"
-                    : "bg-kelen-green-50 text-kelen-green-700 hover:bg-kelen-green-100"
+                    ? "bg-kelen-red-50 text-kelen-red-700 hover:bg-kelen-red-100 dark:bg-kelen-red-900/30 dark:text-kelen-red-400 dark:hover:bg-kelen-red-900/50"
+                    : "bg-kelen-green-50 text-kelen-green-700 hover:bg-kelen-green-100 dark:bg-kelen-green-900/30 dark:text-kelen-green-400 dark:hover:bg-kelen-green-900/50"
                 }`}
               >
                 {item.type === "recommendation" ? "Voir" : "Répondre"}

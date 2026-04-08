@@ -102,20 +102,16 @@ export function RegisterForm({ defaultMode = "client", allowSwitch = true }: Reg
         },
       });
 
-      console.log("[Register] Step 2 — auth response", { authData, authError });
-
       if (authError) throw authError;
 
       // 2. Check if email confirmation is required (session is null)
       if (authData.user && !authData.session) {
-        console.log("[Register] Step 3 — email confirmation required, user:", authData.user.id);
         setSuccess(true);
         return;
       }
 
       // 3. If session is returned (e.g. Email confirms disabled), redirect directly
       if (authData.user && authData.session) {
-        console.log("[Register] Step 3 — session active, redirecting", mode === "professional" ? "/pro/dashboard" : "/dashboard");
         if (mode === "professional") {
           router.push("/pro/dashboard");
         } else {

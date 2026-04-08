@@ -92,15 +92,15 @@ export default function ProSignalsPage() {
   return (
     <main className="max-w-4xl">
       <header className="mb-8">
-        <h1 className="text-3xl font-extrabold text-stone-900 tracking-tight">Signalements & Litiges</h1>
-        <p className="mt-2 text-stone-500 font-medium">
+        <h1 className="text-3xl font-extrabold text-on-surface tracking-tight">Signalements & Litiges</h1>
+        <p className="mt-2 text-on-surface-variant font-medium">
           Gérez les incidents rapportés par vos clients et apportez votre version des faits pour maintenir votre score de confiance.
         </p>
       </header>
 
-      <div className="mb-10 p-5 bg-amber-50 rounded-2xl border border-amber-200 flex gap-4 items-start">
-        <span className="material-symbols-outlined text-amber-600 text-2xl">info</span>
-        <div className="text-sm text-amber-900">
+      <div className="mb-10 p-5 bg-amber-50 dark:bg-amber-900/20 rounded-2xl border border-amber-200 dark:border-amber-800 flex gap-4 items-start">
+        <span className="material-symbols-outlined text-amber-600 dark:text-amber-400 text-2xl">info</span>
+        <div className="text-sm text-amber-900 dark:text-amber-200">
           <p className="font-bold mb-1">Droit de réponse (15 jours)</p>
           <p>Vous disposez d&apos;un délai légal de 15 jours pour répondre à tout signalement. Passé ce délai, le signalement peut être validé automatiquement par nos services.</p>
         </div>
@@ -109,7 +109,7 @@ export default function ProSignalsPage() {
       {isLoading ? (
         <div className="space-y-6">
           {[1, 2].map((i) => (
-            <div key={i} className="h-64 bg-stone-100 rounded-3xl animate-pulse" />
+            <div key={i} className="h-64 bg-surface-container rounded-3xl animate-pulse" />
           ))}
         </div>
       ) : signals.length > 0 ? (
@@ -121,16 +121,16 @@ export default function ProSignalsPage() {
             const daysLeft = Math.max(0, Math.ceil((deadline.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)));
 
             return (
-              <article key={signal.id} className="bg-white rounded-3xl border border-stone-200 overflow-hidden shadow-sm flex flex-col">
-                <div className="p-8 border-b border-stone-100">
+              <article key={signal.id} className="bg-surface-container-low rounded-3xl border border-border overflow-hidden shadow-sm flex flex-col">
+                <div className="p-8 border-b border-border">
                   <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-6">
                     <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center">
+                      <div className="w-12 h-12 rounded-2xl bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 flex items-center justify-center">
                         <span className="material-symbols-outlined">report_problem</span>
                       </div>
                       <div>
-                        <h3 className="text-lg font-bold text-stone-900">{BREACH_LABELS[signal.breach_type]}</h3>
-                        <p className="text-xs text-stone-500 font-medium">Signalé le {createdAt.toLocaleDateString('fr-FR')}</p>
+                        <h3 className="text-lg font-bold text-on-surface">{BREACH_LABELS[signal.breach_type]}</h3>
+                        <p className="text-xs text-on-surface-variant font-medium">Signalé le {createdAt.toLocaleDateString('fr-FR')}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
@@ -138,43 +138,43 @@ export default function ProSignalsPage() {
                         {signal.severity}
                       </span>
                       {!signal.pro_response && (
-                        <span className="px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-[10px] font-black uppercase tracking-widest">
+                        <span className="px-3 py-1 bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 rounded-full text-[10px] font-black uppercase tracking-widest">
                           {daysLeft}j restants
                         </span>
                       )}
                     </div>
                   </div>
-                  
-                  <div className="bg-stone-50 rounded-2xl p-5 mb-6 border border-stone-100">
-                    <p className="text-xs font-black text-stone-400 uppercase tracking-widest mb-2 flex items-center gap-2">
+
+                  <div className="bg-surface-container rounded-2xl p-5 mb-6 border border-border">
+                    <p className="text-xs font-black text-on-surface-variant/60 uppercase tracking-widest mb-2 flex items-center gap-2">
                       <span className="material-symbols-outlined text-sm">subject</span>
                       Détails de l&apos;incident
                     </p>
-                    <p className="text-sm text-stone-700 leading-relaxed italic">
+                    <p className="text-sm text-on-surface-variant leading-relaxed italic">
                       &quot;{signal.breach_description}&quot;
                     </p>
                   </div>
 
                   {!signal.pro_response ? (
                     <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2">
-                      <label className="block text-sm font-bold text-stone-900">
+                      <label className="block text-sm font-bold text-on-surface">
                         Votre réponse officielle
                       </label>
                       <textarea
                         value={responseInput[signal.id] || ""}
                         onChange={(e) => setResponseInput({ ...responseInput, [signal.id]: e.target.value })}
                         rows={4}
-                        className="w-full rounded-2xl border border-stone-200 bg-stone-50/50 px-5 py-4 text-sm focus:border-kelen-green-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-kelen-green-500/5 transition-all"
+                        className="w-full rounded-2xl border border-border bg-surface-container px-5 py-4 text-sm focus:border-kelen-green-500 focus:bg-surface-container-low focus:outline-none focus:ring-4 focus:ring-kelen-green-500/5 transition-all"
                         placeholder="Apportez des éléments factuels pour répondre à ce signalement..."
                       />
                       <div className="flex justify-end">
                         <button
                           onClick={() => submitResponse(signal.id)}
                           disabled={isSubmitting === signal.id || !responseInput[signal.id]?.trim()}
-                          className="px-8 py-3 bg-stone-900 text-white font-bold rounded-xl hover:bg-stone-800 transition-all active:scale-95 disabled:opacity-50 flex items-center gap-2"
+                          className="px-8 py-3 bg-stone-900 dark:bg-white text-white dark:text-stone-900 font-bold rounded-xl hover:bg-stone-800 dark:hover:bg-stone-100 transition-all active:scale-95 disabled:opacity-50 flex items-center gap-2"
                         >
                           {isSubmitting === signal.id ? (
-                             <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                             <div className="w-4 h-4 border-2 border-white/30 dark:border-stone-900/30 border-t-white dark:border-t-stone-900 rounded-full animate-spin" />
                           ) : (
                             <span className="material-symbols-outlined text-lg">send</span>
                           )}
@@ -183,12 +183,12 @@ export default function ProSignalsPage() {
                       </div>
                     </div>
                   ) : (
-                    <div className="bg-kelen-green-50/50 border border-kelen-green-100 rounded-2xl p-6">
-                      <p className="text-xs font-black text-kelen-green-600 uppercase tracking-widest mb-3 flex items-center gap-2">
+                    <div className="bg-kelen-green-50/50 dark:bg-kelen-green-900/20 border border-kelen-green-100 dark:border-kelen-green-800 rounded-2xl p-6">
+                      <p className="text-xs font-black text-kelen-green-600 dark:text-kelen-green-400 uppercase tracking-widest mb-3 flex items-center gap-2">
                         <span className="material-symbols-outlined text-sm">reply</span>
                         Ma réponse publiée
                       </p>
-                      <p className="text-sm text-stone-800 leading-relaxed">
+                      <p className="text-sm text-on-surface-variant leading-relaxed">
                         {signal.pro_response}
                       </p>
                     </div>
@@ -199,12 +199,12 @@ export default function ProSignalsPage() {
           })}
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center py-24 bg-white rounded-3xl border border-stone-200 shadow-sm">
-          <div className="w-24 h-24 bg-stone-50 rounded-full flex items-center justify-center mb-8">
-            <span className="material-symbols-outlined text-5xl text-stone-300">security</span>
+        <div className="flex flex-col items-center justify-center py-24 bg-surface-container-low rounded-3xl border border-border shadow-sm">
+          <div className="w-24 h-24 bg-surface-container rounded-full flex items-center justify-center mb-8">
+            <span className="material-symbols-outlined text-5xl text-on-surface-variant/40">security</span>
           </div>
-          <h3 className="text-2xl font-bold text-stone-900">Score de confiance impeccable</h3>
-          <p className="text-stone-500 mt-2 max-w-sm text-center">
+          <h3 className="text-2xl font-bold text-on-surface">Score de confiance impeccable</h3>
+          <p className="text-on-surface-variant mt-2 max-w-sm text-center">
             Aucun signalement n&apos;a été enregistré sur votre profil. Continuez à offrir un service d&apos;excellence !
           </p>
         </div>

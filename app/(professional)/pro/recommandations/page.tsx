@@ -78,8 +78,8 @@ export default function ProRecommendationsPage() {
   return (
     <main className="max-w-4xl">
       <header className="mb-10">
-        <h1 className="text-3xl font-extrabold text-stone-900 tracking-tight">Recommandations reçues</h1>
-        <p className="mt-2 text-stone-500 font-medium">
+        <h1 className="text-3xl font-extrabold text-on-surface tracking-tight">Recommandations reçues</h1>
+        <p className="mt-2 text-on-surface-variant font-medium">
           Retrouvez ici tous les témoignages de clients satisfaits. Liez-les à votre profil pour renforcer votre visibilité.
         </p>
       </header>
@@ -87,26 +87,26 @@ export default function ProRecommendationsPage() {
       {isLoading ? (
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-24 bg-stone-100 rounded-2xl animate-pulse" />
+            <div key={i} className="h-24 bg-surface-container rounded-2xl animate-pulse" />
           ))}
         </div>
       ) : recommendations.length > 0 ? (
-        <div className="bg-white rounded-3xl border border-stone-200 overflow-hidden shadow-sm">
-          <div className="divide-y divide-stone-100">
+        <div className="bg-surface-container-low rounded-3xl border border-border overflow-hidden shadow-sm">
+          <div className="divide-y divide-border">
             {recommendations.map((rec) => (
               <article
                 key={rec.id}
-                className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 px-8 py-6 hover:bg-stone-50/50 transition-colors"
+                className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 px-8 py-6 hover:bg-surface-container-high/50 transition-colors"
               >
                 <div className="space-y-1">
                   <div className="flex items-center gap-3">
-                    <h3 className="text-base font-bold text-stone-900">
+                    <h3 className="text-base font-bold text-on-surface">
                       {rec.project_type}
                     </h3>
-                    <span className="text-stone-300">·</span>
-                    <span className="text-stone-500 text-sm font-medium">{rec.location}</span>
+                    <span className="text-on-surface-variant/30">·</span>
+                    <span className="text-on-surface-variant text-sm font-medium">{rec.location}</span>
                   </div>
-                  <p className="text-xs text-stone-400 font-semibold uppercase tracking-wider">
+                  <p className="text-xs text-on-surface-variant/60 font-semibold uppercase tracking-wider">
                     Client: {rec.submitter_name} <span className="mx-1">·</span> Terminé le{" "}
                     {new Date(rec.completion_date).toLocaleDateString("fr-FR", {
                       day: "numeric",
@@ -123,20 +123,20 @@ export default function ProRecommendationsPage() {
                   >
                     {STATUS_MAP[rec.status].label}
                   </span>
-                  
+
                   {rec.linked ? (
-                    <div className="flex items-center gap-2 text-kelen-green-600 px-4 py-1.5 bg-kelen-green-50 rounded-xl border border-kelen-green-200/50">
-                      <span className="material-symbols-outlined text-sm font-black text-kelen-green-600">verified</span>
+                    <div className="flex items-center gap-2 text-kelen-green-600 dark:text-kelen-green-400 px-4 py-1.5 bg-kelen-green-50 dark:bg-kelen-green-900/30 rounded-xl border border-kelen-green-200/50 dark:border-kelen-green-800/50">
+                      <span className="material-symbols-outlined text-sm font-black text-kelen-green-600 dark:text-kelen-green-400">verified</span>
                       <span className="text-[10px] font-black uppercase tracking-widest">Publié</span>
                     </div>
                   ) : (
                     <button
                       onClick={() => linkToProfile(rec.id)}
                       disabled={isLinking === rec.id}
-                      className="whitespace-nowrap rounded-xl bg-stone-900 px-5 py-2.5 text-[10px] font-black text-white uppercase tracking-widest transition-all hover:bg-stone-800 disabled:opacity-50 active:scale-95 shadow-lg shadow-stone-900/10 flex items-center gap-2"
+                      className="whitespace-nowrap rounded-xl bg-stone-900 dark:bg-white px-5 py-2.5 text-[10px] font-black text-white dark:text-stone-900 uppercase tracking-widest transition-all hover:bg-stone-800 dark:hover:bg-stone-100 disabled:opacity-50 active:scale-95 shadow-lg shadow-stone-900/10 flex items-center gap-2"
                     >
                       {isLinking === rec.id ? (
-                        <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <div className="w-3 h-3 border-2 border-white/30 dark:border-stone-900/30 border-t-white dark:border-t-stone-900 rounded-full animate-spin" />
                       ) : (
                         <span className="material-symbols-outlined text-base">link</span>
                       )}
@@ -149,12 +149,12 @@ export default function ProRecommendationsPage() {
           </div>
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center py-20 bg-stone-50 rounded-3xl border-2 border-dashed border-stone-200">
-          <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-inner mb-6">
-            <span className="material-symbols-outlined text-4xl text-stone-300">workspace_premium</span>
+        <div className="flex flex-col items-center justify-center py-20 bg-surface-container rounded-3xl border-2 border-dashed border-border">
+          <div className="w-20 h-20 bg-surface-container-low rounded-full flex items-center justify-center shadow-inner mb-6">
+            <span className="material-symbols-outlined text-4xl text-on-surface-variant/40">workspace_premium</span>
           </div>
-          <h3 className="text-xl font-bold text-stone-900">Aucune recommandation</h3>
-          <p className="text-stone-500 mt-2 max-w-sm text-center">
+          <h3 className="text-xl font-bold text-on-surface">Aucune recommandation</h3>
+          <p className="text-on-surface-variant mt-2 max-w-sm text-center">
             Envoyez votre lien de recommandation à vos anciens clients pour commencer à bâtir votre réputation.
           </p>
           <button className="mt-8 px-8 py-3 bg-kelen-green-500 text-white font-bold rounded-xl shadow-lg shadow-kelen-green-500/20">

@@ -39,22 +39,22 @@ export default async function Page() {
 
   return (
     <main className="min-h-screen pt-12 pb-24 px-6 md:px-8">
-      <header className="docked full-width top-0 sticky z-50 bg-stone-50/70 dark:bg-stone-900/70 backdrop-blur-xl border-b border-stone-200/10 dark:border-stone-800/10 shadow-sm dark:shadow-none flex justify-between items-center w-full px-8 py-3">
+      <header className="docked full-width top-0 sticky z-50 bg-surface/70 dark:bg-surface/70 backdrop-blur-xl border-b border-border/10 shadow-sm dark:shadow-none flex justify-between items-center w-full px-8 py-3">
         <div className="flex items-center gap-8">
           <div className="md:hidden">
-            <span className="text-xl font-bold tracking-tight text-[#10b77f]">Kelen Pro</span>
+            <span className="text-xl font-bold tracking-tight text-kelen-green-500">Kelen Pro</span>
           </div>
           <div className="hidden lg:flex items-center gap-6">
-            <Link className="text-stone-600 dark:text-stone-400 font-medium hover:text-[#10b77f] transition-colors duration-200" href="/">Support</Link>
-            <Link className="text-stone-600 dark:text-stone-400 font-medium hover:text-[#10b77f] transition-colors duration-200" href="/">Enterprise</Link>
+            <Link className="text-on-surface-variant font-medium hover:text-kelen-green-500 transition-colors duration-200" href="/">Support</Link>
+            <Link className="text-on-surface-variant font-medium hover:text-kelen-green-500 transition-colors duration-200" href="/">Enterprise</Link>
           </div>
         </div>
         <div className="flex items-center gap-4">
-          <button className="p-2 text-stone-600 hover:text-[#10b77f] transition-colors">
+          <button className="p-2 text-on-surface-variant hover:text-kelen-green-500 transition-colors">
             <span className="material-symbols-outlined">notifications</span>
           </button>
           <div className="h-8 w-8 rounded-full overflow-hidden border-2 border-primary-container">
-            <div className="w-full h-full bg-kelen-green-100 flex items-center justify-center text-kelen-green-700 font-bold text-xs">
+            <div className="w-full h-full bg-kelen-green-100 dark:bg-kelen-green-900/40 flex items-center justify-center text-kelen-green-700 dark:text-kelen-green-300 font-bold text-xs">
               {pro.business_name[0]}
             </div>
           </div>
@@ -64,10 +64,10 @@ export default async function Page() {
       <div className="p-8 max-w-6xl mx-auto">
         <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
-            <h2 className="text-4xl font-extrabold font-headline tracking-tight text-stone-900 mb-2">Abonnement &amp; Visibilité</h2>
-            <p className="text-stone-500 max-w-lg">Gérez vos performances de visibilité et suivez vos transactions en toute transparence.</p>
+            <h2 className="text-4xl font-extrabold font-headline tracking-tight text-on-surface mb-2">Abonnement &amp; Visibilité</h2>
+            <p className="text-on-surface-variant max-w-lg">Gérez vos performances de visibilité et suivez vos transactions en toute transparence.</p>
           </div>
-          <button className="inline-flex items-center gap-2 bg-stone-100 text-stone-900 px-6 py-3 rounded-xl font-semibold hover:bg-stone-200 transition-colors">
+          <button className="inline-flex items-center gap-2 bg-surface-container text-on-surface px-6 py-3 rounded-xl font-semibold hover:bg-surface-container-high transition-colors">
             <span className="material-symbols-outlined text-[20px]">credit_card</span>
             <span>Gérer mon moyen de paiement</span>
           </button>
@@ -109,48 +109,48 @@ export default async function Page() {
             </section>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-white p-8 rounded-2xl border border-stone-200 hover:border-kelen-green-200 transition-all duration-300 shadow-sm">
+              <div className="bg-surface-container-low p-8 rounded-2xl border border-border hover:border-kelen-green-200 dark:hover:border-kelen-green-800 transition-all duration-300 shadow-sm">
                 <h4 className="text-xl font-bold font-headline mb-2">Version Gratuite</h4>
-                <p className="text-stone-500 text-sm mb-6">Visibilité interne pour maintenir votre présence digitale.</p>
-                <div className="text-3xl font-bold mb-8">0 FCFA<span className="text-sm font-normal text-stone-400"> / mois</span></div>
+                <p className="text-on-surface-variant text-sm mb-6">Visibilité interne pour maintenir votre présence digitale.</p>
+                <div className="text-3xl font-bold mb-8">0 FCFA<span className="text-sm font-normal text-on-surface-variant/60"> / mois</span></div>
                 <ul className="space-y-4 mb-8">
-                  <li className="flex items-center gap-3 text-sm text-stone-600">
+                  <li className="flex items-center gap-3 text-sm text-on-surface-variant">
                     <span className="material-symbols-outlined text-kelen-green-600 text-lg">check_circle</span>
                     <span>Recherche par nom exact</span>
                   </li>
-                  <li className="flex items-center gap-3 text-sm text-stone-600">
+                  <li className="flex items-center gap-3 text-sm text-on-surface-variant">
                     <span className="material-symbols-outlined text-kelen-green-600 text-lg">check_circle</span>
                     <span>Maximum 3 projets</span>
                   </li>
-                  <li className="flex items-center gap-3 text-sm text-stone-400">
+                  <li className="flex items-center gap-3 text-sm text-on-surface-variant/40">
                     <span className="material-symbols-outlined text-lg">cancel</span>
                     <span>Non indexé sur Google</span>
                   </li>
                 </ul>
-                <button className="w-full py-3 border border-stone-200 text-stone-600 rounded-xl font-semibold hover:bg-stone-50 transition-colors">
+                <button className="w-full py-3 border border-border text-on-surface-variant rounded-xl font-semibold hover:bg-surface-container transition-colors">
                   Passer à cette version
                 </button>
               </div>
 
-              <div className="bg-stone-50 p-8 rounded-2xl border-2 border-kelen-green-500/20 shadow-sm relative">
+              <div className="bg-surface-container p-8 rounded-2xl border-2 border-kelen-green-500/20 shadow-sm relative">
                 {subscription?.plan !== 'free' && (
-                  <div className="absolute -top-3 right-8 bg-kelen-green-100 text-kelen-green-700 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-tighter shadow-sm border border-kelen-green-200">
+                  <div className="absolute -top-3 right-8 bg-kelen-green-100 dark:bg-kelen-green-900/40 text-kelen-green-700 dark:text-kelen-green-300 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-tighter shadow-sm border border-kelen-green-200 dark:border-kelen-green-800">
                     Actif
                   </div>
                 )}
                 <h4 className="text-xl font-bold font-headline mb-2">Abonnement Premium</h4>
-                <p className="text-stone-500 text-sm mb-6">Maximisez votre impact et votre SEO avec l&apos;offre complète.</p>
-                <div className="text-3xl font-bold mb-8 text-kelen-green-600">3000 FCFA<span className="text-sm font-normal text-stone-400"> / mois</span></div>
+                <p className="text-on-surface-variant text-sm mb-6">Maximisez votre impact et votre SEO avec l&apos;offre complète.</p>
+                <div className="text-3xl font-bold mb-8 text-kelen-green-600">3000 FCFA<span className="text-sm font-normal text-on-surface-variant/60"> / mois</span></div>
                 <ul className="space-y-4 mb-8">
-                  <li className="flex items-center gap-3 text-sm text-stone-600">
+                  <li className="flex items-center gap-3 text-sm text-on-surface-variant">
                     <span className="material-symbols-outlined text-kelen-green-600 text-lg">check_circle</span>
                     <span>Indexation Google (SEO)</span>
                   </li>
-                  <li className="flex items-center gap-3 text-sm text-stone-600">
+                  <li className="flex items-center gap-3 text-sm text-on-surface-variant">
                     <span className="material-symbols-outlined text-kelen-green-600 text-lg">check_circle</span>
                     <span>Projets illimités & Vidéos</span>
                   </li>
-                  <li className="flex items-center gap-3 text-sm text-stone-600">
+                  <li className="flex items-center gap-3 text-sm text-on-surface-variant">
                     <span className="material-symbols-outlined text-kelen-green-600 text-lg">check_circle</span>
                     <span>Visibilité dans les annuaires</span>
                   </li>
@@ -163,24 +163,24 @@ export default async function Page() {
           </div>
 
           <div className="lg:col-span-4 flex flex-col gap-8">
-            <section className="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm">
+            <section className="bg-surface-container-low p-6 rounded-2xl border border-border shadow-sm">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="font-headline font-bold text-lg">Facturation</h3>
-                <span className="material-symbols-outlined text-stone-400">history</span>
+                <span className="material-symbols-outlined text-on-surface-variant/40">history</span>
               </div>
               <div className="space-y-4">
-                <div className="text-center py-6 text-stone-400 text-sm italic">
+                <div className="text-center py-6 text-on-surface-variant/40 text-sm italic">
                   Aucune facture disponible pour le moment.
                 </div>
               </div>
             </section>
 
-            <section className="bg-stone-900 text-white p-6 rounded-2xl shadow-xl">
+            <section className="bg-stone-900 dark:bg-surface-container-low text-white p-6 rounded-2xl shadow-xl">
               <div className="flex gap-4">
                 <span className="material-symbols-outlined text-kelen-yellow-500 text-2xl">lightbulb</span>
                 <div>
                   <h4 className="font-bold mb-1">Astuce Visibilité</h4>
-                  <p className="text-sm text-stone-400 leadng-relaxed">Les profils avec une photo de couverture professionnelle reçoivent 40% de vues supplémentaires en moyenne.</p>
+                  <p className="text-sm text-stone-400 dark:text-on-surface-variant leadng-relaxed">Les profils avec une photo de couverture professionnelle reçoivent 40% de vues supplémentaires en moyenne.</p>
                   <Link className="inline-block mt-4 text-xs font-bold text-kelen-green-500 hover:text-kelen-green-400 transition-colors uppercase tracking-widest" href="/pro/profil">Optimiser mon profil</Link>
                 </div>
               </div>
