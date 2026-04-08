@@ -29,10 +29,10 @@ function formatDate(dateStr: string): string {
 export function downloadProjectPdf(data: ExportProjectData): void {
   const doc = new jsPDF('p', 'mm', 'a4');
   const pageWidth = doc.internal.pageSize.getWidth();
-  const accentColor = [0, 108, 73]; // Kelen green #006c49
+  const accentColor: [number, number, number] = [0, 108, 73]; // Kelen green #006c49
 
   // ── Cover Page ──
-  doc.setFillColor(...accentColor);
+  doc.setFillColor(accentColor[0], accentColor[1], accentColor[2]);
   doc.rect(0, 0, pageWidth, 60, 'F');
 
   doc.setTextColor(255, 255, 255);
@@ -82,7 +82,7 @@ export function downloadProjectPdf(data: ExportProjectData): void {
     ? 92 + (data.description.length > 100 ? 6 : 3) + (data.description.length > 200 ? 3 : 0)
     : 110;
 
-  doc.setFillColor(...accentColor);
+  doc.setFillColor(accentColor[0], accentColor[1], accentColor[2]);
   doc.rect(0, stepsStartY - 8, pageWidth, 10, 'F');
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(12);
@@ -127,7 +127,7 @@ export function downloadProjectPdf(data: ExportProjectData): void {
         styles: { fontSize: 8 },
       });
     } else {
-      doc.setFillColor(...accentColor);
+      doc.setFillColor(accentColor[0], accentColor[1], accentColor[2]);
       doc.rect(0, logsStartY - 8, pageWidth, 10, 'F');
       doc.setTextColor(255, 255, 255);
       doc.setFontSize(12);
@@ -159,7 +159,7 @@ export function downloadProjectPdf(data: ExportProjectData): void {
   const summaryY = (doc as any).lastAutoTable.finalY + 15;
   if (summaryY > 250) {
     doc.addPage();
-    doc.setFillColor(...accentColor);
+    doc.setFillColor(accentColor[0], accentColor[1], accentColor[2]);
     doc.rect(0, 12, pageWidth, 10, 'F');
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(12);
@@ -175,7 +175,7 @@ export function downloadProjectPdf(data: ExportProjectData): void {
       doc.text(`Restant: ${formatMoney(totalBudget - totalSpent, data.currency)}`, 20, 48);
     }
   } else {
-    doc.setFillColor(...accentColor);
+    doc.setFillColor(accentColor[0], accentColor[1], accentColor[2]);
     doc.rect(0, summaryY - 8, pageWidth, 10, 'F');
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(12);

@@ -83,6 +83,7 @@ export default function JournalListPage() {
         // Create log on server
         const result = await createLog({
           projectId: draft.projectId,
+          isProProject: false,
           stepId: draft.stepId,
           logDate: draft.formData.logDate,
           title: draft.formData.title,

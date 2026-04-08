@@ -71,7 +71,7 @@ export async function getProjectExportData(projectId: string): Promise<ExportPro
     budget: step.budget || null,
     expenditure: step.expenditure || null,
     order_index: step.order_index,
-    pros: (step.step_pros || []).map(p => p.professional?.business_name || "Pro externe"),
+    pros: (step.step_pros || []).map((p: any) => p.professional?.business_name || "Pro externe"),
   }));
 
   // Get project logs

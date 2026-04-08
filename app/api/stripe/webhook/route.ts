@@ -1,11 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-06-20.basil",
-});
+const stripeKey = process.env.STRIPE_SECRET_KEY;
+const stripe = stripeKey ? new Stripe(stripeKey, {
+  apiVersion: "2026-03-25.dahlia",
+}) : null;
 
 export async function POST(request: NextRequest) {
+  if (!stripe) {
+    return NextResponse.json({ error: "Stripe not configured" }, { status: 500 });
+  }
+
   const body = await request.text();
   const signature = request.headers.get("stripe-signature");
 
@@ -29,7 +34,7 @@ export async function POST(request: NextRequest) {
 
   // Handle events
   const session = event.data.object as Stripe.Checkout.Session;
-  const subscription = event.data.object as Stripe.Subscription;
+  const subscription = event.data.object as any;
 
   const { createClient } = await import("@/lib/supabase/server");
   const supabase = await createClient();
@@ -76,8 +81,8 @@ export async function POST(request: NextRequest) {
         .from("subscriptions")
         .update({
           status: subscription.status,
-          current_period_end: subscription.current_period_end
-            ? new Date(subscription.current_period_end * 1000).toISOString()
+          current_period_end: subscription.current_period?.ends_at
+            ? new Date(subscription.current_period.ends_at * 1000).toISOString()
             : null,
         })
         .eq("stripe_subscription_id", subscription.id);

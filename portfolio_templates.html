@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kelen Professional Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #111113;
+      --text-primary: #ffffff;
+      --text-secondary: #4b5563;
+      --text-muted: #6b7280;
+      --accent: #3b82f6;
+      --spacing: 2rem;
+      --page-width: 210mm;
+      --page-height: 297mm;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #e5e5e5;
+      line-height: 1.5;
+    }
+
+    .page {
+      width: var(--page-width);
+      height: var(--page-height);
+      margin: 0 auto 2rem;
+      position: relative;
+      overflow: hidden;
+      background: #0a0a0c;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+
+    /* ================= COVER PAGE ================= */
+    .cover {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      /* Subtle dark gradient helps the white card pop */
+      background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.5)), 
+                  url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+    }
+
+    /* The Card on Cover Page */
+    .cover-card {
+      background: #ffffff;
+      padding: 3rem 2rem;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+      width: 80%;
+      max-width: 500px;
+    }
+
+    .cover-card h1 { 
+      font-size: 2.5rem; 
+      font-weight: 700; 
+      color: #111827; 
+      margin-bottom: 0.5rem; 
+      letter-spacing: -0.02em;
+    }
+    
+    .cover-card h2 { 
+      font-size: 1.3rem; 
+      font-weight: 500; 
+      color: #374151; 
+      margin-bottom: 0.3rem; 
+    }
+    
+    .cover-card p { 
+      font-size: 1rem; 
+      color: #6b7280; 
+      font-weight: 400; 
+    }
+
+    .cover-footer {
+      position: absolute;
+      bottom: 2rem;
+      text-align: center;
+      color: #e5e7eb;
+      font-size: 0.9rem;
+    }
+    .cover-footer a { color: #9ca3af; text-decoration: none; font-weight: 500; }
+
+    /* ================= PROJECT HERO PAGE ================= */
+    .project-hero {
+      position: relative;
+    }
+
+    .hero-bg {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-size: cover;
+      background-position: center;
+    }
+
+    /* The Card on Project Hero Page */
+    .hero-card {
+      position: absolute;
+      bottom: 2rem;
+      left: 2rem;
+      right: 2rem;
+      background: #ffffff; /* Solid White Background */
+      border-radius: 12px;
+      padding: 1.5rem 2rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+
+    .hero-card h3 { 
+      font-size: 1.8rem; 
+      font-weight: 700; 
+      margin-bottom: 0.5rem; 
+      color: #111827; 
+    }
+    
+    .hero-card .meta { 
+      display: flex; 
+      flex-wrap: wrap; 
+      gap: 1rem; 
+      color: #4b5563; 
+      font-size: 0.95rem; 
+      margin-bottom: 0.7rem; 
+      font-weight: 500;
+    }
+    
+    .hero-card p { 
+      color: #374151; 
+      font-size: 0.95rem; 
+      line-height: 1.5; 
+    }
+
+    /* ================= PROJECT GRID PAGE ================= */
+    .project-grid {
+      padding: var(--spacing);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .project-grid h3 {
+      font-size: 1.2rem;
+      color: #9ca3af;
+      margin-bottom: 1rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 1.5rem;
+      flex-grow: 1;
+    }
+
+    .grid-item {
+      display: flex;
+      flex-direction: column;
+      background: #1a1a1c;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .grid-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      flex-grow: 1;
+    }
+
+    .grid-caption {
+      padding: 0.8rem;
+      font-size: 0.9rem;
+      color: #e5e7eb;
+      text-align: center;
+      background: #1a1a1c;
+    }
+
+    /* ================= BACK COVER ================= */
+    .back {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 3rem;
+      background: var(--bg-dark);
+      color: #ffffff;
+    }
+
+    .back h2 { font-size: 2rem; margin-bottom: 1.5rem; font-weight: 600; }
+    .back p { max-width: 600px; margin-bottom: 1rem; color: #d1d5db; font-size: 1.05rem; line-height: 1.6; }
+    .back .highlight { color: var(--accent); font-weight: 500; }
+    .back .logo { margin-top: 2rem; font-size: 1.2rem; font-weight: 600; letter-spacing: 2px; }
+    .back .link { color: #6b7280; font-size: 0.9rem; margin-top: 0.5rem; }
+
+    /* ================= PRINT OPTIMIZATION ================= */
+    @media print {
+      body { background: #fff; }
+      .page {
+        margin: 0;
+        box-shadow: none;
+        page-break-after: always;
+      }
+      .page:last-child { page-break-after: auto; }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+
+    @page {
+      size: A4;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- COVER PAGE -->
+  <section class="page cover">
+    <div class="cover-card">
+      <h1>Alex Morgan</h1>
+      <h2>Interior Architect & Designer</h2>
+      <p>Los Angeles, CA</p>
+    </div>
+    <div class="cover-footer">
+      <div style="font-weight: 500; margin-bottom: 0.3rem;">Kelen</div>
+      <a href="https://kelen.co/alexmorgan">Portfolio hosted on kelen.co</a>
+    </div>
+  </section>
+
+  <!-- PROJECT 1: HERO PAGE -->
+  <section class="page project-hero">
+    <div class="hero-bg" style="background-image: url('https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1600&q=80');"></div>
+    
+    <div class="hero-card">
+      <h3>Modern Coastal Retreat</h3>
+      <div class="meta">
+        <span>📍 Malibu, CA</span>
+        <span>💰 $85K – $110K</span>
+      </div>
+      <p>Full interior redesign focusing on natural materials, open sightlines, and sustainable finishes. Completed in 14 weeks with zero structural changes.</p>
+    </div>
+  </section>
+
+  <!-- PROJECT 1: GRID PAGE -->
+  <section class="page project-grid">
+    <h3>Project Gallery</h3>
+    <div class="grid-container">
+      <div class="grid-item">
+        <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80" alt="Living area">
+        <div class="grid-caption">Open-concept living space</div>
+      </div>
+      <div class="grid-item">
+        <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=800&q=80" alt="Kitchen">
+        <div class="grid-caption">Custom matte cabinetry</div>
+      </div>
+      <div class="grid-item">
+        <img src="https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=800&q=80" alt="Bedroom">
+        <div class="grid-caption">Primary suite layout</div>
+      </div>
+      <div class="grid-item">
+        <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80" alt="Details">
+        <div class="grid-caption">Integrated lighting design</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BACK COVER -->
+  <section class="page back">
+    <h2>Find Trusted Professionals. Hire with Confidence.</h2>
+    <p>Kelen connects clients with <span class="highlight">verified, skilled professionals</span> who deliver real results. Our portfolio system showcases actual project work, transparent pricing, and client reviews—so you can compare, choose, and collaborate without the guesswork.</p>
+    <p>Browse portfolios. Verify credentials. Start your project.</p>
+    <div class="logo">KELEN</div>
+    <div class="link">kelen.co</div>
+  </section>
+
+</body>
+</html>

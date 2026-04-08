@@ -59,7 +59,7 @@ export async function recalculateStatus(professionalId: string): Promise<{
     .single();
 
   revalidatePath(`/pro/dashboard`);
-  revalidatePath(`/professionnels/${pro.slug}`);
+  revalidatePath(`/professionnels`);
 
   return {
     oldStatus: pro.status,

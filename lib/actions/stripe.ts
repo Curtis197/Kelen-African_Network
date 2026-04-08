@@ -4,9 +4,10 @@ import { createClient } from "@/lib/supabase/server";
 import Stripe from "stripe";
 import { revalidatePath } from "next/cache";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-06-20.basil",
-});
+const stripeKey = process.env.STRIPE_SECRET_KEY;
+const stripe = stripeKey ? new Stripe(stripeKey, {
+  apiVersion: "2026-03-25.dahlia",
+}) : null;
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://kelen.africa";
 
@@ -33,6 +34,8 @@ const PLANS = {
 export async function createCheckoutSession(
   planKey: "pro_africa" | "pro_europe"
 ): Promise<{ url?: string; error?: string }> {
+  if (!stripe) return { error: "Stripe not configured" };
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -50,19 +53,19 @@ export async function createCheckoutSession(
   // Check existing active subscription
   const { data: existingSub } = await supabase
     .from("subscriptions")
-    .select("id, status")
+    .select("id, status, stripe_customer_id")
     .eq("professional_id", pro.id)
     .eq("status", "active")
     .single();
 
   if (existingSub) {
     // If already subscribed, go to Stripe Customer Portal
-    const { data: portalSession } = await stripe.billingPortal.sessions.create({
-      customer: existingSub.id, // Stripe customer ID stored in subscription
+    const portalSession = await stripe.billingPortal.sessions.create({
+      customer: existingSub.stripe_customer_id,
       return_url: `${baseUrl}/pro/abonnement`,
     });
 
-    return { url: portalSession?.url };
+    return { url: portalSession.url };
   }
 
   // Create Stripe Checkout Session
@@ -115,12 +118,14 @@ export async function createCheckoutSession(
 export async function handleStripeWebhook(
   signature: string,
   payload: string
-): Promise<{ success: boolean; error?: string }> {
+): Promise<void> {
+  if (!stripe) throw new Error("Stripe not configured");
+
   const supabase = await createClient();
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
   if (!webhookSecret) {
-    return { error: "Webhook secret not configured" };
+    throw new Error("Webhook secret not configured");
   }
 
   let event: Stripe.Event;
@@ -129,11 +134,11 @@ export async function handleStripeWebhook(
     event = stripe.webhooks.constructEvent(payload, signature, webhookSecret);
   } catch (err) {
     console.error("Webhook signature verification failed:", err);
-    return { error: "Invalid webhook signature" };
+    throw new Error("Invalid webhook signature");
   }
 
   const session = event.data.object as Stripe.Checkout.Session;
-  const subscription = event.data.object as Stripe.Subscription;
+  const subscription = event.data.object as any;
 
   switch (event.type) {
     case "checkout.session.completed": {
@@ -142,14 +147,14 @@ export async function handleStripeWebhook(
 
       if (!professionalId || !plan) {
         console.error("Missing metadata in checkout session");
-        return { error: "Missing metadata" };
+        return;
       }
 
       // Create/update subscription record
       await supabase.from("subscriptions").upsert({
         professional_id: professionalId,
         stripe_subscription_id: session.subscription,
-        stripe_customer_id: session.customer,
+        stripe_customer_id: typeof session.customer === "string" ? session.customer : null,
         plan,
         status: "active",
         current_period_end: new Date(
@@ -178,13 +183,12 @@ export async function handleStripeWebhook(
         .from("subscriptions")
         .update({
           status: subscription.status,
-          current_period_end: subscription.current_period_end
-            ? new Date(subscription.current_period_end * 1000).toISOString()
+          current_period_end: subscription.current_period?.ends_at
+            ? new Date(subscription.current_period.ends_at * 1000).toISOString()
             : null,
         })
         .eq("stripe_subscription_id", subscription.id);
 
-      // Update professional status if subscription canceled/expired
       if (subscription.status === "canceled" || subscription.status === "past_due") {
         await supabase
           .from("professionals")
@@ -214,9 +218,25 @@ export async function handleStripeWebhook(
 
       break;
     }
-  }
 
-  return { success: true };
+    case "invoice.payment_failed": {
+      const professionalId = subscription.metadata?.professional_id;
+
+      if (!professionalId) break;
+
+      await supabase
+        .from("subscriptions")
+        .update({ status: "past_due" })
+        .eq("stripe_subscription_id", subscription.id);
+
+      await supabase
+        .from("professionals")
+        .update({ subscription_status: "past_due" })
+        .eq("id", professionalId);
+
+      break;
+    }
+  }
 }
 
 /**
@@ -260,6 +280,8 @@ export async function getSubscriptionInfo(): Promise<{
  * Cancel subscription via Stripe Customer Portal.
  */
 export async function cancelSubscription(): Promise<{ url?: string; error?: string }> {
+  if (!stripe) return { error: "Stripe not configured" };
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
