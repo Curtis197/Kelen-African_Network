@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { MARKETING_NAV } from "@/lib/utils/constants";
 import { createClient } from "@/lib/supabase/client";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import { NotificationDropdown } from "@/components/layout/NotificationDropdown";
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -135,13 +136,16 @@ export function Navbar() {
           </Link>
 
           {user ? (
-            <button
-              onClick={handleSignOut}
-              className="flex items-center gap-2 rounded-xl border border-border px-4 py-2 text-sm font-bold text-stone-500 transition-all hover:bg-stone-50 hover:text-stone-900 active:scale-95"
-            >
-              <span className="material-symbols-outlined text-[18px]">logout</span>
-              Déconnexion
-            </button>
+            <div className="flex items-center gap-2">
+              <NotificationDropdown />
+              <button
+                onClick={handleSignOut}
+                className="flex items-center gap-2 rounded-xl border border-border px-4 py-2 text-sm font-bold text-on-surface-variant transition-all hover:bg-surface-container hover:text-on-surface active:scale-95"
+              >
+                <span className="material-symbols-outlined text-[18px]">logout</span>
+                Déconnexion
+              </button>
+            </div>
           ) : (
             <>
               <Link

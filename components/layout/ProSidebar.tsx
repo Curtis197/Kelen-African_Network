@@ -16,6 +16,7 @@ import {
   Menu,
   X,
 } from "lucide-react";
+import { NotificationDropdown } from "@/components/layout/NotificationDropdown";
 
 const NAV_ITEMS = [
   { href: "/pro/dashboard", label: "Tableau de bord", icon: LayoutDashboard },
@@ -124,13 +125,16 @@ export function ProSidebar() {
       <aside className="hidden w-64 shrink-0 border-r border-border bg-surface lg:block">
         <div className="sticky top-0 flex h-screen flex-col">
           {/* Brand */}
-          <div className="flex h-16 items-center border-b border-border px-6">
-            <Link href="/" className="text-xl font-bold text-foreground">
-              Kelen
-            </Link>
-            <span className="ml-2 rounded bg-kelen-green-50 px-1.5 py-0.5 text-xs font-medium text-kelen-green-700">
+          <div className="flex h-16 items-center justify-between border-b border-border px-6">
+            <div className="flex items-center">
+              <Link href="/" className="text-xl font-bold text-foreground">
+                Kelen
+              </Link>
+              <span className="ml-2 rounded bg-kelen-green-50 px-1.5 py-0.5 text-xs font-medium text-kelen-green-700 dark:bg-kelen-green-900/30 dark:text-kelen-green-400">
               Pro
-            </span>
+              </span>
+            </div>
+            <NotificationDropdown />
           </div>
 
           {/* Nav */}
