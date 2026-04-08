@@ -35,7 +35,7 @@ export function ProSidebar() {
   const supabase = createClient();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
-  const [businessName, setBusinessName] = useState<string>("Pro");
+  const [businessName, setBusinessName] = useState<string>("Mon profil");
   const drawerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

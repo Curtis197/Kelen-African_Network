@@ -56,6 +56,7 @@ export function FilterPanel() {
       {/* Browse mode filters */}
       {mode === "browse" && (
         <>
+          <label htmlFor="filter-category" className="sr-only">Catégorie</label>
           <select
             id="filter-category"
             value={category}
@@ -71,6 +72,7 @@ export function FilterPanel() {
             ))}
           </select>
 
+          <label htmlFor="filter-country" className="sr-only">Pays</label>
           <select
             id="filter-country"
             value={country}
@@ -86,6 +88,7 @@ export function FilterPanel() {
             ))}
           </select>
 
+          <label htmlFor="filter-status" className="sr-only">Statut</label>
           <select
             id="filter-status"
             value={statusFilter}

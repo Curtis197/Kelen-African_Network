@@ -89,18 +89,18 @@ export function ProjectDocumentCard({
         {/* Action Menu */}
         <div className="absolute top-4 right-4 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
            <div className="flex gap-2">
-              <Link 
+              <Link
                 href={`/pro/realisations/${doc.id}/edit`}
                 className="flex h-8 w-8 items-center justify-center rounded-full bg-surface/90 text-on-surface shadow-sm hover:bg-white transition-colors"
-                title="Modifier"
+                aria-label={`Modifier ${doc.project_title}`}
                 onClick={(e) => e.stopPropagation()}
               >
                 <Edit2 size={14} />
               </Link>
-              <button 
+              <button
                 onClick={handleDelete}
                 className="flex h-8 w-8 items-center justify-center rounded-full bg-surface/90 text-kelen-red-600 shadow-sm hover:bg-white transition-colors"
-                title="Supprimer"
+                aria-label={`Supprimer ${doc.project_title}`}
               >
                 {isDeleting ? <Loader2 size={12} className="animate-spin" /> : <Trash2 size={14} />}
               </button>

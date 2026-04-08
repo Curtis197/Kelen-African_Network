@@ -217,6 +217,7 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
                            onClick={() => handleRankUpdate(member.id, member.rank_order, 'up')}
                            disabled={member.rank_order === 0 || isUpdating}
                            className="w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center bg-surface-container hover:bg-surface-container-high rounded-full disabled:opacity-30 transition-colors"
+                           aria-label={`Augmenter le rang de ${member.is_external ? member.external_name : member.professionals?.business_name}`}
                          >
                            <span className="material-symbols-outlined text-xs sm:text-[14px]">arrow_upward</span>
                          </button>
@@ -224,6 +225,7 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
                            onClick={() => handleRankUpdate(member.id, member.rank_order, 'down')}
                            disabled={isUpdating}
                            className="w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center bg-surface-container hover:bg-surface-container-high rounded-full disabled:opacity-30 transition-colors"
+                           aria-label={`Diminuer le rang de ${member.is_external ? member.external_name : member.professionals?.business_name}`}
                          >
                            <span className="material-symbols-outlined text-xs sm:text-[14px]">arrow_downward</span>
                          </button>

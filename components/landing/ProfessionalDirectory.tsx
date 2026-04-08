@@ -124,7 +124,7 @@ export function ProfessionalDirectory({
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           {/* Area */}
           <div className="space-y-2">
-            <label className="mb-1 ml-1 block text-[11px] font-black uppercase tracking-widest text-muted-foreground">
+            <label htmlFor="directory-area" className="mb-1 ml-1 block text-[11px] font-black uppercase tracking-widest text-muted-foreground">
               Domaine
             </label>
             <div className="relative group">
@@ -146,7 +146,7 @@ export function ProfessionalDirectory({
 
           {/* Profession (cascading) */}
           <div className="space-y-2">
-            <label className="mb-1 ml-1 block text-[11px] font-black uppercase tracking-widest text-muted-foreground">
+            <label htmlFor="directory-profession" className="mb-1 ml-1 block text-[11px] font-black uppercase tracking-widest text-muted-foreground">
               Profession
             </label>
             <div className="relative group">
@@ -169,7 +169,7 @@ export function ProfessionalDirectory({
 
           {/* Location */}
           <div className="space-y-2">
-            <label className="mb-1 ml-1 block text-[11px] font-black uppercase tracking-widest text-muted-foreground">
+            <label htmlFor="directory-location" className="mb-1 ml-1 block text-[11px] font-black uppercase tracking-widest text-muted-foreground">
               Localisation
             </label>
             <div className="relative group">

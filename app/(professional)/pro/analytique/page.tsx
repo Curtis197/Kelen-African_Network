@@ -169,24 +169,40 @@ export default function ProAnalyticsPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-10">
-        {[
-          { label: "Vues totales", val: stats.total_views, icon: "visibility" },
-          { label: "Ce mois", val: stats.monthly_views, icon: "calendar_month" },
-          { label: "Recherches", val: stats.search_appearances, icon: "manage_search" },
-          { label: "Interactions", val: stats.profile_clicks, icon: "touch_app" },
-          { label: "Contacts", val: stats.contact_clicks, icon: "contact_emergency" },
-        ].map((s, i) => (
-          <div key={i} className="bg-surface-container-low p-5 rounded-3xl border border-border shadow-sm flex flex-col justify-between">
-            <span className="material-symbols-outlined text-on-surface-variant/40 text-xl">{s.icon}</span>
-            <div className="mt-4">
-              <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60 mb-1">{s.label}</p>
-              <p className="text-2xl font-black text-on-surface">{s.val.toLocaleString()}</p>
+        {isLoading ? (
+          Array.from({ length: 5 }).map((_, i) => (
+            <div key={i} className="bg-surface-container-low p-5 rounded-3xl border border-border shadow-sm animate-pulse">
+              <div className="w-5 h-5 bg-surface-container-high rounded mb-4" />
+              <div className="h-3 bg-surface-container-high rounded w-20 mb-2" />
+              <div className="h-7 bg-surface-container-high rounded w-12" />
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          [
+            { label: "Vues totales", val: stats.total_views, icon: "visibility" },
+            { label: "Ce mois", val: stats.monthly_views, icon: "calendar_month" },
+            { label: "Recherches", val: stats.search_appearances, icon: "manage_search" },
+            { label: "Interactions", val: stats.profile_clicks, icon: "touch_app" },
+            { label: "Contacts", val: stats.contact_clicks, icon: "contact_emergency" },
+          ].map((s, i) => (
+            <div key={i} className="bg-surface-container-low p-5 rounded-3xl border border-border shadow-sm flex flex-col justify-between">
+              <span className="material-symbols-outlined text-on-surface-variant/40 text-xl">{s.icon}</span>
+              <div className="mt-4">
+                <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60 mb-1">{s.label}</p>
+                <p className="text-2xl font-black text-on-surface">{s.val.toLocaleString()}</p>
+              </div>
+            </div>
+          ))
+        )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      {isLoading ? (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="bg-surface-container-low p-8 rounded-3xl border border-border shadow-sm h-64 animate-pulse" />
+          <div className="bg-surface-container-low p-8 rounded-3xl border border-border shadow-sm h-64 animate-pulse" />
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Monthly Chart */}
         <div className="bg-surface-container-low p-8 rounded-3xl border border-border shadow-sm">
           <h3 className="text-sm font-black uppercase tracking-widest text-on-surface-variant/60 mb-8">Évolution des vues</h3>
@@ -230,6 +246,7 @@ export default function ProAnalyticsPage() {
           </div>
         </div>
       </div>
+      )}
     </main>
   );
 }

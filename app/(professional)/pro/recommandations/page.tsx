@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { toast } from "sonner";
 
 interface Recommendation {
   id: string;
@@ -157,7 +158,14 @@ export default function ProRecommendationsPage() {
           <p className="text-on-surface-variant mt-2 max-w-sm text-center">
             Envoyez votre lien de recommandation à vos anciens clients pour commencer à bâtir votre réputation.
           </p>
-          <button className="mt-8 px-8 py-3 bg-kelen-green-500 text-white font-bold rounded-xl shadow-lg shadow-kelen-green-500/20">
+          <button
+            onClick={() => {
+              const url = window.location.origin + `/pro/profil`;
+              navigator.clipboard.writeText(url);
+              toast.success("Lien de profil copié dans le presse-papiers");
+            }}
+            className="mt-8 px-8 py-3 bg-kelen-green-500 text-white font-bold rounded-xl shadow-lg shadow-kelen-green-500/20 hover:bg-kelen-green-600 transition-colors"
+          >
             Copier mon lien Pro
           </button>
         </div>
