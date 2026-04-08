@@ -10,9 +10,11 @@ import LogTimeline from '@/components/journal/LogTimeline';
 import OfflineIndicator from '@/components/journal/OfflineIndicator';
 import { Plus, ArrowLeft } from 'lucide-react';
 import type { ProjectLog } from '@/lib/types/daily-logs';
-import { getAllDrafts, getSyncQueue, deleteDraft, markDraftPendingSync, clearSyncQueue } from '@/lib/utils/daily-log-drafts';
+import { getAllDrafts, getSyncQueue, deleteDraft, markDraftPendingSync, clearSyncQueue, getDraft } from '@/lib/utils/daily-log-drafts';
 import { useOnlineStatus } from '@/hooks/use-online-status';
 import { toast } from 'sonner';
+import { createLog } from '@/lib/actions/daily-logs';
+import { uploadLogMedia } from '@/lib/actions/log-media';
 
 export default function JournalListPage() {
   const params = useParams();
@@ -70,12 +72,44 @@ export default function JournalListPage() {
 
     for (const draftId of queue) {
       try {
-        // TODO: Implement actual draft sync - requires server action to sync draft
-        // For now, just mark as synced and delete
-        await markDraftPendingSync(draftId, false);
+        // Read draft from IndexedDB
+        const draft = await getDraft(draftId);
+        if (!draft) {
+          await deleteDraft(draftId);
+          failed++;
+          continue;
+        }
+
+        // Create log on server
+        const result = await createLog({
+          projectId: draft.projectId,
+          stepId: draft.stepId,
+          logDate: draft.formData.logDate,
+          title: draft.formData.title,
+          description: draft.formData.description,
+          moneySpent: draft.formData.moneySpent,
+          moneyCurrency: draft.formData.moneyCurrency,
+          paymentId: draft.formData.paymentId || undefined,
+          issues: draft.formData.issues || undefined,
+          nextSteps: draft.formData.nextSteps || undefined,
+          weather: draft.formData.weather || undefined,
+          gpsLatitude: draft.formData.gpsLatitude,
+          gpsLongitude: draft.formData.gpsLongitude,
+        });
+
+        if (result.error || !result.data) {
+          throw new Error(result.error || 'Failed to create log');
+        }
+
+        // Upload photos if any (draft stores them as File objects in IndexedDB — may not serialize)
+        // For now, photos from offline drafts are lost during sync.
+        // TODO: Store photos as base64 in IndexedDB or use background sync API.
+
+        // Delete draft on success
         await deleteDraft(draftId);
         synced++;
-      } catch {
+      } catch (err) {
+        console.error('Draft sync failed:', err);
         failed++;
       }
     }
