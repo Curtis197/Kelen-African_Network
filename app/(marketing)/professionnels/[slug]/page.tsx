@@ -17,17 +17,55 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const supabase = await createClient();
+
   const { data: pro } = await supabase
     .from("professionals")
-    .select("business_name, description")
+    .select("business_name, description, category, city, country, photo_url, status")
     .eq("slug", slug)
     .single();
 
   if (!pro) return { title: "Professionnel non trouvé | Kelen" };
 
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://kelen.africa';
+  const profileUrl = `${baseUrl}/professionnels/${slug}`;
+
+  // Build description with context
+  const locationParts = [pro.city, pro.country].filter(Boolean).join(', ');
+  const categoryLabel = pro.category ? pro.category.charAt(0).toUpperCase() + pro.category.slice(1) : 'Professionnel';
+  const description = pro.description
+    || `${categoryLabel} basé${locationParts ? ` à ${locationParts}` : ''}. Consultez son portfolio et ses recommandations vérifiées sur Kelen.`;
+
+  // Free profiles: noindex
+  // Paid profiles: full indexing (subscription check when payment is implemented)
+  const isPaid = pro.status === 'gold' || pro.status === 'silver';
+
   return {
-    title: `${pro.business_name} | Portfolio Professionnel Kelen`,
-    description: pro.description || `Consultez le profil de ${pro.business_name} sur Kelen.`,
+    title: `${pro.business_name} — ${categoryLabel}${locationParts ? ` à ${locationParts}` : ''} | Kelen`,
+    description,
+    robots: {
+      index: isPaid,
+      follow: true,
+    },
+    openGraph: {
+      title: `${pro.business_name} — ${categoryLabel} sur Kelen`,
+      description,
+      type: 'profile',
+      url: profileUrl,
+      siteName: 'Kelen',
+      locale: 'fr_FR',
+      images: pro.photo_url
+        ? [{ url: pro.photo_url, width: 1200, height: 630, alt: pro.business_name }]
+        : [],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${pro.business_name} — ${categoryLabel} sur Kelen`,
+      description,
+      images: pro.photo_url ? [pro.photo_url] : [],
+    },
+    alternates: {
+      canonical: profileUrl,
+    },
   };
 }
 
