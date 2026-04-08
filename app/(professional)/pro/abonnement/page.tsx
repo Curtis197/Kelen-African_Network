@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import Link from 'next/link';
 import { redirect } from "next/navigation";
+import { createCheckoutSession, cancelSubscription, getSubscriptionInfo } from "@/lib/actions/stripe";
 
 export default async function Page() {
   const supabase = await createClient();
@@ -67,10 +68,16 @@ export default async function Page() {
             <h2 className="text-4xl font-extrabold font-headline tracking-tight text-on-surface mb-2">Abonnement &amp; Visibilité</h2>
             <p className="text-on-surface-variant max-w-lg">Gérez vos performances de visibilité et suivez vos transactions en toute transparence.</p>
           </div>
-          <button className="inline-flex items-center gap-2 bg-surface-container text-on-surface px-6 py-3 rounded-xl font-semibold hover:bg-surface-container-high transition-colors">
-            <span className="material-symbols-outlined text-[20px]">credit_card</span>
-            <span>Gérer mon moyen de paiement</span>
-          </button>
+          <form action={async () => {
+            "use server";
+            const result = await cancelSubscription();
+            if (result.url) redirect(result.url);
+          }}>
+            <button className="inline-flex items-center gap-2 bg-surface-container text-on-surface px-6 py-3 rounded-xl font-semibold hover:bg-surface-container-high transition-colors">
+              <span className="material-symbols-outlined text-[20px]">credit_card</span>
+              <span>Gérer mon moyen de paiement</span>
+            </button>
+          </form>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -100,9 +107,15 @@ export default async function Page() {
                     <p className="mt-3 text-xs text-white/70 italic">Votre profil est actuellement indexé sur Google et visible dans les annuaires.</p>
                   </div>
                   <div className="flex flex-col gap-3">
-                    <button className="bg-white text-kelen-green-700 font-bold py-3 rounded-xl hover:bg-stone-50 transition-colors shadow-sm">
-                      Gérer mon abonnement
-                    </button>
+                    <form action={async () => {
+                      "use server";
+                      const result = await cancelSubscription();
+                      if (result.url) redirect(result.url);
+                    }}>
+                      <button className="bg-white text-kelen-green-700 font-bold py-3 rounded-xl hover:bg-stone-50 transition-colors shadow-sm">
+                        Gérer mon abonnement
+                      </button>
+                    </form>
                   </div>
                 </div>
               </div>
@@ -155,9 +168,15 @@ export default async function Page() {
                     <span>Visibilité dans les annuaires</span>
                   </li>
                 </ul>
-                <button className="w-full py-3 bg-gradient-to-r from-kelen-green-600 to-kelen-green-700 text-white rounded-xl font-bold shadow-md hover:opacity-95 transition-opacity">
-                  {subscription?.plan !== 'free' ? 'Plan Actuel' : 'S\'abonner maintenant'}
-                </button>
+                <form action={async () => {
+                  "use server";
+                  const result = await createCheckoutSession("pro_africa");
+                  if (result.url) redirect(result.url);
+                }}>
+                  <button className="w-full py-3 bg-gradient-to-r from-kelen-green-600 to-kelen-green-700 text-white rounded-xl font-bold shadow-md hover:opacity-95 transition-opacity">
+                    {subscription?.plan !== 'free' ? 'Plan Actuel' : 'S\'abonner maintenant'}
+                  </button>
+                </form>
               </div>
             </div>
           </div>
