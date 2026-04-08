@@ -7,6 +7,7 @@ import { formatRating } from "@/lib/utils/format";
 import type { ProfessionalStatus } from "@/lib/supabase/types";
 import { manageProjectProfessional } from "@/lib/actions/projects";
 import { Check, Plus } from "lucide-react";
+import { toast } from "sonner";
 
 interface ProfessionalCardProps {
   id: string;
@@ -63,7 +64,7 @@ export function ProfessionalCard({
         false
       );
       if (result && 'error' in result && result.error) {
-        alert(`Erreur : ${result.error}`);
+        toast.error(result.error);
         return;
       }
       setAdded(true);
@@ -72,7 +73,7 @@ export function ProfessionalCard({
       }, 1500);
     } catch (error) {
       console.error("Failed to add professional:", error);
-      alert("Une erreur est survenue lors de l'ajout.");
+      toast.error("Une erreur est survenue lors de l'ajout.");
     } finally {
       setIsAdding(false);
     }

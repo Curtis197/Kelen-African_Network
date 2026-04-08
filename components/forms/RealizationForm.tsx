@@ -9,6 +9,7 @@ import { createClient } from "@/lib/supabase/client";
 import { uploadFile } from "@/lib/supabase/storage";
 import { Image as ImageIcon, FileText, MapPin, Calendar, X, Loader2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { toast } from "sonner";
 
 const projectDocumentSchema = z.object({
   project_title: z.string().min(3, "Le titre doit contenir au moins 3 caractères"),
@@ -91,11 +92,12 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
 
       if (insertError) throw insertError;
 
+      toast.success("Projet enregistré avec succès");
       router.push("/pro/realisations");
       router.refresh();
     } catch (error) {
       console.error("Error saving project document:", error);
-      alert("Erreur lors de l'enregistrement du projet.");
+      toast.error("Erreur lors de l'enregistrement du projet.");
     } finally {
       setIsSaving(false);
     }

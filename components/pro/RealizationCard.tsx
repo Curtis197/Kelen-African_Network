@@ -7,6 +7,7 @@ import { MapPin, Calendar, FileText, ImageIcon, Edit2, Trash2, Loader2 } from "l
 import { deleteProjectDocument } from "@/lib/actions/realisations";
 import { useState } from "react";
 import type { ProjectDocument } from "@/lib/supabase/types";
+import { toast } from "sonner";
 
 interface ProjectDocumentCardProps {
   document: ProjectDocument;
@@ -27,10 +28,11 @@ export function ProjectDocumentCard({
     setIsDeleting(true);
     try {
       await deleteProjectDocument(doc.id);
+      toast.success("Projet supprimé");
       router.refresh();
     } catch (error) {
       console.error("Error deleting:", error);
-      alert("Erreur lors de la suppression.");
+      toast.error("Erreur lors de la suppression.");
     } finally {
       setIsDeleting(false);
     }

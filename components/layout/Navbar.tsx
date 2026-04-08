@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { MARKETING_NAV } from "@/lib/utils/constants";
 import { createClient } from "@/lib/supabase/client";
+import { ThemeToggle } from "@/components/layout/ThemeToggle";
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -123,6 +124,8 @@ export function Navbar() {
 
         {/* Desktop CTA */}
         <div className="hidden items-center gap-3 md:flex">
+          <ThemeToggle />
+
           <Link
             href="/recherche"
             className="flex items-center gap-2 rounded-xl border border-kelen-green-100 bg-kelen-green-50/50 px-4 py-2 text-sm font-bold text-kelen-green-700 transition-all hover:bg-kelen-green-100 hover:text-kelen-green-800 active:scale-95"
