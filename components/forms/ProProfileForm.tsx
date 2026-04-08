@@ -6,8 +6,9 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import {
   ImagePlus, X, Upload, Type, FileText, Eye, Save,
-  Smartphone, Clock, Users, Link as LinkIcon, Plus
+  Smartphone, Clock, Users, Link as LinkIcon, Plus, Wand2
 } from "lucide-react";
+import AICopywritingDialog from "@/components/forms/AICopywritingDialog";
 
 interface ProProfileData {
   description: string;
@@ -34,6 +35,9 @@ export function ProProfileForm() {
   const [profilePreview, setProfilePreview] = useState<string | null>(null);
   const [servicesInput, setServicesInput] = useState("");
   const [portfolioPreviews, setPortfolioPreviews] = useState<{ url: string; file: File }[]>([]);
+  const [showAIDialog, setShowAIDialog] = useState(false);
+  const [businessName, setBusinessName] = useState("");
+  const [category, setCategory] = useState("");
 
   const [formData, setFormData] = useState<ProProfileData>({
     description: "",
@@ -81,6 +85,8 @@ export function ProProfileForm() {
       setHeroPreview(data.hero_image_url);
       setProfilePreview(data.profile_picture_url);
       setSlug(data.slug);
+      setBusinessName(data.business_name || "");
+      setCategory(data.category || "");
     }
     setIsLoading(false);
   };
@@ -251,6 +257,11 @@ export function ProProfileForm() {
     }
   };
 
+  const handleAIGenerated = (accroche: string, presentation: string) => {
+    updateField("hero_tagline", accroche);
+    updateField("about_text", presentation);
+  };
+
   if (isLoading) {
     return (
       <div className="space-y-6 animate-pulse p-4">
@@ -267,19 +278,29 @@ export function ProProfileForm() {
 
   return (
     <div className="space-y-8">
-      {/* Preview Button */}
-      <div className="flex items-center justify-between">
+      {/* Preview Button + AI Copywriting */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <p className="text-sm text-on-surface-variant">
           Gérez l'apparence de votre page professionnelle
         </p>
-        <button
-          type="button"
-          onClick={openPreview}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-surface-container text-on-surface rounded-xl text-sm font-semibold hover:bg-surface-container-high transition-colors"
-        >
-          <Eye className="w-4 h-4" />
-          Aperçu
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setShowAIDialog(true)}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-xl text-sm font-semibold hover:bg-primary/20 transition-colors"
+          >
+            <Wand2 className="w-4 h-4" />
+            Générer avec l'IA
+          </button>
+          <button
+            type="button"
+            onClick={openPreview}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-surface-container text-on-surface rounded-xl text-sm font-semibold hover:bg-surface-container-high transition-colors"
+          >
+            <Eye className="w-4 h-4" />
+            Aperçu
+          </button>
+        </div>
       </div>
 
       {/* ── Section 1: Hero Section ─────────────────────── */}
@@ -556,6 +577,15 @@ export function ProProfileForm() {
           </>
         )}
       </button>
+
+      {/* AI Copywriting Dialog */}
+      <AICopywritingDialog
+        isOpen={showAIDialog}
+        onClose={() => setShowAIDialog(false)}
+        businessName={businessName}
+        category={category}
+        onGenerated={handleAIGenerated}
+      />
     </div>
   );
 }
