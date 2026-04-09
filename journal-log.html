@@ -7,12 +7,22 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #111827;
-      --secondary: #4b5563;
-      --client-color: #2563eb;
-      --pro-color: #7c3aed;
-      --border: #e5e7eb;
-      --bg-light: #f9fafb;
+      /* Kelen Brand Colors - West African Flag Inspired */
+      --kelen-green: #006c49;
+      --kelen-green-light: #009639;
+      --kelen-green-dark: #004D1C;
+      --kelen-yellow: #FCCF00;
+      --kelen-red: #CE1126;
+      
+      /* Role colors */
+      --client-color: #006c49;  /* Kelen Green for client */
+      --pro-color: #009639;     /* Kelen Green Light for professional */
+      
+      /* Neutrals */
+      --primary: #1A1A1A;
+      --secondary: #78716C;
+      --border: #E7E5E4;
+      --bg-light: #F5F5F4;
       --page-width: 210mm;
       --page-height: 297mm;
     }
@@ -40,7 +50,7 @@
     /* ================= COVER PAGE ================= */
     .cover {
       display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
-      background: linear-gradient(160deg, #0f172a 0%, #1e3a8a 100%); color: white; padding: 20mm;
+      background: linear-gradient(160deg, var(--kelen-green-dark) 0%, var(--kelen-green) 50%, var(--kelen-green-light) 100%); color: white; padding: 20mm;
     }
     .cover-title { font-size: 3.2rem; font-weight: 700; margin-bottom: 0.4rem; line-height: 1.1; letter-spacing: -0.02em; }
     .cover-subtitle { font-size: 1.4rem; opacity: 0.9; margin-bottom: 3rem; font-weight: 400; letter-spacing: 0.5px; }
@@ -59,7 +69,7 @@
     .summary-box { background: var(--bg-light); border: 1px solid var(--border); border-radius: 6px; padding: 1.5rem; margin-bottom: 2rem; page-break-inside: avoid; }
     .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 1rem; }
     .stat-item { text-align: center; padding: 1rem; background: white; border-radius: 4px; border: 1px solid var(--border); }
-    .stat-number { font-size: 1.8rem; font-weight: 700; color: var(--pro-color); display: block; }
+    .stat-number { font-size: 1.8rem; font-weight: 700; color: var(--kelen-green); display: block; }
     .stat-label { font-size: 0.8rem; color: var(--secondary); margin-top: 0.25rem; }
 
     /* ================= JOURNAL THREAD ================= */
@@ -81,9 +91,10 @@
     .entry-meta { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; font-size: 0.8rem; }
     .professional .entry-meta { justify-content: flex-end; }
     .status-badge { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.2rem 0.5rem; border-radius: 3px; font-size: 0.75rem; font-weight: 600; }
-    .badge-read { background: #e5e7eb; color: #4b5563; }
-    .badge-approved { background: #d1fae5; color: #059669; }
-    .badge-contested { background: #fee2e2; color: #dc2626; }
+    .badge-read { background: #e8e8e7; color: #3c4a42; }
+    .badge-approved { background: #D1FAE5; color: var(--kelen-green-dark); }
+    .badge-contested { background: #FEE2E2; color: var(--kelen-red); }
+    .badge-resolved { background: #D1FAE5; color: var(--kelen-green); }
     .action-items { margin-top: 0.5rem; font-size: 0.85rem; color: var(--secondary); }
     .action-items-title { font-weight: 600; margin-bottom: 0.2rem; font-size: 0.8rem; }
     .action-items ul { list-style: none; }
@@ -97,9 +108,10 @@
     .finance-table th, .finance-table td { padding: 0.6rem; text-align: left; border-bottom: 1px solid var(--border); }
     .finance-table th { background: var(--bg-light); font-weight: 600; color: var(--secondary); font-size: 0.8rem; text-transform: uppercase; }
     .amount { font-weight: 600; text-align: right; }
-    .balance { font-weight: 700; text-align: right; color: var(--pro-color); }
-    .status-paid { color: #059669; font-weight: 500; }
-    .status-pending { color: #d97706; font-weight: 500; }
+    .balance { font-weight: 700; text-align: right; color: var(--kelen-green); }
+    .status-paid { color: var(--kelen-green-dark); font-weight: 500; }
+    .status-pending { color: var(--kelen-yellow); font-weight: 500; filter: brightness(0.7); }
+    .status-disputed { color: var(--kelen-red); font-weight: 500; }
     .finance-summary { display: flex; justify-content: flex-end; gap: 2rem; margin-top: 1rem; padding: 0.8rem; background: var(--bg-light); border-radius: 4px; font-size: 0.9rem; }
     .finance-summary .total { font-weight: 700; }
 
@@ -121,9 +133,9 @@
     .doc-table th, .doc-table td { padding: 0.6rem; text-align: left; border-bottom: 1px solid var(--border); }
     .doc-table th { background: var(--bg-light); font-weight: 600; color: var(--secondary); font-size: 0.8rem; text-transform: uppercase; }
     .doc-status { font-weight: 500; }
-    .status-final { color: #059669; }
-    .status-draft { color: #d97706; }
-    .status-revised { color: #2563eb; }
+    .status-final { color: var(--kelen-green-dark); }
+    .status-draft { color: var(--secondary); }
+    .status-revised { color: var(--kelen-green); }
 
     /* ================= SIGNATURE & FEEDBACK ================= */
     .signature-section { page-break-before: always; }
