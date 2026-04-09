@@ -40,25 +40,25 @@ export default function RecommandationScrollRow({ recommandations, totalCount }:
       {/* Scroll Controls */}
       <button
         onClick={() => scroll("left")}
-        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-stone-50 transition-colors"
+        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 w-10 h-10 bg-white dark:bg-surface-container rounded-full shadow-lg dark:shadow-none flex items-center justify-center hover:bg-stone-50 dark:hover:bg-surface-container-highest transition-colors"
         aria-label="Voir les recommandations précédentes"
       >
-        <ChevronLeft className="w-5 h-5 text-stone-600" />
+        <ChevronLeft className="w-5 h-5 text-stone-600 dark:text-on-surface-variant" />
       </button>
-      
+
       <button
         onClick={() => scroll("right")}
-        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-stone-50 transition-colors"
+        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 w-10 h-10 bg-white dark:bg-surface-container rounded-full shadow-lg dark:shadow-none flex items-center justify-center hover:bg-stone-50 dark:hover:bg-surface-container-highest transition-colors"
         aria-label="Voir les recommandations suivantes"
       >
-        <ChevronRight className="w-5 h-5 text-stone-600" />
+        <ChevronRight className="w-5 h-5 text-stone-600 dark:text-on-surface-variant" />
       </button>
 
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <span className="text-kelen-green-600 font-black tracking-[0.3em] uppercase text-xs">Témoignages</span>
-          <h2 className="text-3xl md:text-4xl font-black mt-2 text-stone-900 tracking-tight">
+          <span className="text-kelen-green-600 dark:text-kelen-green-400 font-black tracking-[0.3em] uppercase text-xs">Témoignages</span>
+          <h2 className="text-3xl md:text-4xl font-black mt-2 text-stone-900 dark:text-on-surface tracking-tight">
             {totalCount} recommandation{totalCount !== 1 ? "s" : ""}
           </h2>
         </div>
@@ -73,7 +73,7 @@ export default function RecommandationScrollRow({ recommandations, totalCount }:
         {recommandations.map((rec) => (
           <div
             key={rec.id}
-            className="flex-shrink-0 w-80 md:w-96 snap-start bg-white rounded-2xl p-6 shadow-sm border border-stone-100 hover:shadow-lg transition-shadow"
+            className="flex-shrink-0 w-80 md:w-96 snap-start bg-white dark:bg-surface-container rounded-2xl p-6 shadow-sm dark:shadow-none border border-stone-100 dark:border-outline-variant/20 hover:shadow-lg dark:hover:bg-surface-container-highest/50 transition-shadow"
           >
             {/* Quote Icon */}
             <div className="text-kelen-green-600 mb-4">

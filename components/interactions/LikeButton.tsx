@@ -46,9 +46,9 @@ export default function LikeButton({ realizationId, initialLiked, initialCount, 
       onClick={handleLike}
       disabled={isPending}
       className={`inline-flex items-center gap-1.5 ${sizeClasses[size]} transition-all active:scale-95 disabled:opacity-50 ${
-        liked 
-          ? "text-rose-500 hover:text-rose-600" 
-          : "text-stone-400 hover:text-rose-500"
+        liked
+          ? "text-rose-500 dark:text-rose-400 hover:text-rose-600 dark:hover:text-rose-300"
+          : "text-stone-400 dark:text-on-surface-variant/60 hover:text-rose-500 dark:hover:text-rose-400"
       }`}
       aria-label={liked ? "Retirer le like" : "Liker cette réalisation"}
     >
