@@ -1,4 +1,4 @@
-import { ProNavbar } from "@/components/layout/ProNavbar";
+import { ProSidebar } from "@/components/layout/ProSidebar";
 import { Footer } from "@/components/layout/Footer";
 
 export default function ProfessionalLayout({
@@ -7,14 +7,14 @@ export default function ProfessionalLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen flex-col">
-      <ProNavbar />
-      <main className="flex-1 bg-surface">
-        <div className="mx-auto max-w-7xl w-full">
-          <div className="p-4 sm:p-6 lg:p-8">{children}</div>
-        </div>
-      </main>
-      <Footer />
+    <div className="min-h-screen bg-surface">
+      <ProSidebar />
+      <div className="lg:pl-64">
+        <main className="mx-auto max-w-7xl w-full p-4 sm:p-6 lg:p-8">
+          {children}
+        </main>
+        <Footer />
+      </div>
     </div>
   );
 }
