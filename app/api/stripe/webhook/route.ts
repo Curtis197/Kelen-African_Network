@@ -49,6 +49,20 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: "Missing metadata" }, { status: 400 });
       }
 
+      // Fetch the actual subscription to get correct period end date
+      let currentPeriodEnd: number;
+      if (typeof session.subscription === 'string') {
+        try {
+          const stripeSubscription = await stripe.subscriptions.retrieve(session.subscription);
+          currentPeriodEnd = stripeSubscription.current_period_end;
+        } catch (err) {
+          console.error("Failed to retrieve subscription:", err);
+          currentPeriodEnd = Date.now() / 1000 + 30 * 24 * 60 * 60; // Fallback: 30 days
+        }
+      } else {
+        currentPeriodEnd = Date.now() / 1000 + 30 * 24 * 60 * 60; // Fallback: 30 days
+      }
+
       // Upsert subscription record
       await supabase.from("subscriptions").upsert({
         professional_id: professionalId,
@@ -56,9 +70,7 @@ export async function POST(request: NextRequest) {
         stripe_customer_id: typeof session.customer === "string" ? session.customer : null,
         plan,
         status: "active",
-        current_period_end: new Date(
-          (session.expires_at || Date.now() / 1000 + 30 * 24 * 60 * 60) * 1000
-        ).toISOString(),
+        current_period_end: new Date(currentPeriodEnd * 1000).toISOString(),
       }, { onConflict: "professional_id" });
 
       // Update professional tier
