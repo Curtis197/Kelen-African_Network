@@ -9,12 +9,15 @@
     :root {
       --primary: #111827;
       --secondary: #4b5563;
-      --accent: #3b82f6;
-      --accent-light: #dbeafe;
-      --bg-light: #f9fafb;
+      --client-color: #2563eb;
+      --client-bg: #eff6ff;
+      --pro-color: #7c3aed;
+      --pro-bg: #f5f3ff;
       --border: #e5e7eb;
+      --bg-light: #f9fafb;
       --success: #10b981;
       --warning: #f59e0b;
+      --danger: #ef4444;
       --page-width: 210mm;
       --page-height: 297mm;
     }
@@ -46,32 +49,14 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 100%);
       color: white;
       padding: 20mm;
     }
 
-    .cover-logo {
-      font-size: 1.5rem;
-      font-weight: 700;
-      letter-spacing: 2px;
-      margin-bottom: 3rem;
-      opacity: 0.9;
-    }
-
-    .cover-title {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      line-height: 1.2;
-    }
-
-    .cover-subtitle {
-      font-size: 1.1rem;
-      opacity: 0.9;
-      margin-bottom: 3rem;
-      font-weight: 300;
-    }
+    .cover-logo { font-size: 1.5rem; font-weight: 700; letter-spacing: 2px; margin-bottom: 3rem; opacity: 0.9; }
+    .cover-title { font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; line-height: 1.2; }
+    .cover-subtitle { font-size: 1.1rem; opacity: 0.9; margin-bottom: 3rem; font-weight: 300; }
 
     .cover-info {
       background: rgba(255,255,255,0.15);
@@ -91,169 +76,21 @@
     .cover-info-row:last-child { border-bottom: none; }
     .cover-info-label { opacity: 0.8; font-size: 0.9rem; }
     .cover-info-value { font-weight: 600; }
+    .cover-footer { position: absolute; bottom: 15mm; font-size: 0.85rem; opacity: 0.8; }
 
-    .cover-footer {
-      position: absolute;
-      bottom: 15mm;
-      font-size: 0.85rem;
-      opacity: 0.8;
-    }
-
-    /* ================= JOURNAL ENTRIES ================= */
-    .journal-header {
-      border-bottom: 2px solid var(--primary);
-      padding-bottom: 1rem;
-      margin-bottom: 2rem;
-    }
-
-    .journal-header h1 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
-
-    .journal-meta {
-      display: flex;
-      gap: 2rem;
-      color: var(--secondary);
-      font-size: 0.9rem;
-    }
-
-    .entry {
-      margin-bottom: 2rem;
-      page-break-inside: avoid;
-    }
-
-    .entry-header {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 0.75rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .entry-date {
-      background: var(--primary);
-      color: white;
-      padding: 0.4rem 0.8rem;
-      border-radius: 6px;
-      font-weight: 600;
-      font-size: 0.85rem;
-      white-space: nowrap;
-    }
-
-    .entry-type {
-      padding: 0.3rem 0.7rem;
-      border-radius: 4px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .type-meeting { background: var(--accent-light); color: var(--accent); }
-    .type-milestone { background: #d1fae5; color: var(--success); }
-    .type-update { background: #fef3c7; color: var(--warning); }
-    .type-decision { background: #e0e7ff; color: #4f46e5; }
-    .type-note { background: var(--bg-light); color: var(--secondary); }
-
-    .entry-author {
-      margin-left: auto;
-      font-size: 0.85rem;
-      color: var(--secondary);
-      font-style: italic;
-    }
-
-    .entry-content {
-      padding-left: 0.5rem;
-    }
-
-    .entry-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      color: var(--primary);
-    }
-
-    .entry-text {
-      color: var(--secondary);
-      line-height: 1.7;
-      margin-bottom: 0.75rem;
-    }
-
-    .entry-tags {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      margin-top: 0.75rem;
-    }
-
-    .tag {
-      background: var(--bg-light);
-      padding: 0.2rem 0.6rem;
-      border-radius: 4px;
-      font-size: 0.75rem;
-      color: var(--secondary);
-      border: 1px solid var(--border);
-    }
-
-    .action-items {
-      background: var(--bg-light);
-      border-left: 3px solid var(--accent);
-      padding: 0.75rem 1rem;
-      margin-top: 0.75rem;
-      border-radius: 0 6px 6px 0;
-    }
-
-    .action-items-title {
-      font-weight: 600;
-      font-size: 0.85rem;
-      margin-bottom: 0.5rem;
-      color: var(--primary);
-    }
-
-    .action-items ul {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    .action-items li {
-      padding: 0.25rem 0;
-      padding-left: 1.2rem;
-      position: relative;
-      font-size: 0.9rem;
-    }
-
-    .action-items li:before {
-      content: "▸";
-      position: absolute;
-      left: 0;
-      color: var(--accent);
-      font-weight: bold;
-    }
-
-    /* ================= SUMMARY SECTION ================= */
+    /* ================= SUMMARY ================= */
     .summary-box {
       background: var(--bg-light);
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 1.5rem;
       margin-bottom: 2rem;
-    }
-
-    .summary-title {
-      font-size: 1.2rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+      page-break-inside: avoid;
     }
 
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 1rem;
       margin-top: 1rem;
     }
@@ -266,18 +103,121 @@
       border: 1px solid var(--border);
     }
 
-    .stat-number {
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--accent);
-      display: block;
+    .stat-number { font-size: 1.8rem; font-weight: 700; color: var(--pro-color); display: block; }
+    .stat-label { font-size: 0.8rem; color: var(--secondary); margin-top: 0.25rem; }
+
+    /* ================= JOURNAL THREAD ================= */
+    .journal-header {
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 1rem;
+      margin-bottom: 2rem;
     }
 
-    .stat-label {
-      font-size: 0.85rem;
-      color: var(--secondary);
-      margin-top: 0.25rem;
+    .journal-header h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem; }
+
+    .thread { display: flex; flex-direction: column; gap: 1.5rem; }
+
+    .entry-row { display: flex; }
+    .entry-row.client { justify-content: flex-start; }
+    .entry-row.professional { justify-content: flex-end; }
+
+    .entry-card {
+      max-width: 78%;
+      padding: 1rem 1.25rem;
+      border-radius: 12px;
+      position: relative;
+      page-break-inside: avoid;
     }
+
+    .client .entry-card {
+      background: var(--client-bg);
+      border: 1px solid #bfdbfe;
+      border-left: 4px solid var(--client-color);
+    }
+
+    .professional .entry-card {
+      background: var(--pro-bg);
+      border: 1px solid #ddd6fe;
+      border-right: 4px solid var(--pro-color);
+    }
+
+    .entry-role {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.4rem;
+    }
+    .client .entry-role { color: var(--client-color); }
+    .professional .entry-role { color: var(--pro-color); }
+
+    .entry-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.4rem; }
+    .entry-text { color: var(--secondary); line-height: 1.6; margin-bottom: 0.75rem; font-size: 0.95rem; }
+    .entry-meta { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
+    .entry-date { font-size: 0.8rem; color: #6b7280; }
+
+    /* Status Badges */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .badge-read { background: #e5e7eb; color: #4b5563; }
+    .badge-approved { background: #d1fae5; color: #059669; }
+    .badge-contested { background: #fee2e2; color: #dc2626; }
+
+    .action-items {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.6rem 0.8rem;
+      margin-top: 0.75rem;
+    }
+    .action-items-title { font-size: 0.8rem; font-weight: 600; margin-bottom: 0.3rem; }
+    .action-items ul { list-style: none; }
+    .action-items li { font-size: 0.85rem; padding: 0.2rem 0; padding-left: 0.8rem; position: relative; }
+    .action-items li:before { content: "▸"; position: absolute; left: 0; color: var(--secondary); }
+
+    /* ================= FINANCIAL TRACKING ================= */
+    .finance-section { margin-top: 2rem; }
+    .finance-header { font-size: 1.2rem; font-weight: 600; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    
+    .finance-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; page-break-inside: avoid; }
+    .finance-table th, .finance-table td { padding: 0.7rem 0.6rem; text-align: left; border-bottom: 1px solid var(--border); }
+    .finance-table th { background: var(--bg-light); font-weight: 600; color: var(--secondary); font-size: 0.8rem; text-transform: uppercase; }
+    .finance-table tr:last-child td { border-bottom: none; }
+    .amount { font-weight: 600; text-align: right; }
+    .balance { font-weight: 700; text-align: right; color: var(--pro-color); }
+    .status-paid { color: var(--success); font-weight: 500; }
+    .status-pending { color: var(--warning); font-weight: 500; }
+
+    .finance-summary {
+      display: flex;
+      justify-content: flex-end;
+      gap: 2rem;
+      margin-top: 1rem;
+      padding: 0.8rem;
+      background: var(--bg-light);
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+    .finance-summary .total { font-weight: 700; }
+
+    /* ================= PHOTO DOCUMENTATION ================= */
+    .photo-section { margin-top: 2rem; page-break-before: always; }
+    .photo-header { font-size: 1.2rem; font-weight: 600; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    
+    .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; page-break-inside: avoid; }
+    .photo-card { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: white; }
+    .photo-card img { width: 100%; height: 140px; object-fit: cover; display: block; }
+    .photo-meta { padding: 0.75rem; }
+    .photo-meta .title { font-weight: 600; margin-bottom: 0.4rem; font-size: 0.95rem; }
+    .photo-meta .detail { font-size: 0.8rem; color: var(--secondary); margin-bottom: 0.2rem; display: flex; align-items: center; gap: 0.4rem; }
+    .photo-meta .detail span { font-weight: 500; }
 
     /* ================= BACK COVER ================= */
     .back {
@@ -291,41 +231,17 @@
       padding: 20mm;
     }
 
-    .back h2 {
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
-      font-weight: 600;
-    }
-
-    .back p {
-      max-width: 500px;
-      margin-bottom: 1rem;
-      opacity: 0.9;
-      line-height: 1.6;
-    }
-
-    .back-logo {
-      margin-top: 2rem;
-      font-size: 1.5rem;
-      font-weight: 700;
-      letter-spacing: 3px;
-    }
-
-    .back-link {
-      margin-top: 0.5rem;
-      opacity: 0.7;
-      font-size: 0.9rem;
-    }
+    .back h2 { font-size: 1.8rem; margin-bottom: 1rem; font-weight: 600; line-height: 1.3; }
+    .back p { max-width: 500px; margin-bottom: 1rem; opacity: 0.9; line-height: 1.6; }
+    .back-logo { margin-top: 2rem; font-size: 1.5rem; font-weight: 700; letter-spacing: 3px; }
+    .back-link { margin-top: 0.5rem; opacity: 0.7; font-size: 0.9rem; }
 
     /* ================= PRINT OPTIMIZATION ================= */
     @media print {
       body { background: #fff; }
-      .page {
-        margin: 0;
-        box-shadow: none;
-        page-break-after: always;
-      }
+      .page { margin: 0; box-shadow: none; page-break-after: always; }
       .page:last-child { page-break-after: auto; }
+      .photo-section { page-break-before: always; }
       * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     }
 
@@ -341,299 +257,175 @@
   <section class="page cover">
     <div class="cover-logo">KELEN</div>
     <h1 class="cover-title">Project Journal Log</h1>
-    <p class="cover-subtitle">Complete project documentation & communication history</p>
+    <p class="cover-subtitle">Complete communication, financial & photo documentation</p>
     
     <div class="cover-info">
-      <div class="cover-info-row">
-        <span class="cover-info-label">Project Name</span>
-        <span class="cover-info-value">Modern Coastal Retreat</span>
-      </div>
-      <div class="cover-info-row">
-        <span class="cover-info-label">Professional</span>
-        <span class="cover-info-value">Alex Morgan</span>
-      </div>
-      <div class="cover-info-row">
-        <span class="cover-info-label">Client</span>
-        <span class="cover-info-value">Sarah Johnson</span>
-      </div>
-      <div class="cover-info-row">
-        <span class="cover-info-label">Period</span>
-        <span class="cover-info-value">Jan 2024 - Mar 2024</span>
-      </div>
-      <div class="cover-info-row">
-        <span class="cover-info-label">Total Entries</span>
-        <span class="cover-info-value">24 Logs</span>
-      </div>
+      <div class="cover-info-row"><span class="cover-info-label">Project</span><span class="cover-info-value">Modern Coastal Retreat</span></div>
+      <div class="cover-info-row"><span class="cover-info-label">Professional</span><span class="cover-info-value">Alex Morgan</span></div>
+      <div class="cover-info-row"><span class="cover-info-label">Client</span><span class="cover-info-value">Sarah Johnson</span></div>
+      <div class="cover-info-row"><span class="cover-info-label">Period</span><span class="cover-info-value">Jan 15 - Mar 15, 2024</span></div>
+      <div class="cover-info-row"><span class="cover-info-label">Total Entries</span><span class="cover-info-value">14 Logs</span></div>
     </div>
 
-    <div class="cover-footer">
-      Generated on March 15, 2024 • kelen.co
-    </div>
+    <div class="cover-footer">Generated on March 15, 2024 • kelen.co</div>
   </section>
 
   <!-- SUMMARY PAGE -->
   <section class="page">
-    <div class="journal-header">
-      <h1>Project Summary</h1>
-      <div class="journal-meta">
-        <span>📅 Period: January 15 - March 15, 2024</span>
-        <span> Professional: Alex Morgan</span>
-        <span>👥 Client: Sarah Johnson</span>
-      </div>
-    </div>
-
+    <div class="journal-header"><h1>Project Summary</h1></div>
     <div class="summary-box">
-      <div class="summary-title">📊 Activity Overview</div>
       <div class="stats-grid">
-        <div class="stat-item">
-          <span class="stat-number">24</span>
-          <div class="stat-label">Total Entries</div>
-        </div>
-        <div class="stat-item">
-          <span class="stat-number">8</span>
-          <div class="stat-label">Meetings</div>
-        </div>
-        <div class="stat-item">
-          <span class="stat-number">5</span>
-          <div class="stat-label">Milestones</div>
-        </div>
-        <div class="stat-item">
-          <span class="stat-number">7</span>
-          <div class="stat-label">Decisions</div>
-        </div>
-        <div class="stat-item">
-          <span class="stat-number">12</span>
-          <div class="stat-label">Action Items</div>
-        </div>
-        <div class="stat-item">
-          <span class="stat-number">98%</span>
-          <div class="stat-label">Completion</div>
-        </div>
+        <div class="stat-item"><span class="stat-number">14</span><div class="stat-label">Entries</div></div>
+        <div class="stat-item"><span class="stat-number">9</span><div class="stat-label">Approved</div></div>
+        <div class="stat-item"><span class="stat-number">2</span><div class="stat-label">Contested</div></div>
+        <div class="stat-item"><span class="stat-number">$87.5K</span><div class="stat-label">Budget Used</div></div>
       </div>
     </div>
 
-    <div class="summary-box">
-      <div class="summary-title">📝 Key Achievements</div>
-      <ul style="margin-left: 1.5rem; color: var(--secondary); line-height: 1.8;">
-        <li>Initial consultation and project scope defined</li>
-        <li>Design concepts approved by client</li>
-        <li>Material selection completed</li>
-        <li>Contractor coordination finalized</li>
-        <li>Permit applications submitted and approved</li>
-        <li>Phase 1 construction completed on schedule</li>
-      </ul>
-    </div>
-
-    <div class="summary-box">
-      <div class="summary-title">⚠️ Pending Items</div>
-      <ul style="margin-left: 1.5rem; color: var(--secondary); line-height: 1.8;">
-        <li>Final inspection scheduled for March 20</li>
-        <li>Punch list items to be addressed</li>
-        <li>Final payment processing</li>
-      </ul>
+    <!-- FINANCIAL TRACKING -->
+    <div class="finance-section">
+      <div class="finance-header">💰 Financial Tracking</div>
+      <table class="finance-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th class="amount">Amount</th>
+            <th class="amount">Balance</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Jan 15</td><td>Initial Deposit (20%)</td><td class="amount">$17,500</td><td class="balance">$17,500</td><td class="status-paid">Paid</td></tr>
+          <tr><td>Feb 10</td><td>Material Procurement</td><td class="amount">$28,000</td><td class="balance">$45,500</td><td class="status-paid">Paid</td></tr>
+          <tr><td>Mar 01</td><td>Phase 1 Labor Draw</td><td class="amount">$22,000</td><td class="balance">$67,500</td><td class="status-paid">Paid</td></tr>
+          <tr><td>Mar 15</td><td>Fixture & Finish Change Order</td><td class="amount">$2,500</td><td class="balance">$70,000</td><td class="status-pending">Pending</td></tr>
+          <tr><td>Mar 30</td><td>Final Completion Payment (20%)</td><td class="amount">$17,500</td><td class="balance">$87,500</td><td class="status-pending">Scheduled</td></tr>
+        </tbody>
+      </table>
+      <div class="finance-summary">
+        <span>Contract Total: <span class="total">$90,000</span></span>
+        <span>Remaining: <span class="total" style="color: #059669;">$20,000</span></span>
+      </div>
     </div>
   </section>
 
   <!-- JOURNAL ENTRIES PAGE 1 -->
   <section class="page">
-    <div class="journal-header">
-      <h1>Journal Entries</h1>
-      <div class="journal-meta">
-        <span>Detailed project log</span>
-      </div>
-    </div>
+    <div class="journal-header"><h1>Communication Thread</h1></div>
+    <div class="thread">
 
-    <!-- Entry 1 -->
-    <div class="entry">
-      <div class="entry-header">
-        <span class="entry-date">Jan 15, 2024</span>
-        <span class="entry-type type-meeting">Meeting</span>
-        <span class="entry-author">Alex Morgan</span>
-      </div>
-      <div class="entry-content">
-        <div class="entry-title">Initial Consultation & Project Kickoff</div>
-        <div class="entry-text">
-          First meeting with Sarah to discuss vision for the coastal retreat. Reviewed property photos, discussed budget parameters ($85K-$110K), and timeline expectations. Client interested in sustainable materials and open-concept living spaces.
-        </div>
-        <div class="entry-tags">
-          <span class="tag">Consultation</span>
-          <span class="tag">Budget</span>
-          <span class="tag">Timeline</span>
-        </div>
-        <div class="action-items">
-          <div class="action-items-title">Action Items:</div>
-          <ul>
-            <li>Schedule site visit (Alex) - Due: Jan 20</li>
-            <li>Provide inspiration board (Sarah) - Due: Jan 22</li>
-            <li>Prepare initial concept sketches (Alex) - Due: Jan 30</li>
-          </ul>
+      <!-- Client Entry (Left) -->
+      <div class="entry-row client">
+        <div class="entry-card">
+          <div class="entry-role">Client • Sarah Johnson</div>
+          <div class="entry-title">Initial Scope & Budget Confirmation</div>
+          <div class="entry-text">Happy to get started. Confirming budget cap at $90K with a 10% contingency. I'd like to prioritize sustainable materials and keep the original kitchen footprint to save on plumbing costs.</div>
+          <div class="entry-meta">
+            <span class="entry-date">Jan 15, 2024 • 09:30 AM</span>
+            <span class="status-badge badge-approved">✓ Approved</span>
+          </div>
+          <div class="action-items">
+            <div class="action-items-title">Next Steps:</div>
+            <ul><li>Schedule site measurement (Alex) • Due: Jan 20</li></ul>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Entry 2 -->
-    <div class="entry">
-      <div class="entry-header">
-        <span class="entry-date">Jan 22, 2024</span>
-        <span class="entry-type type-milestone">Milestone</span>
-        <span class="entry-author">Alex Morgan</span>
-      </div>
-      <div class="entry-content">
-        <div class="entry-title">Site Visit Completed</div>
-        <div class="entry-text">
-          Conducted thorough site assessment at Malibu property. Took measurements, documented existing conditions, and assessed natural light patterns. Property has excellent ocean views from the east side. Identified structural considerations for open-concept redesign.
-        </div>
-        <div class="entry-tags">
-          <span class="tag">Site Visit</span>
-          <span class="tag">Assessment</span>
-          <span class="tag">Measurements</span>
+      <!-- Professional Entry (Right) -->
+      <div class="entry-row professional">
+        <div class="entry-card">
+          <div class="entry-role">Professional • Alex Morgan</div>
+          <div class="entry-title">Site Assessment & Structural Notes</div>
+          <div class="entry-text">Completed measurements. Load-bearing wall between kitchen and dining can be opened with a steel beam. Natural light is excellent on the east elevation. I'll draft two layout options focusing on your sustainability request.</div>
+          <div class="entry-meta">
+            <span class="entry-date">Jan 22, 2024 • 02:15 PM</span>
+            <span class="status-badge badge-read">👁 Read</span>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Entry 3 -->
-    <div class="entry">
-      <div class="entry-header">
-        <span class="entry-date">Feb 1, 2024</span>
-        <span class="entry-type type-decision">Decision</span>
-        <span class="entry-author">Sarah Johnson</span>
-      </div>
-      <div class="entry-content">
-        <div class="entry-title">Design Concept Approval</div>
-        <div class="entry-text">
-          Reviewed three design concepts presented by Alex. Selected Concept B (Modern Coastal) as the direction forward. Love the use of natural wood tones, white oak flooring, and the proposed kitchen island layout. Approved moving forward with detailed design development.
-        </div>
-        <div class="entry-tags">
-          <span class="tag">Design</span>
-          <span class="tag">Approval</span>
-          <span class="tag">Concept B</span>
+      <!-- Client Entry (Left) -->
+      <div class="entry-row client">
+        <div class="entry-card">
+          <div class="entry-role">Client • Sarah Johnson</div>
+          <div class="entry-title">Design Feedback</div>
+          <div class="entry-text">Option B looks perfect. I do contest the proposed flooring material in the entryway. The engineered wood seems prone to moisture. Can we switch to porcelain tile that mimics wood grain?</div>
+          <div class="entry-meta">
+            <span class="entry-date">Feb 02, 2024 • 11:45 AM</span>
+            <span class="status-badge badge-contested">⚠ Contested</span>
+          </div>
+          <div class="action-items">
+            <div class="action-items-title">Action Required:</div>
+            <ul><li>Provide tile samples & cost difference (Alex) • Due: Feb 05</li></ul>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Entry 4 -->
-    <div class="entry">
-      <div class="entry-header">
-        <span class="entry-date">Feb 10, 2024</span>
-        <span class="entry-type type-meeting">Meeting</span>
-        <span class="entry-author">Alex Morgan</span>
-      </div>
-      <div class="entry-content">
-        <div class="entry-title">Material Selection Session</div>
-        <div class="entry-text">
-          Met with Sarah at the design studio to finalize material selections. Chose white oak flooring (Grade A), matte black fixtures, quartz countertops in "Ocean Mist", and custom cabinetry in soft white finish. All selections within budget parameters.
-        </div>
-        <div class="entry-tags">
-          <span class="tag">Materials</span>
-          <span class="tag">Selection</span>
-          <span class="tag">Budget</span>
-        </div>
-        <div class="action-items">
-          <div class="action-items-title">Action Items:</div>
-          <ul>
-            <li>Order materials (Alex) - Due: Feb 15</li>
-            <li>Schedule contractor bids (Alex) - Due: Feb 20</li>
-          </ul>
+      <!-- Professional Entry (Right) -->
+      <div class="entry-row professional">
+        <div class="entry-card">
+          <div class="entry-role">Professional • Alex Morgan</div>
+          <div class="entry-title">Material Swap Confirmation</div>
+          <div class="entry-text">Agreed. Switching entryway to 6"x36" wood-look porcelain. It's $1.2/sqft cheaper than the engineered option and much more durable for coastal moisture. Updated quote reflects the credit. Moving to material ordering.</div>
+          <div class="entry-meta">
+            <span class="entry-date">Feb 05, 2024 • 04:20 PM</span>
+            <span class="status-badge badge-approved">✓ Resolved</span>
+          </div>
         </div>
       </div>
+
     </div>
   </section>
 
-  <!-- JOURNAL ENTRIES PAGE 2 -->
-  <section class="page">
-    <!-- Entry 5 -->
-    <div class="entry">
-      <div class="entry-header">
-        <span class="entry-date">Feb 20, 2024</span>
-        <span class="entry-type type-milestone">Milestone</span>
-        <span class="entry-author">Alex Morgan</span>
-      </div>
-      <div class="entry-content">
-        <div class="entry-title">Contractor Selection Complete</div>
-        <div class="entry-text">
-          Received three bids from pre-qualified contractors. Selected Pacific Coast Builders based on experience with coastal properties, competitive pricing ($87,500), and availability to start March 1. Contract signed and deposit paid.
-        </div>
-        <div class="entry-tags">
-          <span class="tag">Contractor</span>
-          <span class="tag">Bid</span>
-          <span class="tag">Contract</span>
-        </div>
-      </div>
-    </div>
+  <!-- PHOTO DOCUMENTATION PAGE -->
+  <section class="page photo-section">
+    <div class="photo-header">📷 Photo Documentation Log</div>
+    <div class="photo-grid">
 
-    <!-- Entry 6 -->
-    <div class="entry">
-      <div class="entry-header">
-        <span class="entry-date">Mar 1, 2024</span>
-        <span class="entry-type type-update">Update</span>
-        <span class="entry-author">Alex Morgan</span>
-      </div>
-      <div class="entry-content">
-        <div class="entry-title">Construction Phase 1 Started</div>
-        <div class="entry-text">
-          Demolition and framing work began today. Pacific Coast Builders on site. Initial progress photos shared with Sarah. All materials delivered and staged. Permit inspection scheduled for March 8.
-        </div>
-        <div class="entry-tags">
-          <span class="tag">Construction</span>
-          <span class="tag">Phase 1</span>
-          <span class="tag">Started</span>
+      <div class="photo-card">
+        <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80" alt="Living Space">
+        <div class="photo-meta">
+          <div class="title">Pre-Renovation Living Area</div>
+          <div class="detail">📍 Malibu, CA • <span>34.0259° N, 118.7798° W</span></div>
+          <div class="detail">🕒 Jan 15, 2024 • 10:14 AM</div>
         </div>
       </div>
-    </div>
 
-    <!-- Entry 7 -->
-    <div class="entry">
-      <div class="entry-header">
-        <span class="entry-date">Mar 8, 2024</span>
-        <span class="entry-type type-milestone">Milestone</span>
-        <span class="entry-author">Alex Morgan</span>
-      </div>
-      <div class="entry-content">
-        <div class="entry-title">Permit Inspection Passed</div>
-        <div class="entry-text">
-          City inspector visited site today. All framing, electrical rough-in, and plumbing passed inspection on first attempt. Cleared to proceed with insulation and drywall installation.
-        </div>
-        <div class="entry-tags">
-          <span class="tag">Inspection</span>
-          <span class="tag">Permit</span>
-          <span class="tag">Passed</span>
+      <div class="photo-card">
+        <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=800&q=80" alt="Kitchen Demo">
+        <div class="photo-meta">
+          <div class="title">Demolition Phase 1 Complete</div>
+          <div class="detail">📍 Malibu, CA • <span>34.0259° N, 118.7798° W</span></div>
+          <div class="detail">🕒 Mar 01, 2024 • 08:45 AM</div>
         </div>
       </div>
-    </div>
 
-    <!-- Entry 8 -->
-    <div class="entry">
-      <div class="entry-header">
-        <span class="entry-date">Mar 15, 2024</span>
-        <span class="entry-type type-meeting">Meeting</span>
-        <span class="entry-author">Sarah Johnson</span>
-      </div>
-      <div class="entry-content">
-        <div class="entry-title">Mid-Project Review</div>
-        <div class="entry-text">
-          Walked through the site with Alex and the contractor. Very pleased with progress. Drywall is up, painting starts next week. Discussed final selections for hardware and lighting fixtures. On track for March 30 completion.
-        </div>
-        <div class="entry-tags">
-          <span class="tag">Review</span>
-          <span class="tag">Progress</span>
-          <span class="tag">On Track</span>
-        </div>
-        <div class="action-items">
-          <div class="action-items-title">Action Items:</div>
-          <ul>
-            <li>Finalize hardware selections (Sarah) - Due: Mar 18</li>
-            <li>Schedule final inspection (Alex) - Due: Mar 25</li>
-            <li>Prepare punch list template (Alex) - Due: Mar 28</li>
-          </ul>
+      <div class="photo-card">
+        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80" alt="Framing">
+        <div class="photo-meta">
+          <div class="title">Wall Framing & Steel Beam</div>
+          <div class="detail">📍 Malibu, CA • <span>34.0259° N, 118.7798° W</span></div>
+          <div class="detail">🕒 Mar 05, 2024 • 01:20 PM</div>
         </div>
       </div>
+
+      <div class="photo-card">
+        <img src="https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=800&q=80" alt="Tile Install">
+        <div class="photo-meta">
+          <div class="title">Entryway Porcelain Installation</div>
+          <div class="detail">📍 Malibu, CA • <span>34.0259° N, 118.7798° W</span></div>
+          <div class="detail">🕒 Mar 10, 2024 • 11:05 AM</div>
+        </div>
+      </div>
+
     </div>
   </section>
 
   <!-- BACK COVER -->
   <section class="page back">
     <h2>Transparent Communication.<br>Documented Progress.</h2>
-    <p>This journal log captures every important moment of your project journey with Kelen professionals. From initial consultation to final walkthrough, every decision, meeting, and milestone is documented for your records.</p>
+    <p>This journal log captures every important moment of your project journey with Kelen professionals. From budget tracking to photo evidence and decision approvals, everything is documented for your records.</p>
     <p style="margin-top: 2rem; font-size: 0.95rem; opacity: 0.8;">
       <strong>Keep this document for your records.</strong><br>
       It serves as proof of work completed and agreements made.

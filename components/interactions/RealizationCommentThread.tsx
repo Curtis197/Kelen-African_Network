@@ -46,27 +46,27 @@ export default function RealizationCommentThread({ realizationId, initialComment
     <div className="space-y-8">
       {/* Comments List */}
       <div className="space-y-6">
-        <h3 className="text-lg font-bold text-stone-900">
+        <h3 className="text-lg font-bold text-stone-900 dark:text-on-surface">
           Commentaires ({comments.length})
         </h3>
 
         {comments.length > 0 ? (
           <div className="space-y-6">
             {comments.map((comment) => (
-              <div key={comment.id} className="flex gap-4 p-4 bg-stone-50 rounded-xl">
-                <div className="w-10 h-10 bg-stone-200 rounded-full flex items-center justify-center flex-shrink-0">
-                  <User className="w-5 h-5 text-stone-500" />
+              <div key={comment.id} className="flex gap-4 p-4 bg-stone-50 dark:bg-surface-container-highest/50 rounded-xl">
+                <div className="w-10 h-10 bg-stone-200 dark:bg-surface-variant rounded-full flex items-center justify-center flex-shrink-0">
+                  <User className="w-5 h-5 text-stone-500 dark:text-on-surface-variant" />
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-sm font-bold text-stone-900">
+                    <span className="text-sm font-bold text-stone-900 dark:text-on-surface">
                       {comment.author ? `${comment.author.first_name} ${comment.author.last_name}` : "Utilisateur"}
                     </span>
-                    <span className="text-xs text-stone-400">
+                    <span className="text-xs text-stone-400 dark:text-on-surface-variant/50">
                       {formatDate(comment.created_at)}
                     </span>
                   </div>
-                  <p className="text-sm text-stone-600 leading-relaxed">
+                  <p className="text-sm text-stone-600 dark:text-on-surface-variant leading-relaxed">
                     {comment.content}
                   </p>
                 </div>
@@ -74,8 +74,8 @@ export default function RealizationCommentThread({ realizationId, initialComment
             ))}
           </div>
         ) : (
-          <div className="text-center py-12 bg-stone-50 rounded-xl">
-            <p className="text-stone-400 text-sm font-medium">
+          <div className="text-center py-12 bg-stone-50 dark:bg-surface-container-highest/30 rounded-xl">
+            <p className="text-stone-400 dark:text-on-surface-variant text-sm font-medium">
               Aucun commentaire pour le moment. Soyez le premier à commenter !
             </p>
           </div>
