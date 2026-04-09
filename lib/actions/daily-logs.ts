@@ -302,7 +302,7 @@ export async function getLogById(logId: string, projectId?: string, isProProject
       media:project_log_media(*),
       comments:project_log_comments(
         *,
-        author:users(first_name, last_name)
+        author:users(display_name)
       )
     `)
     .eq("id", logId);
