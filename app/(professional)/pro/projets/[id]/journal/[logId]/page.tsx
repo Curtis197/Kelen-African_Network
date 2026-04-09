@@ -14,10 +14,11 @@ import MoneyDisplay from '@/components/journal/MoneyDisplay';
 import WeatherIcon from '@/components/journal/WeatherIcon';
 import LogStatusBadge from '@/components/journal/LogStatusBadge';
 import ShareLogModal from '@/components/journal/ShareLogModal';
-import { ArrowLeft, Share2, User } from 'lucide-react';
+import { ArrowLeft, Share2, User, UserPlus } from 'lucide-react';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import type { ProjectLog, LogComment } from '@/lib/types/daily-logs';
+import AddClientContactModal from '@/components/pro/AddClientContactModal';
 
 // Share modal wrapper that pre-fills client contact info
 function ShareLogModalWithClientInfo({
@@ -62,6 +63,7 @@ export default function ProLogDetailPage() {
   const [comments, setComments] = useState<LogComment[]>([]);
   const [signedUrls, setSignedUrls] = useState<Record<string, string>>({});
   const [showShareModal, setShowShareModal] = useState(false);
+  const [showAddClientModal, setShowAddClientModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   const loadData = useCallback(async () => {
@@ -203,6 +205,18 @@ export default function ProLogDetailPage() {
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div className="flex items-center gap-3">
+            {/* No client - show add button */}
+            {!clientEmail && !clientPhone && (
+              <button
+                onClick={() => setShowAddClientModal(true)}
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary/10 text-primary rounded-xl font-medium text-sm hover:bg-primary/20 transition-colors"
+                aria-label="Ajouter un contact client"
+              >
+                <UserPlus className="w-4 h-4" />
+                Ajouter client
+              </button>
+            )}
+            
             {/* Share button - only show if project has client contact info */}
             {(clientEmail || clientPhone) && (
               <button
@@ -213,11 +227,6 @@ export default function ProLogDetailPage() {
                 <Share2 className="w-4 h-4" />
                 Partager
               </button>
-            )}
-            {!clientEmail && !clientPhone && (
-              <span className="text-xs text-on-surface-variant italic">
-                Aucun contact client pour partager
-              </span>
             )}
           </div>
         </div>
@@ -329,6 +338,29 @@ export default function ProLogDetailPage() {
         clientName={clientName}
         clientEmail={clientEmail}
         clientPhone={clientPhone}
+      />
+
+      {/* Add client contact modal */}
+      <AddClientContactModal
+        proProjectId={proProjectId}
+        isOpen={showAddClientModal}
+        onClose={() => setShowAddClientModal(false)}
+        onClientAdded={() => {
+          // Reload project data to get new client info
+          const supabase = createClient();
+          supabase
+            .from("pro_projects")
+            .select("client_name, client_email, client_phone")
+            .eq("id", proProjectId)
+            .single()
+            .then(({ data }) => {
+              if (data) {
+                setClientName(data.client_name);
+                setClientEmail(data.client_email);
+                setClientPhone(data.client_phone);
+              }
+            });
+        }}
       />
     </main>
   );
