@@ -16,6 +16,9 @@
 -- Drop the old restrictive read policy
 DROP POLICY IF EXISTS "logs_pro_read" ON project_logs;
 
+-- Drop the old insert policy if it exists
+DROP POLICY IF EXISTS "logs_pro_create" ON project_logs;
+
 -- Create new comprehensive read policy for professionals
 -- Professionals can read ALL logs on their pro_projects
 CREATE POLICY "logs_pro_read_own_projects" ON project_logs
@@ -23,6 +26,22 @@ CREATE POLICY "logs_pro_read_own_projects" ON project_logs
     pro_project_id IN (
       SELECT pp.id FROM pro_projects pp
       JOIN professionals p ON pp.professional_id = p.id
+      WHERE p.user_id = auth.uid()
+    )
+  );
+
+-- Allow professionals to INSERT (create) logs on their pro_projects
+CREATE POLICY "logs_pro_create_own_projects" ON project_logs
+  FOR INSERT WITH CHECK (
+    pro_project_id IN (
+      SELECT pp.id FROM pro_projects pp
+      JOIN professionals p ON pp.professional_id = p.id
+      WHERE p.user_id = auth.uid()
+    )
+    OR project_id IN (
+      SELECT up.id FROM user_projects up
+      JOIN project_professionals ppj ON up.id = ppj.project_id
+      JOIN professionals p ON ppj.professional_id = p.id
       WHERE p.user_id = auth.uid()
     )
   );
