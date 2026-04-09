@@ -8,8 +8,11 @@ import { createClient } from "@/lib/supabase/client";
 import type { ProProject } from "@/lib/types/pro-projects";
 import type { ProjectLog } from "@/lib/types/daily-logs";
 import { getMediaUrl } from "@/lib/actions/log-media";
+import { createLog } from "@/lib/actions/daily-logs";
+import { getAllDrafts, deleteDraft, markDraftPendingSync } from "@/lib/utils/daily-log-drafts";
 import LogTimeline from '@/components/journal/LogTimeline';
 import LogForm from '@/components/journal/LogForm';
+import OfflineIndicator from '@/components/journal/OfflineIndicator';
 import { toast } from "sonner";
 
 interface ProProjectJournalProps {
@@ -22,6 +25,8 @@ export function ProProjectJournal({ project }: ProProjectJournalProps) {
   const [photoUrls, setPhotoUrls] = useState<Record<string, Record<string, string>>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [showNewLog, setShowNewLog] = useState(false);
+  const [pendingDrafts, setPendingDrafts] = useState(0);
+  const [isSyncing, setIsSyncing] = useState(false);
   const supabase = createClient();
 
   const loadLogs = useCallback(async () => {
@@ -64,6 +69,54 @@ export function ProProjectJournal({ project }: ProProjectJournalProps) {
   useEffect(() => {
     loadLogs();
   }, [loadLogs]);
+
+  // Count pending drafts on mount
+  useEffect(() => {
+    const countDrafts = async () => {
+      const drafts = await getAllDrafts(project.id);
+      setPendingDrafts(drafts.filter(d => d.pendingSync).length);
+    };
+    countDrafts();
+  }, [project.id]);
+
+  // Sync drafts handler
+  const handleSync = useCallback(async () => {
+    setIsSyncing(true);
+    try {
+      const drafts = await getAllDrafts(project.id);
+      const pendingDrafts = drafts.filter(d => d.pendingSync);
+      let syncedCount = 0;
+
+      for (const draft of pendingDrafts) {
+        try {
+          const result = await createLog({
+            ...draft.formData,
+            projectId: project.id,
+            isProProject: true,
+          });
+          if (result?.data) {
+            await deleteDraft(draft.id);
+            syncedCount++;
+          }
+        } catch (err) {
+          console.error(`Failed to sync draft ${draft.id}:`, err);
+        }
+      }
+
+      if (syncedCount > 0) {
+        toast.success(`${syncedCount} brouillon(s) synchronisé(s)`);
+        setPendingDrafts(0);
+        loadLogs();
+      } else {
+        toast.info('Aucun brouillon à synchroniser');
+      }
+    } catch (err) {
+      console.error('Sync error:', err);
+      toast.error('Erreur lors de la synchronisation');
+    } finally {
+      setIsSyncing(false);
+    }
+  }, [project.id, loadLogs]);
 
   // Real-time subscription
   useEffect(() => {
@@ -119,6 +172,13 @@ export function ProProjectJournal({ project }: ProProjectJournalProps) {
 
   return (
     <div className="space-y-6">
+      {/* Offline Sync Indicator */}
+      <OfflineIndicator
+        pendingDrafts={pendingDrafts}
+        onSync={handleSync}
+        isSyncing={isSyncing}
+      />
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
