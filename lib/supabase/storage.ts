@@ -38,11 +38,14 @@ async function doUpload(
     : crypto.randomUUID();
   const filePath = `${path}/${fileName}`;
 
+  console.log("[Storage] upload:", { bucket, path, fileName, filePath });
+
   const { error: uploadError } = await supabase.storage
     .from(bucket)
     .upload(filePath, file);
 
   if (uploadError) {
+    console.error("[Storage] upload error:", uploadError);
     throw uploadError;
   }
 
