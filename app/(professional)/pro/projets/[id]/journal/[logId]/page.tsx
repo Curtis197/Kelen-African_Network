@@ -19,15 +19,46 @@ import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import type { ProjectLog, LogComment } from '@/lib/types/daily-logs';
 
+// Share modal wrapper that pre-fills client contact info
+function ShareLogModalWithClientInfo({
+  logId,
+  isOpen,
+  onClose,
+  clientName,
+  clientEmail,
+  clientPhone,
+}: {
+  logId: string;
+  isOpen: boolean;
+  onClose: () => void;
+  clientName: string | null;
+  clientEmail: string | null;
+  clientPhone: string | null;
+}) {
+  return (
+    <ShareLogModal
+      logId={logId}
+      isOpen={isOpen}
+      onClose={onClose}
+      defaultEmail={clientEmail || undefined}
+      defaultPhone={clientPhone || undefined}
+      recipientLabel={clientName ? `Client: ${clientName}` : undefined}
+    />
+  );
+}
+
 export default function ProLogDetailPage() {
   const params = useParams();
   const router = useRouter();
   const projectId = params.id as string;
   const logId = params.logId as string;
   // For pro, the projectId in the URL is the user's project ID that links to the pro's work
-  const proProjectId = projectId; 
+  const proProjectId = projectId;
 
   const [log, setLog] = useState<ProjectLog | null>(null);
+  const [clientName, setClientName] = useState<string | null>(null);
+  const [clientEmail, setClientEmail] = useState<string | null>(null);
+  const [clientPhone, setClientPhone] = useState<string | null>(null);
   const [comments, setComments] = useState<LogComment[]>([]);
   const [signedUrls, setSignedUrls] = useState<Record<string, string>>({});
   const [showShareModal, setShowShareModal] = useState(false);
@@ -42,6 +73,26 @@ export default function ProLogDetailPage() {
     });
     
     setIsLoading(true);
+
+    // Fetch project client info
+    const supabase = createClient();
+    const { data: projData } = await supabase
+      .from("pro_projects")
+      .select("client_name, client_email, client_phone")
+      .eq("id", proProjectId)
+      .single();
+    
+    if (projData) {
+      setClientName(projData.client_name);
+      setClientEmail(projData.client_email);
+      setClientPhone(projData.client_phone);
+      console.log("[ProLogDetailPage] Client info:", {
+        name: projData.client_name,
+        email: projData.client_email,
+        phone: projData.client_phone,
+        hasContact: !!(projData.client_email || projData.client_phone)
+      });
+    }
 
     // Use proProjectId to fetch log with isProProject=true
     console.log("[ProLogDetailPage] Calling getLogById with:", { 
@@ -152,14 +203,22 @@ export default function ProLogDetailPage() {
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div className="flex items-center gap-3">
-            <button
-              onClick={() => setShowShareModal(true)}
-              className="inline-flex items-center gap-2 px-4 py-2.5 bg-surface-container text-on-surface rounded-xl font-medium text-sm hover:bg-surface-container-high transition-colors"
-              aria-label="Partager le rapport"
-            >
-              <Share2 className="w-4 h-4" />
-              Partager
-            </button>
+            {/* Share button - only show if project has client contact info */}
+            {(clientEmail || clientPhone) && (
+              <button
+                onClick={() => setShowShareModal(true)}
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-surface-container text-on-surface rounded-xl font-medium text-sm hover:bg-surface-container-high transition-colors"
+                aria-label="Partager le rapport"
+              >
+                <Share2 className="w-4 h-4" />
+                Partager
+              </button>
+            )}
+            {!clientEmail && !clientPhone && (
+              <span className="text-xs text-on-surface-variant italic">
+                Aucun contact client pour partager
+              </span>
+            )}
           </div>
         </div>
 
@@ -263,10 +322,13 @@ export default function ProLogDetailPage() {
       </div>
 
       {/* Share modal */}
-      <ShareLogModal
+      <ShareLogModalWithClientInfo
         logId={log.id}
         isOpen={showShareModal}
         onClose={() => setShowShareModal(false)}
+        clientName={clientName}
+        clientEmail={clientEmail}
+        clientPhone={clientPhone}
       />
     </main>
   );

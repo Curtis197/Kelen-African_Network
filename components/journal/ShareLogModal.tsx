@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { X, Mail, MessageCircle, Smartphone, Copy, Check } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { X, Mail, MessageCircle, Smartphone, Copy, Check, User } from 'lucide-react';
 import { shareLog } from '@/lib/actions/log-shares';
 import { toast } from 'sonner';
 
@@ -9,14 +9,23 @@ interface ShareLogModalProps {
   logId: string;
   isOpen: boolean;
   onClose: () => void;
+  defaultEmail?: string;
+  defaultPhone?: string;
+  recipientLabel?: string;
 }
 
-export default function ShareLogModal({ logId, isOpen, onClose }: ShareLogModalProps) {
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
+export default function ShareLogModal({ logId, isOpen, onClose, defaultEmail, defaultPhone, recipientLabel }: ShareLogModalProps) {
+  const [email, setEmail] = useState(defaultEmail || '');
+  const [phone, setPhone] = useState(defaultPhone || '');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+
+  // Update when defaults change
+  useEffect(() => {
+    if (defaultEmail) setEmail(defaultEmail);
+    if (defaultPhone) setPhone(defaultPhone);
+  }, [defaultEmail, defaultPhone, isOpen]);
 
   if (!isOpen) return null;
 
@@ -87,6 +96,14 @@ export default function ShareLogModal({ logId, isOpen, onClose }: ShareLogModalP
             <X className="w-5 h-5 text-on-surface-variant" />
           </button>
         </div>
+
+        {/* Recipient label */}
+        {recipientLabel && (
+          <div className="flex items-center gap-2 px-4 py-3 bg-primary/10 rounded-xl">
+            <User className="w-4 h-4 text-primary" />
+            <span className="text-sm font-medium text-on-surface">{recipientLabel}</span>
+          </div>
+        )}
 
         {/* Share methods */}
         <div className="grid grid-cols-3 gap-3">
