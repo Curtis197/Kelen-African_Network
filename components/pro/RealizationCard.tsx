@@ -3,8 +3,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { MapPin, Calendar, FileText, ImageIcon, Edit2, Trash2, Loader2 } from "lucide-react";
+import { MapPin, Calendar, FileText, ImageIcon, Edit2, Trash2, Loader2, Download } from "lucide-react";
 import { deleteProjectDocument } from "@/lib/actions/realisations";
+import { exportRealisationToPDF } from "@/lib/utils/pdf-export";
 import { useState } from "react";
 import type { ProjectDocument } from "@/lib/supabase/types";
 import { toast } from "sonner";
@@ -35,6 +36,23 @@ export function ProjectDocumentCard({
       toast.error("Erreur lors de la suppression.");
     } finally {
       setIsDeleting(false);
+    }
+  };
+
+  const handleExportPDF = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    try {
+      await exportRealisationToPDF(
+        doc.project_title,
+        doc.project_description,
+        doc.photo_urls || [],
+        doc.project_date ? new Date(doc.project_date).toLocaleDateString('fr-FR') : null
+      );
+      toast.success('Export PDF lancé');
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Erreur lors de l'export");
     }
   };
 
@@ -89,6 +107,13 @@ export function ProjectDocumentCard({
         {/* Action Menu */}
         <div className="absolute top-4 right-4 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
            <div className="flex gap-2">
+              <button
+                onClick={handleExportPDF}
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-surface/90 text-on-surface shadow-sm hover:bg-white transition-colors"
+                aria-label={`Exporter ${doc.project_title} en PDF`}
+              >
+                <Download size={14} />
+              </button>
               <Link
                 href={`/pro/realisations/${doc.id}/edit`}
                 className="flex h-8 w-8 items-center justify-center rounded-full bg-surface/90 text-on-surface shadow-sm hover:bg-white transition-colors"

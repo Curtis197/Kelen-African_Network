@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { ArrowLeft, Plus, BookOpen } from "lucide-react";
+import { ArrowLeft, Plus, BookOpen, Download } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import type { ProProject } from "@/lib/types/pro-projects";
@@ -10,6 +10,7 @@ import type { ProjectLog } from "@/lib/types/daily-logs";
 import { getMediaUrl } from "@/lib/actions/log-media";
 import { createLog } from "@/lib/actions/daily-logs";
 import { getAllDrafts, deleteDraft, markDraftPendingSync } from "@/lib/utils/daily-log-drafts";
+import { exportJournalToPDF } from "@/lib/utils/pdf-export";
 import LogTimeline from '@/components/journal/LogTimeline';
 import LogForm from '@/components/journal/LogForm';
 import OfflineIndicator from '@/components/journal/OfflineIndicator';
@@ -141,6 +142,20 @@ export function ProProjectJournal({ project }: ProProjectJournalProps) {
     };
   }, [project.id, loadLogs, supabase]);
 
+  const handleExportPDF = async () => {
+    try {
+      await exportJournalToPDF(
+        project.title,
+        project.category || 'Professionnel',
+        project.client_name || null,
+        project.location || null
+      );
+      toast.success('Export PDF lancé');
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Erreur lors de l'export");
+    }
+  };
+
   if (showNewLog) {
     return (
       <div className="space-y-6">
@@ -198,13 +213,23 @@ export function ProProjectJournal({ project }: ProProjectJournalProps) {
           </div>
         </div>
 
-        <button
-          onClick={() => setShowNewLog(true)}
-          className="inline-flex items-center gap-2 px-5 py-3 bg-primary text-on-primary rounded-xl font-semibold text-sm hover:opacity-90 transition-opacity"
-        >
-          <Plus className="w-4 h-4" />
-          Nouveau rapport
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleExportPDF}
+            className="inline-flex items-center gap-2 px-4 py-3 bg-surface-container text-on-surface rounded-xl font-semibold text-sm hover:bg-surface-container-high transition-colors"
+            aria-label="Exporter le journal en PDF"
+          >
+            <Download className="w-4 h-4" />
+            Exporter PDF
+          </button>
+          <button
+            onClick={() => setShowNewLog(true)}
+            className="inline-flex items-center gap-2 px-5 py-3 bg-primary text-on-primary rounded-xl font-semibold text-sm hover:opacity-90 transition-opacity"
+          >
+            <Plus className="w-4 h-4" />
+            Nouveau rapport
+          </button>
+        </div>
       </div>
 
       {/* Loading state */}
