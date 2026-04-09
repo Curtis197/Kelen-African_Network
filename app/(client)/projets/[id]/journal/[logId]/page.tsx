@@ -35,14 +35,14 @@ export default function LogDetailPage() {
     setIsLoading(true);
 
     // Pass projectId to satisfy RLS
-    const logData = await getLogById(logId, projectId);
-    if (logData) {
-      setLog(logData);
+    const result = await getLogById(logId, projectId);
+    if (result?.data) {
+      setLog(result.data);
 
       // Load signed URLs for photos
       const urls: Record<string, string> = {};
-      if (logData.media) {
-        for (const media of logData.media) {
+      if (result.data.media) {
+        for (const media of result.data.media) {
           const url = await getMediaUrl(media.storage_path);
           if (url) {
             urls[media.storage_path] = url;
@@ -56,7 +56,7 @@ export default function LogDetailPage() {
     setComments(commentsData);
 
     setIsLoading(false);
-  }, [logId]);
+  }, [logId, projectId]);
 
   useEffect(() => {
     loadData();
