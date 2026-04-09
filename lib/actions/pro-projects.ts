@@ -176,12 +176,37 @@ export async function updateProProjectStatus(
     .eq("professional_id", proId);
 
   if (error) {
-    log("pro_project.status.error", { id, status, error: error.message });
+    log("pro_project.status.update.error", { id, error: error.message });
     return { success: false, error: error.message };
   }
 
-  log("pro_project.status.ok", { id, status });
+  log("pro_project.status.update.ok", { id, status });
   revalidatePath("/pro/projets");
+  return { success: true };
+}
+
+export async function toggleProProjectPublic(
+  id: string,
+  isPublic: boolean
+): Promise<{ success: boolean; error?: string }> {
+  const proId = await getProfessionalId();
+  if (!proId) return { success: false, error: "Non autorisé" };
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("pro_projects")
+    .update({ is_public: isPublic })
+    .eq("id", id)
+    .eq("professional_id", proId);
+
+  if (error) {
+    log("pro_project.toggle_public.error", { id, error: error.message });
+    return { success: false, error: error.message };
+  }
+
+  log("pro_project.toggle_public.ok", { id, isPublic });
+  revalidatePath("/pro/projets");
+  revalidatePath(`/pro/projets/${id}`);
   return { success: true };
 }
 

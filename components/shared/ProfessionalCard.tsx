@@ -79,9 +79,17 @@ export function ProfessionalCard({
     }
   };
   return (
-    <button
+    <div
       onClick={() => router.push(`/professionnels/${slug}`)}
       className="group block cursor-pointer rounded-[1.5rem] sm:rounded-[2rem] bg-surface-container-lowest p-5 sm:p-8 transition-all duration-500 hover:shadow-[0_32px_64px_-16px_rgba(0,0,0,0.12)] hover:-translate-y-2 hover:ring-1 hover:ring-kelen-green-100/50 relative overflow-hidden ring-1 ring-outline-variant/10"
+      role="link"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          router.push(`/professionnels/${slug}`);
+        }
+      }}
       aria-label={`Voir le profil de ${businessName}`}
     >
       {added && (
@@ -184,6 +192,6 @@ export function ProfessionalCard({
           </button>
         )}
       </div>
-    </button>
+    </div>
   );
 }

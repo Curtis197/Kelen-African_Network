@@ -1,5 +1,7 @@
 "use server";
 
+import { createClient } from "@/lib/supabase/server";
+import { revalidatePath } from "next/cache";
 import { Anthropic } from "@anthropic-ai/sdk";
 
 const anthropic = new Anthropic({
@@ -25,6 +27,30 @@ interface GeneratedCopy {
 export async function generateBioCopy(
   q: CopywritingQuestionnaire
 ): Promise<{ data?: GeneratedCopy; error?: string }> {
+  // Authentication check
+  const supabase = await createClient();
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  
+  if (authError || !user) {
+    return { error: "Vous devez être connecté" };
+  }
+
+  // Verify user is a professional
+  const { data: professional } = await supabase
+    .from("professionals")
+    .select("id, user_id")
+    .eq("user_id", user.id)
+    .single();
+
+  if (!professional) {
+    return { error: "Profil professionnel introuvable" };
+  }
+
+  // Check if API key is configured
+  if (!process.env.ANTHROPIC_API_KEY) {
+    return { error: "Clé API non configurée" };
+  }
+
   try {
     const systemPrompt = `Tu es un rédacteur professionnel expert pour une plateforme africaine de services. Tu rédiges des textes en français pour des professionnels du bâtiment, de la rénovation et des services en Afrique.
 
@@ -81,6 +107,21 @@ Génère UNIQUEMENT le JSON valide, sans texte avant ou après.`;
       return { error: "L'accroche est trop longue (max 200 caractères)." };
     }
 
+    // Save to professional's profile
+    const { error: updateError } = await supabase
+      .from("professionals")
+      .update({
+        bio_accroche: parsed.bio_accroche,
+        about_text: parsed.bio_presentation,
+      })
+      .eq("id", professional.id);
+
+    if (updateError) {
+      console.error("Error saving AI copy:", updateError);
+      return { error: "Erreur lors de la sauvegarde des textes" };
+    }
+
+    revalidatePath("/pro/profil");
     return { data: parsed };
   } catch (err) {
     console.error("AI copywriting error:", err);

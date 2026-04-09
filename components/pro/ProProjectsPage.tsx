@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
-import { getProProjects, deleteProProject, updateProProjectStatus } from "@/lib/actions/pro-projects";
+import { getProProjects, deleteProProject, updateProProjectStatus, toggleProProjectPublic } from "@/lib/actions/pro-projects";
 import type { ProProject, ProProjectStatus } from "@/lib/types/pro-projects";
 import {
   Plus, Trash2, Eye, EyeOff, Loader2,
@@ -75,13 +75,10 @@ export function ProProjectsPage() {
   };
 
   const togglePublic = async (project: ProProject) => {
-    const { error } = await supabase
-      .from("pro_projects")
-      .update({ is_public: !project.is_public })
-      .eq("id", project.id);
+    const result = await toggleProProjectPublic(project.id, !project.is_public);
 
-    if (error) {
-      toast.error(error.message);
+    if (result.error) {
+      toast.error(result.error);
     } else {
       toast.success(project.is_public ? "Projet retiré du portfolio" : "Projet ajouté au portfolio");
       loadProjects();

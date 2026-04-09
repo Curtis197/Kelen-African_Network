@@ -19,6 +19,36 @@ export async function recalculateStatus(professionalId: string): Promise<{
 }> {
   const supabase = await createClient();
 
+  // Authentication check
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  
+  if (authError || !user) {
+    return {
+      oldStatus: null,
+      newStatus: null,
+      recommendationCount: 0,
+      signalCount: 0,
+      error: "Vous devez être connecté",
+    };
+  }
+
+  // Admin role check
+  const { data: userData } = await supabase
+    .from("users")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (userData?.role !== 'admin') {
+    return {
+      oldStatus: null,
+      newStatus: null,
+      recommendationCount: 0,
+      signalCount: 0,
+      error: "Non autorisé: accès admin requis",
+    };
+  }
+
   // Get current status before recalculation
   const { data: pro } = await supabase
     .from("professionals")

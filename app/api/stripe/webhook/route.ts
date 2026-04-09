@@ -53,9 +53,9 @@ export async function POST(request: NextRequest) {
       let currentPeriodEnd: number;
       if (typeof session.subscription === 'string') {
         try {
-          const stripeSubscription = await stripe.subscriptions.retrieve(session.subscription);
+          const stripeSubscription: any = await stripe.subscriptions.retrieve(session.subscription);
           currentPeriodEnd = stripeSubscription.current_period_end;
-        } catch (err) {
+        } catch (err: any) {
           console.error("Failed to retrieve subscription:", err);
           currentPeriodEnd = Date.now() / 1000 + 30 * 24 * 60 * 60; // Fallback: 30 days
         }
