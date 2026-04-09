@@ -289,7 +289,7 @@ export async function getProjectLogs(projectId: string, isProProject?: boolean):
   return data || [];
 }
 
-export async function getLogById(logId: string, projectId?: string, isProProject?: boolean): Promise<ProjectLog | null> {
+export async function getLogById(logId: string, projectId?: string, isProProject?: boolean): Promise<{ data?: ProjectLog | null; error?: string; debug?: Record<string, unknown> }> {
   const supabase = await createClient();
 
   console.log("[getLogById] === START ===");
@@ -326,14 +326,28 @@ export async function getLogById(logId: string, projectId?: string, isProProject
 
   const { data, error } = await query.single();
 
-  console.log("[getLogById] Query result:", {
+  const debugInfo = {
+    logId,
+    projectId,
+    isProProject,
+    filterColumn: isProProject ? "pro_project_id" : projectId ? "project_id" : "none",
+    filterValue: projectId || null,
     hasData: !!data,
-    error: error ? { message: error.message, code: error.code, details: error.details } : null,
-  });
+    errorCode: error?.code || null,
+    errorMessage: error?.message || null,
+    errorDetails: error?.details || null,
+    errorHint: error?.hint || null,
+  };
+
+  console.log("[getLogById] Query result:", debugInfo);
 
   if (error) {
     console.error("[getLogById] Error fetching log:", error);
-    return null;
+    return { 
+      data: null, 
+      error: error.message,
+      debug: debugInfo 
+    };
   }
 
   console.log("[getLogById] === SUCCESS ===", {
@@ -343,7 +357,7 @@ export async function getLogById(logId: string, projectId?: string, isProProject
     pro_project_id: data?.pro_project_id,
   });
 
-  return data;
+  return { data, debug: debugInfo };
 }
 
 export async function getLogsByStep(stepId: string): Promise<ProjectLog[]> {

@@ -50,27 +50,24 @@ export default function ProLogDetailPage() {
       isProProject: true 
     });
     
-    const logData = await getLogById(logId, proProjectId, true);
+    const result = await getLogById(logId, proProjectId, true);
     
-    console.log("[ProLogDetailPage] getLogById returned:", { 
-      found: !!logData, 
-      logId: logData?.id, 
-      title: logData?.title,
-      project_id: logData?.project_id,
-      pro_project_id: logData?.pro_project_id,
-      author_role: logData?.author_role,
-      mediaCount: logData?.media?.length || 0 
+    // Log debug info from server
+    console.log("[ProLogDetailPage] Server returned:", {
+      hasData: !!result?.data,
+      error: result?.error,
+      debug: result?.debug
     });
     
-    if (logData) {
-      setLog(logData);
+    if (result?.data) {
+      setLog(result.data);
 
       // Load signed URLs for photos
       console.log("[ProLogDetailPage] Loading signed URLs for photos...");
       const urls: Record<string, string> = {};
-      if (logData.media) {
-        console.log("[ProLogDetailPage] Processing", logData.media.length, "media files");
-        for (const media of logData.media) {
+      if (result.data.media) {
+        console.log("[ProLogDetailPage] Processing", result.data.media.length, "media files");
+        for (const media of result.data.media) {
           console.log("[ProLogDetailPage] Getting URL for:", media.storage_path);
           const url = await getMediaUrl(media.storage_path);
           if (url) {
@@ -87,6 +84,8 @@ export default function ProLogDetailPage() {
       console.log("[ProLogDetailPage] Signed URLs loaded:", Object.keys(urls).length);
     } else {
       console.error("[ProLogDetailPage] ✗ Log data not found!");
+      console.error("[ProLogDetailPage] Server error:", result?.error);
+      console.error("[ProLogDetailPage] Server debug info:", result?.debug);
     }
 
     console.log("[ProLogDetailPage] Fetching comments for log:", logId);
