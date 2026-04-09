@@ -1,4 +1,4 @@
-import { Navbar } from "@/components/layout/Navbar";
+import { ProNavbar } from "@/components/layout/ProNavbar";
 import { Footer } from "@/components/layout/Footer";
 
 export default function ProfessionalLayout({
@@ -8,7 +8,7 @@ export default function ProfessionalLayout({
 }) {
   return (
     <div className="flex min-h-screen flex-col">
-      <Navbar />
+      <ProNavbar />
       <main className="flex-1 bg-surface">
         <div className="mx-auto max-w-7xl w-full">
           <div className="p-4 sm:p-6 lg:p-8">{children}</div>
