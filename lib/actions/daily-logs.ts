@@ -194,7 +194,14 @@ export async function updateLog(
   }
 
   log("log.update.ok", { logId });
-  revalidatePath(`/projets/${existingLog.project_id}/journal`);
+  
+  // Revalidate the correct path based on project type
+  if (existingLog.pro_project_id) {
+    revalidatePath(`/pro/projets/${existingLog.pro_project_id}/journal`);
+  } else if (existingLog.project_id) {
+    revalidatePath(`/projets/${existingLog.project_id}/journal`);
+  }
+  
   return { data: updatedLog };
 }
 
@@ -206,7 +213,7 @@ export async function deleteLog(logId: string): Promise<{ success: boolean; erro
 
   const { data: existingLog } = await supabase
     .from("project_logs")
-    .select("project_id, author_id")
+    .select("project_id, pro_project_id, author_id")
     .eq("id", logId)
     .single();
 
@@ -225,7 +232,14 @@ export async function deleteLog(logId: string): Promise<{ success: boolean; erro
   }
 
   log("log.delete.ok", { logId });
-  revalidatePath(`/projets/${existingLog.project_id}/journal`);
+  
+  // Revalidate the correct path based on project type
+  if (existingLog.pro_project_id) {
+    revalidatePath(`/pro/projets/${existingLog.pro_project_id}/journal`);
+  } else if (existingLog.project_id) {
+    revalidatePath(`/projets/${existingLog.project_id}/journal`);
+  }
+  
   return { success: true };
 }
 

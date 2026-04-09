@@ -1,33 +1,27 @@
-import { createClient } from "@/lib/supabase/server";
-import { NextResponse } from "next/server";
+import { createClient } from '@/lib/supabase/server';
+import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
-  const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/";
+  const code = searchParams.get('code');
+  const next = searchParams.get('next') ?? '/dashboard';
 
   if (code) {
     const supabase = await createClient();
-    const { error, data } = await supabase.auth.exchangeCodeForSession(code);
-
-    if (!error && data.session) {
-      if (next.includes("/mot-de-passe/reset")) {
-        return NextResponse.redirect(`${origin}${next}`);
-      }
-
-      const role = data.session.user.user_metadata?.role as string | undefined;
-
-      if (role?.startsWith("pro_")) {
-        return NextResponse.redirect(`${origin}/pro/dashboard`);
-      } else if (role === "admin") {
-        return NextResponse.redirect(`${origin}/admin`);
-      } else {
-        return NextResponse.redirect(`${origin}/dashboard`);
-      }
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    
+    if (!error) {
+      // Successfully exchanged code for session
+      // Redirect to the intended page or default dashboard
+      return NextResponse.redirect(`${origin}${next}`);
+    } else {
+      // Log the error for debugging
+      console.error('Error exchanging code for session:', error);
     }
   }
 
+  // If there's no code or an error occurred, redirect to login with an error
   return NextResponse.redirect(
-    `${origin}/connexion?error=Impossible_de_verifier_votre_email`
+    `${origin}/connexion?error=${encodeURIComponent('Unable to complete authentication')}`
   );
 }

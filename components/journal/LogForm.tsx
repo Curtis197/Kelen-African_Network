@@ -163,11 +163,11 @@ export default function LogForm({ projectId, proProjectId, stepId, projectCurren
       }
 
       toast.success('Rapport publié avec succès');
-      
+
       if (onSaved) {
         onSaved();
       } else {
-        router.push(`/projets/${projectId}/journal`);
+        router.push(`/pro/projets/${projectId}/journal`);
         router.refresh();
       }
     } catch (err) {

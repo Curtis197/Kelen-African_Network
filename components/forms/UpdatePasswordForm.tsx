@@ -37,8 +37,21 @@ export function UpdatePasswordForm() {
       if (error) throw error;
 
       setSuccess(true);
-      setTimeout(() => {
-        router.push("/dashboard");
+      setTimeout(async () => {
+        // Check user role to redirect to appropriate dashboard
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { data: userData } = await supabase
+            .from("users")
+            .select("role")
+            .eq("id", user.id)
+            .single();
+          
+          const isProfessional = userData?.role?.startsWith('pro_');
+          router.push(isProfessional ? "/pro/dashboard" : "/dashboard");
+        } else {
+          router.push("/dashboard");
+        }
       }, 2000);
     } catch (err: any) {
       console.error("Update password error:", err);

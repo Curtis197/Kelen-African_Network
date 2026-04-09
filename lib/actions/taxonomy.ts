@@ -49,7 +49,32 @@ export async function getAllProfessions(): Promise<Profession[]> {
 
 // Admin actions
 
+async function requireAdmin() {
+  const supabase = await createClient();
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  
+  if (authError || !user) {
+    return { error: "Vous devez être connecté" as string };
+  }
+
+  // Check if user is admin
+  const { data: userData, error: userError } = await supabase
+    .from("users")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (userError || !userData || userData.role !== 'admin') {
+    return { error: "Non autorisé: accès admin requis" as string };
+  }
+
+  return { success: true };
+}
+
 export async function createArea(name: string, slug: string) {
+  const adminCheck = await requireAdmin();
+  if ('error' in adminCheck) return adminCheck;
+
   const supabase = await createClient();
   const { data: existing } = await supabase.from("professional_areas").select("id").order("sort_order", { ascending: false }).limit(1).single();
   const nextOrder = (existing as any)?.sort_order ? (existing as any).sort_order + 1 : 1;
@@ -66,6 +91,9 @@ export async function createArea(name: string, slug: string) {
 }
 
 export async function updateArea(id: string, name: string, slug: string) {
+  const adminCheck = await requireAdmin();
+  if ('error' in adminCheck) return adminCheck;
+
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("professional_areas")
@@ -80,6 +108,9 @@ export async function updateArea(id: string, name: string, slug: string) {
 }
 
 export async function deleteArea(id: string) {
+  const adminCheck = await requireAdmin();
+  if ('error' in adminCheck) return adminCheck;
+
   const supabase = await createClient();
   const { error } = await supabase.from("professional_areas").delete().eq("id", id);
   if (error) return { error: error.message };
@@ -88,6 +119,9 @@ export async function deleteArea(id: string) {
 }
 
 export async function createProfession(areaId: string, name: string, slug: string) {
+  const adminCheck = await requireAdmin();
+  if ('error' in adminCheck) return adminCheck;
+
   const supabase = await createClient();
   const { data: existing } = await supabase.from("professions").select("sort_order").eq("area_id", areaId).order("sort_order", { ascending: false }).limit(1).single();
   const nextOrder = (existing as any)?.sort_order ? (existing as any).sort_order + 1 : 1;
@@ -104,6 +138,9 @@ export async function createProfession(areaId: string, name: string, slug: strin
 }
 
 export async function updateProfession(id: string, name: string, slug: string) {
+  const adminCheck = await requireAdmin();
+  if ('error' in adminCheck) return adminCheck;
+
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("professions")
@@ -118,6 +155,9 @@ export async function updateProfession(id: string, name: string, slug: string) {
 }
 
 export async function deleteProfession(id: string) {
+  const adminCheck = await requireAdmin();
+  if ('error' in adminCheck) return adminCheck;
+
   const supabase = await createClient();
   const { error } = await supabase.from("professions").delete().eq("id", id);
   if (error) return { error: error.message };

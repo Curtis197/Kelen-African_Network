@@ -119,6 +119,28 @@ export async function createProject(formData: FormData) {
 
 export async function updateProjectStatus(id: string, status: string) {
   const supabase = await createClient();
+  
+  // Authentication check
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  if (authError || !user) {
+    return { error: "Vous devez être connecté" };
+  }
+
+  // Verify user owns the project
+  const { data: project, error: fetchError } = await supabase
+    .from("user_projects")
+    .select("user_id")
+    .eq("id", id)
+    .single();
+
+  if (fetchError || !project) {
+    return { error: "Projet introuvable" };
+  }
+
+  if (project.user_id !== user.id) {
+    return { error: "Non autorisé" };
+  }
+
   const { error } = await supabase
     .from("user_projects")
     .update({ status })
@@ -130,6 +152,7 @@ export async function updateProjectStatus(id: string, status: string) {
   }
 
   revalidatePath(`/projets/${id}`);
+  revalidatePath("/projets");
 }
 
 export async function getProject(id: string) {
