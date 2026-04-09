@@ -8,7 +8,9 @@
       "Bash(git commit *)",
       "Bash(git push *)",
       "Bash(vercel *)",
-      "Bash(type *)"
+      "Bash(type *)",
+      "Bash(select-string *)",
+      "Bash(select-object *)"
     ]
   },
   "$version": 3

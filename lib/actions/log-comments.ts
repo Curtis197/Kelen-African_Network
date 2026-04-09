@@ -13,24 +13,59 @@ export async function approveLog(
 
   if (!user) return { success: false, error: "Non autorisé" };
 
-  // Get log info
+  // Get log info - include pro_project_id
   const { data: logEntry } = await supabase
     .from("project_logs")
-    .select("project_id, status, author_id")
+    .select("project_id, pro_project_id, status, author_id")
     .eq("id", logId)
     .single();
 
   if (!logEntry) return { success: false, error: "Rapport introuvable" };
 
-  // Verify client owns the project
-  const { data: project } = await supabase
-    .from("user_projects")
-    .select("id")
-    .eq("id", logEntry.project_id)
-    .eq("user_id", user.id)
-    .single();
+  // Verify ownership - check both client projects and pro projects
+  let isAuthorized = false;
+  let projectId = logEntry.project_id;
 
-  if (!project) return { success: false, error: "Non autorisé" };
+  // Check if it's a client project
+  if (logEntry.project_id) {
+    const { data: project } = await supabase
+      .from("user_projects")
+      .select("id")
+      .eq("id", logEntry.project_id)
+      .eq("user_id", user.id)
+      .single();
+    
+    if (project) {
+      isAuthorized = true;
+    }
+  }
+
+  // Check if it's a pro project
+  if (logEntry.pro_project_id && !isAuthorized) {
+    const { data: professional } = await supabase
+      .from("professionals")
+      .select("id")
+      .eq("user_id", user.id)
+      .single();
+    
+    if (professional) {
+      const { data: proProject } = await supabase
+        .from("pro_projects")
+        .select("id")
+        .eq("id", logEntry.pro_project_id)
+        .eq("professional_id", professional.id)
+        .single();
+      
+      if (proProject) {
+        isAuthorized = true;
+        projectId = logEntry.pro_project_id; // Use pro_project_id for revalidation
+      }
+    }
+  }
+
+  if (!isAuthorized) {
+    return { success: false, error: "Non autorisé" };
+  }
 
   // Insert comment
   const { error: commentError } = await supabase
@@ -81,14 +116,20 @@ export async function approveLog(
         comment,
         authorName: commenterName,
         logId,
-        projectId: logEntry.project_id,
+        projectId: logEntry.project_id || logEntry.pro_project_id,
       });
     }
   } catch {
     // Email is optional — don't fail the action
   }
 
-  revalidatePath(`/projets/${logEntry.project_id}/journal`);
+  // Revalidate the correct path based on project type
+  if (logEntry.pro_project_id) {
+    revalidatePath(`/pro/projets/${logEntry.pro_project_id}/journal`);
+  } else if (logEntry.project_id) {
+    revalidatePath(`/projets/${logEntry.project_id}/journal`);
+  }
+  
   return { success: true };
 }
 
@@ -102,24 +143,57 @@ export async function contestLog(
 
   if (!user) return { success: false, error: "Non autorisé" };
 
-  // Get log info
+  // Get log info - include pro_project_id
   const { data: logEntry } = await supabase
     .from("project_logs")
-    .select("project_id, status, author_id")
+    .select("project_id, pro_project_id, status, author_id")
     .eq("id", logId)
     .single();
 
   if (!logEntry) return { success: false, error: "Rapport introuvable" };
 
-  // Verify client owns the project
-  const { data: project } = await supabase
-    .from("user_projects")
-    .select("id")
-    .eq("id", logEntry.project_id)
-    .eq("user_id", user.id)
-    .single();
+  // Verify ownership - check both client projects and pro projects
+  let isAuthorized = false;
 
-  if (!project) return { success: false, error: "Non autorisé" };
+  // Check if it's a client project
+  if (logEntry.project_id) {
+    const { data: project } = await supabase
+      .from("user_projects")
+      .select("id")
+      .eq("id", logEntry.project_id)
+      .eq("user_id", user.id)
+      .single();
+    
+    if (project) {
+      isAuthorized = true;
+    }
+  }
+
+  // Check if it's a pro project
+  if (logEntry.pro_project_id && !isAuthorized) {
+    const { data: professional } = await supabase
+      .from("professionals")
+      .select("id")
+      .eq("user_id", user.id)
+      .single();
+    
+    if (professional) {
+      const { data: proProject } = await supabase
+        .from("pro_projects")
+        .select("id")
+        .eq("id", logEntry.pro_project_id)
+        .eq("professional_id", professional.id)
+        .single();
+      
+      if (proProject) {
+        isAuthorized = true;
+      }
+    }
+  }
+
+  if (!isAuthorized) {
+    return { success: false, error: "Non autorisé" };
+  }
 
   // Insert comment
   const { error: commentError } = await supabase
@@ -146,7 +220,13 @@ export async function contestLog(
     return { success: false, error: updateError.message };
   }
 
-  revalidatePath(`/projets/${logEntry.project_id}/journal`);
+  // Revalidate the correct path based on project type
+  if (logEntry.pro_project_id) {
+    revalidatePath(`/pro/projets/${logEntry.pro_project_id}/journal`);
+  } else if (logEntry.project_id) {
+    revalidatePath(`/projets/${logEntry.project_id}/journal`);
+  }
+  
   return { success: true };
 }
 
@@ -159,10 +239,10 @@ export async function resolveLog(
 
   if (!user) return { success: false, error: "Non autorisé" };
 
-  // Get log info
+  // Get log info - include pro_project_id
   const { data: logEntry } = await supabase
     .from("project_logs")
-    .select("project_id, status, author_id")
+    .select("project_id, pro_project_id, status, author_id")
     .eq("id", logId)
     .single();
 
@@ -171,15 +251,48 @@ export async function resolveLog(
     return { success: false, error: "Ce rapport n'est pas contesté" };
   }
 
-  // Verify client owns the project
-  const { data: project } = await supabase
-    .from("user_projects")
-    .select("id")
-    .eq("id", logEntry.project_id)
-    .eq("user_id", user.id)
-    .single();
+  // Verify ownership - check both client projects and pro projects
+  let isAuthorized = false;
 
-  if (!project) return { success: false, error: "Non autorisé" };
+  // Check if it's a client project
+  if (logEntry.project_id) {
+    const { data: project } = await supabase
+      .from("user_projects")
+      .select("id")
+      .eq("id", logEntry.project_id)
+      .eq("user_id", user.id)
+      .single();
+    
+    if (project) {
+      isAuthorized = true;
+    }
+  }
+
+  // Check if it's a pro project
+  if (logEntry.pro_project_id && !isAuthorized) {
+    const { data: professional } = await supabase
+      .from("professionals")
+      .select("id")
+      .eq("user_id", user.id)
+      .single();
+    
+    if (professional) {
+      const { data: proProject } = await supabase
+        .from("pro_projects")
+        .select("id")
+        .eq("id", logEntry.pro_project_id)
+        .eq("professional_id", professional.id)
+        .single();
+      
+      if (proProject) {
+        isAuthorized = true;
+      }
+    }
+  }
+
+  if (!isAuthorized) {
+    return { success: false, error: "Non autorisé" };
+  }
 
   // Insert comment
   const { error: commentError } = await supabase
@@ -205,7 +318,13 @@ export async function resolveLog(
     return { success: false, error: updateError.message };
   }
 
-  revalidatePath(`/projets/${logEntry.project_id}/journal`);
+  // Revalidate the correct path based on project type
+  if (logEntry.pro_project_id) {
+    revalidatePath(`/pro/projets/${logEntry.pro_project_id}/journal`);
+  } else if (logEntry.project_id) {
+    revalidatePath(`/projets/${logEntry.project_id}/journal`);
+  }
+  
   return { success: true };
 }
 
