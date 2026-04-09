@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import {
-  ImagePlus, X, Upload, Type, FileText, Eye, Save,
+  ImagePlus, X, Upload, Type, FileText, ExternalLink, Save,
   Smartphone, Clock, Users, Link as LinkIcon, Plus, Wand2
 } from "lucide-react";
 import AICopywritingDialog from "@/components/forms/AICopywritingDialog";
@@ -251,9 +251,9 @@ export function ProProfileForm() {
 
   const openPreview = () => {
     if (slug) {
-      router.push(`/professionnels/${slug}`);
+      window.open(`/professionnels/${slug}`, '_blank');
     } else {
-      toast.info("Slug non disponible — sauvegardez d'abord le profil");
+      toast.info("Sauvegardez d'abord le profil pour générer le slug");
     }
   };
 
@@ -280,9 +280,17 @@ export function ProProfileForm() {
     <div className="space-y-8">
       {/* Preview Button + AI Copywriting */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-        <p className="text-sm text-on-surface-variant">
-          Gérez l'apparence de votre page professionnelle
-        </p>
+        <div>
+          <p className="text-sm text-on-surface-variant">
+            Gérez l'apparence de votre page professionnelle
+          </p>
+          {slug && (
+            <p className="text-xs text-on-surface-variant/60 mt-0.5">
+              Votre page est visible à l'adresse:{' '}
+              <code className="text-primary">kelen.africa/professionnels/{slug}</code>
+            </p>
+          )}
+        </div>
         <div className="flex items-center gap-2">
           <button
             type="button"
@@ -296,8 +304,9 @@ export function ProProfileForm() {
             type="button"
             onClick={openPreview}
             className="inline-flex items-center gap-2 px-4 py-2 bg-surface-container text-on-surface rounded-xl text-sm font-semibold hover:bg-surface-container-high transition-colors"
+            title="Ouvrir la page publique dans un nouvel onglet"
           >
-            <Eye className="w-4 h-4" />
+            <ExternalLink className="w-4 h-4" />
             Aperçu
           </button>
         </div>

@@ -26,7 +26,17 @@ function formatDate(dateStr: string): string {
 
 // ── PDF Export ─────────────────────────────────────────────
 
+export function generateProjectPdfBlob(data: ExportProjectData): Blob {
+  const doc = buildPdfDocument(data);
+  return doc.output('blob');
+}
+
 export function downloadProjectPdf(data: ExportProjectData): void {
+  const doc = buildPdfDocument(data);
+  doc.save(`kelen-projet-${data.title.replace(/\s+/g, '-').toLowerCase()}.pdf`);
+}
+
+function buildPdfDocument(data: ExportProjectData): jsPDF {
   const doc = new jsPDF('p', 'mm', 'a4');
   const pageWidth = doc.internal.pageSize.getWidth();
   const accentColor: [number, number, number] = [0, 108, 73]; // Kelen green #006c49
@@ -206,8 +216,7 @@ export function downloadProjectPdf(data: ExportProjectData): void {
     );
   }
 
-  // Download
-  doc.save(`kelen-projet-${data.title.replace(/\s+/g, '-').toLowerCase()}.pdf`);
+  return doc;
 }
 
 // ── Excel Export ───────────────────────────────────────────

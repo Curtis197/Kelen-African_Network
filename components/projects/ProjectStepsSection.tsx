@@ -3,11 +3,12 @@
 import { useState, useEffect } from "react";
 import { ProjectStep } from "@/lib/types/projects";
 import { getProjectSteps, deleteProjectStep } from "@/lib/actions/project-steps";
-import { getProjectExportData } from "@/lib/actions/export-data";
-import { downloadProjectPdf, downloadProjectExcel } from "@/lib/utils/project-export";
+import { getProjectExportData, type ExportProjectData } from "@/lib/actions/export-data";
+import { downloadProjectPdf } from "@/lib/utils/project-export";
 import ProjectStepCard from "./ProjectStepCard";
 import AddStepDialog from "./AddStepDialog";
 import AssignStepProDialog from "./AssignStepProDialog";
+import PdfPreviewModal from "./PdfPreviewModal";
 import {
   PlusCircle,
   Search,
@@ -42,6 +43,8 @@ export default function ProjectStepsSection({
   const [assigningStep, setAssigningStep] = useState<ProjectStep | undefined>();
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [showPdfPreview, setShowPdfPreview] = useState(false);
+  const [exportData, setExportData] = useState<ExportProjectData | null>(null);
 
   useEffect(() => {
     if (initialSteps) {
@@ -89,7 +92,7 @@ export default function ProjectStepsSection({
     }
   };
 
-  const handleExport = async (format: 'pdf' | 'xlsx') => {
+  const handleExport = async (format: 'pdf' | 'xlsx', preview = false) => {
     setIsExporting(true);
     setIsExportOpen(false);
 
@@ -101,9 +104,17 @@ export default function ProjectStepsSection({
       }
 
       if (format === 'pdf') {
-        downloadProjectPdf(data);
-        toast.success("Rapport PDF téléchargé");
+        if (preview) {
+          setExportData(data);
+          setShowPdfPreview(true);
+        } else {
+          downloadProjectPdf(data);
+          toast.success("Rapport PDF téléchargé");
+        }
       } else {
+        // Excel export
+        const XLSX = await import('xlsx');
+        const { downloadProjectExcel } = await import('@/lib/utils/project-export');
         downloadProjectExcel(data);
         toast.success("Tableau Excel téléchargé");
       }
@@ -146,13 +157,22 @@ export default function ProjectStepsSection({
                   <FileSpreadsheet className="w-4 h-4 text-kelen-green-600" />
                   {isExporting ? 'Génération...' : 'Tableau Excel (.xlsx)'}
                 </button>
+                <div className="border-t border-stone-50 my-1" />
                 <button
-                  onClick={() => handleExport('pdf')}
+                  onClick={() => handleExport('pdf', true)}
+                  disabled={isExporting}
+                  className="w-full flex items-center gap-3 px-6 py-3 text-left hover:bg-stone-50 text-stone-900 transition-all font-bold text-xs"
+                >
+                  <TableProperties className="w-4 h-4 text-kelen-green-600" />
+                  {isExporting ? 'Génération...' : 'Aperçu PDF'}
+                </button>
+                <button
+                  onClick={() => handleExport('pdf', false)}
                   disabled={isExporting}
                   className="w-full flex items-center gap-3 px-6 py-3 text-left hover:bg-stone-50 text-stone-900 transition-all font-bold text-xs border-t border-stone-50 disabled:opacity-50"
                 >
-                  <TableProperties className="w-4 h-4 text-kelen-green-600" />
-                  {isExporting ? 'Génération...' : 'Rapport PDF (.pdf)'}
+                  <Download className="w-4 h-4 text-kelen-green-600" />
+                  {isExporting ? 'Génération...' : 'Télécharger PDF'}
                 </button>
               </div>
             )}
@@ -219,7 +239,7 @@ export default function ProjectStepsSection({
         }}
       />
 
-      <AssignStepProDialog 
+      <AssignStepProDialog
         isOpen={isAssignOpen}
         onClose={() => setIsAssignOpen(false)}
         projectId={projectId}
@@ -229,6 +249,12 @@ export default function ProjectStepsSection({
           if (onStepsChange) onStepsChange();
           else fetchSteps();
         }}
+      />
+
+      <PdfPreviewModal
+        data={exportData!}
+        isOpen={showPdfPreview}
+        onClose={() => setShowPdfPreview(false)}
       />
     </section>
   );
