@@ -213,6 +213,7 @@ export default function LogDetailPage() {
             <LogActions
               logId={log.id}
               projectId={projectId}
+              authorId={log.author_id}
               currentStatus={log.status}
               onStatusChange={handleStatusChange}
             />
