@@ -63,21 +63,51 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Non authentifié");
 
+      console.log("[RealizationForm] User ID:", user.id);
+      console.log("[RealizationForm] Professional ID:", professionalId);
+
+      // Verify professional exists and is linked to this user
+      const { data: profData, error: profError } = await supabase
+        .from("professionals")
+        .select("id, user_id")
+        .eq("id", professionalId)
+        .single();
+      
+      if (profError) {
+        console.error("[RealizationForm] Error fetching professional:", profError);
+        throw new Error("Professional profile not found");
+      }
+      
+      console.log("[RealizationForm] Professional data:", profData);
+      console.log("[RealizationForm] User ID matches professional:", profData.user_id === user.id);
+
       let contractUrl = "";
       if (contractFile) {
         const path = `contracts/${user.id}/${Date.now()}_${contractFile.name}`;
+        console.log("[RealizationForm] Contract upload path:", path);
         contractUrl = await uploadFile(contractFile, "contracts", path);
+        console.log("[RealizationForm] Contract uploaded:", contractUrl);
       }
 
       const photoUrls: string[] = [];
       if (imageFiles.length > 0) {
         const uploads = imageFiles.map(async (file) => {
           const path = `portfolios/${user.id}/${Date.now()}_${file.name}`;
+          console.log("[RealizationForm] Photo upload path:", path);
           return uploadFile(file, "portfolios", path);
         });
         const results = await Promise.all(uploads);
+        console.log("[RealizationForm] Photo upload results:", results);
         photoUrls.push(...results);
       }
+
+      console.log("[RealizationForm] Inserting into project_documents:", {
+        professional_id: professionalId,
+        project_title: data.project_title,
+        contract_url: contractUrl || null,
+        photo_urls: photoUrls.length > 0 ? photoUrls : null,
+        status: "pending_review",
+      });
 
       const { error: insertError } = await supabase.from("project_documents").insert({
         professional_id: professionalId,
@@ -90,7 +120,10 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
         status: "pending_review",
       });
 
-      if (insertError) throw insertError;
+      if (insertError) {
+        console.error("[RealizationForm] Database insert error:", insertError);
+        throw insertError;
+      }
 
       toast.success("Projet enregistré avec succès");
       router.push("/pro/realisations");

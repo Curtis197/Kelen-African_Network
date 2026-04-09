@@ -38,11 +38,23 @@ async function doUpload(
     : crypto.randomUUID();
   const filePath = `${path}/${fileName}`;
 
+  console.log("[Storage.doUpload] Bucket:", bucket);
+  console.log("[Storage.doUpload] Input path:", path);
+  console.log("[Storage.doUpload] Generated fileName:", fileName);
+  console.log("[Storage.doUpload] Final filePath:", filePath);
+  
+  // Extract first folder for RLS policy check
+  const pathParts = filePath.split("/");
+  console.log("[Storage.doUpload] Path parts:", pathParts);
+  console.log("[Storage.doUpload] First folder (for RLS):", pathParts[0]);
+
   const { error: uploadError } = await supabase.storage
     .from(bucket)
     .upload(filePath, file);
 
   if (uploadError) {
+    console.error("[Storage.doUpload] Upload error:", uploadError);
+    console.error("[Storage.doUpload] Upload error details:", JSON.stringify(uploadError, null, 2));
     throw uploadError;
   }
 
@@ -56,6 +68,7 @@ async function doUpload(
     );
   }
 
+  console.log("[Storage.doUpload] Success! publicUrl:", publicUrl);
   return publicUrl;
 }
 

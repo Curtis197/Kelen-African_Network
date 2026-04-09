@@ -13,7 +13,8 @@
       "Bash(select-object *)",
       "WebFetch(vercel.com)",
       "WebFetch(kelen-african-network.vercel.app)",
-      "Bash(move *)"
+      "Bash(move *)",
+      "WebSearch"
     ]
   },
   "$version": 3

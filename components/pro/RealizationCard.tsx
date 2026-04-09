@@ -44,12 +44,7 @@ export function ProjectDocumentCard({
     e.stopPropagation();
 
     try {
-      await exportRealisationToPDF(
-        doc.project_title,
-        doc.project_description,
-        doc.photo_urls || [],
-        doc.project_date ? new Date(doc.project_date).toLocaleDateString('fr-FR') : null
-      );
+      await exportRealisationToPDF(doc.id);
       toast.success('Export PDF lancé');
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Erreur lors de l'export");
