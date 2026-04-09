@@ -39,14 +39,8 @@
 
     /* ================= COVER PAGE ================= */
     .cover {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      background: linear-gradient(160deg, #0f172a 0%, #1e3a8a 100%);
-      color: white;
-      padding: 20mm;
+      display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+      background: linear-gradient(160deg, #0f172a 0%, #1e3a8a 100%); color: white; padding: 20mm;
     }
     .cover-title { font-size: 3.2rem; font-weight: 700; margin-bottom: 0.4rem; line-height: 1.1; letter-spacing: -0.02em; }
     .cover-subtitle { font-size: 1.4rem; opacity: 0.9; margin-bottom: 3rem; font-weight: 400; letter-spacing: 0.5px; }
@@ -131,13 +125,28 @@
     .status-draft { color: #d97706; }
     .status-revised { color: #2563eb; }
 
-    /* ================= SIGNATURE BLOCK ================= */
-    .signature-section { margin-top: 2rem; page-break-before: always; }
+    /* ================= SIGNATURE & FEEDBACK ================= */
+    .signature-section { page-break-before: always; }
+    
+    .feedback-section {
+      margin-bottom: 2.5rem;
+      padding: 1.5rem;
+      background: var(--bg-light);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      page-break-inside: avoid;
+    }
+    .feedback-section h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 1.2rem; color: var(--primary); }
+    .feedback-row { margin-bottom: 1.2rem; }
+    .feedback-q { display: block; font-size: 0.95rem; font-weight: 500; margin-bottom: 0.5rem; color: var(--primary); }
+    .feedback-options { display: flex; gap: 1.5rem; font-size: 0.9rem; color: var(--secondary); flex-wrap: wrap; }
+    .checkbox { display: inline-flex; align-items: center; gap: 0.4rem; }
+    .comment-lines { margin-top: 0.5rem; }
+    .comment-line { border-bottom: 1px solid #d1d5db; height: 1.8rem; margin-bottom: 0.4rem; }
+
     .signature-header { font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem; text-align: center; }
     .signature-subtitle { text-align: center; color: var(--secondary); margin-bottom: 2.5rem; font-size: 0.95rem; max-width: 700px; margin-left: auto; margin-right: auto; }
-    
     .signature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-top: 1rem; page-break-inside: avoid; }
-    .signature-block { }
     .signature-block h4 { font-size: 1rem; font-weight: 600; margin-bottom: 1.2rem; color: var(--primary); border-bottom: 2px solid var(--border); padding-bottom: 0.5rem; }
     .sig-field { margin-bottom: 1rem; }
     .sig-label { font-size: 0.75rem; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.2rem; }
@@ -146,11 +155,9 @@
     .sig-line::after { content: "Signature"; position: absolute; bottom: -1.1rem; left: 0; font-size: 0.7rem; color: #6b7280; }
     .sig-date { height: 1.2rem; border-bottom: 1px solid #d1d5db; margin-top: 1.2rem; }
     .sig-date-label { font-size: 0.7rem; color: #6b7280; margin-top: 0.1rem; }
-
     .disclaimer-box {
-      margin-top: 3rem; padding: 1rem; background: var(--bg-light); 
-      border: 1px solid var(--border); border-radius: 4px; 
-      font-size: 0.8rem; color: var(--secondary); text-align: center; line-height: 1.5;
+      margin-top: 3rem; padding: 1rem; background: var(--bg-light); border: 1px solid var(--border); border-radius: 4px; 
+      font-size: 0.8rem; color: var(--secondary); text-align: center; line-height: 1.5; page-break-inside: avoid;
     }
 
     /* ================= BACK COVER ================= */
@@ -323,9 +330,7 @@
   <section class="page documents-section">
     <div class="documents-header">📎 Related Documents & Attachments</div>
     <table class="doc-table">
-      <thead>
-        <tr><th>Document Name</th><th>Type</th><th>Date Issued</th><th>Version</th><th>Status</th></tr>
-      </thead>
+      <thead><tr><th>Document Name</th><th>Type</th><th>Date Issued</th><th>Version</th><th>Status</th></tr></thead>
       <tbody>
         <tr><td>Master Service Agreement</td><td>Contract</td><td>Jan 10, 2024</td><td>v1.0</td><td class="doc-status status-final">Signed</td></tr>
         <tr><td>Design & Material Specification</td><td>Plan</td><td>Jan 28, 2024</td><td>v2.1</td><td class="doc-status status-final">Approved</td></tr>
@@ -339,8 +344,40 @@
     </div>
   </section>
 
-  <!-- SIGNATURE PAGE -->
+  <!-- SIGNATURE & FEEDBACK PAGE -->
   <section class="page signature-section">
+    
+    <!-- CLIENT FEEDBACK FORM -->
+    <div class="feedback-section">
+      <h3>Client Project Feedback</h3>
+      <div class="feedback-row">
+        <span class="feedback-q">Is this project conform to your expectations?</span>
+        <div class="feedback-options">
+          <span class="checkbox">☐ Yes</span>
+          <span class="checkbox">☐ Partially</span>
+          <span class="checkbox">☐ No</span>
+        </div>
+      </div>
+      <div class="feedback-row">
+        <span class="feedback-q">Would you recommend this professional?</span>
+        <div class="feedback-options">
+          <span class="checkbox">☐ Yes</span>
+          <span class="checkbox">☐ No</span>
+          <span class="checkbox">☐ Not sure yet</span>
+        </div>
+      </div>
+      <div class="feedback-row">
+        <span class="feedback-q">Additional comments (optional):</span>
+        <div class="comment-lines">
+          <div class="comment-line"></div>
+          <div class="comment-line"></div>
+          <div class="comment-line"></div>
+          <div class="comment-line"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIGNATURE BLOCK -->
     <h2 class="signature-header">Document Acknowledgment & Signatures</h2>
     <p class="signature-subtitle">By signing below, both parties confirm that this journal log accurately reflects the project communications, financial records, decisions, and deliverables documented throughout the project lifecycle.</p>
     
