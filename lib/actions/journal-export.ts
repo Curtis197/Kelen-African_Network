@@ -169,7 +169,12 @@ export async function generateJournalPDFData(
       budgetUsed: formatCurrency(totalBudget, projectData.currency || 'XOF'),
       currency: projectData.currency || 'XOF',
     },
-    logs: exportLogs,
+    logs: exportLogs.map(log => ({
+      ...log,
+      weather: log.weather || undefined,
+      issues: log.issues || undefined,
+      next_steps: log.next_steps || undefined,
+    })),
     financialRecords,
   };
 }
