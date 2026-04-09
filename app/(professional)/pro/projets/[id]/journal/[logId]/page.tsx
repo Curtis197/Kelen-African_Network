@@ -34,30 +34,68 @@ export default function ProLogDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   const loadData = useCallback(async () => {
+    console.log("[ProLogDetailPage] === START LOAD DATA ===");
+    console.log("[ProLogDetailPage] Route params:", { 
+      projectId, 
+      logId, 
+      proProjectId 
+    });
+    
     setIsLoading(true);
 
     // Use proProjectId to fetch log with isProProject=true
+    console.log("[ProLogDetailPage] Calling getLogById with:", { 
+      logId, 
+      proProjectId, 
+      isProProject: true 
+    });
+    
     const logData = await getLogById(logId, proProjectId, true);
+    
+    console.log("[ProLogDetailPage] getLogById returned:", { 
+      found: !!logData, 
+      logId: logData?.id, 
+      title: logData?.title,
+      project_id: logData?.project_id,
+      pro_project_id: logData?.pro_project_id,
+      author_role: logData?.author_role,
+      mediaCount: logData?.media?.length || 0 
+    });
+    
     if (logData) {
       setLog(logData);
 
       // Load signed URLs for photos
+      console.log("[ProLogDetailPage] Loading signed URLs for photos...");
       const urls: Record<string, string> = {};
       if (logData.media) {
+        console.log("[ProLogDetailPage] Processing", logData.media.length, "media files");
         for (const media of logData.media) {
+          console.log("[ProLogDetailPage] Getting URL for:", media.storage_path);
           const url = await getMediaUrl(media.storage_path);
           if (url) {
             urls[media.storage_path] = url;
+            console.log("[ProLogDetailPage] ✓ Got URL:", url.substring(0, 50) + "...");
+          } else {
+            console.warn("[ProLogDetailPage] ✗ Failed to get URL for:", media.storage_path);
           }
         }
+      } else {
+        console.log("[ProLogDetailPage] No media files in this log");
       }
       setSignedUrls(urls);
+      console.log("[ProLogDetailPage] Signed URLs loaded:", Object.keys(urls).length);
+    } else {
+      console.error("[ProLogDetailPage] ✗ Log data not found!");
     }
 
+    console.log("[ProLogDetailPage] Fetching comments for log:", logId);
     const commentsData = await getLogComments(logId);
+    console.log("[ProLogDetailPage] Comments loaded:", commentsData.length);
     setComments(commentsData);
 
     setIsLoading(false);
+    console.log("[ProLogDetailPage] === LOAD DATA COMPLETE ===");
   }, [logId, proProjectId]);
 
   useEffect(() => {
