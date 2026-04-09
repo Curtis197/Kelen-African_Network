@@ -1,29 +1,23 @@
 "use client";
 
 /**
- * Generates and downloads a PDF from the journal-log.html template.
- * Uses the browser's native print-to-PDF functionality.
+ * Generates and downloads a PDF from the journal via API route.
  */
 export async function exportJournalToPDF(
-  projectTitle: string,
-  professionalName: string,
-  clientName: string | null,
-  location: string | null
+  projectId: string,
+  isProProject: boolean = true
 ): Promise<void> {
-  // Open journal-log.html in a new window/tab for printing
-  const printWindow = window.open('/journal-log.html', '_blank');
+  const printWindow = window.open(`/api/journal-pdf?projectId=${projectId}&isPro=${isProProject}`, '_blank');
   
   if (!printWindow) {
     throw new Error('Pop-up bloqué. Autorisez les pop-ups pour exporter le PDF.');
   }
 
-  // Wait for the page to load, then trigger print
   printWindow.onload = () => {
     printWindow.focus();
-    // Give a small delay for resources to load
     setTimeout(() => {
       printWindow.print();
-    }, 500);
+    }, 800);
   };
 }
 

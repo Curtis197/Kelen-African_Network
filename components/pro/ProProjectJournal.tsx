@@ -144,12 +144,7 @@ export function ProProjectJournal({ project }: ProProjectJournalProps) {
 
   const handleExportPDF = async () => {
     try {
-      await exportJournalToPDF(
-        project.title,
-        project.category || 'Professionnel',
-        project.client_name || null,
-        project.location || null
-      );
+      await exportJournalToPDF(project.id, true);
       toast.success('Export PDF lancé');
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Erreur lors de l'export");
