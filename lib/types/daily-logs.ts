@@ -6,7 +6,8 @@ export type WeatherCondition = 'sunny' | 'cloudy' | 'rainy' | 'stormy' | 'cold';
 
 export interface ProjectLog {
   id: string;
-  project_id: string;
+  project_id: string | null;  // Can be null for pro_projects
+  pro_project_id: string | null;  // Can be null for client projects
   step_id: string | null;
   author_id: string;
   author_role: 'client' | 'professional';
