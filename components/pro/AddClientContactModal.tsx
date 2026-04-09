@@ -24,6 +24,7 @@ export default function AddClientContactModal({
   const [sendInvitation, setSendInvitation] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [isExistingUser, setIsExistingUser] = useState(false);
 
   if (!isOpen) return null;
 
@@ -45,21 +46,26 @@ export default function AddClientContactModal({
       toast.error(result.error);
     } else {
       setSuccess(true);
-      toast.success('Contact client ajouté');
+      setIsExistingUser(!!result.existingUserLinked);
       
-      if (sendInvitation) {
+      if (result.existingUserLinked) {
+        toast.success(`${clientName} est déjà inscrit sur Kelen`);
+      } else if (sendInvitation) {
         toast.success(`Invitation envoyée à ${clientEmail}`);
+      } else {
+        toast.success('Contact client ajouté');
       }
 
       setTimeout(() => {
         onClientAdded();
         onClose();
         setSuccess(false);
+        setIsExistingUser(false);
         setClientName('');
         setClientEmail('');
         setClientPhone('');
         setSendInvitation(true);
-      }, 1500);
+      }, 2000);
     }
   };
 
@@ -92,11 +98,20 @@ export default function AddClientContactModal({
           <div className="text-center py-8 space-y-4">
             <CheckCircle className="w-16 h-16 mx-auto text-green-500" />
             <p className="text-on-surface font-medium">Contact ajouté avec succès !</p>
-            {sendInvitation && (
+            {isExistingUser ? (
+              <div className="space-y-2">
+                <p className="text-sm text-on-surface-variant">
+                  <strong>{clientName}</strong> est déjà inscrit sur Kelen.
+                </p>
+                <p className="text-xs text-primary font-medium">
+                  ✓ Connecté automatiquement au projet
+                </p>
+              </div>
+            ) : sendInvitation ? (
               <p className="text-sm text-on-surface-variant">
-                L'invitation a été envoyée à {clientEmail}
+                L'invitation a été envoyée à <strong>{clientEmail}</strong>
               </p>
-            )}
+            ) : null}
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">

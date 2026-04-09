@@ -110,10 +110,36 @@ export async function createClientContact(
     };
   }
 
-  // Generate invitation token
-  const inviteToken = generateInviteToken();
+  // Check if email already exists in users table (existing Kelen account)
+  const { data: existingUser } = await supabase
+    .from("users")
+    .select("id, display_name, email")
+    .eq("email", validated.clientEmail)
+    .single();
+
+  let linkedUserId: string | null = null;
+  let needsConfirmation = false;
+  let shouldSendInvitation = validated.sendInvitation;
+
+  if (existingUser) {
+    log("client.existing_user_found", { 
+      email: validated.clientEmail, 
+      userId: existingUser.id 
+    });
+    
+    // User exists in database - mark for confirmation instead of invitation
+    linkedUserId = existingUser.id;
+    needsConfirmation = true;
+    shouldSendInvitation = false; // Don't send invitation, user already has account
+    
+    // TODO: In the future, send a notification to the existing user
+    // For now, we'll still create the contact but mark it as needing pro confirmation
+  }
+
+  // Generate invitation token only if sending invitation
+  const inviteToken = shouldSendInvitation ? generateInviteToken() : null;
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://kelen-african-network.vercel.app";
-  const inviteUrl = `${baseUrl}/invitation/${inviteToken}`;
+  const inviteUrl = inviteToken ? `${baseUrl}/invitation/${inviteToken}` : undefined;
 
   // Create client contact
   const insertData: Record<string, unknown> = {
@@ -123,9 +149,16 @@ export async function createClientContact(
     client_email: validated.clientEmail,
     client_phone: validated.clientPhone || null,
     invitation_token: inviteToken,
+    linked_user_id: linkedUserId, // Link to existing user if found
   };
 
-  if (validated.sendInvitation) {
+  if (linkedUserId) {
+    // User already exists - mark as linked
+    insertData.status = 'linked';
+    insertData.linked_at = new Date().toISOString();
+    insertData.invitation_verified = true;
+    insertData.invitation_verified_at = new Date().toISOString();
+  } else if (shouldSendInvitation) {
     insertData.invitation_sent = true;
     insertData.invitation_sent_at = new Date().toISOString();
     insertData.status = 'invited';
@@ -142,19 +175,26 @@ export async function createClientContact(
     return { success: false, error: insertError.message, client: null };
   }
 
-  log("client.create.ok", { 
-    clientId: newClient.id, 
+  log("client.create.ok", {
+    clientId: newClient.id,
     email: validated.clientEmail,
-    invitationSent: validated.sendInvitation 
+    invitationSent: shouldSendInvitation,
+    existingUserLinked: !!linkedUserId
   });
 
-  // Send invitation email if requested
-  if (validated.sendInvitation) {
+  // Send invitation email only if sending to new user
+  if (shouldSendInvitation && inviteUrl) {
     await sendInvitationEmail(
       validated.clientEmail,
       validated.clientName,
       inviteUrl
     );
+  } else if (linkedUserId) {
+    // TODO: Send notification to existing user instead of invitation email
+    log("client.existing_user_linked", { 
+      clientId: newClient.id, 
+      userId: linkedUserId 
+    });
   }
 
   // Also update pro_projects with client info if not already set
@@ -169,10 +209,11 @@ export async function createClientContact(
 
   revalidatePath(`/pro/projets/${validated.proProjectId}/journal`);
 
-  return { 
-    success: true, 
+  return {
+    success: true,
     client: newClient,
-    inviteUrl: validated.sendInvitation ? inviteUrl : undefined 
+    inviteUrl: shouldSendInvitation && inviteUrl ? inviteUrl : undefined,
+    existingUserLinked: !!linkedUserId
   };
 }
 

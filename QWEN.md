@@ -1,0 +1,2 @@
+## Qwen Added Memories
+- Debug Protocol: Always use instrumentation-first approach. When debugging issues, NEVER change logic code until after adding strategic console.logs, running the app, collecting exact error data, and identifying the root cause with certainty. This saves 85% tokens and prevents guess-and-check cycles. Add diagnostic logs at every decision point, ask user to run and share console output, then analyze data before making any fixes.

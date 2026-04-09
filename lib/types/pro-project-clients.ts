@@ -32,4 +32,5 @@ export interface InvitationResult {
   error?: string;
   inviteUrl?: string;
   client: ProProjectClient | null;
+  existingUserLinked?: boolean;
 }

@@ -1,0 +1,52 @@
+{
+  "name": "debug",
+  "version": "1.0.0",
+  "description": "Debug skill for manual browser review and Vercel deployment testing of Kelen project",
+  "triggers": [
+    "/debug",
+    "debug this",
+    "check for errors",
+    "troubleshoot",
+    "browser review"
+  ],
+  "capabilities": [
+    "Check browser console errors",
+    "Verify Supabase connection",
+    "Debug authentication issues",
+    "Test routing and page loads",
+    "Validate environment variables",
+    "Check network requests",
+    "Identify styling issues",
+    "Performance profiling",
+    "Vercel deployment verification"
+  ],
+  "workflow": {
+    "type": "interactive",
+    "steps": [
+      {
+        "name": "context",
+        "description": "Understand what the user is seeing",
+        "questions": [
+          "What page/route are you viewing?",
+          "What issue are you experiencing?",
+          "Is this on localhost or Vercel deployment?"
+        ]
+      },
+      {
+        "name": "diagnose",
+        "description": "Run diagnostic checks",
+        "actions": [
+          "Check relevant source files",
+          "Verify environment configuration",
+          "Review error logs",
+          "Test database connections"
+        ]
+      },
+      {
+        "name": "fix",
+        "description": "Provide solutions",
+        "output": "Actionable steps to resolve identified issues"
+      }
+    ]
+  }
+}
