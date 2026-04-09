@@ -3,11 +3,24 @@
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { sendLogActionEmail } from "@/lib/utils/email-notifications";
+import { z } from "zod";
+
+const logCommentSchema = z.object({
+  logId: z.string().uuid("ID de rapport invalide"),
+  comment: z.string().min(1, "Le commentaire ne peut pas être vide").max(5000, "Le commentaire est trop long (max 5000 caractères)"),
+  evidenceUrls: z.array(z.string().url("URL invalide")).max(10, "Maximum 10 URLs autorisées").optional(),
+});
 
 export async function approveLog(
   logId: string,
   comment: string
 ): Promise<{ success: boolean; error?: string }> {
+  // Validate input
+  const validation = logCommentSchema.safeParse({ logId, comment });
+  if (!validation.success) {
+    return { success: false, error: validation.error.errors[0].message };
+  }
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -138,6 +151,12 @@ export async function contestLog(
   comment: string,
   evidenceUrls: string[] = []
 ): Promise<{ success: boolean; error?: string }> {
+  // Validate input
+  const validation = logCommentSchema.safeParse({ logId, comment, evidenceUrls });
+  if (!validation.success) {
+    return { success: false, error: validation.error.errors[0].message };
+  }
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -234,6 +253,12 @@ export async function resolveLog(
   logId: string,
   comment: string
 ): Promise<{ success: boolean; error?: string }> {
+  // Validate input
+  const validation = logCommentSchema.safeParse({ logId, comment });
+  if (!validation.success) {
+    return { success: false, error: validation.error.errors[0].message };
+  }
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 

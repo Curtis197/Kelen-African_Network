@@ -3,6 +3,13 @@
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import crypto from "crypto";
+import { z } from "zod";
+
+const brandColorsSchema = z.object({
+  primary: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, "Couleur primaire invalide (format hex attendu)"),
+  secondary: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, "Couleur secondaire invalide (format hex attendu)"),
+  accent: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, "Couleur d'accent invalide (format hex attendu)"),
+});
 
 /**
  * Upload professional logo and store the path.
@@ -81,6 +88,12 @@ export async function saveBrandColors(
   logoStoragePath: string,
   colors: { primary: string; secondary: string; accent: string }
 ): Promise<{ error?: string }> {
+  // Validate colors
+  const validation = brandColorsSchema.safeParse(colors);
+  if (!validation.success) {
+    return { error: validation.error.errors[0].message };
+  }
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 

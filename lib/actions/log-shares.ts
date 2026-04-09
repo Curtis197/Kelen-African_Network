@@ -4,6 +4,14 @@ import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import crypto from "crypto";
 import type { ShareStats, SharedLogData } from "@/lib/types/daily-logs";
+import { z } from "zod";
+
+const shareLogSchema = z.object({
+  logId: z.string().uuid("ID de rapport invalide"),
+  method: z.enum(['email', 'whatsapp', 'sms'], { message: "Méthode de partage invalide" }),
+  recipientEmail: z.string().email("Email invalide").optional(),
+  recipientPhone: z.string().regex(/^\+?[\d\s-]{8,20}$/, "Numéro de téléphone invalide").optional(),
+});
 
 export async function shareLog(
   logId: string,
@@ -13,6 +21,18 @@ export async function shareLog(
     recipientPhone?: string;
   }
 ): Promise<{ shareToken: string; shareUrl: string; error?: string }> {
+  // Validate input
+  const validation = shareLogSchema.safeParse({
+    logId,
+    method: options.method,
+    recipientEmail: options.recipientEmail,
+    recipientPhone: options.recipientPhone,
+  });
+  
+  if (!validation.success) {
+    return { shareToken: '', shareUrl: '', error: validation.error.errors[0].message };
+  }
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 

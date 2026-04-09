@@ -21,9 +21,30 @@ interface CreateNotificationInput {
 /**
  * Create a notification for a user.
  * Can be called from server actions, triggers, or background jobs.
+ * Requires authentication to prevent spam.
  */
 export async function createNotification(input: CreateNotificationInput): Promise<{ id?: string; error?: string }> {
   const supabase = await createClient();
+
+  // Require authentication
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  if (authError || !user) {
+    return { error: "Non autorisé" };
+  }
+
+  // Allow system notifications (when userId matches authenticated user or is from admin)
+  if (input.userId !== user.id) {
+    // Check if user is admin (authorized to send notifications to others)
+    const { data: userData } = await supabase
+      .from("users")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+
+    if (userData?.role !== 'admin') {
+      return { error: "Non autorisé: impossible de notifier un autre utilisateur" };
+    }
+  }
 
   const { data, error } = await supabase
     .from("notifications")
