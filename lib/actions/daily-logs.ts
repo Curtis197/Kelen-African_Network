@@ -262,8 +262,13 @@ export async function deleteLog(logId: string): Promise<{ success: boolean; erro
   return { success: true };
 }
 
-export async function getProjectLogs(projectId: string): Promise<ProjectLog[]> {
+export async function getProjectLogs(projectId: string, isProProject?: boolean): Promise<ProjectLog[]> {
   const supabase = await createClient();
+
+  // Determine which column to filter by
+  const filterColumn = isProProject ? "pro_project_id" : "project_id";
+
+  console.log("[getProjectLogs] Fetching logs:", { projectId, isProProject, filterColumn });
 
   const { data, error } = await supabase
     .from("project_logs")
@@ -272,7 +277,7 @@ export async function getProjectLogs(projectId: string): Promise<ProjectLog[]> {
       media:project_log_media(*),
       comments:project_log_comments(*)
     `)
-    .eq("project_id", projectId)
+    .eq(filterColumn, projectId)
     .order("log_date", { ascending: false })
     .order("created_at", { ascending: false });
 
@@ -284,7 +289,7 @@ export async function getProjectLogs(projectId: string): Promise<ProjectLog[]> {
   return data || [];
 }
 
-export async function getLogById(logId: string, projectId?: string): Promise<ProjectLog | null> {
+export async function getLogById(logId: string, projectId?: string, isProProject?: boolean): Promise<ProjectLog | null> {
   const supabase = await createClient();
 
   let query = supabase
@@ -301,8 +306,18 @@ export async function getLogById(logId: string, projectId?: string): Promise<Pro
 
   // Filter by project if provided to satisfy RLS
   if (projectId) {
-    query = query.eq("project_id", projectId);
+    // For pro projects, filter by pro_project_id
+    if (isProProject) {
+      query = query.eq("pro_project_id", projectId);
+      console.log("[getLogById] Filtering by pro_project_id:", projectId);
+    } else {
+      // For client projects, filter by project_id
+      query = query.eq("project_id", projectId);
+      console.log("[getLogById] Filtering by project_id:", projectId);
+    }
   }
+
+  console.log("[getLogById] Query params:", { logId, projectId, isProProject });
 
   const { data, error } = await query.single();
 

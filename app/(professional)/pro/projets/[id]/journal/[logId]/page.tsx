@@ -36,8 +36,8 @@ export default function ProLogDetailPage() {
   const loadData = useCallback(async () => {
     setIsLoading(true);
 
-    // Use proProjectId to fetch log
-    const logData = await getLogById(logId, proProjectId);
+    // Use proProjectId to fetch log with isProProject=true
+    const logData = await getLogById(logId, proProjectId, true);
     if (logData) {
       setLog(logData);
 
