@@ -292,6 +292,9 @@ export async function getProjectLogs(projectId: string, isProProject?: boolean):
 export async function getLogById(logId: string, projectId?: string, isProProject?: boolean): Promise<ProjectLog | null> {
   const supabase = await createClient();
 
+  console.log("[getLogById] === START ===");
+  console.log("[getLogById] Input params:", { logId, projectId, isProProject });
+
   let query = supabase
     .from("project_logs")
     .select(`
@@ -315,16 +318,30 @@ export async function getLogById(logId: string, projectId?: string, isProProject
       query = query.eq("project_id", projectId);
       console.log("[getLogById] Filtering by project_id:", projectId);
     }
+  } else {
+    console.log("[getLogById] No project filter applied");
   }
 
-  console.log("[getLogById] Query params:", { logId, projectId, isProProject });
+  console.log("[getLogById] Executing query...");
 
   const { data, error } = await query.single();
 
+  console.log("[getLogById] Query result:", {
+    hasData: !!data,
+    error: error ? { message: error.message, code: error.code, details: error.details } : null,
+  });
+
   if (error) {
-    console.error("Error fetching log:", error);
+    console.error("[getLogById] Error fetching log:", error);
     return null;
   }
+
+  console.log("[getLogById] === SUCCESS ===", {
+    logId: data?.id,
+    title: data?.title,
+    project_id: data?.project_id,
+    pro_project_id: data?.pro_project_id,
+  });
 
   return data;
 }
