@@ -105,7 +105,6 @@ export async function createLog(data: z.infer<typeof logSchema>): Promise<{ data
   }
 
   const insertData: Record<string, unknown> = {
-    project_id: targetProjectId,
     step_id: validated.stepId || null,
     author_id: user.id,
     author_role: authorRole,
@@ -122,10 +121,30 @@ export async function createLog(data: z.infer<typeof logSchema>): Promise<{ data
     gps_longitude: validated.gpsLongitude,
   };
 
-  // For pro projects, set pro_project_id instead
+  // Set project_id OR pro_project_id based on project type
   if (validated.isProProject) {
+    // For pro projects: set pro_project_id, leave project_id as NULL
     insertData.pro_project_id = validated.projectId;
+    insertData.project_id = null;
+    console.log("[createLog] Inserting pro_project log:", {
+      pro_project_id: validated.projectId,
+      project_id: null,
+      author_id: user.id,
+      author_role: authorRole
+    });
+  } else {
+    // For client projects: set project_id, leave pro_project_id as NULL
+    insertData.project_id = targetProjectId;
+    console.log("[createLog] Inserting client_project log:", {
+      project_id: targetProjectId,
+      pro_project_id: null,
+      author_id: user.id,
+      author_role: authorRole
+    });
   }
+
+  // Debug log before insert
+  console.log("[createLog] Final insertData:", JSON.stringify(insertData, null, 2));
 
   const { data: newLog, error } = await supabase
     .from("project_logs")
