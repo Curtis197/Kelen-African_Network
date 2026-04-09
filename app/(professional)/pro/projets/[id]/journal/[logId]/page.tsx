@@ -187,14 +187,16 @@ export default function ProLogDetailPage() {
             </div>
           </div>
 
-          {/* GPS */}
-          <div className="bg-surface-container-low rounded-2xl p-5">
-            <GPSDisplay
-              latitude={log.gps_latitude}
-              longitude={log.gps_longitude}
-              source={log.is_synced ? 'exif' : undefined}
-            />
-          </div>
+          {/* GPS (only if there are photos with EXIF data) */}
+          {photos.length > 0 && (
+            <div className="bg-surface-container-low rounded-2xl p-5">
+              <GPSDisplay
+                latitude={log.gps_latitude}
+                longitude={log.gps_longitude}
+                source={log.is_synced ? 'exif' : undefined}
+              />
+            </div>
+          )}
 
           {/* Money */}
           {log.money_spent > 0 && (
