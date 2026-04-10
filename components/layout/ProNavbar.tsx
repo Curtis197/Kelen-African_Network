@@ -49,20 +49,29 @@ export function ProNavbar() {
   useEffect(() => {
     let cancelled = false;
 
+    console.log('[ProNavbar] useEffect mounted — fetching session');
+
     const fetchUser = async () => {
+      console.log('[ProNavbar] getSession() called');
       const { data: { session } } = await supabase.auth.getSession();
-      if (cancelled) return;
+      if (cancelled) {
+        console.log('[ProNavbar] getSession returned — component unmounted, skipping');
+        return;
+      }
       if (session?.user) {
+        console.log('[ProNavbar] Session found:', session.user.email);
         setUserEmail(session.user.email ?? null);
         const { data: profile } = await supabase
           .from("professionals")
           .select("business_name")
           .eq("user_id", session.user.id)
           .single();
-        if (profile?.business_name) {
+        if (profile?.business_name && !cancelled) {
+          console.log('[ProNavbar] Business name set:', profile.business_name);
           setBusinessName(profile.business_name);
         }
       } else {
+        console.log('[ProNavbar] No session found — clearing user state');
         setUserEmail(null);
         setBusinessName("Mon profil");
       }
@@ -70,17 +79,20 @@ export function ProNavbar() {
 
     fetchUser();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (cancelled) return;
+      console.log('[ProNavbar] onAuthStateChange:', event, session?.user?.email ?? 'no user');
       if (session?.user) {
         setUserEmail(session.user.email ?? null);
       } else {
+        console.log('[ProNavbar] Auth event cleared session');
         setUserEmail(null);
         setBusinessName("Mon profil");
       }
     });
 
     return () => {
+      console.log('[ProNavbar] useEffect cleanup — unmounting');
       cancelled = true;
       subscription.unsubscribe();
     };
