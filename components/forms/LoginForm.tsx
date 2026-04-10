@@ -26,9 +26,13 @@ export function LoginForm({ defaultRole }: LoginFormProps) {
     resolver: zodResolver(loginSchema),
   });
 
+  const isProPage = defaultRole === "professional";
+  const [wrongRole, setWrongRole] = useState<string | null>(null);
+
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
     setError(null);
+    setWrongRole(null);
 
     try {
       const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
@@ -47,11 +51,30 @@ export function LoginForm({ defaultRole }: LoginFormProps) {
           .single();
 
         const role = profile?.role || "client";
+        const isProUser = role.startsWith("pro_");
+        const isClientUser = role === "client";
+        const isAdminUser = role === "admin";
 
-        if (role?.startsWith("pro_")) {
-          router.push("/pro/dashboard");
-        } else if (role === "admin") {
+        // Block cross-role login: pro user on client page, or client on pro page
+        if (isProPage && (isClientUser || isAdminUser)) {
+          await supabase.auth.signOut();
+          setWrongRole("client");
+          setIsLoading(false);
+          return;
+        }
+
+        if (!isProPage && isProUser) {
+          await supabase.auth.signOut();
+          setWrongRole("pro");
+          setIsLoading(false);
+          return;
+        }
+
+        // Role matches page — redirect to correct dashboard
+        if (isAdminUser) {
           router.push("/admin");
+        } else if (isProUser) {
+          router.push("/pro/dashboard");
         } else {
           router.push("/dashboard");
         }
@@ -62,7 +85,7 @@ export function LoginForm({ defaultRole }: LoginFormProps) {
       console.error("Login error:", err);
       setError(err.message || "Email ou mot de passe incorrect.");
     } finally {
-      setIsLoading(false);
+      if (!wrongRole) setIsLoading(false);
     }
   };
 
@@ -71,6 +94,32 @@ export function LoginForm({ defaultRole }: LoginFormProps) {
       {error && (
         <div className="rounded-lg border border-kelen-red-500/20 bg-kelen-red-50 p-3 text-sm text-kelen-red-700">
           {error}
+        </div>
+      )}
+
+      {wrongRole === "client" && (
+        <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+          <p className="font-medium mb-1">Compte professionnel détecté</p>
+          <p className="mb-3">Ce compte appartient à l&apos;Espace Pro. Veuillez vous connecter depuis la page professionnelle.</p>
+          <Link
+            href="/pro/connexion"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-amber-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-amber-700 transition-colors"
+          >
+            Aller à l&apos;Espace Pro →
+          </Link>
+        </div>
+      )}
+
+      {wrongRole === "pro" && (
+        <div className="rounded-lg border border-kelen-green-200 bg-kelen-green-50 p-4 text-sm text-kelen-green-800">
+          <p className="font-medium mb-1">Compte client détecté</p>
+          <p className="mb-3">Ce compte est un compte client. Veuillez vous connecter depuis la page de connexion classique.</p>
+          <Link
+            href="/connexion"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-kelen-green-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-kelen-green-700 transition-colors"
+          >
+            Aller à la page de connexion →
+          </Link>
         </div>
       )}
 
