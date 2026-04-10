@@ -39,7 +39,14 @@ export function LoginForm({ defaultRole }: LoginFormProps) {
       if (authError) throw authError;
 
       if (authData.user) {
-        const role = authData.user.user_metadata?.role as string | undefined;
+        // Query the database for the actual role (user_metadata may be stale)
+        const { data: profile } = await supabase
+          .from("users")
+          .select("role")
+          .eq("id", authData.user.id)
+          .single();
+
+        const role = profile?.role || "client";
 
         if (role?.startsWith("pro_")) {
           router.push("/pro/dashboard");

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { MARKETING_NAV } from "@/lib/utils/constants";
@@ -12,12 +12,16 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [userRole, setUserRole] = useState<string | null>(null);
+  const [signingOut, setSigningOut] = useState(false);
   const router = useRouter();
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
 
   useEffect(() => {
+    let cancelled = false;
+
     const fetchUserAndRole = async () => {
       const { data: { session } } = await supabase.auth.getSession();
+      if (cancelled) return;
       if (session?.user) {
         setUser(session.user);
         const { data: profile } = await supabase
@@ -25,40 +29,48 @@ export function Navbar() {
           .select("role")
           .eq("id", session.user.id)
           .single();
-        if (profile) setUserRole(profile.role);
+        if (profile && !cancelled) setUserRole(profile.role);
       } else {
         setUser(null);
         setUserRole(null);
       }
     };
-    
+
     fetchUserAndRole();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (cancelled) return;
       if (session?.user) {
         setUser(session.user);
-        const { data: profile } = await supabase
-          .from("users")
-          .select("role")
-          .eq("id", session.user.id)
-          .single();
-        if (profile) setUserRole(profile.role);
+        // Role change may not need immediate DB fetch — middleware handles it
       } else {
         setUser(null);
         setUserRole(null);
       }
     });
 
-    return () => subscription.unsubscribe();
-  }, [supabase.auth]);
+    return () => {
+      cancelled = true;
+      subscription.unsubscribe();
+    };
+  }, [supabase]);
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    setUser(null);
-    setUserRole(null);
-    router.push("/");
-    router.refresh();
-  };
+  const handleSignOut = useCallback(async () => {
+    if (signingOut) return;
+    setSigningOut(true);
+    try {
+      await supabase.auth.signOut({ scope: 'global' });
+    } catch (err) {
+      console.error('Sign out error:', err);
+    } finally {
+      setUser(null);
+      setUserRole(null);
+      setSigningOut(false);
+      setMobileOpen(false);
+      router.push("/");
+      router.refresh();
+    }
+  }, [supabase, signingOut, router]);
 
   const isPro = userRole?.startsWith("pro_");
   const isAdmin = userRole === "admin";
@@ -140,10 +152,11 @@ export function Navbar() {
               <NotificationDropdown />
               <button
                 onClick={handleSignOut}
-                className="flex items-center gap-2 rounded-xl border border-border px-4 py-2 text-sm font-bold text-on-surface-variant transition-all hover:bg-surface-container hover:text-on-surface active:scale-95"
+                disabled={signingOut}
+                className="flex items-center gap-2 rounded-xl border border-border px-4 py-2 text-sm font-bold text-on-surface-variant transition-all hover:bg-surface-container hover:text-on-surface active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100"
               >
-                <span className="material-symbols-outlined text-[18px]">logout</span>
-                Déconnexion
+                <span className={`material-symbols-outlined text-[18px] ${signingOut ? 'animate-pulse' : ''}`}>logout</span>
+                {signingOut ? 'Déconnexion...' : 'Déconnexion'}
               </button>
             </div>
           ) : (
@@ -246,12 +259,12 @@ export function Navbar() {
               <button
                 onClick={() => {
                   handleSignOut();
-                  setMobileOpen(false);
                 }}
-                className="flex items-center justify-center gap-2 rounded-xl border border-border py-3 text-base font-bold text-stone-500 transition-all hover:bg-stone-50"
+                disabled={signingOut}
+                className="flex items-center justify-center gap-2 rounded-xl border border-border py-3 text-base font-bold text-stone-500 transition-all hover:bg-stone-50 disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                <span className="material-symbols-outlined">logout</span>
-                Déconnexion
+                <span className={`material-symbols-outlined ${signingOut ? 'animate-pulse' : ''}`}>logout</span>
+                {signingOut ? 'Déconnexion...' : 'Déconnexion'}
               </button>
             ) : (
               <>

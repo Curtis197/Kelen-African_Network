@@ -28,6 +28,23 @@ export async function middleware(request: NextRequest) {
     },
   });
 
+  // 1. Define Route Protection Rules (outside try block for catch block access)
+  const isClientAuthPage = pathname.startsWith("/connexion") ||
+                           pathname.startsWith("/inscription");
+  const isProAuthPage = pathname.startsWith("/pro/connexion") ||
+                        pathname.startsWith("/pro/inscription");
+  const isAuthPage = isClientAuthPage || isProAuthPage;
+  const isClientRoute = pathname === "/dashboard" ||
+                        pathname.startsWith("/dashboard/") ||
+                        pathname.startsWith("/projets") ||
+                        pathname.startsWith("/recommandation") ||
+                        pathname.startsWith("/signal") ||
+                        pathname.startsWith("/avis") ||
+                        pathname.startsWith("/favoris") ||
+                        pathname.startsWith("/recherche");
+  const isProRoute = pathname.startsWith("/pro/") && !isAuthPage;
+  const isAdminRoute = pathname.startsWith("/admin");
+
   try {
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL || "",
@@ -58,28 +75,6 @@ export async function middleware(request: NextRequest) {
     const {
       data: { session },
     } = await supabase.auth.getSession();
-
-    // 1. Define Route Protection Rules
-    // Auth pages for clients
-    const isClientAuthPage = pathname.startsWith("/connexion") || 
-                             pathname.startsWith("/inscription");
-    
-    // Auth pages for professionals
-    const isProAuthPage = pathname.startsWith("/pro/connexion") || 
-                          pathname.startsWith("/pro/inscription");
-    
-    const isAuthPage = isClientAuthPage || isProAuthPage;
-
-    const isClientRoute = pathname === "/dashboard" ||
-                          pathname.startsWith("/dashboard/") ||
-                          pathname.startsWith("/projets") ||
-                          pathname.startsWith("/recommandation") ||
-                          pathname.startsWith("/signal") ||
-                          pathname.startsWith("/avis") ||
-                          pathname.startsWith("/favoris");
-
-    const isProRoute = pathname.startsWith("/pro/") && !isAuthPage;
-    const isAdminRoute = pathname.startsWith("/admin");
 
     // 2. Handle Authentication
     if (!session) {
@@ -139,8 +134,13 @@ export async function middleware(request: NextRequest) {
     }
   } catch (err) {
     console.error("Middleware Auth Error:", err);
-    // In case of error, just continue to the route (safe fallback)
-    return response;
+    // In case of error, redirect to login (secure fallback)
+    const loginUrl = new URL(
+      isProRoute ? "/pro/connexion" : "/connexion",
+      request.url
+    );
+    loginUrl.searchParams.set("redirect", pathname);
+    return NextResponse.redirect(loginUrl);
   }
 
   return response;
@@ -154,6 +154,7 @@ export const config = {
     "/signal/:path*",
     "/avis/:path*",
     "/favoris/:path*",
+    "/recherche/:path*",
     "/pro/:path*",
     "/admin/:path*",
     "/connexion/:path*",

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { LayoutDashboard, ListChecks, ScrollText, LogOut, Shield, Menu, X } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -15,20 +15,40 @@ const NAV_ITEMS = [
 export function AdminSidebar() {
   const pathname = usePathname();
   const router = useRouter();
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [signingOut, setSigningOut] = useState(false);
   const drawerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    let cancelled = false;
+
     const getUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
+      if (cancelled) return;
       if (session?.user) {
         setUserEmail(session.user.email ?? null);
+      } else {
+        setUserEmail(null);
       }
     };
     getUser();
-  }, [supabase.auth]);
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (cancelled) return;
+      if (session?.user) {
+        setUserEmail(session.user.email ?? null);
+      } else {
+        setUserEmail(null);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+      subscription.unsubscribe();
+    };
+  }, [supabase]);
 
   // Escape key handler
   useEffect(() => {
@@ -87,11 +107,21 @@ export function AdminSidebar() {
     }
   }, [mobileOpen]);
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    router.push("/");
-    router.refresh();
-  };
+  const handleSignOut = useCallback(async () => {
+    if (signingOut) return;
+    setSigningOut(true);
+    try {
+      await supabase.auth.signOut({ scope: 'global' });
+    } catch (err) {
+      console.error('Sign out error:', err);
+    } finally {
+      setUserEmail(null);
+      setSigningOut(false);
+      setMobileOpen(false);
+      router.push("/");
+      router.refresh();
+    }
+  }, [supabase, signingOut, router]);
 
   return (
     <>
@@ -143,10 +173,11 @@ export function AdminSidebar() {
             </div>
             <button
               onClick={handleSignOut}
-              className="mt-2 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              disabled={signingOut}
+              className="mt-2 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              <LogOut className="h-4 w-4" />
-              Se déconnecter
+              <LogOut className={`h-4 w-4 ${signingOut ? 'animate-pulse' : ''}`} />
+              {signingOut ? 'Déconnexion...' : 'Se déconnecter'}
             </button>
           </div>
         </div>
@@ -226,10 +257,11 @@ export function AdminSidebar() {
               </div>
               <button
                 onClick={() => { handleSignOut(); setMobileOpen(false); }}
-                className="mt-2 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                disabled={signingOut}
+                className="mt-2 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                <LogOut className="h-4 w-4" />
-                Se déconnecter
+                <LogOut className={`h-4 w-4 ${signingOut ? 'animate-pulse' : ''}`} />
+                {signingOut ? 'Déconnexion...' : 'Se déconnecter'}
               </button>
             </div>
           </div>

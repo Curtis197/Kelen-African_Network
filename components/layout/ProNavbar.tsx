@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -36,17 +36,22 @@ const MORE_ITEMS = [
 export function ProNavbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [businessName, setBusinessName] = useState<string>("Mon profil");
+  const [signingOut, setSigningOut] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
 
+  // Fetch user info and listen for auth state changes
   useEffect(() => {
-    const getUser = async () => {
+    let cancelled = false;
+
+    const fetchUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
+      if (cancelled) return;
       if (session?.user) {
         setUserEmail(session.user.email ?? null);
         const { data: profile } = await supabase
@@ -57,10 +62,29 @@ export function ProNavbar() {
         if (profile?.business_name) {
           setBusinessName(profile.business_name);
         }
+      } else {
+        setUserEmail(null);
+        setBusinessName("Mon profil");
       }
     };
-    getUser();
-  }, [supabase.auth]);
+
+    fetchUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (cancelled) return;
+      if (session?.user) {
+        setUserEmail(session.user.email ?? null);
+      } else {
+        setUserEmail(null);
+        setBusinessName("Mon profil");
+      }
+    });
+
+    return () => {
+      cancelled = true;
+      subscription.unsubscribe();
+    };
+  }, [supabase]);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -115,11 +139,22 @@ export function ProNavbar() {
     }
   }, [mobileOpen]);
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    router.push("/");
-    router.refresh();
-  };
+  const handleSignOut = useCallback(async () => {
+    if (signingOut) return; // prevent double-click
+    setSigningOut(true);
+    try {
+      await supabase.auth.signOut({ scope: 'global' });
+    } catch (err) {
+      console.error('Sign out error:', err);
+    } finally {
+      setUserEmail(null);
+      setBusinessName("Mon profil");
+      setMoreOpen(false);
+      setSigningOut(false);
+      router.push("/");
+      router.refresh();
+    }
+  }, [supabase, signingOut, router]);
 
   return (
     <>
@@ -208,11 +243,12 @@ export function ProNavbar() {
               </div>
               <button
                 onClick={handleSignOut}
-                className="p-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors"
+                disabled={signingOut}
+                className="p-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                 aria-label="Se déconnecter"
                 title="Se déconnecter"
               >
-                <LogOut className="w-4 h-4" />
+                <LogOut className={`w-4 h-4 ${signingOut ? 'animate-pulse' : ''}`} />
               </button>
             </div>
           </div>
@@ -304,10 +340,11 @@ export function ProNavbar() {
               </div>
               <button
                 onClick={() => { handleSignOut(); setMobileOpen(false); }}
-                className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                disabled={signingOut}
+                className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                <LogOut className="w-4 h-4" />
-                Se déconnecter
+                <LogOut className={`w-4 h-4 ${signingOut ? 'animate-pulse' : ''}`} />
+                {signingOut ? 'Déconnexion...' : 'Se déconnecter'}
               </button>
             </div>
           </div>
