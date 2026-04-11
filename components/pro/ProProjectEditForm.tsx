@@ -6,6 +6,7 @@ import { updateProProject } from "@/lib/actions/pro-projects";
 import type { ProProject, ProProjectFormData, ProProjectStatus } from "@/lib/types/pro-projects";
 import { ArrowLeft, Save, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { ProjectPhotoUpload } from "./ProjectPhotoUpload";
 
 const CATEGORIES = [
   "construction",
@@ -44,6 +45,10 @@ export function ProProjectEditForm({ project }: ProProjectEditFormProps) {
     completion_notes: project.completion_notes || "",
   });
 
+  const [imageUrls, setImageUrls] = useState<string[]>(
+    project.images?.map(img => img.url) || []
+  );
+
   const updateField = <K extends keyof ProProjectFormData>(field: K, value: ProProjectFormData[K]) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
@@ -59,7 +64,7 @@ export function ProProjectEditForm({ project }: ProProjectEditFormProps) {
     setIsSubmitting(true);
 
     try {
-      const result = await updateProProject(project.id, formData);
+      const result = await updateProProject(project.id, formData, imageUrls);
 
       if (result?.error) {
         toast.error(result.error);
@@ -301,6 +306,20 @@ export function ProProjectEditForm({ project }: ProProjectEditFormProps) {
             rows={3}
             className="w-full rounded-lg border border-stone-300 px-4 py-2.5 focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
             placeholder="Notes optionnelles sur la réalisation du projet..."
+          />
+        </div>
+
+        {/* Photos */}
+        <div className="space-y-4 rounded-lg bg-stone-50 p-4">
+          <h3 className="text-sm font-semibold text-stone-700">Photos du projet</h3>
+          <p className="text-xs text-stone-600">
+            Ajoutez ou modifiez les photos de votre projet. Cliquez sur l'étoile pour définir la photo principale.
+          </p>
+          <ProjectPhotoUpload
+            photoUrls={imageUrls}
+            featuredPhoto={imageUrls[0] || null}
+            onPhotosChange={setImageUrls}
+            onFeaturedPhotoChange={() => {}}
           />
         </div>
 

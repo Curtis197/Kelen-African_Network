@@ -4,8 +4,9 @@ import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
 export async function deleteProjectDocument(id: string) {
+  console.log("[deleteProjectDocument] Deleting:", id);
   const supabase = await createClient();
-  
+
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Non authentifié");
 
@@ -24,7 +25,7 @@ export async function deleteProjectDocument(id: string) {
     .eq("professional_id", professional.id);
 
   if (error) {
-    console.error("Error deleting project document:", error);
+    console.error("[deleteProjectDocument] Error:", error);
     throw new Error("Erreur lors de la suppression.");
   }
 

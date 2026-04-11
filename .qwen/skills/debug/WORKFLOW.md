@@ -1,6 +1,6 @@
 # Debug Workflow for Kelen Project
 
-## ⚠️ CRITICAL RULE: INSTRUMENT FIRST, FIX LATER
+## ⚠️ CRITICAL RULE: INSTRUMENT FIRST, FIX LATER & KEEP LOGS FOREVER
 
 **Before making ANY logic changes, we MUST:**
 1. Add strategic console.logs
@@ -8,8 +8,11 @@
 3. Collect exact failure data
 4. Identify root cause with certainty
 5. THEN fix the real issue
+6. **KEEP THE LOGS** - they're permanent infrastructure!
 
-**This saves time, tokens, and frustration.**
+**Logs are NOT temporary! They stay until final release (and maybe even after).**
+
+**This saves time, tokens, and frustration - now and in the future!**
 
 ## Usage
 When you want to debug your project during manual review, use:
@@ -32,9 +35,11 @@ Or ask me to:
 - I will NOT change data fetching
 - I will NOT alter components
 - I will ONLY add diagnostic logs
+- **These logs are PERMANENT - they stay forever!**
 
-### Phase 1: Add Strategic Diagnostic Logs
+### Phase 1: Add Strategic Diagnostic Logs (Permanent!)
 **I will add console.logs at every critical junction:**
+**These logs will REMAIN in the code - they are infrastructure, not temporary tools!**
 
 #### For Data Flow Issues:
 ```typescript
@@ -119,6 +124,14 @@ console.log('[DEBUG] Server action returned:', response)
 1. Test the fix
 2. Confirm it works
 3. Report any remaining issues
+
+### Phase 6: KEEP THE LOGS! (Critical!)
+**I will NOT remove the debug logs!**
+- Logs stay in the code permanently
+- They're valuable for future debugging
+- They document the data flow
+- They help with production issues
+- Only remove if explicitly requested by user
 
 ## Common Debug Scenarios
 

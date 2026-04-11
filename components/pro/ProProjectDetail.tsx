@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { ArrowLeft, BookOpen, MapPin, Calendar, DollarSign, User, FileText, Coins, Image, CalendarDays } from "lucide-react";
+import Image from "next/image";
+import { ArrowLeft, BookOpen, MapPin, Calendar, DollarSign, User, FileText, Coins, Image as ImageIcon, CalendarDays } from "lucide-react";
 import type { ProProject } from "@/lib/types/pro-projects";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -31,8 +32,25 @@ export async function ProProjectDetail({ project }: ProProjectDetailProps) {
     return `${amount.toFixed(2)} ${currency}`;
   };
 
+  const featuredPhoto = project.images?.find(img => img.is_main)?.url || project.images?.[0]?.url;
+  const allPhotos = project.images?.map(img => img.url) || [];
+
   return (
     <div className="space-y-6">
+      {/* Featured Photo Hero */}
+      {featuredPhoto && (
+        <div className="relative aspect-[21/9] w-full overflow-hidden rounded-2xl bg-surface-container-lowest">
+          <Image
+            src={featuredPhoto}
+            alt={project.title}
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
@@ -152,6 +170,36 @@ export async function ProProjectDetail({ project }: ProProjectDetailProps) {
         )}
       </div>
 
+      {/* Photo Gallery */}
+      {allPhotos.length > 0 && (
+        <div className="bg-surface-container-low rounded-2xl p-6">
+          <h3 className="text-base font-bold text-on-surface mb-4 flex items-center gap-2">
+            <ImageIcon className="w-5 h-5" />
+            Galerie photos ({allPhotos.length})
+          </h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+            {allPhotos.map((url, index) => (
+              <div
+                key={index}
+                className="group relative aspect-square overflow-hidden rounded-xl bg-surface-container-lowest"
+              >
+                <Image
+                  src={url}
+                  alt={`${project.title} - Photo ${index + 1}`}
+                  fill
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+                {url === featuredPhoto && (
+                  <div className="absolute left-2 top-2 rounded-md bg-primary px-2 py-0.5 text-[10px] font-bold text-on-primary">
+                    Principale
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Journal Stats */}
       <div className="bg-surface-container-low rounded-2xl p-6">
         <h3 className="text-base font-bold text-on-surface mb-4">Résumé du journal</h3>
@@ -178,7 +226,7 @@ export async function ProProjectDetail({ project }: ProProjectDetailProps) {
             <div className="text-center">
               <div className="flex justify-center mb-2">
                 <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
-                  <Image className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                  <ImageIcon className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                 </div>
               </div>
               <p className="text-2xl font-bold text-on-surface">{journalStats.photoCount}</p>

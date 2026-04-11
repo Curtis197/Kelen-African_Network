@@ -49,7 +49,7 @@ export default async function ProRealisationsPage() {
 
   const { data: documents } = await supabase
     .from("project_documents")
-    .select("*")
+    .select("*, images:project_images(*)")
     .eq("professional_id", professional.id)
     .order("created_at", { ascending: false });
 

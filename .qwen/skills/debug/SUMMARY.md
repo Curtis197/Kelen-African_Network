@@ -82,7 +82,15 @@ Just tell me:
 4. **Analyze** console output
 5. **Identify** exact failure point
 6. **Fix once, correctly**
-7. **Result:** Fast, efficient, certain
+7. **KEEP THE LOGS FOREVER** (permanent infrastructure!)
+8. **Result:** Fast, efficient, certain, future-proof
+
+### ⚠️ CRITICAL: Never Remove Logs!
+- ❌ Don't remove logs after fixing
+- ✅ Logs stay in code permanently
+- ✅ They help with next bug
+- ✅ They document data flow
+- ✅ Only remove at final release (maybe)
 
 ## 📊 Debug Log Patterns
 

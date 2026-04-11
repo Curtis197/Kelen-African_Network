@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { MapPin, Calendar, FileText, ImageIcon, Edit2, Trash2, Loader2, Download } from "lucide-react";
+import { MapPin, Calendar, ImageIcon, Edit2, Trash2, Loader2, Download } from "lucide-react";
 import { deleteProjectDocument } from "@/lib/actions/realisations";
 import { exportRealisationToPDF } from "@/lib/utils/pdf-export";
 import { useState } from "react";
@@ -63,13 +63,16 @@ export function ProjectDocumentCard({
     rejected: "bg-kelen-red-500/10 text-kelen-red-700",
   };
 
+  const featuredPhoto = doc.images?.find(img => img.is_main)?.url || doc.images?.[0]?.url;
+  const photoCount = doc.images?.length || 0;
+
   return (
     <div className={`group relative flex flex-col overflow-hidden rounded-[1.5rem] bg-surface-container-lowest transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_24px_48px_-12px_rgba(26,28,28,0.04)] ${isDeleting ? 'opacity-50 pointer-events-none' : ''}`}>
       {/* Image Preview */}
       <div className="relative aspect-[16/10] w-full overflow-hidden bg-surface-container-low">
-        {doc.photo_urls && doc.photo_urls.length > 0 ? (
+        {featuredPhoto ? (
           <Image
-            src={doc.photo_urls[0]}
+            src={featuredPhoto}
             alt={doc.project_title}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -79,22 +82,16 @@ export function ProjectDocumentCard({
             <ImageIcon size={48} strokeWidth={1} />
           </div>
         ) }
-        
+
         {/* Status Badge */}
         <div className="absolute bottom-4 left-4 flex gap-2">
           <div className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium backdrop-blur-md ${statusColors[doc.status] || 'bg-surface/90 text-on-surface'}`}>
             {statusLabels[doc.status] || doc.status}
           </div>
-          {doc.photo_urls && doc.photo_urls.length > 0 && (
+          {photoCount > 0 && (
             <div className="flex items-center gap-1.5 rounded-full bg-surface/90 px-3 py-1 text-xs font-medium text-on-surface backdrop-blur-md">
               <ImageIcon size={12} />
-              {doc.photo_urls.length}
-            </div>
-          )}
-          {doc.contract_url && (
-            <div className="flex items-center gap-1.5 rounded-full bg-surface/90 px-3 py-1 text-xs font-medium text-on-surface backdrop-blur-md">
-              <FileText size={12} />
-              Contrat
+              {photoCount}
             </div>
           )}
         </div>

@@ -25,21 +25,65 @@ User: "Works!"
 ```
 **Tokens used: 2,000-5,000** 😊
 
+## ⚠️ CRITICAL: Logs Are Permanent, Not Temporary!
+
+### ❌ WRONG: Remove Logs After First Fix
+```
+1. Add debug logs
+2. Find issue
+3. Fix it
+4. Remove logs ❌
+5. New issue appears
+6. Have to re-add logs all over again ❌❌❌
+```
+
+### ✅ RIGHT: Keep Logs Forever
+```
+1. Add debug logs
+2. Find issue
+3. Fix it
+4. Keep logs ✅
+5. New issue appears
+6. Logs already there, instantly see what's wrong! ✅✅✅
+```
+
+**Logs are infrastructure, not temporary tools!**
+
+## Why Permanent Logs Matter
+
+### Benefit 1: Future-Proof Debugging
+- Today's fix might reveal tomorrow's issue
+- Logs stay in place for the next problem
+- No re-instrumentation needed
+
+### Benefit 2: Production Monitoring
+- Logs help diagnose Vercel production issues
+- Users can report problems with console output
+- You have visibility even after deployment
+
+### Benefit 3: Code Understanding
+- Logs document the data flow
+- New developers can see how code works
+- Self-documenting through execution traces
+
+### Benefit 4: Regression Detection
+- If something breaks again, logs catch it immediately
+- Historical comparison is easier
+- Patterns become visible over time
+
 ## The Instrumentation-First Protocol
 
 ### Rule #1: NEVER Guess, Always Measure
 ❌ **Don't:** "I think the issue is in the data fetching"
 ✅ **Do:** "Adding logs to see where data flow breaks"
 
-### Rule #2: Add Logs Before Any Code Changes
-When you report an issue, my FIRST response will be:
-1. Read the relevant file(s)
-2. Add strategic console.logs
-3. Ask you to run and collect data
-4. Analyze the output
-5. THEN fix the real issue
+### Rule #2: Logs Are Permanent Infrastructure
+- **Add logs liberally** - they're staying forever
+- **Don't remove logs after fixes** - they're valuable
+- **Logs = Code documentation** - they explain the flow
+- **Only remove in final release** - and even then, maybe keep them!
 
-### Rule #3: Logs at Every Decision Point
+### Rule #3: Add Logs at Every Decision Point
 
 #### Server Actions (Server-Side):
 ```typescript

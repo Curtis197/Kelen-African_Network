@@ -8,6 +8,7 @@ import {
   LayoutDashboard,
   Briefcase,
   Award,
+  LayoutGrid,
   AlertTriangle,
   Gem,
   BarChart3,
@@ -23,6 +24,7 @@ const NAV_ITEMS = [
   { href: "/pro/dashboard", label: "Tableau de bord", icon: LayoutDashboard },
   { href: "/pro/projets", label: "Projets", icon: Briefcase },
   { href: "/pro/realisations", label: "Réalisations", icon: Award },
+  { href: "/pro/portfolio", label: "Portfolio", icon: LayoutGrid },
   { href: "/pro/abonnement", label: "Abonnement", icon: Gem },
   { href: "/pro/analytique", label: "Analytique", icon: BarChart3 },
 ];

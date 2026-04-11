@@ -6,6 +6,7 @@ import { createProProject } from "@/lib/actions/pro-projects";
 import type { ProProjectFormData, ProProjectStatus } from "@/lib/types/pro-projects";
 import { ArrowLeft, Save, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { ProjectPhotoUpload } from "./ProjectPhotoUpload";
 
 const CATEGORIES = [
   "construction",
@@ -40,6 +41,8 @@ export function ProProjectForm() {
     completion_notes: "",
   });
 
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
+
   const updateField = <K extends keyof ProProjectFormData>(field: K, value: ProProjectFormData[K]) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
@@ -53,7 +56,7 @@ export function ProProjectForm() {
     }
 
     setIsSubmitting(true);
-    const result = await createProProject(formData);
+    const result = await createProProject(formData, imageUrls);
     setIsSubmitting(false);
 
     if (result.error) {
@@ -253,6 +256,20 @@ export function ProProjectForm() {
               </select>
             </div>
           </div>
+        </div>
+
+        {/* Portfolio */}
+        <div className="bg-surface-container-low rounded-2xl p-6 space-y-4">
+          <h3 className="text-base font-bold text-on-surface">Photos du projet</h3>
+          <p className="text-xs text-on-surface-variant">
+            Ajoutez des photos pour documenter votre projet. Vous pourrez définir la photo principale ci-dessous.
+          </p>
+          <ProjectPhotoUpload
+            photoUrls={imageUrls}
+            featuredPhoto={imageUrls[0] || null}
+            onPhotosChange={setImageUrls}
+            onFeaturedPhotoChange={() => {}} // Auto-first image is main
+          />
         </div>
 
         {/* Portfolio */}

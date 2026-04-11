@@ -2,12 +2,13 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import { getProProjects, deleteProProject, updateProProjectStatus, toggleProProjectPublic } from "@/lib/actions/pro-projects";
 import type { ProProject, ProProjectStatus } from "@/lib/types/pro-projects";
 import {
   Plus, Trash2, Eye, EyeOff, Loader2,
-  MapPin, Calendar, DollarSign,
+  MapPin, Calendar, DollarSign, ImageIcon,
   CheckCircle, PauseCircle, XCircle, Construction
 } from "lucide-react";
 import { toast } from "sonner";
@@ -157,12 +158,48 @@ export function ProProjectsPage() {
             return (
               <div
                 key={project.id}
-                className="bg-surface-container-low rounded-2xl p-5 space-y-4"
+                className="bg-surface-container-low rounded-2xl overflow-hidden"
               >
-                {/* Header row */}
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
+                {(() => {
+                  const featuredPhoto = project.images?.find(img => img.is_main)?.url || project.images?.[0]?.url;
+                  const photoCount = project.images?.length || 0;
+                  
+                  if (featuredPhoto) {
+                    return (
+                  <div className="relative aspect-[21/9] w-full overflow-hidden bg-surface-container-lowest">
+                    <Image
+                      src={featuredPhoto}
+                      alt={project.title}
+                      fill
+                      className="object-cover transition-transform duration-500 hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                    <div className="absolute top-4 left-4 flex items-center gap-2">
+                      <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold shadow-lg ${statusConf.color}`}>
+                        {statusConf.icon}
+                        {statusConf.label}
+                      </span>
+                      {project.is_public && (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-700 shadow-lg">
+                          <Eye className="w-3 h-3" />
+                          Portfolio
+                        </span>
+                      )}
+                    </div>
+                    {photoCount > 0 && (
+                      <div className="absolute bottom-4 right-4 flex items-center gap-1.5 rounded-full bg-surface/90 px-3 py-1 text-xs font-medium text-on-surface backdrop-blur-md shadow-lg">
+                        <ImageIcon size={12} />
+                        {photoCount}
+                      </div>
+                    )}
+                  </div>
+                    );
+                  }
+                  
+                  return (
+                  <div className="relative aspect-[21/9] w-full overflow-hidden bg-surface-container-lowest flex items-center justify-center">
+                    <ImageIcon className="w-16 h-16 text-on-surface-variant/20" />
+                    <div className="absolute top-4 left-4 flex items-center gap-2">
                       <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold ${statusConf.color}`}>
                         {statusConf.icon}
                         {statusConf.label}
@@ -174,87 +211,104 @@ export function ProProjectsPage() {
                         </span>
                       )}
                     </div>
-                    <h3 className="text-lg font-semibold text-on-surface truncate">
-                      {project.title}
-                    </h3>
                   </div>
+                  );
+                })()}
 
-                  <div className="flex items-center gap-2">
-                    <Link
-                      href={`/pro/projets/${project.id}`}
-                      className="px-3 py-2 text-sm bg-surface-container text-on-surface rounded-lg hover:bg-surface-container-high transition-colors"
-                    >
-                      Voir détails
-                    </Link>
-                    <button
-                      onClick={() => togglePublic(project)}
-                      className="p-2 text-on-surface-variant hover:text-on-surface bg-surface-container rounded-lg hover:bg-surface-container-high transition-colors"
-                      aria-label={project.is_public ? "Retirer du portfolio" : "Ajouter au portfolio"}
-                      title={project.is_public ? "Retirer du portfolio" : "Ajouter au portfolio"}
-                    >
-                      {project.is_public ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                    </button>
-                    <button
-                      onClick={() => handleDelete(project.id, project.title)}
-                      className="p-2 text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors"
-                      aria-label="Supprimer"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
+                {/* Content section */}
+                <div className="p-5 space-y-4">
+                  {/* Header row */}
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-lg font-semibold text-on-surface truncate">
+                        {project.title}
+                      </h3>
+                    </div>
 
-                {/* Meta row */}
-                <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-on-surface-variant">
-                  {project.category && (
-                    <span className="capitalize">{project.category}</span>
-                  )}
-                  {project.location && (
-                    <span className="flex items-center gap-1">
-                      <MapPin className="w-3.5 h-3.5" />
-                      {project.location}
-                    </span>
-                  )}
-                  {project.start_date && (
-                    <span className="flex items-center gap-1">
-                      <Calendar className="w-3.5 h-3.5" />
-                      {new Date(project.start_date).toLocaleDateString('fr-FR')}
-                    </span>
-                  )}
-                  {project.budget && (
-                    <span className="flex items-center gap-1">
-                      <DollarSign className="w-3.5 h-3.5" />
-                      {project.budget.toLocaleString('fr-FR')} {project.currency}
-                    </span>
-                  )}
-                  {project.client_name && (
-                    <span className="text-on-surface-variant/60">
-                      Client : {project.client_name}
-                    </span>
-                  )}
-                </div>
-
-                {/* Status change */}
-                {project.status !== 'completed' && (
-                  <div className="flex gap-2 pt-2 border-t border-outline-variant/10">
-                    <button
-                      onClick={() => handleStatusChange(project.id, 'completed')}
-                      className="text-xs font-medium text-green-600 hover:text-green-700 flex items-center gap-1"
-                    >
-                      <CheckCircle className="w-3.5 h-3.5" />
-                      Marquer comme terminé
-                    </button>
-                    {project.status !== 'paused' && (
-                      <button
-                        onClick={() => handleStatusChange(project.id, 'paused')}
-                        className="text-xs font-medium text-amber-600 hover:text-amber-700 flex items-center gap-1"
+                    <div className="flex items-center gap-2">
+                      <Link
+                        href={`/pro/projets/${project.id}`}
+                        className="px-3 py-2 text-sm bg-surface-container text-on-surface rounded-lg hover:bg-surface-container-high transition-colors"
                       >
-                        <PauseCircle className="w-3.5 h-3.5" />
-                        Mettre en pause
+                        Voir détails
+                      </Link>
+                      <button
+                        onClick={() => togglePublic(project)}
+                        className="p-2 text-on-surface-variant hover:text-on-surface bg-surface-container rounded-lg hover:bg-surface-container-high transition-colors"
+                        aria-label={project.is_public ? "Retirer du portfolio" : "Ajouter au portfolio"}
+                        title={project.is_public ? "Retirer du portfolio" : "Ajouter au portfolio"}
+                      >
+                        {project.is_public ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
+                      <button
+                        onClick={() => handleDelete(project.id, project.title)}
+                        className="p-2 text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors"
+                        aria-label="Supprimer"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Meta row */}
+                  <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-on-surface-variant">
+                    {project.category && (
+                      <span className="capitalize">{project.category}</span>
+                    )}
+                    {project.location && (
+                      <span className="flex items-center gap-1">
+                        <MapPin className="w-3.5 h-3.5" />
+                        {project.location}
+                      </span>
+                    )}
+                    {project.start_date && (
+                      <span className="flex items-center gap-1">
+                        <Calendar className="w-3.5 h-3.5" />
+                        {new Date(project.start_date).toLocaleDateString('fr-FR')}
+                      </span>
+                    )}
+                    {project.budget && (
+                      <span className="flex items-center gap-1">
+                        <DollarSign className="w-3.5 h-3.5" />
+                        {project.budget.toLocaleString('fr-FR')} {project.currency}
+                      </span>
+                    )}
+                    {project.client_name && (
+                      <span className="text-on-surface-variant/60">
+                        Client : {project.client_name}
+                      </span>
                     )}
                   </div>
-                )}
+
+                  {/* Description */}
+                  {project.description && (
+                    <p className="text-sm text-on-surface-variant line-clamp-2">
+                      {project.description}
+                    </p>
+                  )}
+
+                  {/* Status change */}
+                  {project.status !== 'completed' && (
+                    <div className="flex gap-2 pt-2 border-t border-outline-variant/10">
+                      <button
+                        onClick={() => handleStatusChange(project.id, 'completed')}
+                        className="text-xs font-medium text-green-600 hover:text-green-700 flex items-center gap-1"
+                      >
+                        <CheckCircle className="w-3.5 h-3.5" />
+                        Marquer comme terminé
+                      </button>
+                      {project.status !== 'paused' && (
+                        <button
+                          onClick={() => handleStatusChange(project.id, 'paused')}
+                          className="text-xs font-medium text-amber-600 hover:text-amber-700 flex items-center gap-1"
+                        >
+                          <PauseCircle className="w-3.5 h-3.5" />
+                          Mettre en pause
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
             );
           })}

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Project Document - Kelen</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #111827;
+      --secondary: #4b5563;
+      --muted: #6b7280;
+      --accent: #3b82f6;
+      --bg-light: #f9fafb;
+      --border: #e5e7eb;
+      --page-width: 210mm;
+      --page-height: 297mm;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #e5e5e5;
+      color: var(--primary);
+      line-height: 1.5;
+      font-size: 10pt;
+    }
+
+    .page {
+      width: var(--page-width);
+      min-height: var(--page-height);
+      margin: 0 auto 2rem;
+      background: #fff;
+      padding: 15mm;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ================= PAGE HEADERS ================= */
+    .page-header {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.8rem;
+      border-bottom: 2px solid var(--primary);
+    }
+    .page-header span {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 400;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 0.2rem;
+    }
+
+    /* ================= PAGE 1: COVER ================= */
+    .cover {
+      display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0;
+    }
+    .cover-bg {
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+    }
+    .cover-overlay {
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.65) 100%);
+    }
+    .cover-content { position: relative; z-index: 2; margin-top: -2rem; }
+    .project-title {
+      font-size: 2.8rem; font-weight: 700; color: #ffffff;
+      margin-bottom: 2rem; letter-spacing: -0.02em; line-height: 1.1;
+    }
+    .client-card {
+      background: #ffffff; padding: 1.2rem 1.8rem; border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2); display: inline-block; text-align: left; min-width: 260px;
+    }
+    .client-card .label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 0.3rem; }
+    .client-card .name { font-size: 1.5rem; font-weight: 600; color: var(--primary); margin-bottom: 0.2rem; }
+    .client-card .location { font-size: 0.95rem; color: var(--secondary); }
+    .cover-footer {
+      position: absolute; bottom: 15mm; left: 0; right: 0; text-align: center; z-index: 2;
+      color: rgba(255,255,255,0.85); font-size: 0.85rem;
+    }
+    .cover-footer .brand { display: block; font-size: 1.1rem; font-weight: 600; letter-spacing: 2px; margin-bottom: 0.2rem; color: #ffffff; }
+
+    /* ================= PAGE 2: DETAILS ================= */
+    .details-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 2.5rem; }
+    .info-block { margin-bottom: 2rem; }
+    .info-block h3 {
+      font-size: 1.1rem; font-weight: 600; margin-bottom: 0.6rem; color: var(--primary);
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .info-block p { color: var(--secondary); line-height: 1.7; font-size: 0.95rem; }
+    .budget-table {
+      width: 100%; border-collapse: collapse; font-size: 0.9rem; background: var(--bg-light);
+      border-radius: 6px; overflow: hidden; border: 1px solid var(--border);
+    }
+    .budget-table td { padding: 0.7rem 0.8rem; border-bottom: 1px solid var(--border); }
+    .budget-table tr:last-child td { border-bottom: none; }
+    .budget-label { color: var(--secondary); }
+    .budget-value { font-weight: 600; text-align: right; }
+    .budget-value.highlight { color: var(--accent); font-weight: 700; }
+
+    /* ================= PAGE 3: TIMELINE ================= */
+    .timeline {
+      position: relative;
+      padding-left: 1.5rem;
+      margin-top: 0.5rem;
+    }
+    .timeline::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--border);
+    }
+    .timeline-item {
+      position: relative; padding-bottom: 1.8rem; page-break-inside: avoid;
+    }
+    .timeline-item:last-child { padding-bottom: 0; }
+    .timeline-item::before {
+      content: ''; position: absolute; left: -1.85rem; top: 0.35rem;
+      width: 10px; height: 10px; background: var(--accent); border-radius: 50%;
+      border: 2px solid #fff; box-shadow: 0 0 0 2px var(--border);
+    }
+    .timeline-date { font-size: 0.8rem; color: var(--muted); font-weight: 500; margin-bottom: 0.2rem; }
+    .timeline-title { font-size: 1rem; font-weight: 600; margin-bottom: 0.3rem; }
+    .timeline-desc { font-size: 0.9rem; color: var(--secondary); line-height: 1.5; margin-bottom: 0.4rem; }
+    .timeline-status {
+      display: inline-block; font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 4px; font-weight: 600;
+    }
+    .status-complete { background: #d1fae5; color: #059669; }
+    .status-progress { background: #dbeafe; color: #2563eb; }
+    .status-pending { background: #fef3c7; color: #d97706; }
+
+    /* ================= PAGE 4: GALLERY ================= */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: repeat(3, 1fr);
+      gap: 0.8rem;
+      height: calc(100% - 2rem);
+    }
+    .gallery-item {
+      position: relative; border-radius: 6px; overflow: hidden; border: 1px solid var(--border);
+    }
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .gallery-caption {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.75));
+      color: #ffffff; padding: 1.2rem 0.6rem 0.5rem;
+      font-size: 0.85rem; font-weight: 500;
+    }
+
+    /* ================= PAGE 5: PROFESSIONALS ================= */
+    .pros-intro { color: var(--secondary); margin-bottom: 2rem; font-size: 0.95rem; max-width: 85%; line-height: 1.6; }
+    .pros-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; }
+    .pro-card {
+      display: flex; flex-direction: column; background: var(--bg-light); border: 1px solid var(--border);
+      border-radius: 8px; overflow: hidden; position: relative; page-break-inside: avoid;
+    }
+    .pro-image {
+      height: 120px; background: #d1d5db; overflow: hidden;
+    }
+    .pro-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .pro-details { padding: 1rem; flex: 1; display: flex; flex-direction: column; }
+    .pro-name { font-weight: 600; font-size: 1rem; margin-bottom: 0.2rem; }
+    .pro-role { font-size: 0.85rem; color: var(--accent); font-weight: 500; margin-bottom: 0.3rem; }
+    .pro-company { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.8rem; flex: 1; }
+    .pro-link {
+      display: inline-flex; align-items: center; font-size: 0.8rem; color: var(--primary);
+      text-decoration: none; font-weight: 600; padding-top: 0.4rem; border-top: 1px solid var(--border); margin-top: auto;
+    }
+    .pro-link::after { content: "→"; margin-left: 0.3rem; }
+    .lead-badge {
+      position: absolute; top: 0.6rem; left: 0.6rem; background: var(--primary); color: #fff;
+      padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+
+    /* ================= PAGE 6: BACK COVER ================= */
+    .back-cover {
+      display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); color: #ffffff; padding: 20mm;
+    }
+    .back-content .brand-large { font-size: 2rem; font-weight: 700; letter-spacing: 3px; margin-bottom: 1.5rem; }
+    .back-message { font-size: 1.8rem; font-weight: 600; margin-bottom: 0.8rem; line-height: 1.3; }
+    .back-sub { font-size: 1rem; opacity: 0.85; max-width: 450px; margin: 0 auto 2.5rem; line-height: 1.5; }
+    .back-url { font-size: 1.1rem; font-weight: 500; letter-spacing: 1px; opacity: 0.9; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 1rem; width: 100%; max-width: 200px; }
+
+    /* ================= PRINT OPTIMIZATION ================= */
+    @media print {
+      body { background: #fff; }
+      .page { margin: 0; box-shadow: none; page-break-after: always; }
+      .page:last-child { page-break-after: auto; }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+    @page { size: A4; margin: 0; }
+  </style>
+</head>
+<body>
+
+  <!-- PAGE 1: COVER -->
+  <section class="page cover">
+    <div class="cover-bg"></div>
+    <div class="cover-overlay"></div>
+    <div class="cover-content">
+      <h1 class="project-title">Modern Coastal Retreat</h1>
+      <div class="client-card">
+        <div class="label">Client</div>
+        <div class="name">Sarah Johnson</div>
+        <div class="location">Malibu, CA</div>
+      </div>
+    </div>
+    <div class="cover-footer">
+      <span class="brand">KELEN</span>
+      <span>Project Documentation</span>
+    </div>
+  </section>
+
+  <!-- PAGE 2: PROJECT DETAILS -->
+  <section class="page">
+    <div class="page-header">Project Overview <span>Description & Budget</span></div>
+    <div class="details-grid">
+      <div class="details-left">
+        <div class="info-block">
+          <h3>📋 Project Description</h3>
+          <p>Complete interior redesign of a 2,400 sq ft coastal residence. Focus on sustainable materials, open sightlines, and coastal durability. Scope includes kitchen remodel, primary suite renovation, integrated smart lighting, and custom millwork throughout main living areas.</p>
+        </div>
+        <div class="info-block">
+          <h3>📍 Location & Scope</h3>
+          <p>Single-family residential property located in the Malibu Highlands area. Project spans 14 weeks from permit approval to final walkthrough. All materials selected for low-VOC emissions and moisture resistance.</p>
+        </div>
+      </div>
+      <div class="details-right">
+        <div class="info-block">
+          <h3>💰 Budget Summary</h3>
+          <table class="budget-table">
+            <tr><td class="budget-label">Total Contract Value</td><td class="budget-value">$90,000</td></tr>
+            <tr><td class="budget-label">Materials & Fixtures</td><td class="budget-value">$42,500</td></tr>
+            <tr><td class="budget-label">Labor & Installation</td><td class="budget-value">$31,000</td></tr>
+            <tr><td class="budget-label">Permits & Engineering</td><td class="budget-value">$8,200</td></tr>
+            <tr><td class="budget-label">Contingency Utilized</td><td class="budget-value">$6,300</td></tr>
+            <tr><td class="budget-label">Remaining Balance</td><td class="budget-value highlight">$2,000</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 3: TIMELINE -->
+  <section class="page">
+    <div class="page-header">Project Timeline <span>Milestones & Progress</span></div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-date">Jan 15, 2024</div>
+        <div class="timeline-title">Initial Consultation & Site Assessment</div>
+        <div class="timeline-desc">Scope finalization, budget alignment, and property measurements completed. Structural survey requested.</div>
+        <div class="timeline-status status-complete">✓ Completed</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">Feb 01, 2024</div>
+        <div class="timeline-title">Design Concepts & Material Selection</div>
+        <div class="timeline-desc">Three layout options presented. Client selected Option B (Modern Coastal). Material palette finalized.</div>
+        <div class="timeline-status status-complete">✓ Completed</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">Feb 20, 2024</div>
+        <div class="timeline-title">Permit Submission & Approval</div>
+        <div class="timeline-desc">Architectural and structural drawings submitted to City of Malibu. Permit approved on first review.</div>
+        <div class="timeline-status status-complete">✓ Completed</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">Mar 05, 2024</div>
+        <div class="timeline-title">Demolition & Rough-In Phase</div>
+        <div class="timeline-desc">Wall removal, plumbing rerouting, and electrical rough-in completed. Passed initial city inspection.</div>
+        <div class="timeline-status status-complete">✓ Completed</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">Mar 18, 2024</div>
+        <div class="timeline-title">Finishes Installation</div>
+        <div class="timeline-desc">Drywall, custom cabinetry, tile work, and smart lighting integration currently underway.</div>
+        <div class="timeline-status status-progress">⟳ In Progress</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">Apr 05, 2024</div>
+        <div class="timeline-title">Final Walkthrough & Punch List</div>
+        <div class="timeline-desc">Final inspections, client walkthrough, and punch list resolution scheduled.</div>
+        <div class="timeline-status status-pending">⏳ Upcoming</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 4: GALLERY -->
+  <section class="page">
+    <div class="page-header">Project Gallery <span>Progress & Deliverables</span></div>
+    <div class="gallery-grid">
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80" alt="Living Area">
+        <div class="gallery-caption">Open-Concept Living Space</div>
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=800&q=80" alt="Kitchen">
+        <div class="gallery-caption">Custom Matte Cabinetry</div>
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=800&q=80" alt="Bedroom">
+        <div class="gallery-caption">Primary Suite Layout</div>
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80" alt="Lighting">
+        <div class="gallery-caption">Integrated Smart Lighting</div>
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80" alt="Exterior">
+        <div class="gallery-caption">Coastal Facade & Entry</div>
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80" alt="Bathroom">
+        <div class="gallery-caption">Primary Bathroom Finishes</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 5: PROFESSIONALS INVOLVED -->
+  <section class="page">
+    <div class="page-header">Professionals Involved <span>Project Team & Contributors</span></div>
+    <p class="pros-intro">A complete overview of the licensed professionals who contributed to this project, all verified and connected through the Kelen platform.</p>
+    
+    <div class="pros-grid">
+      <div class="pro-card">
+        <span class="lead-badge">Lead Pro</span>
+        <div class="pro-image">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80" alt="Alex Morgan">
+        </div>
+        <div class="pro-details">
+          <div class="pro-name">Alex Morgan</div>
+          <div class="pro-role">Interior Architect</div>
+          <div class="pro-company">Studio Morgan Design</div>
+          <a href="https://kelen.co/alexmorgan" class="pro-link">View Portfolio</a>
+        </div>
+      </div>
+
+      <div class="pro-card">
+        <div class="pro-image">
+          <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80" alt="Elena Vasquez">
+        </div>
+        <div class="pro-details">
+          <div class="pro-name">Elena Vasquez</div>
+          <div class="pro-role">General Contractor</div>
+          <div class="pro-company">Pacific Coast Builders</div>
+          <a href="https://kelen.co/elenavasquez" class="pro-link">View Portfolio</a>
+        </div>
+      </div>
+
+      <div class="pro-card">
+        <div class="pro-image">
+          <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=400&q=80" alt="Maya Chen">
+        </div>
+        <div class="pro-details">
+          <div class="pro-name">Maya Chen</div>
+          <div class="pro-role">Electrical Engineer</div>
+          <div class="pro-company">BrightWire Solutions</div>
+          <a href="https://kelen.co/mayachen" class="pro-link">View Portfolio</a>
+        </div>
+      </div>
+
+      <div class="pro-card">
+        <div class="pro-image">
+          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80" alt="David Park">
+        </div>
+        <div class="pro-details">
+          <div class="pro-name">David Park</div>
+          <div class="pro-role">Plumbing Specialist</div>
+          <div class="pro-company">CoastFlow Plumbing</div>
+          <a href="https://kelen.co/davidpark" class="pro-link">View Portfolio</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 6: BACK COVER -->
+  <section class="page back-cover">
+    <div class="back-content">
+      <div class="brand-large">KELEN</div>
+      <h2 class="back-message">This project was built on the Kelen platform.</h2>
+      <p class="back-sub">Connecting clients with trusted professionals to bring visions to life. Transparent, documented, and delivered.</p>
+      <div class="back-url">kelen.co</div>
+    </div>
+  </section>
+
+</body>
+</html>

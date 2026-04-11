@@ -27,15 +27,18 @@
 ## Available Debug Tools
 
 ### 📋 Files in This Skill
-- [`INSTRUMENTATION-FIRST.md`](./INSTRUMENTATION-FIRST.md) - **READ THIS FIRST** - Our instrumentation-first philosophy
-- [`EXAMPLES.md`](./EXAMPLES.md) - Real examples showing old vs new approach
-- [`README.md`](./README.md) - Comprehensive debug checklist and reference
-- [`WORKFLOW.md`](./WORKFLOW.md) - Interactive debug workflow process
-- [`QUICK-REFERENCE.md`](./QUICK-REFERENCE.md) - Quick reference card
-- [`HOW-TO-USE.md`](./HOW-TO-USE.md) - Complete usage guide
-- [`skill.json`](./skill.json) - Skill configuration
-- [`debug-checklist.js`](./debug-checklist.js) - Automated check script
-- [`browser-console-snippet.js`](./browser-console-snippet.js) - Browser console tool
+- [`INSTRUMENTATION-FIRST.md`](./INSTRUMENTATION-FIRST.md) - **READ THIS FIRST** - Core debugging methodology
+- [`PERMANENT-LOGS.md`](./PERMANENT-LOGS.md) - **IMPORTANT** - Why logs stay forever
+- [`EXAMPLES.md`](./EXAMPLES.md) - Real before/after scenarios
+- [`SUMMARY.md`](./SUMMARY.md) - Complete overview
+- [`INDEX.md`](./INDEX.md) - Quick entry point
+- [`WORKFLOW.md`](./WORKFLOW.md) - Step-by-step debug process
+- [`QUICK-REFERENCE.md`](./QUICK-REFERENCE.md) - Fast lookup card
+- [`README.md`](./README.md) - Comprehensive checklist
+- [`HOW-TO-USE.md`](./HOW-TO-USE.md) - User manual
+- [`skill.json`](./skill.json) - Configuration
+- [`debug-checklist.js`](./debug-checklist.js) - Automated diagnostics
+- [`browser-console-snippet.js`](./browser-console-snippet.js) - Browser tool
 
 ### 🎯 When to Use
 - Manual browser testing on localhost

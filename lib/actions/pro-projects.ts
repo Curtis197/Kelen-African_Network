@@ -2,11 +2,9 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
-import type { ProProject, ProProjectFormData } from "@/lib/types/pro-projects";
+import type { ProProject, ProProjectFormData, ProProjectImage } from "@/lib/types/pro-projects";
 
-function log(action: string, data: Record<string, unknown>) {
-  console.log(JSON.stringify({ ts: new Date().toISOString(), action, ...data }));
-}
+console.log("[pro-projects] Server action loaded");
 
 async function getProfessionalId(): Promise<string | null> {
   const supabase = await createClient();
@@ -29,7 +27,7 @@ export async function getProProjects(status?: string): Promise<ProProject[]> {
   const supabase = await createClient();
   let query = supabase
     .from("pro_projects")
-    .select("*")
+    .select("*, images:pro_project_images(*)")
     .eq("professional_id", proId)
     .order("created_at", { ascending: false });
 
@@ -53,7 +51,7 @@ export async function getProProject(id: string): Promise<ProProject | null> {
 
   const { data, error } = await supabase
     .from("pro_projects")
-    .select("*")
+    .select("*, images:pro_project_images(*)")
     .eq("id", id)
     .eq("professional_id", proId)
     .single();
@@ -66,9 +64,11 @@ export async function getProProject(id: string): Promise<ProProject | null> {
   return data;
 }
 
-export async function createProProject(data: ProProjectFormData): Promise<{ data?: ProProject; error?: string }> {
+export async function createProProject(data: ProProjectFormData, imageUrls?: string[]): Promise<{ data?: ProProject; error?: string }> {
   const proId = await getProfessionalId();
   if (!proId) return { error: "Non autorisé" };
+
+  console.log("[createProProject] Creating project", { proId, imageCount: imageUrls?.length });
 
   const supabase = await createClient();
   const { data: project, error } = await supabase
@@ -94,21 +94,44 @@ export async function createProProject(data: ProProjectFormData): Promise<{ data
     .single();
 
   if (error) {
-    log("pro_project.create.error", { proId, error: error.message });
+    console.error("[createProProject] Error", { error: error.message });
     return { error: error.message };
   }
 
-  log("pro_project.create.ok", { proId, projectId: project.id, title: project.title });
+  // Insert images into pro_project_images table
+  if (imageUrls && imageUrls.length > 0 && project) {
+    console.log("[createProProject] Inserting images", { count: imageUrls.length });
+    const imageRows = imageUrls.map((url, idx) => ({
+      pro_project_id: project.id,
+      url,
+      is_main: idx === 0, // First image is main by default
+      order_index: idx,
+    }));
+
+    const { error: imgError } = await supabase
+      .from("pro_project_images")
+      .insert(imageRows);
+
+    if (imgError) {
+      console.error("[createProProject] Image insert error", { error: imgError.message });
+      // Don't fail the whole operation, just log the error
+    }
+  }
+
+  console.log("[createProProject] OK", { projectId: project.id });
   revalidatePath("/pro/projets");
   return { data: project };
 }
 
 export async function updateProProject(
   id: string,
-  data: Partial<ProProjectFormData>
+  data: Partial<ProProjectFormData>,
+  imageUrls?: string[]
 ): Promise<{ data?: ProProject; error?: string }> {
   const proId = await getProfessionalId();
   if (!proId) return { error: "Non autorisé" };
+
+  console.log("[updateProProject] Updating project", { id, imageCount: imageUrls?.length });
 
   const supabase = await createClient();
 
@@ -146,11 +169,38 @@ export async function updateProProject(
     .single();
 
   if (error) {
-    log("pro_project.update.error", { id, error: error.message });
+    console.error("[updateProProject] Error", { error: error.message });
     return { error: error.message };
   }
 
-  log("pro_project.update.ok", { id, title: project.title });
+  // Update images if provided
+  if (imageUrls && imageUrls.length > 0) {
+    console.log("[updateProProject] Updating images", { count: imageUrls.length });
+    
+    // Delete existing images
+    await supabase
+      .from("pro_project_images")
+      .delete()
+      .eq("pro_project_id", id);
+
+    // Insert new images
+    const imageRows = imageUrls.map((url, idx) => ({
+      pro_project_id: id,
+      url,
+      is_main: idx === 0,
+      order_index: idx,
+    }));
+
+    const { error: imgError } = await supabase
+      .from("pro_project_images")
+      .insert(imageRows);
+
+    if (imgError) {
+      console.error("[updateProProject] Image update error", { error: imgError.message });
+    }
+  }
+
+  console.log("[updateProProject] OK", { id });
   revalidatePath("/pro/projets");
   return { data: project };
 }
@@ -176,11 +226,11 @@ export async function updateProProjectStatus(
     .eq("professional_id", proId);
 
   if (error) {
-    log("pro_project.status.update.error", { id, error: error.message });
+    console.error("[updateProProjectStatus] Error", { error: error.message });
     return { success: false, error: error.message };
   }
 
-  log("pro_project.status.update.ok", { id, status });
+  console.log("[updateProProjectStatus] OK", { id, status });
   revalidatePath("/pro/projets");
   return { success: true };
 }
@@ -200,39 +250,13 @@ export async function toggleProProjectPublic(
     .eq("professional_id", proId);
 
   if (error) {
-    log("pro_project.toggle_public.error", { id, error: error.message });
+    console.error("[toggleProProjectPublic] Error", { error: error.message });
     return { success: false, error: error.message };
   }
 
-  log("pro_project.toggle_public.ok", { id, isPublic });
+  console.log("[toggleProProjectPublic] OK", { id, isPublic });
   revalidatePath("/pro/projets");
   revalidatePath(`/pro/projets/${id}`);
-  return { success: true };
-}
-
-export async function updateProProjectPhotos(
-  id: string,
-  photoUrls: string[],
-  featuredPhoto?: string
-): Promise<{ success: boolean; error?: string }> {
-  const proId = await getProfessionalId();
-  if (!proId) return { success: false, error: "Non autorisé" };
-
-  const supabase = await createClient();
-  const updateData: Record<string, unknown> = { photo_urls: photoUrls };
-  if (featuredPhoto) updateData.featured_photo = featuredPhoto;
-
-  const { error } = await supabase
-    .from("pro_projects")
-    .update(updateData)
-    .eq("id", id)
-    .eq("professional_id", proId);
-
-  if (error) {
-    return { success: false, error: error.message };
-  }
-
-  revalidatePath("/pro/projets");
   return { success: true };
 }
 
@@ -248,11 +272,11 @@ export async function deleteProProject(id: string): Promise<{ success: boolean; 
     .eq("professional_id", proId);
 
   if (error) {
-    log("pro_project.delete.error", { id, error: error.message });
+    console.error("[deleteProProject] Error", { error: error.message });
     return { success: false, error: error.message };
   }
 
-  log("pro_project.delete.ok", { id });
+  console.log("[deleteProProject] OK", { id });
   revalidatePath("/pro/projets");
   return { success: true };
 }
@@ -261,10 +285,14 @@ export async function getPublicProProjects(slug: string): Promise<ProProject[]> 
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("pro_projects")
-    .select("*")
+    .select(`
+      *,
+      images:pro_project_images(*),
+      professionals!inner(slug)
+    `)
     .eq("is_public", true)
-    .eq("professionals:professional_id(slug)", slug)
-    .eq("professionals(status)", { not: { eq: 'black' } })
+    .eq("professionals.slug", slug)
+    .neq("professionals.status", "black")
     .order("actual_end_date", { ascending: false, nullsFirst: false })
     .order("created_at", { ascending: false });
 
@@ -274,4 +302,81 @@ export async function getPublicProProjects(slug: string): Promise<ProProject[]> 
   }
 
   return data || [];
+}
+
+export async function setMainProjectImage(
+  projectId: string,
+  imageId: string
+): Promise<{ success: boolean; error?: string }> {
+  const proId = await getProfessionalId();
+  if (!proId) return { success: false, error: "Non autorisé" };
+
+  const supabase = await createClient();
+
+  // Verify ownership
+  const { data: project } = await supabase
+    .from("pro_projects")
+    .select("id")
+    .eq("id", projectId)
+    .eq("professional_id", proId)
+    .single();
+
+  if (!project) return { success: false, error: "Projet introuvable" };
+
+  // Set all images to not main
+  await supabase
+    .from("pro_project_images")
+    .update({ is_main: false })
+    .eq("pro_project_id", projectId);
+
+  // Set selected image as main
+  const { error } = await supabase
+    .from("pro_project_images")
+    .update({ is_main: true })
+    .eq("id", imageId)
+    .eq("pro_project_id", projectId);
+
+  if (error) {
+    console.error("[setMainProjectImage] Error", { error: error.message });
+    return { success: false, error: error.message };
+  }
+
+  console.log("[setMainProjectImage] OK", { projectId, imageId });
+  revalidatePath(`/pro/projets/${projectId}`);
+  return { success: true };
+}
+
+export async function deleteProjectImage(
+  projectId: string,
+  imageId: string
+): Promise<{ success: boolean; error?: string }> {
+  const proId = await getProfessionalId();
+  if (!proId) return { success: false, error: "Non autorisé" };
+
+  const supabase = await createClient();
+
+  // Verify ownership
+  const { data: project } = await supabase
+    .from("pro_projects")
+    .select("id")
+    .eq("id", projectId)
+    .eq("professional_id", proId)
+    .single();
+
+  if (!project) return { success: false, error: "Projet introuvable" };
+
+  const { error } = await supabase
+    .from("pro_project_images")
+    .delete()
+    .eq("id", imageId)
+    .eq("pro_project_id", projectId);
+
+  if (error) {
+    console.error("[deleteProjectImage] Error", { error: error.message });
+    return { success: false, error: error.message };
+  }
+
+  console.log("[deleteProjectImage] OK", { projectId, imageId });
+  revalidatePath(`/pro/projets/${projectId}`);
+  return { success: true };
 }

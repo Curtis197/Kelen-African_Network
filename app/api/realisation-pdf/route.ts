@@ -11,10 +11,13 @@ export async function GET(request: NextRequest) {
 
   const supabase = await createClient();
 
-  // Fetch the realisation (project_document)
+  // Fetch the realisation (project_document) with images
   const { data: doc, error: docError } = await supabase
     .from("project_documents")
-    .select("*")
+    .select(`
+      *,
+      images:project_images(*)
+    `)
     .eq("id", realisationId)
     .single();
 
@@ -29,23 +32,23 @@ export async function GET(request: NextRequest) {
     .eq("id", doc.professional_id)
     .single();
 
-  // Generate signed URLs for photos
+  // Generate signed URLs for photos from project_images
   const photoUrls: string[] = [];
-  if (doc.photo_urls && doc.photo_urls.length > 0) {
-    for (const url of doc.photo_urls) {
-      // Check if it's a Supabase storage path or already a full URL
-      if (url.includes("supabase.co/storage")) {
-        photoUrls.push(url);
+  const images = (doc.images || []) as Array<{ url: string }>;
+  for (const img of images) {
+    const url = img.url;
+    // Check if it's a Supabase storage path or already a full URL
+    if (url.includes("supabase.co/storage")) {
+      photoUrls.push(url);
+    } else {
+      // Try to get signed URL if it's a storage path
+      const { data } = await supabase.storage
+        .from("portfolios")
+        .createSignedUrl(url, 3600);
+      if (data?.signedUrl) {
+        photoUrls.push(data.signedUrl);
       } else {
-        // Try to get signed URL if it's a storage path
-        const { data } = await supabase.storage
-          .from("realisations")
-          .createSignedUrl(url, 3600);
-        if (data?.signedUrl) {
-          photoUrls.push(data.signedUrl);
-        } else {
-          photoUrls.push(url); // Fallback to original
-        }
+        photoUrls.push(url); // Fallback to original
       }
     }
   }
@@ -58,7 +61,7 @@ export async function GET(request: NextRequest) {
     : null;
   const location = doc.project_location || null;
   const budget = doc.project_amount
-    ? new Intl.NumberFormat("fr-FR", { style: "currency", currency: doc.project_currency || "XOF" }).format(doc.project_amount)
+    ? new Intl.NumberFormat("fr-FR", { style: "currency", currency: "XOF" }).format(doc.project_amount)
     : null;
 
   // Generate HTML

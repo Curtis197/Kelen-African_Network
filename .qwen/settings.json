@@ -15,7 +15,9 @@
       "WebFetch(kelen-african-network.vercel.app)",
       "Bash(move *)",
       "WebSearch",
-      "Bash(timeout *)"
+      "Bash(timeout *)",
+      "Bash(git log *)",
+      "Bash(tasklist)"
     ]
   },
   "$version": 3

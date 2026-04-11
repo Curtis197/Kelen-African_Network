@@ -4,7 +4,7 @@
 -- The storage.objects `name` column stores the full path including
 -- the bucket folder name. For example:
 --   portfolios/<user_id>/<uuid>.png
--- 
+--
 -- storage.foldername(name) returns ['portfolios', '<user_id>', '<uuid>.png']
 -- In PostgreSQL, array indexing is 1-based, so:
 --   [1] = 'portfolios' (bucket name)
@@ -13,9 +13,17 @@
 -- The original policy checked [1] = auth.uid() which would NEVER match.
 -- This fixes it to check [2].
 
+-- Drop old broken policies (ignore if they don't exist)
 DROP POLICY IF EXISTS "portfolios_upload_own" ON storage.objects;
 DROP POLICY IF EXISTS "portfolios_update_own" ON storage.objects;
 DROP POLICY IF EXISTS "portfolios_delete_own" ON storage.objects;
+DROP POLICY IF EXISTS "portfolios_admin" ON storage.objects;
+
+-- Drop v2 policies if they exist (for re-run safety)
+DROP POLICY IF EXISTS "portfolios_upload_own_v2" ON storage.objects;
+DROP POLICY IF EXISTS "portfolios_update_own_v2" ON storage.objects;
+DROP POLICY IF EXISTS "portfolios_delete_own_v2" ON storage.objects;
+DROP POLICY IF EXISTS "portfolios_admin_v2" ON storage.objects;
 
 CREATE POLICY "portfolios_upload_own_v2" ON storage.objects
   FOR INSERT TO authenticated
@@ -38,9 +46,19 @@ CREATE POLICY "portfolios_delete_own_v2" ON storage.objects
     AND (storage.foldername(name))[2] = auth.uid()::TEXT
   );
 
+CREATE POLICY "portfolios_admin_v2" ON storage.objects
+  FOR ALL TO authenticated
+  USING (
+    bucket_id = 'portfolios'
+    AND public.has_role('admin')
+  );
+
 -- Also fix contracts and evidence read policies that have the same bug
 DROP POLICY IF EXISTS "contracts_read_own" ON storage.objects;
 DROP POLICY IF EXISTS "evidence_read_own" ON storage.objects;
+
+DROP POLICY IF EXISTS "contracts_read_own_v2" ON storage.objects;
+DROP POLICY IF EXISTS "evidence_read_own_v2" ON storage.objects;
 
 CREATE POLICY "contracts_read_own_v2" ON storage.objects
   FOR SELECT TO authenticated
@@ -60,6 +78,9 @@ CREATE POLICY "evidence_read_own_v2" ON storage.objects
 DROP POLICY IF EXISTS "verdocs_upload_own" ON storage.objects;
 DROP POLICY IF EXISTS "verdocs_admin" ON storage.objects;
 
+DROP POLICY IF EXISTS "verdocs_upload_own_v2" ON storage.objects;
+DROP POLICY IF EXISTS "verdocs_admin_v2" ON storage.objects;
+
 CREATE POLICY "verdocs_upload_own_v2" ON storage.objects
   FOR INSERT TO authenticated
   WITH CHECK (
@@ -77,6 +98,10 @@ CREATE POLICY "verdocs_admin_v2" ON storage.objects
 DROP POLICY IF EXISTS "projdocs_upload_own" ON storage.objects;
 DROP POLICY IF EXISTS "projdocs_read_own" ON storage.objects;
 DROP POLICY IF EXISTS "projdocs_admin" ON storage.objects;
+
+DROP POLICY IF EXISTS "projdocs_upload_own_v2" ON storage.objects;
+DROP POLICY IF EXISTS "projdocs_read_own_v2" ON storage.objects;
+DROP POLICY IF EXISTS "projdocs_admin_v2" ON storage.objects;
 
 CREATE POLICY "projdocs_upload_own_v2" ON storage.objects
   FOR INSERT TO authenticated

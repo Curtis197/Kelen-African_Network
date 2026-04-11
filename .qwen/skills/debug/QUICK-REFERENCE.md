@@ -1,12 +1,20 @@
 # 🔍 Debug Quick Reference Card
 
-## ⚠️ GOLDEN RULE: Instrument First, Fix Second!
+## ⚠️ GOLDEN RULES
 
+### Rule #1: Instrument First, Fix Second!
 **I will NOT change any logic code until we:**
 1. Add strategic console.logs
 2. Run the app
 3. Collect exact error data
 4. Identify the real problem
+
+### Rule #2: Logs Are Permanent!
+**Debug logs STAY in the code forever:**
+- ❌ I will NOT remove logs after fixing
+- ✅ Logs are permanent infrastructure
+- ✅ They help with future bugs
+- ✅ Only removed at final release (maybe)
 
 ## Activation
 - Type: `/debug`
@@ -26,6 +34,7 @@ Tell me:
 
 ### Step 3: I Add Logs (NO CODE CHANGES!)
 I will add diagnostic console.logs to find the exact issue
+**These logs will stay permanently in the code!**
 
 ### Step 4: Run & Collect Output
 - Reproduce the issue
@@ -34,6 +43,11 @@ I will add diagnostic console.logs to find the exact issue
 
 ### Step 5: I Fix the Real Issue
 One targeted fix based on actual data
+
+### Step 6: Logs Stay Forever!
+- I will NOT remove the debug logs
+- They're valuable for future debugging
+- They document how the code works
 
 ## Common Issues & Fixes
 

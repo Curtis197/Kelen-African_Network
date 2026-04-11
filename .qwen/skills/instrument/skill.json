@@ -1,0 +1,94 @@
+{
+  "name": "instrument",
+  "version": "1.1.0",
+  "description": "Proactive logging skill - add comprehensive console.logs whenever building, implementing, or updating any code element. Includes database schema reference.",
+  "triggers": [
+    "create",
+    "implement",
+    "build",
+    "add",
+    "update",
+    "modify",
+    "new function",
+    "new component",
+    "new feature",
+    "with logs",
+    "logged",
+    "database query",
+    "supabase"
+  ],
+  "capabilities": [
+    "Add logs to server actions on first write",
+    "Add logs to React components on first write",
+    "Add logs to Supabase queries on first write",
+    "Add logs to form handlers on first write",
+    "Add logs to auth checks on first write",
+    "RLS policy violation detection (EXPLICIT and SILENT)",
+    "Comprehensive error logging",
+    "State change tracking",
+    "Data flow documentation",
+    "Database schema validation before writing code"
+  ],
+  "references": {
+    "database": "DATABASE-REFERENCE.md",
+    "description": "Always check this file before writing database code to ensure correct table names, column names, and relationships"
+  },
+  "philosophy": "Log everything upfront. Never debug blind. Check database schema first. Logs are permanent infrastructure.",
+  "rules": [
+    "ALWAYS check DATABASE-REFERENCE.md before writing database code",
+    "ALWAYS add logs on first implementation",
+    "NEVER write unlogged code",
+    "NEVER guess table/column names",
+    "RLS gets special logging (EXPLICIT and SILENT)",
+    "Logs stay forever",
+    "Log all decision points",
+    "Log all database operations",
+    "Log all auth checks",
+    "Log all validation",
+    "AFTER every migration: Update database-scheme.sql",
+    "AFTER every migration: Update DATABASE-REFERENCE.md",
+    "AFTER RLS migration: Export and update RLS-list.md",
+    "AFTER RLS migration: Review RLS-audit-findings.md",
+    "Verify: Actual DB = Scheme File = Reference File = RLS List"
+  ],
+  "logFormat": {
+    "serverAction": "[ACTION] description",
+    "authentication": "[AUTH] description",
+    "database": "[DB] description",
+    "rls": "[RLS] description",
+    "component": "[COMPONENT] description",
+    "effect": "[EFFECT] description",
+    "fetch": "[FETCH] description",
+    "render": "[RENDER] description",
+    "state": "[STATE] description",
+    "validation": "[VALIDATE] description",
+    "form": "[FORM] description",
+    "query": "[QUERY] description"
+  },
+  "workflow": {
+    "type": "automatic",
+    "trigger": "Whenever implementing/building/creating code",
+    "steps": [
+      {
+        "step": 1,
+        "action": "Write the code implementation"
+      },
+      {
+        "step": 2,
+        "action": "Add comprehensive console.logs at all critical points"
+      },
+      {
+        "step": 3,
+        "action": "Include RLS detection logging"
+      },
+      {
+        "step": 4,
+        "action": "Log all inputs, outputs, and errors"
+      },
+      {
+        "step": 5,
+        "action": "Logs remain in code permanently"
+      }
+    ]
+  }
+}

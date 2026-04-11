@@ -17,9 +17,19 @@ export interface ProProject {
   currency: 'XOF' | 'EUR' | 'USD';
   status: ProProjectStatus;
   is_public: boolean;
-  featured_photo: string | null;
-  photo_urls: string[];
   completion_notes: string | null;
+  created_at: string;
+  updated_at: string;
+  // Related data (joined queries)
+  images?: ProProjectImage[];
+}
+
+export interface ProProjectImage {
+  id: string;
+  pro_project_id: string;
+  url: string;
+  is_main: boolean | null;
+  order_index: number | null;
   created_at: string;
   updated_at: string;
 }

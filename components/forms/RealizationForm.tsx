@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/client";
 import { uploadFile } from "@/lib/supabase/storage";
-import { Image as ImageIcon, FileText, MapPin, Calendar, X, Loader2, ArrowLeft } from "lucide-react";
+import { Image as ImageIcon, X, Loader2, ArrowLeft, Star } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 
@@ -16,7 +16,6 @@ const projectDocumentSchema = z.object({
   project_description: z.string().optional(),
   project_date: z.string().optional(),
   project_amount: z.string().optional(),
-  contract_file: z.any().optional(),
 });
 
 type ProjectDocumentFormData = z.infer<typeof projectDocumentSchema>;
@@ -30,8 +29,12 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
   const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
-  const [contractFile, setContractFile] = useState<File | null>(null);
+  const [existingImages, setExistingImages] = useState<Array<{id: string, url: string, is_main: boolean}>>(
+    initialData?.images?.map((img: any) => ({ id: img.id, url: img.url, is_main: img.is_main || false })) || []
+  );
   const supabase = createClient();
+
+  const isEditing = !!initialData?.id;
 
   const {
     register,
@@ -57,42 +60,136 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
     setImageFiles(prev => prev.filter((_, i) => i !== index));
   };
 
+  const removeExistingImage = async (imageId: string) => {
+    setExistingImages(prev => prev.filter(img => img.id !== imageId));
+    if (isEditing) {
+      const { error } = await supabase
+        .from("project_images")
+        .delete()
+        .eq("id", imageId);
+      if (error) {
+        console.error("[RealizationForm] Error deleting image:", error);
+        toast.error("Erreur lors de la suppression de l'image");
+      }
+    }
+  };
+
+  const setFeaturedImage = (url: string) => {
+    setExistingImages(prev => prev.map(img => ({
+      ...img,
+      is_main: img.url === url
+    })));
+  };
+
   const onSubmit = async (data: ProjectDocumentFormData) => {
     setIsSaving(true);
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Non authentifié");
 
-      let contractUrl = "";
-      if (contractFile) {
-        const path = `contracts/${user.id}`;
-        contractUrl = await uploadFile(contractFile, "contracts", path);
-      }
-
-      const photoUrls: string[] = [];
+      // Upload new images if any
+      const newImageUrls: {url: string, file: File}[] = [];
       if (imageFiles.length > 0) {
         const uploads = imageFiles.map(async (file) => {
           const path = `portfolios/${user.id}`;
-          return uploadFile(file, "portfolios", path);
+          const url = await uploadFile(file, "portfolios", path);
+          return { url, file };
         });
         const results = await Promise.all(uploads);
-        photoUrls.push(...results);
+        newImageUrls.push(...results.filter(r => r.url));
       }
 
-      const { error: insertError } = await supabase.from("project_documents").insert({
-        professional_id: professionalId,
+      // Build update payload (no images)
+      const payload: any = {
         project_title: data.project_title,
         project_description: data.project_description || null,
         project_date: data.project_date || null,
         project_amount: data.project_amount ? parseFloat(data.project_amount) : null,
-        contract_url: contractUrl || null,
-        photo_urls: photoUrls.length > 0 ? photoUrls : null,
-        status: "pending_review",
-      });
+      };
 
-      if (insertError) throw insertError;
+      let error;
 
-      toast.success("Projet enregistré avec succès");
+      if (isEditing) {
+        // Update existing realization
+        console.log("[RealizationForm] Updating document:", initialData.id, payload);
+        const { error: updateError } = await supabase
+          .from("project_documents")
+          .update(payload)
+          .eq("id", initialData.id)
+          .eq("professional_id", professionalId);
+        error = updateError;
+
+        // Update existing images (set is_main flags)
+        if (!error && existingImages.length > 0) {
+          // Reset all is_main flags
+          await supabase
+            .from("project_images")
+            .update({ is_main: false })
+            .eq("project_document_id", initialData.id);
+
+          // Set is_main for featured image
+          const featuredImg = existingImages.find(img => img.is_main);
+          if (featuredImg) {
+            await supabase
+              .from("project_images")
+              .update({ is_main: true })
+              .eq("id", featuredImg.id);
+          }
+        }
+
+        // Insert new images
+        if (!error && newImageUrls.length > 0) {
+          const hasMain = existingImages.some(img => img.is_main);
+          const imageRows = newImageUrls.map(({ url }, idx) => ({
+            project_document_id: initialData.id,
+            professional_id: professionalId,
+            url: url,
+            is_main: !hasMain && idx === 0, // First new image is main if no existing main
+          }));
+
+          const { error: imgError } = await supabase
+            .from("project_images")
+            .insert(imageRows);
+
+          if (imgError) {
+            console.error("[RealizationForm] Error inserting images:", imgError);
+          }
+        }
+      } else {
+        // Create new realization
+        payload.professional_id = professionalId;
+        payload.status = "published";
+        console.log("[RealizationForm] Creating new document:", payload);
+        const { data: newDoc, error: insertError } = await supabase
+          .from("project_documents")
+          .insert(payload)
+          .select()
+          .single();
+        error = insertError;
+
+        // Insert images into project_images table
+        if (!error && newImageUrls.length > 0 && newDoc) {
+          console.log("[RealizationForm] Inserting images for new document:", newDoc.id);
+          const imageRows = newImageUrls.map(({ url }, idx) => ({
+            project_document_id: newDoc.id,
+            professional_id: professionalId,
+            url: url,
+            is_main: idx === 0, // First image is main
+          }));
+
+          const { error: imgError } = await supabase
+            .from("project_images")
+            .insert(imageRows);
+
+          if (imgError) {
+            console.error("[RealizationForm] Error inserting images:", imgError);
+          }
+        }
+      }
+
+      if (error) throw error;
+
+      toast.success(isEditing ? "Projet mis à jour avec succès" : "Projet enregistré avec succès");
       router.push("/pro/realisations");
       router.refresh();
     } catch (error) {
@@ -106,8 +203,8 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-12">
       <div className="flex items-center justify-between border-b border-transparent pb-6">
-        <Link 
-          href="/pro/realisations" 
+        <Link
+          href="/pro/realisations"
           className="flex items-center gap-2 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors"
         >
           <ArrowLeft size={16} />
@@ -118,12 +215,14 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
         <div className="space-y-8 lg:col-span-7">
           <section className="space-y-6">
-            <h2 className="font-headline text-xl font-bold text-on-surface">Détails du projet</h2>
-            
+            <h2 className="font-headline text-xl font-bold text-on-surface">
+              {isEditing ? "Modifier le projet" : "Détails du projet"}
+            </h2>
+
             <div className="space-y-4">
               <div className="space-y-2">
                 <label className="text-sm font-bold text-on-surface">Titre de la réalisation</label>
-                <input 
+                <input
                   {...register("project_title")}
                   placeholder="Ex: Construction Villa Moderne à Abidjan"
                   className="w-full rounded-xl bg-surface-container-low px-4 py-3 text-sm transition-all focus:bg-white focus:ring-4 focus:ring-kelen-green-500/5 outline-none"
@@ -133,7 +232,7 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
 
               <div className="space-y-2">
                 <label className="text-sm font-bold text-on-surface">Description détaillée</label>
-                <textarea 
+                <textarea
                   {...register("project_description")}
                   rows={6}
                   placeholder="Décrivez les défis relevés, les matériaux utilisés, et le résultat final..."
@@ -144,22 +243,16 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-on-surface flex items-center gap-2">
-                    <MapPin size={14} className="text-kelen-green-600" />
-                    Date du projet
-                  </label>
-                  <input 
+                  <label className="text-sm font-bold text-on-surface">Date du projet</label>
+                  <input
                     type="date"
                     {...register("project_date")}
                     className="w-full rounded-xl bg-surface-container-low px-4 py-3 text-sm transition-all focus:bg-white focus:ring-4 focus:ring-kelen-green-500/5 outline-none"
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-on-surface flex items-center gap-2">
-                    <Calendar size={14} className="text-kelen-yellow-700" />
-                    Montant (optionnel)
-                  </label>
-                  <input 
+                  <label className="text-sm font-bold text-on-surface">Montant (optionnel)</label>
+                  <input
                     type="number"
                     {...register("project_amount")}
                     placeholder="Ex: 5000000"
@@ -176,7 +269,7 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
               disabled={isSaving}
               className="flex w-full items-center justify-center gap-3 rounded-2xl bg-gradient-to-br from-kelen-green-600 to-kelen-green-500 py-4 font-headline text-sm font-bold text-white shadow-xl shadow-kelen-green-500/20 transition-all hover:-translate-y-0.5 disabled:opacity-50"
             >
-              {isSaving ? <Loader2 className="animate-spin" size={20} /> : "Enregistrer le projet"}
+              {isSaving ? <Loader2 className="animate-spin" size={20} /> : (isEditing ? "Confirmer les modifications" : "Confirmer")}
             </button>
           </div>
         </div>
@@ -189,83 +282,104 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
                 Galerie Photos
               </h3>
               <label className="cursor-pointer rounded-lg bg-white px-3 py-1.5 text-xs font-bold text-on-surface shadow-sm transition-all hover:bg-stone-50">
-                <input 
-                  type="file" 
-                  multiple 
-                  accept="image/*" 
-                  className="hidden" 
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  className="hidden"
                   onChange={handleImageChange}
                 />
                 Ajouter
               </label>
             </div>
 
-            <div className="grid grid-cols-3 gap-3">
-              {imageFiles.map((file, i) => (
-                <div key={i} className="relative aspect-square overflow-hidden rounded-xl bg-stone-200">
-                  <img 
-                    src={URL.createObjectURL(file)} 
-                    alt="Preview" 
-                    className="h-full w-full object-cover"
-                  />
-                  <button 
-                    type="button"
-                    onClick={() => removeImage(i)}
-                    className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-kelen-red-500 text-white shadow-sm"
-                  >
-                    <X size={12} />
-                  </button>
+            {/* Show existing images when editing */}
+            {isEditing && existingImages.length > 0 && (
+              <div className="space-y-3">
+                <p className="text-xs font-medium text-on-surface-variant">Photos existantes :</p>
+                <div className="grid grid-cols-3 gap-3">
+                  {existingImages.map((img, i) => (
+                    <div key={`existing-${img.id}`} className="relative aspect-square overflow-hidden rounded-xl bg-stone-200 group">
+                      <img
+                        src={img.url}
+                        alt={`Photo ${i + 1}`}
+                        className="h-full w-full object-cover"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setFeaturedImage(img.url)}
+                        className={`absolute left-1 top-1 flex h-6 w-6 items-center justify-center rounded-full shadow-sm transition-all ${
+                          img.is_main
+                            ? 'bg-kelen-green-500 text-white'
+                            : 'bg-white/90 text-stone-600 opacity-0 group-hover:opacity-100'
+                        }`}
+                        title={img.is_main ? 'Photo principale' : 'Définir comme photo principale'}
+                      >
+                        <Star size={12} fill={img.is_main ? 'currentColor' : 'none'} />
+                      </button>
+                      {img.is_main && (
+                        <div className="absolute bottom-1 left-1 right-1 rounded-md bg-black/70 px-1.5 py-0.5 text-[10px] font-bold text-white text-center">
+                          Principale
+                        </div>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => removeExistingImage(img.id)}
+                        className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-kelen-red-500 text-white shadow-sm opacity-0 group-hover:opacity-100"
+                      >
+                        <X size={12} />
+                      </button>
+                    </div>
+                  ))}
                 </div>
-              ))}
-              {imageFiles.length === 0 && (
-                <div className="col-span-3 flex flex-col items-center justify-center py-8 text-center border-2 border-dashed border-on-surface-variant/10 rounded-xl">
-                  <ImageIcon size={32} className="mb-2 text-on-surface-variant/20" />
-                  <p className="text-xs text-on-surface-variant/50">Aucune photo ajoutée</p>
-                </div>
-              )}
-            </div>
-          </section>
+              </div>
+            )}
 
-          <section className="space-y-4 rounded-[1.5rem] bg-surface-container-low p-6">
-            <div className="flex items-center justify-between">
-              <h3 className="font-headline font-bold text-on-surface flex items-center gap-2">
-                <FileText size={18} className="text-kelen-yellow-700" />
-                Contrat (requis)
-              </h3>
-              <label className="cursor-pointer rounded-lg bg-white px-3 py-1.5 text-xs font-bold text-on-surface shadow-sm transition-all hover:bg-stone-50">
-                <input 
-                  type="file" 
-                  accept=".pdf"
-                  className="hidden" 
-                  onChange={(e) => e.target.files && setContractFile(e.target.files[0])}
-                />
-                {contractFile ? "Changer" : "Ajouter"}
-              </label>
-            </div>
+            {/* New image previews */}
+            {imageFiles.length > 0 && (
+              <div className="space-y-3">
+                <p className="text-xs font-medium text-on-surface-variant">Nouvelles photos :</p>
+                <div className="grid grid-cols-3 gap-3">
+                  {imageFiles.map((file, i) => {
+                    const previewUrl = URL.createObjectURL(file);
+                    const isFirstNew = i === 0 && existingImages.length === 0;
+                    return (
+                      <div key={`new-${i}`} className="relative aspect-square overflow-hidden rounded-xl bg-stone-200 group">
+                        <img
+                          src={previewUrl}
+                          alt="Preview"
+                          className="h-full w-full object-cover"
+                        />
+                        {isFirstNew && (
+                          <div className="absolute left-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-kelen-green-500 text-white">
+                            <Star size={12} fill="currentColor" />
+                          </div>
+                        )}
+                        {isFirstNew && (
+                          <div className="absolute bottom-1 left-1 right-1 rounded-md bg-black/70 px-1.5 py-0.5 text-[10px] font-bold text-white text-center">
+                            Principale
+                          </div>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => removeImage(i)}
+                          className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-kelen-red-500 text-white shadow-sm opacity-0 group-hover:opacity-100"
+                        >
+                          <X size={12} />
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
 
-            <div className="space-y-2">
-              {contractFile && (
-                <div className="flex items-center justify-between rounded-xl bg-white p-3 shadow-sm">
-                  <div className="flex items-center gap-3">
-                    <FileText size={16} className="text-on-surface-variant" />
-                    <span className="max-w-[150px] truncate text-xs font-medium text-on-surface">{contractFile.name}</span>
-                  </div>
-                  <button 
-                    type="button" 
-                    onClick={() => setContractFile(null)}
-                    className="text-kelen-red-500 hover:text-kelen-red-700"
-                  >
-                    <X size={14} />
-                  </button>
-                </div>
-              )}
-              {!contractFile && (
-                <div className="flex flex-col items-center justify-center py-8 text-center border-2 border-dashed border-on-surface-variant/10 rounded-xl">
-                  <FileText size={32} className="mb-2 text-on-surface-variant/20" />
-                  <p className="text-xs text-on-surface-variant/50">PDF du contrat signé</p>
-                </div>
-              )}
-            </div>
+            {imageFiles.length === 0 && (!isEditing || !initialData?.photo_urls || initialData.photo_urls.length === 0) && (
+              <div className="flex flex-col items-center justify-center py-8 text-center border-2 border-dashed border-on-surface-variant/10 rounded-xl">
+                <ImageIcon size={32} className="mb-2 text-on-surface-variant/20" />
+                <p className="text-xs text-on-surface-variant/50">Aucune photo ajoutée</p>
+              </div>
+            )}
           </section>
 
           <div className="hidden lg:block pt-6">
@@ -274,10 +388,10 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
               disabled={isSaving}
               className="flex w-full items-center justify-center gap-3 rounded-2xl bg-gradient-to-br from-kelen-green-600 to-kelen-green-500 py-5 font-headline text-base font-bold text-white shadow-xl shadow-kelen-green-500/20 transition-all hover:-translate-y-0.5 disabled:opacity-50"
             >
-              {isSaving ? <Loader2 className="animate-spin" size={24} /> : "Soumettre pour vérification"}
+              {isSaving ? <Loader2 className="animate-spin" size={24} /> : (isEditing ? "Confirmer les modifications" : "Confirmer")}
             </button>
             <p className="mt-4 text-center text-[10px] text-on-surface-variant/50 italic">
-              En soumettant, vous confirmez l'authenticité de ces travaux.
+              En confirmant, vous certifiez l'authenticité de ces travaux.
             </p>
           </div>
         </div>

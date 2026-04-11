@@ -229,7 +229,6 @@ export interface ProjectDocument {
   project_amount: number | null;
   contract_url: string;
   delivery_report_url: string | null;
-  photo_urls: string[] | null;
   status: ProjectDocumentStatus;
   rejection_reason: string | null;
   reviewed_by: string | null;
@@ -241,6 +240,48 @@ export interface ProjectDocument {
   linked_recommendation_id: string | null;
   created_at: string;
   updated_at: string;
+  // Related data (joined queries)
+  images?: ProjectImage[];
+}
+
+export interface ProjectImage {
+  id: string;
+  professional_id: string;
+  project_document_id: string | null;
+  url: string;
+  is_main: boolean | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ProfessionalRealization {
+  id: string;
+  professional_id: string;
+  title: string;
+  description: string | null;
+  location: string | null;
+  completion_date: string | null;
+  price: number | null;
+  currency: string | null;
+  created_at: string;
+  updated_at: string;
+  images?: RealizationImage[];
+  documents?: RealizationDocument[];
+}
+
+export interface RealizationImage {
+  id: string;
+  realization_id: string;
+  url: string;
+  is_main: boolean | null;
+}
+
+export interface RealizationDocument {
+  id: string;
+  realization_id: string;
+  url: string;
+  title: string | null;
+  type: string | null;
 }
 
 export interface UserProject {

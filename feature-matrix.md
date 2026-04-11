@@ -178,7 +178,7 @@
 | Wave / Orange Money payment | Paid | ❌ Infrastructure ready, payment not wired |
 | Client-side color extraction UI | Paid | ❌ Server actions ready, UI component deferred |
 | Photo sync for offline drafts | Free + Paid | ❌ Text sync works, photo sync needs base64 |
-| Realization comments moderation UI | Free + Paid | ❌ Server actions exist, no UI built |
+| Realization documents upload | Free + Paid | ✅ Table exists, UI wired in PortfolioForm |
 | Subscription billing history UI | Paid | ❌ Stripe data available, no UI built |
 | Date range selector in Analytics | Paid | ❌ Always shows last 6 months |
 
