@@ -2,6 +2,140 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import type { ProfessionalPortfolio } from "@/lib/supabase/types";
+
+console.log("[portfolio] Server action loaded");
+
+// ============================================
+// Professional Portfolio Management
+// ============================================
+
+export async function getPortfolio(): Promise<ProfessionalPortfolio | null> {
+  console.log("[getPortfolio] Fetching portfolio");
+  const supabase = await createClient();
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    console.log("[getPortfolio] No user found");
+    return null;
+  }
+
+  const { data: professional } = await supabase
+    .from("professionals")
+    .select("id")
+    .eq("user_id", user.id)
+    .single();
+
+  if (!professional) {
+    console.log("[getPortfolio] No professional profile found");
+    return null;
+  }
+
+  console.log("[getPortfolio] Professional ID:", professional.id);
+
+  const { data: portfolio, error } = await supabase
+    .from("professional_portfolio")
+    .select("*")
+    .eq("professional_id", professional.id)
+    .single();
+
+  if (error) {
+    console.log("[getPortfolio] No portfolio found, will create one");
+    return null;
+  }
+
+  console.log("[getPortfolio] Found portfolio:", portfolio.id);
+  return portfolio;
+}
+
+export async function createOrUpdatePortfolio(data: {
+  hero_image_url: string | null;
+  hero_title: string | null;
+  hero_subtitle: string | null;
+  about_text: string | null;
+  about_image_url: string | null;
+}): Promise<ProfessionalPortfolio | null> {
+  console.log("[createOrUpdatePortfolio] Updating portfolio");
+  const supabase = await createClient();
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Non authentifié");
+
+  const { data: professional } = await supabase
+    .from("professionals")
+    .select("id, slug")
+    .eq("user_id", user.id)
+    .single();
+
+  if (!professional) throw new Error("Profil professionnel non trouvé");
+
+  console.log("[createOrUpdatePortfolio] Professional ID:", professional.id);
+
+  // Check if portfolio exists
+  const { data: existing } = await supabase
+    .from("professional_portfolio")
+    .select("id")
+    .eq("professional_id", professional.id)
+    .single();
+
+  let portfolio;
+
+  if (existing) {
+    // Update existing
+    console.log("[createOrUpdatePortfolio] Updating existing portfolio:", existing.id);
+    const { data: updated, error } = await supabase
+      .from("professional_portfolio")
+      .update({
+        hero_image_url: data.hero_image_url,
+        hero_title: data.hero_title,
+        hero_subtitle: data.hero_subtitle,
+        about_text: data.about_text,
+        about_image_url: data.about_image_url,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", existing.id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error("[createOrUpdatePortfolio] Update error:", error);
+      throw new Error("Erreur lors de la mise à jour du portfolio");
+    }
+
+    portfolio = updated;
+  } else {
+    // Create new
+    console.log("[createOrUpdatePortfolio] Creating new portfolio");
+    const { data: created, error } = await supabase
+      .from("professional_portfolio")
+      .insert({
+        professional_id: professional.id,
+        hero_image_url: data.hero_image_url,
+        hero_title: data.hero_title,
+        hero_subtitle: data.hero_subtitle,
+        about_text: data.about_text,
+        about_image_url: data.about_image_url,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error("[createOrUpdatePortfolio] Create error:", error);
+      throw new Error("Erreur lors de la création du portfolio");
+    }
+
+    portfolio = created;
+  }
+
+  console.log("[createOrUpdatePortfolio] Success:", portfolio.id);
+  revalidatePath("/pro/portfolio");
+  revalidatePath(`/professionnels/${professional.slug}`);
+  return portfolio;
+}
+
+// ============================================
+// Professional Realizations
+// ============================================
 
 export async function createRealization(data: {
   professional_id: string;
