@@ -55,38 +55,97 @@ export default function ProDocumentsPage() {
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    if (!file) {
+      console.log("[Documents] No file selected");
+      return;
+    }
+
+    console.log("[Documents] File selected:", file.name, file.type, file.size);
+
+    // Validate file size (10MB max)
+    if (file.size > 10 * 1024 * 1024) {
+      console.error("[Documents] File too large:", file.size);
+      alert("Le fichier est trop volumineux. Taille maximale : 10 Mo.");
+      return;
+    }
+
+    // Validate file type
+    const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+    if (!allowedTypes.includes(file.type)) {
+      console.error("[Documents] Invalid file type:", file.type);
+      alert("Format non accepté. Formats acceptés : PDF, JPG, PNG.");
+      return;
+    }
 
     setIsUploading(true);
-    // Simulate upload for now (Storage integration pending)
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
 
-    const { data: pro } = await supabase
-      .from("professionals")
-      .select("id")
-      .eq("user_id", user.id)
-      .single();
-
-    if (pro) {
-      try {
-        const fileUrl = await uploadFile(file, "project-docs", `pro/${pro.id}`);
-        
-        const { error } = await supabase.from("project_documents").insert({
-          professional_id: pro.id,
-          project_title: file.name.split('.')[0],
-          contract_url: fileUrl,
-          status: "pending_review"
-        });
-
-        if (!error) {
-          fetchDocuments();
-        }
-      } catch (err) {
-        console.error("Upload error:", err);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        console.error("[Documents] No user authenticated");
+        alert("Vous devez être connecté pour uploader un document.");
+        return;
       }
+
+      console.log("[Documents] User authenticated:", user.id);
+
+      const { data: pro } = await supabase
+        .from("professionals")
+        .select("id")
+        .eq("user_id", user.id)
+        .single();
+
+      if (!pro) {
+        console.error("[Documents] No professional profile found");
+        alert("Profil professionnel non trouvé. Veuillez compléter votre profil.");
+        return;
+      }
+
+      console.log("[Documents] Professional ID:", pro.id);
+
+      // Upload file to storage
+      const bucket = file.type === 'application/pdf' ? 'project-docs' : 'portfolios';
+      const path = `pro/${pro.id}`;
+      
+      console.log("[Documents] Uploading to bucket:", bucket, "path:", path);
+      const fileUrl = await uploadFile(file, bucket, path);
+      console.log("[Documents] Upload successful:", fileUrl);
+
+      // Insert record into project_documents
+      const { error } = await supabase.from("project_documents").insert({
+        professional_id: pro.id,
+        project_title: file.name.split('.')[0],
+        contract_url: fileUrl,
+        status: "pending_review"
+      });
+
+      if (error) {
+        console.error("[Documents] Database insert error:", error);
+        if (error.code === '42501') {
+          console.error('[RLS] ========================================');
+          console.error('[RLS] ❌ RLS POLICY VIOLATION - project_documents table');
+          console.error('[RLS] ========================================');
+          console.error('[RLS] Professional ID:', pro.id);
+          console.error('[RLS] User ID:', user.id);
+          console.error('[RLS] Error:', error.message);
+          console.error('[RLS] Fix: Check INSERT policy on project_documents table');
+          console.error('[RLS] ========================================');
+          alert("Erreur de permissions. Veuillez contacter le support.");
+        } else {
+          alert("Erreur lors de l'enregistrement du document.");
+        }
+        return;
+      }
+
+      console.log("[Documents] ✅ Document saved successfully");
+      alert("Document uploadé avec succès !");
+      fetchDocuments();
+    } catch (err) {
+      console.error("[Documents] Upload error:", err);
+      alert("Erreur lors de l'upload du document.");
+    } finally {
+      setIsUploading(false);
     }
-    setIsUploading(false);
   };
 
   return (
@@ -242,7 +301,7 @@ export default function ProDocumentsPage() {
 
         {/* Secure Upload Zone */}
         <section>
-          <div className="relative group border-2 border-dashed border-stone-200 rounded-[3rem] p-12 bg-white hover:bg-kelen-green-50/20 hover:border-kelen-green-300 transition-all cursor-pointer text-center">
+          <div className="relative group border-2 border-dashed border-stone-200 rounded-[3rem] p-12 bg-white hover:bg-kelen-green-50/20 hover:border-kelen-green-300 transition-all text-center">
             <div className="w-20 h-20 bg-stone-50 rounded-full shadow-inner flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:bg-white transition-all duration-500">
               {isUploading ? (
                 <div className="w-8 h-8 border-4 border-kelen-green-500 border-t-transparent rounded-full animate-spin" />
@@ -252,15 +311,42 @@ export default function ProDocumentsPage() {
             </div>
             <h3 className="text-xl font-headline font-bold text-stone-900 mb-2">Déposez vos documents ici</h3>
             <p className="text-sm text-stone-500 font-medium mb-8 max-w-sm mx-auto italic">Chiffrement AES-256 de bout en bout. Formats acceptés : PDF, JPG, PNG (Max 10Mo).</p>
-            <button className="px-10 py-4 bg-gradient-to-r from-kelen-green-600 to-kelen-green-400 text-white rounded-2xl font-black font-headline text-sm shadow-xl shadow-kelen-green-600/20 active:scale-95 transition-all">
-              SÉLECTIONNER FICHIER
-            </button>
-            <input 
-              type="file" 
-              className="absolute inset-0 opacity-0 cursor-pointer" 
-              onChange={handleUpload}
-              disabled={isUploading}
-            />
+            
+            <div className="flex flex-wrap justify-center gap-4">
+              {/* PDF Document Upload */}
+              <label className="relative inline-flex cursor-pointer">
+                <button 
+                  className="px-8 py-4 bg-gradient-to-r from-kelen-green-600 to-kelen-green-400 text-white rounded-2xl font-black font-headline text-sm shadow-xl shadow-kelen-green-600/20 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={isUploading}
+                >
+                  📄 UPLOADER PDF
+                </button>
+                <input
+                  type="file"
+                  accept=".pdf"
+                  className="absolute inset-0 opacity-0 cursor-pointer disabled:cursor-not-allowed"
+                  onChange={handleUpload}
+                  disabled={isUploading}
+                />
+              </label>
+
+              {/* Photo Upload */}
+              <label className="relative inline-flex cursor-pointer">
+                <button 
+                  className="px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-400 text-white rounded-2xl font-black font-headline text-sm shadow-xl shadow-blue-600/20 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={isUploading}
+                >
+                  📷 UPLOADER PHOTO
+                </button>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="absolute inset-0 opacity-0 cursor-pointer disabled:cursor-not-allowed"
+                  onChange={handleUpload}
+                  disabled={isUploading}
+                />
+              </label>
+            </div>
           </div>
         </section>
       </div>

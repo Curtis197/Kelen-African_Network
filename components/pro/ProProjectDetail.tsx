@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowLeft, BookOpen, MapPin, Calendar, DollarSign, User, FileText, Coins, Image as ImageIcon, CalendarDays } from "lucide-react";
+import { ArrowLeft, BookOpen, MapPin, Calendar, DollarSign, User, FileText, Coins, Image as ImageIcon, CalendarDays, FolderOpen } from "lucide-react";
 import type { ProProject } from "@/lib/types/pro-projects";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -77,6 +77,13 @@ export async function ProProjectDetail({ project }: ProProjectDetailProps) {
         </div>
 
         <div className="flex gap-3">
+          <Link
+            href={`/pro/projets/${project.id}/documents`}
+            className="inline-flex items-center gap-2 px-5 py-3 bg-surface-container text-on-surface rounded-xl font-semibold text-sm hover:bg-surface-container-high transition-colors"
+          >
+            <FolderOpen className="w-4 h-4" />
+            Documents
+          </Link>
           <Link
             href={`/pro/projets/${project.id}/journal`}
             className="inline-flex items-center gap-2 px-5 py-3 bg-primary text-on-primary rounded-xl font-semibold text-sm hover:opacity-90 transition-opacity"

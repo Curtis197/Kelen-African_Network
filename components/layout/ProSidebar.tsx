@@ -17,6 +17,7 @@ import {
   X,
   Bell,
   ChevronDown,
+  FileText,
 } from "lucide-react";
 import { NotificationDropdown } from "@/components/layout/NotificationDropdown";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
@@ -24,6 +25,7 @@ import { ThemeToggle } from "@/components/layout/ThemeToggle";
 const NAV_ITEMS = [
   { href: "/pro/dashboard", label: "Tableau de bord", icon: LayoutDashboard },
   { href: "/pro/projets", label: "Projets", icon: Briefcase },
+  { href: "/pro/documents", label: "Documents", icon: FileText },
   { href: "/pro/realisations", label: "Réalisations", icon: Award },
   { href: "/pro/portfolio", label: "Portfolio", icon: LayoutGrid },
   { href: "/pro/validation", label: "Validation", icon: ShieldCheck },
