@@ -18,7 +18,9 @@
       "Bash(timeout *)",
       "Bash(git log *)",
       "Bash(tasklist)",
-      "Bash(powershell *)"
+      "Bash(powershell *)",
+      "Bash(copy *)",
+      "Bash(rmdir *)"
     ]
   },
   "$version": 3

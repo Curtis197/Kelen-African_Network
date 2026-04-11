@@ -14,8 +14,6 @@ interface ProjectDocument {
   status: "pending_review" | "published" | "rejected";
   contract_url: string;
   created_at: string;
-  file_size?: number;
-  file_type?: string;
 }
 
 export default function ProProjectDocumentsPage() {
@@ -102,7 +100,7 @@ export default function ProProjectDocumentsPage() {
       .from("project_documents")
       .select("*")
       .eq("professional_id", pro.id)
-      .eq("project_id", projectId)
+      .eq("pro_project_id", projectId)
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -181,12 +179,10 @@ export default function ProProjectDocumentsPage() {
       // Insert record into project_documents
       const { error } = await supabase.from("project_documents").insert({
         professional_id: pro.id,
-        project_id: projectId,
+        pro_project_id: projectId,
         project_title: file.name.split('.')[0],
         contract_url: fileUrl,
-        status: "pending_review",
-        file_size: file.size,
-        file_type: file.type
+        status: "pending_review"
       });
 
       if (error) {
@@ -238,13 +234,6 @@ export default function ProProjectDocumentsPage() {
     if (selectedDoc?.id === docId) {
       setSelectedDoc(null);
     }
-  };
-
-  const formatFileSize = (bytes?: number) => {
-    if (!bytes) return "N/A";
-    if (bytes < 1024) return bytes + " B";
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
-    return (bytes / (1024 * 1024)).toFixed(1) + " MB";
   };
 
   return (
@@ -384,9 +373,6 @@ export default function ProProjectDocumentsPage() {
                   Statut
                 </th>
                 <th className="px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
-                  Taille
-                </th>
-                <th className="px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
                   Date
                 </th>
                 <th className="px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider text-right">
@@ -413,7 +399,7 @@ export default function ProProjectDocumentsPage() {
                           {doc.project_title}
                         </p>
                         <p className="text-xs text-on-surface-variant">
-                          {doc.file_type?.split('/')[1]?.toUpperCase() || 'FILE'}
+                          {doc.contract_url.split('.').pop()?.toUpperCase() || 'FILE'}
                         </p>
                       </div>
                     </div>
@@ -428,9 +414,6 @@ export default function ProProjectDocumentsPage() {
                     }`}>
                       {doc.status === 'published' ? 'Vérifié' : doc.status === 'rejected' ? 'Refusé' : 'En examen'}
                     </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-on-surface-variant">
-                    {formatFileSize(doc.file_size)}
                   </td>
                   <td className="px-6 py-4 text-sm text-on-surface-variant">
                     {new Date(doc.created_at).toLocaleDateString('fr-FR')}
@@ -523,12 +506,6 @@ export default function ProProjectDocumentsPage() {
                 </p>
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
-                    <span className="text-on-surface-variant">Taille</span>
-                    <span className="font-medium text-on-surface">
-                      {formatFileSize(selectedDoc.file_size)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-sm">
                     <span className="text-on-surface-variant">Créé le</span>
                     <span className="font-medium text-on-surface">
                       {new Date(selectedDoc.created_at).toLocaleDateString('fr-FR')}
@@ -537,7 +514,7 @@ export default function ProProjectDocumentsPage() {
                   <div className="flex justify-between text-sm">
                     <span className="text-on-surface-variant">Type</span>
                     <span className="font-medium text-on-surface uppercase">
-                      {selectedDoc.file_type?.split('/')[1] || selectedDoc.contract_url.split('.').pop()?.toUpperCase()}
+                      {selectedDoc.contract_url.split('.').pop()?.toUpperCase()}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">

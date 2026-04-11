@@ -232,6 +232,13 @@ export default function ProjectDetailPage() {
                 <span className="material-symbols-outlined text-base sm:text-xl">book</span>
                 <span>Journal</span>
               </Link>
+              <Link
+                href={`/projets/${projectIdStr}/documents`}
+                className="flex-1 sm:flex-none px-3 sm:px-6 lg:px-8 py-2.5 sm:py-4 bg-surface-container-low text-on-surface font-headline font-bold rounded-lg sm:rounded-2xl border border-transparent hover:border-surface-container transition-all flex items-center justify-center gap-2 text-[10px] sm:text-sm"
+              >
+                <span className="material-symbols-outlined text-base sm:text-xl">folder_special</span>
+                <span>Documents</span>
+              </Link>
               <button className="flex-1 sm:flex-none px-3 sm:px-6 lg:px-8 py-2.5 sm:py-4 bg-surface-container-low text-on-surface font-headline font-bold rounded-lg sm:rounded-2xl border border-transparent hover:border-surface-container transition-all flex items-center justify-center gap-2 text-[10px] sm:text-sm">
                 <span className="material-symbols-outlined text-base sm:text-xl">share</span>
                 <span>Partager</span>
@@ -372,42 +379,6 @@ export default function ProjectDetailPage() {
                   </div>
                 </div>
               </div>
-            </section>
-
-            {/* Documents Vault */}
-            <section className="bg-surface-container-low p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-3xl lg:rounded-[2.5rem] space-y-4 sm:space-y-6">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm sm:text-base lg:text-xl font-headline font-bold text-on-surface">Coffre-fort technique</h3>
-                <span className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center bg-white rounded-lg sm:rounded-xl text-primary shadow-sm">
-                  <span className="material-symbols-outlined text-base sm:text-lg">verified_user</span>
-                </span>
-              </div>
-
-              <div className="space-y-2 sm:space-y-3">
-                {team.length > 0 ? team.slice(0, 3).map((member) => (
-                  <div key={member.id} className="p-3 sm:p-4 lg:p-5 bg-surface-container-lowest rounded-lg sm:rounded-xl flex items-center justify-between group hover:shadow-md transition-all">
-                    <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
-                      <div className="w-7 h-7 sm:w-8 sm:h-8 bg-surface-container rounded-lg flex items-center justify-center text-on-surface-variant flex-shrink-0">
-                        <span className="material-symbols-outlined text-sm sm:text-lg">description</span>
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-[10px] sm:text-xs font-bold text-on-surface mb-0.5 truncate">Plans Techniques</p>
-                        <p className="text-[8px] sm:text-[10px] text-on-surface-variant font-medium truncate">Par {member.is_external ? member.external_name : member.professionals?.business_name}</p>
-                      </div>
-                    </div>
-                    <span className="material-symbols-outlined text-on-surface-variant opacity-20 group-hover:opacity-100 transition-opacity flex-shrink-0 ml-1 sm:ml-2 text-sm sm:text-base">download</span>
-                  </div>
-                )) : (
-                  <div className="p-4 sm:p-6 lg:p-8 text-center bg-white rounded-xl sm:rounded-2xl border border-dashed border-outline-variant/30">
-                    <span className="material-symbols-outlined text-2xl sm:text-3xl text-on-surface-variant opacity-20 mb-2 sm:mb-3 block">fact_check</span>
-                    <p className="text-[10px] sm:text-xs text-on-surface-variant font-medium">Aucun document n&apos;est encore disponible dans le vault.</p>
-                  </div>
-                )}
-              </div>
-
-              <button className="w-full py-3 sm:py-4 lg:py-5 bg-on-surface text-white text-[8px] sm:text-[9px] font-black uppercase tracking-widest rounded-lg sm:rounded-xl hover:bg-on-surface-variant transition-all mt-1 sm:mt-2">
-                Accéder au vault complet
-              </button>
             </section>
           </div>
         </div>

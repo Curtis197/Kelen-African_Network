@@ -81,6 +81,7 @@ export function Navbar() {
     { href: "/recommandation", label: "Recommander", icon: "award_star" },
     { href: "/signal", label: "Signaler", icon: "gavel" },
     { href: "/projets", label: "Mes projets", icon: "account_tree" },
+    { href: "/documents", label: "Documents", icon: "folder_special" },
   ];
 
   return (
