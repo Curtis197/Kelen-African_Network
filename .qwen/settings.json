@@ -17,7 +17,8 @@
       "WebSearch",
       "Bash(timeout *)",
       "Bash(git log *)",
-      "Bash(tasklist)"
+      "Bash(tasklist)",
+      "Bash(powershell *)"
     ]
   },
   "$version": 3

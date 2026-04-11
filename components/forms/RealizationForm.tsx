@@ -12,10 +12,10 @@ import Link from "next/link";
 import { toast } from "sonner";
 
 const projectDocumentSchema = z.object({
-  project_title: z.string().min(3, "Le titre doit contenir au moins 3 caractères"),
-  project_description: z.string().optional(),
-  project_date: z.string().optional(),
-  project_amount: z.string().optional(),
+  title: z.string().min(3, "Le titre doit contenir au moins 3 caractères"),
+  description: z.string().optional(),
+  completion_date: z.string().optional(),
+  price: z.string().optional(),
 });
 
 type ProjectDocumentFormData = z.infer<typeof projectDocumentSchema>;
@@ -43,10 +43,10 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
   } = useForm<ProjectDocumentFormData>({
     resolver: zodResolver(projectDocumentSchema),
     defaultValues: initialData || {
-      project_title: "",
-      project_description: "",
-      project_date: new Date().toISOString().split('T')[0],
-      project_amount: "",
+      title: "",
+      description: "",
+      completion_date: new Date().toISOString().split('T')[0],
+      price: "",
     },
   });
 
@@ -61,15 +61,18 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
   };
 
   const removeExistingImage = async (imageId: string) => {
+    console.log("[RealizationForm] Removing existing image:", imageId);
     setExistingImages(prev => prev.filter(img => img.id !== imageId));
     if (isEditing) {
       const { error } = await supabase
-        .from("project_images")
+        .from("realization_images")
         .delete()
         .eq("id", imageId);
       if (error) {
         console.error("[RealizationForm] Error deleting image:", error);
         toast.error("Erreur lors de la suppression de l'image");
+      } else {
+        console.log("[RealizationForm] ✅ Image deleted successfully");
       }
     }
   };
@@ -101,10 +104,10 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
 
       // Build update payload (no images)
       const payload: any = {
-        project_title: data.project_title,
-        project_description: data.project_description || null,
-        project_date: data.project_date || null,
-        project_amount: data.project_amount ? parseFloat(data.project_amount) : null,
+        title: data.title,
+        description: data.description || null,
+        completion_date: data.completion_date || null,
+        price: data.price ? parseFloat(data.price) : null,
       };
 
       let error;
@@ -113,7 +116,7 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
         // Update existing realization
         console.log("[RealizationForm] Updating document:", initialData.id, payload);
         const { error: updateError } = await supabase
-          .from("project_documents")
+          .from("professional_realizations")
           .update(payload)
           .eq("id", initialData.id)
           .eq("professional_id", professionalId);
@@ -123,15 +126,15 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
         if (!error && existingImages.length > 0) {
           // Reset all is_main flags
           await supabase
-            .from("project_images")
+            .from("realization_images")
             .update({ is_main: false })
-            .eq("project_document_id", initialData.id);
+            .eq("realization_id", initialData.id);
 
           // Set is_main for featured image
           const featuredImg = existingImages.find(img => img.is_main);
           if (featuredImg) {
             await supabase
-              .from("project_images")
+              .from("realization_images")
               .update({ is_main: true })
               .eq("id", featuredImg.id);
           }
@@ -141,14 +144,14 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
         if (!error && newImageUrls.length > 0) {
           const hasMain = existingImages.some(img => img.is_main);
           const imageRows = newImageUrls.map(({ url }, idx) => ({
-            project_document_id: initialData.id,
+            realization_id: initialData.id,
             professional_id: professionalId,
             url: url,
             is_main: !hasMain && idx === 0, // First new image is main if no existing main
           }));
 
           const { error: imgError } = await supabase
-            .from("project_images")
+            .from("realization_images")
             .insert(imageRows);
 
           if (imgError) {
@@ -161,24 +164,24 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
         payload.status = "published";
         console.log("[RealizationForm] Creating new document:", payload);
         const { data: newDoc, error: insertError } = await supabase
-          .from("project_documents")
+          .from("professional_realizations")
           .insert(payload)
           .select()
           .single();
         error = insertError;
 
-        // Insert images into project_images table
+        // Insert images into realization_images table
         if (!error && newImageUrls.length > 0 && newDoc) {
           console.log("[RealizationForm] Inserting images for new document:", newDoc.id);
           const imageRows = newImageUrls.map(({ url }, idx) => ({
-            project_document_id: newDoc.id,
+            realization_id: newDoc.id,
             professional_id: professionalId,
             url: url,
             is_main: idx === 0, // First image is main
           }));
 
           const { error: imgError } = await supabase
-            .from("project_images")
+            .from("realization_images")
             .insert(imageRows);
 
           if (imgError) {
@@ -223,22 +226,22 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
               <div className="space-y-2">
                 <label className="text-sm font-bold text-on-surface">Titre de la réalisation</label>
                 <input
-                  {...register("project_title")}
+                  {...register("title")}
                   placeholder="Ex: Construction Villa Moderne à Abidjan"
                   className="w-full rounded-xl bg-surface-container-low px-4 py-3 text-sm transition-all focus:bg-white focus:ring-4 focus:ring-kelen-green-500/5 outline-none"
                 />
-                {errors.project_title && <p className="text-xs text-kelen-red-500">{errors.project_title.message}</p>}
+                {errors.title && <p className="text-xs text-kelen-red-500">{errors.title.message}</p>}
               </div>
 
               <div className="space-y-2">
                 <label className="text-sm font-bold text-on-surface">Description détaillée</label>
                 <textarea
-                  {...register("project_description")}
+                  {...register("description")}
                   rows={6}
                   placeholder="Décrivez les défis relevés, les matériaux utilisés, et le résultat final..."
                   className="w-full rounded-xl bg-surface-container-low px-4 py-3 text-sm transition-all focus:bg-white focus:ring-4 focus:ring-kelen-green-500/5 outline-none resize-none"
                 />
-                {errors.project_description && <p className="text-xs text-kelen-red-500">{errors.project_description.message}</p>}
+                {errors.description && <p className="text-xs text-kelen-red-500">{errors.description.message}</p>}
               </div>
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -246,7 +249,7 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
                   <label className="text-sm font-bold text-on-surface">Date du projet</label>
                   <input
                     type="date"
-                    {...register("project_date")}
+                    {...register("completion_date")}
                     className="w-full rounded-xl bg-surface-container-low px-4 py-3 text-sm transition-all focus:bg-white focus:ring-4 focus:ring-kelen-green-500/5 outline-none"
                   />
                 </div>
@@ -254,7 +257,7 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
                   <label className="text-sm font-bold text-on-surface">Montant (optionnel)</label>
                   <input
                     type="number"
-                    {...register("project_amount")}
+                    {...register("price")}
                     placeholder="Ex: 5000000"
                     className="w-full rounded-xl bg-surface-container-low px-4 py-3 text-sm transition-all focus:bg-white focus:ring-4 focus:ring-kelen-green-500/5 outline-none"
                   />

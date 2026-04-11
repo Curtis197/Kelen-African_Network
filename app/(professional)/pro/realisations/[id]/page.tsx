@@ -3,9 +3,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { ArrowLeft, Calendar, DollarSign, ImageIcon, Edit2 } from "lucide-react";
+import { ArrowLeft, Calendar, DollarSign, ImageIcon, Edit2, MapPin } from "lucide-react";
 import { RealizationGallery } from "@/components/pro/RealizationGallery";
-import type { ProjectDocument } from "@/lib/supabase/types";
 
 export const metadata: Metadata = {
   title: "Détails de la réalisation — Kelen Pro",
@@ -18,48 +17,115 @@ interface RealizationDetailPageProps {
 }
 
 export default async function RealizationDetailPage({ params }: RealizationDetailPageProps) {
+  console.log("[RealizationDetailPage] Loading realization:", (await params).id);
   const { id } = await params;
   const supabase = await createClient();
 
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
+  // Auth check
+  console.log("[RealizationDetailPage] Checking authentication...");
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  console.log("[RealizationDetailPage] Auth result:", {
+    authenticated: !!user,
+    userId: user?.id,
+    error: authError?.message
+  });
 
-  const { data: professional } = await supabase
+  if (authError) {
+    console.error("[RealizationDetailPage] Auth error:", authError);
+  }
+
+  if (!user) {
+    console.warn("[RealizationDetailPage] No user session - redirecting to login");
+    redirect("/login");
+  }
+
+  console.log("[RealizationDetailPage] ✅ Authentication successful");
+
+  // Fetch professional profile
+  console.log("[RealizationDetailPage] Fetching professional profile...");
+  const { data: professional, error: profError } = await supabase
     .from("professionals")
-    .select("id")
+    .select("id, slug")
     .eq("user_id", user.id)
     .single();
 
-  if (!professional) redirect("/pro/profil");
+  console.log("[RealizationDetailPage] Professional query result:", {
+    success: !profError,
+    hasData: !!professional,
+    professionalId: professional?.id,
+    errorMessage: profError?.message,
+    errorCode: profError?.code
+  });
 
-  const { data: document, error } = await supabase
-    .from("project_documents")
-    .select("*, images:project_images(*)")
+  if (profError) {
+    if (profError.code === '42501') {
+      console.error('[RLS] ========================================');
+      console.error('[RLS] ❌ RLS POLICY VIOLATION - professionals table');
+      console.error('[RLS] ========================================');
+      console.error('[RLS] User ID:', user.id);
+      console.error('[RLS] Error:', profError.message);
+      console.error('[RLS] Fix: Check RLS policies on professionals table');
+      console.error('[RLS] ========================================');
+    } else {
+      console.error("[RealizationDetailPage] Professional fetch error:", profError);
+    }
+  }
+
+  if (!professional) {
+    console.warn("[RealizationDetailPage] No professional profile found - redirecting to profil");
+    redirect("/pro/profil");
+  }
+
+  console.log("[RealizationDetailPage] ✅ Professional found:", professional.id);
+
+  // Fetch realization from professional_realizations table (NOT project_documents)
+  console.log("[RealizationDetailPage] Fetching realization from professional_realizations...");
+  const { data: realization, error: realizationError } = await supabase
+    .from("professional_realizations")
+    .select(`
+      *,
+      images:realization_images(*),
+      documents:realization_documents(*)
+    `)
     .eq("id", id)
     .eq("professional_id", professional.id)
     .single();
 
-  if (!document) {
-    console.error("[RealizationDetail] Document not found:", error);
+  console.log("[RealizationDetailPage] Realization query result:", {
+    success: !realizationError,
+    hasData: !!realization,
+    realizationId: realization?.id,
+    title: realization?.title,
+    errorMessage: realizationError?.message,
+    errorCode: realizationError?.code
+  });
+
+  if (realizationError) {
+    if (realizationError.code === '42501') {
+      console.error('[RLS] ========================================');
+      console.error('[RLS] ❌ RLS POLICY VIOLATION - professional_realizations table');
+      console.error('[RLS] ========================================');
+      console.error('[RLS] Realization ID:', id);
+      console.error('[RLS] Professional ID:', professional.id);
+      console.error('[RLS] User ID:', user.id);
+      console.error('[RLS] Error:', realizationError.message);
+      console.error('[RLS] Fix: Check RLS policies on professional_realizations table');
+      console.error('[RLS] ========================================');
+    } else {
+      console.error("[RealizationDetailPage] Realization fetch error:", realizationError);
+    }
     notFound();
   }
 
-  const doc = document as ProjectDocument;
+  if (!realization) {
+    console.warn("[RealizationDetailPage] Realization not found");
+    notFound();
+  }
 
-  const statusLabels: Record<string, string> = {
-    pending_review: "En attente de vérification",
-    published: "Publié",
-    rejected: "Rejeté",
-  };
+  console.log("[RealizationDetailPage] ✅ Realization found:", realization.title);
 
-  const statusColors: Record<string, string> = {
-    pending_review: "bg-kelen-yellow-500/10 text-kelen-yellow-700",
-    published: "bg-kelen-green-500/10 text-kelen-green-700",
-    rejected: "bg-kelen-red-500/10 text-kelen-red-700",
-  };
-
-  const featuredPhoto = doc.images?.find(img => img.is_main)?.url || doc.images?.[0]?.url;
-  const allPhotos = doc.images?.map(img => img.url) || [];
+  const featuredPhoto = realization.images?.find((img: any) => img.is_main)?.url || realization.images?.[0]?.url;
+  const allPhotos = realization.images?.map((img: any) => img.url) || [];
 
   return (
     <div className="mx-auto max-w-5xl">
@@ -68,7 +134,7 @@ export default async function RealizationDetailPage({ params }: RealizationDetai
         <div className="relative aspect-[21/9] w-full overflow-hidden rounded-[2.5rem] bg-white shadow-sm mb-8">
           <Image
             src={featuredPhoto}
-            alt={doc.project_title}
+            alt={realization.title}
             fill
             className="object-cover"
             priority
@@ -89,12 +155,9 @@ export default async function RealizationDetailPage({ params }: RealizationDetai
         <div className="flex items-start justify-between">
           <div>
             <h1 className="font-headline text-3xl font-bold tracking-tight text-on-surface lg:text-4xl">
-              {doc.project_title}
+              {realization.title}
             </h1>
             <div className="mt-3 flex items-center gap-3">
-              <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${statusColors[doc.status]}`}>
-                {statusLabels[doc.status]}
-              </span>
               {allPhotos.length > 0 && (
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-surface-container px-3 py-1 text-xs font-medium text-on-surface-variant">
                   <ImageIcon size={12} />
@@ -104,7 +167,7 @@ export default async function RealizationDetailPage({ params }: RealizationDetai
             </div>
           </div>
           <Link
-            href={`/pro/realisations/${doc.id}/edit`}
+            href={`/pro/portfolio/${realization.id}/edit`}
             className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-container hover:bg-surface-container-high transition-colors"
             aria-label="Modifier"
           >
@@ -117,11 +180,11 @@ export default async function RealizationDetailPage({ params }: RealizationDetai
       <div className="space-y-8">
         {/* Image Gallery */}
         <div className="rounded-[2.5rem] bg-white p-8 shadow-sm lg:p-12">
-          <h2 className="font-headline text-xl font-bold text-on-surface mb-6">Photos du projet</h2>
+          <h2 className="font-headline text-xl font-bold text-on-surface mb-6">Photos de la réalisation</h2>
           {allPhotos.length > 0 ? (
             <RealizationGallery
               photoUrls={allPhotos}
-              projectTitle={doc.project_title}
+              projectTitle={realization.title}
             />
           ) : (
             <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -133,24 +196,34 @@ export default async function RealizationDetailPage({ params }: RealizationDetai
 
         {/* Project Details */}
         <div className="rounded-[2.5rem] bg-white p-8 shadow-sm lg:p-12">
-          <h2 className="font-headline text-xl font-bold text-on-surface mb-6">Détails du projet</h2>
-          
+          <h2 className="font-headline text-xl font-bold text-on-surface mb-6">Détails de la réalisation</h2>
+
           <div className="space-y-6">
-            {doc.project_description && (
+            {realization.description && (
               <div>
                 <h3 className="text-sm font-bold text-on-surface-variant mb-2">Description</h3>
-                <p className="text-on-surface leading-relaxed whitespace-pre-wrap">{doc.project_description}</p>
+                <p className="text-on-surface leading-relaxed whitespace-pre-wrap">{realization.description}</p>
               </div>
             )}
 
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-              {doc.project_date && (
+              {realization.location && (
                 <div className="flex items-start gap-3">
-                  <Calendar size={18} className="mt-0.5 text-kelen-yellow-700" />
+                  <MapPin size={18} className="mt-0.5 text-kelen-yellow-700" />
                   <div>
-                    <h3 className="text-sm font-bold text-on-surface-variant mb-1">Date</h3>
+                    <h3 className="text-sm font-bold text-on-surface-variant mb-1">Localisation</h3>
+                    <p className="text-on-surface">{realization.location}</p>
+                  </div>
+                </div>
+              )}
+
+              {realization.completion_date && (
+                <div className="flex items-start gap-3">
+                  <Calendar size={18} className="mt-0.5 text-kelen-green-600" />
+                  <div>
+                    <h3 className="text-sm font-bold text-on-surface-variant mb-1">Date d'achèvement</h3>
                     <p className="text-on-surface">
-                      {new Date(doc.project_date).toLocaleDateString('fr-FR', {
+                      {new Date(realization.completion_date).toLocaleDateString('fr-FR', {
                         day: 'numeric',
                         month: 'long',
                         year: 'numeric'
@@ -160,13 +233,13 @@ export default async function RealizationDetailPage({ params }: RealizationDetai
                 </div>
               )}
 
-              {doc.project_amount && (
+              {realization.price && (
                 <div className="flex items-start gap-3">
                   <DollarSign size={18} className="mt-0.5 text-kelen-green-600" />
                   <div>
                     <h3 className="text-sm font-bold text-on-surface-variant mb-1">Montant</h3>
                     <p className="text-on-surface">
-                      {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(doc.project_amount)}
+                      {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: realization.currency || 'XOF' }).format(realization.price)}
                     </p>
                   </div>
                 </div>
