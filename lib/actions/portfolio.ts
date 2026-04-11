@@ -11,40 +11,115 @@ console.log("[portfolio] Server action loaded");
 // ============================================
 
 export async function getPortfolio(): Promise<ProfessionalPortfolio | null> {
-  console.log("[getPortfolio] Fetching portfolio");
+  console.log('[ACTION] ========================================');
+  console.log('[ACTION] getPortfolio STARTED');
+  console.log('[ACTION] ========================================');
+
   const supabase = await createClient();
 
-  const { data: { user } } = await supabase.auth.getUser();
+  // Auth check
+  console.log('[AUTH] Checking authentication...');
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  console.log('[AUTH] Auth result:', {
+    authenticated: !!user,
+    userId: user?.id,
+    error: authError?.message
+  });
+
+  if (authError) {
+    console.error('[AUTH] ❌ Auth error:', authError);
+  }
+
   if (!user) {
-    console.log("[getPortfolio] No user found");
+    console.warn('[AUTH] ❌ No user session - returning null');
     return null;
   }
 
-  const { data: professional } = await supabase
+  console.log('[AUTH] ✅ Authentication successful');
+
+  // Fetch professional profile
+  console.log('[DB] Querying professionals table...');
+  console.log('[DB] Query params:', { table: 'professionals', user_id: user.id });
+
+  const { data: professional, error: profError } = await supabase
     .from("professionals")
     .select("id")
     .eq("user_id", user.id)
     .single();
 
-  if (!professional) {
-    console.log("[getPortfolio] No professional profile found");
+  console.log('[DB] Professional query result:', {
+    success: !profError,
+    hasData: !!professional,
+    errorMessage: profError?.message,
+    errorCode: profError?.code
+  });
+
+  if (profError) {
+    if (profError.code === '42501') {
+      console.error('[RLS] ========================================');
+      console.error('[RLS] ❌ RLS POLICY VIOLATION - professionals table');
+      console.error('[RLS] ========================================');
+      console.error('[RLS] User ID:', user.id);
+      console.error('[RLS] Error:', profError.message);
+      console.error('[RLS] Fix: Check RLS policies on professionals table');
+      console.error('[RLS] ========================================');
+    } else {
+      console.error('[DB] ❌ Database error:', profError);
+    }
     return null;
   }
 
-  console.log("[getPortfolio] Professional ID:", professional.id);
+  if (!professional) {
+    console.warn('[DB] No professional profile found for user:', user.id);
+    return null;
+  }
 
-  const { data: portfolio, error } = await supabase
+  console.log('[DB] ✅ Professional found:', professional.id);
+
+  // Fetch portfolio
+  console.log('[DB] Querying professional_portfolio table...');
+  console.log('[DB] Query params:', { table: 'professional_portfolio', professional_id: professional.id });
+
+  const { data: portfolio, error: portfolioError } = await supabase
     .from("professional_portfolio")
     .select("*")
     .eq("professional_id", professional.id)
     .single();
 
-  if (error) {
-    console.log("[getPortfolio] No portfolio found, will create one");
+  console.log('[DB] Portfolio query result:', {
+    success: !portfolioError,
+    hasData: !!portfolio,
+    errorMessage: portfolioError?.message,
+    errorCode: portfolioError?.code
+  });
+
+  if (portfolioError) {
+    if (portfolioError.code === '42501') {
+      console.error('[RLS] ========================================');
+      console.error('[RLS] ❌ RLS POLICY VIOLATION - professional_portfolio table');
+      console.error('[RLS] ========================================');
+      console.error('[RLS] User ID:', user.id);
+      console.error('[RLS] Professional ID:', professional.id);
+      console.error('[RLS] Error:', portfolioError.message);
+      console.error('[RLS] Fix: Check RLS policies on professional_portfolio table');
+      console.error('[RLS] ========================================');
+    } else {
+      console.error('[DB] ❌ Database error:', portfolioError);
+    }
+    console.log('[ACTION] getPortfolio COMPLETED - No portfolio found');
     return null;
   }
 
-  console.log("[getPortfolio] Found portfolio:", portfolio.id);
+  if (!portfolio) {
+    console.warn('[DB] Query succeeded but returned 0 rows - possible silent RLS filtering');
+    console.log('[ACTION] getPortfolio COMPLETED - No portfolio exists yet');
+    return null;
+  }
+
+  console.log('[DB] ✅ Portfolio found:', portfolio.id);
+  console.log('[ACTION] ========================================');
+  console.log('[ACTION] getPortfolio COMPLETED SUCCESSFULLY');
+  console.log('[ACTION] ========================================');
   return portfolio;
 }
 
@@ -55,35 +130,121 @@ export async function createOrUpdatePortfolio(data: {
   about_text: string | null;
   about_image_url: string | null;
 }): Promise<ProfessionalPortfolio | null> {
-  console.log("[createOrUpdatePortfolio] Updating portfolio");
+  console.log('[ACTION] ========================================');
+  console.log('[ACTION] createOrUpdatePortfolio STARTED');
+  console.log('[ACTION] Input:', {
+    hero_image_url: data.hero_image_url ? '✓ set' : 'null',
+    hero_title: data.hero_title,
+    hero_subtitle: data.hero_subtitle,
+    about_text: data.about_text ? `${data.about_text.length} chars` : 'null',
+    about_image_url: data.about_image_url ? '✓ set' : 'null'
+  });
+  console.log('[ACTION] ========================================');
+
   const supabase = await createClient();
 
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) throw new Error("Non authentifié");
+  // Auth check
+  console.log('[AUTH] Checking authentication...');
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  console.log('[AUTH] Auth result:', {
+    authenticated: !!user,
+    userId: user?.id,
+    error: authError?.message
+  });
 
-  const { data: professional } = await supabase
+  if (authError) {
+    console.error('[AUTH] ❌ Auth error:', authError);
+  }
+
+  if (!user) {
+    console.warn('[AUTH] ❌ Unauthorized - no user session');
+    throw new Error("Non authentifié");
+  }
+
+  console.log('[AUTH] ✅ Authentication successful');
+
+  // Fetch professional profile
+  console.log('[DB] Querying professionals table...');
+  console.log('[DB] Query params:', { table: 'professionals', user_id: user.id });
+
+  const { data: professional, error: profError } = await supabase
     .from("professionals")
     .select("id, slug")
     .eq("user_id", user.id)
     .single();
 
-  if (!professional) throw new Error("Profil professionnel non trouvé");
+  console.log('[DB] Professional query result:', {
+    success: !profError,
+    hasData: !!professional,
+    errorMessage: profError?.message,
+    errorCode: profError?.code
+  });
 
-  console.log("[createOrUpdatePortfolio] Professional ID:", professional.id);
+  if (profError) {
+    if (profError.code === '42501') {
+      console.error('[RLS] ========================================');
+      console.error('[RLS] ❌ RLS POLICY VIOLATION - professionals table');
+      console.error('[RLS] ========================================');
+      console.error('[RLS] User ID:', user.id);
+      console.error('[RLS] Error:', profError.message);
+      console.error('[RLS] Fix: Check RLS policies on professionals table');
+      console.error('[RLS] ========================================');
+    } else {
+      console.error('[DB] ❌ Database error:', profError);
+    }
+    throw new Error("Profil professionnel non trouvé");
+  }
+
+  if (!professional) {
+    console.warn('[DB] No professional profile found for user:', user.id);
+    throw new Error("Profil professionnel non trouvé");
+  }
+
+  console.log('[DB] ✅ Professional found:', professional.id, professional.slug);
 
   // Check if portfolio exists
-  const { data: existing } = await supabase
+  console.log('[DB] Checking if portfolio exists...');
+  console.log('[DB] Query params:', { table: 'professional_portfolio', professional_id: professional.id });
+
+  const { data: existing, error: checkError } = await supabase
     .from("professional_portfolio")
     .select("id")
     .eq("professional_id", professional.id)
     .single();
 
+  console.log('[DB] Portfolio check result:', {
+    exists: !!existing,
+    errorMessage: checkError?.message,
+    errorCode: checkError?.code
+  });
+
+  if (checkError && checkError.code !== 'PGRST116') {
+    if (checkError.code === '42501') {
+      console.error('[RLS] ========================================');
+      console.error('[RLS] ❌ RLS POLICY VIOLATION - professional_portfolio table');
+      console.error('[RLS] ========================================');
+      console.error('[RLS] User ID:', user.id);
+      console.error('[RLS] Error:', checkError.message);
+      console.error('[RLS] Fix: Check RLS policies on professional_portfolio table');
+      console.error('[RLS] ========================================');
+    } else {
+      console.error('[DB] ❌ Database error:', checkError);
+    }
+    throw new Error("Erreur lors de la vérification du portfolio");
+  }
+
   let portfolio;
 
   if (existing) {
     // Update existing
-    console.log("[createOrUpdatePortfolio] Updating existing portfolio:", existing.id);
-    const { data: updated, error } = await supabase
+    console.log('[DB] Updating existing portfolio:', existing.id);
+    console.log('[DB] Update payload:', {
+      hero_image_url: data.hero_image_url ? '✓ set' : 'null',
+      hero_title: data.hero_title,
+      about_text: data.about_text ? `${data.about_text.length} chars` : 'null'
+    });
+
+    const { data: updated, error: updateError } = await supabase
       .from("professional_portfolio")
       .update({
         hero_image_url: data.hero_image_url,
@@ -97,16 +258,42 @@ export async function createOrUpdatePortfolio(data: {
       .select()
       .single();
 
-    if (error) {
-      console.error("[createOrUpdatePortfolio] Update error:", error);
+    console.log('[DB] Update result:', {
+      success: !updateError,
+      hasData: !!updated,
+      errorMessage: updateError?.message,
+      errorCode: updateError?.code
+    });
+
+    if (updateError) {
+      if (updateError.code === '42501') {
+        console.error('[RLS] ========================================');
+        console.error('[RLS] ❌ RLS POLICY VIOLATION - UPDATE professional_portfolio');
+        console.error('[RLS] ========================================');
+        console.error('[RLS] Portfolio ID:', existing.id);
+        console.error('[RLS] User ID:', user.id);
+        console.error('[RLS] Error:', updateError.message);
+        console.error('[RLS] Fix: Check UPDATE policy on professional_portfolio table');
+        console.error('[RLS] ========================================');
+      } else {
+        console.error('[DB] ❌ Update error:', updateError);
+      }
       throw new Error("Erreur lors de la mise à jour du portfolio");
     }
 
     portfolio = updated;
+    console.log('[DB] ✅ Portfolio updated successfully');
   } else {
     // Create new
-    console.log("[createOrUpdatePortfolio] Creating new portfolio");
-    const { data: created, error } = await supabase
+    console.log('[DB] Creating new portfolio...');
+    console.log('[DB] Insert payload:', {
+      professional_id: professional.id,
+      hero_image_url: data.hero_image_url ? '✓ set' : 'null',
+      hero_title: data.hero_title,
+      about_text: data.about_text ? `${data.about_text.length} chars` : 'null'
+    });
+
+    const { data: created, error: insertError } = await supabase
       .from("professional_portfolio")
       .insert({
         professional_id: professional.id,
@@ -119,17 +306,41 @@ export async function createOrUpdatePortfolio(data: {
       .select()
       .single();
 
-    if (error) {
-      console.error("[createOrUpdatePortfolio] Create error:", error);
+    console.log('[DB] Insert result:', {
+      success: !insertError,
+      hasData: !!created,
+      errorMessage: insertError?.message,
+      errorCode: insertError?.code
+    });
+
+    if (insertError) {
+      if (insertError.code === '42501') {
+        console.error('[RLS] ========================================');
+        console.error('[RLS] ❌ RLS POLICY VIOLATION - INSERT professional_portfolio');
+        console.error('[RLS] ========================================');
+        console.error('[RLS] Professional ID:', professional.id);
+        console.error('[RLS] User ID:', user.id);
+        console.error('[RLS] Error:', insertError.message);
+        console.error('[RLS] Fix: Check INSERT policy on professional_portfolio table');
+        console.error('[RLS] ========================================');
+      } else {
+        console.error('[DB] ❌ Insert error:', insertError);
+      }
       throw new Error("Erreur lors de la création du portfolio");
     }
 
     portfolio = created;
+    console.log('[DB] ✅ Portfolio created successfully');
   }
 
-  console.log("[createOrUpdatePortfolio] Success:", portfolio.id);
+  console.log('[ACTION] Revalidating paths...');
   revalidatePath("/pro/portfolio");
   revalidatePath(`/professionnels/${professional.slug}`);
+
+  console.log('[ACTION] ========================================');
+  console.log('[ACTION] createOrUpdatePortfolio COMPLETED SUCCESSFULLY');
+  console.log('[ACTION] Portfolio ID:', portfolio.id);
+  console.log('[ACTION] ========================================');
   return portfolio;
 }
 
@@ -148,8 +359,42 @@ export async function createRealization(data: {
   image_urls: string[];
   document_files?: { url: string; title: string | null; type: string | null }[];
 }) {
-  console.log("[createRealization] Creating:", data.title);
+  console.log('[ACTION] ========================================');
+  console.log('[ACTION] createRealization STARTED');
+  console.log('[ACTION] Input:', {
+    professional_id: data.professional_id,
+    title: data.title,
+    image_count: data.image_urls.length,
+    document_count: data.document_files?.length || 0
+  });
+  console.log('[ACTION] ========================================');
+
   const supabase = await createClient();
+
+  // Auth check
+  console.log('[AUTH] Checking authentication...');
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  console.log('[AUTH] Auth result:', {
+    authenticated: !!user,
+    userId: user?.id,
+    error: authError?.message
+  });
+
+  if (!user) {
+    console.warn('[AUTH] ❌ Unauthorized - no user session');
+    throw new Error("Non authentifié");
+  }
+
+  console.log('[AUTH] ✅ Authentication successful');
+
+  // Insert realization
+  console.log('[DB] Inserting into professional_realizations...');
+  console.log('[DB] Insert payload:', {
+    professional_id: data.professional_id,
+    title: data.title,
+    location: data.location,
+    price: data.price
+  });
 
   const { data: realization, error: insertError } = await supabase
     .from("professional_realizations")
@@ -165,13 +410,35 @@ export async function createRealization(data: {
     .select()
     .single();
 
+  console.log('[DB] Insert result:', {
+    success: !insertError,
+    hasData: !!realization,
+    realizationId: realization?.id,
+    errorMessage: insertError?.message,
+    errorCode: insertError?.code
+  });
+
   if (insertError || !realization) {
-    console.error("[createRealization] Insert error:", insertError);
+    if (insertError?.code === '42501') {
+      console.error('[RLS] ========================================');
+      console.error('[RLS] ❌ RLS POLICY VIOLATION - INSERT professional_realizations');
+      console.error('[RLS] ========================================');
+      console.error('[RLS] Professional ID:', data.professional_id);
+      console.error('[RLS] User ID:', user.id);
+      console.error('[RLS] Error:', insertError.message);
+      console.error('[RLS] Fix: Check INSERT policy on professional_realizations table');
+      console.error('[RLS] ========================================');
+    } else {
+      console.error('[DB] ❌ Insert error:', insertError);
+    }
     throw new Error("Erreur lors de la création de la réalisation");
   }
 
+  console.log('[DB] ✅ Realization created:', realization.id);
+
   // Insert images
   if (data.image_urls.length > 0) {
+    console.log('[DB] Inserting realization images...', data.image_urls.length, 'images');
     const imageRows = data.image_urls.map((url, idx) => ({
       realization_id: realization.id,
       url,
@@ -182,13 +449,34 @@ export async function createRealization(data: {
       .from("realization_images")
       .insert(imageRows);
 
+    console.log('[DB] Images insert result:', {
+      success: !imgError,
+      count: data.image_urls.length,
+      errorMessage: imgError?.message,
+      errorCode: imgError?.code
+    });
+
     if (imgError) {
-      console.error("[createRealization] Image insert error:", imgError);
+      if (imgError.code === '42501') {
+        console.error('[RLS] ========================================');
+        console.error('[RLS] ❌ RLS POLICY VIOLATION - INSERT realization_images');
+        console.error('[RLS] ========================================');
+        console.error('[RLS] Realization ID:', realization.id);
+        console.error('[RLS] User ID:', user.id);
+        console.error('[RLS] Error:', imgError.message);
+        console.error('[RLS] Fix: Check INSERT policy on realization_images table');
+        console.error('[RLS] ========================================');
+      } else {
+        console.error('[DB] ❌ Image insert error:', imgError);
+      }
+    } else {
+      console.log('[DB] ✅ Images inserted successfully');
     }
   }
 
   // Insert document files (optional)
   if (data.document_files && data.document_files.length > 0) {
+    console.log('[DB] Inserting realization documents...', data.document_files.length, 'documents');
     const docRows = data.document_files.map((f) => ({
       realization_id: realization.id,
       url: f.url,
@@ -200,13 +488,39 @@ export async function createRealization(data: {
       .from("realization_documents")
       .insert(docRows);
 
+    console.log('[DB] Documents insert result:', {
+      success: !docError,
+      count: data.document_files.length,
+      errorMessage: docError?.message,
+      errorCode: docError?.code
+    });
+
     if (docError) {
-      console.error("[createRealization] Document insert error:", docError);
+      if (docError.code === '42501') {
+        console.error('[RLS] ========================================');
+        console.error('[RLS] ❌ RLS POLICY VIOLATION - INSERT realization_documents');
+        console.error('[RLS] ========================================');
+        console.error('[RLS] Realization ID:', realization.id);
+        console.error('[RLS] User ID:', user.id);
+        console.error('[RLS] Error:', docError.message);
+        console.error('[RLS] Fix: Check INSERT policy on realization_documents table');
+        console.error('[RLS] ========================================');
+      } else {
+        console.error('[DB] ❌ Document insert error:', docError);
+      }
+    } else {
+      console.log('[DB] ✅ Documents inserted successfully');
     }
   }
 
+  console.log('[ACTION] Revalidating paths...');
   revalidatePath("/pro/portfolio");
   revalidatePath("/pro/portfolio/add");
+
+  console.log('[ACTION] ========================================');
+  console.log('[ACTION] createRealization COMPLETED SUCCESSFULLY');
+  console.log('[ACTION] Realization ID:', realization.id);
+  console.log('[ACTION] ========================================');
   return realization;
 }
 
