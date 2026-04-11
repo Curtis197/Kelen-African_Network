@@ -28,9 +28,6 @@ export function PortfolioSettings({
   const [heroImageUrl, setHeroImageUrl] = useState<string>(
     portfolio?.hero_image_url || ""
   );
-  const [heroTitle, setHeroTitle] = useState<string>(
-    portfolio?.hero_title || "Expertise & Savoir-faire"
-  );
   const [heroSubtitle, setHeroSubtitle] = useState<string>(
     portfolio?.hero_subtitle || "Votre partenaire de confiance"
   );
@@ -77,7 +74,6 @@ export function PortfolioSettings({
       
       const result = await createOrUpdatePortfolio({
         hero_image_url: heroImageUrl || null,
-        hero_title: heroTitle || null,
         hero_subtitle: heroSubtitle || null,
         about_text: aboutText || null,
         about_image_url: aboutImageUrl || null,
@@ -136,20 +132,6 @@ export function PortfolioSettings({
             />
             {heroImageUrl ? "Changer l'image" : "Ajouter une image"}
           </label>
-        </div>
-
-        {/* Hero Title */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-on-surface-variant">
-            Titre du héros
-          </label>
-          <input
-            type="text"
-            value={heroTitle}
-            onChange={(e) => setHeroTitle(e.target.value)}
-            placeholder="Ex: Expertise & Savoir-faire"
-            className="w-full rounded-xl bg-surface-container-lowest px-4 py-3 text-sm transition-all focus:bg-white focus:ring-4 focus:ring-kelen-green-500/5 outline-none"
-          />
         </div>
 
         {/* Hero Subtitle */}

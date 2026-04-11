@@ -125,7 +125,6 @@ export async function getPortfolio(): Promise<ProfessionalPortfolio | null> {
 
 export async function createOrUpdatePortfolio(data: {
   hero_image_url: string | null;
-  hero_title: string | null;
   hero_subtitle: string | null;
   about_text: string | null;
   about_image_url: string | null;
@@ -134,7 +133,6 @@ export async function createOrUpdatePortfolio(data: {
   console.log('[ACTION] createOrUpdatePortfolio STARTED');
   console.log('[ACTION] Input:', {
     hero_image_url: data.hero_image_url ? '✓ set' : 'null',
-    hero_title: data.hero_title,
     hero_subtitle: data.hero_subtitle,
     about_text: data.about_text ? `${data.about_text.length} chars` : 'null',
     about_image_url: data.about_image_url ? '✓ set' : 'null'
@@ -240,7 +238,6 @@ export async function createOrUpdatePortfolio(data: {
     console.log('[DB] Updating existing portfolio:', existing.id);
     console.log('[DB] Update payload:', {
       hero_image_url: data.hero_image_url ? '✓ set' : 'null',
-      hero_title: data.hero_title,
       about_text: data.about_text ? `${data.about_text.length} chars` : 'null'
     });
 
@@ -248,7 +245,6 @@ export async function createOrUpdatePortfolio(data: {
       .from("professional_portfolio")
       .update({
         hero_image_url: data.hero_image_url,
-        hero_title: data.hero_title,
         hero_subtitle: data.hero_subtitle,
         about_text: data.about_text,
         about_image_url: data.about_image_url,
@@ -289,7 +285,6 @@ export async function createOrUpdatePortfolio(data: {
     console.log('[DB] Insert payload:', {
       professional_id: professional.id,
       hero_image_url: data.hero_image_url ? '✓ set' : 'null',
-      hero_title: data.hero_title,
       about_text: data.about_text ? `${data.about_text.length} chars` : 'null'
     });
 
@@ -298,7 +293,6 @@ export async function createOrUpdatePortfolio(data: {
       .insert({
         professional_id: professional.id,
         hero_image_url: data.hero_image_url,
-        hero_title: data.hero_title,
         hero_subtitle: data.hero_subtitle,
         about_text: data.about_text,
         about_image_url: data.about_image_url,

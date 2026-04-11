@@ -79,7 +79,6 @@ export interface ProfessionalPortfolio {
   id: string;
   professional_id: string;
   hero_image_url: string | null;
-  hero_title: string | null;
   hero_subtitle: string | null;
   about_text: string | null;
   about_image_url: string | null;

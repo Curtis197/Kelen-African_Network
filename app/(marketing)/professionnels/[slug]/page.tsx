@@ -172,23 +172,16 @@ export default async function ProfessionalProfilePage({ params }: Props) {
                     )}
                   </div>
 
-                  {/* Portfolio Hero Title */}
-                  {portfolio?.hero_title && (
-                    <h2 className="font-headline font-bold text-xl sm:text-2xl md:text-3xl tracking-tight text-primary mb-2 leading-tight">
-                      {portfolio.hero_title}
-                    </h2>
-                  )}
-
-                  <h1 className="font-headline font-extrabold text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tighter text-on-surface mb-4 leading-tight">
-                    {pro.business_name}
-                  </h1>
-
                   {/* Portfolio Hero Subtitle */}
                   {portfolio?.hero_subtitle && (
                     <p className="font-body text-base md:text-lg text-on-surface-variant/80 font-medium mb-6">
                       {portfolio.hero_subtitle}
                     </p>
                   )}
+
+                  <h1 className="font-headline font-extrabold text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tighter text-on-surface mb-4 leading-tight">
+                    {pro.business_name}
+                  </h1>
 
                   <p className="font-body text-lg md:text-xl text-on-surface-variant font-medium italic mb-8 border-l-4 border-primary pl-6">
                     {heroTagline}
