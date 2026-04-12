@@ -5,7 +5,9 @@ import { createClient } from "@/lib/supabase/client";
 import { uploadFile } from "@/lib/supabase/storage";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { ArrowLeft, Upload, FileText, Eye, Download, Trash2, Filter, Grid3X3, List } from "lucide-react";
+import { ArrowLeft, Upload, FileText, Eye, Download, Trash2, Filter, Grid3X3, List, Image as ImageIcon } from "lucide-react";
+import ProjectImageManager from "@/components/pro/ProjectImageManager";
+import type { ProjectImage } from "@/lib/supabase/types";
 
 interface ProjectDocument {
   id: string;
@@ -14,18 +16,23 @@ interface ProjectDocument {
   status: "pending_review" | "published" | "rejected";
   contract_url: string;
   created_at: string;
+  images?: ProjectImage[];
 }
+
+type ViewTab = "documents" | "images";
 
 export default function ProProjectDocumentsPage() {
   const params = useParams();
   const projectId = params?.id as string;
-  
+
   const [documents, setDocuments] = useState<ProjectDocument[]>([]);
   const [selectedDoc, setSelectedDoc] = useState<ProjectDocument | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [projectTitle, setProjectTitle] = useState<string>("");
+  const [activeTab, setActiveTab] = useState<ViewTab>("documents");
+  const [selectedDocumentImages, setSelectedDocumentImages] = useState<ProjectImage[]>([]);
   const supabase = createClient();
 
   console.log("[ProjectDocuments] Page mounted, projectId:", projectId);
@@ -98,7 +105,7 @@ export default function ProProjectDocumentsPage() {
 
     const { data, error } = await supabase
       .from("project_documents")
-      .select("*")
+      .select("*, images:project_images(*)")
       .eq("professional_id", pro.id)
       .eq("pro_project_id", projectId)
       .order("created_at", { ascending: false });
@@ -233,7 +240,14 @@ export default function ProProjectDocumentsPage() {
     fetchDocuments();
     if (selectedDoc?.id === docId) {
       setSelectedDoc(null);
+      setSelectedDocumentImages([]);
     }
+  };
+
+  const handleDocumentSelect = (doc: ProjectDocument) => {
+    console.log("[ProjectDocuments] Document selected:", doc.id);
+    setSelectedDoc(doc);
+    setSelectedDocumentImages(doc.images || []);
   };
 
   return (
@@ -249,13 +263,47 @@ export default function ProProjectDocumentsPage() {
             Retour au projet
           </Link>
           <h1 className="text-2xl font-bold text-on-surface">
-            Documents — {projectTitle}
+            Documents & Images — {projectTitle}
           </h1>
           <p className="text-sm text-on-surface-variant mt-1">
-            Gérez les documents et fichiers de ce projet
+            Gérez les documents et images de ce projet
           </p>
         </div>
       </div>
+
+      {/* Tabs */}
+      <div className="flex gap-2 border-b border-outline-variant/10">
+        <button
+          onClick={() => setActiveTab("documents")}
+          className={`px-4 py-3 font-medium text-sm border-b-2 transition-colors ${
+            activeTab === "documents"
+              ? "border-kelen-green-600 text-kelen-green-700"
+              : "border-transparent text-on-surface-variant hover:text-on-surface"
+          }`}
+        >
+          <div className="flex items-center gap-2">
+            <FileText className="w-4 h-4" />
+            Documents ({documents.length})
+          </div>
+        </button>
+        <button
+          onClick={() => setActiveTab("images")}
+          className={`px-4 py-3 font-medium text-sm border-b-2 transition-colors ${
+            activeTab === "images"
+              ? "border-kelen-green-600 text-kelen-green-700"
+              : "border-transparent text-on-surface-variant hover:text-on-surface"
+          }`}
+        >
+          <div className="flex items-center gap-2">
+            <ImageIcon className="w-4 h-4" />
+            Images
+          </div>
+        </button>
+      </div>
+
+      {/* Documents Tab */}
+      {activeTab === "documents" && (
+        <>
 
       {/* Upload Zone */}
       <div className="relative group border-2 border-dashed border-outline-variant/30 rounded-2xl p-8 bg-surface-container-low hover:bg-kelen-green-50/20 hover:border-kelen-green-300 transition-all cursor-pointer text-center">
@@ -331,7 +379,7 @@ export default function ProProjectDocumentsPage() {
           {documents.map((doc) => (
             <div
               key={doc.id}
-              onClick={() => setSelectedDoc(doc)}
+              onClick={() => handleDocumentSelect(doc)}
               className={`group cursor-pointer bg-surface-container-low rounded-xl overflow-hidden border-2 transition-all hover:shadow-lg ${
                 selectedDoc?.id === doc.id
                   ? 'border-kelen-green-500 shadow-lg'
@@ -349,6 +397,13 @@ export default function ProProjectDocumentsPage() {
                 }`}>
                   {doc.status === 'published' ? 'Vérifié' : doc.status === 'rejected' ? 'Refusé' : 'En examen'}
                 </div>
+                {/* Image count badge */}
+                {doc.images && doc.images.length > 0 && (
+                  <div className="absolute top-3 right-3 px-2 py-1 rounded bg-black/60 text-white text-[10px] font-semibold flex items-center gap-1">
+                    <ImageIcon className="w-3 h-3" />
+                    {doc.images.length}
+                  </div>
+                )}
               </div>
               <div className="p-4">
                 <p className="font-semibold text-sm text-on-surface truncate mb-1">
@@ -373,6 +428,9 @@ export default function ProProjectDocumentsPage() {
                   Statut
                 </th>
                 <th className="px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
+                  Images
+                </th>
+                <th className="px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
                   Date
                 </th>
                 <th className="px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider text-right">
@@ -384,7 +442,7 @@ export default function ProProjectDocumentsPage() {
               {documents.map((doc) => (
                 <tr
                   key={doc.id}
-                  onClick={() => setSelectedDoc(doc)}
+                  onClick={() => handleDocumentSelect(doc)}
                   className={`group cursor-pointer transition-colors ${
                     selectedDoc?.id === doc.id
                       ? 'bg-kelen-green-50/50'
@@ -414,6 +472,16 @@ export default function ProProjectDocumentsPage() {
                     }`}>
                       {doc.status === 'published' ? 'Vérifié' : doc.status === 'rejected' ? 'Refusé' : 'En examen'}
                     </span>
+                  </td>
+                  <td className="px-6 py-4">
+                    {doc.images && doc.images.length > 0 ? (
+                      <div className="flex items-center gap-1 text-sm text-on-surface-variant">
+                        <ImageIcon className="w-4 h-4" />
+                        <span>{doc.images.length}</span>
+                      </div>
+                    ) : (
+                      <span className="text-sm text-on-surface-variant/40">0</span>
+                    )}
                   </td>
                   <td className="px-6 py-4 text-sm text-on-surface-variant">
                     {new Date(doc.created_at).toLocaleDateString('fr-FR')}
@@ -547,6 +615,61 @@ export default function ProProjectDocumentsPage() {
               </div>
             </div>
           </div>
+        </div>
+      )}
+        </>
+      )}
+
+      {/* Images Tab */}
+      {activeTab === "images" && (
+        <div className="space-y-6">
+          <div className="bg-surface-container-low rounded-2xl p-6">
+            <h2 className="text-lg font-semibold text-on-surface mb-4">
+              Gestion des images du projet
+            </h2>
+            <p className="text-sm text-on-surface-variant mb-6">
+              Uploadez et gérez les images associées à ce projet. Les images sont stockées de manière sécurisée et peuvent être utilisées pour illustrer vos réalisations.
+            </p>
+            
+            {/* Image Manager Component */}
+            <ProjectImageManager
+              documentId={projectId}
+              images={[]}
+              onImagesChange={() => {
+                console.log("[ProjectDocuments] Images changed, refetching...");
+                // Refetch documents to get updated images
+                fetchDocuments();
+              }}
+            />
+          </div>
+
+          {/* Document-specific images */}
+          {selectedDoc && (
+            <div className="bg-surface-container-low rounded-2xl p-6">
+              <h3 className="text-lg font-semibold text-on-surface mb-2">
+                Images du document: {selectedDoc.project_title}
+              </h3>
+              <p className="text-sm text-on-surface-variant mb-4">
+                Ces images sont associées à ce document spécifique
+              </p>
+              
+              <ProjectImageManager
+                documentId={selectedDoc.id}
+                images={selectedDocumentImages}
+                onImagesChange={() => {
+                  console.log("[ProjectDocuments] Document images changed, refetching...");
+                  fetchDocuments();
+                  // Update selected doc images
+                  if (selectedDoc) {
+                    const updatedDoc = documents.find(d => d.id === selectedDoc.id);
+                    if (updatedDoc) {
+                      setSelectedDocumentImages(updatedDoc.images || []);
+                    }
+                  }
+                }}
+              />
+            </div>
+          )}
         </div>
       )}
     </div>
