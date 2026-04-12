@@ -28,11 +28,27 @@ export interface DashboardStats {
   subscriptionStatus: string;
   pendingRecommendations: number;
   pendingSignals: number;
+  // Google Business Profile
+  gbp: {
+    isConnected: boolean;
+    verificationStatus: string | null;
+    lastSyncedAt: string | null;
+    gbpLocationName: string | null;
+    gbpPlaceId: string | null;
+  };
 }
 
 export async function getProDashboardStats(): Promise<DashboardStats> {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
+
+  const emptyGbp = {
+    isConnected: false,
+    verificationStatus: null,
+    lastSyncedAt: null,
+    gbpLocationName: null,
+    gbpPlaceId: null,
+  };
 
   if (!user) {
     return {
@@ -47,6 +63,7 @@ export async function getProDashboardStats(): Promise<DashboardStats> {
       subscriptionStatus: "Gratuit",
       pendingRecommendations: 0,
       pendingSignals: 0,
+      gbp: emptyGbp,
     };
   }
 
@@ -70,6 +87,7 @@ export async function getProDashboardStats(): Promise<DashboardStats> {
       subscriptionStatus: "Gratuit",
       pendingRecommendations: 0,
       pendingSignals: 0,
+      gbp: emptyGbp,
     };
   }
 
@@ -129,6 +147,21 @@ export async function getProDashboardStats(): Promise<DashboardStats> {
     .eq("professional_id", pro.id)
     .eq("status", "pending");
 
+  // Google Business Profile connection status
+  const { data: gbpTokens } = await supabase
+    .from("pro_google_tokens")
+    .select("access_token, verification_status, last_synced_at, gbp_location_name, gbp_place_id")
+    .eq("pro_id", pro.id)
+    .single();
+
+  const gbp = {
+    isConnected: !!gbpTokens?.access_token,
+    verificationStatus: gbpTokens?.verification_status || null,
+    lastSyncedAt: gbpTokens?.last_synced_at || null,
+    gbpLocationName: gbpTokens?.gbp_location_name || null,
+    gbpPlaceId: gbpTokens?.gbp_place_id || null,
+  };
+
   return {
     professionalId: pro.id,
     businessName: pro.business_name,
@@ -141,5 +174,6 @@ export async function getProDashboardStats(): Promise<DashboardStats> {
     subscriptionStatus,
     pendingRecommendations: pendingRecommendations || 0,
     pendingSignals: pendingSignals || 0,
+    gbp,
   };
 }

@@ -3,6 +3,8 @@ import Link from "next/link";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { getProDashboardStats } from "@/lib/actions/dashboard-stats";
 import type { ProfessionalStatus } from "@/lib/supabase/types";
+import { Suspense } from "react";
+import { GoogleBusinessConnect } from "@/components/pro/GoogleBusinessConnect";
 
 export const metadata: Metadata = {
   title: "Tableau de bord Pro — Kelen",
@@ -79,6 +81,24 @@ export default async function ProDashboardPage() {
             {stats.subscriptionStatus}
           </p>
         </div>
+      </div>
+
+      {/* Google Business Profile */}
+      <div className="mb-8">
+        <h2 className="mb-3 text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+          Visibilité Google Maps
+        </h2>
+        <Suspense fallback={<div className="h-20 rounded-xl border border-border bg-surface-container-low animate-pulse" />}>
+          {stats.professionalId && (
+            <GoogleBusinessConnect
+              proId={stats.professionalId}
+              isConnected={stats.gbp.isConnected}
+              verificationStatus={stats.gbp.verificationStatus}
+              lastSyncedAt={stats.gbp.lastSyncedAt}
+              gbpLocationName={stats.gbp.gbpLocationName}
+            />
+          )}
+        </Suspense>
       </div>
 
       {/* Pending actions */}

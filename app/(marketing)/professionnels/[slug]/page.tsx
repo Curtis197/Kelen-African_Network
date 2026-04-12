@@ -7,6 +7,8 @@ import { getUserProjects } from "@/lib/actions/projects";
 import { AddToProjectDialog } from "@/components/projects/AddToProjectDialog";
 import RecommandationScrollRow from "@/components/recommandations/RecommandationScrollRow";
 import { getLatestRecommandations, getRecommandationCount } from "@/lib/actions/professional-recommandations";
+import { GoogleReviewsSection } from "@/components/pro/GoogleReviewsSection";
+import { getOrRefreshReviews } from "@/lib/google-reviews";
 
 interface Props {
   params: Promise<{
@@ -136,6 +138,18 @@ export default async function ProfessionalProfilePage({ params }: Props) {
   // Fetch recommendations for social proof
   const recommandationCount = await getRecommandationCount(pro.id);
   const latestRecommandations = await getLatestRecommandations(pro.id, 5);
+
+  // Fetch Google reviews if a Place ID is stored (cache-first, max 24h)
+  const { data: gbpTokens } = await supabase
+    .from("pro_google_tokens")
+    .select("gbp_place_id, verification_status")
+    .eq("pro_id", pro.id)
+    .single();
+
+  const googleReviews =
+    gbpTokens?.gbp_place_id && gbpTokens?.verification_status === "VERIFIED"
+      ? await getOrRefreshReviews(pro.id, gbpTokens.gbp_place_id)
+      : null;
 
   return (
     <div className="bg-surface selection:bg-primary-container selection:text-on-primary-container min-h-screen">
@@ -401,6 +415,16 @@ export default async function ProfessionalProfilePage({ params }: Props) {
             </div>
           </div>
         </section>
+        )}
+
+        {/* Google Reviews — visible only when verified on Google Maps */}
+        {googleReviews && googleReviews.total_reviews > 0 && (
+          <GoogleReviewsSection
+            reviews={googleReviews.reviews}
+            rating={googleReviews.rating}
+            totalReviews={googleReviews.total_reviews}
+            placeId={googleReviews.place_id}
+          />
         )}
 
         {/* Contact Section */}
