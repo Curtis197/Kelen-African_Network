@@ -20,7 +20,12 @@
       "Bash(tasklist)",
       "Bash(powershell *)",
       "Bash(copy *)",
-      "Bash(rmdir *)"
+      "Bash(rmdir *)",
+      "Bash(git pull *)",
+      "Bash(git stash)",
+      "Bash(git stash *)",
+      "Bash(winget *)",
+      "Bash(scoop *)"
     ]
   },
   "$version": 3
