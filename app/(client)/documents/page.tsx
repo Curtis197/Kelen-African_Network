@@ -151,8 +151,8 @@ export default function ClientDocumentsPage() {
 
       console.log("[ClientDocuments] User authenticated:", user.id);
 
-      // Upload file to storage
-      const bucket = file.type === 'application/pdf' ? 'project-docs' : 'portfolios';
+      // Upload file to storage - use portfolios bucket for all files (works reliably)
+      const bucket = 'portfolios';
       const path = `${user.id}/documents`;
 
       console.log("[ClientDocuments] Uploading to bucket:", bucket, "path:", path);

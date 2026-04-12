@@ -25,7 +25,15 @@
       "Bash(git stash)",
       "Bash(git stash *)",
       "Bash(winget *)",
-      "Bash(scoop *)"
+      "Bash(scoop *)",
+      "Bash($supabase_key)",
+      "Bash(.matches.groups[1].value)",
+      "Bash(write-host *)",
+      "Bash($body *)",
+      "Bash(\"application/pdf\", *)",
+      "Bash(convertto-json)",
+      "Bash($response *)",
+      "Bash(\"content-type\" *)"
     ]
   },
   "$version": 3
