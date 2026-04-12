@@ -1,5 +1,6 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
+import { middlewareLog } from "@/lib/logger";
 
 // ============================================
 // Kelen — Auth Middleware
@@ -8,10 +9,10 @@ import { type NextRequest, NextResponse } from "next/server";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  
+
   // Early return for internal paths and static assets to prevent timeouts
   if (
-    pathname.includes("_next") || 
+    pathname.includes("_next") ||
     pathname.includes("favicon.ico") ||
     pathname.includes("sso-api") ||
     pathname.endsWith(".json") ||
@@ -20,6 +21,21 @@ export async function middleware(request: NextRequest) {
     pathname.endsWith(".svg")
   ) {
     return NextResponse.next();
+  }
+
+  // Log all GBP-related route hits for debugging
+  const isGBPRoute =
+    pathname.startsWith("/api/auth/google") ||
+    pathname.startsWith("/api/google");
+
+  if (isGBPRoute) {
+    middlewareLog.info(`GBP route hit: ${request.method} ${pathname}`, {
+      method:    request.method,
+      pathname,
+      hasAuth:   !!request.cookies.get("sb-access-token") ||
+                 request.headers.get("authorization") !== null,
+      userAgent: request.headers.get("user-agent")?.slice(0, 80),
+    });
   }
 
   let response = NextResponse.next({
@@ -132,9 +148,9 @@ export async function middleware(request: NextRequest) {
     if (isAdminRoute && !isAdmin) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
-  } catch (err) {
-    console.error("Middleware Auth Error:", err);
-    // In case of error, redirect to login (secure fallback)
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
+    middlewareLog.error("Middleware auth error", { pathname, error: msg });
     const loginUrl = new URL(
       isProRoute ? "/pro/connexion" : "/connexion",
       request.url
@@ -159,5 +175,8 @@ export const config = {
     "/admin/:path*",
     "/connexion/:path*",
     "/inscription/:path*",
+    // Google Business routes — logged for debugging
+    "/api/auth/google/:path*",
+    "/api/google/:path*",
   ],
 };

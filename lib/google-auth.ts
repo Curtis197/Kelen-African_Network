@@ -1,33 +1,44 @@
 import { google } from "googleapis";
 import { createClient } from "@/lib/supabase/server";
+import { authLog } from "@/lib/logger";
 
 // ──────────────────────────────────────────────
 // OAuth2 client factory
 // ──────────────────────────────────────────────
 
 function createOAuthClient() {
-  return new google.auth.OAuth2(
-    process.env.GOOGLE_CLIENT_ID,
-    process.env.GOOGLE_CLIENT_SECRET,
-    process.env.GOOGLE_REDIRECT_URI
-  );
+  const clientId     = process.env.GOOGLE_CLIENT_ID;
+  const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+  const redirectUri  = process.env.GOOGLE_REDIRECT_URI;
+
+  authLog.debug("OAuth2 client created", {
+    hasClientId:     !!clientId,
+    hasClientSecret: !!clientSecret,
+    redirectUri,
+  });
+
+  return new google.auth.OAuth2(clientId, clientSecret, redirectUri);
 }
 
 export function generateAuthUrl(proId: string): string {
+  authLog.info("Generating OAuth2 authorization URL", { proId });
+
   const client = createOAuthClient();
+  const state  = Buffer.from(JSON.stringify({ proId })).toString("base64");
 
-  const state = Buffer.from(JSON.stringify({ proId })).toString("base64");
-
-  return client.generateAuthUrl({
-    scope: ["https://www.googleapis.com/auth/business.manage"],
+  const url = client.generateAuthUrl({
+    scope:       ["https://www.googleapis.com/auth/business.manage"],
     state,
-    access_type: "offline", // Required to get a refresh token
-    prompt: "consent",       // Force consent screen so refresh token is always returned
+    access_type: "offline",
+    prompt:      "consent",
   });
+
+  authLog.debug("Authorization URL generated", { proId, url });
+  return url;
 }
 
 // ──────────────────────────────────────────────
-// Token storage helpers (Supabase)
+// Token storage helpers
 // ──────────────────────────────────────────────
 
 export interface GoogleTokens {
@@ -44,13 +55,35 @@ export interface GoogleTokens {
 }
 
 export async function getProTokens(proId: string): Promise<GoogleTokens | null> {
-  const supabase = await createClient();
+  authLog.debug("Fetching Google tokens from Supabase", { proId });
 
-  const { data } = await supabase
+  const supabase = await createClient();
+  const { data, error } = await supabase
     .from("pro_google_tokens")
     .select("*")
     .eq("pro_id", proId)
     .single();
+
+  if (error) {
+    if (error.code === "PGRST116") {
+      // No row found — not connected yet, not an error
+      authLog.info("No Google tokens found for pro (not yet connected)", { proId });
+    } else {
+      authLog.error("Error fetching Google tokens", { proId, error: error.message, code: error.code });
+    }
+    return null;
+  }
+
+  authLog.debug("Google tokens loaded", {
+    proId,
+    hasAccessToken:  !!data?.access_token,
+    hasRefreshToken: !!data?.refresh_token,
+    expiryDate:      data?.expiry_date
+      ? new Date(data.expiry_date).toISOString()
+      : null,
+    verificationStatus: data?.verification_status,
+    gbpLocationName:    data?.gbp_location_name,
+  });
 
   return data || null;
 }
@@ -58,19 +91,32 @@ export async function getProTokens(proId: string): Promise<GoogleTokens | null> 
 export async function getProGBPData(
   proId: string
 ): Promise<{ gbp_account_name: string | null; gbp_location_name: string | null; gbp_place_id: string | null } | null> {
-  const supabase = await createClient();
+  authLog.debug("Fetching GBP identifiers", { proId });
 
-  const { data } = await supabase
+  const supabase = await createClient();
+  const { data, error } = await supabase
     .from("pro_google_tokens")
     .select("gbp_account_name, gbp_location_name, gbp_place_id")
     .eq("pro_id", proId)
     .single();
 
+  if (error) {
+    authLog.error("Error fetching GBP identifiers", { proId, error: error.message });
+    return null;
+  }
+
+  authLog.debug("GBP identifiers loaded", {
+    proId,
+    gbpAccountName:  data?.gbp_account_name,
+    gbpLocationName: data?.gbp_location_name,
+    gbpPlaceId:      data?.gbp_place_id,
+  });
+
   return data || null;
 }
 
 // ──────────────────────────────────────────────
-// Token refresh — auto-renews if expiring < 5 min
+// Token refresh
 // ──────────────────────────────────────────────
 
 export async function getAuthenticatedClient(
@@ -78,30 +124,66 @@ export async function getAuthenticatedClient(
   proId: string
 ): Promise<InstanceType<typeof google.auth.OAuth2>> {
   const client = createOAuthClient();
+
   client.setCredentials({
-    access_token: tokens.access_token,
+    access_token:  tokens.access_token,
     refresh_token: tokens.refresh_token ?? undefined,
-    expiry_date: tokens.expiry_date ?? undefined,
+    expiry_date:   tokens.expiry_date   ?? undefined,
   });
 
-  // Refresh if expiring within the next 5 minutes
-  const fiveMinutes = 5 * 60 * 1000;
-  const isExpiringSoon =
-    tokens.expiry_date && tokens.expiry_date < Date.now() + fiveMinutes;
+  const fiveMinutes   = 5 * 60 * 1000;
+  const now           = Date.now();
+  const expiresAt     = tokens.expiry_date ?? 0;
+  const isExpiringSoon = expiresAt < now + fiveMinutes;
+  const alreadyExpired = expiresAt > 0 && expiresAt < now;
+
+  authLog.debug("Checking token validity", {
+    proId,
+    expiresAt:       expiresAt ? new Date(expiresAt).toISOString() : "unknown",
+    alreadyExpired,
+    isExpiringSoon,
+    hasRefreshToken: !!tokens.refresh_token,
+  });
 
   if (isExpiringSoon && tokens.refresh_token) {
-    const { credentials } = await client.refreshAccessToken();
+    authLog.info("Token expiring soon — refreshing", { proId, alreadyExpired });
 
-    const supabase = await createClient();
-    await supabase
-      .from("pro_google_tokens")
-      .update({
-        access_token: credentials.access_token,
-        expiry_date: credentials.expiry_date,
-      })
-      .eq("pro_id", proId);
+    try {
+      const { credentials } = await client.refreshAccessToken();
 
-    client.setCredentials(credentials);
+      const supabase = await createClient();
+      const { error: updateError } = await supabase
+        .from("pro_google_tokens")
+        .update({
+          access_token: credentials.access_token,
+          expiry_date:  credentials.expiry_date,
+        })
+        .eq("pro_id", proId);
+
+      if (updateError) {
+        authLog.error("Failed to persist refreshed token", {
+          proId,
+          error: updateError.message,
+        });
+      } else {
+        authLog.info("Token refreshed and persisted", {
+          proId,
+          newExpiry: credentials.expiry_date
+            ? new Date(credentials.expiry_date).toISOString()
+            : "unknown",
+        });
+      }
+
+      client.setCredentials(credentials);
+    } catch (refreshErr: unknown) {
+      const msg = refreshErr instanceof Error ? refreshErr.message : String(refreshErr);
+      authLog.error("Token refresh failed", { proId, error: msg });
+      // Continue with the existing (possibly expired) token — let the caller handle the 401
+    }
+  } else if (!isExpiringSoon) {
+    authLog.debug("Token is valid, no refresh needed", { proId });
+  } else if (!tokens.refresh_token) {
+    authLog.warn("Token expiring but no refresh_token stored — re-authorization needed", { proId });
   }
 
   return client;

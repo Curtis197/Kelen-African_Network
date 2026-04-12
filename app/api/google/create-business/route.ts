@@ -3,6 +3,7 @@ import { google } from "googleapis";
 import { createClient } from "@/lib/supabase/server";
 import { getProTokens, getAuthenticatedClient } from "@/lib/google-auth";
 import { mapKelenCategoryToGBP } from "@/lib/gbp-categories";
+import { gbpLog } from "@/lib/logger";
 
 const GBP_BUSINESS_INFO_BASE =
   "https://mybusinessbusinessinformation.googleapis.com/v1";
@@ -10,43 +11,68 @@ const GBP_BUSINESS_INFO_BASE =
 /**
  * POST /api/google/create-business
  * Body: { proId: string }
- *
- * Creates a Google Business Profile location for the professional.
- * Requires a valid connected Google account (tokens must exist).
  */
 export async function POST(request: NextRequest) {
+  const log = gbpLog.child("create-business");
+  log.info("→ POST /api/google/create-business");
+
   try {
-    const { proId } = await request.json();
+    const body = await request.json();
+    const { proId } = body;
+
+    log.debug("Request body parsed", { proId });
 
     if (!proId) {
+      log.warn("Missing proId in request body");
       return NextResponse.json({ error: "proId is required" }, { status: 400 });
     }
 
     const supabase = await createClient();
 
-    // Auth guard — caller must own this professional profile
+    // Auth guard
     const {
       data: { user },
+      error: authErr,
     } = await supabase.auth.getUser();
 
-    if (!user) {
+    if (authErr || !user) {
+      log.warn("Unauthorized request", { proId, authError: authErr?.message });
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { data: pro } = await supabase
+    log.debug("Session verified", { userId: user.id, proId });
+
+    // Ownership check
+    const { data: pro, error: proErr } = await supabase
       .from("professionals")
-      .select("*")
+      .select("id, business_name, owner_name, slug, category, phone, address, city, postal_code, country_code, description")
       .eq("id", proId)
       .eq("user_id", user.id)
       .single();
 
-    if (!pro) {
+    if (proErr || !pro) {
+      log.warn("Professional not found or ownership mismatch", {
+        proId,
+        userId:  user.id,
+        dbError: proErr?.message,
+      });
       return NextResponse.json({ error: "Professional not found" }, { status: 404 });
     }
 
-    // Retrieve stored OAuth tokens
+    log.debug("Professional profile loaded", {
+      proId,
+      businessName: pro.business_name,
+      category:     pro.category,
+      city:         pro.city,
+      countryCode:  pro.country_code,
+      hasPhone:     !!pro.phone,
+      hasAddress:   !!pro.address,
+    });
+
+    // Load OAuth tokens
     const tokens = await getProTokens(proId);
     if (!tokens) {
+      log.warn("No OAuth tokens found — user must connect Google first", { proId });
       return NextResponse.json(
         { error: "Google account not connected. Please authorize first." },
         { status: 400 }
@@ -55,16 +81,26 @@ export async function POST(request: NextRequest) {
 
     const authClient = await getAuthenticatedClient(tokens, proId);
 
-    // Step 1 — Get Google Business Account
+    // Step 1 — Fetch GBP accounts
+    log.info("Fetching Google Business accounts list", { proId });
     const accountManager = google.mybusinessaccountmanagement({
       version: "v1",
       auth: authClient,
     });
 
+    const accountsStart = Date.now();
     const accountsResponse = await accountManager.accounts.list();
     const accounts = accountsResponse.data.accounts;
 
+    log.debug("Accounts list response", {
+      proId,
+      ms:           Date.now() - accountsStart,
+      accountCount: accounts?.length ?? 0,
+      accounts:     accounts?.map((a) => ({ name: a.name, type: a.type })),
+    });
+
     if (!accounts || accounts.length === 0) {
+      log.warn("No Google Business accounts found for this user", { proId });
       return NextResponse.json(
         { error: "No Google Business account found. Please create one at business.google.com first." },
         { status: 400 }
@@ -72,26 +108,25 @@ export async function POST(request: NextRequest) {
     }
 
     const accountName = accounts[0].name as string;
+    log.info("Using Google Business account", { proId, accountName });
 
-    // Step 2 — Create the business location via REST (googleapis types don't expose POST /locations)
+    // Step 2 — Create location via REST
     const accessToken = (await authClient.getAccessToken()).token;
-
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://kelen.africa";
-    const profileUrl = `${siteUrl}/professionnels/${pro.slug}`;
+    const siteUrl     = process.env.NEXT_PUBLIC_SITE_URL || "https://kelen.africa";
+    const profileUrl  = `${siteUrl}/professionnels/${pro.slug}`;
+    const gbpCategory = mapKelenCategoryToGBP(pro.category);
 
     const locationData = {
       title: pro.business_name || pro.owner_name || "Mon établissement",
       phoneNumbers: pro.phone ? { primaryPhone: pro.phone } : undefined,
-      categories: {
-        primaryCategory: {
-          name: mapKelenCategoryToGBP(pro.category),
-        },
+      categories:   {
+        primaryCategory: { name: gbpCategory },
       },
       storefrontAddress: {
         addressLines: pro.address ? [pro.address] : [],
-        locality: pro.city || "",
-        postalCode: pro.postal_code || "",
-        regionCode: pro.country_code || "CI",
+        locality:     pro.city        || "",
+        postalCode:   pro.postal_code || "",
+        regionCode:   pro.country_code || "CI",
       },
       websiteUri: profileUrl,
       profile: {
@@ -101,21 +136,50 @@ export async function POST(request: NextRequest) {
       },
     };
 
-    const createRes = await fetch(
-      `${GBP_BUSINESS_INFO_BASE}/${accountName}/locations?requestId=kelen-${proId}-${Date.now()}&validateOnly=false`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(locationData),
-      }
-    );
+    log.info("Creating GBP location", {
+      proId,
+      accountName,
+      title:       locationData.title,
+      category:    gbpCategory,
+      city:        locationData.storefrontAddress.locality,
+      countryCode: locationData.storefrontAddress.regionCode,
+      websiteUri:  locationData.websiteUri,
+    });
+
+    const createUrl = `${GBP_BUSINESS_INFO_BASE}/${accountName}/locations?requestId=kelen-${proId}-${Date.now()}&validateOnly=false`;
+    log.debug("POST to GBP API", { url: createUrl });
+
+    const createStart = Date.now();
+    const createRes = await fetch(createUrl, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(locationData),
+    });
+
+    const ms = Date.now() - createStart;
+    log.debug("GBP location create response", {
+      proId,
+      status: createRes.status,
+      ok:     createRes.ok,
+      ms,
+    });
 
     if (!createRes.ok) {
       const errBody = await createRes.json();
       const msg: string = errBody?.error?.message || "GBP location creation failed";
+
+      log.error("GBP location creation failed", {
+        proId,
+        status:     createRes.status,
+        errorMsg:   msg,
+        errorCode:  errBody?.error?.code,
+        errorDetails: errBody?.error?.details,
+        ms,
+      });
+
       if (msg.includes("ALREADY_EXISTS") || createRes.status === 409) {
         return NextResponse.json(
           { error: "already_exists", message: "Un profil Google Business existe déjà pour cet établissement." },
@@ -125,21 +189,37 @@ export async function POST(request: NextRequest) {
       throw new Error(msg);
     }
 
-    const location = await createRes.json();
+    const location   = await createRes.json();
     const locationName = location.name as string;
-    const placeId = location.metadata?.placeId || null;
+    const placeId      = location.metadata?.placeId || null;
 
-    // Step 3 — Store location reference
-    await supabase
+    log.info("GBP location created", {
+      proId,
+      locationName,
+      placeId,
+      ms,
+    });
+
+    // Step 3 — Persist to Supabase
+    const { error: updateErr } = await supabase
       .from("pro_google_tokens")
       .update({
-        gbp_account_name: accountName,
-        gbp_location_name: locationName,
-        gbp_place_id: placeId,
+        gbp_account_name:    accountName,
+        gbp_location_name:   locationName,
+        gbp_place_id:        placeId,
         verification_status: "PENDING",
-        last_synced_at: new Date().toISOString(),
+        last_synced_at:      new Date().toISOString(),
       })
       .eq("pro_id", proId);
+
+    if (updateErr) {
+      log.error("Failed to persist GBP location to Supabase", {
+        proId,
+        error: updateErr.message,
+      });
+    } else {
+      log.info("GBP identifiers persisted to Supabase", { proId, locationName, placeId });
+    }
 
     return NextResponse.json({
       success: true,
@@ -147,23 +227,18 @@ export async function POST(request: NextRequest) {
       placeId,
       message: "Profil Google Business créé. La vérification est requise avant publication sur Google Maps.",
     });
-  } catch (err: any) {
-    console.error("GBP create-business error:", err);
 
-    // Handle "already exists" case gracefully
-    if (err?.code === 409 || err?.message?.includes("ALREADY_EXISTS")) {
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
+    gbpLog.error("Unhandled error in create-business", { error: msg });
+
+    if (msg.includes("ALREADY_EXISTS")) {
       return NextResponse.json(
-        {
-          error: "already_exists",
-          message: "Un profil Google Business existe déjà pour cet établissement.",
-        },
+        { error: "already_exists", message: "Un profil Google Business existe déjà pour cet établissement." },
         { status: 409 }
       );
     }
 
-    return NextResponse.json(
-      { error: err?.message || "Unexpected error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
