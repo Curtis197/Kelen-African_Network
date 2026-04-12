@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { deleteRealization, getPortfolio } from "@/lib/actions/portfolio";
 import { PortfolioSettings } from "@/components/pro/PortfolioSettings";
+import { DeleteButton } from "@/components/pro/DeleteButton";
 
 export const metadata: Metadata = {
   title: "Mon Portfolio — Kelen Pro",
@@ -259,23 +260,7 @@ async function RealizationCard({
             >
               Modifier
             </Link>
-            <form action={async () => {
-              "use server";
-              console.log("[RealizationCard] Delete form submitted for:", realization.id);
-              await deleteRealization(realization.id);
-            }}>
-              <button
-                type="submit"
-                className="text-xs font-bold text-kelen-red-500 hover:text-kelen-red-600 transition-colors"
-                onClick={(e) => {
-                  if (!confirm("Supprimer cette réalisation ? Elle sera retirée de votre profil public.")) {
-                    e.preventDefault();
-                  }
-                }}
-              >
-                Supprimer
-              </button>
-            </form>
+            <DeleteButton realizationId={realization.id} />
           </div>
         </div>
       </div>

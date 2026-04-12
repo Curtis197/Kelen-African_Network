@@ -151,6 +151,17 @@ export default function ClientDocumentsPage() {
 
       console.log("[ClientDocuments] User authenticated:", user.id);
 
+      // Validate project selection - must have a project to upload
+      const projectId = selectedProject !== "all" ? selectedProject : null;
+      if (!projectId) {
+        console.error("[ClientDocuments] No project selected — required for upload");
+        alert("Veuillez sélectionner un projet avant d'uploader un document.");
+        setIsUploading(false);
+        return;
+      }
+
+      console.log("[ClientDocuments] Uploading to project:", projectId);
+
       // Upload file to storage - use portfolios bucket for all files (works reliably)
       const bucket = 'portfolios';
       const path = `${user.id}/documents`;
@@ -159,9 +170,9 @@ export default function ClientDocumentsPage() {
       const fileUrl = await uploadFile(file, bucket, path);
       console.log("[ClientDocuments] Upload successful:", fileUrl);
 
-      // Insert record into project_documents (without project_id for global upload)
+      // Insert record into project_documents WITH valid project_id
       const { error } = await supabase.from("project_documents").insert({
-        project_id: selectedProject !== "all" ? selectedProject : null,
+        project_id: projectId,  // ← Always a valid project ID
         project_title: file.name.split('.')[0],
         contract_url: fileUrl,
         status: "pending_review"
@@ -271,7 +282,7 @@ export default function ClientDocumentsPage() {
         )}
 
         {/* Upload Zone */}
-        <div className="relative group border-2 border-dashed border-outline-variant/30 rounded-2xl p-8 sm:p-12 bg-surface-container-low hover:bg-primary/5 hover:border-primary transition-all cursor-pointer text-center mb-8">
+        <div className="relative group border-2 border-dashed border-outline-variant/30 rounded-2xl p-8 sm:p-12 bg-surface-container-low hover:bg-primary/5 hover:border-primary transition-all text-center mb-8">
           <div className="w-16 h-16 bg-surface-container rounded-full shadow-inner flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:bg-white transition-all duration-500">
             {isUploading ? (
               <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
@@ -283,14 +294,20 @@ export default function ClientDocumentsPage() {
           <p className="text-sm text-on-surface-variant mb-4 italic">
             Chiffrement AES-256 de bout en bout. Formats acceptés : PDF, JPG, PNG (Max 10Mo).
           </p>
-          <button className="px-6 py-3 bg-primary text-on-primary rounded-xl font-headline font-bold text-sm shadow-lg shadow-primary/20 active:scale-95 transition-all">
-            SÉLECTIONNER FICHIER
-          </button>
+          {selectedProject === "all" ? (
+            <div className="px-6 py-3 bg-surface-container text-on-surface-variant/60 rounded-xl font-headline font-bold text-sm text-center">
+              ⚠️ Sélectionnez un projet pour uploader
+            </div>
+          ) : (
+            <button className="px-6 py-3 bg-primary text-on-primary rounded-xl font-headline font-bold text-sm shadow-lg shadow-primary/20 active:scale-95 transition-all pointer-events-none">
+              SÉLECTIONNER FICHIER
+            </button>
+          )}
           <input
             type="file"
             className="absolute inset-0 opacity-0 cursor-pointer"
             onChange={handleUpload}
-            disabled={isUploading}
+            disabled={isUploading || selectedProject === "all"}
             accept=".pdf,.jpg,.jpeg,.png"
           />
         </div>

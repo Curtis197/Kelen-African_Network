@@ -207,7 +207,7 @@ CREATE TABLE public.project_areas (
 );
 CREATE TABLE public.project_documents (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
-  professional_id uuid NOT NULL,
+  professional_id uuid,                      -- NULLABLE (migration 20260412000005) — client docs don't require a pro
   project_title text NOT NULL,
   project_description text,
   project_date date,
@@ -234,6 +234,14 @@ CREATE TABLE public.project_documents (
   CONSTRAINT project_documents_linked_recommendation_id_fkey FOREIGN KEY (linked_recommendation_id) REFERENCES public.recommendations(id),
   CONSTRAINT project_documents_pro_project_id_fkey FOREIGN KEY (pro_project_id) REFERENCES public.pro_projects(id)
 );
+-- RLS Policies on project_documents (migration 20260412000003):
+--   pdocs_admin_all: ALL for admin
+--   pdocs_pro_own: ALL for professionals on their own projects
+--   pdocs_public_published: SELECT for public when status='published'
+--   pdocs_client_insert: INSERT for clients on their own projects (user_id match)
+--   pdocs_client_select: SELECT for clients on their own projects
+--   pdocs_client_update: UPDATE for clients on their own projects
+--   pdocs_client_delete: DELETE for clients on their own projects
 CREATE TABLE public.project_images (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   professional_id uuid NOT NULL,
@@ -610,3 +618,62 @@ CREATE TABLE public.verification_queue (
   CONSTRAINT verification_queue_professional_id_fkey FOREIGN KEY (professional_id) REFERENCES public.professionals(id),
   CONSTRAINT verification_queue_assigned_to_fkey FOREIGN KEY (assigned_to) REFERENCES public.users(id)
 );
+CREATE TABLE public.pro_google_tokens (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  pro_id uuid NOT NULL UNIQUE,
+  access_token text NOT NULL,
+  refresh_token text,
+  expiry_date bigint,
+  gbp_account_name text,
+  gbp_location_name text,
+  gbp_place_id text,
+  verification_status text DEFAULT 'PENDING'::text,
+  connected_at timestamp with time zone DEFAULT now(),
+  last_synced_at timestamp with time zone,
+  CONSTRAINT pro_google_tokens_pkey PRIMARY KEY (id),
+  CONSTRAINT pro_google_tokens_pro_id_fkey FOREIGN KEY (pro_id) REFERENCES public.professionals(id)
+);
+CREATE TABLE public.pro_google_reviews_cache (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  pro_id uuid NOT NULL UNIQUE,
+  place_id text NOT NULL,
+  rating numeric(2,1),
+  total_reviews integer DEFAULT 0,
+  reviews jsonb DEFAULT '[]'::jsonb,
+  cached_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT pro_google_reviews_cache_pkey PRIMARY KEY (id),
+  CONSTRAINT pro_google_reviews_cache_pro_id_fkey FOREIGN KEY (pro_id) REFERENCES public.professionals(id)
+);
+
+-- ============================================================
+-- Storage Buckets (supabase/storage)
+-- Updated: 2026-04-12 — Removed MIME type restrictions on project-docs & portfolios
+-- ============================================================
+-- Bucket: contracts
+--   file_size_limit: 10 MB
+--   allowed_mime_types: application/pdf (restricted)
+--   public: false
+
+-- Bucket: evidence-photos
+--   file_size_limit: 5 MB
+--   allowed_mime_types: image/jpeg, image/png, image/webp (restricted)
+--   public: false
+
+-- Bucket: portfolios
+--   file_size_limit: 50 MB
+--   allowed_mime_types: {} (ALL types allowed — updated 2026-04-12)
+--   public: true
+
+-- Bucket: verification-docs
+--   file_size_limit: 10 MB
+--   allowed_mime_types: application/pdf (restricted)
+--   public: false
+
+-- Bucket: project-docs
+--   file_size_limit: 10 MB
+--   allowed_mime_types: {} (ALL types allowed — updated 2026-04-12)
+--   public: false
+
+-- Note: Storage bucket policies are defined in migrations, not here.
+-- See: supabase/migrations/20260323000016_storage.sql
+-- See: supabase/migrations/20260412000004_allow_all_doc_types.sql

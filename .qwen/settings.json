@@ -33,7 +33,8 @@
       "Bash(\"application/pdf\", *)",
       "Bash(convertto-json)",
       "Bash($response *)",
-      "Bash(\"content-type\" *)"
+      "Bash(\"content-type\" *)",
+      "Bash(psql *)"
     ]
   },
   "$version": 3

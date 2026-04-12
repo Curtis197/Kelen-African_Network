@@ -94,17 +94,25 @@ export async function getPortfolio(): Promise<ProfessionalPortfolio | null> {
   });
 
   if (portfolioError) {
-    if (portfolioError.code === '42501') {
+    if (portfolioError.code === 'PGRST116') {
+      // No row found — this is normal, not an error
+      console.log('[DB] No portfolio found for professional (PGRST116) — user needs to create one');
+    } else if (portfolioError.code === '42501') {
       console.error('[RLS] ========================================');
       console.error('[RLS] ❌ RLS POLICY VIOLATION - professional_portfolio table');
       console.error('[RLS] ========================================');
       console.error('[RLS] User ID:', user.id);
       console.error('[RLS] Professional ID:', professional.id);
       console.error('[RLS] Error:', portfolioError.message);
-      console.error('[RLS] Fix: Check RLS policies on professional_portfolio table');
+      console.error('[RLS] Hint: Check if professionals.is_visible = TRUE for this user');
       console.error('[RLS] ========================================');
     } else {
-      console.error('[DB] ❌ Database error:', portfolioError);
+      console.error('[DB] ❌ Database error:', {
+        code: portfolioError.code,
+        message: portfolioError.message,
+        details: portfolioError.details,
+        hint: portfolioError.hint,
+      });
     }
     console.log('[ACTION] getPortfolio COMPLETED - No portfolio found');
     return null;
@@ -529,8 +537,16 @@ export async function updateRealization(id: string, data: {
   document_files?: { url: string; title: string | null; type: string | null }[];
   removed_image_ids?: string[];
   removed_document_ids?: string[];
+  updated_images?: { id: string; url: string; is_main: boolean }[];
 }) {
   console.log("[updateRealization] Updating:", id);
+  console.log("[updateRealization] Data received:", {
+    title: data.title,
+    hasImages: !!data.image_urls?.length,
+    hasUpdatedImages: !!data.updated_images?.length,
+    updatedImagesCount: data.updated_images?.length || 0,
+    removedImagesCount: data.removed_image_ids?.length || 0,
+  });
   const supabase = await createClient();
 
   const { error: updateError } = await supabase
@@ -548,6 +564,28 @@ export async function updateRealization(id: string, data: {
   if (updateError) {
     console.error("[updateRealization] Update error:", updateError);
     throw new Error("Erreur lors de la modification");
+  }
+
+  // Update is_main flags on existing images
+  if (data.updated_images && data.updated_images.length > 0) {
+    console.log("[updateRealization] Updating is_main flags on existing images...", data.updated_images.length);
+    
+    for (const img of data.updated_images) {
+      const { error: imgUpdateError } = await supabase
+        .from("realization_images")
+        .update({ is_main: img.is_main })
+        .eq("id", img.id);
+
+      if (imgUpdateError) {
+        console.error("[updateRealization] Error updating image is_main flag:", {
+          imageId: img.id,
+          is_main: img.is_main,
+          error: imgUpdateError,
+        });
+      } else {
+        console.log("[updateRealization] Updated image is_main:", { imageId: img.id, is_main: img.is_main });
+      }
+    }
   }
 
   // Remove deleted images

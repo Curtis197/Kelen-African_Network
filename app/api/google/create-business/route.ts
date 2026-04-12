@@ -79,6 +79,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    log.debug("OAuth tokens loaded", {
+      proId,
+      hasAccessToken: !!tokens.access_token,
+      hasRefreshToken: !!tokens.refresh_token,
+      verificationStatus: tokens.verification_status,
+    });
+
     const authClient = await getAuthenticatedClient(tokens, proId);
 
     // Step 1 — Fetch GBP accounts
@@ -201,6 +208,13 @@ export async function POST(request: NextRequest) {
     });
 
     // Step 3 — Persist to Supabase
+    log.debug("Updating Supabase with GBP location", {
+      proId,
+      locationName,
+      placeId,
+      table: "pro_google_tokens",
+    });
+
     const { error: updateErr } = await supabase
       .from("pro_google_tokens")
       .update({
@@ -213,10 +227,22 @@ export async function POST(request: NextRequest) {
       .eq("pro_id", proId);
 
     if (updateErr) {
-      log.error("Failed to persist GBP location to Supabase", {
-        proId,
-        error: updateErr.message,
-      });
+      if (updateErr.code === "42501") {
+        log.error("❌ RLS VIOLATION (EXPLICIT) — Update blocked by Row Level Security!", {
+          proId,
+          table: "pro_google_tokens",
+          errorCode: updateErr.code,
+          errorMessage: updateErr.message,
+          hint: "Check RLS policy 'pro_google_tokens_update_own' — must allow update where pro.user_id = auth.uid()",
+        });
+      } else {
+        log.error("Failed to persist GBP location to Supabase", {
+          proId,
+          table: "pro_google_tokens",
+          errorCode: updateErr.code,
+          errorMessage: updateErr.message,
+        });
+      }
     } else {
       log.info("GBP identifiers persisted to Supabase", { proId, locationName, placeId });
     }

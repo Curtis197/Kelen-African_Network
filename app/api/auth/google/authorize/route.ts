@@ -47,31 +47,53 @@ export async function GET(request: NextRequest) {
 
   oauthLog.debug("Session verified", { userId: user.id, proId });
 
-  if (!proId) {
-    oauthLog.warn("Missing proId query parameter");
-    return NextResponse.json({ error: "proId is required" }, { status: 400 });
+  // If proId not provided, auto-detect user's professional profile
+  let targetProId: string;
+  
+  if (proId) {
+    // Confirm ownership
+    const { data: pro, error: proError } = await supabase
+      .from("professionals")
+      .select("id")
+      .eq("id", proId)
+      .eq("user_id", user.id)
+      .single();
+
+    if (proError || !pro) {
+      oauthLog.warn("Professional not found or not owned by user", {
+        proId,
+        userId:   user.id,
+        dbError:  proError?.message,
+      });
+      return NextResponse.json({ error: "Professional not found" }, { status: 404 });
+    }
+
+    targetProId = pro.id;
+    oauthLog.info("Professional profile verified", { proId: targetProId, userId: user.id });
+  } else {
+    oauthLog.info("No proId provided — auto-detecting user's professional profile", { userId: user.id });
+    const { data: pro, error: proError } = await supabase
+      .from("professionals")
+      .select("id")
+      .eq("user_id", user.id)
+      .single();
+
+    if (proError || !pro) {
+      oauthLog.warn("User has no professional profile", {
+        userId: user.id,
+        dbError: proError?.message,
+      });
+      return NextResponse.json(
+        { error: "Professional profile not found. Please create your professional profile first." },
+        { status: 404 }
+      );
+    }
+
+    targetProId = pro.id;
+    oauthLog.info("Auto-detected professional profile", { proId: targetProId });
   }
 
-  // Confirm ownership
-  const { data: pro, error: proError } = await supabase
-    .from("professionals")
-    .select("id")
-    .eq("id", proId)
-    .eq("user_id", user.id)
-    .single();
-
-  if (proError || !pro) {
-    oauthLog.warn("Professional not found or not owned by user", {
-      proId,
-      userId:   user.id,
-      dbError:  proError?.message,
-    });
-    return NextResponse.json({ error: "Professional not found" }, { status: 404 });
-  }
-
-  oauthLog.info("Ownership confirmed — generating auth URL", { proId, userId: user.id });
-
-  const authUrl = generateAuthUrl(proId);
+  const authUrl = generateAuthUrl(targetProId);
 
   oauthLog.info("Redirecting to Google OAuth consent screen", {
     proId,

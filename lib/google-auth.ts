@@ -68,10 +68,30 @@ export async function getProTokens(proId: string): Promise<GoogleTokens | null> 
     if (error.code === "PGRST116") {
       // No row found — not connected yet, not an error
       authLog.info("No Google tokens found for pro (not yet connected)", { proId });
+    } else if (error.code === "42501") {
+      // EXPLICIT RLS violation
+      authLog.error("❌ RLS VIOLATION (EXPLICIT) — Query blocked by Row Level Security!", {
+        proId,
+        table: "pro_google_tokens",
+        operation: "SELECT",
+        errorCode: error.code,
+        errorMessage: error.message,
+        hint: "Check RLS policy 'pro_google_tokens_select_own' — must allow select where pro.user_id = auth.uid()",
+      });
     } else {
       authLog.error("Error fetching Google tokens", { proId, error: error.message, code: error.code });
     }
     return null;
+  }
+
+  // SILENT RLS check: 0 rows but no error could mean RLS filtered it out
+  if (!data) {
+    authLog.warn("⚠️ SILENT RLS FILTERING — Query succeeded but returned 0 rows", {
+      proId,
+      table: "pro_google_tokens",
+      operation: "SELECT",
+      hint: "User may not have permission to see this row, or it doesn't exist",
+    });
   }
 
   authLog.debug("Google tokens loaded", {
@@ -101,8 +121,29 @@ export async function getProGBPData(
     .single();
 
   if (error) {
-    authLog.error("Error fetching GBP identifiers", { proId, error: error.message });
+    if (error.code === "42501") {
+      authLog.error("❌ RLS VIOLATION (EXPLICIT) — Query blocked by Row Level Security!", {
+        proId,
+        table: "pro_google_tokens",
+        operation: "SELECT",
+        errorCode: error.code,
+        errorMessage: error.message,
+        hint: "Check RLS policy 'pro_google_tokens_select_own' — must allow select where pro.user_id = auth.uid()",
+      });
+    } else if (error.code !== "PGRST116") {
+      authLog.error("Error fetching GBP identifiers", { proId, error: error.message, code: error.code });
+    }
     return null;
+  }
+
+  // SILENT RLS check
+  if (!data) {
+    authLog.warn("⚠️ SILENT RLS FILTERING — Query succeeded but returned 0 rows", {
+      proId,
+      table: "pro_google_tokens",
+      operation: "SELECT (gbp identifiers)",
+      hint: "User may not have permission to see this row, or it doesn't exist",
+    });
   }
 
   authLog.debug("GBP identifiers loaded", {
@@ -161,10 +202,22 @@ export async function getAuthenticatedClient(
         .eq("pro_id", proId);
 
       if (updateError) {
-        authLog.error("Failed to persist refreshed token", {
-          proId,
-          error: updateError.message,
-        });
+        if (updateError.code === "42501") {
+          authLog.error("❌ RLS VIOLATION (EXPLICIT) — Token refresh update blocked!", {
+            proId,
+            table: "pro_google_tokens",
+            operation: "UPDATE",
+            errorCode: updateError.code,
+            errorMessage: updateError.message,
+            hint: "Check RLS policy 'pro_google_tokens_update_own' — must allow update where pro.user_id = auth.uid()",
+          });
+        } else {
+          authLog.error("Failed to persist refreshed token", {
+            proId,
+            errorCode: updateError.code,
+            errorMessage: updateError.message,
+          });
+        }
       } else {
         authLog.info("Token refreshed and persisted", {
           proId,

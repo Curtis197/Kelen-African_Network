@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { logger } from "@/lib/logger";
 
 const log = logger("kelen:gbp:ui");
@@ -352,6 +353,13 @@ export function GoogleBusinessConnect({
         <GoogleIcon className="w-4 h-4" />
         Connecter mon compte Google
       </a>
+
+      <Link
+        href="/pro/google"
+        className="block text-center text-xs text-primary hover:underline"
+      >
+        Gérer mon profil Google Business →
+      </Link>
     </div>
   );
 }

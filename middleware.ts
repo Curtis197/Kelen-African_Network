@@ -128,12 +128,20 @@ export async function middleware(request: NextRequest) {
     // STRICT CROSS-ROLE PROTECTION
     // Clients cannot access professional routes
     if (isClientRoute && isPro) {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
+      middlewareLog.warn("Professional blocked from client route — redirecting to pro dashboard", {
+        pathname,
+        role,
+      });
+      return NextResponse.redirect(new URL("/pro/dashboard", request.url));
     }
-    
+
     // Professionals cannot access client routes
     if (isProRoute && isClient) {
-      return NextResponse.redirect(new URL("/pro/dashboard", request.url));
+      middlewareLog.warn("Client blocked from pro route — redirecting to client dashboard", {
+        pathname,
+        role,
+      });
+      return NextResponse.redirect(new URL("/dashboard", request.url));
     }
     
     // Admins can access both client and pro routes

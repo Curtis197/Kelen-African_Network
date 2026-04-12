@@ -141,7 +141,7 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
 
   const onSubmit = async (data: RealizationFormData) => {
     setIsSaving(true);
-    console.log("[RealizationForm] Submitting:", { isEditing, data });
+    console.log("[RealizationForm] Submitting:", { isEditing, data, existingImagesCount: existingImages.length, newImagesCount: imageFiles.length });
     try {
       const {
         data: { user },
@@ -172,6 +172,13 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
         newDocFiles.push(...results.filter(Boolean));
       }
 
+      // Collect updated image data (including is_main flags)
+      const updatedImages = existingImages.map((img) => ({
+        id: img.id,
+        url: img.url,
+        is_main: img.is_main,
+      }));
+
       if (isEditing) {
         await updateRealization(initialData!.id, {
           title: data.title,
@@ -184,6 +191,7 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
           document_files: newDocFiles,
           removed_image_ids: removedImageIds,
           removed_document_ids: removedDocumentIds,
+          updated_images: updatedImages,
         });
         toast.success("Réalisation mise à jour avec succès");
       } else {

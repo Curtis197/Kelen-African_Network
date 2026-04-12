@@ -132,8 +132,19 @@ export async function getOrRefreshReviews(
     .eq("pro_id", proId)
     .single();
 
-  if (cacheErr && cacheErr.code !== "PGRST116") {
-    log.warn("Error reading reviews cache", { proId, error: cacheErr.message });
+  if (cacheErr) {
+    if (cacheErr.code === "42501") {
+      log.error("❌ RLS VIOLATION (EXPLICIT) — Cache read blocked!", {
+        proId,
+        table: "pro_google_reviews_cache",
+        operation: "SELECT",
+        errorCode: cacheErr.code,
+        errorMessage: cacheErr.message,
+        hint: "Check RLS policy 'pro_google_reviews_cache_public_select' — should allow public select for portfolio pages",
+      });
+    } else if (cacheErr.code !== "PGRST116") {
+      log.warn("Error reading reviews cache", { proId, error: cacheErr.message, code: cacheErr.code });
+    }
   }
 
   if (cache) {
@@ -181,6 +192,13 @@ export async function getOrRefreshReviews(
   }
 
   // 3. Upsert cache
+  log.debug("Upserting reviews cache", {
+    proId,
+    placeId,
+    totalReviews: fresh.total_reviews,
+    rating: fresh.rating,
+  });
+
   const { error: upsertErr } = await supabase
     .from("pro_google_reviews_cache")
     .upsert({
@@ -193,7 +211,22 @@ export async function getOrRefreshReviews(
     });
 
   if (upsertErr) {
-    log.error("Failed to upsert reviews cache", { proId, error: upsertErr.message });
+    if (upsertErr.code === "42501") {
+      log.error("❌ RLS VIOLATION (EXPLICIT) — Cache upsert blocked!", {
+        proId,
+        table: "pro_google_reviews_cache",
+        operation: "UPSERT",
+        errorCode: upsertErr.code,
+        errorMessage: upsertErr.message,
+        hint: "Check RLS policy 'pro_google_reviews_cache_insert_own' or 'update_own' — must allow where pro.user_id = auth.uid()",
+      });
+    } else {
+      log.error("Failed to upsert reviews cache", {
+        proId,
+        errorCode: upsertErr.code,
+        errorMessage: upsertErr.message,
+      });
+    }
   } else {
     log.info("Reviews cache updated", {
       proId,
