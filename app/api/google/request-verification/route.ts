@@ -2,32 +2,32 @@ import { NextRequest, NextResponse } from "next/server";
 import { google } from "googleapis";
 import { createClient } from "@/lib/supabase/server";
 import { getProTokens, getProGBPData, getAuthenticatedClient } from "@/lib/google-auth";
+import { gbpLog } from "@/lib/logger";
 
 type VerificationMethod = "PHONE_CALL" | "SMS" | "EMAIL" | "ADDRESS";
 
 /**
  * POST /api/google/request-verification
  * Body: { proId: string; method: VerificationMethod }
- *
- * Triggers a verification request for the Google Business location.
- * Google will send a code via the chosen method (phone, SMS, email, or postcard).
  */
 export async function POST(request: NextRequest) {
+  const log = gbpLog.child("request-verification");
+  log.info("→ POST /api/google/request-verification");
+
   try {
-    const { proId, method } = (await request.json()) as {
-      proId: string;
-      method: VerificationMethod;
-    };
+    const body = await request.json();
+    const { proId, method } = body as { proId: string; method: VerificationMethod };
+
+    log.debug("Request parsed", { proId, method });
 
     if (!proId || !method) {
-      return NextResponse.json(
-        { error: "proId and method are required" },
-        { status: 400 }
-      );
+      log.warn("Missing proId or method", { proId, method });
+      return NextResponse.json({ error: "proId and method are required" }, { status: 400 });
     }
 
     const validMethods: VerificationMethod[] = ["PHONE_CALL", "SMS", "EMAIL", "ADDRESS"];
     if (!validMethods.includes(method)) {
+      log.warn("Invalid verification method", { method, validMethods });
       return NextResponse.json(
         { error: `Invalid method. Must be one of: ${validMethods.join(", ")}` },
         { status: 400 }
@@ -36,11 +36,9 @@ export async function POST(request: NextRequest) {
 
     const supabase = await createClient();
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
+    const { data: { user }, error: authErr } = await supabase.auth.getUser();
+    if (authErr || !user) {
+      log.warn("Unauthorized", { proId, authError: authErr?.message });
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -52,54 +50,66 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (!pro) {
+      log.warn("Professional not found or not owned by user", { proId, userId: user.id });
       return NextResponse.json({ error: "Professional not found" }, { status: 404 });
     }
 
     const tokens = await getProTokens(proId);
     if (!tokens) {
+      log.warn("No OAuth tokens — Google not connected", { proId });
       return NextResponse.json({ error: "Google account not connected" }, { status: 400 });
     }
 
     const gbpData = await getProGBPData(proId);
     if (!gbpData?.gbp_location_name) {
+      log.warn("GBP location not created yet", { proId });
       return NextResponse.json(
         { error: "Google Business location not created yet" },
         { status: 400 }
       );
     }
 
-    const authClient = await getAuthenticatedClient(tokens, proId);
-
-    const verifications = google.mybusinessverifications({
-      version: "v1",
-      auth: authClient,
+    log.info("Requesting verification", {
+      proId,
+      method,
+      gbpLocationName: gbpData.gbp_location_name,
     });
 
-    const verificationResponse = await verifications.locations.verify({
-      name: gbpData.gbp_location_name,
+    const authClient    = await getAuthenticatedClient(tokens, proId);
+    const verifications = google.mybusinessverifications({ version: "v1", auth: authClient });
+
+    const verifStart    = Date.now();
+    const verifResponse = await verifications.locations.verify({
+      name:        gbpData.gbp_location_name,
       requestBody: { method },
     });
+    const ms = Date.now() - verifStart;
 
-    const verificationId = verificationResponse.data.verification?.name;
+    const verificationId = verifResponse.data.verification?.name;
+
+    log.info("Verification request submitted", {
+      proId,
+      method,
+      verificationId,
+      ms,
+    });
+
+    const methodLabel: Record<VerificationMethod, string> = {
+      SMS:        "SMS",
+      PHONE_CALL: "appel téléphonique",
+      EMAIL:      "email",
+      ADDRESS:    "courrier postal",
+    };
 
     return NextResponse.json({
       success: true,
       verificationId,
-      message: `Code de vérification envoyé via ${
-        method === "PHONE_CALL"
-          ? "appel téléphonique"
-          : method === "SMS"
-          ? "SMS"
-          : method === "EMAIL"
-          ? "email"
-          : "courrier postal"
-      }.`,
+      message: `Code de vérification envoyé via ${methodLabel[method]}.`,
     });
-  } catch (err: any) {
-    console.error("GBP request-verification error:", err);
-    return NextResponse.json(
-      { error: err?.message || "Unexpected error" },
-      { status: 500 }
-    );
+
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
+    gbpLog.error("Unhandled error in request-verification", { error: msg });
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

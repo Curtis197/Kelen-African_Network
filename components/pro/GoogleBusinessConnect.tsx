@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { logger } from "@/lib/logger";
+
+const log = logger("kelen:gbp:ui");
 
 interface Props {
   proId: string;
@@ -29,48 +31,81 @@ export function GoogleBusinessConnect({
   const [verificationMethod, setVerificationMethod] = useState<"PHONE_CALL" | "SMS" | "EMAIL" | "ADDRESS">("SMS");
   const [showVerifOptions, setShowVerifOptions] = useState(false);
 
+  // Log initial state on mount
+  useEffect(() => {
+    log.debug("GoogleBusinessConnect mounted", {
+      proId,
+      isConnected,
+      verificationStatus,
+      gbpLocationName,
+      lastSyncedAt,
+    });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Handle redirect back from Google OAuth
   useEffect(() => {
     const googleParam = searchParams.get("google");
+    if (!googleParam) return;
+
+    log.info("OAuth redirect param detected", { googleParam, proId });
+
     if (googleParam === "connected") {
+      log.info("Google account connected successfully via OAuth redirect", { proId });
       setSuccessMsg("Compte Google connecté. Vous pouvez maintenant créer votre profil Google Maps.");
       router.replace("/pro/dashboard");
     } else if (googleParam === "denied") {
+      log.warn("User denied Google OAuth consent", { proId });
       setError("Connexion annulée.");
       router.replace("/pro/dashboard");
     } else if (googleParam === "error") {
+      log.error("OAuth callback returned error", { proId });
       setError("Erreur lors de la connexion Google. Veuillez réessayer.");
       router.replace("/pro/dashboard");
     }
-  }, [searchParams, router]);
+  }, [searchParams, router]); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function handleCreateBusiness() {
+    log.info("User initiated GBP location creation", { proId });
     setStep("creating");
     setError(null);
     setSuccessMsg(null);
 
+    const start = Date.now();
     try {
-      const res = await fetch("/api/google/create-business", {
+      log.debug("POST /api/google/create-business", { proId });
+      const res  = await fetch("/api/google/create-business", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ proId }),
       });
 
       const data = await res.json();
+      const ms   = Date.now() - start;
+      log.debug("create-business response", { proId, status: res.status, ok: res.ok, ms, data });
 
       if (!res.ok) {
         if (data.error === "already_exists") {
+          log.warn("GBP location already exists — prompting verification", { proId });
           setError("Un profil Google Business existe déjà pour cet établissement. Demandez la vérification ci-dessous.");
           setShowVerifOptions(true);
         } else {
+          log.error("create-business API error", { proId, error: data.error, ms });
           setError(data.error || "Erreur lors de la création du profil.");
         }
       } else {
+        log.info("GBP location created — prompting verification", {
+          proId,
+          locationName: data.locationName,
+          placeId:      data.placeId,
+          ms,
+        });
         setSuccessMsg("Profil Google Business créé. Choisissez une méthode de vérification.");
         setShowVerifOptions(true);
         router.refresh();
       }
-    } catch {
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e);
+      log.error("Network error during create-business", { proId, error: msg, ms: Date.now() - start });
       setError("Erreur réseau. Veuillez réessayer.");
     } finally {
       setStep("idle");
@@ -78,25 +113,39 @@ export function GoogleBusinessConnect({
   }
 
   async function handleRequestVerification() {
+    log.info("User requested GBP verification", { proId, method: verificationMethod });
     setStep("verifying");
     setError(null);
 
+    const start = Date.now();
     try {
-      const res = await fetch("/api/google/request-verification", {
+      log.debug("POST /api/google/request-verification", { proId, method: verificationMethod });
+      const res  = await fetch("/api/google/request-verification", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ proId, method: verificationMethod }),
       });
 
       const data = await res.json();
+      const ms   = Date.now() - start;
+      log.debug("request-verification response", { proId, status: res.status, ok: res.ok, ms, data });
 
       if (!res.ok) {
+        log.error("request-verification API error", { proId, error: data.error, ms });
         setError(data.error || "Erreur lors de la demande de vérification.");
       } else {
+        log.info("Verification code sent", {
+          proId,
+          method: verificationMethod,
+          verificationId: data.verificationId,
+          ms,
+        });
         setSuccessMsg(data.message);
         setShowVerifOptions(false);
       }
-    } catch {
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e);
+      log.error("Network error during request-verification", { proId, error: msg, ms: Date.now() - start });
       setError("Erreur réseau. Veuillez réessayer.");
     } finally {
       setStep("idle");
@@ -104,24 +153,33 @@ export function GoogleBusinessConnect({
   }
 
   async function handleSyncPhotos() {
+    log.info("User initiated photo sync", { proId });
     setStep("syncing_photos");
     setError(null);
 
+    const start = Date.now();
     try {
-      const res = await fetch("/api/google/sync-photos", {
+      log.debug("POST /api/google/sync-photos", { proId });
+      const res  = await fetch("/api/google/sync-photos", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ proId }),
       });
 
       const data = await res.json();
+      const ms   = Date.now() - start;
+      log.debug("sync-photos response", { proId, status: res.status, ok: res.ok, ms, data });
 
       if (!res.ok) {
+        log.error("sync-photos API error", { proId, error: data.error, ms });
         setError(data.error || "Erreur lors de la synchronisation des photos.");
       } else {
+        log.info("Photo sync complete", { proId, synced: data.synced, errors: data.errors, ms });
         setSuccessMsg(`${data.synced} photo(s) synchronisée(s) sur Google Maps.`);
       }
-    } catch {
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e);
+      log.error("Network error during sync-photos", { proId, error: msg, ms: Date.now() - start });
       setError("Erreur réseau. Veuillez réessayer.");
     } finally {
       setStep("idle");
