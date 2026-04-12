@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { RegisterForm } from "@/components/forms/RegisterForm";
+import { GoogleButton } from "@/components/auth/GoogleButton";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +20,23 @@ export default function RegisterPage() {
       <p className="mt-2 text-center text-sm text-muted-foreground">
         Choisissez votre profil pour commencer
       </p>
+
+      {/* Google OAuth Button */}
+      <div className="mt-6">
+        <GoogleButton role="client" />
+      </div>
+
+      {/* Divider */}
+      <div className="relative mt-6">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t border-border" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-background px-2 text-muted-foreground">
+            Ou continuer avec email
+          </span>
+        </div>
+      </div>
 
       <div className="mt-6">
         <RegisterForm defaultMode="client" allowSwitch={false} />

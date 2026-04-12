@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { loginSchema, type LoginFormData } from "@/lib/utils/validators";
 import { createClient } from "@/lib/supabase/client";
+import { GoogleButton } from "@/components/auth/GoogleButton";
 
 interface LoginFormProps {
   defaultRole?: "client" | "professional";
@@ -90,7 +91,23 @@ export function LoginForm({ defaultRole }: LoginFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <div className="space-y-4">
+      {/* Google OAuth Button */}
+      <GoogleButton role={isProPage ? "professional" : "client"} />
+
+      {/* Divider */}
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t border-border" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-background px-2 text-muted-foreground">
+            Ou continuer avec
+          </span>
+        </div>
+      </div>
+
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       {error && (
         <div className="rounded-lg border border-kelen-red-500/20 bg-kelen-red-50 p-3 text-sm text-kelen-red-700">
           {error}
@@ -199,5 +216,6 @@ export function LoginForm({ defaultRole }: LoginFormProps) {
         )}
       </button>
     </form>
+    </div>
   );
 }
