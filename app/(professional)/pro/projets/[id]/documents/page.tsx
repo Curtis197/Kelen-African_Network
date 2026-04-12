@@ -170,7 +170,7 @@ export default function ProProjectDocumentsPage() {
 
       // Upload file to storage
       const bucket = file.type === 'application/pdf' ? 'project-docs' : 'portfolios';
-      const path = `pro/${pro.id}/projects/${projectId}`;
+      const path = `${user.id}/projects/${projectId}`;
 
       console.log("[ProjectDocuments] Uploading to bucket:", bucket, "path:", path);
       const fileUrl = await uploadFile(file, bucket, path);

@@ -153,7 +153,7 @@ export default function ClientDocumentsPage() {
 
       // Upload file to storage
       const bucket = file.type === 'application/pdf' ? 'project-docs' : 'portfolios';
-      const path = `client/${user.id}/documents`;
+      const path = `${user.id}/documents`;
 
       console.log("[ClientDocuments] Uploading to bucket:", bucket, "path:", path);
       const fileUrl = await uploadFile(file, bucket, path);
