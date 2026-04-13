@@ -16,22 +16,22 @@ const STATUS_CONFIG: Record<string, any> = {
     label: "En cours", 
     icon: Clock, 
     color: "text-amber-500", 
-    bg: "bg-amber-50/50 dark:bg-amber-950/20",
-    border: "border-amber-100 dark:border-amber-900"
+    bg: "bg-amber-50/50",
+    border: "border-amber-100"
   },
   completed: { 
     label: "Terminé", 
     icon: CheckCircle2, 
     color: "text-kelen-green-600", 
-    bg: "bg-kelen-green-50/50 dark:bg-kelen-green-950/20",
-    border: "border-kelen-green-100 dark:border-kelen-green-900"
+    bg: "bg-kelen-green-50/50",
+    border: "border-kelen-green-100"
   },
   on_hold: { 
     label: "En pause", 
     icon: AlertCircle, 
     color: "text-rose-500", 
-    bg: "bg-rose-50/50 dark:bg-rose-950/20",
-    border: "border-rose-100 dark:border-rose-900"
+    bg: "bg-rose-50/50",
+    border: "border-rose-100"
   },
   cancelled: { 
     label: "Annulé", 
@@ -58,7 +58,7 @@ export default function ProjectStepCard({ step, currency, onEdit, onDelete, onMa
   return (
     <div className={cn(
       "p-4 sm:p-6 lg:p-8 rounded-[2.5rem] border bg-surface-container-lowest transition-all duration-500 hover:shadow-2xl group",
-      step.status === 'in_progress' ? "shadow-xl border-amber-100 dark:border-amber-900 ring-4 ring-amber-500/5" : "shadow-sm border-border"
+      step.status === 'in_progress' ? "shadow-xl border-amber-100 ring-4 ring-amber-500/5" : "shadow-sm border-border"
     )}>
       <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-8">
         <div className="flex items-start gap-5">

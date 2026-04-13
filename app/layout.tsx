@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/Toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
@@ -51,7 +50,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
+    <html lang="fr" className={`${geistSans.variable} ${geistMono.variable}`}>
       <head>
         <link
           href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&family=Inter:wght@400;500;600&display=swap"
@@ -65,12 +64,10 @@ export default function RootLayout({
       <body className="antialiased font-sans">
         <GoogleAnalytics />
         <ServiceWorkerRegistration />
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <TooltipProvider>
-            {children}
-          </TooltipProvider>
-          <Toaster />
-        </ThemeProvider>
+        <TooltipProvider>
+          {children}
+        </TooltipProvider>
+        <Toaster />
       </body>
     </html>
   );

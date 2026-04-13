@@ -41,15 +41,15 @@ const BREACH_LABELS: Record<string, string> = {
 };
 
 const SEVERITY_COLORS: Record<string, string> = {
-  minor: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
-  major: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
-  critical: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
+  minor: "bg-blue-100 text-blue-700",
+  major: "bg-amber-100 text-amber-700",
+  critical: "bg-red-100 text-red-700",
 };
 
 const REC_STATUS_CONFIG: Record<string, { label: string; className: string }> = {
-  pending: { label: "En attente", className: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400" },
-  verified: { label: "Vérifié", className: "bg-kelen-green-100 text-kelen-green-700 dark:bg-kelen-green-900/30 dark:text-kelen-green-400" },
-  rejected: { label: "Refusé", className: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400" },
+  pending: { label: "En attente", className: "bg-amber-100 text-amber-700" },
+  verified: { label: "Vérifié", className: "bg-kelen-green-100 text-kelen-green-700" },
+  rejected: { label: "Refusé", className: "bg-red-100 text-red-700" },
 };
 
 export function ValidationPage() {
@@ -135,19 +135,19 @@ export function ValidationPage() {
       </div>
 
       {/* Tab bar */}
-      <div className="flex gap-1 bg-surface-container-low dark:bg-surface-container-low rounded-xl p-1 mb-8">
+      <div className="flex gap-1 bg-surface-container-low rounded-xl p-1 mb-8">
         <button
           onClick={() => setActiveTab("recommendations")}
           className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
             activeTab === "recommendations"
-              ? "bg-white dark:bg-surface-container-high text-on-surface shadow-sm"
+              ? "bg-white text-on-surface shadow-sm"
               : "text-on-surface-variant hover:text-on-surface"
           }`}
         >
           <Star className="w-4 h-4" />
           Recommandations
           {pendingRecs > 0 && (
-            <span className="px-1.5 py-0.5 text-[10px] font-bold bg-kelen-green-100 dark:bg-kelen-green-900/30 text-kelen-green-700 dark:text-kelen-green-400 rounded-full">
+            <span className="px-1.5 py-0.5 text-[10px] font-bold bg-kelen-green-100 text-kelen-green-700 rounded-full">
               {pendingRecs}
             </span>
           )}
@@ -156,14 +156,14 @@ export function ValidationPage() {
           onClick={() => setActiveTab("signals")}
           className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
             activeTab === "signals"
-              ? "bg-white dark:bg-surface-container-high text-on-surface shadow-sm"
+              ? "bg-white text-on-surface shadow-sm"
               : "text-on-surface-variant hover:text-on-surface"
           }`}
         >
           <AlertTriangle className="w-4 h-4" />
           Signalements
           {pendingSignals > 0 && (
-            <span className="px-1.5 py-0.5 text-[10px] font-bold bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded-full">
+            <span className="px-1.5 py-0.5 text-[10px] font-bold bg-red-100 text-red-700 rounded-full">
               {pendingSignals}
             </span>
           )}
@@ -181,7 +181,7 @@ export function ValidationPage() {
             {recommendations.map(rec => {
               const statusConf = REC_STATUS_CONFIG[rec.status];
               return (
-                <div key={rec.id} className="bg-surface-container-low dark:bg-surface-container-low rounded-2xl p-5 border border-border">
+                <div key={rec.id} className="bg-surface-container-low rounded-2xl p-5 border border-border">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div className="space-y-1 min-w-0 flex-1">
                       <div className="flex items-center gap-3 flex-wrap">
@@ -190,7 +190,7 @@ export function ValidationPage() {
                           {statusConf.label}
                         </span>
                         {rec.linked && (
-                          <span className="flex items-center gap-1 text-xs text-kelen-green-600 dark:text-kelen-green-400 font-medium">
+                          <span className="flex items-center gap-1 text-xs text-kelen-green-600 font-medium">
                             <Check className="w-3 h-3" /> Lié au profil
                           </span>
                         )}
@@ -208,7 +208,7 @@ export function ValidationPage() {
                       <button
                         onClick={() => linkToProfile(rec.id)}
                         disabled={isLinking === rec.id}
-                        className="flex items-center gap-2 px-5 py-2.5 bg-stone-900 dark:bg-white text-white dark:text-stone-900 rounded-xl text-xs font-bold uppercase tracking-wider transition-all hover:opacity-90 disabled:opacity-50 flex-shrink-0"
+                        className="flex items-center gap-2 px-5 py-2.5 bg-stone-900 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all hover:opacity-90 disabled:opacity-50 flex-shrink-0"
                       >
                         {isLinking === rec.id ? (
                           <Loader2 className="w-3 h-3 animate-spin" />
@@ -237,9 +237,9 @@ export function ValidationPage() {
           <div className="space-y-6">
             {/* Warning banner */}
             {pendingSignals > 0 && (
-              <div className="p-4 bg-amber-50 dark:bg-amber-900/20 rounded-2xl border border-amber-200 dark:border-amber-800 flex gap-3 items-start">
-                <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
-                <div className="text-sm text-amber-900 dark:text-amber-200">
+              <div className="p-4 bg-amber-50 rounded-2xl border border-amber-200 flex gap-3 items-start">
+                <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                <div className="text-sm text-amber-900">
                   <p className="font-bold mb-0.5">Réponse requise sous 15 jours</p>
                   <p>Vous disposez de 15 jours pour répondre à tout signalement. Passé ce délai, le signalement peut être validé automatiquement.</p>
                 </div>
@@ -253,11 +253,11 @@ export function ValidationPage() {
               const daysLeft = Math.max(0, Math.ceil((deadline.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)));
 
               return (
-                <div key={signal.id} className="bg-surface-container-low dark:bg-surface-container-low rounded-2xl border border-border overflow-hidden">
+                <div key={signal.id} className="bg-surface-container-low rounded-2xl border border-border overflow-hidden">
                   <div className="p-6">
                     <div className="flex flex-col sm:flex-row items-start justify-between gap-3 mb-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 flex items-center justify-center">
+                        <div className="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center">
                           <AlertTriangle className="w-5 h-5" />
                         </div>
                         <div>
@@ -270,7 +270,7 @@ export function ValidationPage() {
                           {signal.severity}
                         </span>
                         {!signal.pro_response && (
-                          <span className="px-3 py-1 bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                          <span className="px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-[10px] font-bold uppercase tracking-wider">
                             {daysLeft}j restants
                           </span>
                         )}
@@ -290,8 +290,8 @@ export function ValidationPage() {
 
                     {/* Response */}
                     {signal.pro_response ? (
-                      <div className="bg-kelen-green-50 dark:bg-kelen-green-900/20 rounded-xl p-4 border border-kelen-green-100 dark:border-kelen-green-800">
-                        <p className="text-xs font-bold text-kelen-green-600 dark:text-kelen-green-400 uppercase tracking-wider mb-2">
+                      <div className="bg-kelen-green-50 rounded-xl p-4 border border-kelen-green-100">
+                        <p className="text-xs font-bold text-kelen-green-600 uppercase tracking-wider mb-2">
                           Votre réponse
                         </p>
                         <p className="text-sm text-on-surface-variant leading-relaxed">{signal.pro_response}</p>
@@ -303,13 +303,13 @@ export function ValidationPage() {
                           onChange={(e) => setResponseInput(prev => ({ ...prev, [signal.id]: e.target.value }))}
                           rows={3}
                           placeholder="Apportez des éléments factuels pour répondre à ce signalement..."
-                          className="w-full px-4 py-3 text-sm rounded-xl border border-border bg-surface-container-low dark:bg-surface-container text-on-surface placeholder:text-on-surface-variant/40 focus:ring-2 focus:ring-kelen-green-500/20 focus:border-kelen-green-500 outline-none resize-none"
+                          className="w-full px-4 py-3 text-sm rounded-xl border border-border bg-surface-container-low text-on-surface placeholder:text-on-surface-variant/40 focus:ring-2 focus:ring-kelen-green-500/20 focus:border-kelen-green-500 outline-none resize-none"
                         />
                         <div className="flex justify-end">
                           <button
                             onClick={() => submitResponse(signal.id)}
                             disabled={isSubmitting === signal.id || !responseInput[signal.id]?.trim()}
-                            className="px-6 py-2.5 bg-stone-900 dark:bg-white text-white dark:text-stone-900 rounded-xl text-xs font-bold uppercase tracking-wider transition-all hover:opacity-90 disabled:opacity-50 flex items-center gap-2"
+                            className="px-6 py-2.5 bg-stone-900 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all hover:opacity-90 disabled:opacity-50 flex items-center gap-2"
                           >
                             {isSubmitting === signal.id ? (
                               <Loader2 className="w-3 h-3 animate-spin" />

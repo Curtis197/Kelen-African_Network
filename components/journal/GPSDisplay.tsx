@@ -39,7 +39,7 @@ export default function GPSDisplay({ latitude, longitude, source, projectLocatio
       )}
 
       {distanceInfo && (
-        <div className={`flex items-center gap-2 text-xs ${distanceInfo.isClose ? 'text-green-600 dark:text-green-400' : 'text-amber-600 dark:text-amber-400'}`}>
+        <div className={`flex items-center gap-2 text-xs ${distanceInfo.isClose ? 'text-green-600' : 'text-amber-600'}`}>
           {distanceInfo.isClose ? (
             <CheckCircle className="w-3.5 h-3.5" />
           ) : (

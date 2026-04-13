@@ -94,7 +94,7 @@ export default function LogActions({ logId, projectId, authorId, currentStatus, 
   // If already approved or resolved, show minimal UI
   if (currentStatus === 'approved') {
     return (
-      <div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400">
+      <div className="flex items-center gap-2 text-sm text-green-600">
         <CheckCircle className="w-4 h-4" />
         <span>Rapport approuvé</span>
       </div>
@@ -103,7 +103,7 @@ export default function LogActions({ logId, projectId, authorId, currentStatus, 
 
   if (currentStatus === 'resolved') {
     return (
-      <div className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400">
+      <div className="flex items-center gap-2 text-sm text-blue-600">
         <CheckCircle className="w-4 h-4" />
         <span>Contestation résolue</span>
       </div>
@@ -151,7 +151,7 @@ export default function LogActions({ logId, projectId, authorId, currentStatus, 
 
       {/* Comment form */}
       {(showApproveForm || showContestForm) && (
-        <div className="bg-surface-container-low dark:bg-surface-container-low rounded-2xl p-5 space-y-3">
+        <div className="bg-surface-container-low rounded-2xl p-5 space-y-3">
           <div className="flex items-center gap-2 text-sm font-medium text-on-surface">
             <MessageCircle className="w-4 h-4" />
             {showApproveForm ? "Commentaire d'approbation" : 'Raison de la contestation'}

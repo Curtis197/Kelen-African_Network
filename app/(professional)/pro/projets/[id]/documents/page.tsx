@@ -13,7 +13,6 @@ interface ProjectDocument {
   id: string;
   project_title: string;
   project_date: string;
-  status: "pending_review" | "published" | "rejected";
   contract_url: string;
   created_at: string;
   images?: ProjectImage[];
@@ -188,8 +187,7 @@ export default function ProProjectDocumentsPage() {
         professional_id: pro.id,
         pro_project_id: projectId,
         project_title: file.name.split('.')[0],
-        contract_url: fileUrl,
-        status: "pending_review"
+        contract_url: fileUrl
       });
 
       if (error) {
@@ -388,15 +386,6 @@ export default function ProProjectDocumentsPage() {
             >
               <div className="aspect-[4/3] bg-surface-container flex items-center justify-center relative">
                 <FileText className="w-12 h-12 text-on-surface-variant/30" />
-                <div className={`absolute top-3 left-3 px-2 py-1 rounded text-[10px] font-semibold uppercase ${
-                  doc.status === 'published'
-                    ? 'bg-kelen-green-100 text-kelen-green-700'
-                    : doc.status === 'rejected'
-                    ? 'bg-red-100 text-red-700'
-                    : 'bg-amber-100 text-amber-700'
-                }`}>
-                  {doc.status === 'published' ? 'Vérifié' : doc.status === 'rejected' ? 'Refusé' : 'En examen'}
-                </div>
                 {/* Image count badge */}
                 {doc.images && doc.images.length > 0 && (
                   <div className="absolute top-3 right-3 px-2 py-1 rounded bg-black/60 text-white text-[10px] font-semibold flex items-center gap-1">
@@ -423,9 +412,6 @@ export default function ProProjectDocumentsPage() {
               <tr>
                 <th className="px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
                   Nom
-                </th>
-                <th className="px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
-                  Statut
                 </th>
                 <th className="px-6 py-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
                   Images
@@ -461,17 +447,6 @@ export default function ProProjectDocumentsPage() {
                         </p>
                       </div>
                     </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className={`inline-flex px-2 py-1 rounded-full text-xs font-semibold ${
-                      doc.status === 'published'
-                        ? 'bg-kelen-green-100 text-kelen-green-700'
-                        : doc.status === 'rejected'
-                        ? 'bg-red-100 text-red-700'
-                        : 'bg-amber-100 text-amber-700'
-                    }`}>
-                      {doc.status === 'published' ? 'Vérifié' : doc.status === 'rejected' ? 'Refusé' : 'En examen'}
-                    </span>
                   </td>
                   <td className="px-6 py-4">
                     {doc.images && doc.images.length > 0 ? (
@@ -534,7 +509,7 @@ export default function ProProjectDocumentsPage() {
             className="absolute inset-0 bg-black/40"
             onClick={() => setSelectedDoc(null)}
           />
-          <div className="relative w-96 bg-surface dark:bg-surface shadow-2xl overflow-y-auto border-l border-outline-variant/20">
+          <div className="relative w-96 bg-surface shadow-2xl overflow-y-auto border-l border-outline-variant/20">
             <div className="sticky top-0 bg-surface border-b border-outline-variant/10 px-6 py-4 flex items-center justify-between z-10">
               <h2 className="text-lg font-bold text-on-surface">Détails du document</h2>
               <button
@@ -554,17 +529,6 @@ export default function ProProjectDocumentsPage() {
                 <h4 className="font-semibold text-sm text-on-surface truncate mb-2 px-2">
                   {selectedDoc.project_title}
                 </h4>
-                <div className="flex justify-center px-2">
-                  <span className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold ${
-                    selectedDoc.status === 'published'
-                      ? 'bg-kelen-green-100 text-kelen-green-700'
-                      : selectedDoc.status === 'rejected'
-                      ? 'bg-red-100 text-red-700'
-                      : 'bg-amber-100 text-amber-700'
-                  }`}>
-                    {selectedDoc.status === 'published' ? 'Certification active' : 'En attente'}
-                  </span>
-                </div>
               </div>
 
               {/* Metadata */}

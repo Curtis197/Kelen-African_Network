@@ -40,7 +40,7 @@ export default async function Page() {
 
   return (
     <main className="min-h-screen pt-12 pb-24 px-6 md:px-8">
-      <header className="docked full-width top-0 sticky z-50 bg-surface/70 dark:bg-surface/70 backdrop-blur-xl border-b border-border/10 shadow-sm dark:shadow-none flex justify-between items-center w-full px-8 py-3">
+      <header className="docked full-width top-0 sticky z-50 bg-surface/70 backdrop-blur-xl border-b border-border/10 shadow-sm flex justify-between items-center w-full px-8 py-3">
         <div className="flex items-center gap-8">
           <div className="md:hidden">
             <span className="text-xl font-bold tracking-tight text-kelen-green-500">Kelen Pro</span>
@@ -55,7 +55,7 @@ export default async function Page() {
             <span className="material-symbols-outlined">notifications</span>
           </button>
           <div className="h-8 w-8 rounded-full overflow-hidden border-2 border-primary-container">
-            <div className="w-full h-full bg-kelen-green-100 dark:bg-kelen-green-900/40 flex items-center justify-center text-kelen-green-700 dark:text-kelen-green-300 font-bold text-xs">
+            <div className="w-full h-full bg-kelen-green-100 flex items-center justify-center text-kelen-green-700 font-bold text-xs">
               {pro.business_name[0]}
             </div>
           </div>
@@ -122,7 +122,7 @@ export default async function Page() {
             </section>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-surface-container-low p-8 rounded-2xl border border-border hover:border-kelen-green-200 dark:hover:border-kelen-green-800 transition-all duration-300 shadow-sm">
+              <div className="bg-surface-container-low p-8 rounded-2xl border border-border hover:border-kelen-green-200 transition-all duration-300 shadow-sm">
                 <h4 className="text-xl font-bold font-headline mb-2">Version Gratuite</h4>
                 <p className="text-on-surface-variant text-sm mb-6">Visibilité interne pour maintenir votre présence digitale.</p>
                 <div className="text-3xl font-bold mb-8">0 FCFA<span className="text-sm font-normal text-on-surface-variant/60"> / mois</span></div>
@@ -147,7 +147,7 @@ export default async function Page() {
 
               <div className="bg-surface-container p-8 rounded-2xl border-2 border-kelen-green-500/20 shadow-sm relative">
                 {subscription?.plan !== 'free' && (
-                  <div className="absolute -top-3 right-8 bg-kelen-green-100 dark:bg-kelen-green-900/40 text-kelen-green-700 dark:text-kelen-green-300 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-tighter shadow-sm border border-kelen-green-200 dark:border-kelen-green-800">
+                  <div className="absolute -top-3 right-8 bg-kelen-green-100 text-kelen-green-700 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-tighter shadow-sm border border-kelen-green-200">
                     Actif
                   </div>
                 )}
@@ -194,12 +194,12 @@ export default async function Page() {
               </div>
             </section>
 
-            <section className="bg-stone-900 dark:bg-surface-container-low text-white p-6 rounded-2xl shadow-xl">
+            <section className="bg-stone-900 text-white p-6 rounded-2xl shadow-xl">
               <div className="flex gap-4">
                 <span className="material-symbols-outlined text-kelen-yellow-500 text-2xl">lightbulb</span>
                 <div>
                   <h4 className="font-bold mb-1">Astuce Visibilité</h4>
-                  <p className="text-sm text-stone-400 dark:text-on-surface-variant leadng-relaxed">Les profils avec une photo de couverture professionnelle reçoivent 40% de vues supplémentaires en moyenne.</p>
+                  <p className="text-sm text-stone-400 leadng-relaxed">Les profils avec une photo de couverture professionnelle reçoivent 40% de vues supplémentaires en moyenne.</p>
                   <Link className="inline-block mt-4 text-xs font-bold text-kelen-green-500 hover:text-kelen-green-400 transition-colors uppercase tracking-widest" href="/pro/profil">Optimiser mon profil</Link>
                 </div>
               </div>

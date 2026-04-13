@@ -78,7 +78,7 @@ export default function AddClientContactModal({
       aria-label="Ajouter un contact client"
     >
       <div
-        className="bg-background dark:bg-surface-container-low rounded-[2rem] p-6 sm:p-8 w-full max-w-md space-y-6"
+        className="bg-background rounded-[2rem] p-6 sm:p-8 w-full max-w-md space-y-6"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}

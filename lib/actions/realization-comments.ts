@@ -28,17 +28,33 @@ export async function createRealizationComment(realizationId: string, content: s
 }
 
 export async function getRealizationComments(realizationId: string): Promise<Array<any>> {
+  console.log('[COMMENTS] Fetching comments for realization:', realizationId);
   const supabase = await createClient();
-  
+
   const { data, error } = await supabase
     .from("realization_comments")
     .select(`
       *,
-      author:users(first_name, last_name)
+      author:users(display_name, country)
     `)
     .eq("realization_id", realizationId)
-    .eq("status", "approved") // Only show approved comments
+    .eq("status", "approved")
     .order("created_at", { ascending: true });
+
+  console.log('[COMMENTS] Result:', { count: data?.length || 0, error: error?.message, code: error?.code });
+
+  if (error?.code === '42501') {
+    console.error('[RLS] ❌ EXPLICIT RLS BLOCKING on realization_comments!');
+    console.error('[RLS] Table: realization_comments');
+    console.error('[RLS] Realization ID:', realizationId);
+    console.error('[RLS] Fix: Add RLS policy allowing SELECT for approved comments');
+  }
+
+  if (!error && data?.length === 0) {
+    console.warn('[RLS] ⚠️ SILENT RLS FILTERING on realization_comments!');
+    console.warn('[RLS] Query succeeded but 0 rows - RLS may be filtering');
+    console.warn('[RLS] Realization ID:', realizationId);
+  }
 
   if (error) {
     console.error("Error fetching comments:", error);

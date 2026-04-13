@@ -285,28 +285,28 @@ export default function GoogleManagementPage() {
     switch (status) {
       case "VERIFIED":
         return (
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-100 text-green-800">
             <span className="text-lg">✅</span>
             <span className="text-sm font-semibold">Vérifié sur Google Maps</span>
           </div>
         );
       case "PENDING":
         return (
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-yellow-100 text-yellow-800">
             <span className="text-lg">⏳</span>
             <span className="text-sm font-semibold">Vérification en cours</span>
           </div>
         );
       case "FAILED":
         return (
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-100 text-red-800">
             <span className="text-lg">❌</span>
             <span className="text-sm font-semibold">Vérification échouée</span>
           </div>
         );
       default:
         return (
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 text-gray-800">
             <span className="text-sm font-semibold">Non vérifié</span>
           </div>
         );
@@ -328,9 +328,9 @@ export default function GoogleManagementPage() {
     return (
       <div className="min-h-screen bg-background p-6">
         <div className="max-w-2xl mx-auto">
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6">
-            <h2 className="text-xl font-bold text-red-800 dark:text-red-400 mb-2">Erreur de chargement</h2>
-            <p className="text-red-700 dark:text-red-300">{error}</p>
+          <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+            <h2 className="text-xl font-bold text-red-800 mb-2">Erreur de chargement</h2>
+            <p className="text-red-700">{error}</p>
             <button
               onClick={loadConnectionStatus}
               className="mt-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
@@ -348,22 +348,22 @@ export default function GoogleManagementPage() {
       <div className="max-w-4xl mx-auto">
         {/* Dev Mode Banner */}
         {isDevMode && (
-          <div className="mb-6 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
+          <div className="mb-6 bg-amber-50 border border-amber-200 rounded-lg p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <span className="text-2xl">🧪</span>
                 <div>
-                  <h3 className="text-sm font-bold text-amber-800 dark:text-amber-300">
-                    MODE DÉVELOPPEMENT (OAuth bypassé)
+                  <h3 className="text-sm font-bold text-amber-800">
+                    MODE DEVELOPPEMENT (OAuth bypasse)
                   </h3>
-                  <p className="text-xs text-amber-700 dark:text-amber-400">
-                    Affichage de données mock pour tester l'interface
+                  <p className="text-xs text-amber-700">
+                    Affichage de donnees mock pour tester l'interface
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setDevModeOverride(false)}
-                className="px-3 py-1.5 text-xs font-medium bg-amber-100 dark:bg-amber-900/40 text-amber-900 dark:text-amber-200 rounded-md hover:bg-amber-200 dark:hover:bg-amber-900/60 transition-colors"
+                className="px-3 py-1.5 text-xs font-medium bg-amber-100 text-amber-900 rounded-md hover:bg-amber-200 transition-colors"
               >
                 Passer en mode Production
               </button>
@@ -373,19 +373,19 @@ export default function GoogleManagementPage() {
 
         {/* Production mode toggle (only shown when NOT in dev mode) */}
         {!isDevMode && DEV_MODE === false && (
-          <div className="mb-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+          <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-bold text-blue-800 dark:text-blue-300">
+                <h3 className="text-sm font-bold text-blue-800">
                   MODE PRODUCTION (OAuth requis)
                 </h3>
-                <p className="text-xs text-blue-700 dark:text-blue-400">
-                  Connexion Google OAuth nécessaire pour afficher les données
+                <p className="text-xs text-blue-700">
+                  Connexion Google OAuth necessaire pour afficher les donnees
                 </p>
               </div>
               <button
                 onClick={() => setDevModeOverride(true)}
-                className="px-3 py-1.5 text-xs font-medium bg-blue-100 dark:bg-blue-900/40 text-blue-900 dark:text-blue-200 rounded-md hover:bg-blue-200 dark:hover:bg-blue-900/60 transition-colors"
+                className="px-3 py-1.5 text-xs font-medium bg-blue-100 text-blue-900 rounded-md hover:bg-blue-200 transition-colors"
               >
                 Passer en mode Dev
               </button>
@@ -403,14 +403,14 @@ export default function GoogleManagementPage() {
 
         {/* Success/Error Messages */}
         {successMsg && (
-          <div className="mb-6 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
-            <p className="text-green-800 dark:text-green-300">{successMsg}</p>
+          <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4">
+            <p className="text-green-800">{successMsg}</p>
           </div>
         )}
 
         {error && (
-          <div className="mb-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
-            <p className="text-red-800 dark:text-red-300">{error}</p>
+          <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
+            <p className="text-red-800">{error}</p>
           </div>
         )}
 
@@ -596,11 +596,11 @@ export default function GoogleManagementPage() {
                 </div>
 
                 {/* WhatsApp Share */}
-                <div className="mt-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
-                  <h3 className="text-sm font-semibold text-green-800 dark:text-green-300 mb-2">
-                    📱 Envoyer par WhatsApp
+                <div className="mt-4 bg-green-50 border border-green-200 rounded-lg p-4">
+                  <h3 className="text-sm font-semibold text-green-800 mb-2">
+                    Envoyer par WhatsApp
                   </h3>
-                  <p className="text-xs text-green-700 dark:text-green-400 mb-3">
+                  <p className="text-xs text-green-700 mb-3">
                     Message pré-rempli avec le lien d'avis Google
                   </p>
                   <a
@@ -619,14 +619,14 @@ export default function GoogleManagementPage() {
 
             {/* Environment Configuration (Debug Info) */}
             {debugState && !debugState.envConfigured && (
-              <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6">
-                <h2 className="text-lg font-bold text-yellow-800 dark:text-yellow-300 mb-3">
-                  ⚠️ Configuration manquante
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+                <h2 className="text-lg font-bold text-yellow-800 mb-3">
+                  Configuration manquante
                 </h2>
-                <p className="text-sm text-yellow-700 dark:text-yellow-400 mb-3">
-                  Certaines variables d'environnement ne sont pas configurées:
+                <p className="text-sm text-yellow-700 mb-3">
+                  Certaines variables d'environnement ne sont pas configurees:
                 </p>
-                <ul className="text-sm space-y-1 text-yellow-700 dark:text-yellow-400">
+                <ul className="text-sm space-y-1 text-yellow-700">
                   {!debugState.hasClientId && <li>• GOOGLE_CLIENT_ID</li>}
                   {!debugState.hasClientSecret && <li>• GOOGLE_CLIENT_SECRET</li>}
                   {!debugState.hasRedirectUri && <li>• GOOGLE_REDIRECT_URI</li>}

@@ -47,7 +47,7 @@ export default function PdfPreviewModal({ data, isOpen, onClose }: PdfPreviewMod
   return (
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" onClick={handleClose}>
       <div
-        className="bg-surface-container-low dark:bg-surface-container-low rounded-2xl w-full max-w-5xl h-[90vh] flex flex-col overflow-hidden shadow-2xl"
+        className="bg-surface-container-low rounded-2xl w-full max-w-5xl h-[90vh] flex flex-col overflow-hidden shadow-2xl"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"

@@ -359,6 +359,7 @@ export async function createRealization(data: {
   price: number | null;
   currency: string;
   image_urls: string[];
+  video_urls?: string[];
   document_files?: { url: string; title: string | null; type: string | null }[];
 }) {
   console.log('[ACTION] ========================================');
@@ -367,6 +368,7 @@ export async function createRealization(data: {
     professional_id: data.professional_id,
     title: data.title,
     image_count: data.image_urls.length,
+    video_count: data.video_urls?.length || 0,
     document_count: data.document_files?.length || 0
   });
   console.log('[ACTION] ========================================');
@@ -476,6 +478,44 @@ export async function createRealization(data: {
     }
   }
 
+  // Insert video files (optional)
+  if (data.video_urls && data.video_urls.length > 0) {
+    console.log('[DB] Inserting realization videos...', data.video_urls.length, 'videos');
+    const videoRows = data.video_urls.map((url, idx) => ({
+      realization_id: realization.id,
+      url,
+      order_index: idx,
+    }));
+
+    const { error: videoError } = await supabase
+      .from("realization_videos")
+      .insert(videoRows);
+
+    console.log('[DB] Videos insert result:', {
+      success: !videoError,
+      count: data.video_urls.length,
+      errorMessage: videoError?.message,
+      errorCode: videoError?.code
+    });
+
+    if (videoError) {
+      if (videoError.code === '42501') {
+        console.error('[RLS] ========================================');
+        console.error('[RLS] ❌ RLS POLICY VIOLATION - INSERT realization_videos');
+        console.error('[RLS] ========================================');
+        console.error('[RLS] Realization ID:', realization.id);
+        console.error('[RLS] User ID:', user.id);
+        console.error('[RLS] Error:', videoError.message);
+        console.error('[RLS] Fix: Check INSERT policy on realization_videos table');
+        console.error('[RLS] ========================================');
+      } else {
+        console.error('[DB] ❌ Video insert error:', videoError);
+      }
+    } else {
+      console.log('[DB] ✅ Videos inserted successfully');
+    }
+  }
+
   // Insert document files (optional)
   if (data.document_files && data.document_files.length > 0) {
     console.log('[DB] Inserting realization documents...', data.document_files.length, 'documents');
@@ -534,8 +574,10 @@ export async function updateRealization(id: string, data: {
   price: number | null;
   currency: string;
   image_urls?: string[];
+  video_urls?: string[];
   document_files?: { url: string; title: string | null; type: string | null }[];
   removed_image_ids?: string[];
+  removed_video_ids?: string[];
   removed_document_ids?: string[];
   updated_images?: { id: string; url: string; is_main: boolean }[];
 }) {
@@ -543,9 +585,11 @@ export async function updateRealization(id: string, data: {
   console.log("[updateRealization] Data received:", {
     title: data.title,
     hasImages: !!data.image_urls?.length,
+    hasVideos: !!data.video_urls?.length,
     hasUpdatedImages: !!data.updated_images?.length,
     updatedImagesCount: data.updated_images?.length || 0,
     removedImagesCount: data.removed_image_ids?.length || 0,
+    removedVideosCount: data.removed_video_ids?.length || 0,
   });
   const supabase = await createClient();
 
@@ -612,6 +656,45 @@ export async function updateRealization(id: string, data: {
     }));
 
     await supabase.from("realization_images").insert(imageRows);
+  }
+
+  // Remove deleted videos
+  if (data.removed_video_ids && data.removed_video_ids.length > 0) {
+    console.log("[updateRealization] Removing deleted videos...", data.removed_video_ids.length);
+    await supabase
+      .from("realization_videos")
+      .delete()
+      .in("id", data.removed_video_ids);
+  }
+
+  // Add new videos
+  if (data.video_urls && data.video_urls.length > 0) {
+    console.log("[updateRealization] Adding new videos...", data.video_urls.length);
+    const maxOrder = await supabase
+      .from("realization_videos")
+      .select("order_index")
+      .eq("realization_id", id)
+      .order("order_index", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    const startIndex = maxOrder?.data?.order_index !== null && maxOrder?.data?.order_index !== undefined 
+      ? maxOrder.data.order_index + 1 
+      : 0;
+
+    const videoRows = data.video_urls.map((url, idx) => ({
+      realization_id: id,
+      url,
+      order_index: startIndex + idx,
+    }));
+
+    const { error: videoError } = await supabase.from("realization_videos").insert(videoRows);
+    
+    if (videoError) {
+      console.error("[updateRealization] Error adding videos:", videoError);
+    } else {
+      console.log("[updateRealization] Videos added successfully:", data.video_urls.length);
+    }
   }
 
   // Remove deleted documents

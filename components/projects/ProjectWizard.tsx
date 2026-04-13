@@ -1,8 +1,10 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { upsertProject, getProject } from "@/lib/actions/projects";
+import { uploadProjectImage } from "@/lib/actions/project-images";
+import { uploadFile } from "@/lib/supabase/storage";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -38,6 +40,9 @@ export default function ProjectWizard({ initialId }: { initialId?: string }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSaving, setIsSaving] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(!!initialId);
+  const [projectImages, setProjectImages] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState<ProjectData>({
     title: "",
     category: "construction",
@@ -82,9 +87,68 @@ export default function ProjectWizard({ initialId }: { initialId?: string }) {
     setFormData((prev) => ({ ...prev, ...data }));
   };
 
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    console.log('[WIZARD] Images selected:', files.length);
+
+    const validFiles = files.filter(f => {
+      const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+      if (!validTypes.includes(f.type)) {
+        toast.error(`${f.name}: format non supporté. Utilisez JPG, PNG ou WEBP`);
+        return false;
+      }
+      if (f.size > 10 * 1024 * 1024) {
+        toast.error(`${f.name}: fichier trop volumineux (max 10 Mo)`);
+        return false;
+      }
+      return true;
+    });
+
+    const newPreviews = validFiles.map(f => URL.createObjectURL(f));
+    setProjectImages(prev => [...prev, ...validFiles]);
+    setImagePreviews(prev => [...prev, ...newPreviews]);
+    console.log('[WIZARD] Total images:', validFiles.length + projectImages.length);
+
+    // Reset file input
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const removeImage = (index: number) => {
+    console.log('[WIZARD] Removing image at index:', index);
+    URL.revokeObjectURL(imagePreviews[index]);
+    setProjectImages(prev => prev.filter((_, i) => i !== index));
+    setImagePreviews(prev => prev.filter((_, i) => i !== index));
+  };
+
   const handleNext = async () => {
     if (currentStep === STEPS.length) {
-      router.push("/projets");
+      // Final step - upload images then redirect
+      setIsSaving(true);
+      try {
+        const projectId = formData.id;
+        if (projectId && projectImages.length > 0) {
+          console.log('[WIZARD] Uploading', projectImages.length, 'images for project:', projectId);
+          const { data: { user } } = await (await import("@/lib/supabase/client")).createClient().auth.getUser();
+          if (user) {
+            for (let i = 0; i < projectImages.length; i++) {
+              const file = projectImages[i];
+              console.log('[WIZARD] Uploading image', i + 1, ':', file.name);
+              const uploadResult = await uploadFile(file, "portfolios", `${user.id}/projects/${projectId}/images`);
+              if (uploadResult?.publicUrl) {
+                console.log('[WIZARD] Image uploaded, saving to database...');
+                await uploadProjectImage(projectId, uploadResult.publicUrl);
+              }
+            }
+            toast.success(`${projectImages.length} image(s) ajoutée(s)`);
+          }
+        }
+        router.push("/projets");
+      } catch (err) {
+        console.error('[WIZARD] Image upload error:', err);
+        toast.error("Erreur lors de l'upload des images");
+      } finally {
+        setIsSaving(false);
+      }
       return;
     }
 
@@ -182,7 +246,14 @@ export default function ProjectWizard({ initialId }: { initialId?: string }) {
                     <Step4Objectives formData={formData} onChange={updateFormData} />
                   )}
                   {currentStep === 5 && (
-                    <Step5Review formData={formData} />
+                    <Step5Review
+                      formData={formData}
+                      projectImages={projectImages}
+                      imagePreviews={imagePreviews}
+                      fileInputRef={fileInputRef}
+                      onImageSelect={handleImageSelect}
+                      onRemoveImage={removeImage}
+                    />
                   )}
                 </motion.div>
               </AnimatePresence>
@@ -501,7 +572,21 @@ function Step4Objectives({ formData, onChange }: { formData: ProjectData; onChan
   );
 }
 
-function Step5Review({ formData }: { formData: ProjectData }) {
+function Step5Review({
+  formData,
+  projectImages,
+  imagePreviews,
+  fileInputRef,
+  onImageSelect,
+  onRemoveImage,
+}: {
+  formData: ProjectData;
+  projectImages: File[];
+  imagePreviews: string[];
+  fileInputRef: React.RefObject<HTMLInputElement | null>;
+  onImageSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onRemoveImage: (index: number) => void;
+}) {
   return (
     <div className="space-y-12">
       <header className="mb-16 space-y-4">
@@ -509,11 +594,12 @@ function Step5Review({ formData }: { formData: ProjectData }) {
           Récapitulatif
         </h1>
         <p className="text-xl text-on-surface-variant opacity-80 max-w-2xl font-body leading-relaxed">
-          Vérifiez les détails de votre projet avant la validation finale.
+          Vérifiez les détails de votre projet et ajoutez des photos avant la validation finale.
         </p>
       </header>
 
       <div className="bg-surface-container-lowest rounded-[2rem] p-8 lg:p-16 shadow-sm space-y-12">
+        {/* Project Summary */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           <div className="space-y-2">
             <p className="text-xs uppercase tracking-widest text-on-surface-variant font-bold">Projet</p>
@@ -535,6 +621,80 @@ function Step5Review({ formData }: { formData: ProjectData }) {
               {formData.start_date || "N/A"} — {formData.end_date || "N/A"}
             </p>
           </div>
+        </div>
+
+        {/* Image Upload Section */}
+        <div className="border-t border-surface-container-high pt-12">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h3 className="text-xl font-headline font-bold text-on-surface flex items-center gap-2">
+                <span className="material-symbols-outlined">photo_library</span>
+                Photos du projet
+              </h3>
+              <p className="text-sm text-on-surface-variant mt-1">
+                Ajoutez des photos pour illustrer votre projet (optionnel)
+              </p>
+            </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              multiple
+              onChange={onImageSelect}
+              className="hidden"
+            />
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl font-headline font-bold text-sm hover:bg-primary-container transition-colors shadow-lg shadow-primary/20"
+            >
+              <span className="material-symbols-outlined text-lg">add_photo_alternate</span>
+              Ajouter des photos
+            </button>
+          </div>
+
+          {imagePreviews.length === 0 ? (
+            <div className="text-center py-12 bg-surface-container-lowest rounded-2xl border-2 border-dashed border-surface-container-high">
+              <span className="material-symbols-outlined text-5xl text-on-surface-variant/30 mb-3">add_photo_alternate</span>
+              <p className="text-sm font-medium text-on-surface-variant">
+                Aucune photo ajoutée
+              </p>
+              <p className="text-xs text-on-surface-variant/60 mt-1">
+                Cliquez sur &quot;Ajouter des photos&quot; pour uploader des images
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+              {imagePreviews.map((preview, index) => (
+                <div
+                  key={index}
+                  className="group relative aspect-square rounded-xl overflow-hidden bg-surface-container-low border border-surface-container-high"
+                >
+                  <img
+                    src={preview}
+                    alt={`Project image ${index + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center">
+                    <button
+                      type="button"
+                      onClick={() => onRemoveImage(index)}
+                      className="p-2 bg-white rounded-full hover:bg-red-50 transition-colors opacity-0 group-hover:opacity-100"
+                      title="Supprimer"
+                    >
+                      <span className="material-symbols-outlined text-red-600 text-sm">delete</span>
+                    </button>
+                  </div>
+                  {index === 0 && (
+                    <div className="absolute top-2 left-2 bg-primary text-white px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
+                      <span className="material-symbols-outlined text-xs fill-current">star</span>
+                      Principale
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

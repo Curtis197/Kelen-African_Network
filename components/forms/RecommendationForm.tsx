@@ -10,6 +10,7 @@ import {
 import { BUDGET_RANGES } from "@/lib/utils/constants";
 import { createClient } from "@/lib/supabase/client";
 import { uploadFile, uploadMultipleFiles, type UploadResult } from "@/lib/supabase/storage";
+import { LocationSearch, type LocationData } from "@/components/location/LocationSearch";
 
 interface RecommendationFormProps {
   professionalId?: string;
@@ -44,6 +45,7 @@ export function RecommendationForm({
     formState: { errors },
     trigger,
     watch,
+    setValue,
   } = useForm<RecommendationFormData>({
     resolver: zodResolver(recommendationSchema),
     defaultValues: {
@@ -269,10 +271,12 @@ export function RecommendationForm({
                   <label className="mb-1.5 block text-sm font-medium text-foreground">
                     Ville
                   </label>
-                  <input
-                    type="text"
-                    {...register("external_city")}
-                    className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
+                  <LocationSearch
+                    value={watch("external_city") ? { name: watch("external_city") || "", formatted_address: watch("external_city") || "", lat: 0, lng: 0 } : null}
+                    onChange={(loc: LocationData | null) => {
+                      setValue("external_city", loc?.city || "");
+                      if (loc?.country) setValue("external_country", loc.country);
+                    }}
                     placeholder="Ex : Douala"
                   />
                   {errors.external_city && (
@@ -288,8 +292,9 @@ export function RecommendationForm({
                   <input
                     type="text"
                     {...register("external_country")}
-                    className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
+                    className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20 placeholder:text-muted-foreground"
                     placeholder="Ex : Cameroun"
+                    readOnly
                   />
                   {errors.external_country && (
                     <p className="mt-1 text-xs text-kelen-red-500">
@@ -412,10 +417,9 @@ export function RecommendationForm({
                 <label className="mb-1.5 block text-sm font-medium text-foreground">
                   Lieu du projet
                 </label>
-                <input
-                  type="text"
-                  {...register("location")}
-                  className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors placeholder:text-muted-foreground focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
+                <LocationSearch
+                  value={watch("location") ? { name: watch("location") || "", formatted_address: watch("location") || "", lat: 0, lng: 0 } : null}
+                  onChange={(loc: LocationData | null) => setValue("location", loc?.formatted_address || "")}
                   placeholder="Ex : Cocody, Abidjan"
                 />
                 {errors.location && (

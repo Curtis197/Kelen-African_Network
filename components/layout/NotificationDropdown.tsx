@@ -84,7 +84,7 @@ export function NotificationDropdown() {
 
       {/* Dropdown panel */}
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-80 sm:w-96 bg-surface-container-low dark:bg-surface-container-low rounded-2xl shadow-xl border border-border overflow-hidden z-50">
+        <div className="absolute right-0 top-full mt-2 w-80 sm:w-96 bg-surface-container-low rounded-2xl shadow-xl border border-border overflow-hidden z-50">
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-border">
             <h3 className="text-sm font-bold text-on-surface">Notifications</h3>
@@ -117,7 +117,7 @@ export function NotificationDropdown() {
                 <div
                   key={n.id}
                   className={`px-4 py-3 border-b border-border last:border-b-0 transition-colors cursor-pointer group ${
-                    !n.is_read ? "bg-primary/5 dark:bg-primary/10" : "hover:bg-surface-container"
+                    !n.is_read ? "bg-primary/5" : "hover:bg-surface-container"
                   }`}
                   onClick={() => {
                     handleMarkRead(n.id);

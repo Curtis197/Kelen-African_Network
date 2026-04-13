@@ -24,7 +24,7 @@ export default function LogCommentThread({ comments }: LogCommentThreadProps) {
           return (
             <div
               key={comment.id}
-              className="bg-surface-container-low dark:bg-surface-container-low rounded-2xl p-4 space-y-2"
+              className="bg-surface-container-low rounded-2xl p-4 space-y-2"
             >
               <div className="flex items-center gap-2">
                 <User className="w-3.5 h-3.5 text-on-surface-variant" />
@@ -32,12 +32,12 @@ export default function LogCommentThread({ comments }: LogCommentThreadProps) {
                 <span className="text-xs text-on-surface-variant/60">{timeAgo}</span>
 
                 {comment.comment_type === 'approval' ? (
-                  <span className="ml-auto flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
+                  <span className="ml-auto flex items-center gap-1 text-xs text-green-600">
                     <CheckCircle className="w-3 h-3" />
                     Approuvé
                   </span>
                 ) : (
-                  <span className="ml-auto flex items-center gap-1 text-xs text-red-600 dark:text-red-400">
+                  <span className="ml-auto flex items-center gap-1 text-xs text-red-600">
                     <AlertTriangle className="w-3 h-3" />
                     Contesté
                   </span>

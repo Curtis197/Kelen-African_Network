@@ -124,7 +124,7 @@ export default function AICopywritingDialog({
   return (
     <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" onClick={handleClose}>
       <div
-        className="bg-surface-container-low dark:bg-surface-container-low rounded-[2rem] p-6 sm:p-8 w-full max-w-lg space-y-6 max-h-[90vh] overflow-y-auto"
+        className="bg-surface-container-low rounded-[2rem] p-6 sm:p-8 w-full max-w-lg space-y-6 max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"

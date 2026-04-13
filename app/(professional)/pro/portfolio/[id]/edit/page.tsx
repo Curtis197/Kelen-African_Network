@@ -28,6 +28,7 @@ export default async function EditRealizationPage({ params }: Props) {
     .select(`
       *,
       images:realization_images(*),
+      videos:realization_videos(*),
       documents:realization_documents(*)
     `)
     .eq("id", id)
@@ -59,6 +60,7 @@ export default async function EditRealizationPage({ params }: Props) {
             price: realization.price,
             currency: realization.currency || "XOF",
             images: realization.images || [],
+            videos: realization.videos || [],
             documents: realization.documents || [],
           }}
         />

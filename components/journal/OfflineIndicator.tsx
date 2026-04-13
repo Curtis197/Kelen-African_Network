@@ -18,8 +18,8 @@ export default function OfflineIndicator({ pendingDrafts = 0, onSync, isSyncing 
     <div
       className={`sticky top-0 z-40 px-4 py-3 flex items-center justify-between text-sm ${
         isOnline
-          ? 'bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-300'
-          : 'bg-amber-50 dark:bg-amber-900/20 text-amber-800 dark:text-amber-300'
+          ? 'bg-green-50 text-green-800'
+          : 'bg-amber-50 text-amber-800'
       }`}
       role="alert"
       aria-live="polite"

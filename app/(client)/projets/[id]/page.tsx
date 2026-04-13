@@ -14,6 +14,8 @@ import { DEVELOPMENT_AREAS } from "@/lib/constants/projects";
 import { ProjectProfessional, ProjectStep, ProjectArea } from "@/lib/types/projects";
 import { createProjectArea, deleteProjectArea, getProjectAreas } from "@/lib/actions/projects";
 import { getProjectSteps } from "@/lib/actions/project-steps";
+import { getProjectImages, type ProjectImage } from "@/lib/actions/project-images";
+import { generateProjectPdf } from "@/lib/actions/project-pdf";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -58,6 +60,7 @@ export default function ProjectDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [showAreaSelector, setShowAreaSelector] = useState(false);
   const [areas, setAreas] = useState<ProjectArea[]>([]);
+  const [heroImage, setHeroImage] = useState<string | null>(null);
   const supabase = createClient();
 
   useEffect(() => {
@@ -100,6 +103,15 @@ export default function ProjectDetailPage() {
     // Fetch Steps (via server action to get associated_pros names)
     const stepsData = await getProjectSteps(projectIdStr);
     setSteps(stepsData as ProjectStep[]);
+
+    // Fetch images for hero background
+    const imgs = await getProjectImages(projectIdStr);
+    console.log('[PROJECT-DETAIL] Images fetched:', imgs.length);
+    const mainImg = imgs.find((img: ProjectImage) => img.is_main) || imgs[0];
+    if (mainImg) {
+      console.log('[PROJECT-DETAIL] Setting hero image:', mainImg.url);
+      setHeroImage(mainImg.url);
+    }
 
     setIsLoading(false);
   };
@@ -152,7 +164,22 @@ export default function ProjectDetailPage() {
 
   return (
     <main className="min-h-screen bg-surface font-body text-on-surface">
-      <div className="mx-auto max-w-7xl w-full px-3 sm:px-4 lg:px-8 pt-4 sm:pt-6 lg:pt-8">
+      {/* Hero Background */}
+      {heroImage && (
+        <div className="relative h-48 sm:h-64 lg:h-80 overflow-hidden">
+          <img
+            src={heroImage}
+            alt={project.title}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/50 to-transparent" />
+        </div>
+      )}
+
+      <div className={cn(
+        "mx-auto max-w-7xl w-full px-3 sm:px-4 lg:px-8",
+        heroImage ? "-mt-24 sm:-mt-32 lg:-mt-40 relative z-10" : "pt-4 sm:pt-6 lg:pt-8"
+      )}>
         {/* Breadcrumb */}
         <nav className="flex items-center gap-1.5 sm:gap-2 text-[9px] sm:text-xs font-black uppercase tracking-[0.12em] sm:tracking-[0.2em] text-on-surface-variant mb-3 sm:mb-4 lg:mb-6 overflow-x-auto scrollbar-hide">
           <Link href="/projets" className="hover:text-primary transition-colors truncate flex-shrink-0 sm:flex-shrink">
@@ -168,19 +195,9 @@ export default function ProjectDetailPage() {
           <div className="flex flex-col gap-4 sm:gap-6 lg:gap-10">
             {/* Title and Status */}
             <div className="space-y-3 sm:space-y-4">
-              <div className="flex flex-col gap-3">
-                <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-[3rem] font-headline font-bold text-on-surface tracking-tight leading-tight break-words">
-                  {project.title}
-                </h1>
-                <div className="flex lg:hidden items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-primary-container/20 to-transparent rounded-full self-start">
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
-                  <span className="text-[9px] font-black uppercase tracking-widest text-primary">Live</span>
-                </div>
-                <div className="hidden lg:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary-container/20 to-transparent rounded-full flex-shrink-0">
-                  <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-primary">Live Sync</span>
-                </div>
-              </div>
+              <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-[3rem] font-headline font-bold text-on-surface tracking-tight leading-tight break-words">
+                {project.title}
+              </h1>
 
               {/* Meta info */}
               <div className="flex flex-wrap items-center gap-2 sm:gap-3 lg:gap-6">
@@ -224,32 +241,55 @@ export default function ProjectDetailPage() {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+            <div className="flex flex-wrap gap-2 sm:gap-3">
               <Link
                 href={`/projets/${projectIdStr}/journal`}
-                className="flex-1 sm:flex-none px-3 sm:px-6 lg:px-8 py-2.5 sm:py-4 bg-surface-container-low text-on-surface font-headline font-bold rounded-lg sm:rounded-2xl border border-transparent hover:border-surface-container transition-all flex items-center justify-center gap-2 text-[10px] sm:text-sm"
+                className="flex-1 min-w-[120px] sm:flex-none px-3 sm:px-6 lg:px-8 py-2.5 sm:py-4 bg-surface-container-low text-on-surface font-headline font-bold rounded-lg sm:rounded-2xl border border-transparent hover:border-surface-container transition-all flex items-center justify-center gap-2 text-[10px] sm:text-sm"
               >
                 <span className="material-symbols-outlined text-base sm:text-xl">book</span>
                 <span>Journal</span>
               </Link>
               <Link
                 href={`/projets/${projectIdStr}/documents`}
-                className="flex-1 sm:flex-none px-3 sm:px-6 lg:px-8 py-2.5 sm:py-4 bg-surface-container-low text-on-surface font-headline font-bold rounded-lg sm:rounded-2xl border border-transparent hover:border-surface-container transition-all flex items-center justify-center gap-2 text-[10px] sm:text-sm"
+                className="flex-1 min-w-[120px] sm:flex-none px-3 sm:px-6 lg:px-8 py-2.5 sm:py-4 bg-surface-container-low text-on-surface font-headline font-bold rounded-lg sm:rounded-2xl border border-transparent hover:border-surface-container transition-all flex items-center justify-center gap-2 text-[10px] sm:text-sm"
               >
                 <span className="material-symbols-outlined text-base sm:text-xl">folder_special</span>
                 <span>Documents</span>
               </Link>
-              <button className="flex-1 sm:flex-none px-3 sm:px-6 lg:px-8 py-2.5 sm:py-4 bg-surface-container-low text-on-surface font-headline font-bold rounded-lg sm:rounded-2xl border border-transparent hover:border-surface-container transition-all flex items-center justify-center gap-2 text-[10px] sm:text-sm">
-                <span className="material-symbols-outlined text-base sm:text-xl">share</span>
-                <span>Partager</span>
-              </button>
               <Link
-                href={`/projets/nouveau?id=${projectIdStr}`}
-                className="flex-1 sm:flex-none px-3 sm:px-8 lg:px-10 py-2.5 sm:py-4 bg-primary text-white font-headline font-bold rounded-lg sm:rounded-2xl shadow-lg sm:shadow-xl shadow-primary/10 hover:scale-[0.98] transition-all flex items-center justify-center gap-2 text-[10px] sm:text-sm"
+                href={`/projets/${projectIdStr}/modifier`}
+                className="flex-1 min-w-[120px] sm:flex-none px-3 sm:px-6 lg:px-8 py-2.5 sm:py-4 bg-surface-container-low text-on-surface font-headline font-bold rounded-lg sm:rounded-2xl border border-transparent hover:border-surface-container transition-all flex items-center justify-center gap-2 text-[10px] sm:text-sm"
               >
-                <span className="material-symbols-outlined text-base sm:text-xl">add_task</span>
-                <span>Mise à jour</span>
+                <span className="material-symbols-outlined text-base sm:text-xl">edit</span>
+                <span>Modifier</span>
               </Link>
+              <button
+                onClick={async () => {
+                  console.log('[PROJECT-DETAIL] Exporting PDF for project:', projectIdStr);
+                  toast.info("Génération du PDF en cours...");
+                  const result = await generateProjectPdf(projectIdStr);
+                  if (result.success && result.html) {
+                    // Open in new window for printing
+                    const printWindow = window.open('', '_blank');
+                    if (printWindow) {
+                      printWindow.document.write(result.html);
+                      printWindow.document.close();
+                      printWindow.onload = () => {
+                        printWindow.print();
+                      };
+                      toast.success("PDF généré — utilisez 'Enregistrer en PDF' dans la boîte de dialogue d'impression");
+                    } else {
+                      toast.error("Veuillez autoriser les popups pour exporter le PDF");
+                    }
+                  } else {
+                    toast.error(result.error || "Erreur lors de la génération du PDF");
+                  }
+                }}
+                className="flex-1 min-w-[120px] sm:flex-none px-3 sm:px-6 lg:px-8 py-2.5 sm:py-4 bg-surface-container-low text-on-surface font-headline font-bold rounded-lg sm:rounded-2xl border border-transparent hover:border-surface-container transition-all flex items-center justify-center gap-2 text-[10px] sm:text-sm"
+              >
+                <span className="material-symbols-outlined text-base sm:text-xl">picture_as_pdf</span>
+                <span>Exporter PDF</span>
+              </button>
             </div>
           </div>
         </div>

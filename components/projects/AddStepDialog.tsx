@@ -83,7 +83,7 @@ export default function AddStepDialog({ isOpen, onClose, projectId, step, onSucc
         onClick={onClose}
       />
 
-      <div className="relative w-full max-w-xl bg-surface-container-low dark:bg-surface-container-low rounded-2xl sm:rounded-3xl lg:rounded-[2.5rem] shadow-3xl border border-border overflow-hidden animate-in fade-in zoom-in duration-300 max-h-[90vh] flex flex-col">
+      <div className="relative w-full max-w-xl bg-surface-container-low rounded-2xl sm:rounded-3xl lg:rounded-[2.5rem] shadow-3xl border border-border overflow-hidden animate-in fade-in zoom-in duration-300 max-h-[90vh] flex flex-col">
         <div className="p-4 sm:p-6 lg:p-8 pb-3 sm:pb-4 flex items-center justify-between border-b border-border flex-shrink-0">
           <div className="flex-1 min-w-0 pr-4">
             <h2 className="text-lg sm:text-xl lg:text-2xl font-black text-on-surface tracking-tight">
@@ -101,7 +101,7 @@ export default function AddStepDialog({ isOpen, onClose, projectId, step, onSucc
 
         <form onSubmit={handleSubmit} className="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 overflow-y-auto flex-1">
           {submitError && (
-            <div className="rounded-xl sm:rounded-2xl bg-rose-50 dark:bg-rose-900/20 border border-rose-100 dark:border-rose-800 p-3 sm:p-4 text-xs sm:text-sm text-rose-700 dark:text-rose-300 font-medium">
+            <div className="rounded-xl sm:rounded-2xl bg-rose-50 border border-rose-100 p-3 sm:p-4 text-xs sm:text-sm text-rose-700 font-medium">
               {submitError}
             </div>
           )}

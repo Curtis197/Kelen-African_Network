@@ -75,24 +75,9 @@ export async function upsertProject(data: z.infer<typeof projectSchema>) {
     }
 
     log("project.create.ok", { userId: user.id, projectId: created.id, title: created.title });
-    // Initialize default steps for new projects
-    await initializeDefaultSteps(created.id);
 
     return { data: created };
   }
-}
-
-async function initializeDefaultSteps(projectId: string) {
-  const supabase = await createClient();
-  const defaultSteps = [
-    { project_id: projectId, title: "Phase 1 : Conception & Plans", order_index: 0, status: 'pending' },
-    { project_id: projectId, title: "Phase 2 : Gros Œuvre / Fondations", order_index: 1, status: 'pending' },
-    { project_id: projectId, title: "Phase 3 : Second Œuvre / Finitions", order_index: 2, status: 'pending' },
-    { project_id: projectId, title: "Phase 4 : Réception des Travaux", order_index: 3, status: 'pending' },
-  ];
-
-  const { error } = await supabase.from("project_steps").insert(defaultSteps);
-  if (error) console.error("Error initializing default steps:", error);
 }
 
 export async function createProject(formData: FormData) {

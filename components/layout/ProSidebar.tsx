@@ -20,7 +20,6 @@ import {
   FileText,
 } from "lucide-react";
 import { NotificationDropdown } from "@/components/layout/NotificationDropdown";
-import { ThemeToggle } from "@/components/layout/ThemeToggle";
 
 const NAV_ITEMS = [
   { href: "/pro/dashboard", label: "Tableau de bord", icon: LayoutDashboard },
@@ -155,11 +154,11 @@ export function ProSidebar() {
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden lg:flex lg:flex-col lg:w-64 lg:shrink-0 lg:fixed lg:inset-y-0 border-r border-border bg-surface dark:bg-surface z-40">
+      <aside className="hidden lg:flex lg:flex-col lg:w-64 lg:shrink-0 lg:fixed lg:inset-y-0 border-r border-border bg-surface z-40">
         <div className="flex h-16 items-center border-b border-border px-6">
           <Link href="/pro/dashboard" className="flex items-center gap-2">
             <span className="text-lg font-bold text-on-surface">Kelen</span>
-            <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-kelen-green-100 text-kelen-green-700 dark:bg-kelen-green-900/30 dark:text-kelen-green-400">
+            <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-kelen-green-100 text-kelen-green-700">
               Pro
             </span>
           </Link>
@@ -176,7 +175,7 @@ export function ProSidebar() {
                 href={item.href}
                 className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
                   isActive
-                    ? "bg-kelen-green-50 dark:bg-kelen-green-900/20 text-kelen-green-700 dark:text-kelen-green-400"
+                    ? "bg-kelen-green-50 text-kelen-green-700"
                     : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container"
                 }`}
               >
@@ -189,14 +188,13 @@ export function ProSidebar() {
 
         {/* Bottom: user info + sign out */}
         <div className="border-t border-border p-4 space-y-3">
-          {/* Notifications + Theme */}
+          {/* Notifications */}
           <div className="flex items-center gap-2">
             <NotificationDropdown />
-            <ThemeToggle />
           </div>
 
           {/* User */}
-          <div className="rounded-lg bg-surface-container/50 dark:bg-surface-container/50 p-3">
+          <div className="rounded-lg bg-surface-container/50 p-3">
             <p className="text-xs font-medium text-on-surface truncate">{businessName}</p>
             <p className="mt-0.5 text-[10px] text-on-surface-variant truncate">{userEmail ?? "Chargement..."}</p>
           </div>
@@ -204,7 +202,7 @@ export function ProSidebar() {
           <button
             onClick={handleSignOut}
             disabled={signingOut}
-            className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:text-red-600 hover:bg-red-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <LogOut className={`w-4 h-4 ${signingOut ? 'animate-pulse' : ''}`} />
             {signingOut ? 'Déconnexion...' : 'Se déconnecter'}
@@ -213,11 +211,11 @@ export function ProSidebar() {
       </aside>
 
       {/* Mobile header */}
-      <header className="lg:hidden sticky top-0 z-50 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-b border-border">
+      <header className="lg:hidden sticky top-0 z-50 bg-surface/80 backdrop-blur-xl border-b border-border">
         <div className="flex items-center justify-between px-4 h-14">
           <Link href="/pro/dashboard" className="flex items-center gap-2">
             <span className="text-base font-bold text-on-surface">Kelen</span>
-            <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-kelen-green-100 text-kelen-green-700 dark:bg-kelen-green-900/30 dark:text-kelen-green-400">
+            <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-kelen-green-100 text-kelen-green-700">
               Pro
             </span>
           </Link>
@@ -245,7 +243,7 @@ export function ProSidebar() {
           />
           <div
             ref={drawerRef}
-            className="fixed inset-y-0 right-0 w-72 bg-surface dark:bg-surface shadow-xl overflow-y-auto border-l border-border"
+            className="fixed inset-y-0 right-0 w-72 bg-surface shadow-xl overflow-y-auto border-l border-border"
             tabIndex={-1}
           >
             {/* Drawer header */}
@@ -278,7 +276,7 @@ export function ProSidebar() {
                     onClick={() => setMobileOpen(false)}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                       isActive
-                        ? "bg-kelen-green-50 dark:bg-kelen-green-900/20 text-kelen-green-700 dark:text-kelen-green-400"
+                        ? "bg-kelen-green-50 text-kelen-green-700"
                         : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container"
                     }`}
                   >
@@ -291,14 +289,10 @@ export function ProSidebar() {
 
             {/* Bottom actions */}
             <div className="p-4 border-t border-border space-y-2">
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-on-surface-variant">Thème</span>
-                <ThemeToggle />
-              </div>
               <button
                 onClick={() => { handleSignOut(); setMobileOpen(false); }}
                 disabled={signingOut}
-                className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 <LogOut className={`w-4 h-4 ${signingOut ? 'animate-pulse' : ''}`} />
                 {signingOut ? 'Déconnexion...' : 'Se déconnecter'}

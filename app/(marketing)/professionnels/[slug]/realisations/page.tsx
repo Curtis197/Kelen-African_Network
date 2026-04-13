@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { ArrowLeft, Heart, MessageCircle } from "lucide-react";
+import { ArrowLeft, Heart, MessageCircle, Play } from "lucide-react";
 import Link from "next/link";
 import PriceDisplay from "@/components/projects/PriceDisplay";
 
@@ -40,12 +40,13 @@ export default async function RealisationsListPage({ params }: Props) {
 
   if (!pro) notFound();
 
-  // Fetch realizations with their images
+  // Fetch realizations with their images and videos
   const { data: realizations } = await supabase
     .from("professional_realizations")
     .select(`
       *,
-      images:realization_images(*)
+      images:realization_images(*),
+      videos:realization_videos(*)
     `)
     .eq("professional_id", pro.id)
     .order("created_at", { ascending: false });
@@ -79,6 +80,7 @@ export default async function RealisationsListPage({ params }: Props) {
   const portfolioItems = realizations && realizations.length > 0
     ? realizations.map(r => {
         const mainImage = r.images?.find((img: any) => img.is_main) || r.images?.[0];
+        const videoCount = r.videos?.length || 0;
         return {
           id: r.id,
           title: r.title,
@@ -88,31 +90,24 @@ export default async function RealisationsListPage({ params }: Props) {
           price: r.price,
           currency: r.currency || "XOF",
           likeCount: likesMap[r.id] || 0,
-          commentCount: commentsMap[r.id] || 0
+          commentCount: commentsMap[r.id] || 0,
+          videoCount
         };
       })
     : [];
 
   return (
     <div className="bg-surface selection:bg-primary-container selection:text-on-primary-container min-h-screen">
-      <main className="pt-16">
-        {/* Header */}
-        <div className="bg-stone-50 border-b border-stone-100">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-8">
-            <Link 
-              href={`/professionnels/${slug}#portfolio`}
-              className="inline-flex items-center gap-2 text-stone-600 hover:text-kelen-green-600 transition-colors mb-6"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Retour au profil
-            </Link>
-            <h1 className="text-3xl md:text-4xl font-black text-stone-900 tracking-tight">
-              Toutes les réalisations de {pro.business_name}
-            </h1>
-            <p className="text-stone-500 mt-2 text-lg">
-              {portfolioItems.length} réalisation{portfolioItems.length !== 1 ? 's' : ''} publiée{portfolioItems.length !== 1 ? 's' : ''}
-            </p>
-          </div>
+      <main className="pt-8">
+        {/* Breadcrumb Navigation */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-4">
+          <Link
+            href={`/professionnels/${slug}#portfolio`}
+            className="inline-flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors mb-6 text-sm"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Retour au profil
+          </Link>
         </div>
 
         {/* Grid */}
@@ -121,16 +116,24 @@ export default async function RealisationsListPage({ params }: Props) {
             {portfolioItems.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {portfolioItems.map((item) => (
-                  <Link 
+                  <Link
                     key={item.id}
                     href={`/professionnels/${slug}/realisations/${item.id}`}
                     className="group relative overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-500 hover:shadow-2xl"
                   >
-                    <img
-                      className="w-full aspect-[4/3] object-cover transition-transform duration-700 group-hover:scale-110"
-                      src={item.image}
-                      alt={item.title}
-                    />
+                    <div className="relative">
+                      <img
+                        className="w-full aspect-[4/3] object-cover transition-transform duration-700 group-hover:scale-110"
+                        src={item.image}
+                        alt={item.title}
+                      />
+                      {item.videoCount > 0 && (
+                        <div className="absolute bottom-3 right-3 bg-black/70 backdrop-blur-sm text-white px-2.5 py-1.5 rounded-full flex items-center gap-1.5 text-xs font-semibold">
+                          <Play className="w-3 h-3" fill="currentColor" />
+                          {item.videoCount}
+                        </div>
+                      )}
+                    </div>
                     <div className="p-6">
                       <h3 className="text-xl font-black text-stone-900 mb-2 group-hover:text-kelen-green-600 transition-colors">
                         {item.title}

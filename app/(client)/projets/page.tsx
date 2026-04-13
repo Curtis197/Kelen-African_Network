@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { motion } from "framer-motion";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { getProjectImages, type ProjectImage } from "@/lib/actions/project-images";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -35,8 +37,10 @@ const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
 };
 
 export default function ProjectsPage() {
+  const router = useRouter();
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [projectImages, setProjectImages] = useState<Record<string, string>>({});
   const supabase = createClient();
 
   useEffect(() => {
@@ -57,7 +61,23 @@ export default function ProjectsPage() {
     if (error) {
       console.error("Error fetching projects:", error);
     } else {
-      setProjects((data as Project[]) || []);
+      const projectsData = (data as Project[]) || [];
+      setProjects(projectsData);
+
+      // Fetch images for all projects
+      console.log('[PROJECTS-LIST] Fetching images for', projectsData.length, 'projects');
+      const imagesMap: Record<string, string> = {};
+      await Promise.all(
+        projectsData.map(async (project) => {
+          const imgs = await getProjectImages(project.id);
+          const mainImg = imgs.find((img: ProjectImage) => img.is_main) || imgs[0];
+          if (mainImg) {
+            imagesMap[project.id] = mainImg.url;
+          }
+        })
+      );
+      console.log('[PROJECTS-LIST] Images map:', imagesMap);
+      setProjectImages(imagesMap);
     }
     setIsLoading(false);
   };
@@ -115,10 +135,20 @@ export default function ProjectsPage() {
                       href={`/projets/${project.id}`}
                       className="group bg-surface-container-lowest p-4 sm:p-5 rounded-xl sm:rounded-2xl flex items-center gap-3 sm:gap-4 lg:gap-6 hover:shadow-2xl hover:shadow-surface-container-high/50 transition-all duration-300 border border-transparent hover:border-surface-container"
                     >
-                      <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-xl sm:rounded-2xl overflow-hidden flex-shrink-0 bg-surface-container-low flex items-center justify-center">
-                        <span className="material-symbols-outlined text-2xl sm:text-3xl lg:text-4xl text-on-surface-variant opacity-40">
-                          {(project.category || '').toLowerCase() === 'construction' ? 'home_work' : 'architecture'}
-                        </span>
+                      <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-xl sm:rounded-2xl overflow-hidden flex-shrink-0 bg-surface-container-low">
+                        {projectImages[project.id] ? (
+                          <img
+                            src={projectImages[project.id]}
+                            alt={project.title}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <span className="material-symbols-outlined text-2xl sm:text-3xl lg:text-4xl text-on-surface-variant opacity-40">
+                              {(project.category || '').toLowerCase() === 'construction' ? 'home_work' : 'architecture'}
+                            </span>
+                          </div>
+                        )}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 sm:gap-3 mb-1">
@@ -143,7 +173,17 @@ export default function ProjectsPage() {
                           </span>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            router.push(`/projets/${project.id}/modifier`);
+                          }}
+                          className="p-2 hover:bg-surface-container rounded-full text-on-surface-variant hover:text-primary transition-colors"
+                          title="Modifier"
+                        >
+                          <span className="material-symbols-outlined text-base">edit</span>
+                        </button>
                         <div className="p-2 hover:bg-surface-container rounded-full text-on-surface-variant transition-colors">
                           <span className="material-symbols-outlined">chevron_right</span>
                         </div>

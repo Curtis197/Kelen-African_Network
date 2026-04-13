@@ -209,11 +209,11 @@ export default function ProAnalyticsPage() {
           <div className="flex items-end gap-3 h-48">
             {chartData.map((d) => (
               <div key={d.month} className="flex-1 flex flex-col items-center gap-2 group">
-                <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-stone-900 dark:bg-white text-white dark:text-stone-900 text-[10px] font-bold px-2 py-1 rounded-md mb-1">
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-stone-900 text-white text-[10px] font-bold px-2 py-1 rounded-md mb-1">
                   {d.views}
                 </div>
                 <div
-                  className="w-full bg-kelen-green-500 rounded-t-lg transition-all duration-500 hover:bg-stone-900 dark:hover:bg-white"
+                  className="w-full bg-kelen-green-500 rounded-t-lg transition-all duration-500 hover:bg-stone-900"
                   style={{ height: `${(d.views / maxViews) * 100}%` }}
                 />
                 <span className="text-[10px] font-bold text-on-surface-variant/60 uppercase tracking-tighter">{d.month}</span>

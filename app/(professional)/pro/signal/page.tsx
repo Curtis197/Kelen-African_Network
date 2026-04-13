@@ -98,9 +98,9 @@ export default function ProSignalsPage() {
         </p>
       </header>
 
-      <div className="mb-10 p-5 bg-amber-50 dark:bg-amber-900/20 rounded-2xl border border-amber-200 dark:border-amber-800 flex gap-4 items-start">
-        <span className="material-symbols-outlined text-amber-600 dark:text-amber-400 text-2xl">info</span>
-        <div className="text-sm text-amber-900 dark:text-amber-200">
+      <div className="mb-10 p-5 bg-amber-50 rounded-2xl border border-amber-200 flex gap-4 items-start">
+        <span className="material-symbols-outlined text-amber-600 text-2xl">info</span>
+        <div className="text-sm text-amber-900">
           <p className="font-bold mb-1">Droit de réponse (15 jours)</p>
           <p>Vous disposez d&apos;un délai légal de 15 jours pour répondre à tout signalement. Passé ce délai, le signalement peut être validé automatiquement par nos services.</p>
         </div>
@@ -125,7 +125,7 @@ export default function ProSignalsPage() {
                 <div className="p-8 border-b border-border">
                   <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-6">
                     <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-2xl bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 flex items-center justify-center">
+                      <div className="w-12 h-12 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center">
                         <span className="material-symbols-outlined">report_problem</span>
                       </div>
                       <div>
@@ -138,7 +138,7 @@ export default function ProSignalsPage() {
                         {signal.severity}
                       </span>
                       {!signal.pro_response && (
-                        <span className="px-3 py-1 bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 rounded-full text-[10px] font-black uppercase tracking-widest">
+                        <span className="px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-[10px] font-black uppercase tracking-widest">
                           {daysLeft}j restants
                         </span>
                       )}
@@ -171,10 +171,10 @@ export default function ProSignalsPage() {
                         <button
                           onClick={() => submitResponse(signal.id)}
                           disabled={isSubmitting === signal.id || !responseInput[signal.id]?.trim()}
-                          className="px-8 py-3 bg-stone-900 dark:bg-white text-white dark:text-stone-900 font-bold rounded-xl hover:bg-stone-800 dark:hover:bg-stone-100 transition-all active:scale-95 disabled:opacity-50 flex items-center gap-2"
+                          className="px-8 py-3 bg-stone-900 text-white font-bold rounded-xl hover:bg-stone-800 transition-all active:scale-95 disabled:opacity-50 flex items-center gap-2"
                         >
                           {isSubmitting === signal.id ? (
-                             <div className="w-4 h-4 border-2 border-white/30 dark:border-stone-900/30 border-t-white dark:border-t-stone-900 rounded-full animate-spin" />
+                             <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                           ) : (
                             <span className="material-symbols-outlined text-lg">send</span>
                           )}
@@ -183,8 +183,8 @@ export default function ProSignalsPage() {
                       </div>
                     </div>
                   ) : (
-                    <div className="bg-kelen-green-50/50 dark:bg-kelen-green-900/20 border border-kelen-green-100 dark:border-kelen-green-800 rounded-2xl p-6">
-                      <p className="text-xs font-black text-kelen-green-600 dark:text-kelen-green-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                    <div className="bg-kelen-green-50/50 border border-kelen-green-100 rounded-2xl p-6">
+                      <p className="text-xs font-black text-kelen-green-600 uppercase tracking-widest mb-3 flex items-center gap-2">
                         <span className="material-symbols-outlined text-sm">reply</span>
                         Ma réponse publiée
                       </p>

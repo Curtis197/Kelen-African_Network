@@ -255,9 +255,9 @@ export default function SharedLogPage() {
             </div>
           </div>
         ) : (
-          <div className="bg-green-50 dark:bg-green-900/20 rounded-2xl p-6 text-center">
-            <CheckCircle className="w-8 h-8 mx-auto mb-3 text-green-600 dark:text-green-400" />
-            <p className="text-sm font-medium text-green-800 dark:text-green-300">
+          <div className="bg-green-50 rounded-2xl p-6 text-center">
+            <CheckCircle className="w-8 h-8 mx-auto mb-3 text-green-600" />
+            <p className="text-sm font-medium text-green-800">
               Merci pour votre retour. Votre réponse a été enregistrée.
             </p>
           </div>

@@ -254,6 +254,16 @@ CREATE TABLE public.project_images (
   CONSTRAINT project_images_professional_id_fkey FOREIGN KEY (professional_id) REFERENCES public.professionals(id),
   CONSTRAINT project_images_project_document_id_fkey FOREIGN KEY (project_document_id) REFERENCES public.project_documents(id)
 );
+CREATE TABLE public.user_project_images (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  project_id uuid NOT NULL,
+  url text NOT NULL,
+  is_main boolean DEFAULT false,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT user_project_images_pkey PRIMARY KEY (id),
+  CONSTRAINT user_project_images_project_id_fkey FOREIGN KEY (project_id) REFERENCES public.user_projects(id) ON DELETE CASCADE
+);
 CREATE TABLE public.project_log_comments (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   log_id uuid NOT NULL,
@@ -432,6 +442,18 @@ CREATE TABLE public.realization_images (
   updated_at timestamp with time zone DEFAULT now(),
   CONSTRAINT realization_images_pkey PRIMARY KEY (id),
   CONSTRAINT realization_images_realization_id_fkey FOREIGN KEY (realization_id) REFERENCES public.professional_realizations(id)
+);
+CREATE TABLE public.realization_videos (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  realization_id uuid NOT NULL,
+  url text NOT NULL,
+  thumbnail_url text,
+  duration integer,
+  order_index integer DEFAULT 0,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT realization_videos_pkey PRIMARY KEY (id),
+  CONSTRAINT realization_videos_realization_id_fkey FOREIGN KEY (realization_id) REFERENCES public.professional_realizations(id)
 );
 CREATE TABLE public.realization_likes (
   id uuid NOT NULL DEFAULT gen_random_uuid(),

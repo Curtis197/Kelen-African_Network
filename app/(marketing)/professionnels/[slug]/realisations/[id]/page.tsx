@@ -49,7 +49,8 @@ export default async function RealizationDetailPage({ params }: Props) {
     .select(`
       *,
       professional:professionals(*),
-      images:realization_images(*)
+      images:realization_images(*),
+      videos:realization_videos(*)
     `)
     .eq("id", id)
     .single();
@@ -69,19 +70,7 @@ export default async function RealizationDetailPage({ params }: Props) {
 
   return (
     <div className="bg-[#f9f9f8] font-body text-[#1a1c1c] antialiased min-h-screen">
-      <nav className="fixed top-0 w-full z-50 bg-[#f9f9f8]/70 backdrop-blur-xl border-b border-[#bbcabf]/15 shadow-sm">
-        <div className="flex items-center justify-between px-6 md:px-8 py-4 w-full max-w-[1440px] mx-auto">
-          <div className="flex items-center gap-6 md:gap-8">
-            <Link href="/" className="text-lg md:text-xl font-bold tracking-tighter text-[#1a1c1c]">Kelen</Link>
-            <div className="hidden md:flex items-center gap-6 font-headline font-bold text-sm tracking-tight">
-              <Link href="/discover" className="text-[#1a1c1c]/60 hover:text-[#10b77f] transition-all">Découvrir</Link>
-              <Link href="/professionnels" className="text-[#1a1c1c]/60 hover:text-[#10b77f] transition-all">Experts</Link>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      <main className="pt-24 pb-32 md:pb-20 max-w-[1440px] mx-auto px-4 md:px-8">
+      <main className="pt-8 pb-32 md:pb-20 max-w-[1440px] mx-auto px-4 md:px-8">
         {/* Breadcrumb & Back */}
         <div className="mb-8 md:mb-12 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-sm font-medium text-[#3c4a42]/60">
@@ -138,7 +127,6 @@ export default async function RealizationDetailPage({ params }: Props) {
 
             {/* Description */}
             <section>
-              <h2 className="font-headline font-bold text-3xl mb-6 text-[#1a1c1c]">Vision & Exécution</h2>
               <div className="space-y-6 text-lg leading-relaxed text-[#3c4a42] max-w-3xl">
                 <p>{realization.description}</p>
               </div>
@@ -159,6 +147,37 @@ export default async function RealizationDetailPage({ params }: Props) {
                     />
                   </div>
                 ))}
+              </section>
+            )}
+
+            {/* Videos Section */}
+            {realization.videos && realization.videos.length > 0 && (
+              <section>
+                <h2 className="font-headline font-bold text-2xl md:text-3xl mb-6 md:mb-8 tracking-tight">Vidéos</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {realization.videos
+                    .sort((a: any, b: any) => (a.order_index || 0) - (b.order_index || 0))
+                    .map((video: any, i: number) => (
+                      <div
+                        key={video.id}
+                        className="rounded-2xl overflow-hidden shadow-sm bg-black"
+                      >
+                        <video
+                          src={video.url}
+                          controls
+                          className="w-full aspect-video"
+                          preload="metadata"
+                        >
+                          Votre navigateur ne supporte pas la lecture de vidéos.
+                        </video>
+                        {video.duration && (
+                          <div className="px-4 py-2 text-xs text-[#3c4a42]/60">
+                            Durée: {Math.floor(video.duration / 60)}:{String(video.duration % 60).padStart(2, '0')}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                </div>
               </section>
             )}
 

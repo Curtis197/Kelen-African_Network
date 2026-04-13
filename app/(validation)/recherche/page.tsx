@@ -29,11 +29,6 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     .eq("is_active", true)
     .eq("is_visible", true);
 
-  // Black-listed professionals appear in name lookup (verification) but not in discovery
-  if (mode === "browse") {
-    browserQuery = browserQuery.neq("status", "black");
-  }
-
   // Text search
   if (query) {
     browserQuery = browserQuery.or(

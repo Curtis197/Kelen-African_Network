@@ -7,10 +7,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/client";
 import { uploadFile } from "@/lib/supabase/storage";
-import { Image as ImageIcon, X, Loader2, ArrowLeft, Star, FileText, Upload } from "lucide-react";
+import { Image as ImageIcon, X, Loader2, ArrowLeft, Star, FileText, Upload, Video } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { createRealization, updateRealization } from "@/lib/actions/portfolio";
+import { LocationSearch, type LocationData } from "@/components/location/LocationSearch";
 
 const realizationSchema = z.object({
   title: z.string().min(3, "Le titre doit contenir au moins 3 caractères"),
@@ -34,6 +35,7 @@ interface RealizationFormProps {
     price: number | null;
     currency: string;
     images?: Array<{ id: string; url: string; is_main: boolean }>;
+    videos?: Array<{ id: string; url: string; thumbnail_url: string | null; duration: number | null }>;
     documents?: Array<{ id: string; url: string; title: string | null; type: string | null }>;
   };
 }
@@ -42,14 +44,19 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
   const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [videoFiles, setVideoFiles] = useState<File[]>([]);
   const [documentFiles, setDocumentFiles] = useState<File[]>([]);
   const [existingImages, setExistingImages] = useState<
     Array<{ id: string; url: string; is_main: boolean }>
   >(initialData?.images || []);
+  const [existingVideos, setExistingVideos] = useState<
+    Array<{ id: string; url: string; thumbnail_url: string | null; duration: number | null }>
+  >(initialData?.videos || []);
   const [existingDocuments, setExistingDocuments] = useState<
     Array<{ id: string; url: string; title: string | null; type: string | null }>
   >(initialData?.documents || []);
   const [removedImageIds, setRemovedImageIds] = useState<string[]>([]);
+  const [removedVideoIds, setRemovedVideoIds] = useState<string[]>([]);
   const [removedDocumentIds, setRemovedDocumentIds] = useState<string[]>([]);
   const supabase = createClient();
 
@@ -59,6 +66,8 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
+    watch,
   } = useForm<RealizationFormData>({
     resolver: zodResolver(realizationSchema),
     defaultValues: initialData
@@ -86,6 +95,12 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
     }
   };
 
+  const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setVideoFiles((prev) => [...prev, ...Array.from(e.target.files!)]);
+    }
+  };
+
   const handleDocumentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setDocumentFiles((prev) => [...prev, ...Array.from(e.target.files!)]);
@@ -94,6 +109,10 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
 
   const removeImage = (index: number) => {
     setImageFiles((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const removeVideo = (index: number) => {
+    setVideoFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
   const removeDocument = (index: number) => {
@@ -111,6 +130,21 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
       if (error) {
         console.error("[RealizationForm] Error deleting image:", error);
         toast.error("Erreur lors de la suppression de l'image");
+      }
+    }
+  };
+
+  const removeExistingVideo = async (videoId: string) => {
+    setExistingVideos((prev) => prev.filter((v) => v.id !== videoId));
+    if (isEditing) {
+      setRemovedVideoIds((prev) => [...prev, videoId]);
+      const { error } = await supabase
+        .from("realization_videos")
+        .delete()
+        .eq("id", videoId);
+      if (error) {
+        console.error("[RealizationForm] Error deleting video:", error);
+        toast.error("Erreur lors de la suppression de la vidéo");
       }
     }
   };
@@ -141,7 +175,7 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
 
   const onSubmit = async (data: RealizationFormData) => {
     setIsSaving(true);
-    console.log("[RealizationForm] Submitting:", { isEditing, data, existingImagesCount: existingImages.length, newImagesCount: imageFiles.length });
+    console.log("[RealizationForm] Submitting:", { isEditing, data, existingImagesCount: existingImages.length, newImagesCount: imageFiles.length, existingVideosCount: existingVideos.length, newVideosCount: videoFiles.length });
     try {
       const {
         data: { user },
@@ -158,6 +192,20 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
         });
         const results = await Promise.all(uploads);
         newImageUrls.push(...results.filter(Boolean));
+      }
+
+      // Upload new video files
+      const newVideoUrls: string[] = [];
+      if (videoFiles.length > 0) {
+        console.log("[RealizationForm] Uploading videos...", videoFiles.length);
+        const uploads = videoFiles.map(async (file) => {
+          const path = `portfolios/${user.id}/videos`;
+          const url = await uploadFile(file, "portfolios", path);
+          return url;
+        });
+        const results = await Promise.all(uploads);
+        newVideoUrls.push(...results.filter(Boolean));
+        console.log("[RealizationForm] Videos uploaded:", newVideoUrls.length);
       }
 
       // Upload new document files
@@ -188,8 +236,10 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
           price: data.price ? parseFloat(data.price) : null,
           currency: data.currency,
           image_urls: newImageUrls,
+          video_urls: newVideoUrls,
           document_files: newDocFiles,
           removed_image_ids: removedImageIds,
+          removed_video_ids: removedVideoIds,
           removed_document_ids: removedDocumentIds,
           updated_images: updatedImages,
         });
@@ -204,6 +254,7 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
           price: data.price ? parseFloat(data.price) : null,
           currency: data.currency,
           image_urls: newImageUrls,
+          video_urls: newVideoUrls,
           document_files: newDocFiles.length > 0 ? newDocFiles : undefined,
         });
         toast.success("Réalisation ajoutée avec succès");
@@ -263,10 +314,10 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-on-surface">Localisation</label>
-                  <input
-                    {...register("location")}
+                  <LocationSearch
+                    value={watch("location") ? { name: watch("location") || "", formatted_address: watch("location") || "", lat: 0, lng: 0 } : null}
+                    onChange={(loc: LocationData | null) => setValue("location", loc?.formatted_address || "")}
                     placeholder="Ex: Abidjan, Côte d'Ivoire"
-                    className="w-full rounded-xl bg-surface-container-low px-4 py-3 text-sm transition-all focus:bg-white focus:ring-4 focus:ring-kelen-green-500/5 outline-none"
                   />
                 </div>
                 <div className="space-y-2">
@@ -390,6 +441,92 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
             )}
           </section>
 
+          {/* Videos Section */}
+          <section className="space-y-4 rounded-[1.5rem] bg-surface-container-low p-6">
+            <div className="flex items-center justify-between">
+              <h3 className="font-headline font-bold text-on-surface flex items-center gap-2">
+                <Video size={18} className="text-kelen-green-600" />
+                Vidéos
+              </h3>
+              <label className="cursor-pointer rounded-lg bg-white px-3 py-1.5 text-xs font-bold text-on-surface shadow-sm transition-all hover:bg-stone-50">
+                <input type="file" multiple accept="video/mp4,video/webm" className="hidden" onChange={handleVideoChange} />
+                Ajouter
+              </label>
+            </div>
+
+            <p className="text-xs text-on-surface-variant/60">
+              Vidéos de démonstration (MP4, WebM - max 50 Mo par vidéo).
+            </p>
+
+            {isEditing && existingVideos.length > 0 && (
+              <div className="space-y-3">
+                <p className="text-xs font-medium text-on-surface-variant">Vidéos existantes :</p>
+                <div className="grid grid-cols-2 gap-3">
+                  {existingVideos.map((video) => (
+                    <div key={`existing-video-${video.id}`} className="relative aspect-video overflow-hidden rounded-xl bg-stone-900 group">
+                      <video src={video.url} className="h-full w-full object-cover" muted />
+                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                        <div className="bg-black/60 rounded-full p-2">
+                          <Video size={20} className="text-white" />
+                        </div>
+                      </div>
+                      {video.duration && (
+                        <div className="absolute bottom-1 right-1 bg-black/80 text-white text-[10px] px-1.5 py-0.5 rounded">
+                          {Math.floor(video.duration / 60)}:{String(video.duration % 60).padStart(2, '0')}
+                        </div>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => removeExistingVideo(video.id)}
+                        className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-kelen-red-500 text-white shadow-sm opacity-0 group-hover:opacity-100"
+                      >
+                        <X size={12} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {videoFiles.length > 0 && (
+              <div className="space-y-3">
+                <p className="text-xs font-medium text-on-surface-variant">Nouvelles vidéos :</p>
+                <div className="grid grid-cols-2 gap-3">
+                  {videoFiles.map((file, i) => {
+                    const previewUrl = URL.createObjectURL(file);
+                    return (
+                      <div key={`new-video-${i}`} className="relative aspect-video overflow-hidden rounded-xl bg-stone-900 group">
+                        <video src={previewUrl} className="h-full w-full object-cover" muted />
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                          <div className="bg-black/60 rounded-full p-2">
+                            <Video size={20} className="text-white" />
+                          </div>
+                        </div>
+                        <div className="absolute bottom-1 left-1 right-1 bg-black/80 text-white text-[10px] px-1.5 py-0.5 rounded truncate">
+                          {file.name}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => removeVideo(i)}
+                          className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-kelen-red-500 text-white shadow-sm opacity-0 group-hover:opacity-100"
+                        >
+                          <X size={12} />
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {videoFiles.length === 0 && existingVideos.length === 0 && (
+              <div className="flex flex-col items-center justify-center py-8 text-center border-2 border-dashed border-on-surface-variant/10 rounded-xl">
+                <Video size={32} className="mb-2 text-on-surface-variant/20" />
+                <p className="text-xs text-on-surface-variant/50">Aucune vidéo ajoutée</p>
+              </div>
+            )}
+          </section>
+
           {/* Documents Section */}
           <section className="space-y-4 rounded-[1.5rem] bg-surface-container-low p-6">
             <div className="flex items-center justify-between">
@@ -465,9 +602,6 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
             >
               {isSaving ? <Loader2 className="animate-spin" size={24} /> : isEditing ? "Confirmer les modifications" : "Confirmer"}
             </button>
-            <p className="mt-4 text-center text-[10px] text-on-surface-variant/50 italic">
-              En confirmant, vous certifiez l&apos;authenticité de ces travaux.
-            </p>
           </div>
         </div>
       </div>

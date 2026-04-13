@@ -97,7 +97,8 @@ export function FilterPanel() {
             className="rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground focus:border-kelen-green-500 focus:outline-none"
           >
             <option value="">Tous statuts</option>
-            <option value="gold">Liste Or uniquement</option>
+            <option value="black">Liste noire uniquement</option>
+            <option value="red,black">Liste noire et liste rouge</option>
           </select>
         </>
       )}

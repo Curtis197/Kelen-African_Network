@@ -67,10 +67,10 @@ export function ClientValidationPage() {
   useEffect(() => { fetchValidations(); }, [fetchValidations]);
 
   const statusConfig: Record<string, { label: string; className: string }> = {
-    pending: { label: "En attente", className: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400" },
-    verified: { label: "Vérifié", className: "bg-kelen-green-100 text-kelen-green-700 dark:bg-kelen-green-900/30 dark:text-kelen-green-400" },
-    rejected: { label: "Refusé", className: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400" },
-    disputed: { label: "Contesté", className: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400" },
+    pending: { label: "En attente", className: "bg-amber-100 text-amber-700" },
+    verified: { label: "Vérifié", className: "bg-kelen-green-100 text-kelen-green-700" },
+    rejected: { label: "Refusé", className: "bg-red-100 text-red-700" },
+    disputed: { label: "Contesté", className: "bg-blue-100 text-blue-700" },
   };
 
   return (
@@ -87,12 +87,12 @@ export function ClientValidationPage() {
       </div>
 
       {/* Tab bar */}
-      <div className="flex gap-1 bg-surface-container-low dark:bg-surface-container-low rounded-xl p-1 mb-8">
+      <div className="flex gap-1 bg-surface-container-low rounded-xl p-1 mb-8">
         <button
           onClick={() => setActiveTab("my-validations")}
           className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
             activeTab === "my-validations"
-              ? "bg-white dark:bg-surface-container-high text-on-surface shadow-sm"
+              ? "bg-white text-on-surface shadow-sm"
               : "text-on-surface-variant hover:text-on-surface"
           }`}
         >
@@ -130,12 +130,12 @@ export function ClientValidationPage() {
           {validations.map(v => {
             const conf = statusConfig[v.status] || { label: v.status, className: "bg-surface-container text-on-surface-variant" };
             return (
-              <div key={`${v.type}-${v.id}`} className="bg-surface-container-low dark:bg-surface-container-low rounded-2xl p-5 border border-border">
+              <div key={`${v.type}-${v.id}`} className="bg-surface-container-low rounded-2xl p-5 border border-border">
                 <div className="flex items-start gap-4">
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
                     v.type === "recommendation"
-                      ? "bg-kelen-green-50 dark:bg-kelen-green-900/20 text-kelen-green-600 dark:text-kelen-green-400"
-                      : "bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400"
+                      ? "bg-kelen-green-50 text-kelen-green-600"
+                      : "bg-red-50 text-red-600"
                   }`}>
                     {v.type === "recommendation" ? <Star className="w-5 h-5" /> : <AlertTriangle className="w-5 h-5" />}
                   </div>

@@ -9,7 +9,6 @@ interface ProjectDocument {
   id: string;
   project_title: string;
   project_date: string;
-  status: "pending_review" | "published" | "rejected";
   contract_url: string;
   created_at: string;
 }
@@ -115,8 +114,7 @@ export default function ProDocumentsPage() {
       const { error } = await supabase.from("project_documents").insert({
         professional_id: pro.id,
         project_title: file.name.split('.')[0],
-        contract_url: fileUrl,
-        status: "pending_review"
+        contract_url: fileUrl
       });
 
       if (error) {
@@ -230,11 +228,7 @@ export default function ProDocumentsPage() {
                     <span className="material-symbols-outlined text-4xl text-stone-300 group-hover:scale-110 transition-transform">
                       {doc.contract_url.endsWith('.pdf') ? 'picture_as_pdf' : 'image'}
                     </span>
-                    <div className={`absolute top-4 left-4 px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-widest ${
-                       doc.status === 'published' ? 'bg-kelen-green-500 text-white' :
-                       doc.status === 'rejected' ? 'bg-kelen-red-500 text-white' :
-                       'bg-white/90 text-stone-600'
-                    }`}>
+                    <div className="absolute top-4 left-4 px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-widest bg-white/90 text-stone-600">
                       {doc.contract_url.split('.').pop() || 'FILE'}
                     </div>
                   </div>
@@ -257,7 +251,6 @@ export default function ProDocumentsPage() {
                    <thead className="bg-stone-50/50 border-b border-stone-100">
                       <tr>
                         <th className="px-8 py-5 text-[10px] font-black text-stone-400 uppercase tracking-widest">Nom & Date</th>
-                        <th className="px-6 py-5 text-[10px] font-black text-stone-400 uppercase tracking-widest">Statut</th>
                         <th className="px-8 py-5 text-right"></th>
                       </tr>
                    </thead>
@@ -278,15 +271,6 @@ export default function ProDocumentsPage() {
                                   <p className="text-[10px] text-stone-400 uppercase font-black">{new Date(doc.created_at).toLocaleDateString()}</p>
                                 </div>
                               </div>
-                           </td>
-                           <td className="px-6 py-5">
-                              <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${
-                                doc.status === 'published' ? 'bg-kelen-green-100 text-kelen-green-700' :
-                                doc.status === 'rejected' ? 'bg-kelen-red-100 text-kelen-red-700' :
-                                'bg-stone-100 text-stone-600'
-                              }`}>
-                                {doc.status === 'published' ? 'Vérifié' : doc.status === 'rejected' ? 'Refusé' : 'En examen'}
-                              </span>
                            </td>
                            <td className="px-8 py-5 text-right">
                               <button className="material-symbols-outlined text-stone-300 group-hover:text-kelen-green-600 transition-colors">download</button>
@@ -374,13 +358,6 @@ export default function ProDocumentsPage() {
               </div>
               <div className="mt-6 text-center">
                 <h4 className="font-bold text-stone-900 leading-tight mb-2 truncate px-2">{selectedDoc.project_title}</h4>
-                <div className={`inline-flex items-center px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${
-                  selectedDoc.status === 'published' ? 'bg-kelen-green-100 text-kelen-green-700' :
-                  selectedDoc.status === 'rejected' ? 'bg-kelen-red-100 text-kelen-red-700' :
-                  'bg-stone-100 text-stone-600'
-                }`}>
-                  {selectedDoc.status === 'published' ? 'Certification active' : 'En attente'}
-                </div>
               </div>
             </div>
 

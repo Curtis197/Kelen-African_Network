@@ -135,7 +135,7 @@ export default function LogDetailPage() {
           </div>
 
           {/* Title and description */}
-          <div className="bg-surface-container-low dark:bg-surface-container-low rounded-2xl p-6 space-y-4">
+          <div className="bg-surface-container-low rounded-2xl p-6 space-y-4">
             <h1 className="text-2xl md:text-3xl font-bold text-on-surface">
               {log.title}
             </h1>
@@ -189,7 +189,7 @@ export default function LogDetailPage() {
               <h2 className="text-sm font-bold text-on-surface mb-3">
                 ⚠️ Problèmes rencontrés
               </h2>
-              <p className="text-sm text-on-surface-variant bg-amber-50 dark:bg-amber-900/10 rounded-xl p-5 whitespace-pre-wrap">
+              <p className="text-sm text-on-surface-variant bg-amber-50 rounded-xl p-5 whitespace-pre-wrap">
                 {log.issues}
               </p>
             </div>

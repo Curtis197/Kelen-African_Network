@@ -18,7 +18,6 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { NotificationDropdown } from "@/components/layout/NotificationDropdown";
-import { ThemeToggle } from "@/components/layout/ThemeToggle";
 
 const NAV_ITEMS = [
   { href: "/pro/dashboard", label: "Tableau de bord", icon: LayoutDashboard },
@@ -173,13 +172,13 @@ export function ProNavbar() {
   return (
     <>
       {/* Desktop navbar */}
-      <header className="hidden lg:flex sticky top-0 z-50 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-b border-border">
+      <header className="hidden lg:flex sticky top-0 z-50 bg-surface/80 backdrop-blur-xl border-b border-border">
         <div className="flex items-center justify-between w-full px-6 h-16">
           {/* Left: Brand + Nav */}
           <div className="flex items-center gap-8">
             <Link href="/pro/dashboard" className="flex items-center gap-2">
               <span className="text-lg font-bold text-on-surface">Kelen</span>
-              <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-kelen-green-100 text-kelen-green-700 dark:bg-kelen-green-900/30 dark:text-kelen-green-400">
+              <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-kelen-green-100 text-kelen-green-700">
                 Pro
               </span>
             </Link>
@@ -194,7 +193,7 @@ export function ProNavbar() {
                     href={item.href}
                     className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                       isActive
-                        ? "bg-kelen-green-50 dark:bg-kelen-green-900/20 text-kelen-green-700 dark:text-kelen-green-400"
+                        ? "bg-kelen-green-50 text-kelen-green-700"
                         : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container"
                     }`}
                   >
@@ -210,7 +209,7 @@ export function ProNavbar() {
                   onClick={() => setMoreOpen(!moreOpen)}
                   className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                     MORE_ITEMS.some(i => pathname === i.href || pathname?.startsWith(i.href + "/"))
-                      ? "bg-kelen-green-50 dark:bg-kelen-green-900/20 text-kelen-green-700 dark:text-kelen-green-400"
+                      ? "bg-kelen-green-50 text-kelen-green-700"
                       : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container"
                   }`}
                 >
@@ -219,7 +218,7 @@ export function ProNavbar() {
                 </button>
 
                 {moreOpen && (
-                  <div className="absolute top-full left-0 mt-1 w-56 bg-surface-container-low dark:bg-surface-container-low rounded-xl shadow-xl border border-border overflow-hidden py-1 z-50">
+                  <div className="absolute top-full left-0 mt-1 w-56 bg-surface-container-low rounded-xl shadow-xl border border-border overflow-hidden py-1 z-50">
                     {MORE_ITEMS.map((item) => {
                       const isActive = pathname === item.href || pathname?.startsWith(item.href + "/");
                       const Icon = item.icon;
@@ -230,7 +229,7 @@ export function ProNavbar() {
                           onClick={() => setMoreOpen(false)}
                           className={`flex items-center gap-3 px-4 py-2.5 text-sm font-medium transition-colors ${
                             isActive
-                              ? "bg-kelen-green-50 dark:bg-kelen-green-900/20 text-kelen-green-700 dark:text-kelen-green-400"
+                              ? "bg-kelen-green-50 text-kelen-green-700"
                               : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high"
                           }`}
                         >
@@ -245,10 +244,9 @@ export function ProNavbar() {
             </nav>
           </div>
 
-          {/* Right: Notifications + Theme + User + Sign out */}
+          {/* Right: Notifications + User + Sign out */}
           <div className="flex items-center gap-2">
             <NotificationDropdown />
-            <ThemeToggle />
 
             <div className="flex items-center gap-3 ml-2 pl-4 border-l border-border">
               <div className="text-right">
@@ -270,11 +268,11 @@ export function ProNavbar() {
       </header>
 
       {/* Mobile header */}
-      <header className="lg:hidden sticky top-0 z-50 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-b border-border">
+      <header className="lg:hidden sticky top-0 z-50 bg-surface/80 backdrop-blur-xl border-b border-border">
         <div className="flex items-center justify-between px-4 h-14">
           <Link href="/pro/dashboard" className="flex items-center gap-2">
             <span className="text-base font-bold text-on-surface">Kelen</span>
-            <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-kelen-green-100 text-kelen-green-700 dark:bg-kelen-green-900/30 dark:text-kelen-green-400">
+            <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-kelen-green-100 text-kelen-green-700">
               Pro
             </span>
           </Link>
@@ -302,7 +300,7 @@ export function ProNavbar() {
           />
           <div
             ref={drawerRef}
-            className="fixed inset-y-0 right-0 w-72 bg-surface dark:bg-surface shadow-xl overflow-y-auto border-l border-border"
+            className="fixed inset-y-0 right-0 w-72 bg-surface shadow-xl overflow-y-auto border-l border-border"
             tabIndex={-1}
           >
             {/* Drawer header */}
@@ -335,7 +333,7 @@ export function ProNavbar() {
                     onClick={() => setMobileOpen(false)}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                       isActive
-                        ? "bg-kelen-green-50 dark:bg-kelen-green-900/20 text-kelen-green-700 dark:text-kelen-green-400"
+                        ? "bg-kelen-green-50 text-kelen-green-700"
                         : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container"
                     }`}
                   >
@@ -348,14 +346,10 @@ export function ProNavbar() {
 
             {/* Bottom actions */}
             <div className="p-4 border-t border-border space-y-2">
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-on-surface-variant">Thème</span>
-                <ThemeToggle />
-              </div>
               <button
                 onClick={() => { handleSignOut(); setMobileOpen(false); }}
                 disabled={signingOut}
-                className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 <LogOut className={`w-4 h-4 ${signingOut ? 'animate-pulse' : ''}`} />
                 {signingOut ? 'Déconnexion...' : 'Se déconnecter'}

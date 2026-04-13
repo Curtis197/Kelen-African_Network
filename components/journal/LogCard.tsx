@@ -32,7 +32,7 @@ export default function LogCard({ log, projectId, proProjectId, primaryPhotoUrl,
       className="block group"
       aria-label={`Rapport du ${dateStr}: ${log.title}`}
     >
-      <article className="bg-surface-container-low dark:bg-surface-container-low rounded-2xl p-5 sm:p-6 hover:shadow-lg transition-shadow border border-outline-variant/10">
+      <article className="bg-surface-container-low rounded-2xl p-5 sm:p-6 hover:shadow-lg transition-shadow border border-outline-variant/10">
         {/* Header */}
         <div className="flex items-start justify-between gap-3 mb-3">
           <div className="flex-1 min-w-0">
@@ -93,7 +93,7 @@ export default function LogCard({ log, projectId, proProjectId, primaryPhotoUrl,
 
         {/* Issues flag */}
         {log.issues && (
-          <div className="flex items-center gap-1.5 mt-3 text-xs text-amber-700 dark:text-amber-400">
+          <div className="flex items-center gap-1.5 mt-3 text-xs text-amber-700">
             <AlertTriangle className="w-3.5 h-3.5" />
             <span className="line-clamp-1">{log.issues}</span>
           </div>

@@ -250,7 +250,7 @@ export function ProjectPhotoUpload({
 
       {/* Error */}
       {error && (
-        <p className="flex items-center gap-1.5 text-xs text-red-600 dark:text-red-400">
+        <p className="flex items-center gap-1.5 text-xs text-red-600">
           <AlertCircle className="w-3.5 h-3.5" />
           {error}
         </p>

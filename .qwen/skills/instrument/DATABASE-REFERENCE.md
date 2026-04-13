@@ -18,6 +18,7 @@
 - `professional_portfolio` - Profile customization (hero, about sections)
 - `professional_realizations` - Portfolio showcase (FINISHED work)
 - `realization_images` - Realization photos
+- `realization_videos` - Realization videos
 - `realization_documents` - Realization docs
 - `realization_comments` - Realization feedback
 - `realization_likes` - Realization likes
@@ -42,9 +43,10 @@
 - `project_log_shares` - Shared log links
 - `project_log_views` - Log view tracking
 
-### 6. **DOCUMENTS & EVIDENCE** (2 tables)
+### 6. **DOCUMENTS & EVIDENCE** (3 tables)
 - `project_documents` - Contracts/documents
-- `project_images` - Project photos
+- `project_images` - Professional project photos (pro-owned)
+- `user_project_images` - Client project images (client-owned)
 
 ### 7. **REVIEWS & SIGNALS** (4 tables)
 - `reviews` - Professional reviews
@@ -202,6 +204,40 @@ const { data } = await supabase
     category: 'Construction',
     budget_currency: 'EUR'
   })
+```
+
+---
+
+### `user_project_images` - Client Project Images
+**Purpose:** Image gallery for client's user_projects
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | uuid | Primary key |
+| `project_id` | uuid | FK → user_projects.id (CASCADE DELETE) |
+| `url` | text | Image URL (storage) |
+| `is_main` | boolean | Main/hero image flag |
+| `created_at` | timestamptz | Auto now |
+| `updated_at` | timestamptz | Auto now |
+
+**RLS Policies:**
+- `upimages_user_read_own` — SELECT for project owner
+- `upimages_user_insert_own` — INSERT for project owner
+- `upimages_user_update_own` — UPDATE for project owner
+- `upimages_user_delete_own` — DELETE for project owner
+- `upimages_public_read` — SELECT for anyone
+- `upimages_admin_all` — ALL for admins
+
+**Common Usage:**
+```typescript
+// Get project images (client-side)
+import { getProjectImages } from '@/lib/actions/project-images'
+const images = await getProjectImages(projectId)
+const mainImage = images.find(img => img.is_main) || images[0]
+
+// Upload and add image (via server action)
+import { uploadProjectImage } from '@/lib/actions/project-images'
+const result = await uploadProjectImage(projectId, imageUrl)
 ```
 
 ---
@@ -374,6 +410,50 @@ const { data } = await supabase
 
 ---
 
+## 📊 Table Details
+
+### `realization_videos` - Realization Videos
+**Purpose:** Videos for professional realizations (MP4, WebM)
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | uuid | Primary key |
+| `realization_id` | uuid | FK → professional_realizations.id (CASCADE DELETE) |
+| `url` | text | Video URL (storage) |
+| `thumbnail_url` | text | Optional thumbnail URL |
+| `duration` | integer | Video duration in seconds |
+| `order_index` | integer | Display order (default: 0) |
+| `created_at` | timestamptz | Auto now |
+| `updated_at` | timestamptz | Auto now |
+
+**Storage:**
+- **Bucket:** `portfolios`
+- **Path:** `portfolios/{user_id}/videos/{uuid}.{ext}`
+- **Max file size:** 50 MB
+- **Allowed formats:** `video/mp4`, `video/webm`
+
+**RLS Policies:**
+- `realization_videos_insert_own` — INSERT for realization owner
+- `realization_videos_update_own` — UPDATE for realization owner
+- `realization_videos_delete_own` — DELETE for realization owner
+- `realization_videos_public_view` — SELECT for anyone (if professional is visible)
+
+**Common Usage:**
+```typescript
+// Get realization videos
+const { data } = await supabase
+  .from('professional_realizations')
+  .select('*, realization_videos(*)')
+  .eq('id', realizationId)
+  .single()
+
+// Videos are ordered by order_index
+const sortedVideos = data.realization_videos
+  .sort((a, b) => a.order_index - b.order_index)
+```
+
+---
+
 ### `professional_realizations` - Portfolio Showcase (FINISHED WORK)
 **Purpose:** Completed work showcased on professional's PUBLIC portfolio
 
@@ -390,6 +470,7 @@ const { data } = await supabase
 
 **Associated Tables:**
 - `realization_images` - Photos for this realization
+- `realization_videos` - Videos for this realization
 - `realization_documents` - Documents for this realization
 - `realization_comments` - Feedback/comments on realization
 - `realization_likes` - Likes for this realization
@@ -441,6 +522,7 @@ professionals
  ├─ professional_realizations (professional_id) - Portfolio showcase (PUBLIC)
  ├─ professional_portfolio (professional_id) UNIQUE - Profile customization
  ├─ realization_images - Photos for realizations
+ ├─ realization_videos - Videos for realizations
  ├─ realization_documents - Docs for realizations
  ├─ realization_comments - Comments on realizations
  ├─ realization_likes - Likes for realizations
@@ -469,6 +551,7 @@ pro_projects
 
 professional_realizations
  ├─ realization_images (realization_id) - Photos
+ ├─ realization_videos (realization_id) - Videos
  ├─ realization_documents (realization_id) - Documents
  ├─ realization_comments (realization_id) - Comments
  └─ realization_likes (realization_id) - Likes

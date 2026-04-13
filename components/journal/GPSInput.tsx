@@ -108,7 +108,7 @@ export default function GPSInput({ onGPSChange, initialLat, initialLng, initialS
       )}
 
       {error && (
-        <p className="text-xs text-red-600 dark:text-red-400 flex items-center gap-1.5">
+        <p className="text-xs text-red-600 flex items-center gap-1.5">
           <AlertCircle className="w-3.5 h-3.5" />
           {error}
         </p>

@@ -16,6 +16,7 @@ import {
 import { SUPPORTED_COUNTRIES, AFRICA_COUNTRIES, EUROPE_COUNTRIES } from "@/lib/utils/constants";
 import { getAreas, getProfessionsByArea } from "@/lib/actions/taxonomy";
 import type { ProfessionalArea, Profession } from "@/lib/types/taxonomy";
+import { LocationSearch, type LocationData } from "@/components/location/LocationSearch";
 
 type RegisterMode = "client" | "professional";
 
@@ -56,6 +57,8 @@ export function RegisterForm({ defaultMode = "client", allowSwitch = true }: Reg
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
+    watch,
   } = useForm<any>({
     resolver: zodResolver(schema),
   });
@@ -318,11 +321,9 @@ export function RegisterForm({ defaultMode = "client", allowSwitch = true }: Reg
               <label htmlFor="city" className="mb-1.5 block text-sm font-medium text-foreground">
                 Ville
               </label>
-              <input
-                id="city"
-                type="text"
-                {...register("city")}
-                className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors placeholder:text-muted-foreground focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
+              <LocationSearch
+                value={watch("city") ? { name: watch("city") || "", formatted_address: watch("city") || "", lat: 0, lng: 0 } : null}
+                onChange={(loc: LocationData | null) => setValue("city", loc?.city || "")}
                 placeholder="Abidjan, Dakar..."
               />
               {errors.city && (

@@ -18,10 +18,10 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 const STATUS_COLORS: Record<string, string> = {
-  in_progress: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
-  completed: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
-  paused: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
-  cancelled: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
+  in_progress: "bg-blue-100 text-blue-700",
+  completed: "bg-green-100 text-green-700",
+  paused: "bg-amber-100 text-amber-700",
+  cancelled: "bg-red-100 text-red-700",
 };
 
 export async function ProProjectDetail({ project }: ProProjectDetailProps) {
@@ -68,7 +68,7 @@ export async function ProProjectDetail({ project }: ProProjectDetailProps) {
                 {STATUS_LABELS[project.status]}
               </span>
               {project.is_public && (
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-700">
                   Portfolio
                 </span>
               )}
@@ -223,8 +223,8 @@ export async function ProProjectDetail({ project }: ProProjectDetailProps) {
             </div>
             <div className="text-center">
               <div className="flex justify-center mb-2">
-                <div className="w-10 h-10 rounded-xl bg-green-50 dark:bg-green-900/20 flex items-center justify-center">
-                  <Coins className="w-5 h-5 text-green-600 dark:text-green-400" />
+                <div className="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center">
+                  <Coins className="w-5 h-5 text-green-600" />
                 </div>
               </div>
               <p className="text-lg font-bold text-on-surface">{formatMoney(journalStats.totalSpent, journalStats.currency)}</p>
@@ -232,8 +232,8 @@ export async function ProProjectDetail({ project }: ProProjectDetailProps) {
             </div>
             <div className="text-center">
               <div className="flex justify-center mb-2">
-                <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
-                  <ImageIcon className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
+                  <ImageIcon className="w-5 h-5 text-blue-600" />
                 </div>
               </div>
               <p className="text-2xl font-bold text-on-surface">{journalStats.photoCount}</p>
@@ -241,8 +241,8 @@ export async function ProProjectDetail({ project }: ProProjectDetailProps) {
             </div>
             <div className="text-center">
               <div className="flex justify-center mb-2">
-                <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center">
-                  <CalendarDays className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+                <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center">
+                  <CalendarDays className="w-5 h-5 text-amber-600" />
                 </div>
               </div>
               <p className="text-2xl font-bold text-on-surface">{journalStats.daysWorked}</p>

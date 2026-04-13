@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { MapPin, Verified, Phone, Mail, Smartphone, ChevronRight, Compass, Calendar, ShieldCheck, Award } from "lucide-react";
+import { MapPin, Verified, Phone, Mail, Smartphone, ChevronRight, Compass, Calendar, ShieldCheck, Award, Play } from "lucide-react";
 import Link from "next/link";
 import { getUserProjects } from "@/lib/actions/projects";
 import { AddToProjectDialog } from "@/components/projects/AddToProjectDialog";
@@ -97,26 +97,101 @@ export default async function ProfessionalProfilePage({ params }: Props) {
   const currentStatus = (pro.status as keyof typeof statusColors) || "white";
 
   // Fetch professional portfolio (about_text, hero content, etc.)
-  const { data: portfolio } = await supabase
+  console.log('[PROFILE PAGE] ========================================');
+  console.log('[PROFILE PAGE] Fetching portfolio for professional:', pro.id);
+  console.log('[PROFILE PAGE] Professional details:', {
+    id: pro.id,
+    slug: pro.slug,
+    business_name: pro.business_name,
+    is_visible: pro.is_visible,
+    status: pro.status
+  });
+
+  const { data: portfolio, error: portfolioError } = await supabase
     .from("professional_portfolio")
     .select("*")
     .eq("professional_id", pro.id)
     .single();
 
-  // Fetch realizations with their images
-  const { data: realizations } = await supabase
+  console.log('[PROFILE PAGE] Portfolio fetch result:', {
+    success: !portfolioError,
+    hasPortfolio: !!portfolio,
+    error: portfolioError?.message,
+    code: portfolioError?.code
+  });
+
+  if (portfolioError?.code === '42501') {
+    console.error('[PROFILE PAGE] [RLS] ❌ EXPLICIT RLS BLOCKING on professional_portfolio!');
+    console.error('[PROFILE PAGE] [RLS] Table: professional_portfolio');
+    console.error('[PROFILE PAGE] [RLS] Professional ID:', pro.id);
+    console.error('[PROFILE PAGE] [RLS] Fix: Check SELECT policy on professional_portfolio');
+  }
+
+  // Fetch realizations with their images and videos
+  console.log('[PROFILE PAGE] Fetching realizations for professional_id:', pro.id);
+  console.log('[PROFILE PAGE] Query params:', {
+    table: 'professional_realizations',
+    professional_id: pro.id,
+    includes: ['images:realization_images', 'videos:realization_videos']
+  });
+
+  const { data: realizations, error: realizationsError } = await supabase
     .from("professional_realizations")
     .select(`
       *,
-      images:realization_images(*)
+      images:realization_images(*),
+      videos:realization_videos(*)
     `)
     .eq("professional_id", pro.id)
     .order("created_at", { ascending: false });
+
+  console.log('[PROFILE PAGE] Realizations fetch result:', {
+    success: !realizationsError,
+    count: realizations?.length || 0,
+    error: realizationsError?.message,
+    errorCode: realizationsError?.code,
+    errorDetails: realizationsError?.details,
+    errorHint: realizationsError?.hint
+  });
+
+  if (realizationsError?.code === '42501') {
+    console.error('[PROFILE PAGE] [RLS] ❌ EXPLICIT RLS BLOCKING on professional_realizations!');
+    console.error('[PROFILE PAGE] [RLS] ========================================');
+    console.error('[PROFILE PAGE] [RLS] Table: professional_realizations');
+    console.error('[PROFILE PAGE] [RLS] Professional ID:', pro.id);
+    console.error('[PROFILE PAGE] [RLS] Error:', realizationsError.message);
+    console.error('[PROFILE PAGE] [RLS] Hint:', realizationsError.hint);
+    console.error('[PROFILE PAGE] [RLS] ========================================');
+    console.error('[PROFILE PAGE] [RLS] Fix: Check SELECT policy on professional_realizations');
+    console.error('[PROFILE PAGE] [RLS] Policy should allow: professional_id IN (SELECT id FROM professionals WHERE is_visible = true)');
+  }
+
+  if (!realizationsError && realizations?.length === 0) {
+    console.warn('[PROFILE PAGE] ⚠️ SILENT RLS FILTERING on professional_realizations!');
+    console.warn('[PROFILE PAGE] Query succeeded but returned 0 rows');
+    console.warn('[PROFILE PAGE] This likely means RLS is filtering out the data');
+    console.warn('[PROFILE PAGE] Professional is_visible:', pro.is_visible);
+    console.warn('[PROFILE PAGE] Fix: Ensure professionals.is_visible = true for public access');
+  }
+
+  if (realizations && realizations.length > 0) {
+    console.log('[PROFILE PAGE] ✅ Realizations found:', realizations.length);
+    realizations.forEach((r, idx) => {
+      console.log(`[PROFILE PAGE] Realization ${idx + 1}:`, {
+        id: r.id,
+        title: r.title,
+        images_count: r.images?.length || 0,
+        videos_count: r.videos?.length || 0,
+        has_main_image: r.images?.some(img => img.is_main) || false
+      });
+    });
+  }
 
   // Map realizations to portfolio items format
   const portfolioItems = realizations && realizations.length > 0
     ? realizations.map(r => {
         const mainImage = r.images?.find((img: any) => img.is_main) || r.images?.[0];
+        const videoCount = r.videos?.length || 0;
         return {
           id: r.id,
           title: r.title,
@@ -124,10 +199,16 @@ export default async function ProfessionalProfilePage({ params }: Props) {
           image: mainImage?.url || "https://images.unsplash.com/photo-1600585154340-be6199f7d209?auto=format&fit=crop&q=80",
           location: r.location,
           price: r.price,
-          currency: r.currency || "XOF"
+          currency: r.currency || "XOF",
+          videoCount
         };
       })
     : [];
+
+  console.log('[PROFILE PAGE] Mapped portfolioItems:', portfolioItems.length);
+  if (portfolioItems.length > 0) {
+    console.log('[PROFILE PAGE] First item:', portfolioItems[0]);
+  }
 
   // Use portfolio data for hero and about sections
   const heroImage = portfolio?.hero_image_url || pro.portfolio_photos?.[0] || "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80";
@@ -171,10 +252,27 @@ export default async function ProfessionalProfilePage({ params }: Props) {
           <div className="max-w-5xl mx-auto">
             <div className="bg-surface-container-lowest p-8 sm:p-10 md:p-16 rounded-2xl shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04),0_40px_60px_-12px_rgba(0,0,0,0.15)] border border-outline-variant/10 text-center md:text-left">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 md:gap-10">
-                {/* Left: Title, Tagline, Buttons */}
+                {/* Left: Name, Profession, Subtitle, Ranking, Buttons */}
                 <div className="flex-1">
-                  {/* Status Badges */}
-                  <div className="flex items-center justify-center md:justify-start gap-2 mb-4">
+                  {/* 1. Name */}
+                  <h1 className="font-headline font-extrabold text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tighter text-on-surface mb-4 leading-tight">
+                    {pro.business_name}
+                  </h1>
+
+                  {/* 2. Profession */}
+                  <p className="font-body text-xl md:text-2xl text-on-surface font-semibold mb-4">
+                    {pro.category}
+                  </p>
+
+                  {/* 3. Subtitle */}
+                  {portfolio?.hero_subtitle && (
+                    <p className="font-body text-base md:text-lg text-on-surface-variant/80 font-medium mb-6">
+                      {portfolio.hero_subtitle}
+                    </p>
+                  )}
+
+                  {/* 4. List Ranking (Gold, Silver, etc.) */}
+                  <div className="flex items-center justify-center md:justify-start gap-2 mb-8">
                     <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-[0.2em] border ${statusColors[currentStatus]}`}>
                       Rang {currentStatus.charAt(0).toUpperCase() + currentStatus.slice(1)}
                     </span>
@@ -186,21 +284,7 @@ export default async function ProfessionalProfilePage({ params }: Props) {
                     )}
                   </div>
 
-                  {/* Portfolio Hero Subtitle */}
-                  {portfolio?.hero_subtitle && (
-                    <p className="font-body text-base md:text-lg text-on-surface-variant/80 font-medium mb-6">
-                      {portfolio.hero_subtitle}
-                    </p>
-                  )}
-
-                  <h1 className="font-headline font-extrabold text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tighter text-on-surface mb-4 leading-tight">
-                    {pro.business_name}
-                  </h1>
-
-                  <p className="font-body text-lg md:text-xl text-on-surface-variant font-medium italic mb-8 border-l-4 border-primary pl-6">
-                    {heroTagline}
-                  </p>
-
+                  {/* 5. Buttons */}
                   <div className="flex flex-wrap justify-center md:justify-start gap-3">
                     <a href="#contact" className="bg-primary text-on-primary px-6 md:px-8 py-3 md:py-4 rounded-md font-bold text-sm md:text-base flex items-center gap-2 hover:scale-[0.98] transition-transform">
                       Consulter Expert
@@ -270,17 +354,30 @@ export default async function ProfessionalProfilePage({ params }: Props) {
         </div>
 
         {/* Portfolio Section (Refactored Layout) - Only shown if realizations exist */}
-        {portfolioItems.length > 0 && (
+        {(() => {
+          console.log('[PROFILE PAGE RENDER] Rendering check: portfolioItems.length =', portfolioItems.length);
+          console.log('[PROFILE PAGE RENDER] Will show portfolio section:', portfolioItems.length > 0);
+          if (portfolioItems.length === 0) {
+            console.warn('[PROFILE PAGE RENDER] ⚠️ No portfolio items to display!');
+            console.warn('[PROFILE PAGE RENDER] This means either:');
+            console.warn('[PROFILE PAGE RENDER]   1. No realizations exist for this professional');
+            console.warn('[PROFILE PAGE RENDER]   2. RLS policy is blocking access to realizations');
+            console.warn('[PROFILE PAGE RENDER]   3. Professional is_visible = false');
+          }
+          return portfolioItems.length > 0;
+        })() && (
         <section className="py-24 px-4 sm:px-6 md:px-8 bg-surface" id="portfolio">
           <div className="max-w-7xl mx-auto">
             {/* Section Header */}
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
               <div>
-                <span className="text-primary font-black tracking-[0.3em] uppercase text-xs">Excellence en Construction</span>
-                <h2 className="font-headline font-bold text-4xl mt-2 text-on-surface">Nos Réalisations</h2>
+                <h2 className="font-headline font-bold text-4xl mt-2 text-on-surface">Réalisations</h2>
               </div>
               <div className="h-px flex-grow bg-outline-variant/20 mx-8 hidden md:block"></div>
-              <p className="text-on-surface-variant max-w-xs font-medium italic">Une sélection de projets d&apos;exception alliant précision technique et esthétique contemporaine.</p>
+              <Link href={`/professionnels/${slug}/realisations`} className="text-primary font-semibold flex items-center gap-2 hover:gap-3 transition-all duration-300 group">
+                Voir toutes les réalisations
+                <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
             </div>
 
             {/* Projects Stack */}
@@ -293,6 +390,12 @@ export default async function ProfessionalProfilePage({ params }: Props) {
                     src={portfolioItems[0].image}
                     alt={portfolioItems[0].title}
                   />
+                  {portfolioItems[0].videoCount > 0 && (
+                    <div className="absolute bottom-3 right-3 bg-black/70 backdrop-blur-sm text-white px-2.5 py-1.5 rounded-full flex items-center gap-1.5 text-xs font-semibold">
+                      <Play className="w-3 h-3" fill="currentColor" />
+                      {portfolioItems[0].videoCount}
+                    </div>
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-t from-on-surface/90 via-on-surface/20 to-transparent flex flex-col justify-end p-8 md:p-12">
                     <div className="max-w-2xl">
                       <span className="bg-primary text-on-primary px-3 py-1 rounded text-xs font-bold uppercase tracking-widest mb-4 inline-block">Projet Phare</span>
@@ -308,13 +411,19 @@ export default async function ProfessionalProfilePage({ params }: Props) {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {portfolioItems.slice(1, 3).map((item) => (
                     <div key={item.id} className="group bg-surface-container-lowest rounded-2xl shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-1px_rgba(0,0,0,0.03)] border border-outline-variant/10 overflow-hidden flex flex-col hover:shadow-xl transition-all duration-300">
-                      <Link href={`/professionnels/${slug}/realisations/${item.id}`} className="flex-grow flex flex-col">
-                        <div className="h-80 overflow-hidden">
+                      <Link href={`/professionnels/${slug}/realisations/${item.id}`} className="flex-grow flex-col">
+                        <div className="relative h-80 overflow-hidden">
                           <img
                             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                             src={item.image}
                             alt={item.title}
                           />
+                          {item.videoCount > 0 && (
+                            <div className="absolute bottom-3 right-3 bg-black/70 backdrop-blur-sm text-white px-2.5 py-1.5 rounded-full flex items-center gap-1.5 text-xs font-semibold z-10">
+                              <Play className="w-3 h-3" fill="currentColor" />
+                              {item.videoCount}
+                            </div>
+                          )}
                         </div>
                         <div className="p-8 flex-grow">
                           <h4 className="font-headline font-bold text-2xl text-on-surface mb-3">{item.title}</h4>
@@ -368,31 +477,6 @@ export default async function ProfessionalProfilePage({ params }: Props) {
                   src={aboutImage || "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80"}
                   alt="Le professionnel au travail"
                 />
-                <div className="hidden sm:block absolute -bottom-6 -right-6 bg-surface-container-lowest p-6 md:p-8 rounded-xl shadow-lg z-20 border border-outline-variant/10">
-                  {pro.profile_picture_url ? (
-                    <div className="flex items-center gap-4">
-                      <img
-                        src={pro.profile_picture_url}
-                        alt={pro.business_name}
-                        className="w-12 h-12 rounded-full object-cover"
-                      />
-                      <div>
-                        <p className="font-bold text-on-surface">{pro.business_name}</p>
-                        <p className="text-sm text-on-surface-variant">Certification Kelen Gold</p>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-4">
-                      <div className="bg-secondary-container p-3 rounded-full">
-                        <Award className="w-6 h-6 text-on-secondary-container" />
-                      </div>
-                      <div>
-                        <p className="font-bold text-on-surface">Professionnel Vérifié</p>
-                        <p className="text-sm text-on-surface-variant">Certification Kelen Gold</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
               </div>
             </div>
           </div>

@@ -5,8 +5,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { MARKETING_NAV } from "@/lib/utils/constants";
 import { createClient } from "@/lib/supabase/client";
-import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { NotificationDropdown } from "@/components/layout/NotificationDropdown";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -82,6 +87,7 @@ export function Navbar() {
     { href: "/signal", label: "Signaler", icon: "gavel" },
     { href: "/projets", label: "Mes projets", icon: "account_tree" },
     { href: "/documents", label: "Documents", icon: "folder_special" },
+    { href: "/parametres/profil", label: "Mon profil", icon: "manage_accounts" },
   ];
 
   return (
@@ -95,7 +101,7 @@ export function Navbar() {
         </Link>
 
         {/* Desktop nav */}
-        <div className="hidden items-center gap-6 md:flex">
+        <div className="hidden items-center gap-6 md:flex ml-auto">
           {/* Marketing Nav - Always Visible */}
           {MARKETING_NAV.map((item) => (
             <Link
@@ -110,17 +116,29 @@ export function Navbar() {
           {/* Additional links for connected users */}
           {user && (
             <>
-              {/* Show client-only links to clients */}
-              {isClient && CLIENT_NAV.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="text-sm font-semibold text-foreground/80 hover:text-kelen-green-600 transition-colors flex items-center gap-1.5"
-                >
-                  <span className="material-symbols-outlined text-[18px]">{item.icon}</span>
-                  {item.label}
-                </Link>
-              ))}
+              {/* Show client-only links as dropdown to clients */}
+              {isClient && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="text-sm font-semibold text-foreground/80 hover:text-kelen-green-600 transition-colors flex items-center gap-1.5 cursor-pointer">
+                    <span className="material-symbols-outlined text-[18px]">account_circle</span>
+                    Espace Client
+                    <span className="material-symbols-outlined text-[16px]">expand_more</span>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56">
+                    {CLIENT_NAV.map((item) => (
+                      <DropdownMenuItem key={item.href} className="p-0">
+                        <Link
+                          href={item.href}
+                          className="flex items-center gap-2 px-2 py-1.5 w-full"
+                        >
+                          <span className="material-symbols-outlined text-[18px]">{item.icon}</span>
+                          {item.label}
+                        </Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
 
               {/* Show pro dashboard link to pros */}
               {isPro && (
@@ -138,8 +156,6 @@ export function Navbar() {
 
         {/* Desktop CTA */}
         <div className="hidden items-center gap-3 md:flex">
-          <ThemeToggle />
-
           <Link
             href="/recherche"
             className="flex items-center gap-2 rounded-xl border border-kelen-green-100 bg-kelen-green-50/50 px-4 py-2 text-sm font-bold text-kelen-green-700 transition-all hover:bg-kelen-green-100 hover:text-kelen-green-800 active:scale-95"

@@ -7,6 +7,7 @@ import type { ProProjectFormData, ProProjectStatus } from "@/lib/types/pro-proje
 import { ArrowLeft, Save, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { ProjectPhotoUpload } from "./ProjectPhotoUpload";
+import { LocationSearch, type LocationData } from "@/components/location/LocationSearch";
 
 const CATEGORIES = [
   "construction",
@@ -145,13 +146,10 @@ export function ProProjectForm() {
               <label htmlFor="location" className="block text-sm font-medium text-on-surface-variant mb-2">
                 Lieu
               </label>
-              <input
-                id="location"
-                type="text"
-                value={formData.location}
-                onChange={(e) => updateField("location", e.target.value)}
-                placeholder="Ex: Dakar, Sénégal"
-                className="w-full px-4 py-3 text-sm rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface placeholder:text-on-surface-variant/40"
+              <LocationSearch
+                value={formData.location ? { name: formData.location, formatted_address: formData.location, lat: 0, lng: 0 } : null}
+                onChange={(loc: LocationData | null) => updateField("location", loc?.formatted_address || "")}
+                placeholder="Ex: Dakar, Senegal"
               />
             </div>
           </div>

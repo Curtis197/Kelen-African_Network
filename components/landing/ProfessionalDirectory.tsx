@@ -6,6 +6,7 @@ import { MapPin, ChevronDown, Inbox, LayoutDashboard } from "lucide-react";
 import { Professional } from "@/lib/supabase/types";
 import { ProfessionalCard } from "@/components/shared/ProfessionalCard";
 import type { ProfessionalArea, Profession } from "@/lib/types/taxonomy";
+import { LocationSearch, type LocationData } from "@/components/location/LocationSearch";
 
 interface ProfessionalDirectoryProps {
   initialPros: Professional[];
@@ -172,18 +173,12 @@ export function ProfessionalDirectory({
             <label htmlFor="directory-location" className="mb-1 ml-1 block text-[11px] font-black uppercase tracking-widest text-muted-foreground">
               Localisation
             </label>
-            <div className="relative group">
-              <MapPin className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground group-focus-within:text-kelen-green-500" />
-              <input
-                id="directory-location"
-                type="text"
-                placeholder="Abidjan, Dakar..."
-                value={locationQuery}
-                onChange={(e) => setLocationQuery(e.target.value)}
-                aria-label="Filtrer par localisation"
-                className="w-full rounded-2xl border-none bg-surface-container-lowest py-4 pl-11 pr-4 text-sm shadow-sm transition-all focus:ring-2 focus:ring-kelen-green-500"
-              />
-            </div>
+            <LocationSearch
+              value={locationQuery ? { name: locationQuery || "", formatted_address: locationQuery || "", lat: 0, lng: 0 } : null}
+              onChange={(loc: LocationData | null) => setLocationQuery(loc?.city || loc?.formatted_address || "")}
+              placeholder="Abidjan, Dakar..."
+              className="rounded-2xl border-none bg-surface-container-lowest shadow-sm"
+            />
           </div>
 
           {/* Status */}

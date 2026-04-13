@@ -1,19 +1,26 @@
 import { createClient } from "./client";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB
+const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB (images)
+const MAX_VIDEO_SIZE_BYTES = 50 * 1024 * 1024; // 50 MB (videos)
 
 const ALLOWED_MIME_TYPES: Record<string, string[]> = {
   contracts: ["application/pdf"],
   "evidence-photos": ["image/jpeg", "image/png", "image/webp"],
-  portfolios: ["image/jpeg", "image/png", "image/webp", "application/pdf"],
+  portfolios: ["image/jpeg", "image/png", "image/webp", "application/pdf", "video/mp4", "video/webm"],
   "verification-docs": ["application/pdf", "image/jpeg", "image/png"],
 };
 
 function validateFile(file: File, bucket: string): string | null {
-  if (file.size > MAX_FILE_SIZE_BYTES) {
-    return `${file.name} dépasse la taille maximale de 10 Mo.`;
+  // Check file size based on type
+  const isVideo = file.type.startsWith("video/");
+  const maxSize = isVideo ? MAX_VIDEO_SIZE_BYTES : MAX_FILE_SIZE_BYTES;
+  
+  if (file.size > maxSize) {
+    const sizeMB = isVideo ? "50 Mo" : "10 Mo";
+    return `${file.name} dépasse la taille maximale de ${sizeMB}.`;
   }
+  
   const allowed = ALLOWED_MIME_TYPES[bucket];
   if (!allowed) {
     return `Bucket "${bucket}" n'a pas de règles de type de fichier configurées.`;
@@ -67,18 +74,40 @@ export async function uploadFile(
   bucket: string,
   path: string
 ): Promise<string> {
+  console.log('[Storage] uploadFile called:', { 
+    fileName: file.name, 
+    fileType: file.type, 
+    fileSize: file.size,
+    bucket, 
+    path 
+  });
+  
   const supabase = createClient();
 
   const { data: { user }, error: authError } = await supabase.auth.getUser();
+  console.log('[Storage] Auth check:', { 
+    authenticated: !!user, 
+    userId: user?.id, 
+    authError: authError?.message 
+  });
+  
   if (authError || !user) {
+    console.error('[Storage] ❌ Auth failed:', authError);
     throw new Error("Vous devez être connecté pour envoyer des fichiers.");
   }
 
   const validationError = validateFile(file, bucket);
+  console.log('[Storage] Validation result:', { 
+    error: validationError,
+    valid: !validationError 
+  });
+  
   if (validationError) {
+    console.error('[Storage] ❌ Validation failed:', validationError);
     throw new Error(validationError);
   }
 
+  console.log('[Storage] Calling doUpload...');
   return doUpload(supabase, file, bucket, path);
 }
 

@@ -77,7 +77,7 @@ export default async function ProDashboardPage() {
         </div>
         <div className="rounded-xl border border-border bg-surface-container-low p-5">
           <p className="text-sm text-muted-foreground">Abonnement</p>
-          <p className="mt-1 text-2xl font-bold text-kelen-green-600 dark:text-kelen-green-400">
+          <p className="mt-1 text-2xl font-bold text-kelen-green-600">
             {stats.subscriptionStatus}
           </p>
         </div>
@@ -121,7 +121,7 @@ export default async function ProDashboardPage() {
                   </div>
                   <Link
                     href="/pro/recommandations"
-                    className="shrink-0 rounded-lg px-4 py-2 text-xs font-medium transition-colors bg-kelen-green-50 text-kelen-green-700 hover:bg-kelen-green-100 dark:bg-kelen-green-900/30 dark:text-kelen-green-400 dark:hover:bg-kelen-green-900/50"
+                    className="shrink-0 rounded-lg px-4 py-2 text-xs font-medium transition-colors bg-kelen-green-50 text-kelen-green-700 hover:bg-kelen-green-100"
                   >
                     Voir
                   </Link>
@@ -139,7 +139,7 @@ export default async function ProDashboardPage() {
                   </div>
                   <Link
                     href="/pro/signal"
-                    className="shrink-0 rounded-lg px-4 py-2 text-xs font-medium transition-colors bg-kelen-red-50 text-kelen-red-700 hover:bg-kelen-red-100 dark:bg-kelen-red-900/30 dark:text-kelen-red-400 dark:hover:bg-kelen-red-900/50"
+                    className="shrink-0 rounded-lg px-4 py-2 text-xs font-medium transition-colors bg-kelen-red-50 text-kelen-red-700 hover:bg-kelen-red-100"
                   >
                     Répondre
                   </Link>

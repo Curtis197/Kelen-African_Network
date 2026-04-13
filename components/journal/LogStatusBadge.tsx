@@ -7,19 +7,19 @@ interface LogStatusBadgeProps {
 const statusConfig: Record<LogStatus, { label: string; className: string }> = {
   pending: {
     label: 'En attente',
-    className: 'bg-amber-100 text-amber-800 dark:bg-amber-200/20 dark:text-amber-300',
+    className: 'bg-amber-100 text-amber-800',
   },
   approved: {
     label: 'Approuvé',
-    className: 'bg-green-100 text-green-800 dark:bg-green-200/20 dark:text-green-300',
+    className: 'bg-green-100 text-green-800',
   },
   contested: {
     label: 'Contesté',
-    className: 'bg-red-100 text-red-800 dark:bg-red-200/20 dark:text-red-300',
+    className: 'bg-red-100 text-red-800',
   },
   resolved: {
     label: 'Résolu',
-    className: 'bg-blue-100 text-blue-800 dark:bg-blue-200/20 dark:text-blue-300',
+    className: 'bg-blue-100 text-blue-800',
   },
 };
 

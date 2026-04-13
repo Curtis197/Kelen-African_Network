@@ -4,11 +4,13 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
-import { LayoutDashboard, ListChecks, ScrollText, LogOut, Shield, Menu, X } from "lucide-react";
+import { LayoutDashboard, ListChecks, ScrollText, LogOut, Shield, Menu, X, Ban, FolderOpen } from "lucide-react";
 
 const NAV_ITEMS = [
   { href: "/admin", label: "Vue d'ensemble", icon: LayoutDashboard, exact: true },
   { href: "/admin/queue", label: "File de vérification", icon: ListChecks, exact: false },
+  { href: "/admin/blacklisted", label: "Liste Noire", icon: Ban, exact: false },
+  { href: "/admin/client-projects", label: "Projets Clients", icon: FolderOpen, exact: false },
   { href: "/admin/journal", label: "Journal d'activité", icon: ScrollText, exact: false },
 ];
 

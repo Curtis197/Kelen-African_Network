@@ -5,8 +5,10 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Recommandation {
   id: string;
-  content: string;
-  project_context?: string | null;
+  project_description: string;
+  project_type?: string | null;
+  submitter_name: string;
+  submitter_country: string;
   created_at: string;
 }
 
@@ -40,25 +42,25 @@ export default function RecommandationScrollRow({ recommandations, totalCount }:
       {/* Scroll Controls */}
       <button
         onClick={() => scroll("left")}
-        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 w-10 h-10 bg-white dark:bg-surface-container rounded-full shadow-lg dark:shadow-none flex items-center justify-center hover:bg-stone-50 dark:hover:bg-surface-container-highest transition-colors"
+        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-stone-50 transition-colors"
         aria-label="Voir les recommandations précédentes"
       >
-        <ChevronLeft className="w-5 h-5 text-stone-600 dark:text-on-surface-variant" />
+        <ChevronLeft className="w-5 h-5 text-stone-600" />
       </button>
 
       <button
         onClick={() => scroll("right")}
-        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 w-10 h-10 bg-white dark:bg-surface-container rounded-full shadow-lg dark:shadow-none flex items-center justify-center hover:bg-stone-50 dark:hover:bg-surface-container-highest transition-colors"
+        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-stone-50 transition-colors"
         aria-label="Voir les recommandations suivantes"
       >
-        <ChevronRight className="w-5 h-5 text-stone-600 dark:text-on-surface-variant" />
+        <ChevronRight className="w-5 h-5 text-stone-600" />
       </button>
 
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <span className="text-kelen-green-600 dark:text-kelen-green-400 font-black tracking-[0.3em] uppercase text-xs">Témoignages</span>
-          <h2 className="text-3xl md:text-4xl font-black mt-2 text-stone-900 dark:text-on-surface tracking-tight">
+          <span className="text-kelen-green-600 font-black tracking-[0.3em] uppercase text-xs">Témoignages</span>
+          <h2 className="text-3xl md:text-4xl font-black mt-2 text-stone-900 tracking-tight">
             {totalCount} recommandation{totalCount !== 1 ? "s" : ""}
           </h2>
         </div>
@@ -73,7 +75,7 @@ export default function RecommandationScrollRow({ recommandations, totalCount }:
         {recommandations.map((rec) => (
           <div
             key={rec.id}
-            className="flex-shrink-0 w-80 md:w-96 snap-start bg-white dark:bg-surface-container rounded-2xl p-6 shadow-sm dark:shadow-none border border-stone-100 dark:border-outline-variant/20 hover:shadow-lg dark:hover:bg-surface-container-highest/50 transition-shadow"
+            className="flex-shrink-0 w-80 md:w-96 snap-start bg-white rounded-2xl p-6 shadow-sm border border-stone-100 hover:shadow-lg transition-shadow"
           >
             {/* Quote Icon */}
             <div className="text-kelen-green-600 mb-4">
@@ -82,25 +84,30 @@ export default function RecommandationScrollRow({ recommandations, totalCount }:
               </svg>
             </div>
 
-            {/* Content */}
+            {/* Project Description */}
             <p className="text-stone-600 text-sm leading-relaxed mb-4 line-clamp-4">
-              {rec.content}
+              {rec.project_description}
             </p>
 
-            {/* Context */}
-            {rec.project_context && (
+            {/* Project Type */}
+            {rec.project_type && (
               <p className="text-xs text-stone-400 mb-3 italic">
-                Contexte : {rec.project_context}
+                Type : {rec.project_type}
               </p>
             )}
 
-            {/* Anonymous Author */}
+            {/* Author */}
             <div className="flex items-center justify-between pt-4 border-t border-stone-100">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-kelen-green-100 rounded-full flex items-center justify-center">
-                  <span className="text-xs font-black text-kelen-green-600">A</span>
+                  <span className="text-xs font-black text-kelen-green-600">{rec.submitter_name.charAt(0).toUpperCase()}</span>
                 </div>
-                <span className="text-xs font-medium text-stone-500">Client vérifié</span>
+                <div>
+                  <span className="text-xs font-medium text-stone-500 block">{rec.submitter_name}</span>
+                  {rec.submitter_country && (
+                    <span className="text-xs text-stone-400">{rec.submitter_country}</span>
+                  )}
+                </div>
               </div>
               <span className="text-xs text-stone-400">
                 {formatDate(rec.created_at)}

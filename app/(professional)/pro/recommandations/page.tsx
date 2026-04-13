@@ -126,18 +126,18 @@ export default function ProRecommendationsPage() {
                   </span>
 
                   {rec.linked ? (
-                    <div className="flex items-center gap-2 text-kelen-green-600 dark:text-kelen-green-400 px-4 py-1.5 bg-kelen-green-50 dark:bg-kelen-green-900/30 rounded-xl border border-kelen-green-200/50 dark:border-kelen-green-800/50">
-                      <span className="material-symbols-outlined text-sm font-black text-kelen-green-600 dark:text-kelen-green-400">verified</span>
+                    <div className="flex items-center gap-2 text-kelen-green-600 px-4 py-1.5 bg-kelen-green-50 rounded-xl border border-kelen-green-200/50">
+                      <span className="material-symbols-outlined text-sm font-black text-kelen-green-600">verified</span>
                       <span className="text-[10px] font-black uppercase tracking-widest">Publié</span>
                     </div>
                   ) : (
                     <button
                       onClick={() => linkToProfile(rec.id)}
                       disabled={isLinking === rec.id}
-                      className="whitespace-nowrap rounded-xl bg-stone-900 dark:bg-white px-5 py-2.5 text-[10px] font-black text-white dark:text-stone-900 uppercase tracking-widest transition-all hover:bg-stone-800 dark:hover:bg-stone-100 disabled:opacity-50 active:scale-95 shadow-lg shadow-stone-900/10 flex items-center gap-2"
+                      className="whitespace-nowrap rounded-xl bg-stone-900 px-5 py-2.5 text-[10px] font-black text-white uppercase tracking-widest transition-all hover:bg-stone-800 disabled:opacity-50 active:scale-95 shadow-lg shadow-stone-900/10 flex items-center gap-2"
                     >
                       {isLinking === rec.id ? (
-                        <div className="w-3 h-3 border-2 border-white/30 dark:border-stone-900/30 border-t-white dark:border-t-stone-900 rounded-full animate-spin" />
+                        <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                       ) : (
                         <span className="material-symbols-outlined text-base">link</span>
                       )}

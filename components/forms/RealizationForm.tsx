@@ -161,7 +161,6 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
       } else {
         // Create new realization
         payload.professional_id = professionalId;
-        payload.status = "published";
         console.log("[RealizationForm] Creating new document:", payload);
         const { data: newDoc, error: insertError } = await supabase
           .from("professional_realizations")
@@ -393,9 +392,6 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
             >
               {isSaving ? <Loader2 className="animate-spin" size={24} /> : (isEditing ? "Confirmer les modifications" : "Confirmer")}
             </button>
-            <p className="mt-4 text-center text-[10px] text-on-surface-variant/50 italic">
-              En confirmant, vous certifiez l'authenticité de ces travaux.
-            </p>
           </div>
         </div>
       </div>

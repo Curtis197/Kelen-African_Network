@@ -34,7 +34,8 @@
       "Bash(convertto-json)",
       "Bash($response *)",
       "Bash(\"content-type\" *)",
-      "Bash(psql *)"
+      "Bash(psql *)",
+      "Bash(tee-object *)"
     ]
   },
   "$version": 3

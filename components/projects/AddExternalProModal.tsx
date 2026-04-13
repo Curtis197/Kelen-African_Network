@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { manageProjectProfessional, updateExternalProfessional } from "@/lib/actions/projects";
 import { toast } from "sonner";
+import { LocationSearch, type LocationData } from "@/components/location/LocationSearch";
 
 interface AddExternalProModalProps {
   isOpen: boolean;
@@ -142,12 +143,10 @@ export function AddExternalProModal({ isOpen, onClose, projectId, areaName, onSu
                   </div>
                   <div className="space-y-2">
                     <label className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60 ml-4">Localisation</label>
-                    <input
-                      type="text"
-                      value={formData.location}
-                      onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                    <LocationSearch
+                      value={formData.location ? { name: formData.location, formatted_address: formData.location, lat: 0, lng: 0 } : null}
+                      onChange={(loc: LocationData | null) => setFormData({ ...formData, location: loc?.formatted_address || "" })}
                       placeholder="Dakar, Sénégal"
-                      className="w-full bg-surface-container-low rounded-2xl px-6 py-4 font-headline font-bold text-on-surface border-none focus:ring-2 focus:ring-primary/20 placeholder:opacity-30"
                     />
                   </div>
                 </div>
