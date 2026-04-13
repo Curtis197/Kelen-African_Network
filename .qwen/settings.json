@@ -35,7 +35,9 @@
       "Bash($response *)",
       "Bash(\"content-type\" *)",
       "Bash(psql *)",
-      "Bash(tee-object *)"
+      "Bash(tee-object *)",
+      "Bash(get-content *)",
+      "Bash(cmd *)"
     ]
   },
   "$version": 3

@@ -1,0 +1,31 @@
+
+> kelen@0.1.0 build
+> next build
+
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of c:\Users\DELL LATITUDE 7480\package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * c:\Users\DELL LATITUDE 7480\Kelen-African_Network\package-lock.json
+
+▲ Next.js 16.1.6 (Turbopack)
+- Environments: .env.local
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+✓ Compiled successfully in 64s
+  Running TypeScript ...
+Failed to compile.
+
+./components/projects/ProjectWizard.tsx:137:33
+Type error: Property 'publicUrl' does not exist on type 'string'.
+
+[0m [90m 135 |[39m               console[33m.[39mlog([32m'[WIZARD] Uploading image'[39m[33m,[39m i [33m+[39m [35m1[39m[33m,[39m [32m':'[39m[33m,[39m file[33m.[39mname)[33m;[39m
+ [90m 136 |[39m               [36mconst[39m uploadResult [33m=[39m [36mawait[39m uploadFile(file[33m,[39m [32m"portfolios"[39m[33m,[39m [32m`${user.id}/projects/${projectId}/images`[39m)[33m;[39m
+[31m[1m>[22m[39m[90m 137 |[39m               [36mif[39m (uploadResult[33m?[39m[33m.[39mpublicUrl) {
+ [90m     |[39m                                 [31m[1m^[22m[39m
+ [90m 138 |[39m                 console[33m.[39mlog([32m'[WIZARD] Image uploaded, saving to database...'[39m)[33m;[39m
+ [90m 139 |[39m                 [36mawait[39m uploadProjectImage(projectId[33m,[39m uploadResult[33m.[39mpublicUrl)[33m;[39m
+ [90m 140 |[39m               }[0m
+Next.js build worker exited with code: 1 and signal: null

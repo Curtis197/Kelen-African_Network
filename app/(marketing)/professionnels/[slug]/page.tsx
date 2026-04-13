@@ -182,7 +182,7 @@ export default async function ProfessionalProfilePage({ params }: Props) {
         title: r.title,
         images_count: r.images?.length || 0,
         videos_count: r.videos?.length || 0,
-        has_main_image: r.images?.some(img => img.is_main) || false
+        has_main_image: r.images?.some((img: any) => img.is_main) || false
       });
     });
   }

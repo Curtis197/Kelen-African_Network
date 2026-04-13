@@ -133,10 +133,10 @@ export default function ProjectWizard({ initialId }: { initialId?: string }) {
             for (let i = 0; i < projectImages.length; i++) {
               const file = projectImages[i];
               console.log('[WIZARD] Uploading image', i + 1, ':', file.name);
-              const uploadResult = await uploadFile(file, "portfolios", `${user.id}/projects/${projectId}/images`);
-              if (uploadResult?.publicUrl) {
+              const imageUrl = await uploadFile(file, "portfolios", `${user.id}/projects/${projectId}/images`);
+              if (imageUrl) {
                 console.log('[WIZARD] Image uploaded, saving to database...');
-                await uploadProjectImage(projectId, uploadResult.publicUrl);
+                await uploadProjectImage(projectId, imageUrl);
               }
             }
             toast.success(`${projectImages.length} image(s) ajoutée(s)`);

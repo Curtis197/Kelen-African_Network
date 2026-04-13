@@ -1,3 +1,7 @@
+
+> kelen@0.1.0 build
+> next build
+
 ⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
  We detected multiple lockfiles and selected the directory of c:\Users\DELL LATITUDE 7480\package-lock.json as the root directory.
  To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
@@ -10,18 +14,18 @@
 
 ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
   Creating an optimized production build ...
-✓ Compiled successfully in 2.1min
+✓ Compiled successfully in 65s
   Running TypeScript ...
 Failed to compile.
 
-./app/(professional)/pro/projets/[id]/documents/page.tsx:8:105
-Type error: Module '"lucide-react"' has no exported member 'Tabs'.
+./app/(marketing)/professionnels/[slug]/page.tsx:185:40
+Type error: Parameter 'img' implicitly has an 'any' type.
 
-[0m [90m  6 |[39m [36mimport[39m [33mLink[39m [36mfrom[39m [32m"next/link"[39m[33m;[39m
- [90m  7 |[39m [36mimport[39m { useParams } [36mfrom[39m [32m"next/navigation"[39m[33m;[39m
-[31m[1m>[22m[39m[90m  8 |[39m [36mimport[39m { [33mArrowLeft[39m[33m,[39m [33mUpload[39m[33m,[39m [33mFileText[39m[33m,[39m [33mEye[39m[33m,[39m [33mDownload[39m[33m,[39m [33mTrash2[39m[33m,[39m [33mFilter[39m[33m,[39m [33mGrid3X3[39m[33m,[39m [33mList[39m[33m,[39m [33mImage[39m [36mas[39m [33mImageIcon[39m[33m,[39m [33mTabs[39m } [36mfrom[39m [32m"lucide-react"[39m[33m;[39m
- [90m    |[39m                                                                                                         [31m[1m^[22m[39m
- [90m  9 |[39m [36mimport[39m [33mProjectImageManager[39m [36mfrom[39m [32m"@/components/pro/ProjectImageManager"[39m[33m;[39m
- [90m 10 |[39m [36mimport[39m type { [33mProjectImage[39m } [36mfrom[39m [32m"@/lib/supabase/types"[39m[33m;[39m
- [90m 11 |[39m[0m
+[0m [90m 183 |[39m         images_count[33m:[39m r[33m.[39mimages[33m?[39m[33m.[39mlength [33m||[39m [35m0[39m[33m,[39m
+ [90m 184 |[39m         videos_count[33m:[39m r[33m.[39mvideos[33m?[39m[33m.[39mlength [33m||[39m [35m0[39m[33m,[39m
+[31m[1m>[22m[39m[90m 185 |[39m         has_main_image[33m:[39m r[33m.[39mimages[33m?[39m[33m.[39msome(img [33m=>[39m img[33m.[39mis_main) [33m||[39m [36mfalse[39m
+ [90m     |[39m                                        [31m[1m^[22m[39m
+ [90m 186 |[39m       })[33m;[39m
+ [90m 187 |[39m     })[33m;[39m
+ [90m 188 |[39m   }[0m
 Next.js build worker exited with code: 1 and signal: null

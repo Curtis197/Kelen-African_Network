@@ -1,0 +1,31 @@
+
+> kelen@0.1.0 build
+> next build
+
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of c:\Users\DELL LATITUDE 7480\package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * c:\Users\DELL LATITUDE 7480\Kelen-African_Network\package-lock.json
+
+▲ Next.js 16.1.6 (Turbopack)
+- Environments: .env.local
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+✓ Compiled successfully in 56s
+  Running TypeScript ...
+Failed to compile.
+
+./components/projects/ProjectStepsSection.tsx:108:14
+Type error: Cannot find name 'Loader2'.
+
+[0m [90m 106 |[39m         {isLoading [33m?[39m (
+ [90m 107 |[39m           [33m<[39m[33mdiv[39m className[33m=[39m[32m"p-12 sm:p-24 flex items-center justify-center bg-surface-container rounded-xl sm:rounded-[2.5rem] border-2 border-dashed border-border"[39m[33m>[39m
+[31m[1m>[22m[39m[90m 108 |[39m             [33m<[39m[33mLoader2[39m className[33m=[39m[32m"w-8 h-8 sm:w-12 sm:h-12 text-on-surface-variant/30 animate-spin"[39m [33m/[39m[33m>[39m
+ [90m     |[39m              [31m[1m^[22m[39m
+ [90m 109 |[39m           [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
+ [90m 110 |[39m         ) [33m:[39m steps[33m.[39mlength [33m>[39m [35m0[39m [33m?[39m (
+ [90m 111 |[39m           [33m<[39m[33mdiv[39m className[33m=[39m[32m"space-y-3 sm:space-y-4"[39m[33m>[39m[0m
+Next.js build worker exited with code: 1 and signal: null

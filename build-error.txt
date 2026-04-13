@@ -1,0 +1,22 @@
+[33m[1m⚠[22m[39m Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of c:\Users\DELL LATITUDE 7480\package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * c:\Users\DELL LATITUDE 7480\Kelen-African_Network\package-lock.json
+
+[33m[1m⚠[22m[39m The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+[31mFailed to compile.
+[39m
+[36m./app/(client)/projets/[id]/modifier/EditClientProjectPage.tsx[39m:[33m312[39m:[33m28[39m
+[31m[1mType error[22m[39m: Property 'publicUrl' does not exist on type 'string'.
+
+[0m [90m 310 |[39m       console[33m.[39mlog([32m'[CLIENT-PROJECT-EDIT] Step 1 result:'[39m[33m,[39m {
+ [90m 311 |[39m         success[33m:[39m [33m![39m[33m![39mresult[33m,[39m
+[31m[1m>[22m[39m[90m 312 |[39m         publicUrl[33m:[39m result[33m?[39m[33m.[39mpublicUrl [33m||[39m result[33m,[39m
+ [90m     |[39m                            [31m[1m^[22m[39m
+ [90m 313 |[39m         result[33m:[39m result
+ [90m 314 |[39m       })[33m;[39m
+ [90m 315 |[39m[0m
+Next.js build worker exited with code: 1 and signal: null
+[?25h

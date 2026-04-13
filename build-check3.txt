@@ -1,0 +1,133 @@
+
+> kelen@0.1.0 build
+> next build
+
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of c:\Users\DELL LATITUDE 7480\package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * c:\Users\DELL LATITUDE 7480\Kelen-African_Network\package-lock.json
+
+▲ Next.js 16.1.6 (Turbopack)
+- Environments: .env.local
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+✓ Compiled successfully in 57s
+  Running TypeScript ...
+  Collecting page data using 3 workers ...
+[pro-projects] Server action loaded
+[pro-projects] Server action loaded
+[portfolio] Server action loaded
+  Generating static pages using 3 workers (0/60) ...
+[ProRealisationsPage] Loading realizations page
+[CLIENT-PROJECTS-ADMIN] Module loaded
+[CLIENT-PROJECTS-ADMIN] Component mounted
+[AddRealizationPage] Loading add realization page
+  Generating static pages using 3 workers (15/60) 
+[ClientDocuments] Page mounted
+  Generating static pages using 3 workers (30/60) 
+  Generating static pages using 3 workers (45/60) 
+[portfolio] Server action loaded
+[PortfolioPage] Loading portfolio management page
+✓ Generating static pages using 3 workers (60/60) in 3.0s
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ○ /_not-found
+├ ○ /a-propos
+├ ƒ /admin
+├ ƒ /admin/blacklisted
+├ ○ /admin/client-projects
+├ ƒ /admin/journal
+├ ƒ /admin/queue
+├ ƒ /admin/queue/[id]
+├ ƒ /api/auth/google/authorize
+├ ƒ /api/auth/google/callback
+├ ƒ /api/google/create-business
+├ ƒ /api/google/debug
+├ ƒ /api/google/request-verification
+├ ƒ /api/google/sync-photos
+├ ƒ /api/google/sync-profile
+├ ƒ /api/journal-pdf
+├ ƒ /api/log-media/[...path]
+├ ƒ /api/realisation-pdf
+├ ƒ /api/stripe/webhook
+├ ƒ /auth/callback
+├ ƒ /avis/[slug]
+├ ○ /cgu
+├ ○ /comment-ca-marche
+├ ○ /confidentialite
+├ ƒ /connexion
+├ ○ /contact
+├ ○ /dashboard
+├ ○ /documents
+├ ○ /faq
+├ ○ /favoris
+├ ƒ /inscription
+├ ƒ /invitation/[token]
+├ ƒ /journal/[token]
+├ ○ /mentions-legales
+├ ○ /mot-de-passe
+├ ○ /mot-de-passe/reset
+├ ○ /parametres/profil
+├ ○ /pour-les-pros
+├ ƒ /pro/[slug]
+├ ƒ /pro/abonnement
+├ ○ /pro/analytique
+├ ƒ /pro/connexion
+├ ƒ /pro/dashboard
+├ ○ /pro/documents
+├ ○ /pro/google
+├ ƒ /pro/inscription
+├ ƒ /pro/portfolio
+├ ƒ /pro/portfolio/[id]
+├ ƒ /pro/portfolio/[id]/edit
+├ ƒ /pro/portfolio/add
+├ ○ /pro/profil
+├ ○ /pro/projets
+├ ƒ /pro/projets/[id]
+├ ƒ /pro/projets/[id]/documents
+├ ƒ /pro/projets/[id]/edit
+├ ƒ /pro/projets/[id]/journal
+├ ƒ /pro/projets/[id]/journal/[logId]
+├ ○ /pro/projets/nouveau
+├ ƒ /pro/realisations
+├ ƒ /pro/realisations/[id]
+├ ƒ /pro/realisations/[id]/edit
+├ ƒ /pro/realisations/add
+├ ○ /pro/recommandations
+├ ○ /pro/signal
+├ ○ /pro/validation
+├ ƒ /professionnels/[slug]
+├ ƒ /professionnels/[slug]/realisations
+├ ƒ /professionnels/[slug]/realisations/[id]
+├ ƒ /professionnels/[slug]/recommandations
+├ ○ /projets
+├ ƒ /projets/[id]
+├ ƒ /projets/[id]/documents
+├ ƒ /projets/[id]/journal
+├ ƒ /projets/[id]/journal/[logId]
+├ ƒ /projets/[id]/journal/nouveau
+├ ƒ /projets/[id]/modifier
+├ ƒ /projets/nouveau
+├ ƒ /recherche
+├ ○ /recommandation
+├ ƒ /recommandation/[slug]
+├ ○ /recommandation/externe
+├ ○ /robots.txt
+├ ○ /signal
+├ ƒ /signal/[slug]
+├ ○ /signal/externe
+├ ƒ /sitemap.xml
+├ ○ /tarifs
+└ ○ /validation
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
