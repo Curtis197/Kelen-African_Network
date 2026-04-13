@@ -306,15 +306,12 @@ export default function EditClientProjectPage() {
 
       // Upload to storage
       console.log('[CLIENT-PROJECT-EDIT] Step 1: Uploading to Supabase storage...');
-      const result = await uploadFile(file, "portfolios", uploadPath);
+      const imageUrl = await uploadFile(file, "portfolios", uploadPath);
       console.log('[CLIENT-PROJECT-EDIT] Step 1 result:', {
-        success: !!result,
-        publicUrl: result?.publicUrl || result,
-        result: result
+        success: !!imageUrl,
+        publicUrl: imageUrl,
       });
 
-      const imageUrl = result?.publicUrl || result;
-      
       if (!imageUrl) {
         console.error('[CLIENT-PROJECT-EDIT] ❌ Upload returned no URL');
         toast.error("Erreur lors de l'upload de l'image");
