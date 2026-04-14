@@ -164,32 +164,6 @@ export default function ProDocumentsPage() {
           </p>
         </header>
 
-        {/* Folders Section (Static for now as per mock) */}
-        <section>
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-[10px] font-black text-stone-400 uppercase tracking-[0.2em]">Dossiers récents</h3>
-            <button className="text-xs font-bold text-kelen-green-600 hover:underline">Voir tout</button>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              { name: "Contrats Fonciers", count: 12, size: "48.5 MB", icon: "folder", color: "text-amber-600", bg: "bg-amber-50" },
-              { name: "Plans Architecturaux", count: 8, size: "1.2 GB", icon: "architecture", color: "text-kelen-green-600", bg: "bg-kelen-green-50" },
-              { name: "Preuves de Paiement", count: 24, size: "12.8 MB", icon: "account_balance_wallet", color: "text-blue-600", bg: "bg-blue-50" }
-            ].map((folder, i) => (
-              <div key={i} className="group cursor-pointer bg-white p-6 rounded-[2rem] border border-stone-100 transition-all duration-300 hover:shadow-xl hover:shadow-stone-200/50 flex items-center gap-4">
-                <div className={`w-12 h-12 rounded-2xl ${folder.bg} flex items-center justify-center ${folder.color}`}>
-                  <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>{folder.icon}</span>
-                </div>
-                <div className="flex-1">
-                  <p className="font-bold text-sm text-stone-900">{folder.name}</p>
-                  <p className="text-[10px] text-stone-400 font-black uppercase tracking-widest">{folder.count} Fichiers</p>
-                </div>
-                <span className="material-symbols-outlined text-stone-200 group-hover:text-stone-400 transition-colors">more_vert</span>
-              </div>
-            ))}
-          </div>
-        </section>
-
         {/* Documents Grid/List */}
         <section>
           <div className="flex items-center justify-between mb-6">

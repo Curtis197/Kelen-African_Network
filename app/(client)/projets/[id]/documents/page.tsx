@@ -95,6 +95,18 @@ export default function ClientProjectDocumentsPage() {
       }
     } else {
       console.log("[ClientProjectDocuments] Documents fetched:", data?.length || 0);
+      console.log("[ClientProjectDocuments] [RLS] ✅ No RLS violation - documents loaded");
+      
+      // Log each document URL for debugging
+      if (data && data.length > 0) {
+        console.log("[ClientProjectDocuments] Document URLs:");
+        data.forEach((doc: any, idx: number) => {
+          console.log(`  [DOC ${idx}] ID: ${doc.id}`);
+          console.log(`  [DOC ${idx}] URL: ${doc.contract_url}`);
+          console.log(`  [DOC ${idx}] Type: ${doc.contract_url?.split('.').pop()}`);
+        });
+      }
+      
       setDocuments((data as ProjectDocument[]) || []);
     }
     setIsLoading(false);
@@ -321,29 +333,84 @@ export default function ClientProjectDocumentsPage() {
           </div>
         ) : viewMode === "grid" ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {documents.map((doc) => (
-              <div
-                key={doc.id}
-                onClick={() => setSelectedDoc(doc)}
-                className={`group cursor-pointer bg-surface-container-low rounded-xl overflow-hidden border-2 transition-all hover:shadow-lg ${
-                  selectedDoc?.id === doc.id
-                    ? 'border-primary shadow-lg'
-                    : 'border-transparent hover:border-outline-variant/30'
-                }`}
-              >
-                <div className="aspect-[4/3] bg-surface-container flex items-center justify-center">
-                  <FileText className="w-12 h-12 text-on-surface-variant/30" />
+            {documents.map((doc) => {
+              const fileExt = doc.contract_url?.split('.').pop()?.toLowerCase();
+              const isImage = ['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(fileExt || '');
+              const isPdf = fileExt === 'pdf';
+              
+              console.log("[DOCUMENT THUMBNAIL] Rendering:", {
+                id: doc.id,
+                url: doc.contract_url,
+                extension: fileExt,
+                isImage,
+                isPdf
+              });
+              
+              return (
+                <div
+                  key={doc.id}
+                  onClick={() => {
+                    console.log("[DOCUMENT THUMBNAIL] Clicked, setting selected doc:", doc.id);
+                    setSelectedDoc(doc);
+                  }}
+                  className={`group cursor-pointer bg-surface-container-low rounded-xl overflow-hidden border-2 transition-all hover:shadow-lg ${
+                    selectedDoc?.id === doc.id
+                      ? 'border-primary shadow-lg'
+                      : 'border-transparent hover:border-outline-variant/30'
+                  }`}
+                >
+                  <div className="aspect-[4/3] bg-surface-container flex items-center justify-center relative">
+                    {isImage ? (
+                      <img
+                        src={doc.contract_url}
+                        alt={doc.project_title}
+                        className="w-full h-full object-cover"
+                        loading="eager"
+                        onLoad={(e) => {
+                          const img = e.target as HTMLImageElement;
+                          console.log("[DOCUMENT THUMBNAIL] ✅ Image loaded successfully:", {
+                            url: doc.contract_url,
+                            naturalWidth: img.naturalWidth,
+                            naturalHeight: img.naturalHeight,
+                            currentSrc: img.currentSrc
+                          });
+                        }}
+                        onError={(e) => {
+                          const img = e.target as HTMLImageElement;
+                          console.error("[DOCUMENT THUMBNAIL] ❌ FAILED to load image:", {
+                            url: doc.contract_url,
+                            src: img.src,
+                            currentSrc: img.currentSrc,
+                            naturalWidth: img.naturalWidth,
+                            naturalHeight: img.naturalHeight,
+                            error: e.type
+                          });
+                          fetch(doc.contract_url, { method: 'HEAD' })
+                            .then(r => console.log("[DOCUMENT THUMBNAIL] URL accessibility test:", r.status, r.statusText))
+                            .catch(err => console.error("[DOCUMENT THUMBNAIL] URL not accessible:", err));
+                        }}
+                      />
+                    ) : isPdf ? (
+                      <div className="relative w-full h-full bg-gradient-to-br from-red-50 to-red-100 flex flex-col items-center justify-center gap-2">
+                        <FileText className="w-10 h-10 text-red-500/70" />
+                        <span className="text-xs font-bold text-red-600">PDF</span>
+                        <span className="text-[8px] text-red-400">Click to preview</span>
+                      </div>
+                    ) : (
+                      <FileText className="w-12 h-12 text-on-surface-variant/30" />
+                    )}
+                  </div>
+                  <div className="p-4">
+                    <p className="font-semibold text-sm text-on-surface truncate mb-1">
+                      {doc.project_title}
+                    </p>
+                    <p className="text-xs text-on-surface-variant">
+                      {new Date(doc.created_at).toLocaleDateString('fr-FR')}
+                    </p>
+                  </div>
                 </div>
-                <div className="p-4">
-                  <p className="font-semibold text-sm text-on-surface truncate mb-1">
-                    {doc.project_title}
-                  </p>
-                  <p className="text-xs text-on-surface-variant">
-                    {new Date(doc.created_at).toLocaleDateString('fr-FR')}
-                  </p>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         ) : (
           <div className="bg-surface-container-low rounded-xl overflow-hidden">
@@ -450,8 +517,67 @@ export default function ClientProjectDocumentsPage() {
               <div className="p-6 space-y-6">
                 {/* Preview */}
                 <div className="bg-surface-container rounded-xl p-4">
-                  <div className="aspect-square bg-surface-container-low rounded-lg flex items-center justify-center mb-4">
-                    <FileText className="w-16 h-16 text-on-surface-variant/30" />
+                  <div className="aspect-square bg-surface-container-low rounded-lg flex items-center justify-center mb-4 overflow-hidden relative">
+                    {(() => {
+                      const fileExt = selectedDoc.contract_url?.split('.').pop()?.toLowerCase();
+                      console.log("[DOCUMENT PREVIEW] Rendering preview for:", {
+                        id: selectedDoc.id,
+                        url: selectedDoc.contract_url,
+                        extension: fileExt,
+                        isImage: ['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(fileExt || ''),
+                        isPdf: fileExt === 'pdf'
+                      });
+                      
+                      if (['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(fileExt || '')) {
+                        return (
+                          <img
+                            src={selectedDoc.contract_url}
+                            alt={selectedDoc.project_title}
+                            className="w-full h-full object-contain"
+                            loading="eager"
+                            onLoad={(e) => {
+                              const img = e.target as HTMLImageElement;
+                              console.log("[DOCUMENT PREVIEW] ✅ Image loaded successfully:", {
+                                url: selectedDoc.contract_url,
+                                naturalWidth: img.naturalWidth,
+                                naturalHeight: img.naturalHeight
+                              });
+                            }}
+                            onError={(e) => {
+                              const img = e.target as HTMLImageElement;
+                              console.error("[DOCUMENT PREVIEW] ❌ FAILED to load image:", {
+                                url: selectedDoc.contract_url,
+                                src: img.src,
+                                currentSrc: img.currentSrc,
+                                naturalWidth: img.naturalWidth,
+                                naturalHeight: img.naturalHeight
+                              });
+                              // Test accessibility
+                              fetch(selectedDoc.contract_url, { method: 'HEAD' })
+                                .then(r => console.log("[DOCUMENT PREVIEW] URL test:", r.status, r.statusText))
+                                .catch(err => console.error("[DOCUMENT PREVIEW] URL not accessible:", err));
+                            }}
+                          />
+                        );
+                      } else if (fileExt === 'pdf') {
+                        console.log("[DOCUMENT PREVIEW] Rendering PDF iframe:", selectedDoc.contract_url);
+                        return (
+                          <iframe
+                            src={selectedDoc.contract_url}
+                            className="w-full h-full"
+                            title="PDF Preview"
+                            onLoad={() => console.log("[DOCUMENT PREVIEW] ✅ PDF iframe loaded:", selectedDoc.contract_url)}
+                            onError={(e) => {
+                              console.error("[DOCUMENT PREVIEW] ❌ PDF iframe error:", selectedDoc.contract_url);
+                              console.error("[DOCUMENT PREVIEW] Error:", e);
+                            }}
+                          />
+                        );
+                      } else {
+                        console.warn("[DOCUMENT PREVIEW] ⚠️ Unsupported file type:", fileExt);
+                        return <FileText className="w-16 h-16 text-on-surface-variant/30" />;
+                      }
+                    })()}
                   </div>
                   <h4 className="font-semibold text-sm text-on-surface truncate mb-2 px-2">
                     {selectedDoc.project_title}

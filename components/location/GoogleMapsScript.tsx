@@ -19,6 +19,12 @@ export function GoogleMapsScriptProvider({ apiKey, children }: GoogleMapsScriptP
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
+    // Skip loading if no API key provided
+    if (!apiKey || apiKey.trim() === "") {
+      console.warn('[GoogleMapsScript] No API key provided, skipping Google Maps loading');
+      return;
+    }
+
     // Check if already loaded
     if (window.google?.maps) {
       setIsLoaded(true);

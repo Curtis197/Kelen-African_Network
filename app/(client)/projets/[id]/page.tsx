@@ -15,6 +15,7 @@ import { ProjectProfessional, ProjectStep, ProjectArea } from "@/lib/types/proje
 import { createProjectArea, deleteProjectArea, getProjectAreas } from "@/lib/actions/projects";
 import { getProjectSteps } from "@/lib/actions/project-steps";
 import { getProjectImages, type ProjectImage } from "@/lib/actions/project-images";
+import { ProjectImageCarousel } from "@/components/projects/ProjectImageCarousel";
 import { generateProjectPdf } from "@/lib/actions/project-pdf";
 
 function cn(...inputs: ClassValue[]) {
@@ -60,7 +61,7 @@ export default function ProjectDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [showAreaSelector, setShowAreaSelector] = useState(false);
   const [areas, setAreas] = useState<ProjectArea[]>([]);
-  const [heroImage, setHeroImage] = useState<string | null>(null);
+  const [images, setImages] = useState<ProjectImage[]>([]);
   const supabase = createClient();
 
   useEffect(() => {
@@ -104,14 +105,10 @@ export default function ProjectDetailPage() {
     const stepsData = await getProjectSteps(projectIdStr);
     setSteps(stepsData as ProjectStep[]);
 
-    // Fetch images for hero background
+    // Fetch images for carousel
     const imgs = await getProjectImages(projectIdStr);
     console.log('[PROJECT-DETAIL] Images fetched:', imgs.length);
-    const mainImg = imgs.find((img: ProjectImage) => img.is_main) || imgs[0];
-    if (mainImg) {
-      console.log('[PROJECT-DETAIL] Setting hero image:', mainImg.url);
-      setHeroImage(mainImg.url);
-    }
+    setImages(imgs);
 
     setIsLoading(false);
   };
@@ -164,22 +161,7 @@ export default function ProjectDetailPage() {
 
   return (
     <main className="min-h-screen bg-surface font-body text-on-surface">
-      {/* Hero Background */}
-      {heroImage && (
-        <div className="relative h-48 sm:h-64 lg:h-80 overflow-hidden">
-          <img
-            src={heroImage}
-            alt={project.title}
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/50 to-transparent" />
-        </div>
-      )}
-
-      <div className={cn(
-        "mx-auto max-w-7xl w-full px-3 sm:px-4 lg:px-8",
-        heroImage ? "-mt-24 sm:-mt-32 lg:-mt-40 relative z-10" : "pt-4 sm:pt-6 lg:pt-8"
-      )}>
+      <div className="mx-auto max-w-7xl w-full px-3 sm:px-4 lg:px-8 pt-4 sm:pt-6 lg:pt-8">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-1.5 sm:gap-2 text-[9px] sm:text-xs font-black uppercase tracking-[0.12em] sm:tracking-[0.2em] text-on-surface-variant mb-3 sm:mb-4 lg:mb-6 overflow-x-auto scrollbar-hide">
           <Link href="/projets" className="hover:text-primary transition-colors truncate flex-shrink-0 sm:flex-shrink">
@@ -294,6 +276,13 @@ export default function ProjectDetailPage() {
           </div>
         </div>
 
+        {/* Image Carousel */}
+        {images.length > 0 && (
+          <div className="mb-6 sm:mb-8 lg:mb-12">
+            <ProjectImageCarousel images={images} projectId={projectIdStr} />
+          </div>
+        )}
+
         {/* Main Content Grid */}
         <div className="flex flex-col lg:grid lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-10">
           {/* Left Column - Main Content */}
@@ -324,7 +313,7 @@ export default function ProjectDetailPage() {
                   </button>
 
                   {showAreaSelector && (
-                    <div className="absolute right-0 mt-3 w-64 sm:w-72 bg-white rounded-2xl shadow-2xl border border-outline-variant/30 p-2 z-50">
+                    <div className="absolute left-0 mt-3 w-64 sm:w-72 bg-white rounded-2xl shadow-2xl border border-outline-variant/30 p-2 z-50">
                       <div className="max-h-64 overflow-y-auto overflow-x-hidden scrollbar-hide">
                         {DEVELOPMENT_AREAS.filter(a => !areas.some(pa => pa.name === a)).map((area) => (
                           <button

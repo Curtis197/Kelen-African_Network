@@ -60,6 +60,10 @@
 - `profile_interactions` - Contact clicks, etc.
 - `verification_queue` - Items awaiting verification
 
+### 9. **COLLABORATION** (2 tables)
+- `project_collaborations` - Client-pro collaboration pipeline (Saved → Finalist → Proposal → Active)
+- `collaboration_messages` - Negotiation messages thread
+
 ---
 
 ## 🔑 Common Confusion Points
@@ -181,7 +185,11 @@ const { data } = await supabase.from('users').select('*').eq('role', 'client')
 | `title` | text | Project title |
 | `description` | text | Project description |
 | `category` | text | Project category |
-| `location` | text | Project location |
+| `location` | text | Project location (city name) |
+| `location_lat` | numeric | GPS latitude coordinate |
+| `location_lng` | numeric | GPS longitude coordinate |
+| `location_country` | text | Country name from geocoding |
+| `location_formatted` | text | Full formatted address from Google Maps |
 | `budget_total` | numeric | Total budget |
 | `budget_currency` | text | `EUR`, `XOF`, `USD` (default: `EUR`) |
 | `status` | text | `en_preparation`, `en_cours`, `en_pause`, `termine`, `annule` |
@@ -578,6 +586,113 @@ pro_projects (status: completed)
       └─ realization_images (showcase photos)
           → DISPLAYED ON PUBLIC PORTFOLIO
 ```
+
+---
+
+## 🤝 Collaboration Tables
+
+### `project_collaborations` - Client-Pro Collaboration Pipeline
+**Purpose:** Tracks the collaboration pipeline from finalist selection to active collaboration
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | uuid | Primary key |
+| `project_id` | uuid | FK → user_projects.id (CASCADE DELETE) |
+| `professional_id` | uuid | FK → professionals.id (CASCADE DELETE) |
+| `project_professional_id` | uuid | FK → project_professionals.id (CASCADE DELETE) |
+| `pro_project_id` | uuid | FK → pro_projects.id (SET NULL on delete) |
+| `status` | text | `pending`, `negotiating`, `active`, `declined`, `not_picked`, `suspended`, `terminated` |
+| `proposal_text` | text | Pro's approach & terms |
+| `proposal_budget` | numeric | Pro's quoted price |
+| `proposal_currency` | text | Default `XOF` |
+| `proposal_timeline` | text | Pro's estimated timeline |
+| `proposal_submitted_at` | timestamptz | When proposal was submitted |
+| `agreed_price` | numeric | Final agreed price |
+| `agreed_start_date` | date | Agreement start |
+| `agreed_end_date` | date | Agreement end |
+| `started_at` | timestamptz | When collaboration became active |
+| `ended_at` | timestamptz | When collaboration ended |
+| `decline_reason` | text | Reason for declining |
+| `created_at` | timestamptz | Auto now |
+| `updated_at` | timestamptz | Auto now |
+
+**Status Workflow:**
+```
+pending → negotiating → active → terminated
+pending → declined
+negotiating → not_picked
+```
+
+**Common Queries:**
+```typescript
+// Get all collaborations for a project
+const { data } = await supabase
+  .from('project_collaborations')
+  .select('*, professional:professionals(*), messages:collaboration_messages(*)')
+  .eq('project_id', projectId)
+  .order('created_at', { ascending: false })
+
+// Get pro's inbox
+const { data } = await supabase
+  .from('project_collaborations')
+  .select('*, project:user_projects(*)')
+  .eq('professional_id', proId)
+  .in('status', ['pending', 'negotiating', 'active'])
+```
+
+---
+
+### `collaboration_messages` - Collaboration Message Thread
+**Purpose:** Negotiation messages between client and pro
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | uuid | Primary key |
+| `collaboration_id` | uuid | FK → project_collaborations.id (CASCADE DELETE) |
+| `sender_id` | uuid | FK → users.id |
+| `sender_role` | text | `client` or `professional` |
+| `message_type` | text | `proposal`, `counter_offer`, `revision_request`, `acceptance`, `decline`, `general` |
+| `content` | text | Message body |
+| `attachments` | jsonb | Array of `{url, type, name}` |
+| `created_at` | timestamptz | Auto now |
+
+**Common Queries:**
+```typescript
+// Get message thread
+const { data } = await supabase
+  .from('collaboration_messages')
+  .select('*')
+  .eq('collaboration_id', collabId)
+  .order('created_at', { ascending: true })
+```
+
+---
+
+### `project_professionals` — Updated `selection_status` values
+
+**New values added:** `agreed`, `not_selected`
+
+| Status | Collaboration Status | Meaning |
+|--------|---------------------|---------|
+| `candidate` | *(no collaboration)* | Pro saved/liked by client |
+| `shortlisted` | *(no collaboration)* | Client considering |
+| `finalist` | `pending` or `negotiating` | Proposal phase |
+| `agreed` | `active` | Pro picked, collaboration active |
+| `not_selected` | `declined` or `not_picked` | Finalist not chosen |
+
+---
+
+### `notifications.type` — New enum values
+
+**8 new values added:**
+- `finalist_selected`
+- `proposal_submitted`
+- `revision_requested`
+- `proposal_accepted`
+- `proposal_declined`
+- `collaboration_declined`
+- `collaboration_activated`
+- `collaboration_terminated`
 
 ---
 

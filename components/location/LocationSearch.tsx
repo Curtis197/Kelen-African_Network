@@ -49,6 +49,7 @@ export function LocationSearch({ value, onChange, placeholder = "Rechercher une 
     // Poll every 200ms until Google is loaded
     checkInterval.current = setInterval(() => {
       if (window.google?.maps?.places) {
+        console.log('[LocationSearch] Google Maps API loaded');
         setIsGoogleLoaded(true);
         autocompleteService.current = new google.maps.places.AutocompleteService();
         const dummyDiv = document.createElement("div");
@@ -150,7 +151,7 @@ export function LocationSearch({ value, onChange, placeholder = "Rechercher une 
 
     debounceTimer.current = setTimeout(() => {
       if (!isGoogleLoaded || !autocompleteService.current) {
-        console.warn("Google Maps not loaded yet");
+        // Silently skip — Google Maps still loading, poll will catch it
         return;
       }
 
@@ -266,8 +267,8 @@ export function LocationSearch({ value, onChange, placeholder = "Rechercher une 
           onChange={handleInputChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          placeholder={placeholder}
-          className="w-full bg-stone-50 border-none rounded-xl sm:rounded-2xl p-3 sm:p-4 pl-10 sm:pl-12 pr-24 text-sm sm:text-base text-stone-900 focus:ring-2 focus:ring-kelen-green-500 transition-all font-medium"
+          placeholder={isGoogleLoaded ? placeholder : `${placeholder} (saisie manuelle)`}
+          className="w-full bg-stone-50 border-none rounded-xl sm:rounded-2xl p-3 sm:p-4 pl-10 sm:pl-12 pr-20 text-sm sm:text-base text-stone-900 focus:ring-2 focus:ring-kelen-green-500 transition-all font-medium"
           autoComplete="off"
         />
 
@@ -281,20 +282,6 @@ export function LocationSearch({ value, onChange, placeholder = "Rechercher une 
               <X className="w-4 h-4 text-stone-400" />
             </button>
           )}
-          
-          <button
-            type="button"
-            onClick={handleGetCurrentLocation}
-            disabled={isGettingLocation}
-            className="p-1.5 rounded-lg hover:bg-stone-200 transition-colors disabled:opacity-50"
-            title="Utiliser ma position actuelle"
-          >
-            {isGettingLocation ? (
-              <Loader2 className="w-4 h-4 text-kelen-green-600 animate-spin" />
-            ) : (
-              <Navigation className="w-4 h-4 text-stone-400" />
-            )}
-          </button>
         </div>
       </div>
 
@@ -337,11 +324,11 @@ export function LocationSearch({ value, onChange, placeholder = "Rechercher une 
         </div>
       )}
 
-      {/* Selected location indicator */}
-      {value && value.lat && value.lng && (
-        <div className="mt-2 text-xs text-kelen-green-600 font-medium flex items-center gap-1">
+      {/* Google Maps not loaded warning */}
+      {!isGoogleLoaded && (
+        <div className="mt-2 text-xs text-amber-600 font-medium flex items-center gap-1">
           <MapPin className="w-3 h-3" />
-          <span>📍 {value.lat.toFixed(4)}, {value.lng.toFixed(4)}</span>
+          <span>Saisie manuelle uniquement - Google Maps non disponible</span>
         </div>
       )}
     </div>

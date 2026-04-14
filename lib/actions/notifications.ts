@@ -6,7 +6,10 @@ import { revalidatePath } from "next/cache";
 export type NotificationType =
   | "log_created" | "log_approved" | "log_contested" | "log_resolved"
   | "project_assigned" | "new_recommendation" | "new_signal"
-  | "status_changed" | "subscription_activated" | "subscription_expired";
+  | "status_changed" | "subscription_activated" | "subscription_expired"
+  | "finalist_selected" | "proposal_submitted" | "revision_requested"
+  | "proposal_accepted" | "proposal_declined" | "collaboration_declined"
+  | "collaboration_activated" | "collaboration_terminated";
 
 interface CreateNotificationInput {
   userId: string;

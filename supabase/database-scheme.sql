@@ -4,7 +4,7 @@
 CREATE TABLE public.notifications (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   user_id uuid NOT NULL,
-  type text NOT NULL CHECK (type = ANY (ARRAY['log_created'::text, 'log_approved'::text, 'log_contested'::text, 'log_resolved'::text, 'project_assigned'::text, 'new_recommendation'::text, 'new_signal'::text, 'status_changed'::text, 'subscription_activated'::text, 'subscription_expired'::text])),
+  type text NOT NULL CHECK (type = ANY (ARRAY['log_created'::text, 'log_approved'::text, 'log_contested'::text, 'log_resolved'::text, 'project_assigned'::text, 'new_recommendation'::text, 'new_signal'::text, 'status_changed'::text, 'subscription_activated'::text, 'subscription_expired'::text, 'finalist_selected'::text, 'proposal_submitted'::text, 'revision_requested'::text, 'proposal_accepted'::text, 'proposal_declined'::text, 'collaboration_declined'::text, 'collaboration_activated'::text, 'collaboration_terminated'::text])),
   title text NOT NULL,
   body text NOT NULL,
   link text,
@@ -363,6 +363,46 @@ CREATE TABLE public.project_payments (
   CONSTRAINT project_payments_project_id_fkey FOREIGN KEY (project_id) REFERENCES public.user_projects(id),
   CONSTRAINT project_payments_project_professional_id_fkey FOREIGN KEY (project_professional_id) REFERENCES public.project_professionals(id)
 );
+CREATE TABLE public.project_collaborations (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  project_id uuid NOT NULL,
+  professional_id uuid NOT NULL,
+  project_professional_id uuid NOT NULL,
+  pro_project_id uuid,
+  status text NOT NULL DEFAULT 'pending'::text
+    CHECK (status = ANY (ARRAY['pending','negotiating','active','declined','not_picked','suspended','terminated'])),
+  proposal_text text,
+  proposal_budget numeric,
+  proposal_currency text DEFAULT 'XOF'::text,
+  proposal_timeline text,
+  proposal_submitted_at timestamp with time zone,
+  agreed_price numeric,
+  agreed_start_date date,
+  agreed_end_date date,
+  started_at timestamp with time zone,
+  ended_at timestamp with time zone,
+  decline_reason text,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT project_collaborations_pkey PRIMARY KEY (id),
+  CONSTRAINT fk_collab_project FOREIGN KEY (project_id) REFERENCES public.user_projects(id) ON DELETE CASCADE,
+  CONSTRAINT fk_collab_professional FOREIGN KEY (professional_id) REFERENCES public.professionals(id) ON DELETE CASCADE,
+  CONSTRAINT fk_collab_project_prof FOREIGN KEY (project_professional_id) REFERENCES public.project_professionals(id) ON DELETE CASCADE,
+  CONSTRAINT fk_collab_pro_project FOREIGN KEY (pro_project_id) REFERENCES public.pro_projects(id) ON DELETE SET NULL
+);
+CREATE TABLE public.collaboration_messages (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  collaboration_id uuid NOT NULL,
+  sender_id uuid NOT NULL,
+  sender_role text NOT NULL CHECK (sender_role = ANY (ARRAY['client','professional'])),
+  message_type text NOT NULL CHECK (message_type = ANY (ARRAY['proposal','counter_offer','revision_request','acceptance','decline','general'])),
+  content text NOT NULL,
+  attachments jsonb DEFAULT '[]'::jsonb,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT collab_messages_pkey PRIMARY KEY (id),
+  CONSTRAINT collab_messages_collab_id_fkey FOREIGN KEY (collaboration_id) REFERENCES public.project_collaborations(id) ON DELETE CASCADE,
+  CONSTRAINT collab_messages_sender_id_fkey FOREIGN KEY (sender_id) REFERENCES public.users(id)
+);
 CREATE TABLE public.project_professionals (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   project_id uuid NOT NULL,
@@ -379,7 +419,7 @@ CREATE TABLE public.project_professionals (
   updated_at timestamp with time zone DEFAULT now(),
   development_area text,
   rank_order integer DEFAULT 0,
-  selection_status text DEFAULT 'candidate'::text CHECK (selection_status = ANY (ARRAY['candidate'::text, 'shortlisted'::text, 'finalist'::text])),
+  selection_status text DEFAULT 'candidate'::text CHECK (selection_status = ANY (ARRAY['candidate'::text, 'shortlisted'::text, 'finalist'::text, 'agreed'::text, 'not_selected'::text])),
   project_area_id uuid,
   project_step_id uuid,
   CONSTRAINT project_professionals_pkey PRIMARY KEY (id),
@@ -599,6 +639,10 @@ CREATE TABLE public.user_projects (
   description text,
   category text,
   location text,
+  location_lat numeric,
+  location_lng numeric,
+  location_country text,
+  location_formatted text,
   budget_total numeric,
   budget_currency text DEFAULT 'EUR'::text CHECK (budget_currency = ANY (ARRAY['EUR'::text, 'XOF'::text, 'USD'::text])),
   start_date date,
@@ -685,6 +729,10 @@ CREATE TABLE public.pro_google_reviews_cache (
 --   file_size_limit: 50 MB
 --   allowed_mime_types: {} (ALL types allowed — updated 2026-04-12)
 --   public: true
+--   RLS Policies:
+--     - portfolios_upload_auth_v2 (INSERT) - authenticated users
+--     - portfolios_admin_v2 (ALL) - admin role
+--     - portfolios_public_read (SELECT) - public read access (added 2026-04-14)
 
 -- Bucket: verification-docs
 --   file_size_limit: 10 MB

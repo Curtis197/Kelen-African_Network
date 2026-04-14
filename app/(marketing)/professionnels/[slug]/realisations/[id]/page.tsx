@@ -71,15 +71,8 @@ export default async function RealizationDetailPage({ params }: Props) {
   return (
     <div className="bg-[#f9f9f8] font-body text-[#1a1c1c] antialiased min-h-screen">
       <main className="pt-8 pb-32 md:pb-20 max-w-[1440px] mx-auto px-4 md:px-8">
-        {/* Breadcrumb & Back */}
-        <div className="mb-8 md:mb-12 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-center gap-2 text-sm font-medium text-[#3c4a42]/60">
-            <Link href="/professionnels" className="hover:text-[#1a1c1c] transition-colors">Experts</Link>
-            <ChevronRight className="w-3 h-3" />
-            <Link href={`/professionnels/${slug}`} className="hover:text-[#1a1c1c] transition-colors">{pro.business_name}</Link>
-            <ChevronRight className="w-3 h-3" />
-            <span className="text-[#1a1c1c]">{realization.title}</span>
-          </div>
+        {/* Back Button */}
+        <div className="mb-8 md:mb-12 flex justify-end">
           <Link
             href={`/professionnels/${slug}`}
             className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#f3f4f3] hover:bg-[#e8e8e7] text-[#1a1c1c] font-semibold text-sm rounded-full transition-all duration-200"

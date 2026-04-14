@@ -18,10 +18,10 @@ interface AddToProjectDialogProps {
   userProjects: Project[];
 }
 
-export function AddToProjectDialog({ 
-  professionalId, 
-  professionalName, 
-  userProjects 
+export function AddToProjectDialog({
+  professionalId,
+  professionalName,
+  userProjects
 }: AddToProjectDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState<"project" | "area">("project");
@@ -30,9 +30,20 @@ export function AddToProjectDialog({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
+  console.log('[ADD_TO_PROJECT_DIALOG] Props received:', { professionalId, professionalName, projectsCount: userProjects.length });
+
   const handleAdd = async (area: string) => {
-    if (!selectedProjectId) return;
-    
+    if (!selectedProjectId) {
+      console.error('[ADD_TO_PROJECT_DIALOG] No project selected!');
+      return;
+    }
+
+    console.log('[ADD_TO_PROJECT_DIALOG] Attempting to add pro to project:', {
+      projectId: selectedProjectId,
+      professionalId,
+      area,
+    });
+
     setIsSubmitting(true);
     try {
       const result = await manageProjectProfessional(
@@ -42,14 +53,19 @@ export function AddToProjectDialog({
         "add"
       );
 
+      console.log('[ADD_TO_PROJECT_DIALOG] Server action result:', result);
+
       if (result.success) {
+        console.log('[ADD_TO_PROJECT_DIALOG] Success! Redirecting to project:', selectedProjectId);
         toast.success(`${professionalName} ajouté au projet`);
         setIsOpen(false);
         router.push(`/projets/${selectedProjectId}`);
       } else {
-        toast.error("Erreur lors de l'ajout");
+        console.error('[ADD_TO_PROJECT_DIALOG] Server action returned error:', result.error);
+        toast.error(`Erreur lors de l'ajout: ${result.error || 'Erreur inconnue'}`);
       }
     } catch (error) {
+      console.error('[ADD_TO_PROJECT_DIALOG] Exception caught:', error);
       toast.error("Erreur de connexion");
     } finally {
       setIsSubmitting(false);

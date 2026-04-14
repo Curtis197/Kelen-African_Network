@@ -37,7 +37,8 @@
       "Bash(psql *)",
       "Bash(tee-object *)",
       "Bash(get-content *)",
-      "Bash(cmd *)"
+      "Bash(cmd *)",
+      "Bash(dir *)"
     ]
   },
   "$version": 3

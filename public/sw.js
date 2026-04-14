@@ -9,14 +9,26 @@
 const CACHE_NAME = "kelen-v1";
 const STATIC_ASSETS = [
   "/",
-  "/offline",
   "/manifest.json",
+  // Note: /offline route not yet implemented - add when available
 ];
 
 // ── Install: cache static assets ─────────────────────────────
 self.addEventListener("install", (event) => {
+  console.log("[SW] Installing service worker, caching static assets");
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS))
+    caches.open(CACHE_NAME).then(async (cache) => {
+      // Add assets one by one to avoid cache.addAll failing on single asset
+      for (const asset of STATIC_ASSETS) {
+        try {
+          console.log("[SW] Caching:", asset);
+          await cache.add(asset);
+        } catch (err) {
+          console.warn("[SW] Failed to cache asset:", asset, err.message);
+        }
+      }
+      console.log("[SW] Install complete");
+    })
   );
   self.skipWaiting();
 });

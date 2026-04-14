@@ -54,27 +54,46 @@ export function ProNavbar() {
 
     const fetchUser = async () => {
       console.log('[ProNavbar] getSession() called');
-      const { data: { session } } = await supabase.auth.getSession();
-      if (cancelled) {
-        console.log('[ProNavbar] getSession returned — component unmounted, skipping');
-        return;
-      }
-      if (session?.user) {
-        console.log('[ProNavbar] Session found:', session.user.email);
-        setUserEmail(session.user.email ?? null);
-        const { data: profile } = await supabase
-          .from("professionals")
-          .select("business_name")
-          .eq("user_id", session.user.id)
-          .single();
-        if (profile?.business_name && !cancelled) {
-          console.log('[ProNavbar] Business name set:', profile.business_name);
-          setBusinessName(profile.business_name);
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          console.error('[ProNavbar] Session fetch error:', error.message, error.code);
+          // Clear local state on auth error
+          if (!cancelled) {
+            setUserEmail(null);
+            setBusinessName("Mon profil");
+          }
+          return;
         }
-      } else {
-        console.log('[ProNavbar] No session found — clearing user state');
-        setUserEmail(null);
-        setBusinessName("Mon profil");
+        
+        if (cancelled) {
+          console.log('[ProNavbar] getSession returned — component unmounted, skipping');
+          return;
+        }
+        if (session?.user) {
+          console.log('[ProNavbar] Session found:', session.user.email);
+          setUserEmail(session.user.email ?? null);
+          const { data: profile } = await supabase
+            .from("professionals")
+            .select("business_name")
+            .eq("user_id", session.user.id)
+            .single();
+          if (profile?.business_name && !cancelled) {
+            console.log('[ProNavbar] Business name set:', profile.business_name);
+            setBusinessName(profile.business_name);
+          }
+        } else {
+          console.log('[ProNavbar] No session found — clearing user state');
+          setUserEmail(null);
+          setBusinessName("Mon profil");
+        }
+      } catch (err) {
+        console.error('[ProNavbar] Unexpected error fetching session:', err);
+        if (!cancelled) {
+          setUserEmail(null);
+          setBusinessName("Mon profil");
+        }
       }
     };
 

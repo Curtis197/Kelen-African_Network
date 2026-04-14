@@ -238,10 +238,10 @@ export default function EditClientProjectPage() {
     console.log('[CLIENT-PROJECT-EDIT] Event:', e);
     console.log('[CLIENT-PROJECT-EDIT] Files:', e.target.files);
     console.log('[CLIENT-PROJECT-EDIT] Files count:', e.target.files?.length || 0);
-    
+
     const file = e.target.files?.[0];
     console.log('[CLIENT-PROJECT-EDIT] First file:', file);
-    
+
     if (!file) {
       console.warn('[CLIENT-PROJECT-EDIT] No file selected, aborting');
       toast.error("Aucun fichier sélectionné");
@@ -259,16 +259,16 @@ export default function EditClientProjectPage() {
     const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
     console.log('[CLIENT-PROJECT-EDIT] Allowed types:', allowedTypes);
     console.log('[CLIENT-PROJECT-EDIT] File type valid:', allowedTypes.includes(file.type));
-    
+
     if (!allowedTypes.includes(file.type)) {
       console.error('[CLIENT-PROJECT-EDIT] ❌ Invalid file type:', file.type, 'Allowed:', allowedTypes);
       toast.error("Format non supporté. Utilisez JPG, PNG ou WEBP");
       return;
     }
-    
+
     const maxSize = 10 * 1024 * 1024; // 10 MB
     console.log('[CLIENT-PROJECT-EDIT] Max size:', maxSize, 'File size:', file.size, 'Valid:', file.size <= maxSize);
-    
+
     if (file.size > maxSize) {
       console.error('[CLIENT-PROJECT-EDIT] ❌ File too large:', file.size, 'Max:', maxSize);
       toast.error("Fichier trop volumineux (max 10 Mo)");
@@ -277,17 +277,17 @@ export default function EditClientProjectPage() {
 
     console.log('[CLIENT-PROJECT-EDIT] ✅ File validation passed, proceeding with upload');
     setIsUploading(true);
-    
+
     try {
       // Get auth user
       console.log('[CLIENT-PROJECT-EDIT] Getting authenticated user...');
       const { data: { user }, error: authError } = await supabase.auth.getUser();
-      console.log('[CLIENT-PROJECT-EDIT] Auth result:', { 
-        authenticated: !!user, 
-        userId: user?.id, 
-        error: authError?.message 
+      console.log('[CLIENT-PROJECT-EDIT] Auth result:', {
+        authenticated: !!user,
+        userId: user?.id,
+        error: authError?.message
       });
-      
+
       if (!user) {
         console.error('[CLIENT-PROJECT-EDIT] ❌ No authenticated user');
         toast.error("Session expirée");
@@ -325,7 +325,7 @@ export default function EditClientProjectPage() {
         projectId,
         imageUrl
       });
-      
+
       const imgResult = await uploadProjectImage(projectId, imageUrl);
       console.log('[CLIENT-PROJECT-EDIT] Step 2 result:', {
         success: imgResult.success,
@@ -342,11 +342,11 @@ export default function EditClientProjectPage() {
 
       console.log('[CLIENT-PROJECT-EDIT] ✅ Image uploaded and saved successfully!');
       toast.success("Image ajoutée avec succès");
-      
+
       // Refresh image list
       console.log('[CLIENT-PROJECT-EDIT] Refreshing image list...');
       await fetchImages();
-      
+
     } catch (err) {
       console.error('[CLIENT-PROJECT-EDIT] ❌ Upload error:', err);
       console.error('[CLIENT-PROJECT-EDIT] Error details:', {

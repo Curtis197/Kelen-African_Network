@@ -146,11 +146,11 @@ export default async function RealizationDetailPage({ params }: RealizationDetai
       {/* Header */}
       <div className="mb-10">
         <Link
-          href="/pro/realisations"
+          href="/pro/portfolio"
           className="mb-4 flex items-center gap-2 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors"
         >
           <ArrowLeft size={16} />
-          Retour aux réalisations
+          Retour au portfolio
         </Link>
         <div className="flex items-start justify-between">
           <div>

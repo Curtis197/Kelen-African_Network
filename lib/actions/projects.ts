@@ -186,10 +186,17 @@ export async function manageProjectProfessional(
   externalData?: { name?: string; phone?: string; category?: string; location?: string; note?: string },
   areaId?: string
 ) {
+  console.log('[MANAGE_PROJECT_PROFESSIONAL] Called with:', { projectId, proId, area, action, isExternal, areaId });
+  
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-  if (!user) throw new Error("Non autorisé");
+  console.log('[MANAGE_PROJECT_PROFESSIONAL] Auth result:', { hasUser: !!user, authError: authError?.message });
+
+  if (!user) {
+    console.error('[MANAGE_PROJECT_PROFESSIONAL] ❌ No authenticated user!');
+    throw new Error("Non autorisé");
+  }
 
   if (action === 'add') {
     const insertData: any = {
@@ -212,14 +219,53 @@ export async function manageProjectProfessional(
       insertData.project_area_id = areaId;
     }
 
-    const { error } = await supabase
+    console.log('[MANAGE_PROJECT_PROFESSIONAL] Inserting to project_professionals:', insertData);
+
+    // Check if the area exists in project_areas, if not create it
+    const { data: existingArea } = await supabase
+      .from("project_areas")
+      .select("id")
+      .eq("project_id", projectId)
+      .eq("name", area)
+      .single();
+
+    console.log('[MANAGE_PROJECT_PROFESSIONAL] Existing area check:', { exists: !!existingArea, areaName: area });
+
+    if (!existingArea) {
+      console.log('[MANAGE_PROJECT_PROFESSIONAL] Area not found, creating it...');
+      const { data: newArea, error: areaError } = await supabase
+        .from("project_areas")
+        .insert([{ project_id: projectId, name: area }])
+        .select()
+        .single();
+
+      if (areaError) {
+        console.error('[MANAGE_PROJECT_PROFESSIONAL] ❌ Failed to create area:', areaError.message);
+      } else {
+        console.log('[MANAGE_PROJECT_PROFESSIONAL] ✅ Created area:', newArea.id);
+        insertData.project_area_id = newArea.id;
+      }
+    } else {
+      insertData.project_area_id = existingArea.id;
+    }
+
+    const { data, error } = await supabase
       .from("project_professionals")
-      .insert([insertData]);
+      .insert([insertData])
+      .select();
+
+    console.log('[MANAGE_PROJECT_PROFESSIONAL] Insert result:', { data, error: error?.message, errorCode: error?.code });
 
     if (error) {
+      console.error('[MANAGE_PROJECT_PROFESSIONAL] ❌ Database insert error:', error.message);
+      if (error.code === '42501') {
+        console.error('[MANAGE_PROJECT_PROFESSIONAL] ❌ EXPLICIT RLS BLOCKING! Table: project_professionals');
+        console.error('[MANAGE_PROJECT_PROFESSIONAL] RLS policy is blocking insert for user:', user.id);
+      }
       log("project.pro.add.error", { userId: user.id, projectId, area, isExternal, proId, error: error.message });
-      return { error: error.message };
+      return { success: false, error: error.message };
     }
+    console.log('[MANAGE_PROJECT_PROFESSIONAL] ✅ Successfully added pro to project:', data);
     log("project.pro.add.ok", { userId: user.id, projectId, area, isExternal, proId: isExternal ? null : proId, externalName: isExternal ? externalData?.name : null });
   } else {
     const { error } = await supabase

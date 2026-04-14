@@ -18,12 +18,14 @@ import {
   Bell,
   ChevronDown,
   FileText,
+  Handshake,
 } from "lucide-react";
 import { NotificationDropdown } from "@/components/layout/NotificationDropdown";
 
 const NAV_ITEMS = [
   { href: "/pro/dashboard", label: "Tableau de bord", icon: LayoutDashboard },
   { href: "/pro/projets", label: "Projets", icon: Briefcase },
+  { href: "/pro/collaborations", label: "Collaborations", icon: Handshake },
   { href: "/pro/documents", label: "Documents", icon: FileText },
   { href: "/pro/realisations", label: "Réalisations", icon: Award },
   { href: "/pro/portfolio", label: "Portfolio", icon: LayoutGrid },
@@ -49,27 +51,45 @@ export function ProSidebar() {
 
     const getUser = async () => {
       console.log('[ProSidebar] getSession() called');
-      const { data: { session } } = await supabase.auth.getSession();
-      if (cancelled) {
-        console.log('[ProSidebar] getSession returned — component unmounted, skipping');
-        return;
-      }
-      if (session?.user) {
-        console.log('[ProSidebar] Session found:', session.user.email);
-        setUserEmail(session.user.email ?? null);
-        const { data: profile } = await supabase
-          .from("professionals")
-          .select("business_name")
-          .eq("user_id", session.user.id)
-          .single();
-        if (profile?.business_name && !cancelled) {
-          console.log('[ProSidebar] Business name set:', profile.business_name);
-          setBusinessName(profile.business_name);
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          console.error('[ProSidebar] Session fetch error:', error.message, error.code);
+          if (!cancelled) {
+            setUserEmail(null);
+            setBusinessName("Mon profil");
+          }
+          return;
         }
-      } else {
-        console.log('[ProSidebar] No session found — clearing user state');
-        setUserEmail(null);
-        setBusinessName("Mon profil");
+        
+        if (cancelled) {
+          console.log('[ProSidebar] getSession returned — component unmounted, skipping');
+          return;
+        }
+        if (session?.user) {
+          console.log('[ProSidebar] Session found:', session.user.email);
+          setUserEmail(session.user.email ?? null);
+          const { data: profile } = await supabase
+            .from("professionals")
+            .select("business_name")
+            .eq("user_id", session.user.id)
+            .single();
+          if (profile?.business_name && !cancelled) {
+            console.log('[ProSidebar] Business name set:', profile.business_name);
+            setBusinessName(profile.business_name);
+          }
+        } else {
+          console.log('[ProSidebar] No session found — clearing user state');
+          setUserEmail(null);
+          setBusinessName("Mon profil");
+        }
+      } catch (err) {
+        console.error('[ProSidebar] Unexpected error fetching session:', err);
+        if (!cancelled) {
+          setUserEmail(null);
+          setBusinessName("Mon profil");
+        }
       }
     };
     getUser();

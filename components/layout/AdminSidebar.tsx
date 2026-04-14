@@ -27,11 +27,24 @@ export function AdminSidebar() {
     let cancelled = false;
 
     const getUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (cancelled) return;
-      if (session?.user) {
-        setUserEmail(session.user.email ?? null);
-      } else {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          console.error('[AdminSidebar] Session fetch error:', error.message, error.code);
+          setUserEmail(null);
+          return;
+        }
+        
+        if (cancelled) return;
+        
+        if (session?.user) {
+          setUserEmail(session.user.email ?? null);
+        } else {
+          setUserEmail(null);
+        }
+      } catch (err) {
+        console.error('[AdminSidebar] Unexpected error fetching session:', err);
         setUserEmail(null);
       }
     };

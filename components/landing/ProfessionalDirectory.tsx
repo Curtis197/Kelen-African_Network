@@ -35,7 +35,7 @@ export function ProfessionalDirectory({
   const [selectedAreaId, setSelectedAreaId] = useState(initialAreaId || "");
   const [selectedProfessionId, setSelectedProfessionId] = useState(initialProfessionId || "");
   const [tier, setTier] = useState("Tous");
-  const [locationQuery, setLocationQuery] = useState("");
+  const [locationData, setLocationData] = useState<LocationData | null>(null);
 
   // Professions filtered to the selected area
   const professionsForArea = useMemo(() => {
@@ -54,14 +54,15 @@ export function ProfessionalDirectory({
       const matchesArea = !selectedAreaId || pro.area_id === selectedAreaId;
       const matchesProfession = !selectedProfessionId || pro.profession_id === selectedProfessionId;
       const matchesTier = tier === "Tous" || (tier === "Or" && pro.status === "gold");
-      const searchStr = locationQuery.toLowerCase().trim();
       const matchesLocation =
-        !searchStr ||
-        pro.city.toLowerCase().includes(searchStr) ||
-        pro.country.toLowerCase().includes(searchStr);
+        !locationData ||
+        pro.city.toLowerCase().includes(locationData.name.toLowerCase()) ||
+        pro.country.toLowerCase().includes(locationData.name.toLowerCase()) ||
+        pro.city.toLowerCase().includes((locationData.city || "").toLowerCase()) ||
+        pro.country.toLowerCase().includes((locationData.country || "").toLowerCase());
       return matchesArea && matchesProfession && matchesTier && matchesLocation;
     });
-  }, [initialPros, selectedAreaId, selectedProfessionId, tier, locationQuery]);
+  }, [initialPros, selectedAreaId, selectedProfessionId, tier, locationData]);
 
   const handleAreaChange = (areaId: string) => {
     setSelectedAreaId(areaId);
@@ -72,8 +73,15 @@ export function ProfessionalDirectory({
     setSelectedAreaId(initialAreaId || "");
     setSelectedProfessionId("");
     setTier("Tous");
-    setLocationQuery("");
+    setLocationData(null);
   };
+
+  console.log('[PRO_DIRECTORY] Component mounted:', {
+    initialProsCount: initialPros.length,
+    totalCount,
+    filteredProsCount: filteredPros.length,
+    hasMore: initialPros.length < totalCount,
+  });
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 bg-surface">
@@ -115,7 +123,12 @@ export function ProfessionalDirectory({
         <div className="flex items-center gap-3 rounded-full bg-surface-container-low px-5 py-2.5 text-sm font-bold text-kelen-green-700">
           <span className="flex h-2 w-2 rounded-full bg-kelen-green-500" />
           <span>
-            {filteredPros.length.toLocaleString()} professionnel{filteredPros.length > 1 ? "s" : ""} vérifié{filteredPros.length > 1 ? "s" : ""} trouvé{filteredPros.length > 1 ? "s" : ""}
+            {filteredPros.length.toLocaleString()} professionnel{filteredPros.length > 1 ? "s" : ""} vérifié{filteredPros.length > 1 ? "s" : ""} affiché{filteredPros.length > 1 ? "s" : ""}
+            {initialPros.length < totalCount && (
+              <span className="ml-1.5 text-xs opacity-75">
+                (sur {totalCount.toLocaleString()})
+              </span>
+            )}
           </span>
         </div>
       </div>
@@ -174,8 +187,8 @@ export function ProfessionalDirectory({
               Localisation
             </label>
             <LocationSearch
-              value={locationQuery ? { name: locationQuery || "", formatted_address: locationQuery || "", lat: 0, lng: 0 } : null}
-              onChange={(loc: LocationData | null) => setLocationQuery(loc?.city || loc?.formatted_address || "")}
+              value={locationData}
+              onChange={setLocationData}
               placeholder="Abidjan, Dakar..."
               className="rounded-2xl border-none bg-surface-container-lowest shadow-sm"
             />
@@ -251,39 +264,33 @@ export function ProfessionalDirectory({
       )}
 
       {/* Pagination / Load More */}
-      <div className="mt-20 flex flex-col items-center gap-6">
-        <button 
-          className="flex items-center gap-3 rounded-[1.5rem] bg-surface-container-lowest px-6 md:px-10 py-4 md:py-5 font-black text-foreground shadow-lg shadow-black/5 ring-1 ring-border transition-all hover:bg-kelen-green-50 hover:text-kelen-green-700 hover:ring-kelen-green-200 active:scale-95 text-sm md:text-base"
-          aria-label="Charger plus de professionnels"
-        >
-          <span>Voir plus de professionnels qualifiés</span>
-          <ChevronDown className="h-5 w-5" />
-        </button>
-
-        <div className="flex items-center gap-2 md:gap-3" role="navigation" aria-label="Pagination">
-          {[1, 2, 3].map((page) => (
+      {filteredPros.length > 0 && (
+        <div className="mt-20 flex flex-col items-center gap-6">
+          {/* "Voir plus" button - only show if we haven't loaded all professionals */}
+          {initialPros.length < totalCount && (
             <button
-              key={page}
-              className={`h-10 w-10 md:h-12 md:w-12 rounded-full text-xs md:text-sm font-bold transition-colors ${
-                page === 1
-                  ? "bg-kelen-green-600 text-white shadow-md shadow-kelen-green-600/20"
-                  : "text-muted-foreground hover:bg-muted"
-              }`}
-              aria-current={page === 1 ? "page" : undefined}
-              aria-label={`Page ${page}`}
+              className="flex items-center gap-3 rounded-[1.5rem] bg-surface-container-lowest px-6 md:px-10 py-4 md:py-5 font-black text-foreground shadow-lg shadow-black/5 ring-1 ring-border transition-all hover:bg-kelen-green-50 hover:text-kelen-green-700 hover:ring-kelen-green-200 active:scale-95 text-sm md:text-base"
+              aria-label="Charger plus de professionnels"
+              onClick={() => {
+                // TODO: Implement load more functionality
+                console.log('[PRO_DIRECTORY] Load more clicked - need to implement pagination');
+              }}
             >
-              {page}
+              <span>Voir plus de professionnels qualifiés</span>
+              <ChevronDown className="h-5 w-5" />
             </button>
-          ))}
-          <span className="px-2 md:px-4 text-muted-foreground font-black tracking-widest text-xs md:text-sm">...</span>
-          <button
-            className="h-10 w-10 md:h-12 md:w-12 rounded-full text-xs md:text-sm font-bold text-muted-foreground hover:bg-muted transition-colors"
-            aria-label="Page 12"
-          >
-            12
-          </button>
+          )}
+
+          {/* Pagination - only show if there are multiple pages */}
+          {totalCount > initialPros.length && (
+            <div className="flex items-center gap-2 md:gap-3" role="navigation" aria-label="Pagination">
+              <span className="text-xs md:text-sm font-bold text-muted-foreground">
+                Affichage de {initialPros.length} sur {totalCount} professionnels
+              </span>
+            </div>
+          )}
         </div>
-      </div>
+      )}
     </section>
   );
 }

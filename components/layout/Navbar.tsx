@@ -25,17 +25,32 @@ export function Navbar() {
     let cancelled = false;
 
     const fetchUserAndRole = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (cancelled) return;
-      if (session?.user) {
-        setUser(session.user);
-        const { data: profile } = await supabase
-          .from("users")
-          .select("role")
-          .eq("id", session.user.id)
-          .single();
-        if (profile && !cancelled) setUserRole(profile.role);
-      } else {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          console.error('[Navbar] Session fetch error:', error.message, error.code);
+          setUser(null);
+          setUserRole(null);
+          return;
+        }
+        
+        if (cancelled) return;
+        
+        if (session?.user) {
+          setUser(session.user);
+          const { data: profile } = await supabase
+            .from("users")
+            .select("role")
+            .eq("id", session.user.id)
+            .single();
+          if (profile && !cancelled) setUserRole(profile.role);
+        } else {
+          setUser(null);
+          setUserRole(null);
+        }
+      } catch (err) {
+        console.error('[Navbar] Unexpected error fetching session:', err);
         setUser(null);
         setUserRole(null);
       }
