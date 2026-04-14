@@ -434,7 +434,7 @@ export default function ProDocumentsPage() {
                   <img
                     src={cleanUrl}
                     alt={selectedDoc.project_title}
-                    className="absolute inset-0 w-full h-full object-cover"
+                    className="absolute inset-0 w-full h-full object-contain"
                     onLoad={() => console.log('[IMG] ✅ sidebar loaded:', cleanUrl)}
                     onError={() => {
                       console.error('[IMG] ❌ sidebar failed to load:', cleanUrl);
