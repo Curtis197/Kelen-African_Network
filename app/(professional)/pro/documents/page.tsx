@@ -19,6 +19,7 @@ export default function ProDocumentsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [imgErrors, setImgErrors] = useState<Set<string>>(new Set());
   const supabase = createClient();
 
   useEffect(() => {
@@ -26,22 +27,42 @@ export default function ProDocumentsPage() {
   }, []);
 
   const fetchDocuments = async () => {
+    console.log('[ACTION] Started: fetchDocuments');
     setIsLoading(true);
+    
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+    console.log('[AUTH] User:', user?.id);
+    
+    if (!user) {
+      setIsLoading(false);
+      return;
+    }
 
-    const { data: pro } = await supabase
+    const { data: pro, error: proError } = await supabase
       .from("professionals")
       .select("id")
       .eq("user_id", user.id)
       .single();
 
+    console.log('[DB] Professional lookup:', { proId: pro?.id, error: proError?.message });
+
     if (pro) {
+      console.log('[FETCH] Requesting project_documents for professional_id:', pro.id);
       const { data, error } = await supabase
         .from("project_documents")
         .select("*")
         .eq("professional_id", pro.id)
         .order("created_at", { ascending: false });
+
+      console.log('[DB] Result project_documents:', { count: data?.length, error: error?.message, code: error?.code, dataPreview: data });
+
+      if (error?.code === '42501') {
+        console.error('[RLS] ❌ EXPLICIT RLS BLOCKING!');
+        console.error('[RLS] Table: project_documents');
+      }
+      if (!error && data?.length === 0) {
+        console.warn('[RLS] ⚠️ SILENT RLS FILTERING OR EMPTY TABLE!');
+      }
 
       if (error) {
         console.error("Error fetching documents:", error);
@@ -192,26 +213,43 @@ export default function ProDocumentsPage() {
              </div>
           ) : viewMode === "grid" ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {documents.map((doc) => (
-                <div 
+              {documents.map((doc) => {
+                const cleanUrl = doc.contract_url?.trim() || "";
+                return (
+                 <div 
                   key={doc.id} 
                   onClick={() => setSelectedDoc(doc)}
                   className={`group cursor-pointer bg-white rounded-[2rem] overflow-hidden transition-all duration-300 border-2 ${selectedDoc?.id === doc.id ? 'border-kelen-green-500 shadow-xl' : 'border-transparent hover:shadow-xl hover:shadow-stone-200/30'}`}
-                >
-                  <div className="aspect-[4/3] bg-stone-100 relative overflow-hidden flex items-center justify-center group-hover:bg-stone-200 transition-colors">
-                    <span className="material-symbols-outlined text-4xl text-stone-300 group-hover:scale-110 transition-transform">
-                      {doc.contract_url.endsWith('.pdf') ? 'picture_as_pdf' : 'image'}
-                    </span>
-                    <div className="absolute top-4 left-4 px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-widest bg-white/90 text-stone-600">
-                      {doc.contract_url.split('.').pop() || 'FILE'}
+                 >
+                  <div className="aspect-[4/3] bg-stone-100 relative overflow-hidden flex items-center justify-center group-hover:bg-stone-200 transition-colors p-2">
+                    {/\.(jpg|jpeg|png|webp|gif)(\?.*)?$/i.test(cleanUrl) && !imgErrors.has(doc.id) ? (
+                      <img
+                        src={cleanUrl}
+                        alt=""
+                        className="w-full h-full object-cover rounded-xl group-hover:scale-105 transition-transform duration-500 shadow-sm"
+                        onError={() => setImgErrors(prev => new Set([...prev, doc.id]))}
+                      />
+                    ) : /\.pdf(\?.*)?$/i.test(cleanUrl) ? (
+                      <div className="w-full h-full flex flex-col items-center justify-center bg-white rounded-xl shadow-sm border border-stone-100 group-hover:bg-stone-50 transition-colors">
+                        <span className="material-symbols-outlined text-4xl text-red-500 mb-2">picture_as_pdf</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-stone-400">Document</span>
+                      </div>
+                    ) : (
+                      <span className="material-symbols-outlined text-4xl text-stone-300 group-hover:scale-110 transition-transform">
+                        description
+                      </span>
+                    )}
+                    <div className="absolute top-4 left-4 px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-widest bg-white/90 text-stone-600 shadow-sm backdrop-blur-md">
+                      {cleanUrl.split('?')[0].split('.').pop()?.substring(0, 4) || 'FILE'}
                     </div>
                   </div>
                   <div className="p-5">
                     <p className="font-bold text-xs truncate text-stone-900 mb-1">{doc.project_title}</p>
                     <p className="text-[9px] text-stone-400 font-black uppercase tracking-[0.1em]">{new Date(doc.created_at).toLocaleDateString()}</p>
                   </div>
-                </div>
-              ))}
+                 </div>
+                );
+              })}
               {documents.length === 0 && (
                 <div className="col-span-full py-20 text-center bg-stone-50 border-2 border-dashed border-stone-100 rounded-[2rem]">
                   <span className="material-symbols-outlined text-5xl text-stone-200 mb-4 italic">cloud_off</span>
@@ -309,25 +347,45 @@ export default function ProDocumentsPage() {
         </section>
       </div>
 
-      {/* Right Preview Side (Sidebar Style) */}
-      <aside className={`fixed lg:relative inset-y-0 right-0 w-80 lg:w-[22rem] bg-white border-l border-stone-100 p-8 shadow-2xl lg:shadow-none transition-transform duration-500 z-50 transform ${selectedDoc ? 'translate-x-0' : 'translate-x-full lg:translate-x-0 opacity-0 lg:opacity-20 pointer-events-none'}`}>
+      {/* Backdrop */}
+      <div 
+        className={`fixed inset-0 bg-stone-900/20 backdrop-blur-sm z-40 transition-opacity duration-300 ${selectedDoc ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
+        onClick={() => setSelectedDoc(null)} 
+      />
+
+      {/* Right Preview Side (Overlay Style) */}
+      <aside className={`fixed inset-y-0 right-0 w-80 lg:w-[26rem] bg-white border-l border-stone-100 p-8 shadow-2xl transition-transform duration-500 z-50 transform ${selectedDoc ? 'translate-x-0' : 'translate-x-full'}`}>
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-lg font-black font-headline text-stone-900 italic">Détails Fichier</h2>
           <button 
             onClick={() => setSelectedDoc(null)}
-            className="p-1 hover:bg-stone-100 rounded-xl transition-colors lg:hidden"
+            className="p-1 hover:bg-stone-100 rounded-xl transition-colors"
           >
             <span className="material-symbols-outlined text-lg">close</span>
           </button>
         </div>
 
-        {selectedDoc ? (
-          <div className="space-y-8">
+        {selectedDoc && (() => {
+          const cleanUrl = selectedDoc.contract_url?.trim() || "";
+          return (
+          <div className="space-y-8 h-full overflow-y-auto pb-20 scrollbar-hide">
             <div className="bg-stone-50 p-4 rounded-3xl border border-stone-100">
-              <div className="aspect-square bg-white rounded-2xl shadow-sm overflow-hidden flex items-center justify-center relative group">
-                <span className="material-symbols-outlined text-6xl text-stone-100 italic">inventory_2</span>
-                <div className="absolute inset-0 bg-kelen-green-900/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <button className="px-4 py-2 bg-white rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg">Aperçu</button>
+              <div className="aspect-square bg-stone-100 rounded-2xl shadow-sm overflow-hidden flex items-center justify-center relative group">
+                {/\.(jpg|jpeg|png|webp|gif)(\?.*)?$/i.test(cleanUrl) && !imgErrors.has(selectedDoc.id) ? (
+                  <img
+                    src={cleanUrl}
+                    alt={selectedDoc.project_title}
+                    className="w-full h-full object-cover"
+                    onError={() => setImgErrors(prev => new Set([...prev, selectedDoc.id]))}
+                  />
+                ) : /\.pdf(\?.*)?$/i.test(cleanUrl) ? (
+                  <iframe src={`${cleanUrl}#toolbar=0&navpanes=0&scrollbar=0`} className="w-full h-full border-0 pointer-events-none" title="PDF Preview" />
+                ) : (
+                  <span className="material-symbols-outlined text-6xl text-stone-200 italic">inventory_2</span>
+                )}
+                
+                <div className="absolute inset-0 bg-stone-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-10">
+                  <a href={cleanUrl} target="_blank" rel="noreferrer" className="px-4 py-2 bg-white rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg hover:scale-105 transition-transform text-stone-900">Aperçu Complet</a>
                 </div>
               </div>
               <div className="mt-6 text-center">
@@ -339,16 +397,14 @@ export default function ProDocumentsPage() {
               <p className="text-[10px] font-black text-stone-400 uppercase tracking-widest border-b border-stone-100 pb-2">Métadonnées</p>
               <div className="space-y-4">
                 <div className="flex justify-between items-center text-xs">
-                  <span className="text-stone-400">Poids</span>
-                  <span className="font-bold text-stone-900">1.2 MB</span>
-                </div>
-                <div className="flex justify-between items-center text-xs">
                   <span className="text-stone-400">Créé le</span>
                   <span className="font-bold text-stone-900">{new Date(selectedDoc.created_at).toLocaleDateString()}</span>
                 </div>
                 <div className="flex justify-between items-center text-xs">
                   <span className="text-stone-400">Type</span>
-                  <span className="font-bold text-stone-900 uppercase">{selectedDoc.contract_url.split('.').pop()}</span>
+                  <span className="font-bold text-stone-900 uppercase">
+                    {cleanUrl.split('?')[0].split('.').pop()?.substring(0, 4) || 'INCONNU'}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center text-xs">
                   <span className="text-stone-400">Sécurité</span>
@@ -359,6 +415,7 @@ export default function ProDocumentsPage() {
                 </div>
               </div>
             </div>
+
 
             <div className="space-y-4">
               <p className="text-[10px] font-black text-stone-400 uppercase tracking-widest border-b border-stone-100 pb-2">Tags Associés</p>
@@ -382,12 +439,8 @@ export default function ProDocumentsPage() {
               </a>
             </div>
           </div>
-        ) : (
-          <div className="h-[60vh] flex flex-col items-center justify-center text-center opacity-40 italic">
-            <span className="material-symbols-outlined text-5xl mb-4 italic">draft</span>
-            <p className="text-sm font-medium">Sélectionnez un fichier pour voir les détails de certification.</p>
-          </div>
-        )}
+          );
+        })()}
       </aside>
     </div>
   );
