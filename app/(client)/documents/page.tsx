@@ -27,6 +27,7 @@ export default function ClientDocumentsPage() {
   const [isUploading, setIsUploading] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [selectedProject, setSelectedProject] = useState<string>("all");
+  const [imgErrors, setImgErrors] = useState<Set<string>>(new Set());
   const supabase = createClient();
 
   console.log("[ClientDocuments] Page mounted");
@@ -366,8 +367,29 @@ export default function ClientDocumentsPage() {
                     : 'border-transparent hover:border-outline-variant/30'
                 }`}
               >
-                <div className="aspect-[4/3] bg-surface-container flex items-center justify-center">
-                  <FileText className="w-12 h-12 text-on-surface-variant/30" />
+                <div className="aspect-[4/3] bg-surface-container relative overflow-hidden flex items-center justify-center">
+                  {(() => {
+                    const cleanUrl = doc.contract_url?.trim() || "";
+                    if (/\.(jpg|jpeg|png|webp|gif)(\?.*)?$/i.test(cleanUrl) && !imgErrors.has(doc.id)) {
+                      return (
+                        <img
+                          src={cleanUrl}
+                          alt=""
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          onError={() => setImgErrors(prev => new Set([...prev, doc.id]))}
+                        />
+                      );
+                    }
+                    if (/\.pdf(\?.*)?$/i.test(cleanUrl)) {
+                      return (
+                        <div className="flex flex-col items-center justify-center gap-2">
+                          <FileText className="w-12 h-12 text-red-400" />
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">PDF</span>
+                        </div>
+                      );
+                    }
+                    return <FileText className="w-12 h-12 text-on-surface-variant/30" />;
+                  })()}
                 </div>
                 <div className="p-4">
                   <p className="font-semibold text-sm text-on-surface truncate mb-1">
@@ -500,8 +522,30 @@ export default function ClientDocumentsPage() {
               <div className="p-6 space-y-6">
                 {/* Preview */}
                 <div className="bg-surface-container rounded-xl p-4">
-                  <div className="aspect-square bg-surface-container-low rounded-lg flex items-center justify-center mb-4">
-                    <FileText className="w-16 h-16 text-on-surface-variant/30" />
+                  <div className="aspect-square bg-surface-container-low rounded-lg overflow-hidden flex items-center justify-center mb-4 relative group">
+                    {(() => {
+                      const cleanUrl = selectedDoc.contract_url?.trim() || "";
+                      if (/\.(jpg|jpeg|png|webp|gif)(\?.*)?$/i.test(cleanUrl) && !imgErrors.has(selectedDoc.id)) {
+                        return (
+                          <img
+                            src={cleanUrl}
+                            alt={selectedDoc.project_title}
+                            className="w-full h-full object-cover"
+                            onError={() => setImgErrors(prev => new Set([...prev, selectedDoc.id]))}
+                          />
+                        );
+                      }
+                      if (/\.pdf(\?.*)?$/i.test(cleanUrl)) {
+                        return (
+                          <iframe
+                            src={`${cleanUrl}#toolbar=0&navpanes=0&scrollbar=0`}
+                            className="w-full h-full border-0 pointer-events-none"
+                            title="PDF Preview"
+                          />
+                        );
+                      }
+                      return <FileText className="w-16 h-16 text-on-surface-variant/30" />;
+                    })()}
                   </div>
                   <h4 className="font-semibold text-sm text-on-surface truncate mb-2 px-2">
                     {selectedDoc.project_title}
