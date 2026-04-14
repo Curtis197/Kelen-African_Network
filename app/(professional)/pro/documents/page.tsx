@@ -26,6 +26,18 @@ export default function ProDocumentsPage() {
     fetchDocuments();
   }, []);
 
+  const handleDelete = async (docId: string) => {
+    if (!confirm("Supprimer ce document ?")) return;
+    const { error } = await supabase.from("project_documents").delete().eq("id", docId);
+    if (error) {
+      console.error("[Documents] Delete error:", error);
+      alert("Erreur lors de la suppression.");
+      return;
+    }
+    if (selectedDoc?.id === docId) setSelectedDoc(null);
+    fetchDocuments();
+  };
+
   const fetchDocuments = async () => {
     console.group('[ProDocuments] fetchDocuments');
     console.log('▶ Start');
@@ -295,6 +307,13 @@ export default function ProDocumentsPage() {
                     <div className="absolute top-2 left-2 px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-widest bg-white/90 text-stone-600 shadow-sm backdrop-blur-md z-10">
                       {cleanUrl.split('?')[0].split('.').pop()?.substring(0, 4) || 'FILE'}
                     </div>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); handleDelete(doc.id); }}
+                      className="absolute top-2 right-2 p-1.5 rounded-xl bg-white/90 text-red-400 hover:text-red-600 hover:bg-white shadow-sm backdrop-blur-md z-10 opacity-0 group-hover:opacity-100 transition-all"
+                      title="Supprimer"
+                    >
+                      <span className="material-symbols-outlined text-sm">delete</span>
+                    </button>
                   </div>
                   <div className="p-5">
                     <p className="font-bold text-xs truncate text-stone-900 mb-1">{doc.project_title}</p>
@@ -489,7 +508,7 @@ export default function ProDocumentsPage() {
               <button className="py-3 bg-stone-100 text-stone-900 text-[10px] font-black uppercase tracking-widest rounded-2xl flex items-center justify-center gap-2 hover:bg-stone-200 transition-all">
                 Partager
               </button>
-              <a 
+              <a
                 href={selectedDoc.contract_url}
                 target="_blank"
                 className="py-3 bg-kelen-green-600 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl flex items-center justify-center gap-2 hover:bg-kelen-green-700 transition-all shadow-md shadow-kelen-green-600/10"
@@ -497,6 +516,13 @@ export default function ProDocumentsPage() {
                 Ouvrir
               </a>
             </div>
+            <button
+              onClick={() => handleDelete(selectedDoc.id)}
+              className="w-full py-3 bg-red-50 text-red-500 text-[10px] font-black uppercase tracking-widest rounded-2xl flex items-center justify-center gap-2 hover:bg-red-100 hover:text-red-600 transition-all"
+            >
+              <span className="material-symbols-outlined text-sm">delete</span>
+              Supprimer le document
+            </button>
           </div>
           );
         })()}
