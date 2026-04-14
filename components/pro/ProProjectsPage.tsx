@@ -325,13 +325,6 @@ export function ProProjectsPage() {
                         </Link>
                         <div className="flex items-center gap-1">
                           <button
-                            onClick={() => togglePublic(project)}
-                            className="p-1.5 text-on-surface-variant hover:text-on-surface rounded hover:bg-surface-container transition-colors"
-                            aria-label={project.is_public ? "Retirer du portfolio" : "Ajouter au portfolio"}
-                          >
-                            {project.is_public ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                          </button>
-                          <button
                             onClick={() => handleDelete(project.id, project.title)}
                             className="p-1.5 text-red-600 rounded hover:bg-red-50 transition-colors"
                             aria-label="Supprimer"
@@ -466,14 +459,6 @@ export function ProProjectsPage() {
 
                         <td className="px-6 py-4">
                           <div className="flex items-center justify-end gap-1">
-                            <button
-                              onClick={() => togglePublic(project)}
-                              className="p-2 text-on-surface-variant hover:text-on-surface rounded-lg hover:bg-surface-container transition-colors"
-                              aria-label={project.is_public ? "Retirer du portfolio" : "Ajouter au portfolio"}
-                              title={project.is_public ? "Retirer du portfolio" : "Ajouter au portfolio"}
-                            >
-                              {project.is_public ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                            </button>
                             <Link
                               href={`/pro/projets/${project.id}`}
                               className="p-2 text-on-surface-variant hover:text-on-surface rounded-lg hover:bg-surface-container transition-colors"

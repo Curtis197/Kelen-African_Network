@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { deleteRealization } from "@/lib/actions/portfolio";
 import { DeleteButton } from "@/components/pro/DeleteButton";
+import { ToggleFeaturedButton } from "@/components/pro/ToggleFeaturedButton";
 
 export const metadata: Metadata = {
   title: "Mes réalisations — Kelen Pro",
@@ -274,6 +275,10 @@ async function RealizationCard({
             {realization.images?.length || 0} photo{(realization.images?.length || 0) !== 1 ? "s" : ""}
           </span>
           <div className="flex items-center gap-2">
+            <ToggleFeaturedButton
+              realizationId={realization.id}
+              isFeatured={realization.is_featured ?? false}
+            />
             <Link
               href={`/pro/portfolio/${realization.id}/edit`}
               className="text-xs font-bold text-kelen-green-600 hover:text-kelen-green-700 transition-colors"

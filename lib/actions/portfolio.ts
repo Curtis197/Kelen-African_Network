@@ -722,6 +722,35 @@ export async function updateRealization(id: string, data: {
   revalidatePath(`/pro/portfolio/${id}/edit`);
 }
 
+export async function toggleRealizationFeatured(id: string, isFeatured: boolean) {
+  const supabase = await createClient();
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Non authentifié");
+
+  const { data: professional } = await supabase
+    .from("professionals")
+    .select("id")
+    .eq("user_id", user.id)
+    .single();
+
+  if (!professional) throw new Error("Profil professionnel non trouvé");
+
+  const { error } = await supabase
+    .from("professional_realizations")
+    .update({ is_featured: isFeatured })
+    .eq("id", id)
+    .eq("professional_id", professional.id);
+
+  if (error) {
+    console.error("[toggleRealizationFeatured] Error:", error);
+    throw new Error("Erreur lors de la mise à jour");
+  }
+
+  revalidatePath("/pro/realisations");
+  revalidatePath("/pro/portfolio");
+}
+
 export async function deleteRealization(id: string) {
   console.log("[deleteRealization] Deleting:", id);
   const supabase = await createClient();
