@@ -390,6 +390,34 @@ CREATE TABLE public.project_collaborations (
   CONSTRAINT fk_collab_project_prof FOREIGN KEY (project_professional_id) REFERENCES public.project_professionals(id) ON DELETE CASCADE,
   CONSTRAINT fk_collab_pro_project FOREIGN KEY (pro_project_id) REFERENCES public.pro_projects(id) ON DELETE SET NULL
 );
+-- RLS Policies on project_collaborations (migration 20260414000003):
+--   collab_client_all: ALL for clients on their own projects (user_projects.user_id = auth.uid())
+--   collab_pro_read:   SELECT for pros on their own collaborations
+--   collab_pro_update: UPDATE for pros on their own collaborations
+--
+-- ⚠️ RLS RECURSION FIX (migration 20260414000008):
+-- The user_projects policies below used to reference project_collaborations directly,
+-- creating a cycle: project_collaborations → user_projects → project_collaborations (42P17).
+-- Fix: SECURITY DEFINER helper function bypasses RLS on project_collaborations.
+CREATE OR REPLACE FUNCTION public.get_collab_project_ids_for_pro(statuses text[])
+RETURNS SETOF uuid
+LANGUAGE sql
+SECURITY DEFINER
+STABLE
+SET search_path = public
+AS $$
+  SELECT pc.project_id
+  FROM   project_collaborations pc
+  JOIN   professionals p ON p.id = pc.professional_id
+  WHERE  p.user_id  = auth.uid()
+  AND    pc.status  = ANY(statuses)
+$$;
+-- user_projects policies that use this function:
+--   collab_pro_read:  SELECT WHERE id IN (get_collab_project_ids_for_pro(['pending','negotiating','active']))
+--   collab_pro_write: ALL    WHERE id IN (get_collab_project_ids_for_pro(['active']))
+-- project_professionals policy that uses this function:
+--   project_professionals_collab_view: client branch = user_projects.user_id; pro branch = get_collab_project_ids_for_pro(['active']) AND selection_status='agreed'
+
 CREATE TABLE public.collaboration_messages (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   collaboration_id uuid NOT NULL,
