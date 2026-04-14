@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Plus, LayoutGrid, FileText, MapPin, Calendar, DollarSign, Settings } from "lucide-react";
+import { Plus, LayoutGrid, FileText, MapPin, Calendar, DollarSign, Settings, Eye } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { deleteRealization, getPortfolio } from "@/lib/actions/portfolio";
 import { PortfolioSettings } from "@/components/pro/PortfolioSettings";
 import { DeleteButton } from "@/components/pro/DeleteButton";
+import { ToggleFeaturedButton } from "@/components/pro/ToggleFeaturedButton";
 
 export const metadata: Metadata = {
   title: "Mon Portfolio — Kelen Pro",
@@ -149,6 +150,9 @@ export default async function PortfolioPage() {
 
         <div className="flex items-center gap-4 text-sm font-medium text-on-surface-variant">
           <span>{realizations?.length || 0} réalisation{(realizations?.length || 0) > 1 ? "s" : ""} au total</span>
+          <span className="text-kelen-green-600 font-semibold">
+            {realizations?.filter(r => r.is_featured).length || 0} affichée{(realizations?.filter(r => r.is_featured).length || 0) > 1 ? "s" : ""} dans le portfolio
+          </span>
         </div>
 
         {realizations && realizations.length > 0 ? (
@@ -193,7 +197,7 @@ async function RealizationCard({
     "https://images.unsplash.com/photo-1600585154340-be6199f7d209?auto=format&fit=crop&q=80";
 
   return (
-    <div className="group relative overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-500 hover:shadow-2xl">
+    <div className={`group relative overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-500 hover:shadow-2xl ${realization.is_featured ? 'ring-2 ring-kelen-green-500' : 'ring-1 ring-outline-variant/20'}`}>
       <Link href={`/pro/portfolio/${realization.id}`}>
         <div className="relative aspect-[4/3] overflow-hidden">
           <img
@@ -201,6 +205,12 @@ async function RealizationCard({
             src={mainImage}
             alt={realization.title}
           />
+          {realization.is_featured && (
+            <div className="absolute top-3 left-3 flex items-center gap-1 rounded-full bg-kelen-green-600 px-2.5 py-1 text-xs font-bold text-white">
+              <Eye size={10} />
+              Portfolio
+            </div>
+          )}
           {realization.documents && realization.documents.length > 0 && (
             <div className="absolute top-3 right-3 flex items-center gap-1 rounded-full bg-black/60 px-2.5 py-1 text-xs font-bold text-white">
               <FileText size={12} />
@@ -254,6 +264,10 @@ async function RealizationCard({
             {realization.images?.length || 0} photo{(realization.images?.length || 0) !== 1 ? "s" : ""}
           </span>
           <div className="flex items-center gap-2">
+            <ToggleFeaturedButton
+              realizationId={realization.id}
+              isFeatured={realization.is_featured ?? false}
+            />
             <Link
               href={`/pro/portfolio/${realization.id}/edit`}
               className="text-xs font-bold text-kelen-green-600 hover:text-kelen-green-700 transition-colors"

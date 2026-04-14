@@ -49,6 +49,7 @@ export default async function RealisationsListPage({ params }: Props) {
       videos:realization_videos(*)
     `)
     .eq("professional_id", pro.id)
+    .eq("is_featured", true)
     .order("created_at", { ascending: false });
 
   // Fetch like and comment counts for each realization

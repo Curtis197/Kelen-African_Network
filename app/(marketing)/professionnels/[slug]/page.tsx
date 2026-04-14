@@ -143,6 +143,7 @@ export default async function ProfessionalProfilePage({ params }: Props) {
       videos:realization_videos(*)
     `)
     .eq("professional_id", pro.id)
+    .eq("is_featured", true)
     .order("created_at", { ascending: false });
 
   console.log('[PROFILE PAGE] Realizations fetch result:', {
