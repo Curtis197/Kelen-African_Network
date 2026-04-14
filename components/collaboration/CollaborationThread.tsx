@@ -71,20 +71,31 @@ export function CollaborationThread({
 }: CollaborationThreadProps) {
   const [newMessage, setNewMessage] = useState("");
   const [isSending, setIsSending] = useState(false);
-  console.log('[CollaborationThread] Render:', { 
-    collabId: collaborationId, 
-    messageCount: messages.length,
-    currentUserRole 
-  });
+
+  console.log('[COMPONENT] ========================================');
+  console.log('[COMPONENT] CollaborationThread RENDER');
+  console.log('[COMPONENT] collaborationId:', collaborationId);
+  console.log('[COMPONENT] messageCount:', messages.length);
+  console.log('[COMPONENT] currentUserId:', currentUserId);
+  console.log('[COMPONENT] currentUserRole:', currentUserRole);
+  console.log('[COMPONENT] isSending:', isSending);
+  console.log('[COMPONENT] ========================================');
 
   const handleSend = async () => {
+    console.log('[ACTION] ========================================');
+    console.log('[ACTION] CollaborationThread handleSend STARTED');
+    console.log('[ACTION] collaborationId:', collaborationId);
+    console.log('[ACTION] senderRole:', currentUserRole);
+    console.log('[ACTION] messageLength:', newMessage.trim().length);
+    console.log('[ACTION] ========================================');
+
     if (!newMessage.trim()) {
-      console.log('[CollaborationThread] Empty message, ignoring');
+      console.warn('[ACTION] ⚠️ Empty message — aborting send');
       return;
     }
 
     setIsSending(true);
-    console.log('[CollaborationThread] Sending message...');
+    console.log('[STATE] isSending → true');
 
     try {
       const { success, error } = await sendCollaborationMessage(collaborationId, {
@@ -92,18 +103,21 @@ export function CollaborationThread({
         content: newMessage,
       }, currentUserRole);
 
-      console.log('[CollaborationThread] Send result:', { success, error });
+      console.log('[ACTION] sendCollaborationMessage result:', { success, error });
 
       if (success) {
+        console.log('[ACTION] ✅ Message sent successfully');
+        console.log('[STATE] Clearing newMessage, calling onMessageSent');
         setNewMessage("");
         onMessageSent?.();
       } else {
-        console.error('[CollaborationThread] Failed to send:', error);
+        console.error('[ACTION] ❌ sendCollaborationMessage failed:', error);
       }
     } catch (err) {
-      console.error('[CollaborationThread] Error sending message:', err);
+      console.error('[ACTION] ❌ handleSend threw exception:', err);
     } finally {
       setIsSending(false);
+      console.log('[STATE] isSending → false');
     }
   };
 

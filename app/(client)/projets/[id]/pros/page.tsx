@@ -1,7 +1,9 @@
 import { ProListPage } from "@/components/collaboration/ProListPage";
 
 export default function ProListRoute() {
-  console.log("[ProListRoute] Rendering pro list route page");
+  console.log('[COMPONENT] ========================================');
+  console.log('[COMPONENT] ProListRoute RENDER — route: /projets/[id]/pros');
+  console.log('[COMPONENT] ========================================');
 
   return (
     <main className="min-h-screen bg-surface font-body text-on-surface">

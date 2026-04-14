@@ -25,7 +25,6 @@ import {
   CheckCircle2,
   XCircle,
   Send,
-  ChevronDown,
   ChevronRight,
   Handshake,
   Loader2,
@@ -33,12 +32,12 @@ import {
 import { toast } from "sonner";
 
 const STATUS_CONFIG: Record<string, { label: string; className: string }> = {
-  pending: { label: "Invitation en attente", className: "bg-yellow-100 text-yellow-700" },
-  negotiating: { label: "Proposition soumise", className: "bg-purple-100 text-purple-700" },
-  active: { label: "Collaboration active", className: "bg-green-500 text-white" },
-  declined: { label: "Refusé", className: "bg-red-100 text-red-700" },
-  not_picked: { label: "Non retenu", className: "bg-surface-container text-on-surface-variant" },
-  terminated: { label: "Terminé", className: "bg-surface-container text-on-surface-variant" },
+  pending:     { label: "Invitation en attente",   className: "bg-yellow-100 text-yellow-700" },
+  negotiating: { label: "Proposition soumise",     className: "bg-purple-100 text-purple-700" },
+  active:      { label: "Collaboration active",    className: "bg-green-500 text-white" },
+  declined:    { label: "Refusé",                  className: "bg-red-100 text-red-700" },
+  not_picked:  { label: "Non retenu",              className: "bg-surface-container text-on-surface-variant" },
+  terminated:  { label: "Terminé",                 className: "bg-surface-container text-on-surface-variant" },
 };
 
 type FullCollaboration = Omit<ProjectCollaboration, 'project' | 'messages'> & {
@@ -59,33 +58,61 @@ type FullCollaboration = Omit<ProjectCollaboration, 'project' | 'messages'> & {
 
 export default function ProCollaborationDetailPage() {
   const { id: collaborationId } = useParams();
-  const collabIdStr = Array.isArray(collaborationId) ? collaborationId[0] : collaborationId || "";
+  const collabIdStr = Array.isArray(collaborationId) ? collaborationId[0] : collaborationId || '';
   const router = useRouter();
 
-  const [collab, setCollab] = useState<FullCollaboration | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showProposalForm, setShowProposalForm] = useState(false);
-  const [replyText, setReplyText] = useState("");
+  console.log('[COMPONENT] ========================================');
+  console.log('[COMPONENT] ProCollaborationDetailPage RENDER START');
+  console.log('[COMPONENT] collaborationId:', collabIdStr);
+  console.log('[COMPONENT] ========================================');
 
-  const [proposal, setProposal] = useState<ProposalFormData>({
-    text: "",
-    budget: 0,
-    currency: "XOF",
-    timeline: "",
+  const [collab, setCollab]               = useState<FullCollaboration | null>(null);
+  const [isLoading, setIsLoading]         = useState(true);
+  const [isSubmitting, setIsSubmitting]   = useState(false);
+  const [showProposalForm, setShowProposalForm] = useState(false);
+  const [replyText, setReplyText]         = useState('');
+  const [proposal, setProposal]           = useState<ProposalFormData>({
+    text: '', budget: 0, currency: 'XOF', timeline: '',
   });
 
-  console.log("[ProCollabDetail] Render, collaborationId:", collabIdStr);
+  console.log('[STATE] collab:', collab?.id, 'status:', collab?.status, 'isLoading:', isLoading, 'isSubmitting:', isSubmitting);
 
+  // ── DATA FETCH ───────────────────────────────────────────────────────────────
   useEffect(() => {
-    if (!collabIdStr) return;
+    if (!collabIdStr) {
+      console.warn('[EFFECT] ⚠️ No collaborationId in params — skipping fetch');
+      return;
+    }
+
+    console.log('[EFFECT] ========================================');
+    console.log('[EFFECT] ProCollaborationDetailPage useEffect triggered');
+    console.log('[EFFECT] collabIdStr:', collabIdStr);
+    console.log('[EFFECT] ========================================');
 
     const fetchCollab = async () => {
-      console.log("[ProCollabDetail] Fetching collaboration...");
+      console.log('[FETCH] Starting collaboration detail fetch...');
       const supabase = createClient();
 
+      // ── AUTH ────────────────────────────────────────────
+      console.log('[AUTH] Checking user session...');
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      console.log('[AUTH] Result:', { userId: user?.id, error: authError?.message });
+
+      if (authError || !user) {
+        console.error('[AUTH] ❌ No authenticated user — cannot load collaboration');
+        setIsLoading(false);
+        return;
+      }
+      console.log('[AUTH] ✅ User authenticated:', user.id);
+
+      // ── COLLABORATION + PROJECT + MESSAGES ──────────────
+      console.log('[DB] ========================================');
+      console.log('[DB] Querying project_collaborations + user_projects + collaboration_messages');
+      console.log('[DB] collaborationId:', collabIdStr);
+      console.log('[DB] ========================================');
+
       const { data, error } = await supabase
-        .from("project_collaborations")
+        .from('project_collaborations')
         .select(`
           *,
           project:user_projects(
@@ -102,104 +129,202 @@ export default function ProCollaborationDetailPage() {
           ),
           messages:collaboration_messages(*)
         `)
-        .eq("id", collabIdStr)
-        .order("created_at", { ascending: true, referencedTable: "collaboration_messages" })
+        .eq('id', collabIdStr)
+        .order('created_at', { ascending: true, referencedTable: 'collaboration_messages' })
         .single();
 
-      console.log("[ProCollabDetail] Fetched:", {
-        hasData: !!data,
+      console.log('[DB] project_collaborations result:', {
+        found: !!data,
         status: data?.status,
+        hasProject: !!(data as FullCollaboration)?.project,
+        messageCount: (data as FullCollaboration)?.messages?.length ?? 0,
+        stepsCount: (data as FullCollaboration)?.project?.steps?.length ?? 0,
         error: error?.message,
         code: error?.code,
       });
 
-      if (error?.code === "42501") {
-        console.error("[RLS] ❌ EXPLICIT RLS BLOCKING! Table: project_collaborations");
-        toast.error("Accès refusé");
-      } else if (error) {
-        toast.error("Impossible de charger la collaboration");
+      // ── RLS DETECTION ──────────────────────────────────
+      if (error) {
+        if (error.code === '42501') {
+          console.error('[RLS] ========================================');
+          console.error('[RLS] ❌ EXPLICIT RLS BLOCKING!');
+          console.error('[RLS] Table: project_collaborations');
+          console.error('[RLS] Operation: SELECT');
+          console.error('[RLS] collaborationId:', collabIdStr);
+          console.error('[RLS] User:', user.id);
+          console.error('[RLS] Fix: collab_pro_read policy must allow SELECT where professional_id matches auth uid');
+          console.error('[RLS] ========================================');
+          toast.error('Accès refusé — politique RLS');
+        } else if (error.code === 'PGRST116') {
+          console.warn('[DB] ⚠️ No row found (PGRST116) for collaborationId:', collabIdStr);
+          console.warn('[DB] Either the ID is wrong or RLS is silently filtering it');
+          toast.error('Collaboration introuvable');
+        } else {
+          console.error('[DB] ❌ Database error (NOT RLS):', { message: error.message, code: error.code });
+          toast.error('Impossible de charger la collaboration');
+        }
+        setIsLoading(false);
+        return;
       }
 
-      setCollab(data as FullCollaboration || null);
+      if (!data) {
+        console.warn('[RLS] ========================================');
+        console.warn('[RLS] ⚠️ SILENT RLS FILTERING — .single() returned null with no error');
+        console.warn('[RLS] collaborationId:', collabIdStr);
+        console.warn('[RLS] User:', user.id);
+        console.warn('[RLS] Verify: check Supabase table editor for this collaboration row');
+        console.warn('[RLS] ========================================');
+        toast.error('Collaboration introuvable');
+        setIsLoading(false);
+        return;
+      }
+
+      console.log('[DB] ✅ Collaboration loaded successfully');
+      console.log('[DB] Project:', (data as FullCollaboration).project?.title);
+      console.log('[DB] Messages:', (data as FullCollaboration).messages?.length ?? 0);
+      console.log('[DB] Steps:', (data as FullCollaboration).project?.steps?.length ?? 0);
+
+      console.log('[STATE] Setting collab data');
+      setCollab(data as FullCollaboration);
       setIsLoading(false);
+
+      console.log('[FETCH] ✅ Fetch complete');
     };
 
     fetchCollab();
   }, [collabIdStr]);
 
+  // ── ACTION: SUBMIT PROPOSAL ──────────────────────────────────────────────────
   const handleSubmitProposal = async () => {
+    console.log('[ACTION] ========================================');
+    console.log('[ACTION] handleSubmitProposal STARTED');
+    console.log('[ACTION] collaborationId:', collabIdStr);
+    console.log('[ACTION] Proposal data:', {
+      textLength: proposal.text.length,
+      budget: proposal.budget,
+      currency: proposal.currency,
+      timeline: proposal.timeline,
+    });
+    console.log('[ACTION] ========================================');
+
     if (!proposal.text.trim() || !proposal.timeline.trim()) {
-      toast.error("Veuillez remplir tous les champs obligatoires");
+      console.warn('[ACTION] ❌ Validation failed — text or timeline missing');
+      toast.error('Veuillez remplir tous les champs obligatoires');
       return;
     }
+
     setIsSubmitting(true);
-    console.log("[ProCollabDetail] Submitting proposal...");
+    console.log('[STATE] isSubmitting → true');
 
     const result = await submitProposal(collabIdStr, proposal);
 
-    console.log("[ProCollabDetail] submitProposal result:", result);
+    console.log('[ACTION] submitProposal result:', { success: result.success, error: result.error });
 
     if (result.error) {
+      console.error('[ACTION] ❌ submitProposal failed:', result.error);
       toast.error(result.error);
     } else {
-      toast.success("Proposition soumise avec succès !");
+      console.log('[ACTION] ✅ Proposal submitted successfully');
+      toast.success('Proposition soumise avec succès !');
       setShowProposalForm(false);
-      // Refresh
-      router.refresh();
+      console.log('[STATE] showProposalForm → false, reloading page...');
       setTimeout(() => window.location.reload(), 500);
     }
+
     setIsSubmitting(false);
+    console.log('[STATE] isSubmitting → false');
   };
 
+  // ── ACTION: DECLINE ──────────────────────────────────────────────────────────
   const handleDecline = async () => {
-    if (!confirm("Refuser cette invitation ? Cette action est irréversible.")) return;
+    console.log('[ACTION] ========================================');
+    console.log('[ACTION] handleDecline STARTED');
+    console.log('[ACTION] collaborationId:', collabIdStr);
+    console.log('[ACTION] ========================================');
 
-    const reason = prompt("Raison du refus (optionnel) :") || "Refusé par le professionnel";
+    if (!confirm('Refuser cette invitation ? Cette action est irréversible.')) {
+      console.log('[ACTION] Decline cancelled by user');
+      return;
+    }
+
+    const reason = prompt('Raison du refus (optionnel) :') || 'Refusé par le professionnel';
+    console.log('[ACTION] Decline reason:', reason);
+
     setIsSubmitting(true);
-    console.log("[ProCollabDetail] Declining collaboration...");
+    console.log('[STATE] isSubmitting → true');
 
     const result = await declineCollaboration(collabIdStr, reason);
 
-    console.log("[ProCollabDetail] declineCollaboration result:", result);
+    console.log('[ACTION] declineCollaboration result:', { success: result.success, error: result.error });
 
     if (result.error) {
+      console.error('[ACTION] ❌ declineCollaboration failed:', result.error);
       toast.error(result.error);
     } else {
-      toast.success("Invitation refusée.");
-      router.push("/pro/collaborations");
+      console.log('[ACTION] ✅ Collaboration declined — redirecting to /pro/collaborations');
+      toast.success('Invitation refusée.');
+      router.push('/pro/collaborations');
     }
+
     setIsSubmitting(false);
+    console.log('[STATE] isSubmitting → false');
   };
 
+  // ── ACTION: SEND MESSAGE ─────────────────────────────────────────────────────
   const handleSendMessage = async () => {
-    if (!replyText.trim()) return;
+    console.log('[ACTION] ========================================');
+    console.log('[ACTION] handleSendMessage STARTED');
+    console.log('[ACTION] collaborationId:', collabIdStr);
+    console.log('[ACTION] messageLength:', replyText.trim().length);
+    console.log('[ACTION] ========================================');
+
+    if (!replyText.trim()) {
+      console.warn('[ACTION] Empty message — aborting');
+      return;
+    }
 
     setIsSubmitting(true);
-    console.log("[ProCollabDetail] Sending message...");
+    console.log('[STATE] isSubmitting → true');
 
     const result = await sendCollaborationMessage(collabIdStr, {
-      type: "general",
+      type: 'general',
       content: replyText.trim(),
+    }, 'professional');
+
+    console.log('[ACTION] sendCollaborationMessage result:', {
+      success: result.success,
+      messageId: (result as { data?: { id: string } }).data?.id,
+      error: result.error,
     });
 
-    console.log("[ProCollabDetail] sendMessage result:", result);
-
     if (result.error) {
+      console.error('[ACTION] ❌ sendCollaborationMessage failed:', result.error);
       toast.error(result.error);
     } else {
-      setReplyText("");
-      // Optimistically add message
-      if (result.data) {
-        setCollab(prev => prev ? {
-          ...prev,
-          messages: [...(prev.messages || []), result.data as CollaborationMessage],
-        } : prev);
+      console.log('[ACTION] ✅ Message sent — updating local state');
+      setReplyText('');
+      if ((result as { data?: CollaborationMessage }).data) {
+        setCollab(prev => {
+          if (!prev) return prev;
+          const updated = {
+            ...prev,
+            messages: [...(prev.messages || []), (result as { data: CollaborationMessage }).data],
+          };
+          console.log('[STATE] Updated messages count:', updated.messages.length);
+          return updated;
+        });
       }
     }
+
     setIsSubmitting(false);
+    console.log('[STATE] isSubmitting → false');
   };
 
+  // ── RENDER GUARDS ────────────────────────────────────────────────────────────
+  console.log('[RENDER] State:', { isLoading, collabId: collab?.id, status: collab?.status });
+
   if (isLoading) {
+    console.log('[RENDER] → Loading spinner');
     return (
       <div className="min-h-screen bg-surface flex items-center justify-center">
         <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
@@ -208,10 +333,14 @@ export default function ProCollaborationDetailPage() {
   }
 
   if (!collab) {
+    console.warn('[RENDER] → Not found / access denied state');
     return (
       <div className="min-h-screen bg-surface flex flex-col items-center justify-center p-8 text-center">
         <Handshake className="w-12 h-12 text-on-surface-variant/40 mb-4" />
         <h1 className="text-2xl font-bold text-on-surface mb-2">Collaboration introuvable</h1>
+        <p className="text-sm text-on-surface-variant mb-4">
+          Vérifiez l'URL ou consultez vos collaborations.
+        </p>
         <Link href="/pro/collaborations" className="text-primary font-semibold hover:underline">
           ← Retour aux collaborations
         </Link>
@@ -219,25 +348,28 @@ export default function ProCollaborationDetailPage() {
     );
   }
 
-  const statusCfg = STATUS_CONFIG[collab.status] || STATUS_CONFIG["pending"];
-  const project = collab.project;
-  const messages = collab.messages || [];
-  const isActive = collab.status === "active";
-  const isPending = collab.status === "pending";
-  const isNegotiating = collab.status === "negotiating";
-  const canAct = isPending || isNegotiating;
-  const isArchived = ["declined", "not_picked", "terminated"].includes(collab.status);
+  const statusCfg  = STATUS_CONFIG[collab.status] || STATUS_CONFIG['pending'];
+  const project    = collab.project;
+  const messages   = collab.messages || [];
+  const isPending    = collab.status === 'pending';
+  const isNegotiating = collab.status === 'negotiating';
+  const isActive   = collab.status === 'active';
+  const isArchived = ['declined', 'not_picked', 'terminated'].includes(collab.status);
+  const canAct     = isPending || isNegotiating;
+
+  console.log('[RENDER] → Main UI, status:', collab.status, 'messages:', messages.length, 'canAct:', canAct);
 
   return (
     <main className="min-h-screen bg-surface font-body text-on-surface">
       <div className="mx-auto max-w-4xl w-full px-3 sm:px-4 lg:px-8 py-6 sm:py-8 lg:py-12">
+
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-xs font-medium text-on-surface-variant mb-6">
           <Link href="/pro/collaborations" className="hover:text-primary transition-colors">
             Collaborations
           </Link>
           <span className="opacity-30">/</span>
-          <span className="text-primary truncate">{project?.title || "Détail"}</span>
+          <span className="text-primary truncate">{project?.title || 'Détail'}</span>
         </nav>
 
         <Link
@@ -250,29 +382,27 @@ export default function ProCollaborationDetailPage() {
 
         {/* Status Banner */}
         <div className={`rounded-xl p-4 mb-6 flex items-center gap-3 ${
-          isActive ? "bg-green-50 border border-green-200" :
-          isPending ? "bg-yellow-50 border border-yellow-200" :
-          isNegotiating ? "bg-purple-50 border border-purple-200" :
-          "bg-surface-container border border-outline-variant/20"
+          isActive      ? 'bg-green-50 border border-green-200' :
+          isPending     ? 'bg-yellow-50 border border-yellow-200' :
+          isNegotiating ? 'bg-purple-50 border border-purple-200' :
+          'bg-surface-container border border-outline-variant/20'
         }`}>
           <Handshake className={`w-5 h-5 shrink-0 ${
-            isActive ? "text-green-600" :
-            isPending ? "text-yellow-600" :
-            isNegotiating ? "text-purple-600" :
-            "text-on-surface-variant"
+            isActive      ? 'text-green-600' :
+            isPending     ? 'text-yellow-600' :
+            isNegotiating ? 'text-purple-600' :
+            'text-on-surface-variant'
           }`} />
           <div>
-            <div className="font-semibold text-sm text-on-surface">
-              {statusCfg.label}
-            </div>
+            <div className="font-semibold text-sm text-on-surface">{statusCfg.label}</div>
             {isPending && (
               <div className="text-xs text-on-surface-variant mt-0.5">
-                Invitation reçue le {new Date(collab.created_at).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
+                Invitation reçue le {new Date(collab.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
               </div>
             )}
             {isActive && collab.started_at && (
               <div className="text-xs text-green-600 mt-0.5">
-                Depuis le {new Date(collab.started_at).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
+                Depuis le {new Date(collab.started_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
               </div>
             )}
           </div>
@@ -286,14 +416,13 @@ export default function ProCollaborationDetailPage() {
               {project.category && <span className="capitalize">{project.category}</span>}
               {project.location && (
                 <span className="flex items-center gap-1">
-                  <MapPin className="w-3.5 h-3.5" />
-                  {project.location}
+                  <MapPin className="w-3.5 h-3.5" />{project.location}
                 </span>
               )}
               {project.budget_total && (
                 <span className="flex items-center gap-1 font-semibold text-on-surface">
                   <DollarSign className="w-3.5 h-3.5" />
-                  {project.budget_total.toLocaleString("fr-FR")} {project.budget_currency || "XOF"}
+                  {project.budget_total.toLocaleString('fr-FR')} {project.budget_currency || 'XOF'}
                 </span>
               )}
             </div>
@@ -305,8 +434,8 @@ export default function ProCollaborationDetailPage() {
             )}
 
             {/* Steps */}
-            {project.steps && project.steps.length > 0 && (
-              <div>
+            {project.steps?.length > 0 && (
+              <div className="mb-4">
                 <h3 className="text-sm font-semibold text-on-surface mb-2">Étapes du projet</h3>
                 <div className="space-y-2">
                   {project.steps.map((step, idx) => (
@@ -317,7 +446,7 @@ export default function ProCollaborationDetailPage() {
                       <span className="flex-1 text-on-surface">{step.title}</span>
                       {step.budget && (
                         <span className="text-on-surface-variant text-xs">
-                          {step.budget.toLocaleString("fr-FR")} {project.budget_currency || "XOF"}
+                          {step.budget.toLocaleString('fr-FR')} {project.budget_currency || 'XOF'}
                         </span>
                       )}
                     </div>
@@ -327,8 +456,8 @@ export default function ProCollaborationDetailPage() {
             )}
 
             {/* Areas */}
-            {project.areas && project.areas.length > 0 && (
-              <div className="mt-4">
+            {project.areas?.length > 0 && (
+              <div>
                 <h3 className="text-sm font-semibold text-on-surface mb-2">Zones / périmètres</h3>
                 <div className="flex flex-wrap gap-2">
                   {project.areas.map(area => (
@@ -342,19 +471,18 @@ export default function ProCollaborationDetailPage() {
           </div>
         )}
 
-        {/* Existing Proposal (if submitted) */}
+        {/* Existing Proposal */}
         {collab.proposal_submitted_at && (
           <div className="bg-surface-container-low rounded-2xl p-6 mb-6">
             <h2 className="text-lg font-bold text-on-surface mb-4 flex items-center gap-2">
-              <FileText className="w-5 h-5" />
-              Votre proposition
+              <FileText className="w-5 h-5" />Votre proposition
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
               {collab.proposal_budget && (
                 <div className="bg-surface-container rounded-xl p-4">
                   <div className="text-xs text-on-surface-variant mb-1">Budget proposé</div>
                   <div className="text-xl font-bold text-on-surface">
-                    {collab.proposal_budget.toLocaleString("fr-FR")} {collab.proposal_currency || "XOF"}
+                    {collab.proposal_budget.toLocaleString('fr-FR')} {collab.proposal_currency || 'XOF'}
                   </div>
                 </div>
               )}
@@ -377,29 +505,32 @@ export default function ProCollaborationDetailPage() {
         {messages.length > 0 && (
           <div className="bg-surface-container-low rounded-2xl p-6 mb-6">
             <h2 className="text-lg font-bold text-on-surface mb-4 flex items-center gap-2">
-              <MessageSquare className="w-5 h-5" />
-              Fil de discussion
+              <MessageSquare className="w-5 h-5" />Fil de discussion ({messages.length})
             </h2>
             <div className="space-y-4 max-h-80 overflow-y-auto mb-4">
               {messages.map(msg => (
-                <div
-                  key={msg.id}
-                  className={`flex ${msg.sender_role === "professional" ? "justify-end" : "justify-start"}`}
-                >
-                  <div
-                    className={`max-w-[80%] rounded-xl p-4 ${
-                      msg.sender_role === "professional"
-                        ? "bg-primary/10 text-on-surface"
-                        : "bg-surface-container text-on-surface"
-                    }`}
-                  >
+                <div key={msg.id} className={`flex ${msg.sender_role === 'professional' ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`max-w-[80%] rounded-xl p-4 ${
+                    msg.sender_role === 'professional'
+                      ? 'bg-primary/10 text-on-surface'
+                      : 'bg-surface-container text-on-surface'
+                  }`}>
                     <div className="text-xs text-on-surface-variant mb-1">
-                      {msg.sender_role === "professional" ? "Vous" : project?.user?.display_name || "Client"}
+                      {msg.sender_role === 'professional' ? 'Vous' : project?.user?.display_name || 'Client'}
+                      {msg.message_type !== 'general' && (
+                        <Badge className="ml-2 bg-surface-container-high text-on-surface-variant text-[10px]">
+                          {msg.message_type === 'proposal'          && 'Proposition'}
+                          {msg.message_type === 'revision_request'  && 'Demande de révision'}
+                          {msg.message_type === 'counter_offer'     && 'Contre-offre'}
+                          {msg.message_type === 'acceptance'        && 'Acceptation'}
+                          {msg.message_type === 'decline'           && 'Refus'}
+                        </Badge>
+                      )}
                     </div>
                     <div className="text-sm whitespace-pre-wrap">{msg.content}</div>
                     <div className="text-xs text-on-surface-variant/60 mt-2">
-                      {new Date(msg.created_at).toLocaleDateString("fr-FR", {
-                        day: "numeric", month: "short", hour: "2-digit", minute: "2-digit",
+                      {new Date(msg.created_at).toLocaleDateString('fr-FR', {
+                        day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit',
                       })}
                     </div>
                   </div>
@@ -412,7 +543,10 @@ export default function ProCollaborationDetailPage() {
               <div className="flex gap-2">
                 <textarea
                   value={replyText}
-                  onChange={e => setReplyText(e.target.value)}
+                  onChange={e => {
+                    setReplyText(e.target.value);
+                    console.log('[STATE] replyText updated, length:', e.target.value.length);
+                  }}
                   placeholder="Votre message..."
                   className="flex-1 bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/50 resize-none focus:outline-none focus:border-primary/50"
                   rows={3}
@@ -422,19 +556,47 @@ export default function ProCollaborationDetailPage() {
                   disabled={!replyText.trim() || isSubmitting}
                   className="self-end px-4 py-3 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <Send className="w-4 h-4" />
+                  {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                 </button>
               </div>
             )}
           </div>
         )}
 
+        {/* No messages yet but active collaboration — show reply box */}
+        {messages.length === 0 && !isArchived && (
+          <div className="bg-surface-container-low rounded-2xl p-6 mb-6">
+            <h2 className="text-lg font-bold text-on-surface mb-4 flex items-center gap-2">
+              <MessageSquare className="w-5 h-5" />Message au client
+            </h2>
+            <div className="flex gap-2">
+              <textarea
+                value={replyText}
+                onChange={e => setReplyText(e.target.value)}
+                placeholder="Votre message..."
+                className="flex-1 bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/50 resize-none focus:outline-none focus:border-primary/50"
+                rows={3}
+              />
+              <button
+                onClick={handleSendMessage}
+                disabled={!replyText.trim() || isSubmitting}
+                className="self-end px-4 py-3 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* PROPOSAL FORM */}
-        {(isPending || isNegotiating) && !collab.proposal_submitted_at && (
+        {canAct && !collab.proposal_submitted_at && (
           <div className="mb-6">
             {!showProposalForm ? (
               <button
-                onClick={() => setShowProposalForm(true)}
+                onClick={() => {
+                  console.log('[STATE] showProposalForm → true');
+                  setShowProposalForm(true);
+                }}
                 className="w-full flex items-center justify-between bg-primary text-on-primary rounded-2xl px-6 py-4 font-semibold hover:opacity-90 transition-opacity"
               >
                 <span>Soumettre votre proposition</span>
@@ -443,65 +605,65 @@ export default function ProCollaborationDetailPage() {
             ) : (
               <div className="bg-surface-container-low rounded-2xl p-6">
                 <h2 className="text-lg font-bold text-on-surface mb-4 flex items-center gap-2">
-                  <FileText className="w-5 h-5" />
-                  Votre proposition
+                  <FileText className="w-5 h-5" />Votre proposition
                 </h2>
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-on-surface mb-1.5">
-                        Budget proposé
-                      </label>
+                      <label className="block text-sm font-medium text-on-surface mb-1.5">Budget proposé</label>
                       <input
                         type="number"
-                        value={proposal.budget || ""}
-                        onChange={e => setProposal(prev => ({ ...prev, budget: Number(e.target.value) }))}
+                        value={proposal.budget || ''}
+                        onChange={e => {
+                          const val = Number(e.target.value);
+                          console.log('[FORM] proposal.budget changed:', val);
+                          setProposal(prev => ({ ...prev, budget: val }));
+                        }}
                         placeholder="25000000"
                         className="w-full bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface focus:outline-none focus:border-primary/50"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-on-surface mb-1.5">
-                        Durée estimée *
-                      </label>
+                      <label className="block text-sm font-medium text-on-surface mb-1.5">Durée estimée *</label>
                       <input
                         type="text"
                         value={proposal.timeline}
-                        onChange={e => setProposal(prev => ({ ...prev, timeline: e.target.value }))}
+                        onChange={e => {
+                          console.log('[FORM] proposal.timeline changed:', e.target.value);
+                          setProposal(prev => ({ ...prev, timeline: e.target.value }));
+                        }}
                         placeholder="ex: 4 mois"
                         className="w-full bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface focus:outline-none focus:border-primary/50"
                       />
                     </div>
                   </div>
-
                   <div>
-                    <label className="block text-sm font-medium text-on-surface mb-1.5">
-                      Votre approche et conditions *
-                    </label>
+                    <label className="block text-sm font-medium text-on-surface mb-1.5">Votre approche et conditions *</label>
                     <textarea
                       value={proposal.text}
-                      onChange={e => setProposal(prev => ({ ...prev, text: e.target.value }))}
+                      onChange={e => {
+                        console.log('[FORM] proposal.text length:', e.target.value.length);
+                        setProposal(prev => ({ ...prev, text: e.target.value }));
+                      }}
                       placeholder="Décrivez votre approche, vos méthodes, vos conditions..."
                       rows={6}
                       className="w-full bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/50 resize-none focus:outline-none focus:border-primary/50"
                     />
                   </div>
-
                   <div className="flex gap-3">
                     <button
                       onClick={handleSubmitProposal}
                       disabled={isSubmitting || !proposal.text.trim() || !proposal.timeline.trim()}
                       className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-primary text-on-primary rounded-xl font-semibold text-sm hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {isSubmitting ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <Send className="w-4 h-4" />
-                      )}
+                      {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                       Soumettre la proposition
                     </button>
                     <button
-                      onClick={() => setShowProposalForm(false)}
+                      onClick={() => {
+                        console.log('[STATE] showProposalForm → false (cancelled)');
+                        setShowProposalForm(false);
+                      }}
                       className="px-6 py-3 bg-surface-container text-on-surface rounded-xl font-semibold text-sm hover:bg-surface-container-high transition-colors"
                     >
                       Annuler
@@ -549,6 +711,7 @@ export default function ProCollaborationDetailPage() {
             Cette collaboration est archivée.
           </div>
         )}
+
       </div>
     </main>
   );

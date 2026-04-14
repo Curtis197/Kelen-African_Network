@@ -459,15 +459,20 @@ export function ProListPage() {
     declined: true,
   });
 
-  console.log("[ProListPage] Render, projectId:", projectId, "isLoading:", isLoading);
+  console.log('[COMPONENT] ========================================');
+  console.log('[COMPONENT] ProListPage RENDER');
+  console.log('[COMPONENT] projectId:', projectId, 'isLoading:', isLoading, 'groups:', !!groups);
+  console.log('[COMPONENT] ========================================');
 
   const loadProList = useCallback(async () => {
-    console.log("[ProListPage] loadProList started, projectId:", projectId);
+    console.log('[EFFECT] ========================================');
+    console.log('[EFFECT] loadProList triggered, projectId:', projectId);
+    console.log('[EFFECT] ========================================');
     setIsLoading(true);
 
     const result = await getProjectProList(projectId);
 
-    console.log("[ProListPage] loadProList completed:", {
+    console.log('[DB] getProjectProList result:', {
       hasGroups: !!result.groups,
       saved: result.groups?.saved.count,
       shortlisted: result.groups?.shortlisted.count,
@@ -478,7 +483,7 @@ export function ProListPage() {
     });
 
     if (result.error) {
-      console.error("[ProListPage] loadProList error:", result.error);
+      console.error('[DB] ❌ getProjectProList error:', result.error);
       toast.error(result.error);
       setIsLoading(false);
       return;
@@ -500,13 +505,21 @@ export function ProListPage() {
       }
     }
 
-    if (!result.groups || 
+    if (!result.groups ||
       (result.groups.saved.count === 0 &&
         result.groups.shortlisted.count === 0 &&
         result.groups.finalists.count === 0 &&
         result.groups.active.count === 0 &&
         result.groups.declined.count === 0)) {
-      console.warn("[RLS] ⚠️ SILENT RLS FILTERING! getProjectProList returned 0 total pros");
+      console.warn('[RLS] ========================================');
+      console.warn('[RLS] ⚠️ SILENT RLS FILTERING — getProjectProList returned 0 total pros');
+      console.warn('[RLS] Table: project_professionals');
+      console.warn('[RLS] projectId:', projectId);
+      console.warn('[RLS] Could be: no pros added yet, or RLS silently filtering');
+      console.warn('[RLS] Verify: check Supabase table editor for rows with this project_id');
+      console.warn('[RLS] ========================================');
+    } else {
+      console.log('[DB] ✅ Pro list loaded successfully');
     }
 
     setIsLoading(false);
@@ -521,7 +534,7 @@ export function ProListPage() {
     if (!projectId) return;
 
     const fetchProjectTitle = async () => {
-      console.log("[ProListPage] Fetching project title, projectId:", projectId);
+      console.log('[FETCH] Fetching project title, projectId:', projectId);
       const { createClient } = await import("@/lib/supabase/client");
       const supabase = createClient();
 
@@ -531,13 +544,22 @@ export function ProListPage() {
         .eq("id", projectId)
         .single();
 
-      console.log("[ProListPage] Project title fetched:", { title: data?.title, error: error?.message, code: error?.code });
+      console.log('[DB] user_projects title result:', { title: data?.title, error: error?.message, code: error?.code });
 
-      if (error?.code === "42501") {
-        console.error("[RLS] ❌ EXPLICIT RLS BLOCKING! Table: user_projects");
-      }
-
-      if (data?.title) {
+      if (error?.code === '42501') {
+        console.error('[RLS] ========================================');
+        console.error('[RLS] ❌ EXPLICIT RLS BLOCKING!');
+        console.error('[RLS] Table: user_projects');
+        console.error('[RLS] Operation: SELECT (title)');
+        console.error('[RLS] projectId:', projectId);
+        console.error('[RLS] Fix: Ensure client owns the project (user_id = auth.uid())');
+        console.error('[RLS] ========================================');
+      } else if (!error && !data) {
+        console.warn('[RLS] ⚠️ SILENT RLS FILTERING — user_projects returned null');
+        console.warn('[RLS] Table: user_projects, projectId:', projectId);
+        console.warn('[RLS] Verify: check if this project exists in Supabase table editor');
+      } else if (data?.title) {
+        console.log('[FETCH] ✅ Project title:', data.title);
         setProjectTitle(data.title);
       }
     };
@@ -550,17 +572,24 @@ export function ProListPage() {
     professionalId: string,
     projectProfessionalId: string
   ) => {
-    console.log("[ProListPage] handleMakeFinalist called:", { projectId, professionalId, projectProfessionalId });
+    console.log('[ACTION] ========================================');
+    console.log('[ACTION] handleMakeFinalist STARTED');
+    console.log('[ACTION] projectId:', projectId);
+    console.log('[ACTION] professionalId:', professionalId);
+    console.log('[ACTION] projectProfessionalId:', projectProfessionalId);
+    console.log('[ACTION] ========================================');
 
     const result = await makeFinalist(projectId, professionalId, projectProfessionalId);
 
-    console.log("[ProListPage] makeFinalist result:", { success: result.success, error: result.error });
+    console.log('[ACTION] makeFinalist result:', { success: result.success, error: result.error });
 
     if (result.error) {
+      console.error('[ACTION] ❌ makeFinalist failed:', result.error);
       toast.error(result.error);
     } else {
-      toast.success("Professionnel rendu finaliste !");
-      loadProList(); // Reload to reflect changes
+      console.log('[ACTION] ✅ makeFinalist succeeded — reloading pro list');
+      toast.success('Professionnel rendu finaliste !');
+      loadProList();
     }
   };
 
@@ -572,7 +601,10 @@ export function ProListPage() {
     }));
   };
 
+  console.log('[RENDER] State:', { isLoading, hasGroups: !!groups, projectTitle });
+
   if (isLoading) {
+    console.log('[RENDER] → Skeleton loading state');
     return (
       <div className="space-y-4">
         <div className="h-8 bg-surface-container-low rounded-lg animate-pulse" />
@@ -584,6 +616,7 @@ export function ProListPage() {
   }
 
   if (!groups) {
+    console.warn('[RENDER] → Empty state (no groups — possible first load or RLS issue)');
     return (
       <div className="text-center py-16 bg-surface-container-low rounded-2xl">
         <Users className="w-12 h-12 mx-auto text-on-surface-variant/40 mb-4" />

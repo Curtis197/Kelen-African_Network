@@ -51,23 +51,35 @@ export function ProposalCard({
   onSendReminder,
 }: ProposalCardProps) {
   const [isLoading, setIsLoading] = useState(false);
-  console.log('[ProposalCard] Render:', { 
-    proId: pro.professional_id, 
-    businessName: pro.professional?.business_name,
-    collabStatus: collaboration?.status 
-  });
 
   const collabStatus = collaboration?.status || 'pending';
-  const config = STATUS_CONFIG[collabStatus] || STATUS_CONFIG.pending;
-  const hasProposal = !!collaboration?.proposal_submitted_at;
+  const hasProposal  = !!collaboration?.proposal_submitted_at;
+  const config       = STATUS_CONFIG[collabStatus] || STATUS_CONFIG.pending;
 
-  const handleAction = async (action: () => void) => {
+  console.log('[COMPONENT] ========================================');
+  console.log('[COMPONENT] ProposalCard RENDER');
+  console.log('[COMPONENT] proId:', pro.professional_id);
+  console.log('[COMPONENT] businessName:', pro.professional?.business_name);
+  console.log('[COMPONENT] selectionStatus:', pro.selection_status);
+  console.log('[COMPONENT] collabStatus:', collabStatus);
+  console.log('[COMPONENT] hasProposal:', hasProposal);
+  console.log('[COMPONENT] proposalBudget:', collaboration?.proposal_budget);
+  console.log('[COMPONENT] ========================================');
+
+  const handleAction = async (actionName: string, action: () => void) => {
+    console.log('[ACTION] ProposalCard action triggered:', actionName);
+    console.log('[ACTION] proId:', pro.professional_id);
+    console.log('[ACTION] collabId:', collaboration?.id);
     setIsLoading(true);
-    console.log('[ProposalCard] Action triggered');
+    console.log('[STATE] isLoading → true');
     try {
       action();
+      console.log('[ACTION] ✅', actionName, 'called successfully');
+    } catch (err) {
+      console.error('[ACTION] ❌', actionName, 'threw exception:', err);
     } finally {
       setIsLoading(false);
+      console.log('[STATE] isLoading → false');
     }
   };
 
@@ -138,7 +150,7 @@ export function ProposalCard({
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => handleAction(() => onViewProposal(pro.professional_id))}
+                  onClick={() => handleAction('onViewProposal', () => onViewProposal(pro.professional_id))}
                   disabled={isLoading}
                 >
                   {isLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : "Voir la proposition"}
@@ -149,7 +161,7 @@ export function ProposalCard({
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => handleAction(() => onRequestChange(pro.professional_id))}
+                  onClick={() => handleAction('onRequestChange', () => onRequestChange(pro.professional_id))}
                   disabled={isLoading}
                 >
                   {isLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : "Demander un changement"}
@@ -160,7 +172,7 @@ export function ProposalCard({
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => handleAction(() => onSendReminder(pro.professional_id))}
+                  onClick={() => handleAction('onSendReminder', () => onSendReminder(pro.professional_id))}
                   disabled={isLoading}
                 >
                   {isLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : "Envoyer un rappel"}
@@ -171,7 +183,7 @@ export function ProposalCard({
                 <Button
                   size="sm"
                   className="bg-green-600 hover:bg-green-700"
-                  onClick={() => handleAction(() => onPick(pro.professional_id))}
+                  onClick={() => handleAction('onPick', () => onPick(pro.professional_id))}
                   disabled={isLoading}
                 >
                   {isLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : (
