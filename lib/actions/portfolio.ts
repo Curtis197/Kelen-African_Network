@@ -723,28 +723,56 @@ export async function updateRealization(id: string, data: {
 }
 
 export async function toggleRealizationFeatured(id: string, isFeatured: boolean) {
+  console.log("[toggleRealizationFeatured] id:", id, "isFeatured:", isFeatured);
   const supabase = await createClient();
 
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  if (authError) {
+    console.error("[toggleRealizationFeatured] Auth error:", authError);
+    throw new Error("Erreur d'authentification");
+  }
   if (!user) throw new Error("Non authentifié");
+  console.log("[toggleRealizationFeatured] user.id:", user.id);
 
-  const { data: professional } = await supabase
+  const { data: professional, error: profError } = await supabase
     .from("professionals")
     .select("id")
     .eq("user_id", user.id)
     .single();
 
+  if (profError) {
+    console.error("[toggleRealizationFeatured] Professional lookup error:", profError.code, profError.message);
+  }
   if (!professional) throw new Error("Profil professionnel non trouvé");
+  console.log("[toggleRealizationFeatured] professional.id:", professional.id);
 
-  const { error } = await supabase
+  const { error, data } = await supabase
     .from("professional_realizations")
     .update({ is_featured: isFeatured })
     .eq("id", id)
-    .eq("professional_id", professional.id);
+    .eq("professional_id", professional.id)
+    .select("id, is_featured");
+
+  console.log("[toggleRealizationFeatured] update result:", { data, error });
 
   if (error) {
-    console.error("[toggleRealizationFeatured] Error:", error);
-    throw new Error("Erreur lors de la mise à jour");
+    console.error("[toggleRealizationFeatured] ❌ Supabase error:", {
+      code: error.code,
+      message: error.message,
+      details: error.details,
+      hint: error.hint,
+    });
+    if (error.code === "42501") {
+      throw new Error(`[RLS] UPDATE bloqué sur professional_realizations`);
+    }
+    if (error.code === "42703") {
+      throw new Error(`[DB] Colonne is_featured inexistante — migration non appliquée ?`);
+    }
+    throw new Error(`Supabase: ${error.message}`);
+  }
+
+  if (!data || data.length === 0) {
+    console.warn("[toggleRealizationFeatured] ⚠️ 0 rows updated — id or professional_id mismatch?", { id, professionalId: professional.id });
   }
 
   revalidatePath("/pro/realisations");
