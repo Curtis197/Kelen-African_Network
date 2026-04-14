@@ -11,6 +11,100 @@ interface Props {
   }>;
 }
 
+type MediaItem =
+  | { type: "image"; url: string }
+  | { type: "video"; url: string; thumbnail_url?: string | null };
+
+function MediaContent({ item }: { item: MediaItem }) {
+  if (item.type === "image") {
+    return (
+      <img
+        src={item.url}
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+      />
+    );
+  }
+  if (item.thumbnail_url) {
+    return (
+      <>
+        <img
+          src={item.thumbnail_url}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+        />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center">
+            <Play className="w-5 h-5 text-white" fill="currentColor" />
+          </div>
+        </div>
+      </>
+    );
+  }
+  return (
+    <>
+      <video
+        src={item.url}
+        preload="metadata"
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover"
+      />
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center">
+          <Play className="w-5 h-5 text-white" fill="currentColor" />
+        </div>
+      </div>
+    </>
+  );
+}
+
+function MediaGrid({ items }: { items: MediaItem[] }) {
+  if (items.length === 0) return null;
+
+  if (items.length === 1) {
+    return (
+      <div className="aspect-[4/3] relative overflow-hidden">
+        <MediaContent item={items[0]} />
+      </div>
+    );
+  }
+
+  if (items.length === 2) {
+    return (
+      <div className="aspect-[4/3] grid grid-cols-2 gap-0.5 overflow-hidden">
+        <div className="relative overflow-hidden">
+          <MediaContent item={items[0]} />
+        </div>
+        <div className="relative overflow-hidden">
+          <MediaContent item={items[1]} />
+        </div>
+      </div>
+    );
+  }
+
+  // 3+ items: large left spanning full height + 2 stacked on right
+  const overflow = items.length - 3;
+  return (
+    <div className="aspect-[4/3] grid grid-cols-2 grid-rows-2 gap-0.5 overflow-hidden">
+      <div className="relative overflow-hidden row-span-2">
+        <MediaContent item={items[0]} />
+      </div>
+      <div className="relative overflow-hidden">
+        <MediaContent item={items[1]} />
+      </div>
+      <div className="relative overflow-hidden">
+        <MediaContent item={items[2]} />
+        {overflow > 0 && (
+          <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+            <span className="text-white font-bold text-2xl">+{overflow}</span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const supabase = await createClient();
@@ -78,21 +172,45 @@ export default async function RealisationsListPage({ params }: Props) {
   const likesMap = Object.fromEntries(likesData.map(l => [l.id, l.count]));
   const commentsMap = Object.fromEntries(commentsData.map(c => [c.id, c.count]));
 
+  const fallbackImage = "https://images.unsplash.com/photo-1600585154340-be6199f7d209?auto=format&fit=crop&q=80";
+
   const portfolioItems = realizations && realizations.length > 0
     ? realizations.map(r => {
-        const mainImage = r.images?.find((img: any) => img.is_main) || r.images?.[0];
-        const videoCount = r.videos?.length || 0;
+        // Build ordered image list with main image first
+        const rawImages: any[] = r.images || [];
+        const mainIdx = rawImages.findIndex((img: any) => img.is_main);
+        const orderedImages = mainIdx > 0
+          ? [rawImages[mainIdx], ...rawImages.filter((_: any, i: number) => i !== mainIdx)]
+          : rawImages;
+
+        const imageItems: MediaItem[] = orderedImages.map((img: any) => ({
+          type: "image",
+          url: img.url,
+        }));
+
+        const videoItems: MediaItem[] = [...(r.videos || [])]
+          .sort((a: any, b: any) => (a.order_index ?? 0) - (b.order_index ?? 0))
+          .map((v: any) => ({
+            type: "video",
+            url: v.url,
+            thumbnail_url: v.thumbnail_url ?? null,
+          }));
+
+        const mediaItems: MediaItem[] =
+          imageItems.length > 0 || videoItems.length > 0
+            ? [...imageItems, ...videoItems]
+            : [{ type: "image", url: fallbackImage }];
+
         return {
           id: r.id,
           title: r.title,
           description: r.description || "",
-          image: mainImage?.url || "https://images.unsplash.com/photo-1600585154340-be6199f7d209?auto=format&fit=crop&q=80",
+          mediaItems,
           location: r.location,
           price: r.price,
           currency: r.currency || "XOF",
           likeCount: likesMap[r.id] || 0,
           commentCount: commentsMap[r.id] || 0,
-          videoCount
         };
       })
     : [];
@@ -122,19 +240,7 @@ export default async function RealisationsListPage({ params }: Props) {
                     href={`/professionnels/${slug}/realisations/${item.id}`}
                     className="group relative overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-500 hover:shadow-2xl"
                   >
-                    <div className="relative">
-                      <img
-                        className="w-full aspect-[4/3] object-cover transition-transform duration-700 group-hover:scale-110"
-                        src={item.image}
-                        alt={item.title}
-                      />
-                      {item.videoCount > 0 && (
-                        <div className="absolute bottom-3 right-3 bg-black/70 backdrop-blur-sm text-white px-2.5 py-1.5 rounded-full flex items-center gap-1.5 text-xs font-semibold">
-                          <Play className="w-3 h-3" fill="currentColor" />
-                          {item.videoCount}
-                        </div>
-                      )}
-                    </div>
+                    <MediaGrid items={item.mediaItems} />
                     <div className="p-6">
                       <h3 className="text-xl font-black text-stone-900 mb-2 group-hover:text-kelen-green-600 transition-colors">
                         {item.title}
