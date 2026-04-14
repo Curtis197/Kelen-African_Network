@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { ArrowLeft, MapPin, Calendar, DollarSign, FileText, Download } from "lucide-react";
+import { ArrowLeft, MapPin, Calendar, DollarSign, FileText, Download, Play, Video } from "lucide-react";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -16,6 +16,7 @@ export default async function RealizationDetailPage({ params }: Props) {
     .select(`
       *,
       images:realization_images(*),
+      videos:realization_videos(*),
       documents:realization_documents(*)
     `)
     .eq("id", id)
@@ -29,6 +30,8 @@ export default async function RealizationDetailPage({ params }: Props) {
   const galleryImages = realization.images
     ? realization.images.filter((img: any) => img.url !== mainImage).map((img: any) => img.url)
     : [];
+  const videos: Array<{ id: string; url: string; thumbnail_url: string | null; duration: number | null }> =
+    [...(realization.videos || [])].sort((a: any, b: any) => (a.order_index ?? 0) - (b.order_index ?? 0));
 
   return (
     <div className="mx-auto max-w-5xl">
@@ -76,6 +79,51 @@ export default async function RealizationDetailPage({ params }: Props) {
                       alt={`${realization.title} - ${i + 1}`}
                       className="w-full h-full object-cover"
                     />
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {videos.length > 0 && (
+            <section>
+              <h2 className="font-headline text-xl font-bold text-on-surface mb-4 flex items-center gap-2">
+                <Video size={18} className="text-kelen-green-600" />
+                Vidéos
+              </h2>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {videos.map((video) => (
+                  <div key={video.id} className="relative aspect-video overflow-hidden rounded-xl bg-stone-900">
+                    {video.thumbnail_url ? (
+                      <img
+                        src={video.thumbnail_url}
+                        alt="Miniature vidéo"
+                        className="absolute inset-0 w-full h-full object-cover"
+                      />
+                    ) : (
+                      <video
+                        src={video.url}
+                        preload="metadata"
+                        muted
+                        playsInline
+                        className="absolute inset-0 w-full h-full object-cover"
+                      />
+                    )}
+                    <a
+                      href={video.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/50 transition-colors"
+                    >
+                      <div className="w-12 h-12 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center">
+                        <Play size={20} className="text-white ml-0.5" fill="currentColor" />
+                      </div>
+                    </a>
+                    {video.duration && (
+                      <div className="absolute bottom-2 right-2 bg-black/80 text-white text-xs px-2 py-0.5 rounded font-mono">
+                        {Math.floor(video.duration / 60)}:{String(video.duration % 60).padStart(2, "0")}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

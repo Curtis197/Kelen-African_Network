@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Plus, LayoutGrid, FileText, MapPin, Calendar, DollarSign, Settings, Eye } from "lucide-react";
+import { Plus, LayoutGrid, FileText, MapPin, Calendar, DollarSign, Settings, Eye, Video } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { deleteRealization, getPortfolio } from "@/lib/actions/portfolio";
@@ -68,6 +68,7 @@ export default async function PortfolioPage() {
     .select(`
       *,
       images:realization_images(*),
+      videos:realization_videos(id),
       documents:realization_documents(*)
     `)
     .eq("professional_id", professional.id)
@@ -211,8 +212,14 @@ async function RealizationCard({
               Portfolio
             </div>
           )}
-          {realization.documents && realization.documents.length > 0 && (
+          {realization.videos && realization.videos.length > 0 && (
             <div className="absolute top-3 right-3 flex items-center gap-1 rounded-full bg-black/60 px-2.5 py-1 text-xs font-bold text-white">
+              <Video size={12} />
+              {realization.videos.length}
+            </div>
+          )}
+          {realization.documents && realization.documents.length > 0 && (
+            <div className={`absolute ${realization.videos?.length > 0 ? 'top-10' : 'top-3'} right-3 flex items-center gap-1 rounded-full bg-black/60 px-2.5 py-1 text-xs font-bold text-white`}>
               <FileText size={12} />
               {realization.documents.length}
             </div>

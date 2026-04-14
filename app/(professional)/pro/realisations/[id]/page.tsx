@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { ArrowLeft, Calendar, DollarSign, ImageIcon, Edit2, MapPin } from "lucide-react";
+import { ArrowLeft, Calendar, DollarSign, ImageIcon, Edit2, MapPin, Play, Video } from "lucide-react";
 import { RealizationGallery } from "@/components/pro/RealizationGallery";
 
 export const metadata: Metadata = {
@@ -85,6 +85,7 @@ export default async function RealizationDetailPage({ params }: RealizationDetai
     .select(`
       *,
       images:realization_images(*),
+      videos:realization_videos(*),
       documents:realization_documents(*)
     `)
     .eq("id", id)
@@ -126,6 +127,8 @@ export default async function RealizationDetailPage({ params }: RealizationDetai
 
   const featuredPhoto = realization.images?.find((img: any) => img.is_main)?.url || realization.images?.[0]?.url;
   const allPhotos = realization.images?.map((img: any) => img.url) || [];
+  const videos: Array<{ id: string; url: string; thumbnail_url: string | null; duration: number | null; order_index: number }> =
+    [...(realization.videos || [])].sort((a: any, b: any) => (a.order_index ?? 0) - (b.order_index ?? 0));
 
   return (
     <div className="mx-auto max-w-5xl">
@@ -164,6 +167,12 @@ export default async function RealizationDetailPage({ params }: RealizationDetai
                   {allPhotos.length} photo{allPhotos.length > 1 ? 's' : ''}
                 </span>
               )}
+              {videos.length > 0 && (
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-surface-container px-3 py-1 text-xs font-medium text-on-surface-variant">
+                  <Video size={12} />
+                  {videos.length} vidéo{videos.length > 1 ? 's' : ''}
+                </span>
+              )}
             </div>
           </div>
           <Link
@@ -193,6 +202,52 @@ export default async function RealizationDetailPage({ params }: RealizationDetai
             </div>
           )}
         </div>
+
+        {/* Videos Section */}
+        {videos.length > 0 && (
+          <div className="rounded-[2.5rem] bg-white p-8 shadow-sm lg:p-12">
+            <h2 className="font-headline text-xl font-bold text-on-surface mb-6 flex items-center gap-2">
+              <Video size={20} className="text-kelen-green-600" />
+              Vidéos
+            </h2>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {videos.map((video) => (
+                <div key={video.id} className="relative aspect-video overflow-hidden rounded-2xl bg-stone-900 group">
+                  {video.thumbnail_url ? (
+                    <img
+                      src={video.thumbnail_url}
+                      alt="Miniature vidéo"
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                  ) : (
+                    <video
+                      src={video.url}
+                      preload="metadata"
+                      muted
+                      playsInline
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                  )}
+                  <a
+                    href={video.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/50 transition-colors"
+                  >
+                    <div className="w-14 h-14 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center">
+                      <Play size={24} className="text-white ml-1" fill="currentColor" />
+                    </div>
+                  </a>
+                  {video.duration && (
+                    <div className="absolute bottom-2 right-2 bg-black/80 text-white text-xs px-2 py-0.5 rounded font-mono">
+                      {Math.floor(video.duration / 60)}:{String(video.duration % 60).padStart(2, "0")}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Project Details */}
         <div className="rounded-[2.5rem] bg-white p-8 shadow-sm lg:p-12">
