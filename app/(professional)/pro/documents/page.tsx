@@ -27,50 +27,89 @@ export default function ProDocumentsPage() {
   }, []);
 
   const fetchDocuments = async () => {
-    console.log('[ACTION] Started: fetchDocuments');
+    console.group('[ProDocuments] fetchDocuments');
+    console.log('▶ Start');
     setIsLoading(true);
-    
-    const { data: { user } } = await supabase.auth.getUser();
-    console.log('[AUTH] User:', user?.id);
-    
-    if (!user) {
+
+    // ── Auth ──────────────────────────────────────────────────────
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError) {
+      console.error('[AUTH] ❌ getUser failed:', authError.message);
       setIsLoading(false);
+      console.groupEnd();
       return;
     }
+    if (!user) {
+      console.error('[AUTH] ❌ No authenticated user');
+      setIsLoading(false);
+      console.groupEnd();
+      return;
+    }
+    console.log('[AUTH] ✅ user.id:', user.id);
 
+    // ── Professional lookup ───────────────────────────────────────
     const { data: pro, error: proError } = await supabase
       .from("professionals")
       .select("id")
       .eq("user_id", user.id)
       .single();
 
-    console.log('[DB] Professional lookup:', { proId: pro?.id, error: proError?.message });
-
-    if (pro) {
-      console.log('[FETCH] Requesting project_documents for professional_id:', pro.id);
-      const { data, error } = await supabase
-        .from("project_documents")
-        .select("*")
-        .eq("professional_id", pro.id)
-        .order("created_at", { ascending: false });
-
-      console.log('[DB] Result project_documents:', { count: data?.length, error: error?.message, code: error?.code, dataPreview: data });
-
-      if (error?.code === '42501') {
-        console.error('[RLS] ❌ EXPLICIT RLS BLOCKING!');
-        console.error('[RLS] Table: project_documents');
+    if (proError) {
+      console.error('[DB] ❌ professionals lookup failed');
+      console.error('  code:', proError.code, '| message:', proError.message);
+      if (proError.code === 'PGRST116') {
+        console.error('  → No professional row found for this user_id — profile missing?');
       }
-      if (!error && data?.length === 0) {
-        console.warn('[RLS] ⚠️ SILENT RLS FILTERING OR EMPTY TABLE!');
+      if (proError.code === '42501') {
+        console.error('  → [RLS] SELECT blocked on professionals table');
       }
-
-      if (error) {
-        console.error("Error fetching documents:", error);
-      } else {
-        setDocuments((data as ProjectDocument[]) || []);
-      }
+      setIsLoading(false);
+      console.groupEnd();
+      return;
     }
+    console.log('[DB] ✅ professional.id:', pro.id);
+
+    // ── Fetch documents ───────────────────────────────────────────
+    console.log('[FETCH] Querying project_documents WHERE professional_id =', pro.id);
+    const { data, error } = await supabase
+      .from("project_documents")
+      .select("*")
+      .eq("professional_id", pro.id)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error('[FETCH] ❌ project_documents query failed');
+      console.error('  code:', error.code, '| message:', error.message);
+      if (error.code === '42501') {
+        console.error('  → [RLS] SELECT blocked on project_documents — check "pdocs_pro_own" policy');
+      }
+      setIsLoading(false);
+      console.groupEnd();
+      return;
+    }
+
+    console.log('[FETCH] ✅ rows returned:', data?.length ?? 0);
+    if (!data || data.length === 0) {
+      console.warn('[FETCH] ⚠️ 0 rows — either empty table OR silent RLS filtering');
+      console.warn('  Tip: run in Supabase SQL editor as service_role:');
+      console.warn(`  SELECT * FROM project_documents WHERE professional_id = '${pro.id}';`);
+    } else {
+      data.forEach((doc, i) => {
+        console.log(`[FETCH] doc[${i}]`, {
+          id: doc.id,
+          project_title: doc.project_title,
+          contract_url: doc.contract_url,
+          url_length: doc.contract_url?.length,
+          url_trimmed: doc.contract_url?.trim(),
+          isPdf: /\.pdf(\?.*)?$/i.test(doc.contract_url?.trim() || ''),
+          created_at: doc.created_at,
+        });
+      });
+    }
+
+    setDocuments((data as ProjectDocument[]) || []);
     setIsLoading(false);
+    console.groupEnd();
   };
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -215,6 +254,14 @@ export default function ProDocumentsPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {documents.map((doc) => {
                 const cleanUrl = doc.contract_url?.trim() || "";
+                const isPdf = /\.pdf(\?.*)?$/i.test(cleanUrl);
+                const hasImgError = imgErrors.has(doc.id);
+                console.log('[RENDER] grid card', doc.id, {
+                  cleanUrl,
+                  isPdf,
+                  hasImgError,
+                  willRender: isPdf ? 'pdf-icon' : hasImgError ? 'fallback-icon' : 'img-tag',
+                });
                 return (
                  <div 
                   key={doc.id} 
@@ -236,7 +283,11 @@ export default function ProDocumentsPage() {
                         src={cleanUrl}
                         alt=""
                         className="w-full h-full object-cover rounded-xl group-hover:scale-105 transition-transform duration-500 shadow-sm"
-                        onError={() => setImgErrors(prev => new Set([...prev, doc.id]))}
+                        onLoad={() => console.log('[IMG] ✅ loaded:', cleanUrl)}
+                        onError={() => {
+                          console.error('[IMG] ❌ failed to load:', cleanUrl);
+                          setImgErrors(prev => new Set([...prev, doc.id]));
+                        }}
                       />
                     )}
                     <div className="absolute top-4 left-4 px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-widest bg-white/90 text-stone-600 shadow-sm backdrop-blur-md">
@@ -380,7 +431,11 @@ export default function ProDocumentsPage() {
                     src={cleanUrl}
                     alt={selectedDoc.project_title}
                     className="w-full h-full object-cover"
-                    onError={() => setImgErrors(prev => new Set([...prev, selectedDoc.id]))}
+                    onLoad={() => console.log('[IMG] ✅ sidebar loaded:', cleanUrl)}
+                    onError={() => {
+                      console.error('[IMG] ❌ sidebar failed to load:', cleanUrl);
+                      setImgErrors(prev => new Set([...prev, selectedDoc.id]));
+                    }}
                   />
                 )}
                 
