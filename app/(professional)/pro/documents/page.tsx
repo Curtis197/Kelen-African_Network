@@ -222,22 +222,22 @@ export default function ProDocumentsPage() {
                   className={`group cursor-pointer bg-white rounded-[2rem] overflow-hidden transition-all duration-300 border-2 ${selectedDoc?.id === doc.id ? 'border-kelen-green-500 shadow-xl' : 'border-transparent hover:shadow-xl hover:shadow-stone-200/30'}`}
                  >
                   <div className="aspect-[4/3] bg-stone-100 relative overflow-hidden flex items-center justify-center group-hover:bg-stone-200 transition-colors p-2">
-                    {/\.(jpg|jpeg|png|webp|gif)(\?.*)?$/i.test(cleanUrl) && !imgErrors.has(doc.id) ? (
+                    {/\.pdf(\?.*)?$/i.test(cleanUrl) ? (
+                      <div className="w-full h-full flex flex-col items-center justify-center bg-white rounded-xl shadow-sm border border-stone-100 group-hover:bg-stone-50 transition-colors">
+                        <span className="material-symbols-outlined text-4xl text-red-500 mb-2">picture_as_pdf</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-stone-400">Document</span>
+                      </div>
+                    ) : imgErrors.has(doc.id) ? (
+                      <span className="material-symbols-outlined text-4xl text-stone-300 group-hover:scale-110 transition-transform">
+                        description
+                      </span>
+                    ) : (
                       <img
                         src={cleanUrl}
                         alt=""
                         className="w-full h-full object-cover rounded-xl group-hover:scale-105 transition-transform duration-500 shadow-sm"
                         onError={() => setImgErrors(prev => new Set([...prev, doc.id]))}
                       />
-                    ) : /\.pdf(\?.*)?$/i.test(cleanUrl) ? (
-                      <div className="w-full h-full flex flex-col items-center justify-center bg-white rounded-xl shadow-sm border border-stone-100 group-hover:bg-stone-50 transition-colors">
-                        <span className="material-symbols-outlined text-4xl text-red-500 mb-2">picture_as_pdf</span>
-                        <span className="text-[10px] font-black uppercase tracking-widest text-stone-400">Document</span>
-                      </div>
-                    ) : (
-                      <span className="material-symbols-outlined text-4xl text-stone-300 group-hover:scale-110 transition-transform">
-                        description
-                      </span>
                     )}
                     <div className="absolute top-4 left-4 px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-widest bg-white/90 text-stone-600 shadow-sm backdrop-blur-md">
                       {cleanUrl.split('?')[0].split('.').pop()?.substring(0, 4) || 'FILE'}
@@ -371,17 +371,17 @@ export default function ProDocumentsPage() {
           <div className="space-y-8 h-full overflow-y-auto pb-20 scrollbar-hide">
             <div className="bg-stone-50 p-4 rounded-3xl border border-stone-100">
               <div className="aspect-square bg-stone-100 rounded-2xl shadow-sm overflow-hidden flex items-center justify-center relative group">
-                {/\.(jpg|jpeg|png|webp|gif)(\?.*)?$/i.test(cleanUrl) && !imgErrors.has(selectedDoc.id) ? (
+                {/\.pdf(\?.*)?$/i.test(cleanUrl) ? (
+                  <iframe src={`${cleanUrl}#toolbar=0&navpanes=0&scrollbar=0`} className="w-full h-full border-0 pointer-events-none" title="PDF Preview" />
+                ) : imgErrors.has(selectedDoc.id) ? (
+                  <span className="material-symbols-outlined text-6xl text-stone-200 italic">inventory_2</span>
+                ) : (
                   <img
                     src={cleanUrl}
                     alt={selectedDoc.project_title}
                     className="w-full h-full object-cover"
                     onError={() => setImgErrors(prev => new Set([...prev, selectedDoc.id]))}
                   />
-                ) : /\.pdf(\?.*)?$/i.test(cleanUrl) ? (
-                  <iframe src={`${cleanUrl}#toolbar=0&navpanes=0&scrollbar=0`} className="w-full h-full border-0 pointer-events-none" title="PDF Preview" />
-                ) : (
-                  <span className="material-symbols-outlined text-6xl text-stone-200 italic">inventory_2</span>
                 )}
                 
                 <div className="absolute inset-0 bg-stone-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-10">
