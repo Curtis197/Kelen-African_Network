@@ -285,7 +285,10 @@ export default function ProDocumentsPage() {
                         src={cleanUrl}
                         alt=""
                         className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        onLoad={() => console.log('[IMG] ✅ loaded:', cleanUrl)}
+                        onLoad={(e) => {
+                          const el = e.currentTarget;
+                          console.log('[IMG] ✅ loaded:', cleanUrl, '| natural:', el.naturalWidth, 'x', el.naturalHeight, '| rendered:', el.width, 'x', el.height, '| offsetW:', el.offsetWidth, 'x', el.offsetHeight);
+                        }}
                         onError={() => {
                           console.error('[IMG] ❌ failed to load:', cleanUrl);
                           setImgErrors(prev => new Set([...prev, doc.id]));
