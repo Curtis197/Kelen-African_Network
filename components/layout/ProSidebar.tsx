@@ -25,7 +25,7 @@ import { NotificationDropdown } from "@/components/layout/NotificationDropdown";
 const NAV_ITEMS = [
   { href: "/pro/dashboard", label: "Tableau de bord", icon: LayoutDashboard },
   { href: "/pro/projets", label: "Projets", icon: Briefcase },
-  { href: "/pro/collaborations", label: "Collaborations", icon: Handshake },
+  { href: "/pro/collaborations", label: "Boîte de réception", icon: Handshake },
   { href: "/pro/documents", label: "Documents", icon: FileText },
   { href: "/pro/realisations", label: "Réalisations", icon: Award },
   { href: "/pro/portfolio", label: "Portfolio", icon: LayoutGrid },
