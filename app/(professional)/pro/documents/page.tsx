@@ -268,21 +268,23 @@ export default function ProDocumentsPage() {
                   onClick={() => setSelectedDoc(doc)}
                   className={`group cursor-pointer bg-white rounded-[2rem] overflow-hidden transition-all duration-300 border-2 ${selectedDoc?.id === doc.id ? 'border-kelen-green-500 shadow-xl' : 'border-transparent hover:shadow-xl hover:shadow-stone-200/30'}`}
                  >
-                  <div className="aspect-[4/3] bg-stone-100 relative overflow-hidden flex items-center justify-center group-hover:bg-stone-200 transition-colors p-2">
+                  <div className="aspect-[4/3] bg-stone-100 relative overflow-hidden group-hover:bg-stone-200 transition-colors">
                     {/\.pdf(\?.*)?$/i.test(cleanUrl) ? (
-                      <div className="w-full h-full flex flex-col items-center justify-center bg-white rounded-xl shadow-sm border border-stone-100 group-hover:bg-stone-50 transition-colors">
+                      <div className="absolute inset-0 flex flex-col items-center justify-center bg-white border border-stone-100 group-hover:bg-stone-50 transition-colors">
                         <span className="material-symbols-outlined text-4xl text-red-500 mb-2">picture_as_pdf</span>
                         <span className="text-[10px] font-black uppercase tracking-widest text-stone-400">Document</span>
                       </div>
                     ) : imgErrors.has(doc.id) ? (
-                      <span className="material-symbols-outlined text-4xl text-stone-300 group-hover:scale-110 transition-transform">
-                        description
-                      </span>
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="material-symbols-outlined text-4xl text-stone-300 group-hover:scale-110 transition-transform">
+                          description
+                        </span>
+                      </div>
                     ) : (
                       <img
                         src={cleanUrl}
                         alt=""
-                        className="w-full h-full object-cover rounded-xl group-hover:scale-105 transition-transform duration-500 shadow-sm"
+                        className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         onLoad={() => console.log('[IMG] ✅ loaded:', cleanUrl)}
                         onError={() => {
                           console.error('[IMG] ❌ failed to load:', cleanUrl);
@@ -290,7 +292,7 @@ export default function ProDocumentsPage() {
                         }}
                       />
                     )}
-                    <div className="absolute top-4 left-4 px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-widest bg-white/90 text-stone-600 shadow-sm backdrop-blur-md">
+                    <div className="absolute top-2 left-2 px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-widest bg-white/90 text-stone-600 shadow-sm backdrop-blur-md z-10">
                       {cleanUrl.split('?')[0].split('.').pop()?.substring(0, 4) || 'FILE'}
                     </div>
                   </div>
@@ -421,16 +423,18 @@ export default function ProDocumentsPage() {
           return (
           <div className="space-y-8 h-full overflow-y-auto pb-20 scrollbar-hide">
             <div className="bg-stone-50 p-4 rounded-3xl border border-stone-100">
-              <div className="aspect-square bg-stone-100 rounded-2xl shadow-sm overflow-hidden flex items-center justify-center relative group">
+              <div className="aspect-square bg-stone-100 rounded-2xl shadow-sm overflow-hidden relative group">
                 {/\.pdf(\?.*)?$/i.test(cleanUrl) ? (
-                  <iframe src={`${cleanUrl}#toolbar=0&navpanes=0&scrollbar=0`} className="w-full h-full border-0 pointer-events-none" title="PDF Preview" />
+                  <iframe src={`${cleanUrl}#toolbar=0&navpanes=0&scrollbar=0`} className="absolute inset-0 w-full h-full border-0 pointer-events-none" title="PDF Preview" />
                 ) : imgErrors.has(selectedDoc.id) ? (
-                  <span className="material-symbols-outlined text-6xl text-stone-200 italic">inventory_2</span>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="material-symbols-outlined text-6xl text-stone-200 italic">inventory_2</span>
+                  </div>
                 ) : (
                   <img
                     src={cleanUrl}
                     alt={selectedDoc.project_title}
-                    className="w-full h-full object-cover"
+                    className="absolute inset-0 w-full h-full object-cover"
                     onLoad={() => console.log('[IMG] ✅ sidebar loaded:', cleanUrl)}
                     onError={() => {
                       console.error('[IMG] ❌ sidebar failed to load:', cleanUrl);
