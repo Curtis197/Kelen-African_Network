@@ -238,7 +238,7 @@ export default function ProCollaborationsPage() {
       console.log('[DB] ✅ Comments loaded:', data?.length);
     }
 
-    setComments((data as PendingComment[]) || []);
+    setComments(((data as unknown) as PendingComment[]) || []);
     setCommentsLoaded(true);
     setCommentsLoading(false);
   };
