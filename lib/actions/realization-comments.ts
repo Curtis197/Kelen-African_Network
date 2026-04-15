@@ -51,9 +51,7 @@ export async function getRealizationComments(realizationId: string): Promise<Arr
   }
 
   if (!error && data?.length === 0) {
-    console.warn('[RLS] ⚠️ SILENT RLS FILTERING on realization_comments!');
-    console.warn('[RLS] Query succeeded but 0 rows - RLS may be filtering');
-    console.warn('[RLS] Realization ID:', realizationId);
+    console.log('[COMMENTS] No approved comments found for realization:', realizationId);
   }
 
   if (error) {
