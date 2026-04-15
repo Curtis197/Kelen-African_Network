@@ -339,15 +339,70 @@ export async function getUserProjects() {
 }
 
 export async function getProjectAreas(projectId: string) {
+  console.log('[GET_PROJECT_AREAS] Fetching areas for project:', projectId);
   const supabase = await createClient();
-  const { data, error } = await supabase
+  
+  // First, get all unique development_area values from project_professionals
+  const { data: professionals, error: proError } = await supabase
+    .from("project_professionals")
+    .select("development_area")
+    .eq("project_id", projectId)
+    .not("development_area", "is", null);
+
+  if (proError) {
+    console.error('[GET_PROJECT_AREAS] Error fetching professionals:', proError.message);
+  }
+
+  // Extract unique area names from professionals
+  const uniqueAreasFromPros = [...new Set(professionals?.map(p => p.development_area).filter(Boolean))] as string[];
+  console.log('[GET_PROJECT_AREAS] Unique areas from professionals:', uniqueAreasFromPros);
+
+  // Get existing project_areas
+  const { data: existingAreas, error: areaError } = await supabase
     .from("project_areas")
     .select("*")
     .eq("project_id", projectId)
     .order("created_at", { ascending: true });
 
-  if (error) return [];
-  return data;
+  if (areaError) {
+    console.error('[GET_PROJECT_AREAS] Error fetching project_areas:', areaError.message);
+    return [];
+  }
+
+  const existingAreaNames = existingAreas?.map(a => a.name) || [];
+  console.log('[GET_PROJECT_AREAS] Existing project_areas:', existingAreaNames);
+
+  // Create missing areas
+  const missingAreas = uniqueAreasFromPros.filter(name => !existingAreaNames.includes(name));
+  console.log('[GET_PROJECT_AREAS] Missing areas to create:', missingAreas);
+
+  if (missingAreas.length > 0) {
+    const { data: newAreas, error: insertError } = await supabase
+      .from("project_areas")
+      .insert(missingAreas.map(name => ({ project_id: projectId, name })))
+      .select();
+
+    if (insertError) {
+      console.error('[GET_PROJECT_AREAS] Error creating missing areas:', insertError.message);
+    } else {
+      console.log('[GET_PROJECT_AREAS] Created', newAreas?.length, 'new areas');
+    }
+  }
+
+  // Fetch all areas again (including newly created ones)
+  const { data: allAreas, error: finalError } = await supabase
+    .from("project_areas")
+    .select("*")
+    .eq("project_id", projectId)
+    .order("created_at", { ascending: true });
+
+  if (finalError) {
+    console.error('[GET_PROJECT_AREAS] Final fetch error:', finalError.message);
+    return [];
+  }
+
+  console.log('[GET_PROJECT_AREAS] Returning', allAreas?.length, 'areas');
+  return allAreas;
 }
 
 export async function createProjectArea(projectId: string, name: string) {
@@ -377,6 +432,76 @@ export async function createProjectArea(projectId: string, name: string) {
   log("area.create.ok", { userId: user.id, projectId, areaId: data.id, name });
   revalidatePath(`/projets/${projectId}`);
   return { data };
+}
+
+/**
+ * Sync project_areas from project_professionals.development_area
+ * Ensures all areas used by professionals exist in project_areas table
+ */
+export async function syncProjectAreasFromProfessionals(projectId: string) {
+  console.log('[SYNC_AREAS] Syncing areas for project:', projectId);
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "Non autorisé" };
+
+  // Verify project ownership
+  const { data: project } = await supabase
+    .from("user_projects")
+    .select("id")
+    .eq("id", projectId)
+    .eq("user_id", user.id)
+    .single();
+
+  if (!project) return { error: "Projet introuvable ou accès refusé." };
+
+  // Get unique areas from professionals
+  const { data: professionals, error: proError } = await supabase
+    .from("project_professionals")
+    .select("development_area")
+    .eq("project_id", projectId)
+    .not("development_area", "is", null);
+
+  if (proError) {
+    console.error('[SYNC_AREAS] Error fetching professionals:', proError.message);
+    return { error: proError.message };
+  }
+
+  const uniqueAreasFromPros = [...new Set(professionals?.map(p => p.development_area).filter(Boolean))] as string[];
+  console.log('[SYNC_AREAS] Unique areas from professionals:', uniqueAreasFromPros);
+
+  // Get existing areas
+  const { data: existingAreas, error: areaError } = await supabase
+    .from("project_areas")
+    .select("name")
+    .eq("project_id", projectId);
+
+  if (areaError) {
+    console.error('[SYNC_AREAS] Error fetching existing areas:', areaError.message);
+    return { error: areaError.message };
+  }
+
+  const existingAreaNames = existingAreas?.map(a => a.name) || [];
+  const missingAreas = uniqueAreasFromPros.filter(name => !existingAreaNames.includes(name));
+
+  console.log('[SYNC_AREAS] Missing areas:', missingAreas);
+
+  // Create missing areas
+  if (missingAreas.length > 0) {
+    const { data: newAreas, error: insertError } = await supabase
+      .from("project_areas")
+      .insert(missingAreas.map(name => ({ project_id: projectId, name })))
+      .select();
+
+    if (insertError) {
+      console.error('[SYNC_AREAS] Error creating areas:', insertError.message);
+      return { error: insertError.message };
+    }
+
+    console.log('[SYNC_AREAS] Created', newAreas?.length, 'new areas');
+  }
+
+  revalidatePath(`/projets/${projectId}`);
+  return { success: true, synced: missingAreas.length };
 }
 
 export async function updateExternalProfessional(

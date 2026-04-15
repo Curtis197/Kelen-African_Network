@@ -12,7 +12,7 @@ import ProjectStepsSection from "@/components/projects/ProjectStepsSection";
 import { DevelopmentAreaRow } from "@/components/projects/DevelopmentAreaRow";
 import { DEVELOPMENT_AREAS } from "@/lib/constants/projects";
 import { ProjectProfessional, ProjectStep, ProjectArea } from "@/lib/types/projects";
-import { createProjectArea, deleteProjectArea, getProjectAreas } from "@/lib/actions/projects";
+import { createProjectArea, deleteProjectArea, getProjectAreas, syncProjectAreasFromProfessionals } from "@/lib/actions/projects";
 import { getProjectSteps } from "@/lib/actions/project-steps";
 import { getProjectImages, type ProjectImage } from "@/lib/actions/project-images";
 import { ProjectImageCarousel } from "@/components/projects/ProjectImageCarousel";
@@ -97,8 +97,10 @@ export default function ProjectDetailPage() {
       setTeam(teamData as ProjectProfessional[]);
     }
 
-    // Fetch Areas
+    // Fetch Areas (auto-syncs from professionals)
+    console.log('[PROJECT-DETAIL] Fetching areas for project:', projectIdStr);
     const areasData = await getProjectAreas(projectIdStr);
+    console.log('[PROJECT-DETAIL] Areas fetched:', areasData.length);
     setAreas(areasData as ProjectArea[]);
 
     // Fetch Steps (via server action to get associated_pros names)
@@ -125,6 +127,21 @@ export default function ProjectDetailPage() {
     if (!confirm("Supprimer ce domaine et retirer tous ses professionnels ?")) return;
     await deleteProjectArea(areaId, projectIdStr);
     setAreas(prev => prev.filter(a => a.id !== areaId));
+  };
+
+  const syncAreas = async () => {
+    console.log('[PROJECT-DETAIL] Manually syncing areas...');
+    const result = await syncProjectAreasFromProfessionals(projectIdStr);
+    if (result.success) {
+      console.log('[PROJECT-DETAIL] Sync completed, synced', result.synced, 'areas');
+      toast.success(`${result.synced} domaine(s) synchronisé(s)`);
+      // Refetch areas
+      const areasData = await getProjectAreas(projectIdStr);
+      setAreas(areasData as ProjectArea[]);
+    } else {
+      console.error('[PROJECT-DETAIL] Sync failed:', result.error);
+      toast.error(`Erreur: ${result.error}`);
+    }
   };
 
   const updateStatus = async (newStatus: string) => {
@@ -301,32 +318,43 @@ export default function ProjectDetailPage() {
                 <div>
                   <h3 className="text-base sm:text-lg lg:text-2xl font-headline font-bold text-on-surface">Moteur de Comparaison</h3>
                   <p className="text-on-surface-variant font-medium mt-1 text-[10px] sm:text-sm lg:text-base">Sélectionnez et classez les meilleurs experts pour chaque domaine.</p>
+                  <p className="text-on-surface-variant/60 text-[8px] sm:text-[9px] font-medium mt-1">Les domaines sont automatiquement créés quand vous ajoutez un professionnel.</p>
                 </div>
-                <div className="relative self-start">
-                  <button
-                    onClick={() => setShowAreaSelector(!showAreaSelector)}
-                    className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-6 py-2 sm:py-3 bg-primary text-white text-[9px] sm:text-xs font-black uppercase tracking-widest rounded-lg sm:rounded-2xl shadow-lg shadow-primary/20 hover:scale-[0.98] transition-all"
-                  >
-                    <span className="material-symbols-outlined text-sm sm:text-base">add</span>
-                    <span className="hidden sm:inline">Ajouter un domaine</span>
-                    <span className="sm:hidden">Domaine</span>
-                  </button>
+                <div className="flex flex-wrap gap-2 sm:gap-3">
+                  <div className="relative self-start">
+                    <button
+                      onClick={() => setShowAreaSelector(!showAreaSelector)}
+                      className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-6 py-2 sm:py-3 bg-primary text-white text-[9px] sm:text-xs font-black uppercase tracking-widest rounded-lg sm:rounded-2xl shadow-lg shadow-primary/20 hover:scale-[0.98] transition-all"
+                    >
+                      <span className="material-symbols-outlined text-sm sm:text-base">add</span>
+                      <span className="hidden sm:inline">Ajouter un domaine</span>
+                      <span className="sm:hidden">Domaine</span>
+                    </button>
 
-                  {showAreaSelector && (
-                    <div className="absolute left-0 mt-3 w-64 sm:w-72 bg-white rounded-2xl shadow-2xl border border-outline-variant/30 p-2 z-50">
-                      <div className="max-h-64 overflow-y-auto overflow-x-hidden scrollbar-hide">
-                        {DEVELOPMENT_AREAS.filter(a => !areas.some(pa => pa.name === a)).map((area) => (
-                          <button
-                            key={area}
-                            onClick={() => addArea(area)}
-                            className="w-full text-left px-4 py-3 text-sm font-medium hover:bg-surface-container rounded-xl transition-colors"
-                          >
-                            {area}
-                          </button>
-                        ))}
+                    {showAreaSelector && (
+                      <div className="absolute left-0 mt-3 w-64 sm:w-72 bg-white rounded-2xl shadow-2xl border border-outline-variant/30 p-2 z-50">
+                        <div className="max-h-64 overflow-y-auto overflow-x-hidden scrollbar-hide">
+                          {DEVELOPMENT_AREAS.filter(a => !areas.some(pa => pa.name === a)).map((area) => (
+                            <button
+                              key={area}
+                              onClick={() => addArea(area)}
+                              className="w-full text-left px-4 py-3 text-sm font-medium hover:bg-surface-container rounded-xl transition-colors"
+                            >
+                              {area}
+                            </button>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
+                  <button
+                    onClick={syncAreas}
+                    className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-6 py-2 sm:py-3 bg-surface-container-low text-on-surface-variant text-[9px] sm:text-xs font-black uppercase tracking-widest rounded-lg sm:rounded-2xl border border-outline-variant/30 hover:bg-surface-container transition-all"
+                    title="Synchroniser les domaines depuis les professionnels"
+                  >
+                    <span className="material-symbols-outlined text-sm sm:text-base">sync</span>
+                    <span className="hidden sm:inline">Synchroniser</span>
+                  </button>
                 </div>
               </div>
 
