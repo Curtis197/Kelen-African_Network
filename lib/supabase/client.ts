@@ -18,7 +18,7 @@ export function createClient() {
   return createBrowserClient(url, anonKey, {
     global: {
       // Handle auth errors gracefully
-      fetch: async (url, options = {}) => {
+      fetch: async (url: RequestInfo | URL, options: RequestInit = {}) => {
         const result = await fetch(url, options);
         
         // Check for auth errors (401, invalid token, etc.)
