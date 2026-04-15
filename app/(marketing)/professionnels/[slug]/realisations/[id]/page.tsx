@@ -42,9 +42,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function RealizationDetailPage({ params }: Props) {
   const { slug, id } = await params;
+  console.log("[RealizationDetail] ── FETCH START ──────────────────────────");
+  console.log("[RealizationDetail] slug:", slug, "| realization id:", id);
+
   const supabase = await createClient();
 
-  const { data: realization } = await supabase
+  const { data: realization, error: fetchError } = await supabase
     .from("professional_realizations")
     .select(`
       *,
@@ -55,14 +58,50 @@ export default async function RealizationDetailPage({ params }: Props) {
     .eq("id", id)
     .single();
 
-  if (!realization) notFound();
+  console.log("[RealizationDetail] DB result:", {
+    found: !!realization,
+    error: fetchError?.message ?? null,
+    errorCode: fetchError?.code ?? null,
+  });
+
+  if (!realization) {
+    console.warn("[RealizationDetail] ❌ Realization not found — notFound()");
+    notFound();
+  }
 
   const pro = realization.professional;
 
-  // Get main image (is_main=true) or first image
-  const mainImageObj = realization.images?.find((img: any) => img.is_main) || realization.images?.[0];
-  const mainImage = mainImageObj?.url || "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80";
-  const galleryImages = realization.images ? realization.images.filter((img: any) => img.id !== mainImageObj?.id).map((img: any) => img.url) : [];
+  // ── Images ─────────────────────────────────────────────────────────────
+  const allImages: any[] = realization.images ?? [];
+  console.log("[RealizationDetail] images fetched:", allImages.length);
+  allImages.forEach((img, i) =>
+    console.log(`[RealizationDetail]   img[${i}] id=${img.id} is_main=${img.is_main} url=${img.url}`)
+  );
+
+  const mainImageObj = allImages.find((img) => img.is_main) || allImages[0];
+  const mainImage =
+    mainImageObj?.url ||
+    "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80";
+  const galleryImages = allImages
+    .filter((img) => img.id !== mainImageObj?.id)
+    .map((img) => img.url);
+
+  console.log("[RealizationDetail] hero image:", mainImage);
+  console.log("[RealizationDetail] gallery images:", galleryImages.length);
+
+  // ── Videos ─────────────────────────────────────────────────────────────
+  const allVideos: any[] = realization.videos ?? [];
+  console.log("[RealizationDetail] videos fetched:", allVideos.length);
+  allVideos.forEach((v, i) =>
+    console.log(
+      `[RealizationDetail]   vid[${i}] id=${v.id} order=${v.order_index} has_thumbnail=${!!v.thumbnail_url} url=${v.url}`
+    )
+  );
+
+  console.log("[RealizationDetail] ── RENDER START ─────────────────────────");
+  console.log("[RealizationDetail] will render hero:", !!mainImage);
+  console.log("[RealizationDetail] will render gallery section:", galleryImages.length > 0);
+  console.log("[RealizationDetail] will render videos section:", allVideos.length > 0);
 
   // Fetch like status and comments
   const likeStatus = await getRealizationLikeStatus(id);
@@ -144,13 +183,13 @@ export default async function RealizationDetailPage({ params }: Props) {
             )}
 
             {/* Videos Section */}
-            {realization.videos && realization.videos.length > 0 && (
+            {allVideos.length > 0 && (
               <section>
                 <h2 className="font-headline font-bold text-2xl md:text-3xl mb-6 md:mb-8 tracking-tight">Vidéos</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {realization.videos
-                    .sort((a: any, b: any) => (a.order_index || 0) - (b.order_index || 0))
-                    .map((video: any, i: number) => (
+                  {[...allVideos]
+                    .sort((a, b) => (a.order_index || 0) - (b.order_index || 0))
+                    .map((video, i) => (
                       <div
                         key={video.id}
                         className="rounded-2xl overflow-hidden shadow-sm bg-black"
@@ -160,6 +199,7 @@ export default async function RealizationDetailPage({ params }: Props) {
                           controls
                           className="w-full aspect-video"
                           preload="metadata"
+                          poster={video.thumbnail_url || undefined}
                         >
                           Votre navigateur ne supporte pas la lecture de vidéos.
                         </video>

@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Plus, X, FolderOpen, ChevronRight, Check } from "lucide-react";
 import { manageProjectProfessional } from "@/lib/actions/projects";
+import { getAreas } from "@/lib/actions/taxonomy";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -26,15 +27,41 @@ export function AddToProjectDialog({
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState<"project" | "area">("project");
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
-  const [newArea, setNewArea] = useState("");
+  const [selectedArea, setSelectedArea] = useState<string | null>(null);
+  const [customArea, setCustomArea] = useState("");
+  const [useCustomArea, setUseCustomArea] = useState(false);
+  const [availableAreas, setAvailableAreas] = useState<Array<{ id: string; name: string; slug: string }>>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoadingAreas, setIsLoadingAreas] = useState(false);
   const router = useRouter();
 
   console.log('[ADD_TO_PROJECT_DIALOG] Props received:', { professionalId, professionalName, projectsCount: userProjects.length });
 
-  const handleAdd = async (area: string) => {
+  // Fetch available areas when dialog opens
+  useEffect(() => {
+    if (isOpen && step === "area" && availableAreas.length === 0) {
+      console.log('[ADD_TO_PROJECT_DIALOG] Fetching available areas...');
+      setIsLoadingAreas(true);
+      getAreas().then(areas => {
+        console.log('[ADD_TO_PROJECT_DIALOG] Areas loaded:', areas.length);
+        setAvailableAreas(areas);
+        setIsLoadingAreas(false);
+      }).catch(err => {
+        console.error('[ADD_TO_PROJECT_DIALOG] Error fetching areas:', err);
+        setIsLoadingAreas(false);
+      });
+    }
+  }, [isOpen, step, availableAreas.length]);
+
+  const handleAdd = async () => {
     if (!selectedProjectId) {
       console.error('[ADD_TO_PROJECT_DIALOG] No project selected!');
+      return;
+    }
+
+    const area = useCustomArea ? customArea : selectedArea;
+    if (!area) {
+      console.error('[ADD_TO_PROJECT_DIALOG] No area selected!');
       return;
     }
 
@@ -42,6 +69,7 @@ export function AddToProjectDialog({
       projectId: selectedProjectId,
       professionalId,
       area,
+      isCustom: useCustomArea,
     });
 
     setIsSubmitting(true);
@@ -130,7 +158,7 @@ export function AddToProjectDialog({
               ) : (
                 <div className="text-center py-12 bg-stone-50 rounded-3xl border-2 border-dashed border-stone-100">
                   <p className="text-stone-400 font-medium mb-4">Vous n&apos;avez pas encore de projet actif.</p>
-                  <button 
+                  <button
                     onClick={() => router.push("/projets/nouveau")}
                     className="text-kelen-green-600 font-black uppercase tracking-widest text-xs"
                   >
@@ -141,32 +169,101 @@ export function AddToProjectDialog({
             </div>
           ) : (
             <div className="space-y-6">
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-500 ml-1">
-                  Domaine de recherche (ex: Juridique, Design...)
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={newArea}
-                    onChange={(e) => setNewArea(e.target.value)}
-                    placeholder="Entrez un domaine..."
-                    autoFocus
-                    className="w-full bg-stone-50 border-none rounded-2xl p-4 text-stone-900 focus:ring-2 focus:ring-kelen-green-500 transition-all font-medium"
-                  />
-                </div>
+              {/* Toggle between predefined areas and custom input */}
+              <div className="flex gap-2 p-1 bg-stone-100 rounded-lg">
+                <button
+                  onClick={() => setUseCustomArea(false)}
+                  className={`flex-1 py-2 px-4 rounded-md text-sm font-bold transition-all ${
+                    !useCustomArea
+                      ? "bg-white text-kelen-green-700 shadow-sm"
+                      : "text-stone-500 hover:text-stone-700"
+                  }`}
+                >
+                  Choisir un domaine
+                </button>
+                <button
+                  onClick={() => setUseCustomArea(true)}
+                  className={`flex-1 py-2 px-4 rounded-md text-sm font-bold transition-all ${
+                    useCustomArea
+                      ? "bg-white text-kelen-green-700 shadow-sm"
+                      : "text-stone-500 hover:text-stone-700"
+                  }`}
+                >
+                  Autre domaine
+                </button>
               </div>
+
+              {/* Area Selection List */}
+              {!useCustomArea && (
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-500 ml-1">
+                    Domaine de recherche
+                  </label>
+                  {isLoadingAreas ? (
+                    <div className="text-center py-8 text-stone-400">
+                      Chargement des domaines...
+                    </div>
+                  ) : availableAreas.length > 0 ? (
+                    <div className="space-y-2 max-h-[40vh] overflow-y-auto pr-2 custom-scrollbar">
+                      {availableAreas.map((area) => (
+                        <button
+                          key={area.id}
+                          onClick={() => setSelectedArea(area.name)}
+                          className={`w-full flex items-center justify-between p-4 rounded-xl border-2 transition-all ${
+                            selectedArea === area.name
+                              ? "border-kelen-green-500 bg-kelen-green-50"
+                              : "border-stone-200 bg-stone-50 hover:border-kelen-green-300 hover:bg-kelen-green-50/50"
+                          }`}
+                        >
+                          <span className="font-bold text-stone-900">{area.name}</span>
+                          {selectedArea === area.name && (
+                            <Check className="w-5 h-5 text-kelen-green-600" />
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 text-stone-400">
+                      Aucun domaine disponible
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Custom Area Input */}
+              {useCustomArea && (
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-500 ml-1">
+                    Domaine de recherche (ex: Juridique, Design...)
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={customArea}
+                      onChange={(e) => setCustomArea(e.target.value)}
+                      placeholder="Entrez un domaine..."
+                      autoFocus
+                      className="w-full bg-stone-50 border-none rounded-2xl p-4 text-stone-900 focus:ring-2 focus:ring-kelen-green-500 transition-all font-medium"
+                    />
+                  </div>
+                </div>
+              )}
 
               <div className="flex gap-4">
                 <button
-                  onClick={() => setStep("project")}
+                  onClick={() => {
+                    setStep("project");
+                    setSelectedArea(null);
+                    setCustomArea("");
+                    setUseCustomArea(false);
+                  }}
                   className="flex-1 py-4 text-stone-400 font-black uppercase tracking-widest text-xs hover:text-stone-900 transition-all"
                 >
                   Retour
                 </button>
                 <button
-                  disabled={!newArea || isSubmitting}
-                  onClick={() => handleAdd(newArea)}
+                  disabled={(!useCustomArea && !selectedArea) || (useCustomArea && !customArea) || isSubmitting}
+                  onClick={() => handleAdd()}
                   className="flex-[2] bg-kelen-green-600 text-white py-4 rounded-2xl font-black uppercase tracking-widest text-xs shadow-lg shadow-kelen-green-600/20 hover:scale-[0.98] disabled:opacity-50 disabled:scale-100 transition-all flex items-center justify-center gap-2"
                 >
                   {isSubmitting ? "Ajout..." : (
