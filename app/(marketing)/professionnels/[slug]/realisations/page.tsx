@@ -1,108 +1,15 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { ArrowLeft, Heart, MessageCircle, Play } from "lucide-react";
+import { ArrowLeft, Heart, MessageCircle } from "lucide-react";
 import Link from "next/link";
 import PriceDisplay from "@/components/projects/PriceDisplay";
+import { MediaGrid, buildMediaItems } from "@/components/portfolio/MediaGrid";
 
 interface Props {
   params: Promise<{
     slug: string;
   }>;
-}
-
-type MediaItem =
-  | { type: "image"; url: string }
-  | { type: "video"; url: string; thumbnail_url?: string | null };
-
-function MediaContent({ item }: { item: MediaItem }) {
-  if (item.type === "image") {
-    return (
-      <img
-        src={item.url}
-        alt=""
-        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-      />
-    );
-  }
-  if (item.thumbnail_url) {
-    return (
-      <>
-        <img
-          src={item.thumbnail_url}
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-        />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center">
-            <Play className="w-5 h-5 text-white" fill="currentColor" />
-          </div>
-        </div>
-      </>
-    );
-  }
-  return (
-    <>
-      <video
-        src={item.url}
-        preload="metadata"
-        muted
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover"
-      />
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center">
-          <Play className="w-5 h-5 text-white" fill="currentColor" />
-        </div>
-      </div>
-    </>
-  );
-}
-
-function MediaGrid({ items }: { items: MediaItem[] }) {
-  if (items.length === 0) return null;
-
-  if (items.length === 1) {
-    return (
-      <div className="aspect-[4/3] relative overflow-hidden">
-        <MediaContent item={items[0]} />
-      </div>
-    );
-  }
-
-  if (items.length === 2) {
-    return (
-      <div className="aspect-[4/3] grid grid-cols-2 gap-0.5 overflow-hidden">
-        <div className="relative overflow-hidden">
-          <MediaContent item={items[0]} />
-        </div>
-        <div className="relative overflow-hidden">
-          <MediaContent item={items[1]} />
-        </div>
-      </div>
-    );
-  }
-
-  // 3+ items: large left spanning full height + 2 stacked on right
-  const overflow = items.length - 3;
-  return (
-    <div className="aspect-[4/3] grid grid-cols-2 grid-rows-2 gap-0.5 overflow-hidden">
-      <div className="relative overflow-hidden row-span-2">
-        <MediaContent item={items[0]} />
-      </div>
-      <div className="relative overflow-hidden">
-        <MediaContent item={items[1]} />
-      </div>
-      <div className="relative overflow-hidden">
-        <MediaContent item={items[2]} />
-        {overflow > 0 && (
-          <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-            <span className="text-white font-bold text-2xl">+{overflow}</span>
-          </div>
-        )}
-      </div>
-    </div>
-  );
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -172,47 +79,18 @@ export default async function RealisationsListPage({ params }: Props) {
   const likesMap = Object.fromEntries(likesData.map(l => [l.id, l.count]));
   const commentsMap = Object.fromEntries(commentsData.map(c => [c.id, c.count]));
 
-  const fallbackImage = "https://images.unsplash.com/photo-1600585154340-be6199f7d209?auto=format&fit=crop&q=80";
-
   const portfolioItems = realizations && realizations.length > 0
-    ? realizations.map(r => {
-        // Build ordered image list with main image first
-        const rawImages: any[] = r.images || [];
-        const mainIdx = rawImages.findIndex((img: any) => img.is_main);
-        const orderedImages = mainIdx > 0
-          ? [rawImages[mainIdx], ...rawImages.filter((_: any, i: number) => i !== mainIdx)]
-          : rawImages;
-
-        const imageItems: MediaItem[] = orderedImages.map((img: any) => ({
-          type: "image",
-          url: img.url,
-        }));
-
-        const videoItems: MediaItem[] = [...(r.videos || [])]
-          .sort((a: any, b: any) => (a.order_index ?? 0) - (b.order_index ?? 0))
-          .map((v: any) => ({
-            type: "video",
-            url: v.url,
-            thumbnail_url: v.thumbnail_url ?? null,
-          }));
-
-        const mediaItems: MediaItem[] =
-          imageItems.length > 0 || videoItems.length > 0
-            ? [...imageItems, ...videoItems]
-            : [{ type: "image", url: fallbackImage }];
-
-        return {
-          id: r.id,
-          title: r.title,
-          description: r.description || "",
-          mediaItems,
-          location: r.location,
-          price: r.price,
-          currency: r.currency || "XOF",
-          likeCount: likesMap[r.id] || 0,
-          commentCount: commentsMap[r.id] || 0,
-        };
-      })
+    ? realizations.map(r => ({
+        id: r.id,
+        title: r.title,
+        description: r.description || "",
+        mediaItems: buildMediaItems(r.images, r.videos),
+        location: r.location,
+        price: r.price,
+        currency: r.currency || "XOF",
+        likeCount: likesMap[r.id] || 0,
+        commentCount: commentsMap[r.id] || 0,
+      }))
     : [];
 
   return (

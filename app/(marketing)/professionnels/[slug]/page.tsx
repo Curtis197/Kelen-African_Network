@@ -9,6 +9,7 @@ import RecommandationScrollRow from "@/components/recommandations/Recommandation
 import { getLatestRecommandations, getRecommandationCount } from "@/lib/actions/professional-recommandations";
 import { GoogleReviewsSection } from "@/components/pro/GoogleReviewsSection";
 import { getOrRefreshReviews } from "@/lib/google-reviews";
+import { MediaGrid, MediaContent, buildMediaItems } from "@/components/portfolio/MediaGrid";
 
 interface Props {
   params: Promise<{
@@ -191,17 +192,18 @@ export default async function ProfessionalProfilePage({ params }: Props) {
   // Map realizations to portfolio items format
   const portfolioItems = realizations && realizations.length > 0
     ? realizations.map(r => {
-        const mainImage = r.images?.find((img: any) => img.is_main) || r.images?.[0];
-        const videoCount = r.videos?.length || 0;
+        const mediaItems = buildMediaItems(r.images, r.videos);
+        // First image item (for featured card hero background)
+        const heroMedia = mediaItems[0];
         return {
           id: r.id,
           title: r.title,
           description: r.description || "",
-          image: mainImage?.url || "https://images.unsplash.com/photo-1600585154340-be6199f7d209?auto=format&fit=crop&q=80",
+          heroMedia,
+          mediaItems,
           location: r.location,
           price: r.price,
           currency: r.currency || "XOF",
-          videoCount
         };
       })
     : [];
@@ -385,18 +387,8 @@ export default async function ProfessionalProfilePage({ params }: Props) {
             <div className="space-y-8">
               {/* Featured Project (100% Width) */}
               <div className="group relative h-[500px] md:h-[600px] overflow-hidden rounded-2xl shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04),0_40px_60px_-12px_rgba(0,0,0,0.15)] bg-surface-container-lowest">
-                <Link href={`/professionnels/${slug}/realisations/${portfolioItems[0].id}`}>
-                  <img
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    src={portfolioItems[0].image}
-                    alt={portfolioItems[0].title}
-                  />
-                  {portfolioItems[0].videoCount > 0 && (
-                    <div className="absolute bottom-3 right-3 bg-black/70 backdrop-blur-sm text-white px-2.5 py-1.5 rounded-full flex items-center gap-1.5 text-xs font-semibold">
-                      <Play className="w-3 h-3" fill="currentColor" />
-                      {portfolioItems[0].videoCount}
-                    </div>
-                  )}
+                <Link href={`/professionnels/${slug}/realisations/${portfolioItems[0].id}`} className="absolute inset-0">
+                  <MediaContent item={portfolioItems[0].heroMedia} hover={true} />
                   <div className="absolute inset-0 bg-gradient-to-t from-on-surface/90 via-on-surface/20 to-transparent flex flex-col justify-end p-8 md:p-12">
                     <div className="max-w-2xl">
                       <span className="bg-primary text-on-primary px-3 py-1 rounded text-xs font-bold uppercase tracking-widest mb-4 inline-block">Projet Phare</span>
@@ -413,19 +405,7 @@ export default async function ProfessionalProfilePage({ params }: Props) {
                   {portfolioItems.slice(1, 3).map((item) => (
                     <div key={item.id} className="group bg-surface-container-lowest rounded-2xl shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-1px_rgba(0,0,0,0.03)] border border-outline-variant/10 overflow-hidden flex flex-col hover:shadow-xl transition-all duration-300">
                       <Link href={`/professionnels/${slug}/realisations/${item.id}`} className="flex-grow flex-col">
-                        <div className="relative h-80 overflow-hidden">
-                          <img
-                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                            src={item.image}
-                            alt={item.title}
-                          />
-                          {item.videoCount > 0 && (
-                            <div className="absolute bottom-3 right-3 bg-black/70 backdrop-blur-sm text-white px-2.5 py-1.5 rounded-full flex items-center gap-1.5 text-xs font-semibold z-10">
-                              <Play className="w-3 h-3" fill="currentColor" />
-                              {item.videoCount}
-                            </div>
-                          )}
-                        </div>
+                        <MediaGrid items={item.mediaItems} />
                         <div className="p-8 flex-grow">
                           <h4 className="font-headline font-bold text-2xl text-on-surface mb-3">{item.title}</h4>
                           <p className="text-on-surface-variant font-body leading-relaxed">{item.description || item.location || ''}</p>
