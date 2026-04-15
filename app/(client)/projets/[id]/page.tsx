@@ -37,6 +37,7 @@ interface Project {
   status: string;
   created_at: string;
   objectives: any[];
+  development_areas?: string[] | null;
 }
 
 // Removed duplicate import
