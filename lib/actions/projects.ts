@@ -593,3 +593,92 @@ export async function deleteProjectArea(areaId: string, projectId: string) {
   revalidatePath(`/projets/${projectId}`);
   return { success: true };
 }
+
+/**
+ * Add a development area to user_projects.development_areas array
+ */
+export async function addProjectDevelopmentArea(projectId: string, area: string) {
+  console.log('[ADD_PROJECT_DEVELOPMENT_AREA] Adding area to project:', { projectId, area });
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "Non autorisé" };
+
+  // Verify project ownership
+  const { data: project } = await supabase
+    .from("user_projects")
+    .select("id, development_areas")
+    .eq("id", projectId)
+    .eq("user_id", user.id)
+    .single();
+
+  if (!project) return { error: "Projet introuvable ou accès refusé." };
+
+  const currentAreas = (project.development_areas as string[]) || [];
+  
+  // Don't add if already exists
+  if (currentAreas.includes(area)) {
+    console.log('[ADD_PROJECT_DEVELOPMENT_AREA] Area already exists:', area);
+    return { success: true, data: currentAreas };
+  }
+
+  const newAreas = [...currentAreas, area];
+  console.log('[ADD_PROJECT_DEVELOPMENT_AREA] New areas array:', newAreas);
+
+  const { data, error } = await supabase
+    .from("user_projects")
+    .update({ development_areas: newAreas })
+    .eq("id", projectId)
+    .select()
+    .single();
+
+  if (error) {
+    console.error('[ADD_PROJECT_DEVELOPMENT_AREA] Error:', error.message);
+    log("project.development_area.add.error", { userId: user.id, projectId, area, error: error.message });
+    return { error: error.message };
+  }
+
+  log("project.development_area.add.ok", { userId: user.id, projectId, area });
+  revalidatePath(`/projets/${projectId}`);
+  return { success: true, data: newAreas };
+}
+
+/**
+ * Remove a development area from user_projects.development_areas array
+ */
+export async function removeProjectDevelopmentArea(projectId: string, area: string) {
+  console.log('[REMOVE_PROJECT_DEVELOPMENT_AREA] Removing area from project:', { projectId, area });
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "Non autorisé" };
+
+  // Verify project ownership
+  const { data: project } = await supabase
+    .from("user_projects")
+    .select("id, development_areas")
+    .eq("id", projectId)
+    .eq("user_id", user.id)
+    .single();
+
+  if (!project) return { error: "Projet introuvable ou accès refusé." };
+
+  const currentAreas = (project.development_areas as string[]) || [];
+  const newAreas = currentAreas.filter(a => a !== area);
+  console.log('[REMOVE_PROJECT_DEVELOPMENT_AREA] New areas array:', newAreas);
+
+  const { data, error } = await supabase
+    .from("user_projects")
+    .update({ development_areas: newAreas })
+    .eq("id", projectId)
+    .select()
+    .single();
+
+  if (error) {
+    console.error('[REMOVE_PROJECT_DEVELOPMENT_AREA] Error:', error.message);
+    log("project.development_area.remove.error", { userId: user.id, projectId, area, error: error.message });
+    return { error: error.message };
+  }
+
+  log("project.development_area.remove.ok", { userId: user.id, projectId, area });
+  revalidatePath(`/projets/${projectId}`);
+  return { success: true, data: newAreas };
+}

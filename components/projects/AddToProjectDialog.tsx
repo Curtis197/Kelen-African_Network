@@ -11,6 +11,7 @@ interface Project {
   id: string;
   title: string;
   category?: string;
+  development_areas?: string[];
 }
 
 interface AddToProjectDialogProps {
@@ -29,8 +30,9 @@ export function AddToProjectDialog({
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const [selectedArea, setSelectedArea] = useState<string | null>(null);
   const [customArea, setCustomArea] = useState("");
-  const [useCustomArea, setUseCustomArea] = useState(false);
+  const [areaMode, setAreaMode] = useState<"predefined" | "custom" | "project">("predefined");
   const [availableAreas, setAvailableAreas] = useState<Array<{ id: string; name: string; slug: string }>>([]);
+  const [projectAreas, setProjectAreas] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingAreas, setIsLoadingAreas] = useState(false);
   const router = useRouter();
@@ -53,13 +55,27 @@ export function AddToProjectDialog({
     }
   }, [isOpen, step, availableAreas.length]);
 
+  // Update project areas when project is selected
+  useEffect(() => {
+    if (selectedProjectId && step === "area") {
+      const selectedProject = userProjects.find(p => p.id === selectedProjectId);
+      if (selectedProject?.development_areas) {
+        console.log('[ADD_TO_PROJECT_DIALOG] Project has development_areas:', selectedProject.development_areas);
+        setProjectAreas(selectedProject.development_areas);
+      } else {
+        console.log('[ADD_TO_PROJECT_DIALOG] Project has no development_areas');
+        setProjectAreas([]);
+      }
+    }
+  }, [selectedProjectId, step, userProjects]);
+
   const handleAdd = async () => {
     if (!selectedProjectId) {
       console.error('[ADD_TO_PROJECT_DIALOG] No project selected!');
       return;
     }
 
-    const area = useCustomArea ? customArea : selectedArea;
+    const area = areaMode === "custom" ? customArea : selectedArea;
     if (!area) {
       console.error('[ADD_TO_PROJECT_DIALOG] No area selected!');
       return;
@@ -69,7 +85,7 @@ export function AddToProjectDialog({
       projectId: selectedProjectId,
       professionalId,
       area,
-      isCustom: useCustomArea,
+      areaMode,
     });
 
     setIsSubmitting(true);
@@ -169,32 +185,42 @@ export function AddToProjectDialog({
             </div>
           ) : (
             <div className="space-y-6">
-              {/* Toggle between predefined areas and custom input */}
-              <div className="flex gap-2 p-1 bg-stone-100 rounded-lg">
+              {/* Toggle between 3 area modes */}
+              <div className="flex gap-1.5 p-1 bg-stone-100 rounded-lg">
                 <button
-                  onClick={() => setUseCustomArea(false)}
-                  className={`flex-1 py-2 px-4 rounded-md text-sm font-bold transition-all ${
-                    !useCustomArea
+                  onClick={() => setAreaMode("predefined")}
+                  className={`flex-1 py-2 px-3 rounded-md text-xs font-bold transition-all ${
+                    areaMode === "predefined"
                       ? "bg-white text-kelen-green-700 shadow-sm"
                       : "text-stone-500 hover:text-stone-700"
                   }`}
                 >
-                  Choisir un domaine
+                  Prédéfinis
                 </button>
                 <button
-                  onClick={() => setUseCustomArea(true)}
-                  className={`flex-1 py-2 px-4 rounded-md text-sm font-bold transition-all ${
-                    useCustomArea
+                  onClick={() => setAreaMode("project")}
+                  className={`flex-1 py-2 px-3 rounded-md text-xs font-bold transition-all ${
+                    areaMode === "project"
                       ? "bg-white text-kelen-green-700 shadow-sm"
                       : "text-stone-500 hover:text-stone-700"
                   }`}
                 >
-                  Autre domaine
+                  {projectAreas.length > 0 ? `Projet (${projectAreas.length})` : "Projet"}
+                </button>
+                <button
+                  onClick={() => setAreaMode("custom")}
+                  className={`flex-1 py-2 px-3 rounded-md text-xs font-bold transition-all ${
+                    areaMode === "custom"
+                      ? "bg-white text-kelen-green-700 shadow-sm"
+                      : "text-stone-500 hover:text-stone-700"
+                  }`}
+                >
+                  Personnalisé
                 </button>
               </div>
 
-              {/* Area Selection List */}
-              {!useCustomArea && (
+              {/* Mode 1: Predefined Areas */}
+              {areaMode === "predefined" && (
                 <div className="space-y-2">
                   <label className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-500 ml-1">
                     Domaine de recherche
@@ -230,8 +256,42 @@ export function AddToProjectDialog({
                 </div>
               )}
 
-              {/* Custom Area Input */}
-              {useCustomArea && (
+              {/* Mode 2: Project Areas */}
+              {areaMode === "project" && (
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-500 ml-1">
+                    Domaines du projet
+                  </label>
+                  {projectAreas.length > 0 ? (
+                    <div className="space-y-2 max-h-[40vh] overflow-y-auto pr-2 custom-scrollbar">
+                      {projectAreas.map((area) => (
+                        <button
+                          key={area}
+                          onClick={() => setSelectedArea(area)}
+                          className={`w-full flex items-center justify-between p-4 rounded-xl border-2 transition-all ${
+                            selectedArea === area
+                              ? "border-kelen-green-500 bg-kelen-green-50"
+                              : "border-stone-200 bg-stone-50 hover:border-kelen-green-300 hover:bg-kelen-green-50/50"
+                          }`}
+                        >
+                          <span className="font-bold text-stone-900">{area}</span>
+                          {selectedArea === area && (
+                            <Check className="w-5 h-5 text-kelen-green-600" />
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 bg-stone-50 rounded-2xl border-2 border-dashed border-stone-200">
+                      <p className="text-stone-400 font-medium mb-2">Ce projet n&apos;a pas encore de domaines</p>
+                      <p className="text-stone-300 text-xs">Ajoutez des domaines dans la page du projet</p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Mode 3: Custom Area */}
+              {areaMode === "custom" && (
                 <div className="space-y-2">
                   <label className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-500 ml-1">
                     Domaine de recherche (ex: Juridique, Design...)
@@ -255,14 +315,14 @@ export function AddToProjectDialog({
                     setStep("project");
                     setSelectedArea(null);
                     setCustomArea("");
-                    setUseCustomArea(false);
+                    setAreaMode("predefined");
                   }}
                   className="flex-1 py-4 text-stone-400 font-black uppercase tracking-widest text-xs hover:text-stone-900 transition-all"
                 >
                   Retour
                 </button>
                 <button
-                  disabled={(!useCustomArea && !selectedArea) || (useCustomArea && !customArea) || isSubmitting}
+                  disabled={(areaMode !== "custom" && !selectedArea) || (areaMode === "custom" && !customArea) || isSubmitting}
                   onClick={() => handleAdd()}
                   className="flex-[2] bg-kelen-green-600 text-white py-4 rounded-2xl font-black uppercase tracking-widest text-xs shadow-lg shadow-kelen-green-600/20 hover:scale-[0.98] disabled:opacity-50 disabled:scale-100 transition-all flex items-center justify-center gap-2"
                 >

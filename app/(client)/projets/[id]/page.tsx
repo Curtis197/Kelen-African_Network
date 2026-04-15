@@ -12,7 +12,7 @@ import ProjectStepsSection from "@/components/projects/ProjectStepsSection";
 import { DevelopmentAreaRow } from "@/components/projects/DevelopmentAreaRow";
 import { DEVELOPMENT_AREAS } from "@/lib/constants/projects";
 import { ProjectProfessional, ProjectStep, ProjectArea } from "@/lib/types/projects";
-import { createProjectArea, deleteProjectArea, getProjectAreas, syncProjectAreasFromProfessionals } from "@/lib/actions/projects";
+import { createProjectArea, deleteProjectArea, getProjectAreas, syncProjectAreasFromProfessionals, addProjectDevelopmentArea, removeProjectDevelopmentArea } from "@/lib/actions/projects";
 import { getProjectSteps } from "@/lib/actions/project-steps";
 import { getProjectImages, type ProjectImage } from "@/lib/actions/project-images";
 import { ProjectImageCarousel } from "@/components/projects/ProjectImageCarousel";
@@ -60,6 +60,8 @@ export default function ProjectDetailPage() {
   const [steps, setSteps] = useState<ProjectStep[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showAreaSelector, setShowAreaSelector] = useState(false);
+  const [showProjectAreaInput, setShowProjectAreaInput] = useState(false);
+  const [newProjectArea, setNewProjectArea] = useState("");
   const [areas, setAreas] = useState<ProjectArea[]>([]);
   const [images, setImages] = useState<ProjectImage[]>([]);
   const supabase = createClient();
@@ -140,6 +142,33 @@ export default function ProjectDetailPage() {
       setAreas(areasData as ProjectArea[]);
     } else {
       console.error('[PROJECT-DETAIL] Sync failed:', result.error);
+      toast.error(`Erreur: ${result.error}`);
+    }
+  };
+
+  const addDevelopmentArea = async (area: string) => {
+    console.log('[PROJECT-DETAIL] Adding development area:', area);
+    const result = await addProjectDevelopmentArea(projectIdStr, area);
+    if (result.success) {
+      toast.success(`Domaine "${area}" ajouté au projet`);
+      // Update project state
+      setProject(prev => prev ? { ...prev, development_areas: result.data as string[] } : null);
+      setNewProjectArea("");
+      setShowProjectAreaInput(false);
+    } else {
+      toast.error(`Erreur: ${result.error}`);
+    }
+  };
+
+  const removeDevelopmentArea = async (area: string) => {
+    if (!confirm(`Retirer le domaine "${area}" du projet ?`)) return;
+    console.log('[PROJECT-DETAIL] Removing development area:', area);
+    const result = await removeProjectDevelopmentArea(projectIdStr, area);
+    if (result.success) {
+      toast.success(`Domaine "${area}" retiré du projet`);
+      // Update project state
+      setProject(prev => prev ? { ...prev, development_areas: result.data as string[] } : null);
+    } else {
       toast.error(`Erreur: ${result.error}`);
     }
   };
@@ -392,6 +421,90 @@ export default function ProjectDetailPage() {
 
           {/* Right Column - Sidebar */}
           <div className="lg:col-span-4 space-y-4 sm:space-y-6 lg:space-y-8">
+            {/* Project Development Areas */}
+            <section className="bg-surface-container-lowest p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-3xl lg:rounded-[2.5rem] shadow-xl sm:shadow-2xl shadow-surface-container-high/50">
+              <div className="flex items-center justify-between mb-4 sm:mb-6">
+                <h3 className="text-sm sm:text-base lg:text-xl font-headline font-bold text-on-surface">Domaines du Projet</h3>
+                <span className="px-2 sm:px-3 py-1 bg-surface-container-high text-on-surface-variant text-[7px] sm:text-[9px] font-black uppercase tracking-widest rounded-lg border border-outline-variant/30">
+                  {(project?.development_areas?.length || 0)}
+                </span>
+              </div>
+
+              {/* Display existing areas */}
+              {project?.development_areas && project.development_areas.length > 0 && (
+                <div className="space-y-2 mb-4">
+                  {project.development_areas.map((area) => (
+                    <div
+                      key={area}
+                      className="flex items-center justify-between p-3 bg-surface-container-low rounded-lg group hover:bg-surface-container transition-colors"
+                    >
+                      <span className="text-xs sm:text-sm font-medium text-on-surface truncate flex-1">{area}</span>
+                      <button
+                        onClick={() => removeDevelopmentArea(area)}
+                        className="ml-2 p-1 text-on-surface-variant/40 hover:text-kelen-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                        title="Retirer ce domaine"
+                      >
+                        <span className="material-symbols-outlined text-sm">delete</span>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Add new area */}
+              {showProjectAreaInput ? (
+                <div className="space-y-2">
+                  <input
+                    type="text"
+                    value={newProjectArea}
+                    onChange={(e) => setNewProjectArea(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && newProjectArea.trim()) {
+                        addDevelopmentArea(newProjectArea.trim());
+                      }
+                      if (e.key === "Escape") {
+                        setShowProjectAreaInput(false);
+                        setNewProjectArea("");
+                      }
+                    }}
+                    placeholder="Nom du domaine..."
+                    autoFocus
+                    className="w-full bg-surface-container-low border border-outline-variant/30 rounded-lg px-3 py-2 text-sm text-on-surface focus:ring-2 focus:ring-primary/20 outline-none"
+                  />
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => {
+                        setShowProjectAreaInput(false);
+                        setNewProjectArea("");
+                      }}
+                      className="flex-1 py-2 text-xs font-bold text-on-surface-variant hover:text-on-surface transition-colors"
+                    >
+                      Annuler
+                    </button>
+                    <button
+                      onClick={() => newProjectArea.trim() && addDevelopmentArea(newProjectArea.trim())}
+                      disabled={!newProjectArea.trim()}
+                      className="flex-1 py-2 bg-primary text-white text-xs font-bold rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                    >
+                      Ajouter
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setShowProjectAreaInput(true)}
+                  className="w-full py-3 border-2 border-dashed border-outline-variant/30 rounded-lg text-xs font-bold text-on-surface-variant hover:border-primary hover:text-primary transition-all flex items-center justify-center gap-2"
+                >
+                  <span className="material-symbols-outlined text-sm">add</span>
+                  Ajouter un domaine
+                </button>
+              )}
+
+              <p className="text-[8px] sm:text-[9px] text-on-surface-variant/60 mt-3">
+                Ces domaines seront disponibles quand vous ajouterez un professionnel.
+              </p>
+            </section>
+
             {/* Financial Status */}
             <section className="bg-surface-container-lowest p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-3xl lg:rounded-[2.5rem] shadow-xl sm:shadow-2xl shadow-surface-container-high/50">
               <div className="flex items-center justify-between mb-4 sm:mb-6 lg:mb-8">
