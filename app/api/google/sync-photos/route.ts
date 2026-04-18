@@ -14,13 +14,11 @@ export async function POST(request: NextRequest) {
   log.info("→ POST /api/google/sync-photos");
 
   try {
-    const { proId } = await request.json();
-    log.debug("Request parsed", { proId });
+    const body = await request.json().catch(() => ({}));
+    const { realizationId } = body;
+    const bodyProId = body.proId;
 
-    if (!proId) {
-      log.warn("Missing proId");
-      return NextResponse.json({ error: "proId is required" }, { status: 400 });
-    }
+    log.debug("Request parsed", { bodyProId, realizationId });
 
     const supabase = await createClient();
 
@@ -30,23 +28,24 @@ export async function POST(request: NextRequest) {
     } = await supabase.auth.getUser();
 
     if (authErr || !user) {
-      log.warn("Unauthorized", { proId, authError: authErr?.message });
+      log.warn("Unauthorized", { authError: authErr?.message });
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    log.debug("Session verified", { userId: user.id, proId });
+    log.debug("Session verified", { userId: user.id });
 
     const { data: pro } = await supabase
       .from("professionals")
       .select("id")
-      .eq("id", proId)
       .eq("user_id", user.id)
       .single();
 
     if (!pro) {
-      log.warn("Professional not found or not owned by user", { proId, userId: user.id });
+      log.warn("Professional not found for user", { userId: user.id });
       return NextResponse.json({ error: "Professional not found" }, { status: 404 });
     }
+
+    const proId = pro.id;
 
     // Load tokens
     const tokens = await getProTokens(proId);
@@ -73,11 +72,19 @@ export async function POST(request: NextRequest) {
     const accessToken = (await authClient.getAccessToken()).token;
 
     // Load photos
-    log.info("Fetching realization images from Supabase", { proId });
-    const { data: images, error: imgErr } = await supabase
+    log.info("Fetching realization images from Supabase", { proId, realizationId });
+    
+    let query = supabase
       .from("realization_images")
-      .select("url, professional_realizations!inner(professional_id)")
+      .select("url, professional_realizations!inner(professional_id, id)")
       .eq("professional_realizations.professional_id", proId)
+      .not("url", "is", null);
+
+    if (realizationId) {
+      query = query.eq("professional_realizations.id", realizationId);
+    }
+
+    const { data: images, error: imgErr } = await query
       .order("created_at", { ascending: false })
       .limit(10);
 

@@ -15,37 +15,42 @@ export async function POST(request: NextRequest) {
   log.info("→ POST /api/google/sync-profile");
 
   try {
-    const { proId } = await request.json();
-    log.debug("Request parsed", { proId });
+    const body = await request.json().catch(() => ({}));
+    const { proId: bodyProId } = body;
 
-    if (!proId) {
-      log.warn("Missing proId");
-      return NextResponse.json({ error: "proId is required" }, { status: 400 });
-    }
+    log.debug("Request body parsed", { bodyProId });
 
     const supabase = await createClient();
 
-    const { data: { user }, error: authErr } = await supabase.auth.getUser();
+    // Auth guard
+    const {
+      data: { user },
+      error: authErr,
+    } = await supabase.auth.getUser();
+
     if (authErr || !user) {
-      log.warn("Unauthorized", { proId, authError: authErr?.message });
+      log.warn("Unauthorized request", { authError: authErr?.message });
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    log.debug("Session verified", { userId: user.id });
+
+    // Ownership check & Pro fetching
     const { data: pro, error: proErr } = await supabase
       .from("professionals")
-      .select("business_name, phone, description, slug")
-      .eq("id", proId)
+      .select("id, business_name, owner_name, slug, category, phone, address, city, postal_code, country_code, description")
       .eq("user_id", user.id)
       .single();
 
     if (proErr || !pro) {
-      log.warn("Professional not found or not owned by user", {
-        proId,
+      log.warn("Professional not found", {
         userId:  user.id,
         dbError: proErr?.message,
       });
       return NextResponse.json({ error: "Professional not found" }, { status: 404 });
     }
+
+    const proId = pro.id;
 
     log.debug("Professional loaded", {
       proId,

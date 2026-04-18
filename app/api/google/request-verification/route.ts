@@ -15,14 +15,14 @@ export async function POST(request: NextRequest) {
   log.info("→ POST /api/google/request-verification");
 
   try {
-    const body = await request.json();
-    const { proId, method } = body as { proId: string; method: VerificationMethod };
+    const body = await request.json().catch(() => ({}));
+    const { method } = body as { method: VerificationMethod };
 
-    log.debug("Request parsed", { proId, method });
+    log.debug("Request parsed", { method });
 
-    if (!proId || !method) {
-      log.warn("Missing proId or method", { proId, method });
-      return NextResponse.json({ error: "proId and method are required" }, { status: 400 });
+    if (!method) {
+      log.warn("Missing method", { method });
+      return NextResponse.json({ error: "method is required" }, { status: 400 });
     }
 
     const validMethods: VerificationMethod[] = ["PHONE_CALL", "SMS", "EMAIL", "ADDRESS"];
@@ -38,21 +38,22 @@ export async function POST(request: NextRequest) {
 
     const { data: { user }, error: authErr } = await supabase.auth.getUser();
     if (authErr || !user) {
-      log.warn("Unauthorized", { proId, authError: authErr?.message });
+      log.warn("Unauthorized", { authError: authErr?.message });
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const { data: pro } = await supabase
       .from("professionals")
       .select("id")
-      .eq("id", proId)
       .eq("user_id", user.id)
       .single();
 
     if (!pro) {
-      log.warn("Professional not found or not owned by user", { proId, userId: user.id });
+      log.warn("Professional not found", { userId: user.id });
       return NextResponse.json({ error: "Professional not found" }, { status: 404 });
     }
+
+    const proId = pro.id;
 
     const tokens = await getProTokens(proId);
     if (!tokens) {

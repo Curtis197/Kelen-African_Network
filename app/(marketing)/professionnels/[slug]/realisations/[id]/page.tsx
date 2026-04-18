@@ -122,7 +122,7 @@ export default async function RealizationDetailPage({ params }: Props) {
         </div>
 
         {/* Hero Section */}
-        <section className="relative w-full aspect-[21/9] rounded-2xl overflow-hidden mb-16 shadow-lg">
+        <section className="relative w-full h-[80vh] rounded-2xl overflow-hidden mb-16 shadow-lg">
           <img
             src={mainImage}
             alt={realization.title}
@@ -166,7 +166,7 @@ export default async function RealizationDetailPage({ params }: Props) {
 
             {/* Gallery - Bento Grid */}
             {galleryImages.length > 0 && (
-              <section className="grid grid-cols-2 gap-4 md:gap-6">
+              <section className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                 {galleryImages.map((img: string, i: number) => (
                   <div
                     key={i}

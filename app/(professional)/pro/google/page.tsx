@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { logger } from "@/lib/logger";
+import { createClient } from "@/lib/supabase/client";
 
 const log = logger("kelen:google-management");
 
@@ -43,6 +44,10 @@ export default function GoogleManagementPage() {
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [devModeOverride, setDevModeOverride] = useState<boolean | null>(null); // null = use env, true/false = manual override
 
+  const [realizations, setRealizations] = useState<{ id: string; title: string }[]>([]);
+  const [selectedRealizationId, setSelectedRealizationId] = useState<string>("");
+  const [reviewsData, setReviewsData] = useState<{ rating: number | null; totalReviews: number; reviews: any[] } | null>(null);
+
   // DEV MODE: Mock connection state for UI development
   const mockConnectionState: GoogleConnectionState = {
     isConnected: true,
@@ -69,15 +74,63 @@ export default function GoogleManagementPage() {
 
   // Load connection status on mount
   useEffect(() => {
+    loadRealizations();
     if (isDevMode) {
       log.info("[DEV MODE] Loading mock connection state");
       setConnection(mockConnectionState);
       setDebugState(mockDebugState);
       setLoading("connected");
+      setReviewsData({
+        rating: 4.8,
+        totalReviews: 12,
+        reviews: [
+          {
+            reviewer: { displayName: "Jane Doe" },
+            starRating: "FIVE",
+            comment: "Excellent travail !",
+            createTime: new Date().toISOString()
+          }
+        ]
+      });
     } else {
       loadConnectionStatus();
     }
   }, [isDevMode]);
+
+  async function loadRealizations() {
+    try {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const { data: pro } = await supabase.from("professionals").select("id").eq("user_id", user.id).single();
+      if (!pro) return;
+      
+      const { data: reals } = await supabase
+        .from("professional_realizations")
+        .select("id, title")
+        .eq("professional_id", pro.id)
+        .order("created_at", { ascending: false });
+        
+      if (reals) setRealizations(reals);
+    } catch (err) {
+      log.error("Failed to load realizations", { error: err });
+    }
+  }
+
+  async function loadReviews(forceRefresh = false) {
+    try {
+      const url = forceRefresh ? "/api/google/reviews?refresh=1" : "/api/google/reviews";
+      const res = await fetch(url);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success) {
+          setReviewsData(data);
+        }
+      }
+    } catch (err) {
+      log.error("Failed to load reviews", { error: err });
+    }
+  }
 
   async function loadConnectionStatus() {
     log.info("Loading Google connection status");
@@ -125,6 +178,7 @@ export default function GoogleManagementPage() {
         });
 
         setLoading("connected");
+        loadReviews();
       } else {
         log.info("Not connected to Google Business");
         setLoading("not_connected");
@@ -217,7 +271,7 @@ export default function GoogleManagementPage() {
       const response = await fetch("/api/google/sync-photos", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({}),
+        body: JSON.stringify({ realizationId: selectedRealizationId || undefined }),
       });
 
       const data = await response.json();
@@ -531,17 +585,31 @@ export default function GoogleManagementPage() {
                     <button
                       onClick={handleSyncProfile}
                       disabled={syncingProfile}
-                      className="px-4 py-3 bg-secondary text-secondary-foreground rounded-lg font-medium hover:bg-secondary/80 transition-colors disabled:opacity-50"
+                      className="h-fit px-4 py-3 bg-secondary text-secondary-foreground rounded-lg font-medium hover:bg-secondary/80 transition-colors disabled:opacity-50"
                     >
                       {syncingProfile ? "Synchronisation..." : "Synchroniser le profil"}
                     </button>
-                    <button
-                      onClick={handleSyncPhotos}
-                      disabled={syncingPhotos}
-                      className="px-4 py-3 bg-secondary text-secondary-foreground rounded-lg font-medium hover:bg-secondary/80 transition-colors disabled:opacity-50"
-                    >
-                      {syncingPhotos ? "Synchronisation..." : "Synchroniser les photos"}
-                    </button>
+                    
+                    <div className="flex flex-col gap-2 rounded-lg border border-border p-3 bg-muted/30">
+                      <div className="text-sm font-semibold">Synchroniser des photos</div>
+                      <select 
+                        className="w-full text-sm rounded-md border border-border bg-background p-2"
+                        value={selectedRealizationId}
+                        onChange={(e) => setSelectedRealizationId(e.target.value)}
+                      >
+                        <option value="">Images récentes (défaut)</option>
+                        {realizations.map(r => (
+                          <option key={r.id} value={r.id}>{r.title}</option>
+                        ))}
+                      </select>
+                      <button
+                        onClick={handleSyncPhotos}
+                        disabled={syncingPhotos}
+                        className="w-full px-4 py-2 bg-secondary text-secondary-foreground rounded-md font-medium hover:bg-secondary/80 transition-colors disabled:opacity-50 mt-1"
+                      >
+                        {syncingPhotos ? "Synchronisation..." : "Synchroniser"}
+                      </button>
+                    </div>
                   </>
                 )}
               </div>
@@ -614,6 +682,89 @@ export default function GoogleManagementPage() {
                     Ouvrir WhatsApp
                   </a>
                 </div>
+              </div>
+            )}
+
+            {/* Reviews Section */}
+            {connection.gbpLocationName && (
+              <div className="bg-card border border-border rounded-lg p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <h2 className="text-xl font-bold text-foreground">Derniers avis Google</h2>
+                    <p className="text-sm text-muted-foreground mt-1">Vos avis synchronisés depuis Google Maps</p>
+                  </div>
+                  <button 
+                    onClick={() => loadReviews(true)}
+                    className="text-xs px-3 py-1.5 bg-secondary text-secondary-foreground rounded hover:bg-secondary/80 flex items-center gap-1 font-medium"
+                  >
+                    <span>🔄</span> Actualiser
+                  </button>
+                </div>
+
+                {!reviewsData ? (
+                  <div className="py-8 text-center text-muted-foreground bg-muted rounded-lg border border-dashed border-border text-sm">
+                    <p>Chargement des avis...</p>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="flex items-center gap-5 mb-8 bg-amber-50 text-amber-900 border border-amber-200 rounded-lg p-6">
+                      <div className="text-5xl text-amber-500 font-bold tracking-tighter">
+                        {reviewsData.rating ? reviewsData.rating.toFixed(1) : "N/A"}
+                      </div>
+                      <div>
+                        <div className="flex text-amber-400 text-2xl drop-shadow-sm mb-1">
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <span key={i}>
+                              {i < Math.round(reviewsData.rating || 0) ? "★" : "☆"}
+                            </span>
+                          ))}
+                        </div>
+                        <p className="text-sm font-medium opacity-80">{reviewsData.totalReviews} avis clients</p>
+                      </div>
+                    </div>
+
+                    {reviewsData.reviews && reviewsData.reviews.length > 0 ? (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {reviewsData.reviews.map((r, i) => {
+                          const ratingLabel = r.starRating === "FIVE" ? 5 : r.starRating === "FOUR" ? 4 : r.starRating === "THREE" ? 3 : r.starRating === "TWO" ? 2 : 1;
+                          return (
+                            <div key={r.reviewId || i} className="bg-background border border-border rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow">
+                              <div className="flex justify-between items-start mb-4">
+                                <div className="flex items-center gap-3">
+                                  {r.reviewer?.profilePhotoUrl ? (
+                                    <img src={r.reviewer.profilePhotoUrl} alt={r.reviewer.displayName} className="w-10 h-10 rounded-full ring-2 ring-primary/10" />
+                                  ) : (
+                                    <div className="w-10 h-10 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center text-sm font-bold text-gray-500 ring-2 ring-primary/10">
+                                      {r.reviewer?.displayName?.charAt(0) || "?"}
+                                    </div>
+                                  )}
+                                  <div>
+                                    <div className="font-semibold text-sm line-clamp-1">{r.reviewer?.displayName || "Anonyme"}</div>
+                                    <div className="text-xs text-muted-foreground mt-0.5">
+                                      {r.createTime ? new Date(r.createTime).toLocaleDateString("fr-FR", { year: "numeric", month: "long", day: "numeric" }) : ""}
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="flex text-amber-400 text-sm">
+                                  {Array.from({ length: 5 }).map((_, idx) => (
+                                    <span key={idx}>{(idx < ratingLabel) ? "★" : "☆"}</span>
+                                  ))}
+                                </div>
+                              </div>
+                              <p className="text-sm text-foreground mt-3 leading-relaxed break-words">
+                                {r.comment || <span className="italic text-muted-foreground">Aucun commentaire textuel partagé.</span>}
+                              </p>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className="py-8 text-center text-muted-foreground bg-muted/50 rounded-lg border border-dashed border-border text-sm">
+                        <p>Aucun avis trouvé pour le moment.</p>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )}
 
