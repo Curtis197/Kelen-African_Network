@@ -132,6 +132,58 @@ if (!error && data?.length === 0) {
 
 ---
 
+## Task Dependency Map
+
+> Agents: read this before picking up any task. Only start a task when all its dependencies are `DONE`.
+
+| Task | Status | Depends on | Can run in parallel with |
+|------|--------|-----------|--------------------------|
+| **T1** DB Migration | `TODO` | None | T2, T4, T11, T12 |
+| **T2** Style Token System | `TODO` | None | T1, T4, T11, T12 |
+| **T3** Apply Tokens to Portfolio Page | `TODO` | T2 | T4, T11, T12 |
+| **T4** Copy Generator | `TODO` | None | T1, T2, T11, T12 |
+| **T5** Server Actions (quiz) | `TODO` | T1, T2, T4 | T11, T12 |
+| **T6** Preview Render Function | `TODO` | T1, T2 | T4, T5, T11, T12 |
+| **T7** StyleQuiz Component | `TODO` | T2, T5 | T8 |
+| **T8** CopywritingQuiz Component | `TODO` | T4, T5 | T7 |
+| **T9** Preview Frame Component | `TODO` | T6 | T7, T8 |
+| **T10** Mon Site Page + SiteBuilder | `TODO` | T7, T8, T9 | T11, T12, T13, T15, T17 |
+| **T11** Registrar API Client | `TODO` | None | T1, T2, T4, T12 |
+| **T12** Vercel Domains API Client | `TODO` | None | T1, T2, T4, T11 |
+| **T13** Domain Server Actions | `TODO` | T1, T11, T12 | T10 |
+| **T14** Domain Search UI | `TODO` | T10, T13 | T15, T16, T17 |
+| **T15** Middleware Hostname Routing | `TODO` | T1 | T10, T14, T16, T17 |
+| **T16** Add Mon Site to Pro Nav | `TODO` | T10 | T14, T15, T17 |
+| **T17** ProfessionalCard Domain Linking | `TODO` | T1 | T10, T14, T15, T16 |
+
+### Parallel execution opportunities
+
+**Wave 1 (no dependencies — start immediately):** T1, T2, T4, T11, T12
+
+**Wave 2 (after Wave 1 subsets):**
+- T3 starts after T2 ✓
+- T5 starts after T1 + T2 + T4 ✓
+- T6 starts after T1 + T2 ✓
+- T15 starts after T1 ✓
+- T17 starts after T1 ✓
+
+**Wave 3:**
+- T7 starts after T2 + T5 ✓
+- T8 starts after T4 + T5 ✓
+- T13 starts after T1 + T11 + T12 ✓
+
+**Wave 4:**
+- T9 starts after T6 ✓ — T7 and T8 can run in parallel with T9
+
+**Wave 5:**
+- T10 starts after T7 + T8 + T9 ✓
+
+**Wave 6 (final):**
+- T14 starts after T10 + T13 ✓
+- T16 starts after T10 ✓
+
+---
+
 ## File Map
 
 ### New files — Phase 1 (Quiz + Preview)
@@ -173,11 +225,12 @@ if (!error && data?.length === 0) {
 ---
 
 ### Task 1: Database Migration
+**Status:** `TODO` | **Depends on:** None | **Parallel with:** T2, T4, T11, T12
 
 **Files:**
 - Create: `supabase/migrations/20260418000001_portfolio_site.sql`
 
-- [ ] **Step 1: Write the migration**
+- [ ] **Step 1: Write the migration** — `TODO`
 
 ```sql
 -- supabase/migrations/20260418000001_portfolio_site.sql
@@ -200,7 +253,7 @@ CREATE INDEX IF NOT EXISTS idx_portfolio_custom_domain
   WHERE custom_domain IS NOT NULL;
 ```
 
-- [ ] **Step 2: Apply migration**
+- [ ] **Step 2: Apply migration** — `TODO` _(requires Step 1 complete)_
 
 ```bash
 npx supabase db push
@@ -208,7 +261,7 @@ npx supabase db push
 
 Expected: Migration applied, no errors.
 
-- [ ] **Step 3: Verify columns exist**
+- [ ] **Step 3: Verify columns exist** — `TODO` _(requires Step 2 complete)_
 
 ```bash
 npx supabase db diff
@@ -216,7 +269,7 @@ npx supabase db diff
 
 Expected: No diff (migration is applied).
 
-- [ ] **Step 4: Commit**
+- [ ] **Step 4: Commit** — `TODO` _(requires Step 3 passes)_
 
 ```bash
 git add supabase/migrations/20260418000001_portfolio_site.sql
@@ -226,13 +279,14 @@ git commit -m "feat(db): add style_tokens, copy_quiz, domain fields to professio
 ---
 
 ### Task 2: Style Token System
+**Status:** `TODO` | **Depends on:** None | **Parallel with:** T1, T4, T11, T12
 
 **Files:**
 - Create: `lib/portfolio/style-tokens.ts`
 
 This is the single source of truth. Quiz question IDs, option values, and their CSS variable output all live here.
 
-- [ ] **Step 1: Create the file**
+- [ ] **Step 1: Create the file** — `TODO`
 
 ```typescript
 // lib/portfolio/style-tokens.ts
@@ -348,7 +402,7 @@ export function renderStyleTag(tokens: Partial<StyleAnswers>): string {
 }
 ```
 
-- [ ] **Step 2: Commit**
+- [ ] **Step 2: Commit** — `TODO` _(requires Step 1 complete)_
 
 ```bash
 git add lib/portfolio/style-tokens.ts
@@ -358,11 +412,14 @@ git commit -m "feat(portfolio): style token system — quiz answers to CSS vars"
 ---
 
 ### Task 3: Apply Style Tokens to Portfolio Page
+**Status:** `TODO` | **Depends on:** T2 (`StyleAnswers` type + `buildCssVars` must exist) | **Parallel with:** T4, T11, T12
 
 **Files:**
 - Modify: `app/(marketing)/professionnels/[slug]/page.tsx`
 
-- [ ] **Step 1: Import the renderer at the top of the file**
+> ⚠️ **Cannot start until T2 is `DONE`** — imports `buildCssVars` and `StyleAnswers` from `lib/portfolio/style-tokens.ts`
+
+- [ ] **Step 1: Import the renderer at the top of the file** — `TODO`
 
 In `app/(marketing)/professionnels/[slug]/page.tsx`, add this import after the existing imports:
 
@@ -371,7 +428,7 @@ import { buildCssVars } from "@/lib/portfolio/style-tokens";
 import type { StyleAnswers } from "@/lib/portfolio/style-tokens";
 ```
 
-- [ ] **Step 2: Extract CSS vars from portfolio data**
+- [ ] **Step 2: Extract CSS vars from portfolio data** — `TODO` _(requires Step 1 complete)_
 
 Inside `ProfessionalProfilePage`, after the `portfolio` is fetched (around line 216), add:
 
@@ -386,7 +443,7 @@ Inside `ProfessionalProfilePage`, after the `portfolio` is fetched (around line 
     .join("; ");
 ```
 
-- [ ] **Step 3: Inject the style tag into the page wrapper**
+- [ ] **Step 3: Inject the style tag into the page wrapper** — `TODO` _(requires Step 2 complete)_
 
 Replace the opening `<div>` of the return statement (currently line 239):
 
@@ -409,7 +466,7 @@ Wait — Next.js doesn't support `cssText` in style prop. Use a `<style>` tag in
       <main>
 ```
 
-- [ ] **Step 4: Apply CSS vars to the hero section**
+- [ ] **Step 4: Apply CSS vars to the hero section** — `TODO` _(requires Step 3 complete)_
 
 The hero section currently hardcodes `h-[80vh]`. Replace with the CSS var:
 
@@ -420,7 +477,7 @@ The hero section currently hardcodes `h-[80vh]`. Replace with the CSS var:
         >
 ```
 
-- [ ] **Step 5: Apply CSS vars to the hero overlay**
+- [ ] **Step 5: Apply CSS vars to the hero overlay** — `TODO` _(requires Step 4 complete)_
 
 The overlay `div` currently uses `bg-on-surface/30`. Replace with the CSS var:
 
@@ -431,7 +488,7 @@ The overlay `div` currently uses `bg-on-surface/30`. Replace with the CSS var:
             />
 ```
 
-- [ ] **Step 6: Apply CSS vars to section padding**
+- [ ] **Step 6: Apply CSS vars to section padding** — `TODO` _(requires Step 5 complete)_
 
 The portfolio section currently has `py-24`. Update to use the CSS var:
 
@@ -443,7 +500,7 @@ The portfolio section currently has `py-24`. Update to use the CSS var:
         >
 ```
 
-- [ ] **Step 7: Commit**
+- [ ] **Step 7: Commit** — `TODO` _(requires Steps 1–6 complete)_
 
 ```bash
 git add app/'(marketing)'/professionnels/'[slug]'/page.tsx
@@ -453,11 +510,12 @@ git commit -m "feat(portfolio): apply style_tokens CSS vars to public portfolio 
 ---
 
 ### Task 4: Copy Generator
+**Status:** `TODO` | **Depends on:** None | **Parallel with:** T1, T2, T11, T12
 
 **Files:**
 - Create: `lib/portfolio/copy-generator.ts`
 
-- [ ] **Step 1: Install Anthropic SDK if not present**
+- [ ] **Step 1: Install Anthropic SDK if not present** — `TODO`
 
 ```bash
 npm list @anthropic-ai/sdk || npm install @anthropic-ai/sdk
@@ -465,7 +523,7 @@ npm list @anthropic-ai/sdk || npm install @anthropic-ai/sdk
 
 Expected: Package present or installed.
 
-- [ ] **Step 2: Create the file**
+- [ ] **Step 2: Create the file** — `TODO` _(requires Step 1 complete)_
 
 ```typescript
 // lib/portfolio/copy-generator.ts
@@ -597,14 +655,14 @@ Réponds UNIQUEMENT avec ce JSON valide, rien d'autre:
 }
 ```
 
-- [ ] **Step 3: Add ANTHROPIC_API_KEY to environment**
+- [ ] **Step 3: Add ANTHROPIC_API_KEY to environment** — `TODO` _(requires Step 2 complete)_
 
 ```bash
 # In .env.local (do not commit)
 ANTHROPIC_API_KEY=sk-ant-...
 ```
 
-- [ ] **Step 4: Commit**
+- [ ] **Step 4: Commit** — `TODO` _(requires Steps 1–3 complete)_
 
 ```bash
 git add lib/portfolio/copy-generator.ts
@@ -614,11 +672,14 @@ git commit -m "feat(portfolio): Claude copy generator from quiz answers"
 ---
 
 ### Task 5: Server Actions for Quiz
+**Status:** `TODO` | **Depends on:** T1 (DB columns), T2 (`StyleAnswers`), T4 (`CopyAnswers`, `generatePortfolioCopy`) | **Parallel with:** T11, T12
 
 **Files:**
 - Create: `lib/actions/portfolio-site.ts`
 
-- [ ] **Step 1: Create the file**
+> ⚠️ **Cannot start until T1, T2, and T4 are all `DONE`** — needs DB columns for upsert, `StyleAnswers` type from T2, and `generatePortfolioCopy` from T4.
+
+- [ ] **Step 1: Create the file** — `TODO`
 
 ```typescript
 // lib/actions/portfolio-site.ts
@@ -691,7 +752,7 @@ export async function saveCopyQuizAndGenerate(answers: CopyAnswers) {
 }
 ```
 
-- [ ] **Step 2: Commit**
+- [ ] **Step 2: Commit** — `TODO` _(requires Step 1 complete)_
 
 ```bash
 git add lib/actions/portfolio-site.ts
@@ -701,13 +762,16 @@ git commit -m "feat(portfolio): server actions for style + copy quiz persistence
 ---
 
 ### Task 6: Preview Render Function
+**Status:** `TODO` | **Depends on:** T1 (DB schema for `professional_portfolio`), T2 (`buildCssVars`, `StyleAnswers`) | **Parallel with:** T4, T5, T11, T12
 
 **Files:**
 - Create: `app/api/portfolio-preview/route.ts`
 
 This endpoint returns a full HTML document with the pro's real data and the proposed style tokens applied. It is called from an iframe in the quiz UI.
 
-- [ ] **Step 1: Create the route**
+> ⚠️ **Cannot start until T1 and T2 are `DONE`** — queries `professional_portfolio` (needs DB columns from T1) and imports `buildCssVars` (from T2).
+
+- [ ] **Step 1: Create the route** — `TODO`
 
 ```typescript
 // app/api/portfolio-preview/route.ts
@@ -905,7 +969,7 @@ function escapeHtml(str: string): string {
 }
 ```
 
-- [ ] **Step 2: Test the endpoint manually**
+- [ ] **Step 2: Test the endpoint manually** — `TODO` _(requires Step 1 complete)_
 
 Start the dev server: `npm run dev`
 
@@ -913,7 +977,7 @@ Navigate to: `http://localhost:3000/api/portfolio-preview?slug=YOUR_TEST_SLUG&st
 
 Expected: A full HTML page renders with dark mood colors applied.
 
-- [ ] **Step 3: Commit**
+- [ ] **Step 3: Commit** — `TODO` _(requires Step 2 passes)_
 
 ```bash
 git add app/api/portfolio-preview/route.ts
@@ -923,11 +987,14 @@ git commit -m "feat(api): portfolio preview render function with style token inj
 ---
 
 ### Task 7: Style Quiz Component
+**Status:** `TODO` | **Depends on:** T2 (`STYLE_QUESTIONS`, `StyleAnswers`), T5 (`saveStyleQuiz`) | **Parallel with:** T8
 
 **Files:**
 - Create: `components/portfolio/StyleQuiz.tsx`
 
-- [ ] **Step 1: Create the component**
+> ⚠️ **Cannot start until T2 and T5 are `DONE`** — imports `STYLE_QUESTIONS` + `StyleAnswers` from T2, `saveStyleQuiz` from T5.
+
+- [ ] **Step 1: Create the component** — `TODO`
 
 ```tsx
 // components/portfolio/StyleQuiz.tsx
@@ -1013,7 +1080,7 @@ export function StyleQuiz({ initialAnswers, onAnswersChange }: Props) {
 }
 ```
 
-- [ ] **Step 2: Commit**
+- [ ] **Step 2: Commit** — `TODO` _(requires Step 1 complete)_
 
 ```bash
 git add components/portfolio/StyleQuiz.tsx
@@ -1023,11 +1090,14 @@ git commit -m "feat(components): style quiz with 4 visual preference questions"
 ---
 
 ### Task 8: Copywriting Quiz Component
+**Status:** `TODO` | **Depends on:** T4 (`COPY_QUESTIONS`, `CopyAnswers`), T5 (`saveCopyQuizAndGenerate`) | **Parallel with:** T7
 
 **Files:**
 - Create: `components/portfolio/CopywritingQuiz.tsx`
 
-- [ ] **Step 1: Create the component**
+> ⚠️ **Cannot start until T4 and T5 are `DONE`** — imports `COPY_QUESTIONS` + `CopyAnswers` from T4, `saveCopyQuizAndGenerate` from T5.
+
+- [ ] **Step 1: Create the component** — `TODO`
 
 ```tsx
 // components/portfolio/CopywritingQuiz.tsx
@@ -1147,7 +1217,7 @@ export function CopywritingQuiz({ initialAnswers, onCopyGenerated }: Props) {
 }
 ```
 
-- [ ] **Step 2: Commit**
+- [ ] **Step 2: Commit** — `TODO` _(requires Step 1 complete)_
 
 ```bash
 git add components/portfolio/CopywritingQuiz.tsx
@@ -1157,11 +1227,14 @@ git commit -m "feat(components): copywriting quiz with AI generation trigger"
 ---
 
 ### Task 9: Preview Frame Component
+**Status:** `TODO` | **Depends on:** T6 (preview endpoint must be live to test the iframe) | **Parallel with:** T7, T8
 
 **Files:**
 - Create: `components/portfolio/PortfolioPreviewFrame.tsx`
 
-- [ ] **Step 1: Create the component**
+> ⚠️ **Cannot start until T6 is `DONE`** — the iframe calls `/api/portfolio-preview` which requires T6's endpoint to exist.
+
+- [ ] **Step 1: Create the component** — `TODO`
 
 ```tsx
 // components/portfolio/PortfolioPreviewFrame.tsx
@@ -1252,7 +1325,7 @@ export function PortfolioPreviewFrame({ slug, styleOverride }: Props) {
 }
 ```
 
-- [ ] **Step 2: Commit**
+- [ ] **Step 2: Commit** — `TODO` _(requires Step 1 complete)_
 
 ```bash
 git add components/portfolio/PortfolioPreviewFrame.tsx
@@ -1262,13 +1335,17 @@ git commit -m "feat(components): portfolio preview iframe with viewport toggle a
 ---
 
 ### Task 10: "Mon Site" Pro Page
+**Status:** `TODO` | **Depends on:** T7 (`StyleQuiz`), T8 (`CopywritingQuiz`), T9 (`PortfolioPreviewFrame`) | **Parallel with:** T11, T12, T13, T15, T17
 
 **Files:**
 - Create: `app/(professional)/pro/site/page.tsx`
+- Create: `components/portfolio/SiteBuilder.tsx`
 
 This is the main orchestration page where the quiz, preview, and eventually the domain section live.
 
-- [ ] **Step 1: Create the page**
+> ⚠️ **Cannot start until T7, T8, and T9 are all `DONE`** — `SiteBuilder` imports all three components.
+
+- [ ] **Step 1: Create the page** — `TODO`
 
 ```tsx
 // app/(professional)/pro/site/page.tsx
@@ -1324,7 +1401,7 @@ export default async function MySitePage() {
 }
 ```
 
-- [ ] **Step 2: Create the SiteBuilder client component**
+- [ ] **Step 2: Create the SiteBuilder client component** — `TODO` _(requires Step 1 complete)_
 
 ```tsx
 // components/portfolio/SiteBuilder.tsx
@@ -1436,7 +1513,7 @@ export function SiteBuilder({ pro, portfolio, isPaid }: Props) {
 }
 ```
 
-- [ ] **Step 3: Commit**
+- [ ] **Step 3: Commit** — `TODO` _(requires Steps 1–2 complete)_
 
 ```bash
 git add app/'(professional)'/pro/site/page.tsx components/portfolio/SiteBuilder.tsx
@@ -1450,13 +1527,14 @@ git commit -m "feat(pro): Mon Site page with quiz + live preview + domain placeh
 ---
 
 ### Task 11: Registrar API Client
+**Status:** `TODO` | **Depends on:** None | **Parallel with:** T1, T2, T4, T12
 
 **Files:**
 - Create: `lib/domain/registrar.ts`
 
 > Note: Replace the base URL and auth headers with your actual registrar API credentials (Namecheap, OpenSRS, or CheapDomain). The interface below is provider-agnostic.
 
-- [ ] **Step 1: Create the client**
+- [ ] **Step 1: Create the client** — `TODO`
 
 ```typescript
 // lib/domain/registrar.ts
@@ -1541,7 +1619,7 @@ export async function purchaseDomain(
 }
 ```
 
-- [ ] **Step 2: Add env vars to .env.local**
+- [ ] **Step 2: Add env vars to .env.local** — `TODO` _(requires Step 1 complete)_
 
 ```bash
 # .env.local (never commit)
@@ -1550,7 +1628,7 @@ REGISTRAR_API_KEY=your-api-key
 REGISTRAR_API_USER=your-username
 ```
 
-- [ ] **Step 3: Commit**
+- [ ] **Step 3: Commit** — `TODO` _(requires Steps 1–2 complete)_
 
 ```bash
 git add lib/domain/registrar.ts
@@ -1560,11 +1638,12 @@ git commit -m "feat(domain): registrar API client for domain check and purchase"
 ---
 
 ### Task 12: Vercel Domains API Client
+**Status:** `TODO` | **Depends on:** None | **Parallel with:** T1, T2, T4, T11
 
 **Files:**
 - Create: `lib/domain/vercel-domains.ts`
 
-- [ ] **Step 1: Create the client**
+- [ ] **Step 1: Create the client** — `TODO`
 
 ```typescript
 // lib/domain/vercel-domains.ts
@@ -1636,7 +1715,7 @@ export async function checkDomainStatus(domain: string): Promise<{ verified: boo
 }
 ```
 
-- [ ] **Step 2: Add env vars to .env.local**
+- [ ] **Step 2: Add env vars to .env.local** — `TODO` _(requires Step 1 complete)_
 
 ```bash
 # .env.local
@@ -1647,7 +1726,7 @@ VERCEL_TEAM_ID=your-team-id   # optional, omit if personal account
 
 To find VERCEL_PROJECT_ID: run `vercel project ls` or check the Vercel dashboard project settings.
 
-- [ ] **Step 3: Commit**
+- [ ] **Step 3: Commit** — `TODO` _(requires Steps 1–2 complete)_
 
 ```bash
 git add lib/domain/vercel-domains.ts
@@ -1657,11 +1736,14 @@ git commit -m "feat(domain): Vercel REST API client for domain registration and 
 ---
 
 ### Task 13: Domain Server Actions
+**Status:** `TODO` | **Depends on:** T1 (DB columns), T11 (registrar client), T12 (Vercel client) | **Parallel with:** T10
+
+> ⚠️ **Cannot start until T1, T11, and T12 are all `DONE`** — upserts to `professional_portfolio` (T1 columns), calls `checkDomainAvailability` + `purchaseDomain` (T11), calls `addDomainToVercel` (T12).
 
 **Files:**
 - Create: `lib/actions/domain.ts`
 
-- [ ] **Step 1: Create the file**
+- [ ] **Step 1: Create the file** — `TODO`
 
 ```typescript
 // lib/actions/domain.ts
@@ -1771,7 +1853,7 @@ export async function activateDomain(domain: string) {
 }
 ```
 
-- [ ] **Step 2: Commit**
+- [ ] **Step 2: Commit** — `TODO` _(requires Step 1 complete)_
 
 ```bash
 git add lib/actions/domain.ts
@@ -1781,11 +1863,14 @@ git commit -m "feat(domain): server actions for domain search and purchase + Ver
 ---
 
 ### Task 14: Domain Search UI Component
+**Status:** `TODO` | **Depends on:** T10 (`SiteBuilder` exists for wiring), T13 (`searchDomain`, `activateDomain` actions) | **Parallel with:** T15, T16, T17
+
+> ⚠️ **Cannot start until T10 and T13 are `DONE`** — `DomainSearch` imports `searchDomain` + `activateDomain` from T13, and Step 2 wires it into `SiteBuilder` from T10.
 
 **Files:**
 - Create: `components/portfolio/DomainSearch.tsx`
 
-- [ ] **Step 1: Create the component**
+- [ ] **Step 1: Create the component** — `TODO`
 
 ```tsx
 // components/portfolio/DomainSearch.tsx
@@ -1921,7 +2006,7 @@ export function DomainSearch() {
 }
 ```
 
-- [ ] **Step 2: Wire DomainSearch into SiteBuilder**
+- [ ] **Step 2: Wire DomainSearch into SiteBuilder** — `TODO` _(requires Step 1 complete)_
 
 In `components/portfolio/SiteBuilder.tsx`, replace the domain placeholder text:
 
@@ -1938,7 +2023,7 @@ import { DomainSearch } from "./DomainSearch";
 <DomainSearch />
 ```
 
-- [ ] **Step 3: Commit**
+- [ ] **Step 3: Commit** — `TODO` _(requires Steps 1–2 complete)_
 
 ```bash
 git add components/portfolio/DomainSearch.tsx components/portfolio/SiteBuilder.tsx
@@ -1948,13 +2033,16 @@ git commit -m "feat(domain): domain search and purchase UI for Gold/Silver pros"
 ---
 
 ### Task 15: Middleware Hostname Routing
+**Status:** `TODO` | **Depends on:** T1 (DB columns `custom_domain`, `domain_status` must exist) | **Parallel with:** T10, T14, T16, T17
+
+> ⚠️ **Cannot start until T1 is `DONE`** — queries `professional_portfolio.custom_domain` and `professional_portfolio.domain_status`, both added in T1's migration.
 
 **Files:**
 - Modify: `middleware.ts`
 
 When a request arrives with a hostname that is not the Kelen platform domain, look up which professional owns that domain and rewrite the request to their portfolio page. All auth logic is skipped — portfolio pages are public.
 
-- [ ] **Step 1: Add hostname routing at the top of the middleware function**
+- [ ] **Step 1: Add hostname routing at the top of the middleware function** — `TODO`
 
 In `middleware.ts`, add this block immediately after the early return for static assets (after line 24):
 
@@ -2009,7 +2097,7 @@ In `middleware.ts`, add this block immediately after the early return for static
   // ── End custom domain routing ─────────────────────────
 ```
 
-- [ ] **Step 2: Update the middleware matcher to include all paths**
+- [ ] **Step 2: Update the middleware matcher to include all paths** — `TODO` _(requires Step 1 complete)_
 
 Replace the `config` export at the bottom:
 
@@ -2024,7 +2112,7 @@ export const config = {
 
 > Note: The broader matcher is required so the custom domain check runs on `/` and `/realisations`. Auth logic only runs when `isCustomDomain` is false, so there's no regression on existing routes.
 
-- [ ] **Step 3: Verify existing auth routes still work**
+- [ ] **Step 3: Verify existing auth routes still work** — `TODO` _(requires Steps 1–2 complete)_
 
 Start the dev server: `npm run dev`
 
@@ -2032,7 +2120,7 @@ Start the dev server: `npm run dev`
 2. Navigate to `http://localhost:3000/professionnels/your-test-slug` — should load the portfolio.
 3. Confirm no infinite redirects or auth errors on public routes.
 
-- [ ] **Step 4: Commit**
+- [ ] **Step 4: Commit** — `TODO` _(requires Step 3 passes)_
 
 ```bash
 git add middleware.ts
@@ -2042,10 +2130,13 @@ git commit -m "feat(middleware): custom domain hostname routing to professional 
 ---
 
 ### Task 16: Add "Mon Site" to Pro Navigation
+**Status:** `TODO` | **Depends on:** T10 (`/pro/site` page must exist) | **Parallel with:** T14, T15, T17
+
+> ⚠️ **Cannot start until T10 is `DONE`** — the nav link points to `/pro/site` which is created in T10.
 
 The new page needs to be discoverable. Add a nav link in the pro sidebar/nav.
 
-- [ ] **Step 1: Find the pro navigation component**
+- [ ] **Step 1: Find the pro navigation component** — `TODO`
 
 ```bash
 grep -r "pro/portfolio" app --include="*.tsx" -l
@@ -2054,7 +2145,7 @@ grep -r "pro/dashboard" components --include="*.tsx" -l
 
 Identify the sidebar or nav component that lists pro routes.
 
-- [ ] **Step 2: Add the link**
+- [ ] **Step 2: Add the link** — `TODO` _(requires Step 1 complete)_
 
 In the identified nav component, add alongside the existing portfolio link:
 
@@ -2071,7 +2162,7 @@ import { Globe } from "lucide-react";
 </Link>
 ```
 
-- [ ] **Step 3: Commit**
+- [ ] **Step 3: Commit** — `TODO` _(requires Steps 1–2 complete)_
 
 ```bash
 git add <nav-component-file>
@@ -2080,9 +2171,10 @@ git commit -m "feat(nav): add Mon Site link to pro navigation"
 
 ---
 
----
-
 ### Task 17: ProfessionalCard Custom Domain Linking
+**Status:** `TODO` | **Depends on:** T1 (DB columns `custom_domain`, `domain_status`) | **Parallel with:** T10, T14, T15, T16
+
+> ⚠️ **Cannot start until T1 is `DONE`** — the search page query joins `professional_portfolio(custom_domain, domain_status)`, both added in T1's migration.
 
 **Files:**
 - Modify: `components/shared/ProfessionalCard.tsx`
@@ -2091,7 +2183,7 @@ git commit -m "feat(nav): add Mon Site link to pro navigation"
 
 The card currently hardcodes `router.push('/professionnels/${slug}')` on click. When a pro has an active custom domain, the card must link to their domain instead. This applies everywhere the card is rendered: the search/browse page and the landing directory.
 
-- [ ] **Step 1: Update ProfessionalCard to accept and use customDomain**
+- [ ] **Step 1: Update ProfessionalCard to accept and use customDomain** — `TODO`
 
 In `components/shared/ProfessionalCard.tsx`, add the `customDomain` prop and update navigation:
 
@@ -2140,7 +2232,7 @@ Also add a render log at the top of the component:
   });
 ```
 
-- [ ] **Step 2: Update the search page query to join professional_portfolio**
+- [ ] **Step 2: Update the search page query to join professional_portfolio** — `TODO` _(requires Step 1 complete)_
 
 In `app/(validation)/recherche/page.tsx`, the current query is:
 
@@ -2195,7 +2287,7 @@ Then when mapping results to `ProfessionalCard`, extract the domain:
 })}
 ```
 
-- [ ] **Step 3: Update ProfessionalDirectory to pass customDomain**
+- [ ] **Step 3: Update ProfessionalDirectory to pass customDomain** — `TODO` _(requires Step 1 complete)_
 
 In `components/landing/ProfessionalDirectory.tsx`, find where `ProfessionalCard` is rendered (search for `<ProfessionalCard`). The `initialPros` prop comes from a server query. Check whether `professional_portfolio` is already joined in the query that feeds this component. If not, the parent page that calls `ProfessionalDirectory` needs the same join added as in Step 2.
 
@@ -2212,7 +2304,7 @@ const customDomain =
 />
 ```
 
-- [ ] **Step 4: Add RLS log for the portfolio join**
+- [ ] **Step 4: Add RLS log for the portfolio join** — `TODO` _(requires Steps 2–3 complete)_
 
 In the search page, after the query executes, add:
 
@@ -2233,7 +2325,7 @@ In the search page, after the query executes, add:
   }
 ```
 
-- [ ] **Step 5: Commit**
+- [ ] **Step 5: Commit** — `TODO` _(requires Steps 1–4 complete)_
 
 ```bash
 git add components/shared/ProfessionalCard.tsx \
