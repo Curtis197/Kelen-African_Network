@@ -75,6 +75,7 @@ export interface MessageAttachment {
 export interface ProfessionalSnapshot {
   id: string;
   business_name: string;
+  slug: string;
   category: string;
   subcategories: string[] | null;
   city: string;

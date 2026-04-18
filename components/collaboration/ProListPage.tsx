@@ -4,10 +4,17 @@ import { useEffect, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { getProjectProList, makeFinalist } from "@/lib/actions/collaborations";
+import { getProjectProList, makeFinalist, updateProjectProfessionalSelectionStatus, removeProjectProfessionalById } from "@/lib/actions/collaborations";
 import type { ProListGrouped, ProjectProfessionalWithProfile } from "@/lib/types/collaborations";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Users,
   Star,
@@ -22,6 +29,9 @@ import {
   Clock,
   Bell,
   Handshake,
+  Trash2,
+  MoreVertical,
+  AlertCircle,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -151,12 +161,15 @@ function getProStatusBadge(pro: ProjectProfessionalWithProfile) {
 function ProCard({
   pro,
   section,
-  onMakeFinalist,
+  onStatusChange,
+  onRemove,
 }: {
   pro: ProjectProfessionalWithProfile;
   section: string;
-  onMakeFinalist: (projectId: string, professionalId: string, projectProfessionalId: string) => void;
+  onStatusChange: (ppId: string, status: string) => Promise<void>;
+  onRemove: (ppId: string) => Promise<void>;
 }) {
+  const [isUpdating, setIsUpdating] = useState(false);
   const professional = pro.professional;
   const collab = pro.collaboration;
 
@@ -273,145 +286,110 @@ function ProCard({
             </div>
           )}
         </div>
+
+        {/* Status Dropdown and Actions */}
+        <div className="flex items-center gap-2 shrink-0">
+          <Select
+            disabled={isUpdating}
+            value={pro.selection_status}
+            onValueChange={async (val) => {
+              if (val) {
+                setIsUpdating(true);
+                await onStatusChange(pro.id, val);
+                setIsUpdating(false);
+              }
+            }}
+          >
+            <SelectTrigger className="h-8 text-xs min-w-[130px] bg-surface-container-high border-outline-variant/20 hover:border-outline-variant/50">
+              <SelectValue placeholder="Changer d'état" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="candidate">Sauvegardé</SelectItem>
+              <SelectItem value="shortlisted">Shortlisté</SelectItem>
+              <SelectItem value="finalist" disabled={pro.is_external}>Rendre finaliste</SelectItem>
+              <SelectItem value="agreed">Sélectionner (Actif)</SelectItem>
+              <SelectItem value="not_selected">Refuser</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <button
+            title="Retirer du projet"
+            disabled={isUpdating}
+            onClick={async () => {
+              if (confirm("Voulez-vous vraiment retirer ce professionnel du projet ? Cela annulera également toute collaboration en cours.")) {
+                setIsUpdating(true);
+                await onRemove(pro.id);
+                setIsUpdating(false);
+              }
+            }}
+            className="p-1.5 text-on-surface-variant hover:text-error hover:bg-error/10 rounded-lg transition-colors border border-transparent hover:border-error/20"
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+        </div>
       </div>
 
-      {/* Actions */}
-      <div className="mt-4 pt-3 border-t border-outline-variant/10 flex flex-wrap gap-2">
-        {section === "saved" && (
-          <>
-            <button
-              onClick={() => {
-                console.log("[ProCard] Shortlist clicked, pro:", pro.id);
-                toast.info("Shortlist — fonctionnalité à venir");
-              }}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg text-xs font-medium hover:bg-blue-200 transition-colors"
-            >
-              <Star className="w-3 h-3" />
-              Shortlister
-            </button>
-            <button
-              onClick={() => {
-                console.log("[ProCard] Remove clicked, pro:", pro.id);
-                toast.info("Retirer — fonctionnalité à venir");
-              }}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container text-on-surface-variant rounded-lg text-xs font-medium hover:bg-surface-container-high transition-colors"
-            >
-              <XCircle className="w-3 h-3" />
-              Retirer
-            </button>
-          </>
-        )}
+      {/* Specific Step Content / Links */}
+      {(section === "finalists" || section === "active" || section === "declined") && (
+        <div className="mt-4 pt-3 border-t border-outline-variant/10 flex flex-wrap gap-2">
+          {section === "finalists" && (
+            <>
+              {collab?.proposal_submitted_at ? (
+                <>
+                  <Link
+                    href={`/projets/${pro.project_id}/pros/proposal/${pro.professional_id}`}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary rounded-lg text-xs font-medium hover:bg-primary/20 transition-colors"
+                  >
+                    <Eye className="w-3 h-3" />
+                    Voir la proposition
+                  </Link>
+                  <button
+                    onClick={() => {
+                      toast.info("Demander un changement — fonctionnalité à venir");
+                    }}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container text-on-surface-variant rounded-lg text-xs font-medium hover:bg-surface-container-high transition-colors"
+                  >
+                    <MessageSquare className="w-3 h-3" />
+                    Demander révision
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={() => {
+                    toast.info("Envoyer un rappel — fonctionnalité à venir");
+                  }}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container text-on-surface-variant rounded-lg text-xs font-medium hover:bg-surface-container-high transition-colors"
+                >
+                  <Bell className="w-3 h-3" />
+                  Envoyer un rappel
+                </button>
+              )}
+            </>
+          )}
 
-        {section === "shortlisted" && (
-          <>
-            <button
-              onClick={() => {
-                console.log("[ProCard] Make Finalist clicked, pro:", { id: pro.id, isExternal: pro.is_external });
-                if (pro.is_external || !pro.professional_id) {
-                  toast.error("Seuls les professionnels inscrits peuvent être rendus finalistes");
-                  return;
-                }
-                onMakeFinalist(pro.project_id, pro.professional_id, pro.id);
-              }}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-yellow-100 text-yellow-700 rounded-lg text-xs font-medium hover:bg-yellow-200 transition-colors disabled:opacity-50"
-              disabled={pro.is_external}
-            >
-              <Award className="w-3 h-3" />
-              Rendre finaliste
-            </button>
-            <button
-              onClick={() => {
-                console.log("[ProCard] Remove clicked, pro:", pro.id);
-                toast.info("Retirer — fonctionnalité à venir");
-              }}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container text-on-surface-variant rounded-lg text-xs font-medium hover:bg-surface-container-high transition-colors"
-            >
-              <XCircle className="w-3 h-3" />
-              Retirer
-            </button>
-          </>
-        )}
-
-        {section === "finalists" && collab?.proposal_submitted_at && (
-          <>
-            <Link
-              href={`/projets/${pro.project_id}/pros/proposal/${pro.professional_id}`}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary rounded-lg text-xs font-medium hover:bg-primary/20 transition-colors"
-            >
-              <Eye className="w-3 h-3" />
-              Voir la proposition
-            </Link>
-            <button
-              onClick={() => {
-                console.log("[ProCard] Request Change clicked, collab:", collab.id);
-                toast.info("Demander un changement — fonctionnalité à venir");
-              }}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container text-on-surface-variant rounded-lg text-xs font-medium hover:bg-surface-container-high transition-colors"
-            >
-              <MessageSquare className="w-3 h-3" />
-              Demander un changement
-            </button>
-            {collab.status !== "negotiating" && (
-              <button
-                onClick={() => {
-                  console.log("[ProCard] Pick Pro clicked, collab:", collab.id);
-                  toast.info("Sélectionner ce pro — fonctionnalité à venir");
-                }}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-100 text-green-700 rounded-lg text-xs font-medium hover:bg-green-200 transition-colors"
+          {section === "active" && (
+            <>
+              <Link
+                href={`/projets/${pro.project_id}`}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary rounded-lg text-xs font-medium hover:bg-primary/20 transition-colors"
               >
-                <Handshake className="w-3 h-3" />
-                Sélectionner
-              </button>
-            )}
-          </>
-        )}
+                <Eye className="w-3 h-3" />
+                Voir l&apos;activité
+              </Link>
+            </>
+          )}
 
-        {section === "finalists" && !collab?.proposal_submitted_at && (
-          <button
-            onClick={() => {
-              console.log("[ProCard] Send Reminder clicked, pro:", pro.professional_id);
-              toast.info("Envoyer un rappel — fonctionnalité à venir");
-            }}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container text-on-surface-variant rounded-lg text-xs font-medium hover:bg-surface-container-high transition-colors"
-          >
-            <Bell className="w-3 h-3" />
-            Envoyer un rappel
-          </button>
-        )}
-
-        {section === "active" && (
-          <>
+          {section === "declined" && !pro.is_external && (
             <Link
-              href={`/projets/${pro.project_id}`}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary rounded-lg text-xs font-medium hover:bg-primary/20 transition-colors"
-            >
-              <Eye className="w-3 h-3" />
-              Voir l&apos;activité
-            </Link>
-            <button
-              onClick={() => {
-                console.log("[ProCard] Manage clicked, pro:", pro.id);
-                toast.info("Gérer — fonctionnalité à venir");
-              }}
+              href={`/professionnels/${professional?.slug}`}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container text-on-surface-variant rounded-lg text-xs font-medium hover:bg-surface-container-high transition-colors"
             >
-              Gérer
-            </button>
-          </>
-        )}
-
-        {section === "declined" && (
-          <button
-            onClick={() => {
-              console.log("[ProCard] View profile clicked, pro:", pro.professional_id);
-            }}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container text-on-surface-variant rounded-lg text-xs font-medium hover:bg-surface-container-high transition-colors"
-          >
-            <Eye className="w-3 h-3" />
-            Voir le profil
-          </button>
-        )}
-      </div>
+              <Eye className="w-3 h-3" />
+              Voir le profil
+            </Link>
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -425,13 +403,15 @@ function ProSection({
   group,
   collapsed,
   onToggle,
-  onMakeFinalist,
+  onStatusChange,
+  onRemove,
 }: {
   section: string;
   group: ProListGrouped[keyof ProListGrouped];
   collapsed: boolean;
   onToggle: () => void;
-  onMakeFinalist: (projectId: string, professionalId: string, projectProfessionalId: string) => void;
+  onStatusChange: (ppId: string, status: string) => Promise<void>;
+  onRemove: (ppId: string) => Promise<void>;
 }) {
   console.log("[ProSection] Render, section:", section, "count:", group.count, "collapsed:", collapsed);
 
@@ -463,7 +443,8 @@ function ProSection({
               key={pro.id}
               pro={pro}
               section={section}
-              onMakeFinalist={onMakeFinalist}
+              onStatusChange={onStatusChange}
+              onRemove={onRemove}
             />
           ))}
         </div>
@@ -596,29 +577,27 @@ export function ProListPage() {
     fetchProjectTitle();
   }, [projectId]);
 
-  const handleMakeFinalist = async (
-    projectId: string,
-    professionalId: string,
-    projectProfessionalId: string
-  ) => {
-    console.log('[ACTION] ========================================');
-    console.log('[ACTION] handleMakeFinalist STARTED');
-    console.log('[ACTION] projectId:', projectId);
-    console.log('[ACTION] professionalId:', professionalId);
-    console.log('[ACTION] projectProfessionalId:', projectProfessionalId);
-    console.log('[ACTION] ========================================');
-
-    const result = await makeFinalist(projectId, professionalId, projectProfessionalId);
-
-    console.log('[ACTION] makeFinalist result:', { success: result.success, error: result.error });
-
-    if (result.error) {
-      console.error('[ACTION] ❌ makeFinalist failed:', result.error);
-      toast.error(result.error);
-    } else {
-      console.log('[ACTION] ✅ makeFinalist succeeded — reloading pro list');
-      toast.success('Professionnel rendu finaliste !');
+  const handleStatusChange = async (ppId: string, status: string) => {
+    console.log('[ACTION] handleStatusChange:', { ppId, status });
+    const result = await updateProjectProfessionalSelectionStatus(ppId, status, projectId);
+    
+    if (result.success) {
+      toast.success("Statut mis à jour");
       loadProList();
+    } else {
+      toast.error(result.error || "Erreur lors de la mise à jour");
+    }
+  };
+
+  const handleRemove = async (ppId: string) => {
+    console.log('[ACTION] handleRemove:', { ppId });
+    const result = await removeProjectProfessionalById(ppId, projectId);
+    
+    if (result.success) {
+      toast.success("Professionnel retiré du projet");
+      loadProList();
+    } else {
+      toast.error(result.error || "Erreur lors du retrait");
     }
   };
 
@@ -700,7 +679,8 @@ export function ProListPage() {
           group={groups.saved}
           collapsed={!!collapsedSections.saved}
           onToggle={() => toggleSection("saved")}
-          onMakeFinalist={handleMakeFinalist}
+          onStatusChange={handleStatusChange}
+          onRemove={handleRemove}
         />
 
         {/* Shortlisted */}
@@ -709,7 +689,8 @@ export function ProListPage() {
           group={groups.shortlisted}
           collapsed={!!collapsedSections.shortlisted}
           onToggle={() => toggleSection("shortlisted")}
-          onMakeFinalist={handleMakeFinalist}
+          onStatusChange={handleStatusChange}
+          onRemove={handleRemove}
         />
 
         {/* Finalists */}
@@ -718,7 +699,8 @@ export function ProListPage() {
           group={groups.finalists}
           collapsed={!!collapsedSections.finalists}
           onToggle={() => toggleSection("finalists")}
-          onMakeFinalist={handleMakeFinalist}
+          onStatusChange={handleStatusChange}
+          onRemove={handleRemove}
         />
 
         {/* Active */}
@@ -727,7 +709,8 @@ export function ProListPage() {
           group={groups.active}
           collapsed={!!collapsedSections.active}
           onToggle={() => toggleSection("active")}
-          onMakeFinalist={handleMakeFinalist}
+          onStatusChange={handleStatusChange}
+          onRemove={handleRemove}
         />
 
         {/* Declined */}
@@ -736,7 +719,8 @@ export function ProListPage() {
           group={groups.declined}
           collapsed={!!collapsedSections.declined}
           onToggle={() => toggleSection("declined")}
-          onMakeFinalist={handleMakeFinalist}
+          onStatusChange={handleStatusChange}
+          onRemove={handleRemove}
         />
       </div>
 

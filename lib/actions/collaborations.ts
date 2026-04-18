@@ -117,6 +117,134 @@ export async function makeFinalist(projectId: string, professionalId: string, pr
 }
 
 // ============================================
+// UPDATE SELECTION STATUS
+// ============================================
+
+export async function updateProjectProfessionalSelectionStatus(
+  projectProfessionalId: string,
+  newStatus: string,
+  projectId: string
+) {
+  console.log('[ACTION] updateProjectProfessionalSelectionStatus started:', { projectProfessionalId, newStatus, projectId });
+
+  const supabase = await createClient();
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  console.log('[AUTH] User:', user?.id);
+  if (!user || authError) return { success: false, error: 'Unauthorized' };
+
+  // 1. Get current record to identify professional_id if we need to call other actions
+  const { data: current, error: fetchError } = await supabase
+    .from('project_professionals')
+    .select('selection_status, professional_id')
+    .eq('id', projectProfessionalId)
+    .single();
+
+  if (fetchError || !current) {
+    console.error('[DB] Fetch current project_professional failed:', fetchError);
+    return { success: false, error: 'Record not found' };
+  }
+
+  const oldStatus = current.selection_status;
+  const professionalId = current.professional_id;
+
+  // 2. Handle specific status logic
+  if (newStatus === 'finalist') {
+    // Reuse makeFinalist logic
+    return await makeFinalist(projectId, professionalId, projectProfessionalId);
+  }
+
+  if (newStatus === 'agreed') {
+    // Check if a collaboration exists to accept
+    const { data: collab } = await supabase
+      .from('project_collaborations')
+      .select('id')
+      .eq('project_professional_id', projectProfessionalId)
+      .single();
+
+    if (collab) {
+      return await acceptProposal(collab.id);
+    } else {
+      // Direct agreement without collaboration record (rare but possible)
+      const { error: ppError } = await supabase
+        .from('project_professionals')
+        .update({ selection_status: 'agreed' })
+        .eq('id', projectProfessionalId);
+      
+      if (ppError) return { success: false, error: ppError.message };
+    }
+  }
+
+  // 3. Cleanup collaboration if moving AWAY from finalist
+  if (oldStatus === 'finalist' && newStatus !== 'finalist') {
+    const { error: collabError } = await supabase
+      .from('project_collaborations')
+      .update({ 
+        status: 'not_picked', 
+        ended_at: new Date().toISOString() 
+      })
+      .eq('project_professional_id', projectProfessionalId)
+      .in('status', ['pending', 'negotiating']);
+    
+    console.log('[DB] Cleanup pending collaboration:', { error: collabError?.message });
+  }
+
+  // 4. Update the status
+  const { error: updateError } = await supabase
+    .from('project_professionals')
+    .update({ selection_status: newStatus })
+    .eq('id', projectProfessionalId);
+
+  console.log('[DB] Update project_professional status:', { error: updateError?.message });
+
+  if (updateError) return { success: false, error: updateError.message };
+
+  revalidatePath(`/projects/${projectId}/pros`);
+  return { success: true, error: null };
+}
+
+// ============================================
+// REMOVE PROFESSIONAL
+// ============================================
+
+export async function removeProjectProfessionalById(
+  projectProfessionalId: string,
+  projectId: string
+) {
+  console.log('[ACTION] removeProjectProfessionalById started:', { projectProfessionalId, projectId });
+
+  const supabase = await createClient();
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  console.log('[AUTH] User:', user?.id);
+  if (!user || authError) return { success: false, error: 'Unauthorized' };
+
+  // 1. Cleanup associated collaborations (cascade confirmed by user)
+  const { error: collabError } = await supabase
+    .from('project_collaborations')
+    .delete()
+    .eq('project_professional_id', projectProfessionalId);
+
+  console.log('[DB] Delete associated collaborations:', { error: collabError?.message });
+
+  // 2. Delete the professional record
+  const { error: deleteError } = await supabase
+    .from('project_professionals')
+    .delete()
+    .eq('id', projectProfessionalId);
+
+  console.log('[DB] Delete project_professional:', { error: deleteError?.message });
+
+  if (deleteError) {
+    if (deleteError.code === '42501') {
+      console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: project_professionals DELETE');
+    }
+    return { success: false, error: deleteError.message };
+  }
+
+  revalidatePath(`/projects/${projectId}/pros`);
+  return { success: true, error: null };
+}
+
+// ============================================
 // SUBMIT PROPOSAL
 // ============================================
 
@@ -669,6 +797,7 @@ export async function getProjectProList(projectId: string) {
       professional:professionals(
         id,
         business_name,
+        slug,
         category,
         subcategories,
         city,
