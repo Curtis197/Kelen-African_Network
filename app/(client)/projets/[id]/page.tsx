@@ -335,34 +335,43 @@ export default function ProjectDetailPage() {
                   <p className="text-on-surface-variant font-medium mt-1 text-[10px] sm:text-sm lg:text-base">Sélectionnez et classez les meilleurs experts pour chaque domaine.</p>
                   <p className="text-on-surface-variant/60 text-[8px] sm:text-[9px] font-medium mt-1">Les domaines sont automatiquement créés quand vous ajoutez un professionnel.</p>
                 </div>
-                <div className="flex flex-wrap gap-2 sm:gap-3">
-                  <div className="relative self-start">
-                    <button
-                      onClick={() => setShowAreaSelector(!showAreaSelector)}
-                      className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-6 py-2 sm:py-3 bg-primary text-white text-[9px] sm:text-xs font-black uppercase tracking-widest rounded-lg sm:rounded-2xl shadow-lg shadow-primary/20 hover:scale-[0.98] transition-all"
-                    >
-                      <span className="material-symbols-outlined text-sm sm:text-base">add</span>
-                      <span className="hidden sm:inline">Ajouter un domaine</span>
-                      <span className="sm:hidden">Domaine</span>
-                    </button>
+                  <div className="flex flex-wrap gap-2 sm:gap-3">
+                    <div className="relative self-start">
+                      <button
+                        onClick={() => setShowAreaSelector(!showAreaSelector)}
+                        className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-6 py-2 sm:py-3 bg-primary text-white text-[9px] sm:text-xs font-black uppercase tracking-widest rounded-lg sm:rounded-2xl shadow-lg shadow-primary/20 hover:scale-[0.98] transition-all"
+                      >
+                        <span className="material-symbols-outlined text-sm sm:text-base">add</span>
+                        <span className="hidden sm:inline">Ajouter un domaine</span>
+                        <span className="sm:hidden">Domaine</span>
+                      </button>
 
-                    {showAreaSelector && (
-                      <div className="absolute left-0 mt-3 w-64 sm:w-72 bg-white rounded-2xl shadow-2xl border border-outline-variant/30 p-2 z-50">
-                        <div className="max-h-64 overflow-y-auto overflow-x-hidden scrollbar-hide">
-                          {DEVELOPMENT_AREAS.filter(a => !areas.some(pa => pa.name === a)).map((area) => (
-                            <button
-                              key={area}
-                              onClick={() => addArea(area)}
-                              className="w-full text-left px-4 py-3 text-sm font-medium hover:bg-surface-container rounded-xl transition-colors"
-                            >
-                              {area}
-                            </button>
-                          ))}
+                      {showAreaSelector && (
+                        <div className="absolute left-0 mt-3 w-64 sm:w-72 bg-white rounded-2xl shadow-2xl border border-outline-variant/30 p-2 z-50">
+                          <div className="max-h-64 overflow-y-auto overflow-x-hidden scrollbar-hide">
+                            {DEVELOPMENT_AREAS.filter(a => !areas.some(pa => pa.name === a)).map((area) => (
+                              <button
+                                key={area}
+                                onClick={() => addArea(area)}
+                                className="w-full text-left px-4 py-3 text-sm font-medium hover:bg-surface-container rounded-xl transition-colors"
+                              >
+                                {area}
+                              </button>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
+                    </div>
+
+                    <Link
+                      href={`/projets/${projectIdStr}/pros`}
+                      className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-6 py-2 sm:py-3 bg-surface-container-low text-on-surface text-[9px] sm:text-xs font-black uppercase tracking-widest rounded-lg sm:rounded-2xl border border-transparent hover:border-surface-container transition-all"
+                    >
+                      <span className="material-symbols-outlined text-sm sm:text-base">group</span>
+                      <span className="hidden sm:inline">Gérer les Professionnels</span>
+                      <span className="sm:hidden">Pros</span>
+                    </Link>
                   </div>
-                </div>
               </div>
 
               <div className="space-y-6 sm:space-y-8 lg:space-y-12">
