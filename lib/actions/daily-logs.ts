@@ -140,6 +140,8 @@ export async function createLog(data: z.infer<typeof logSchema>): Promise<{ data
       project_id: targetProjectId,
       pro_project_id: null,
       author_id: user.id,
+      author_role: authorRole
+    });
   }
 
   // Perform reverse geocoding if coordinates are provided
