@@ -16,9 +16,8 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json().catch(() => ({}));
     const { realizationId } = body;
-    const bodyProId = body.proId;
 
-    log.debug("Request parsed", { bodyProId, realizationId });
+    log.debug("Request parsed", { realizationId });
 
     const supabase = await createClient();
 

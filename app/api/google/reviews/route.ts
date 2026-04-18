@@ -114,7 +114,7 @@ export async function GET(request: NextRequest) {
       .from("pro_google_reviews_cache")
       .upsert({
         pro_id: proId,
-        place_id: gbpData.gbp_place_id || "unknown", // assuming place_id was saved when creating the location
+        place_id: gbpData.gbp_place_id ?? null,
         rating: averageRating,
         total_reviews: totalReviewCount,
         reviews: reviews,

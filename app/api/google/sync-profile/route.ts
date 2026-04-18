@@ -15,11 +15,6 @@ export async function POST(request: NextRequest) {
   log.info("→ POST /api/google/sync-profile");
 
   try {
-    const body = await request.json().catch(() => ({}));
-    const { proId: bodyProId } = body;
-
-    log.debug("Request body parsed", { bodyProId });
-
     const supabase = await createClient();
 
     // Auth guard
