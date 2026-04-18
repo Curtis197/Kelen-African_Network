@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Plus, X, FolderOpen, ChevronRight, Check } from "lucide-react";
-import { manageProjectProfessional } from "@/lib/actions/projects";
+import { manageProjectProfessional, getProjectAreas } from "@/lib/actions/projects";
 import { getAreas } from "@/lib/actions/taxonomy";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -32,9 +32,11 @@ export function AddToProjectDialog({
   const [customArea, setCustomArea] = useState("");
   const [areaMode, setAreaMode] = useState<"predefined" | "custom" | "project">("predefined");
   const [availableAreas, setAvailableAreas] = useState<Array<{ id: string; name: string; slug: string }>>([]);
-  const [projectAreas, setProjectAreas] = useState<string[]>([]);
+  const [projectAreas, setProjectAreas] = useState<Array<{ id: string; name: string }>>([]);
+  const [selectedProjectAreaId, setSelectedProjectAreaId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingAreas, setIsLoadingAreas] = useState(false);
+  const [isLoadingProjectAreas, setIsLoadingProjectAreas] = useState(false);
   const router = useRouter();
 
   console.log('[ADD_TO_PROJECT_DIALOG] Props received:', { professionalId, professionalName, projectsCount: userProjects.length });
@@ -55,22 +57,22 @@ export function AddToProjectDialog({
     }
   }, [isOpen, step, availableAreas.length]);
 
-  // Update project areas when project is selected
+  // Fetch project areas from project_areas table when project is selected
   useEffect(() => {
     if (selectedProjectId && step === "area") {
-      console.log('[ADD_TO_PROJECT_DIALOG] Loading project areas for project:', selectedProjectId);
-      const selectedProject = userProjects.find(p => p.id === selectedProjectId);
-      console.log('[ADD_TO_PROJECT_DIALOG] Found project:', selectedProject);
-      
-      if (selectedProject?.development_areas && selectedProject.development_areas.length > 0) {
-        console.log('[ADD_TO_PROJECT_DIALOG] ✅ Project has development_areas:', selectedProject.development_areas);
-        setProjectAreas(selectedProject.development_areas);
-      } else {
-        console.log('[ADD_TO_PROJECT_DIALOG] ⚠️ Project has NO development_areas');
-        setProjectAreas([]);
-      }
+      console.log('[ADD_TO_PROJECT_DIALOG] Fetching project_areas for project:', selectedProjectId);
+      setIsLoadingProjectAreas(true);
+      setProjectAreas([]);
+      getProjectAreas(selectedProjectId).then((areas) => {
+        console.log('[ADD_TO_PROJECT_DIALOG] project_areas loaded:', areas.length, areas);
+        setProjectAreas(areas.map((a: any) => ({ id: a.id, name: a.name })));
+        setIsLoadingProjectAreas(false);
+      }).catch((err) => {
+        console.error('[ADD_TO_PROJECT_DIALOG] Error fetching project areas:', err);
+        setIsLoadingProjectAreas(false);
+      });
     }
-  }, [selectedProjectId, step, userProjects]);
+  }, [selectedProjectId, step]);
 
   // Reset state when dialog opens
   useEffect(() => {
@@ -82,6 +84,7 @@ export function AddToProjectDialog({
       setCustomArea("");
       setAreaMode("predefined");
       setProjectAreas([]);
+      setSelectedProjectAreaId(null);
     }
   }, [isOpen]);
 
@@ -110,7 +113,10 @@ export function AddToProjectDialog({
         selectedProjectId,
         professionalId,
         area,
-        "add"
+        "add",
+        false,
+        undefined,
+        areaMode === "project" ? (selectedProjectAreaId ?? undefined) : undefined
       );
 
       console.log('[ADD_TO_PROJECT_DIALOG] Server action result:', result);
@@ -232,7 +238,7 @@ export function AddToProjectDialog({
               {/* Toggle between 3 area modes */}
               <div className="flex gap-1.5 p-1 bg-stone-100 rounded-lg">
                 <button
-                  onClick={() => setAreaMode("predefined")}
+                  onClick={() => { setAreaMode("predefined"); setSelectedArea(null); setSelectedProjectAreaId(null); }}
                   className={`flex-1 py-2 px-3 rounded-md text-xs font-bold transition-all ${
                     areaMode === "predefined"
                       ? "bg-white text-kelen-green-700 shadow-sm"
@@ -242,17 +248,17 @@ export function AddToProjectDialog({
                   Prédéfinis
                 </button>
                 <button
-                  onClick={() => setAreaMode("project")}
+                  onClick={() => { setAreaMode("project"); setSelectedArea(null); setSelectedProjectAreaId(null); }}
                   className={`flex-1 py-2 px-3 rounded-md text-xs font-bold transition-all ${
                     areaMode === "project"
                       ? "bg-white text-kelen-green-700 shadow-sm"
                       : "text-stone-500 hover:text-stone-700"
                   }`}
                 >
-                  {projectAreas.length > 0 ? `Projet (${projectAreas.length})` : "Projet"}
+                  {isLoadingProjectAreas ? "Projet…" : projectAreas.length > 0 ? `Projet (${projectAreas.length})` : "Projet"}
                 </button>
                 <button
-                  onClick={() => setAreaMode("custom")}
+                  onClick={() => { setAreaMode("custom"); setSelectedArea(null); setSelectedProjectAreaId(null); }}
                   className={`flex-1 py-2 px-3 rounded-md text-xs font-bold transition-all ${
                     areaMode === "custom"
                       ? "bg-white text-kelen-green-700 shadow-sm"
@@ -306,7 +312,11 @@ export function AddToProjectDialog({
                   <label className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-500 ml-1">
                     Domaines du projet
                   </label>
-                  {projectAreas.length > 0 ? (
+                  {isLoadingProjectAreas ? (
+                    <div className="text-center py-8 text-stone-400">
+                      Chargement des domaines du projet…
+                    </div>
+                  ) : projectAreas.length > 0 ? (
                     <>
                       <p className="text-[9px] text-stone-400 font-medium mb-2">
                         Ces domaines ont été définis pour ce projet. Sélectionnez-en un.
@@ -314,16 +324,19 @@ export function AddToProjectDialog({
                       <div className="space-y-2 max-h-[40vh] overflow-y-auto pr-2 custom-scrollbar">
                         {projectAreas.map((area) => (
                           <button
-                            key={area}
-                            onClick={() => setSelectedArea(area)}
+                            key={area.id}
+                            onClick={() => {
+                              setSelectedArea(area.name);
+                              setSelectedProjectAreaId(area.id);
+                            }}
                             className={`w-full flex items-center justify-between p-4 rounded-xl border-2 transition-all ${
-                              selectedArea === area
+                              selectedArea === area.name
                                 ? "border-kelen-green-500 bg-kelen-green-50"
                                 : "border-stone-200 bg-stone-50 hover:border-kelen-green-300 hover:bg-kelen-green-50/50"
                             }`}
                           >
-                            <span className="font-bold text-stone-900">{area}</span>
-                            {selectedArea === area && (
+                            <span className="font-bold text-stone-900">{area.name}</span>
+                            {selectedArea === area.name && (
                               <Check className="w-5 h-5 text-kelen-green-600" />
                             )}
                           </button>
@@ -365,6 +378,7 @@ export function AddToProjectDialog({
                     setSelectedArea(null);
                     setCustomArea("");
                     setAreaMode("predefined");
+                    setSelectedProjectAreaId(null);
                   }}
                   className="flex-1 py-4 text-stone-400 font-black uppercase tracking-widest text-xs hover:text-stone-900 transition-all"
                 >
