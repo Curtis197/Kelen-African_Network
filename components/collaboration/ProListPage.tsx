@@ -112,6 +112,13 @@ function getProStatusBadge(pro: ProjectProfessionalWithProfile) {
   const selectionStatus = pro.selection_status;
   const collab = pro.collaboration;
 
+  console.log('[Component] getProStatusBadge:', { 
+    id: pro.id, 
+    status: selectionStatus, 
+    hasCollab: !!collab,
+    isExternal: pro.is_external 
+  });
+
   if (selectionStatus === "candidate") {
     return STATUS_BADGE_CONFIG["candidate"];
   }
@@ -150,13 +157,22 @@ function ProCard({
   section: string;
   onMakeFinalist: (projectId: string, professionalId: string, projectProfessionalId: string) => void;
 }) {
-  console.log("[ProCard] Render, pro:", pro.professional?.business_name, "section:", section);
-
   const professional = pro.professional;
   const collab = pro.collaboration;
 
-  const initials = professional?.business_name
-    ? professional.business_name
+  const displayName = pro.is_external 
+    ? (pro.external_name || "Professionnel Externe") 
+    : (professional?.business_name || "Professionnel");
+
+  console.log("[ProCard] Render:", { 
+    id: pro.id,
+    name: displayName, 
+    isExternal: pro.is_external,
+    section 
+  });
+
+  const initials = displayName
+    ? displayName
         .split(" ")
         .map((w: string) => w[0])
         .join("")
@@ -166,6 +182,9 @@ function ProCard({
 
   const rating = professional?.avg_rating;
   const reviewCount = professional?.review_count || 0;
+  
+  const category = pro.is_external ? pro.external_category : professional?.category;
+  const location = pro.is_external ? pro.external_location : professional?.city;
 
   return (
     <div className="bg-surface-container-low rounded-xl p-4 border border-outline-variant/10 hover:border-outline-variant/30 transition-colors">
@@ -173,17 +192,22 @@ function ProCard({
         {/* Avatar */}
         <Avatar size="lg" className="shrink-0">
           {professional?.profile_picture_url ? (
-            <AvatarImage src={professional.profile_picture_url} alt={professional.business_name || ""} />
+            <AvatarImage src={professional.profile_picture_url} alt={displayName} />
           ) : null}
-          <AvatarFallback className="text-sm font-bold">{initials}</AvatarFallback>
+          <AvatarFallback className="text-sm font-bold bg-primary/10 text-primary">{initials}</AvatarFallback>
         </Avatar>
 
         {/* Info */}
         <div className="flex-1 min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <h4 className="text-sm font-semibold text-on-surface truncate">
-              {professional?.business_name || "Professionnel"}
+              {displayName}
             </h4>
+            {pro.is_external && (
+              <Badge variant="outline" className="bg-surface-container-high text-on-surface-variant text-[10px] py-0 h-5">
+                Externe
+              </Badge>
+            )}
             {(() => {
               const badge = getProStatusBadge(pro);
               return (
@@ -196,16 +220,16 @@ function ProCard({
           </div>
 
           <div className="flex flex-wrap items-center gap-3 mt-1 text-xs text-on-surface-variant">
-            {professional?.category && (
-              <span className="capitalize">{professional.category}</span>
+            {category && (
+              <span className="capitalize">{category}</span>
             )}
-            {professional?.city && (
+            {location && (
               <>
                 <span>•</span>
-                <span>{professional.city}</span>
+                <span>{location}</span>
               </>
             )}
-            {rating && (
+            {!pro.is_external && rating && (
               <>
                 <span>•</span>
                 <span className="flex items-center gap-1">
@@ -282,10 +306,15 @@ function ProCard({
           <>
             <button
               onClick={() => {
-                console.log("[ProCard] Make Finalist clicked, pro:", pro.id, "project:", pro.project_id);
+                console.log("[ProCard] Make Finalist clicked, pro:", { id: pro.id, isExternal: pro.is_external });
+                if (pro.is_external || !pro.professional_id) {
+                  toast.error("Seuls les professionnels inscrits peuvent être rendus finalistes");
+                  return;
+                }
                 onMakeFinalist(pro.project_id, pro.professional_id, pro.id);
               }}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-yellow-100 text-yellow-700 rounded-lg text-xs font-medium hover:bg-yellow-200 transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-yellow-100 text-yellow-700 rounded-lg text-xs font-medium hover:bg-yellow-200 transition-colors disabled:opacity-50"
+              disabled={pro.is_external}
             >
               <Award className="w-3 h-3" />
               Rendre finaliste

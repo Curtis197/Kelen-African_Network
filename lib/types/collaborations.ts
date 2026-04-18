@@ -117,12 +117,17 @@ export interface ProListGrouped {
 export interface ProjectProfessionalWithProfile {
   id: string;
   project_id: string;
-  professional_id: string;
+  professional_id: string | null;
   role: string;
   selection_status: SelectionStatus;
+  is_external: boolean;
+  external_name: string | null;
+  external_phone: string | null;
+  external_category: string | null;
+  external_location: string | null;
   added_at: string;
   updated_at: string;
-  professional: ProfessionalSnapshot;
+  professional: ProfessionalSnapshot | null;
   collaboration?: ProjectCollaboration;
 }
 
