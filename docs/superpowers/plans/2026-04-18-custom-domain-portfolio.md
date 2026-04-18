@@ -1,12 +1,123 @@
 # Custom Domain Portfolio Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:subagent-driven-development` to execute this plan. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Allow paying pros (Gold/Silver) to launch their Kelen portfolio as a standalone website on a custom domain, with a 2-minute style + copywriting quiz generating the site from their existing data, and a Fluid Compute preview function so they see the result before paying.
 
 **Architecture:** Phase 1 — Style quiz (3-4 questions → CSS tokens) + Copy quiz (3-4 questions → AI-generated text via Claude) + a preview Fluid Compute function rendering real portfolio data as HTML, gated behind a paywall only at publish time. Phase 2 — Domain purchase via a registrar API, Vercel API domain registration, and Next.js middleware hostname routing that maps `diallo-construction-abidjan.com` to the existing `/professionnels/diallo-construction-abidjan` page with style tokens applied.
 
 **Tech Stack:** Next.js App Router, Supabase, Tailwind CSS, Claude API (Anthropic SDK) for copy generation, Vercel REST API for domain management, registrar API (CheapDomain/Namecheap) for purchase, Vercel Fluid Compute for preview render.
+
+---
+
+## Execution Workflow (Read Before Starting)
+
+### Step 0 — Worktree Setup (REQUIRED)
+
+Use `superpowers:using-git-worktrees` to create an isolated workspace before touching any code.
+
+```bash
+# Verify .worktrees is git-ignored
+git check-ignore -q .worktrees
+
+# Create worktree on a new branch
+git worktree add .worktrees/custom-domain-portfolio -b feat/custom-domain-portfolio
+
+cd .worktrees/custom-domain-portfolio
+npm install
+```
+
+All implementation work happens inside the worktree. Never work directly on the main branch.
+
+### Per-Task Loop (REQUIRED for every task)
+
+For each task, follow this exact sequence — no shortcuts:
+
+```
+1. Dispatch implementer subagent (fresh, no prior context)
+   → Provide: full task text + scene-setting context below
+   → Subagent asks questions? Answer before they proceed.
+   → Subagent reports: DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT
+
+2. Dispatch spec compliance reviewer subagent
+   → Read actual code, compare to task requirements line by line
+   → ✅ Spec compliant → proceed to step 3
+   → ❌ Issues found → implementer fixes → re-review
+
+3. Dispatch code quality reviewer subagent (superpowers:code-reviewer)
+   → Strengths, Issues (Critical/Important/Minor), Assessment
+   → ✅ Approved → mark task complete in TodoWrite
+   → ❌ Issues → implementer fixes → re-review
+
+4. Mark task complete. Move to next task.
+```
+
+**Never skip reviews. Never batch-fix across tasks. Never proceed with open issues.**
+
+### Step Final — Branch Completion (REQUIRED)
+
+After all tasks pass both reviews, use `superpowers:finishing-a-development-branch` to:
+1. Verify tests pass
+2. Present merge/PR/keep/discard options
+3. Clean up worktree
+
+---
+
+## Project-Specific Rules (MANDATORY — Read First)
+
+### Instrument Skill (.qwen/skills/instrument)
+
+**Every file created or modified in this plan must follow these rules without exception:**
+
+**Rule 1 — Log on first write.** Every function, component, server action, and Supabase query gets comprehensive logs from the very first implementation. Never write unlogged code.
+
+**Rule 2 — RLS is always explicitly checked.** Every Supabase query must include both detection patterns:
+
+```typescript
+// After every .from().select()/.insert()/.update()/.delete():
+console.log('[DB] Query result:', {
+  hasData: !!data,
+  rowCount: data?.length,
+  hasError: !!error,
+  errorMessage: error?.message,
+  errorCode: error?.code
+})
+
+// EXPLICIT RLS (error code 42501):
+if (error?.code === '42501') {
+  console.error('[RLS] ❌ EXPLICIT RLS BLOCKING!')
+  console.error('[RLS] Table:', tableName)
+  console.error('[RLS] User:', userId)
+  console.error('[RLS] Fix in Supabase → Auth → Policies')
+}
+
+// SILENT RLS (no error but 0 rows):
+if (!error && data?.length === 0) {
+  console.warn('[RLS] ⚠️ POTENTIAL SILENT RLS FILTERING')
+  console.warn('[RLS] Table:', tableName)
+  console.warn('[RLS] Check if data exists in Supabase dashboard')
+}
+```
+
+**Rule 3 — Logs are permanent.** Never remove logs after implementation. They are infrastructure.
+
+**Rule 4 — Check DATABASE-REFERENCE.md before any DB code.** File is at `.qwen/skills/instrument/DATABASE-REFERENCE.md`. Verify table names and column names before writing any query.
+
+**Logging format by element type:**
+
+| Element | Prefix | What to log |
+|---------|--------|-------------|
+| Server action | `[ACTION]` | Start/end, inputs, auth check, DB result, errors |
+| Component | `[COMPONENT]` | Render start, props, state, effects, fetch result |
+| DB query | `[DB]` / `[RLS]` | Table, operation, filters, result, RLS detection |
+| Auth | `[AUTH]` | Session check, user details, result |
+| Form | `[FORM]` | Submitted data, validation, server action result |
+| API route | `[API]` | Request params, DB result, response |
+| Middleware | `[MIDDLEWARE]` | Request host, routing decision |
+
+### Debug Skill (.qwen/skills/debug)
+
+**Instrument first, fix later.** When a task involves modifying existing code that may have issues: add logs → run → collect console output → identify root cause → fix. Never change logic before understanding what it does.
 
 ---
 
@@ -1969,6 +2080,170 @@ git commit -m "feat(nav): add Mon Site link to pro navigation"
 
 ---
 
+---
+
+### Task 17: ProfessionalCard Custom Domain Linking
+
+**Files:**
+- Modify: `components/shared/ProfessionalCard.tsx`
+- Modify: `app/(validation)/recherche/page.tsx`
+- Modify: `components/landing/ProfessionalDirectory.tsx`
+
+The card currently hardcodes `router.push('/professionnels/${slug}')` on click. When a pro has an active custom domain, the card must link to their domain instead. This applies everywhere the card is rendered: the search/browse page and the landing directory.
+
+- [ ] **Step 1: Update ProfessionalCard to accept and use customDomain**
+
+In `components/shared/ProfessionalCard.tsx`, add the `customDomain` prop and update navigation:
+
+```tsx
+// Add to ProfessionalCardProps interface (after profilePictureUrl):
+  customDomain?: string | null;
+
+// Replace the onClick handler (line 83):
+  const destination = customDomain
+    ? `https://${customDomain}`
+    : `/professionnels/${slug}`;
+
+  const handleCardClick = () => {
+    console.log('[COMPONENT] ProfessionalCard click:', {
+      slug,
+      hasCustomDomain: !!customDomain,
+      destination,
+    });
+    if (customDomain) {
+      window.open(destination, '_blank', 'noopener,noreferrer');
+    } else {
+      router.push(destination);
+    }
+  };
+
+// Replace onKeyDown handler accordingly:
+  onKeyDown={(e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleCardClick();
+    }
+  }}
+
+// Update aria-label:
+  aria-label={`Voir le site de ${businessName}`}
+```
+
+Also add a render log at the top of the component:
+
+```tsx
+  console.log('[COMPONENT] ProfessionalCard render:', {
+    slug,
+    businessName,
+    hasCustomDomain: !!customDomain,
+    customDomain,
+  });
+```
+
+- [ ] **Step 2: Update the search page query to join professional_portfolio**
+
+In `app/(validation)/recherche/page.tsx`, the current query is:
+
+```typescript
+  let browserQuery = supabase
+    .from("professionals")
+    .select("*")
+```
+
+Replace with:
+
+```typescript
+  let browserQuery = supabase
+    .from("professionals")
+    .select("*, professional_portfolio(custom_domain, domain_status)")
+```
+
+Then when mapping results to `ProfessionalCard`, extract the domain:
+
+```tsx
+{finalResults.map((pro) => {
+  const portfolio = (pro.professional_portfolio as any)?.[0];
+  const customDomain =
+    portfolio?.domain_status === 'active' ? portfolio.custom_domain : null;
+
+  console.log('[RENDER] ProfessionalCard data:', {
+    slug: pro.slug,
+    hasPortfolio: !!portfolio,
+    customDomain,
+    domainStatus: portfolio?.domain_status,
+  });
+
+  return (
+    <ProfessionalCard
+      key={pro.id}
+      id={pro.id}
+      slug={pro.slug}
+      businessName={pro.business_name}
+      ownerName={pro.owner_name}
+      category={pro.category}
+      city={pro.city}
+      country={pro.country}
+      status={pro.status}
+      recommendationCount={pro.recommendation_count ?? 0}
+      signalCount={pro.signal_count ?? 0}
+      avgRating={pro.avg_rating ?? null}
+      reviewCount={pro.review_count ?? 0}
+      profilePictureUrl={pro.profile_picture_url}
+      customDomain={customDomain}
+    />
+  );
+})}
+```
+
+- [ ] **Step 3: Update ProfessionalDirectory to pass customDomain**
+
+In `components/landing/ProfessionalDirectory.tsx`, find where `ProfessionalCard` is rendered (search for `<ProfessionalCard`). The `initialPros` prop comes from a server query. Check whether `professional_portfolio` is already joined in the query that feeds this component. If not, the parent page that calls `ProfessionalDirectory` needs the same join added as in Step 2.
+
+Add the same extraction pattern:
+
+```tsx
+const portfolio = (pro.professional_portfolio as any)?.[0];
+const customDomain =
+  portfolio?.domain_status === 'active' ? portfolio.custom_domain : null;
+
+<ProfessionalCard
+  // ... existing props
+  customDomain={customDomain}
+/>
+```
+
+- [ ] **Step 4: Add RLS log for the portfolio join**
+
+In the search page, after the query executes, add:
+
+```typescript
+  console.log('[DB] Search results with portfolio join:', {
+    count: finalResults.length,
+    withCustomDomain: finalResults.filter((p: any) => {
+      const pp = p.professional_portfolio?.[0];
+      return pp?.domain_status === 'active' && pp?.custom_domain;
+    }).length,
+    error: error?.message,
+    errorCode: error?.code,
+  });
+
+  if (error?.code === '42501') {
+    console.error('[RLS] ❌ EXPLICIT RLS BLOCKING on professionals or professional_portfolio!');
+    console.error('[RLS] Check SELECT policies on both tables');
+  }
+```
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add components/shared/ProfessionalCard.tsx \
+        app/'(validation)'/recherche/page.tsx \
+        components/landing/ProfessionalDirectory.tsx
+git commit -m "feat(cards): link professional cards to custom domain when active"
+```
+
+---
+
 ## Self-Review
 
 ### Spec coverage check
@@ -1986,8 +2261,10 @@ git commit -m "feat(nav): add Mon Site link to pro navigation"
 | CSS tokens applied to portfolio page | Tasks 2, 3 |
 | Custom domain maps to existing portfolio page | Task 15 |
 | DB schema for new fields | Task 1 |
+| Professional list cards link to custom domain | Task 17 |
 | Comment section | Already in DB (`realization_comments`). Frontend activation (like/comment buttons on the realization detail page) is a separate task not in scope here — it's a UI completion, not a new feature. |
 | GMB auto-display | Marked out of scope: GMB integration is already built and awaiting Google review. No new work needed. |
+| Instrument skill applied to all new code | Mandatory requirement in Project-Specific Rules section — spec and code quality reviewers must verify this on every task |
 
 ### No placeholders confirmed
 
@@ -1999,3 +2276,4 @@ All code steps contain full, runnable code. No TBDs or "similar to Task N" short
 - `CopyAnswers` defined in `lib/portfolio/copy-generator.ts` — used consistently in `CopywritingQuiz`, `portfolio-site.ts`
 - `saveStyleQuiz`, `saveCopyQuizAndGenerate` defined in `lib/actions/portfolio-site.ts` — imported in quiz components
 - `searchDomain`, `activateDomain` defined in `lib/actions/domain.ts` — imported in `DomainSearch`
+- `customDomain` prop added to `ProfessionalCard` — passed from search page and directory with `domain_status === 'active'` guard
