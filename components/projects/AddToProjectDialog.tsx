@@ -202,14 +202,14 @@ export function AddToProjectDialog({
                         <p className="text-xs text-stone-400 uppercase tracking-widest font-black mt-0.5">{project.category}</p>
                         {hasAreas && (
                           <div className="flex flex-wrap gap-1 mt-2">
-                            {project.development_areas.slice(0, 2).map((area: string) => (
+                            {(project.development_areas || []).slice(0, 2).map((area: string) => (
                               <span key={area} className="text-[8px] px-2 py-0.5 bg-kelen-green-100 text-kelen-green-700 rounded-full font-bold">
                                 {area}
                               </span>
                             ))}
-                            {project.development_areas.length > 2 && (
+                            {(project.development_areas?.length || 0) > 2 && (
                               <span className="text-[8px] px-2 py-0.5 bg-stone-200 text-stone-600 rounded-full font-bold">
-                                +{project.development_areas.length - 2}
+                                +{(project.development_areas?.length || 0) - 2}
                               </span>
                             )}
                           </div>
