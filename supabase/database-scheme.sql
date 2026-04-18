@@ -730,7 +730,7 @@ CREATE TABLE public.pro_google_tokens (
 CREATE TABLE public.pro_google_reviews_cache (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   pro_id uuid NOT NULL UNIQUE,
-  place_id text NOT NULL,
+  place_id text,                          -- NULLABLE (migration make_reviews_cache_place_id_nullable) — place_id may not be assigned by Google yet when location is first created
   rating numeric(2,1),
   total_reviews integer DEFAULT 0,
   reviews jsonb DEFAULT '[]'::jsonb,
@@ -738,6 +738,10 @@ CREATE TABLE public.pro_google_reviews_cache (
   CONSTRAINT pro_google_reviews_cache_pkey PRIMARY KEY (id),
   CONSTRAINT pro_google_reviews_cache_pro_id_fkey FOREIGN KEY (pro_id) REFERENCES public.professionals(id)
 );
+-- RLS Policies on pro_google_reviews_cache:
+--   pro_google_reviews_cache_insert_own: INSERT — EXISTS (professionals where id = pro_id AND user_id = auth.uid())
+--   pro_google_reviews_cache_public_select: SELECT — true (public read for portfolio display)
+--   pro_google_reviews_cache_update_own: UPDATE — EXISTS (professionals where id = pro_id AND user_id = auth.uid())
 
 -- ============================================================
 -- Storage Buckets (supabase/storage)
