@@ -146,44 +146,44 @@ export function ProposalCard({
             )}
 
             <div className="flex items-center gap-2 mt-3">
-              {hasProposal && onViewProposal && (
+              {hasProposal && onViewProposal && pro.professional_id && (
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => handleAction('onViewProposal', () => onViewProposal(pro.professional_id))}
+                  onClick={() => handleAction('onViewProposal', () => onViewProposal(pro.professional_id!))}
                   disabled={isLoading}
                 >
                   {isLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : "Voir la proposition"}
                 </Button>
               )}
 
-              {hasProposal && collabStatus === 'negotiating' && onRequestChange && (
+              {hasProposal && collabStatus === 'negotiating' && onRequestChange && pro.professional_id && (
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => handleAction('onRequestChange', () => onRequestChange(pro.professional_id))}
+                  onClick={() => handleAction('onRequestChange', () => onRequestChange(pro.professional_id!))}
                   disabled={isLoading}
                 >
                   {isLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : "Demander un changement"}
                 </Button>
               )}
 
-              {!hasProposal && collabStatus === 'pending' && onSendReminder && (
+              {!hasProposal && collabStatus === 'pending' && onSendReminder && pro.professional_id && (
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => handleAction('onSendReminder', () => onSendReminder(pro.professional_id))}
+                  onClick={() => handleAction('onSendReminder', () => onSendReminder(pro.professional_id!))}
                   disabled={isLoading}
                 >
                   {isLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : "Envoyer un rappel"}
                 </Button>
               )}
 
-              {hasProposal && collabStatus === 'negotiating' && onPick && (
+              {hasProposal && collabStatus === 'negotiating' && onPick && pro.professional_id && (
                 <Button
                   size="sm"
                   className="bg-green-600 hover:bg-green-700"
-                  onClick={() => handleAction('onPick', () => onPick(pro.professional_id))}
+                  onClick={() => handleAction('onPick', () => onPick(pro.professional_id!))}
                   disabled={isLoading}
                 >
                   {isLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : (

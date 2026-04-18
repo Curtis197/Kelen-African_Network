@@ -1,12 +1,11 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import { manageProjectProfessional } from "@/lib/actions/projects";
 import { toast } from "sonner";
 import { Search, X, User, Star, ShieldCheck, CheckCircle2, ChevronRight, Loader2, Plus } from "lucide-react";
-import { debounce } from "lodash";
 
 interface Professional {
   id: string;
@@ -43,21 +42,21 @@ export function AddProSearchDialog({
   const [isAdding, setIsAdding] = useState<string | null>(null);
   const supabase = createClient();
 
-  const handleSearch = useCallback(
-    debounce(async (query: string) => {
-      if (!query.trim() || query.length < 2) {
+  useEffect(() => {
+    const fetchResults = async () => {
+      if (!searchQuery.trim() || searchQuery.length < 2) {
         setResults([]);
         setIsSearching(false);
         return;
       }
 
       setIsSearching(true);
-      console.log('[ADD_PRO_SEARCH] Searching for:', query);
+      console.log('[ADD_PRO_SEARCH] Searching for:', searchQuery);
 
       const { data, error } = await supabase
         .from("professionals")
         .select("id, business_name, owner_name, category, city, country, status, avg_rating, portfolio_photos")
-        .or(`business_name.ilike.%${query}%,category.ilike.%${query}%,owner_name.ilike.%${query}%`)
+        .or(`business_name.ilike.%${searchQuery}%,category.ilike.%${searchQuery}%,owner_name.ilike.%${searchQuery}%`)
         .neq("status", "black") // Don't show blacklisted pros
         .limit(10);
 
@@ -69,13 +68,14 @@ export function AddProSearchDialog({
         setResults(data || []);
       }
       setIsSearching(false);
-    }, 500),
-    []
-  );
+    };
 
-  useEffect(() => {
-    handleSearch(searchQuery);
-  }, [searchQuery, handleSearch]);
+    const timer = setTimeout(() => {
+      fetchResults();
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery, supabase]);
 
   const handleAddPro = async (pro: Professional) => {
     setIsAdding(pro.id);
