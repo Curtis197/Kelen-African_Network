@@ -12,7 +12,7 @@ import ProjectStepsSection from "@/components/projects/ProjectStepsSection";
 import { DevelopmentAreaRow } from "@/components/projects/DevelopmentAreaRow";
 import { DEVELOPMENT_AREAS } from "@/lib/constants/projects";
 import { ProjectProfessional, ProjectStep, ProjectArea } from "@/lib/types/projects";
-import { createProjectArea, deleteProjectArea, getProjectAreas, syncProjectAreasFromProfessionals, addProjectDevelopmentArea, removeProjectDevelopmentArea } from "@/lib/actions/projects";
+import { createProjectArea, deleteProjectArea, getProjectAreas, addProjectDevelopmentArea, removeProjectDevelopmentArea } from "@/lib/actions/projects";
 import { getProjectSteps } from "@/lib/actions/project-steps";
 import { getProjectImages, type ProjectImage } from "@/lib/actions/project-images";
 import { ProjectImageCarousel } from "@/components/projects/ProjectImageCarousel";
@@ -130,21 +130,6 @@ export default function ProjectDetailPage() {
     if (!confirm("Supprimer ce domaine et retirer tous ses professionnels ?")) return;
     await deleteProjectArea(areaId, projectIdStr);
     setAreas(prev => prev.filter(a => a.id !== areaId));
-  };
-
-  const syncAreas = async () => {
-    console.log('[PROJECT-DETAIL] Manually syncing areas...');
-    const result = await syncProjectAreasFromProfessionals(projectIdStr);
-    if (result.success) {
-      console.log('[PROJECT-DETAIL] Sync completed, synced', result.synced, 'areas');
-      toast.success(`${result.synced} domaine(s) synchronisé(s)`);
-      // Refetch areas
-      const areasData = await getProjectAreas(projectIdStr);
-      setAreas(areasData as ProjectArea[]);
-    } else {
-      console.error('[PROJECT-DETAIL] Sync failed:', result.error);
-      toast.error(`Erreur: ${result.error}`);
-    }
   };
 
   const addDevelopmentArea = async (area: string) => {
@@ -377,14 +362,6 @@ export default function ProjectDetailPage() {
                       </div>
                     )}
                   </div>
-                  <button
-                    onClick={syncAreas}
-                    className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-6 py-2 sm:py-3 bg-surface-container-low text-on-surface-variant text-[9px] sm:text-xs font-black uppercase tracking-widest rounded-lg sm:rounded-2xl border border-outline-variant/30 hover:bg-surface-container transition-all"
-                    title="Synchroniser les domaines depuis les professionnels"
-                  >
-                    <span className="material-symbols-outlined text-sm sm:text-base">sync</span>
-                    <span className="hidden sm:inline">Synchroniser</span>
-                  </button>
                 </div>
               </div>
 
