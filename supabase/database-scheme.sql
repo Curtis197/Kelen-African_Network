@@ -340,6 +340,7 @@ CREATE TABLE public.project_logs (
   created_at timestamp with time zone DEFAULT now(),
   updated_at timestamp with time zone DEFAULT now(),
   pro_project_id uuid,
+  location_name text,
   CONSTRAINT project_logs_pkey PRIMARY KEY (id),
   CONSTRAINT project_logs_project_id_fkey FOREIGN KEY (project_id) REFERENCES public.user_projects(id),
   CONSTRAINT project_logs_step_id_fkey FOREIGN KEY (step_id) REFERENCES public.project_steps(id),

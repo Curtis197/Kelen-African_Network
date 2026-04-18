@@ -134,7 +134,11 @@ export default function SharedLogPage() {
           </p>
 
           {/* GPS */}
-          <GPSDisplay latitude={log.gps_latitude} longitude={log.gps_longitude} />
+          <GPSDisplay 
+            latitude={log.gps_latitude} 
+            longitude={log.gps_longitude} 
+            locationName={log.location_name}
+          />
 
           {/* Money */}
           {log.money_spent > 0 && <MoneyDisplay amount={log.money_spent} currency={log.money_currency} />}

@@ -353,6 +353,7 @@ const { data } = await supabase
 | `status` | text | `pending`, `approved`, `contested`, `resolved` |
 | `gps_latitude` | numeric | GPS location |
 | `gps_longitude` | numeric | GPS location |
+| `location_name` | text | Human-readable city name |
 
 **Common Queries:**
 ```typescript

@@ -27,6 +27,7 @@ export interface ProjectLog {
   synced_at: string | null;
   created_at: string;
   updated_at: string;
+  location_name: string | null;
   // Joined fields
   media?: LogMedia[];
   comments?: LogComment[];

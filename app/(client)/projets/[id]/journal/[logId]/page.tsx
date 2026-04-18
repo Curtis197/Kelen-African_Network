@@ -154,6 +154,7 @@ export default function LogDetailPage() {
               <GPSDisplay
                 latitude={log.gps_latitude}
                 longitude={log.gps_longitude}
+                locationName={log.location_name}
                 source={log.is_synced ? 'exif' : undefined}
               />
             </div>

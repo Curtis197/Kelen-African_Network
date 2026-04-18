@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import type { ProjectLog, LogFormData } from "@/lib/types/daily-logs";
+import { reverseGeocode } from "@/lib/utils/geocoding";
 
 function log(action: string, data: Record<string, unknown>) {
   console.log(JSON.stringify({ ts: new Date().toISOString(), action, ...data }));
@@ -139,9 +140,20 @@ export async function createLog(data: z.infer<typeof logSchema>): Promise<{ data
       project_id: targetProjectId,
       pro_project_id: null,
       author_id: user.id,
-      author_role: authorRole
-    });
   }
+
+  // Perform reverse geocoding if coordinates are provided
+  let locationName = null;
+  if (validated.gpsLatitude && validated.gpsLongitude) {
+    try {
+      const geoResult = await reverseGeocode(validated.gpsLatitude, validated.gpsLongitude);
+      locationName = geoResult?.city || null;
+      console.log("[createLog] Geocoded location:", locationName);
+    } catch (err) {
+      console.error("[createLog] Geocoding error:", err);
+    }
+  }
+  insertData.location_name = locationName;
 
   // Debug log before insert
   console.log("[createLog] Final insertData:", JSON.stringify(insertData, null, 2));
@@ -199,6 +211,19 @@ export async function updateLog(
   if (data.weather !== undefined) updateData.weather = data.weather;
   if (data.gpsLatitude) updateData.gps_latitude = data.gpsLatitude;
   if (data.gpsLongitude) updateData.gps_longitude = data.gpsLongitude;
+
+  // Re-geocode if coordinates changed
+  if (data.gpsLatitude || data.gpsLongitude) {
+    const lat = data.gpsLatitude || existingLog.gps_latitude;
+    const lng = data.gpsLongitude || existingLog.gps_longitude;
+    try {
+      const geoResult = await reverseGeocode(lat, lng);
+      updateData.location_name = geoResult?.city || null;
+      console.log("[updateLog] Geocoded location:", updateData.location_name);
+    } catch (err) {
+      console.error("[updateLog] Geocoding error:", err);
+    }
+  }
 
   const { data: updatedLog, error } = await supabase
     .from("project_logs")
