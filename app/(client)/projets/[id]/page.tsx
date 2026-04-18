@@ -454,40 +454,72 @@ export default function ProjectDetailPage() {
 
               {/* Add new area */}
               {showProjectAreaInput ? (
-                <div className="space-y-2">
-                  <input
-                    type="text"
-                    value={newProjectArea}
-                    onChange={(e) => setNewProjectArea(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" && newProjectArea.trim()) {
-                        addDevelopmentArea(newProjectArea.trim());
-                      }
-                      if (e.key === "Escape") {
-                        setShowProjectAreaInput(false);
-                        setNewProjectArea("");
-                      }
-                    }}
-                    placeholder="Nom du domaine..."
-                    autoFocus
-                    className="w-full bg-surface-container-low border border-outline-variant/30 rounded-lg px-3 py-2 text-sm text-on-surface focus:ring-2 focus:ring-primary/20 outline-none"
-                  />
-                  <div className="flex gap-2">
+                <div className="space-y-3">
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={newProjectArea}
+                      onChange={(e) => {
+                        console.log('[PROJECT-DETAIL] Search areas input:', e.target.value);
+                        setNewProjectArea(e.target.value);
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && newProjectArea.trim()) {
+                          addDevelopmentArea(newProjectArea.trim());
+                        }
+                        if (e.key === "Escape") {
+                          setShowProjectAreaInput(false);
+                          setNewProjectArea("");
+                        }
+                      }}
+                      placeholder="Nom du domaine..."
+                      autoFocus
+                      className="w-full bg-surface-container-low border border-outline-variant/30 rounded-lg px-3 py-2 text-sm text-on-surface focus:ring-2 focus:ring-primary/20 outline-none"
+                    />
+                  </div>
+
+                  {/* Suggestions list */}
+                  <div className="max-h-40 overflow-y-auto pr-1 space-y-1 custom-scrollbar">
+                    {DEVELOPMENT_AREAS
+                      .filter(area => 
+                        area.toLowerCase().includes(newProjectArea.toLowerCase()) && 
+                        area !== "Autre" &&
+                        !(project?.development_areas || []).includes(area)
+                      )
+                      .map((area) => (
+                        <button
+                          key={area}
+                          onClick={() => {
+                            console.log('[PROJECT-DETAIL] Area suggestion selected:', area);
+                            addDevelopmentArea(area);
+                          }}
+                          className="w-full text-left px-3 py-2 text-[10px] font-bold text-on-surface-variant hover:text-primary hover:bg-primary/5 rounded-lg transition-all"
+                        >
+                          {area}
+                        </button>
+                      ))}
+                    
+                    {newProjectArea && !DEVELOPMENT_AREAS.some(a => a.toLowerCase() === newProjectArea.toLowerCase()) && (
+                      <button
+                        onClick={() => addDevelopmentArea(newProjectArea.trim())}
+                        className="w-full text-left px-3 py-2 text-[10px] font-bold text-primary bg-primary/5 hover:bg-primary/10 rounded-lg border border-dashed border-primary/20 transition-all flex items-center gap-1"
+                      >
+                        <span className="material-symbols-outlined text-xs">add</span>
+                        Créer &quot;{newProjectArea}&quot;
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="flex gap-2 pt-1 border-t border-outline-variant/10">
                     <button
                       onClick={() => {
+                        console.log('[PROJECT-DETAIL] Cancel area addition');
                         setShowProjectAreaInput(false);
                         setNewProjectArea("");
                       }}
-                      className="flex-1 py-2 text-xs font-bold text-on-surface-variant hover:text-on-surface transition-colors"
+                      className="flex-1 py-1 text-[10px] font-black uppercase tracking-widest text-on-surface-variant hover:text-on-surface transition-colors"
                     >
                       Annuler
-                    </button>
-                    <button
-                      onClick={() => newProjectArea.trim() && addDevelopmentArea(newProjectArea.trim())}
-                      disabled={!newProjectArea.trim()}
-                      className="flex-1 py-2 bg-primary text-white text-xs font-bold rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                    >
-                      Ajouter
                     </button>
                   </div>
                 </div>

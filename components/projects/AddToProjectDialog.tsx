@@ -6,6 +6,8 @@ import { manageProjectProfessional } from "@/lib/actions/projects";
 import { getAreas } from "@/lib/actions/taxonomy";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { DEVELOPMENT_AREAS } from "@/lib/constants/projects";
+import { cn } from "@/lib/utils";
 
 interface Project {
   id: string;
@@ -343,19 +345,67 @@ export function AddToProjectDialog({
 
               {/* Mode 3: Custom Area */}
               {areaMode === "custom" && (
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-500 ml-1">
-                    Domaine de recherche (ex: Juridique, Design...)
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      value={customArea}
-                      onChange={(e) => setCustomArea(e.target.value)}
-                      placeholder="Entrez un domaine..."
-                      autoFocus
-                      className="w-full bg-stone-50 border-none rounded-2xl p-4 text-stone-900 focus:ring-2 focus:ring-kelen-green-500 transition-all font-medium"
-                    />
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-500 ml-1">
+                      Domaine de recherche (ex: Juridique, Design...)
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={customArea}
+                        onChange={(e) => {
+                          console.log('[ADD_TO_PROJECT_DIALOG] Custom area input:', e.target.value);
+                          setCustomArea(e.target.value);
+                        }}
+                        placeholder="Rechercher ou entrer un domaine..."
+                        autoFocus
+                        className="w-full bg-stone-50 border-none rounded-2xl p-4 text-stone-900 focus:ring-2 focus:ring-kelen-green-500 transition-all font-medium"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Searchable Suggestions */}
+                  <div className="space-y-2">
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-400 ml-1">
+                      Suggestions
+                    </p>
+                    <div className="flex flex-wrap gap-2 max-h-[30vh] overflow-y-auto pr-2 custom-scrollbar">
+                      {Array.from(new Set([
+                        ...DEVELOPMENT_AREAS,
+                        ...availableAreas.map(a => a.name)
+                      ]))
+                        .filter(area => 
+                          area.toLowerCase().includes(customArea.toLowerCase()) && 
+                          area !== "Autre"
+                        )
+                        .map((area) => (
+                          <button
+                            key={area}
+                            onClick={() => {
+                              console.log('[ADD_TO_PROJECT_DIALOG] Suggestion selected:', area);
+                              setCustomArea(area);
+                            }}
+                            className={cn(
+                              "text-xs px-4 py-2 rounded-xl font-bold transition-all border-2",
+                              customArea === area
+                                ? "bg-kelen-green-600 text-white border-kelen-green-600 shadow-md shadow-kelen-green-600/20"
+                                : "bg-stone-50 text-stone-600 border-stone-100 hover:border-kelen-green-200 hover:bg-kelen-green-50/50"
+                            )}
+                          >
+                            {area}
+                          </button>
+                        ))}
+                      
+                      {customArea && !DEVELOPMENT_AREAS.some(a => a.toLowerCase() === customArea.toLowerCase()) && (
+                        <div className="w-full mt-2 p-3 bg-kelen-green-50 rounded-xl border border-kelen-green-100">
+                          <p className="text-[10px] text-kelen-green-700 font-bold flex items-center gap-2">
+                            <Plus className="w-3 h-3" />
+                            Créer un nouveau domaine : &quot;{customArea}&quot;
+                          </p>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               )}
