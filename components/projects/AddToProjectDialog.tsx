@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Plus, X, FolderOpen, ChevronRight, Check } from "lucide-react";
-import { manageProjectProfessional } from "@/lib/actions/projects";
+import { manageProjectProfessional, getProjectAreas } from "@/lib/actions/projects";
 import { getAreas } from "@/lib/actions/taxonomy";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -34,7 +34,8 @@ export function AddToProjectDialog({
   const [customArea, setCustomArea] = useState("");
   const [areaMode, setAreaMode] = useState<"predefined" | "custom" | "project">("predefined");
   const [availableAreas, setAvailableAreas] = useState<Array<{ id: string; name: string; slug: string }>>([]);
-  const [projectAreas, setProjectAreas] = useState<string[]>([]);
+  const [projectAreas, setProjectAreas] = useState<Array<{ id: string; name: string }>>([]);
+  const [selectedAreaId, setSelectedAreaId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingAreas, setIsLoadingAreas] = useState(false);
   const router = useRouter();
@@ -57,24 +58,22 @@ export function AddToProjectDialog({
     }
   }, [isOpen, step, availableAreas.length]);
 
-  // Load project areas from user_projects.development_areas when a project is selected
+  // Load project areas using getProjectAreas when a project is selected
   useEffect(() => {
     if (!selectedProjectId || step !== "area") return;
 
-    console.log('[ADD_TO_PROJECT_DIALOG] Loading project areas for project:', selectedProjectId);
-    setProjectAreas([]);
-    setSelectedArea(null);
-
-    const selectedProject = userProjects.find(p => p.id === selectedProjectId);
-    console.log('[ADD_TO_PROJECT_DIALOG] Found project:', selectedProject);
-
-    if (selectedProject?.development_areas && selectedProject.development_areas.length > 0) {
-      console.log('[ADD_TO_PROJECT_DIALOG] ✅ Project has development_areas:', selectedProject.development_areas);
-      setProjectAreas(selectedProject.development_areas);
-    } else {
-      console.log('[ADD_TO_PROJECT_DIALOG] ⚠️ Project has NO development_areas');
-    }
-  }, [selectedProjectId, step, userProjects]);
+    console.log('[ADD_TO_PROJECT_DIALOG] Fetching project areas for project:', selectedProjectId);
+    setIsLoadingAreas(true);
+    
+    getProjectAreas(selectedProjectId).then(areas => {
+      console.log('[ADD_TO_PROJECT_DIALOG] ✅ Project areas fetched:', areas.length);
+      setProjectAreas(areas || []);
+      setIsLoadingAreas(false);
+    }).catch(err => {
+      console.error('[ADD_TO_PROJECT_DIALOG] Error fetching project areas:', err);
+      setIsLoadingAreas(false);
+    });
+  }, [selectedProjectId, step]);
 
   // Reset state when dialog opens
   useEffect(() => {
@@ -86,6 +85,7 @@ export function AddToProjectDialog({
       setCustomArea("");
       setAreaMode("predefined");
       setProjectAreas([]);
+      setSelectedAreaId(null);
     }
   }, [isOpen]);
 
@@ -114,7 +114,10 @@ export function AddToProjectDialog({
         selectedProjectId,
         professionalId,
         area,
-        "add"
+        "add",
+        false,
+        undefined,
+        selectedAreaId || undefined
       );
 
       console.log('[ADD_TO_PROJECT_DIALOG] Server action result:', result);
@@ -316,18 +319,21 @@ export function AddToProjectDialog({
                         Ces domaines ont été définis pour ce projet. Sélectionnez-en un.
                       </p>
                       <div className="space-y-2 max-h-[40vh] overflow-y-auto pr-2 custom-scrollbar">
-                        {projectAreas.map((area) => (
+                        {projectAreas.map((areaData) => (
                           <button
-                            key={area}
-                            onClick={() => setSelectedArea(area)}
+                            key={areaData.id}
+                            onClick={() => {
+                              setSelectedArea(areaData.name);
+                              setSelectedAreaId(areaData.id);
+                            }}
                             className={`w-full flex items-center justify-between p-4 rounded-xl border-2 transition-all ${
-                              selectedArea === area
+                              selectedArea === areaData.name
                                 ? "border-kelen-green-500 bg-kelen-green-50"
                                 : "border-stone-200 bg-stone-50 hover:border-kelen-green-300 hover:bg-kelen-green-50/50"
                             }`}
                           >
-                            <span className="font-bold text-stone-900">{area}</span>
-                            {selectedArea === area && (
+                            <span className="font-bold text-stone-900">{areaData.name}</span>
+                            {selectedArea === areaData.name && (
                               <Check className="w-5 h-5 text-kelen-green-600" />
                             )}
                           </button>
