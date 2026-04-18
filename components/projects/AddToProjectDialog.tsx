@@ -58,16 +58,32 @@ export function AddToProjectDialog({
   // Update project areas when project is selected
   useEffect(() => {
     if (selectedProjectId && step === "area") {
+      console.log('[ADD_TO_PROJECT_DIALOG] Loading project areas for project:', selectedProjectId);
       const selectedProject = userProjects.find(p => p.id === selectedProjectId);
-      if (selectedProject?.development_areas) {
-        console.log('[ADD_TO_PROJECT_DIALOG] Project has development_areas:', selectedProject.development_areas);
+      console.log('[ADD_TO_PROJECT_DIALOG] Found project:', selectedProject);
+      
+      if (selectedProject?.development_areas && selectedProject.development_areas.length > 0) {
+        console.log('[ADD_TO_PROJECT_DIALOG] ✅ Project has development_areas:', selectedProject.development_areas);
         setProjectAreas(selectedProject.development_areas);
       } else {
-        console.log('[ADD_TO_PROJECT_DIALOG] Project has no development_areas');
+        console.log('[ADD_TO_PROJECT_DIALOG] ⚠️ Project has NO development_areas');
         setProjectAreas([]);
       }
     }
   }, [selectedProjectId, step, userProjects]);
+
+  // Reset state when dialog opens
+  useEffect(() => {
+    if (isOpen) {
+      console.log('[ADD_TO_PROJECT_DIALOG] Dialog opened, resetting state');
+      setStep("project");
+      setSelectedProjectId(null);
+      setSelectedArea(null);
+      setCustomArea("");
+      setAreaMode("predefined");
+      setProjectAreas([]);
+    }
+  }, [isOpen]);
 
   const handleAdd = async () => {
     if (!selectedProjectId) {
@@ -142,6 +158,11 @@ export function AddToProjectDialog({
               {step === "project" ? "Choisir un projet" : "Définir le domaine"}
             </h2>
             <p className="text-sm text-stone-500 font-medium">Pour {professionalName}</p>
+            {step === "area" && (
+              <p className="text-xs text-kelen-green-600 font-bold mt-1">
+                Étape 2/2 — Sélectionnez un domaine
+              </p>
+            )}
           </div>
           <button 
             onClick={() => setIsOpen(false)}
@@ -155,22 +176,45 @@ export function AddToProjectDialog({
           {step === "project" ? (
             <div className="space-y-3 max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
               {userProjects.length > 0 ? (
-                userProjects.map((project) => (
-                  <button
-                    key={project.id}
-                    onClick={() => {
-                      setSelectedProjectId(project.id);
-                      setStep("area");
-                    }}
-                    className="w-full flex items-center justify-between p-5 rounded-2xl bg-stone-50 hover:bg-kelen-green-50 group transition-all"
-                  >
-                    <div className="text-left">
-                      <p className="font-bold text-stone-900 group-hover:text-kelen-green-700">{project.title}</p>
-                      <p className="text-xs text-stone-400 uppercase tracking-widest font-black mt-0.5">{project.category}</p>
-                    </div>
-                    <ChevronRight className="w-5 h-5 text-stone-300 group-hover:text-kelen-green-400 group-hover:translate-x-1 transition-all" />
-                  </button>
-                ))
+                userProjects.map((project) => {
+                  const hasAreas = project.development_areas && project.development_areas.length > 0;
+                  console.log(`[ADD_TO_PROJECT_DIALOG] Project ${project.id}:`, {
+                    title: project.title,
+                    hasAreas,
+                    areas: project.development_areas
+                  });
+                  
+                  return (
+                    <button
+                      key={project.id}
+                      onClick={() => {
+                        setSelectedProjectId(project.id);
+                        setStep("area");
+                      }}
+                      className="w-full flex items-center justify-between p-5 rounded-2xl bg-stone-50 hover:bg-kelen-green-50 group transition-all"
+                    >
+                      <div className="text-left flex-1">
+                        <p className="font-bold text-stone-900 group-hover:text-kelen-green-700">{project.title}</p>
+                        <p className="text-xs text-stone-400 uppercase tracking-widest font-black mt-0.5">{project.category}</p>
+                        {hasAreas && (
+                          <div className="flex flex-wrap gap-1 mt-2">
+                            {project.development_areas.slice(0, 2).map((area: string) => (
+                              <span key={area} className="text-[8px] px-2 py-0.5 bg-kelen-green-100 text-kelen-green-700 rounded-full font-bold">
+                                {area}
+                              </span>
+                            ))}
+                            {project.development_areas.length > 2 && (
+                              <span className="text-[8px] px-2 py-0.5 bg-stone-200 text-stone-600 rounded-full font-bold">
+                                +{project.development_areas.length - 2}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                      <ChevronRight className="w-5 h-5 text-stone-300 group-hover:text-kelen-green-400 group-hover:translate-x-1 transition-all" />
+                    </button>
+                  );
+                })
               ) : (
                 <div className="text-center py-12 bg-stone-50 rounded-3xl border-2 border-dashed border-stone-100">
                   <p className="text-stone-400 font-medium mb-4">Vous n&apos;avez pas encore de projet actif.</p>
@@ -263,24 +307,29 @@ export function AddToProjectDialog({
                     Domaines du projet
                   </label>
                   {projectAreas.length > 0 ? (
-                    <div className="space-y-2 max-h-[40vh] overflow-y-auto pr-2 custom-scrollbar">
-                      {projectAreas.map((area) => (
-                        <button
-                          key={area}
-                          onClick={() => setSelectedArea(area)}
-                          className={`w-full flex items-center justify-between p-4 rounded-xl border-2 transition-all ${
-                            selectedArea === area
-                              ? "border-kelen-green-500 bg-kelen-green-50"
-                              : "border-stone-200 bg-stone-50 hover:border-kelen-green-300 hover:bg-kelen-green-50/50"
-                          }`}
-                        >
-                          <span className="font-bold text-stone-900">{area}</span>
-                          {selectedArea === area && (
-                            <Check className="w-5 h-5 text-kelen-green-600" />
-                          )}
-                        </button>
-                      ))}
-                    </div>
+                    <>
+                      <p className="text-[9px] text-stone-400 font-medium mb-2">
+                        Ces domaines ont été définis pour ce projet. Sélectionnez-en un.
+                      </p>
+                      <div className="space-y-2 max-h-[40vh] overflow-y-auto pr-2 custom-scrollbar">
+                        {projectAreas.map((area) => (
+                          <button
+                            key={area}
+                            onClick={() => setSelectedArea(area)}
+                            className={`w-full flex items-center justify-between p-4 rounded-xl border-2 transition-all ${
+                              selectedArea === area
+                                ? "border-kelen-green-500 bg-kelen-green-50"
+                                : "border-stone-200 bg-stone-50 hover:border-kelen-green-300 hover:bg-kelen-green-50/50"
+                            }`}
+                          >
+                            <span className="font-bold text-stone-900">{area}</span>
+                            {selectedArea === area && (
+                              <Check className="w-5 h-5 text-kelen-green-600" />
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    </>
                   ) : (
                     <div className="text-center py-8 bg-stone-50 rounded-2xl border-2 border-dashed border-stone-200">
                       <p className="text-stone-400 font-medium mb-2">Ce projet n&apos;a pas encore de domaines</p>

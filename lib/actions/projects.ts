@@ -319,6 +319,7 @@ export async function updateProfessionalSelection(projectId: string, linkId: str
 }
 
 export async function getUserProjects() {
+  console.log('[GET_USER_PROJECTS] Fetching projects for user');
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -326,7 +327,7 @@ export async function getUserProjects() {
 
   const { data, error } = await supabase
     .from("user_projects")
-    .select("id, title, category, location")
+    .select("id, title, category, location, development_areas")
     .eq("user_id", user.id)
     .order("updated_at", { ascending: false });
 
@@ -334,6 +335,15 @@ export async function getUserProjects() {
     console.error("Error fetching user projects:", error);
     return [];
   }
+
+  console.log('[GET_USER_PROJECTS] Fetched', data?.length, 'projects');
+  data?.forEach((project, idx) => {
+    console.log(`[GET_USER_PROJECTS] Project ${idx + 1}:`, {
+      id: project.id,
+      title: project.title,
+      development_areas: project.development_areas
+    });
+  });
 
   return data;
 }
