@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { updateProfessionalRank, updateProfessionalSelection, manageProjectProfessional, updateProjectArea } from "@/lib/actions/projects";
 import { AddExternalProModal } from "./AddExternalProModal";
+import { AddProSearchDialog } from "./AddProSearchDialog";
 import { ProfessionalStatus } from "@/lib/supabase/types";
 
 import { ProjectProfessional, Professional } from "@/lib/types/projects";
@@ -21,6 +22,7 @@ interface DevelopmentAreaRowProps {
 export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId, onRefresh, onDelete }: DevelopmentAreaRowProps) {
   const [isUpdating, setIsUpdating] = useState(false);
   const [showAddExternal, setShowAddExternal] = useState(false);
+  const [showAddSearch, setShowAddSearch] = useState(false);
   const [isEditingName, setIsEditingName] = useState(false);
   const [editedName, setEditedName] = useState(areaName);
   const [editingMember, setEditingMember] = useState<{ id: string; data: { name: string; phone: string; category: string; location: string; note: string } } | null>(null);
@@ -49,7 +51,8 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
       areaName, 
       'remove', 
       member.is_external,
-      member.is_external ? { name: member.external_name || undefined } : undefined
+      member.is_external ? { name: member.external_name || undefined } : undefined,
+      areaId
     );
     onRefresh();
     setIsUpdating(false);
@@ -112,14 +115,14 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
           </span>
         </div>
         <div className="flex items-center gap-2 sm:gap-3 flex-wrap pl-3 sm:pl-0">
-          <Link
-            href={`/?projectId=${projectId}&areaName=${encodeURIComponent(areaName)}`}
+          <button
+            onClick={() => setShowAddSearch(true)}
             className="flex items-center gap-1 sm:gap-2 text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-primary hover:underline bg-primary/5 px-2 sm:px-4 py-1.5 sm:py-2 rounded-full border border-primary/10 transition-all hover:bg-primary/10"
           >
-            <span className="material-symbols-outlined text-xs sm:text-sm">search</span>
-            <span className="hidden xs:inline">Trouver un pro</span>
-            <span className="xs:hidden">Trouver</span>
-          </Link>
+            <span className="material-symbols-outlined text-xs sm:text-sm" style={{ fontVariationSettings: "'FILL' 0, 'wght' 700, 'GRAD' 0, 'opsz' 24" }}>search</span>
+            <span className="hidden xs:inline">Rechercher</span>
+            <span className="xs:hidden">Chercher</span>
+          </button>
           <button
             onClick={handleAddExternal}
             className="flex items-center gap-1 sm:gap-2 text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-on-surface-variant hover:text-on-surface transition-colors"
@@ -296,22 +299,32 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
         ) : (
           <div className="w-full py-8 sm:py-12 text-center bg-surface-container-low/50 rounded-xl sm:rounded-3xl border border-dashed border-outline-variant/30">
              <p className="text-on-surface-variant font-medium italic text-xs sm:text-sm">Aucun profil à comparer dans ce domaine.</p>
-             <Link
-               href={`/?projectId=${projectId}&areaName=${encodeURIComponent(areaName)}`}
+             <button
+               onClick={() => setShowAddSearch(true)}
                className="mt-2 sm:mt-4 text-[10px] sm:text-xs font-bold text-primary hover:underline flex items-center gap-1.5 sm:gap-2 mx-auto justify-center"
              >
                <span className="material-symbols-outlined text-xs sm:text-sm">search</span>
                Trouver un pro
-             </Link>
+             </button>
           </div>
         )}
       </div>
       
+      <AddProSearchDialog
+        isOpen={showAddSearch}
+        onClose={() => setShowAddSearch(false)}
+        projectId={projectId}
+        areaName={areaName}
+        areaId={areaId}
+        onSuccess={onRefresh}
+      />
+
       <AddExternalProModal
         isOpen={showAddExternal}
         onClose={() => setShowAddExternal(false)}
         projectId={projectId}
         areaName={areaName}
+        areaId={areaId}
         onSuccess={onRefresh}
       />
 
@@ -320,6 +333,7 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
         onClose={() => setEditingMember(null)}
         projectId={projectId}
         areaName={areaName}
+        areaId={areaId}
         onSuccess={() => { setEditingMember(null); onRefresh(); }}
         editLinkId={editingMember?.id}
         initialData={editingMember?.data}

@@ -268,21 +268,48 @@ export async function manageProjectProfessional(
     console.log('[MANAGE_PROJECT_PROFESSIONAL] ✅ Successfully added pro to project:', data);
     log("project.pro.add.ok", { userId: user.id, projectId, area, isExternal, proId: isExternal ? null : proId, externalName: isExternal ? externalData?.name : null });
   } else {
-    const { error } = await supabase
+    console.log('[MANAGE_PROJECT_PROFESSIONAL] Action: remove', { projectId, proId, area, isExternal, externalName: externalData?.name });
+    
+    // We try to be as precise as possible for deletion
+    const query = supabase
       .from("project_professionals")
       .delete()
-      .eq("project_id", projectId)
-      .eq(isExternal ? "external_name" : "professional_id", isExternal ? externalData?.name : proId)
-      .eq("development_area", area);
+      .eq("project_id", projectId);
+
+    if (isExternal) {
+      query.eq("external_name", externalData?.name).eq("is_external", true);
+    } else {
+      query.eq("professional_id", proId).eq("is_external", false);
+    }
+
+    if (area) {
+      query.eq("development_area", area);
+    }
+    
+    // If areaId is provided, use it for extra precision
+    if (areaId) {
+      query.eq("project_area_id", areaId);
+    }
+
+    const { error, count } = await query;
+
+    console.log('[MANAGE_PROJECT_PROFESSIONAL] Delete result:', { error: error?.message, count });
 
     if (error) {
+      console.error('[MANAGE_PROJECT_PROFESSIONAL] ❌ Delete error:', error.message);
       log("project.pro.remove.error", { userId: user.id, projectId, area, isExternal, proId, error: error.message });
       return { error: error.message };
     }
+    
+    if (count === 0) {
+      console.warn('[MANAGE_PROJECT_PROFESSIONAL] ⚠️ SILENT RLS FILTERING or no record found! Action: remove');
+    }
+
     log("project.pro.remove.ok", { userId: user.id, projectId, area, isExternal, proId: isExternal ? null : proId });
   }
 
   revalidatePath(`/projets/${projectId}`);
+  revalidatePath(`/projets/${projectId}/pros`); // Added sync for pros page
   return { success: true };
 }
 
@@ -590,17 +617,38 @@ export async function deleteProjectArea(areaId: string, projectId: string) {
 
   if (!project) return { error: "Projet introuvable ou accès refusé." };
 
+  console.log('[DELETE_PROJECT_AREA] Cleaning up professionals in area:', areaId);
+  // FIRST: Delete all professionals associated with this area to ensure sync with /pros page
+  const { error: proDeleteError, count: proCount } = await supabase
+    .from("project_professionals")
+    .delete()
+    .eq("project_area_id", areaId);
+
+  if (proDeleteError) {
+    console.error('[DELETE_PROJECT_AREA] ❌ Error cleaning up professionals:', proDeleteError.message);
+    // We continue even if this fails, or should we abort? 
+    // Usually it's better to keep the area if cleanup fails to avoid orphans.
+    return { error: `Échec du nettoyage des professionnels: ${proDeleteError.message}` };
+  }
+  
+  console.log('[DELETE_PROJECT_AREA] Removed', proCount, 'professionals from area');
+
   const { error } = await supabase
     .from("project_areas")
     .delete()
     .eq("id", areaId);
 
   if (error) {
+    console.error('[DELETE_PROJECT_AREA] ❌ Error deleting area:', error.message);
     log("area.delete.error", { userId: user.id, projectId, areaId, error: error.message });
     return { error: error.message };
   }
+
+  console.log('[DELETE_PROJECT_AREA] ✅ Area successfully deleted');
   log("area.delete.ok", { userId: user.id, projectId, areaId });
+  
   revalidatePath(`/projets/${projectId}`);
+  revalidatePath(`/projets/${projectId}/pros`); // Added sync for pros page
   return { success: true };
 }
 

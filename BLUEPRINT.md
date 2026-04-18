@@ -71,7 +71,7 @@ The application adheres to a premium, editorial-grade design system characterize
 - [x] Universal Project Comparison Engine (Row-based comparison, ranking).
 - [x] Add-to-Project assignment workflow (direct from profile & search).
 - [x] Granular Project Step Management (Phases, Budgets, Pro-Association).
-- [ ] Fix ProCard rendering to support both internal and external professional profiles.
+- [x] Fix ProCard rendering to support both internal and external professional profiles.
 - [ ] Backend logic for exporting project steps (PDF/Excel)
 - [ ] Financial dashboard aggregation across all project steps
 - [ ] Role-based access control (RBAC) refinements for professional assistants

@@ -11,12 +11,13 @@ interface AddExternalProModalProps {
   onClose: () => void;
   projectId: string;
   areaName: string;
+  areaId?: string;
   onSuccess: () => void;
   editLinkId?: string;
   initialData?: { name: string; phone: string; category: string; location: string; note: string };
 }
 
-export function AddExternalProModal({ isOpen, onClose, projectId, areaName, onSuccess, editLinkId, initialData }: AddExternalProModalProps) {
+export function AddExternalProModal({ isOpen, onClose, projectId, areaName, areaId, onSuccess, editLinkId, initialData }: AddExternalProModalProps) {
   const isEditMode = !!editLinkId;
   const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState(initialData || {
@@ -64,7 +65,8 @@ export function AddExternalProModal({ isOpen, onClose, projectId, areaName, onSu
             category: formData.category,
             location: formData.location,
             note: formData.note
-          }
+          },
+          areaId
         );
       }
 
