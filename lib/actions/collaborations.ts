@@ -174,18 +174,18 @@ export async function updateProjectProfessionalSelectionStatus(
     }
   }
 
-  // 3. Cleanup collaboration if moving AWAY from finalist
-  if (oldStatus === 'finalist' && newStatus !== 'finalist') {
+  // 3. Cleanup collaboration if moving AWAY from finalist or agreed
+  const wasFinalistOrAgreed = oldStatus === 'finalist' || oldStatus === 'agreed';
+  const isFinalistOrAgreed = newStatus === 'finalist' || newStatus === 'agreed';
+
+  if (wasFinalistOrAgreed && !isFinalistOrAgreed) {
+    console.log('[ACTION] Moving away from finalist/agreed: DELETING collaboration record');
     const { error: collabError } = await supabase
       .from('project_collaborations')
-      .update({ 
-        status: 'not_picked', 
-        ended_at: new Date().toISOString() 
-      })
-      .eq('project_professional_id', projectProfessionalId)
-      .in('status', ['pending', 'negotiating']);
+      .delete()
+      .eq('project_professional_id', projectProfessionalId);
     
-    console.log('[DB] Cleanup pending collaboration:', { error: collabError?.message });
+    console.log('[DB] Collaboration delete result:', { error: collabError?.message });
   }
 
   // 4. Update the status
