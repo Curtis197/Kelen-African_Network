@@ -482,11 +482,13 @@ export async function acceptProposal(collaborationId: string) {
   // Get collaboration details
   const { data: collabRaw4, error: collabError } = await supabase
     .from('project_collaborations')
-    .select('project_id, professional_id, project_professional_id, professional:professionals(user_id)')
+    .select('project_id, professional_id, project_professional_id, professional:professionals(user_id, category, area_id)')
     .eq('id', collaborationId)
     .single();
 
-  const collab = collabRaw4 as typeof collabRaw4 & { professional: { user_id: string } | null };
+  const collab = collabRaw4 as typeof collabRaw4 & { 
+    professional: { user_id: string; category: string; area_id: string } | null 
+  };
 
   console.log('[DB] Get collaboration:', { error: collabError?.message });
   if (!collab) return { success: false, error: 'Collaboration not found' };
@@ -517,26 +519,55 @@ export async function acceptProposal(collaborationId: string) {
 
   console.log('[DB] Update winner project_professionals:', { error: ppError?.message });
 
-  // Decline other finalists
+  // Decline other finalists in the same domain/area
   const { data: otherFinalistsRaw, error: finalistsError } = await supabase
     .from('project_collaborations')
-    .select('id, professional_id, project_professional_id, professional:professionals(user_id)')
+    .select('id, professional_id, project_professional_id, professional:professionals(user_id, category, area_id)')
     .eq('project_id', collab.project_id)
     .neq('id', collaborationId)
     .in('status', ['pending', 'negotiating']);
 
-  type FinalistRow = { id: string; professional_id: string; project_professional_id: string; professional: { user_id: string } | null };
+  type FinalistRow = { 
+    id: string; 
+    professional_id: string; 
+    project_professional_id: string; 
+    professional: { user_id: string; category: string; area_id: string } | null 
+  };
   const otherFinalists = otherFinalistsRaw as FinalistRow[] | null;
 
-  console.log('[DB] Find other finalists:', { 
+  console.log('[DB] Find candidate finalists for refusal:', { 
     count: otherFinalists?.length, 
     error: finalistsError?.message 
   });
 
   if (otherFinalists) {
+    const winningCategory = collab.professional?.category;
+    const winningAreaId = collab.professional?.area_id;
+
+    console.log('[ACTION] Domain-based filtering:', { 
+      winningCategory, 
+      winningAreaId,
+      totalCandidates: otherFinalists.length 
+    });
+
     for (const finalist of otherFinalists) {
+      const isSameDomain = (
+        (winningCategory && finalist.professional?.category === winningCategory) ||
+        (winningAreaId && finalist.professional?.area_id === winningAreaId)
+      );
+
+      console.log('[FILTER] Professional refusal decision:', {
+        proId: finalist.professional_id,
+        category: finalist.professional?.category,
+        areaId: finalist.professional?.area_id,
+        isSameDomain,
+        action: isSameDomain ? 'REFUSING' : 'SKIPPING'
+      });
+
+      if (!isSameDomain) continue;
+
       // Update collaboration
-      await supabase
+      const { error: updateCollabError } = await supabase
         .from('project_collaborations')
         .update({
           status: 'not_picked',
@@ -544,17 +575,26 @@ export async function acceptProposal(collaborationId: string) {
         })
         .eq('id', finalist.id);
 
+      if (updateCollabError) {
+        console.error('[DB] Failed to refuse collaboration:', { id: finalist.id, error: updateCollabError.message });
+        continue;
+      }
+
       // Update project_professionals
       if (finalist.project_professional_id) {
-        await supabase
+        const { error: updatePPError } = await supabase
           .from('project_professionals')
           .update({ selection_status: 'not_selected' })
           .eq('id', finalist.project_professional_id);
+        
+        if (updatePPError) {
+          console.error('[DB] Failed to update PP status:', { id: finalist.project_professional_id, error: updatePPError.message });
+        }
       }
 
       // Notify declined finalist
       if (finalist.professional?.user_id) {
-        await createNotification({
+        const { error: notifError } = await createNotification({
           userId: finalist.professional.user_id,
           type: 'proposal_declined',
           title: 'Proposition non retenue',
@@ -563,6 +603,10 @@ export async function acceptProposal(collaborationId: string) {
           icon: 'info',
           metadata: { collaborationId: finalist.id, projectId: collab.project_id },
         });
+
+        if (notifError) {
+          console.warn('[NOTIFICATION] Failed to send refusal notification:', { proId: finalist.professional_id, error: notifError });
+        }
       }
     }
   }
