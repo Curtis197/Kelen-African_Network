@@ -20,8 +20,14 @@ import {
   XCircle,
   RefreshCw,
   Send,
+  Paperclip,
+  File,
+  X,
+  Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
+import { uploadFile } from "@/lib/supabase/storage";
+import { useRef } from "react";
 
 const STATUS_BADGE_CONFIG: Record<string, { label: string; className: string }> = {
   pending: { label: "En attente", className: "bg-yellow-100 text-yellow-700" },
@@ -39,8 +45,11 @@ export default function ProposalReviewPage() {
   const [professional, setProfessional] = useState<ProfessionalSnapshot | null>(null);
   const [messages, setMessages] = useState<CollaborationMessage[]>([]);
   const [replyText, setReplyText] = useState("");
+  const [attachments, setAttachments] = useState<{ url: string; name: string; type: string }[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   console.log('[COMPONENT] ========================================');
   console.log('[COMPONENT] ProposalReviewPage RENDER');
@@ -302,6 +311,44 @@ export default function ProposalReviewPage() {
     console.log('[STATE] isSubmitting → false (handleRequestRevision)');
   };
 
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    console.log('[ACTION] handleFileSelect STARTED, files:', files.length);
+    setIsUploading(true);
+    
+    try {
+      const file = files[0]; // Instant upload handle one by one for better UX
+      console.log('[STORAGE] Uploading file:', file.name, file.type, file.size);
+      
+      const bucket = "collaboration-attachments";
+      const path = `${proIdStr}/${Date.now()}`;
+      
+      const publicUrl = await uploadFile(file, bucket, path);
+      console.log('[STORAGE] ✅ Upload success, URL:', publicUrl);
+      
+      setAttachments(prev => [...prev, {
+        url: publicUrl,
+        name: file.name,
+        type: file.type
+      }]);
+      
+      toast.success("Fichier ajouté");
+    } catch (error: any) {
+      console.error('[STORAGE] ❌ Upload failed:', error);
+      toast.error(error.message || "Erreur lors de l'envoi du fichier");
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
+  const removeAttachment = (index: number) => {
+    console.log('[ACTION] removeAttachment index:', index);
+    setAttachments(prev => prev.filter((_, i) => i !== index));
+  };
+
   const handleSendReply = async () => {
     if (!collaboration || !replyText.trim()) return;
 
@@ -343,6 +390,7 @@ export default function ProposalReviewPage() {
         sender_role: "client",
         message_type: "general",
         content: replyText.trim(),
+        attachments: attachments, // JSONB column
       }])
       .select()
       .single();
@@ -371,6 +419,8 @@ export default function ProposalReviewPage() {
         console.log('[STATE] messages appended, new count:', messages.length + 1);
       }
       toast.success("Message envoyé");
+      setAttachments([]);
+      console.log('[STATE] attachments cleared');
     }
     setIsSubmitting(false);
     console.log('[STATE] isSubmitting → false (handleSendReply)');
@@ -573,7 +623,36 @@ export default function ProposalReviewPage() {
                         </Badge>
                       )}
                     </div>
+                    </div>
                     <div className="text-sm whitespace-pre-wrap">{msg.content}</div>
+                    
+                    {/* Render Attachments */}
+                    {msg.attachments && Array.isArray(msg.attachments) && msg.attachments.length > 0 && (
+                      <div className="mt-3 flex flex-wrap gap-2 border-t border-current/10 pt-2">
+                        {msg.attachments.map((att: any, idx: number) => {
+                          const isImg = att.type?.startsWith('image/');
+                          return (
+                            <a 
+                              key={idx} 
+                              href={att.url} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="group relative flex items-center gap-2 bg-black/5 hover:bg-black/10 rounded-lg p-2 transition-colors overflow-hidden max-w-[200px]"
+                            >
+                              {isImg ? (
+                                <img src={att.url} alt={att.name} className="w-8 h-8 object-cover rounded" />
+                              ) : (
+                                <File className="w-6 h-6 opacity-40 shrink-0" />
+                              )}
+                              <span className="text-[10px] truncate font-medium opacity-70 group-hover:opacity-100">
+                                {att.name}
+                              </span>
+                            </a>
+                          );
+                        })}
+                      </div>
+                    )}
+                    
                     <div className="text-xs text-on-surface-variant/60 mt-2">
                       {new Date(msg.created_at).toLocaleDateString("fr-FR", {
                         day: "numeric",
@@ -590,21 +669,75 @@ export default function ProposalReviewPage() {
 
           {/* Reply Input */}
           {collaboration.status !== "active" && (
-            <div className="flex gap-2">
-              <textarea
-                value={replyText}
-                onChange={(e) => setReplyText(e.target.value)}
-                placeholder="Votre message..."
-                className="flex-1 bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/50 resize-none focus:outline-none focus:border-primary/50"
-                rows={3}
-              />
-              <button
-                onClick={handleSendReply}
-                disabled={!replyText.trim() || isSubmitting}
-                className="self-end px-4 py-3 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <Send className="w-4 h-4" />
-              </button>
+            <div className="space-y-4">
+              {/* Attachment Previews */}
+              {attachments.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {attachments.map((att, idx) => (
+                    <div key={idx} className="relative group">
+                      <div className="bg-surface-container-high rounded-lg p-2 flex items-center gap-2 pr-8 animate-in fade-in slide-in-from-bottom-2">
+                        {att.type.startsWith('image/') ? (
+                          <img src={att.url} alt={att.name} className="w-10 h-10 object-cover rounded" />
+                        ) : (
+                          <File className="w-10 h-10 text-on-surface-variant/40" />
+                        )}
+                        <div className="text-[10px] max-w-[100px] truncate font-medium">
+                          {att.name}
+                        </div>
+                        <button
+                          onClick={() => removeAttachment(idx)}
+                          className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                  {isUploading && (
+                    <div className="bg-surface-container-high rounded-lg p-2 flex items-center gap-2 h-[56px] min-w-[100px] animate-pulse">
+                      <Loader2 className="w-4 h-4 animate-spin opacity-40" />
+                      <span className="text-[10px] opacity-40">Chargement...</span>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <textarea
+                    value={replyText}
+                    onChange={(e) => setReplyText(e.target.value)}
+                    placeholder="Votre message..."
+                    className="w-full bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/50 resize-none focus:outline-none focus:border-primary/50 pr-12 min-h-[100px]"
+                  />
+                  
+                  {/* Hidden Input */}
+                  <input 
+                    type="file" 
+                    ref={fileInputRef} 
+                    onChange={handleFileSelect} 
+                    className="hidden" 
+                    accept="image/*,application/pdf"
+                  />
+                  
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isUploading || isSubmitting}
+                    className="absolute right-3 bottom-3 p-2 bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant rounded-lg transition-colors disabled:opacity-50"
+                    title="Ajouter un document ou une image"
+                  >
+                    {isUploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Paperclip className="w-4 h-4" />}
+                  </button>
+                </div>
+
+                <button
+                  onClick={handleSendReply}
+                  disabled={(!replyText.trim() && attachments.length === 0) || isSubmitting || isUploading}
+                  className="self-end px-4 py-3 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed h-[100px] inline-flex items-center justify-center min-w-[56px]"
+                >
+                  <Send className="w-5 h-5" />
+                </button>
+              </div>
             </div>
           )}
         </div>

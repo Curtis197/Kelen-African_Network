@@ -9,6 +9,7 @@ const ALLOWED_MIME_TYPES: Record<string, string[]> = {
   "evidence-photos": ["image/jpeg", "image/png", "image/webp"],
   portfolios: ["image/jpeg", "image/png", "image/webp", "application/pdf", "video/mp4", "video/webm"],
   "verification-docs": ["application/pdf", "image/jpeg", "image/png"],
+  "collaboration-attachments": ["image/jpeg", "image/png", "image/webp", "application/pdf"],
 };
 
 function validateFile(file: File, bucket: string): string | null {

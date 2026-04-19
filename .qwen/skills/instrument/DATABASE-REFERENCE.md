@@ -780,4 +780,15 @@ const { data } = await supabase
 
 ---
 
+### 📦 Storage Buckets
+
+| Bucket | Public | Size Limit | Formats | Purpose |
+|--------|--------|------------|---------|---------|
+| `portfolios` | Yes | 50MB | ALL | Pro showcase images, videos, docs |
+| `project-docs` | No | 10MB | ALL | Contract documents, plans |
+| `evidence-photos`| No | 5MB | Images | Log evidence photos |
+| `collaboration-attachments` | **Yes** | 10MB | Images, PDFs | Negotiation message attachments |
+
+---
+
 **Keep this file updated as schema changes!** 📝

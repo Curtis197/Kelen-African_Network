@@ -777,6 +777,15 @@ CREATE TABLE public.pro_google_reviews_cache (
 --   allowed_mime_types: {} (ALL types allowed — updated 2026-04-12)
 --   public: false
 
+-- Bucket: collaboration-attachments
+--   file_size_limit: 10 MB
+--   allowed_mime_types: image/jpeg, image/png, image/webp, application/pdf
+--   public: true
+--   RLS Policies:
+--     - Collaboration attachments public select (SELECT) - public
+--     - Collaboration attachments auth insert (INSERT) - authenticated
+--     - Collaboration attachments auth delete (DELETE) - authenticated (owner only)
+
 -- Note: Storage bucket policies are defined in migrations, not here.
 -- See: supabase/migrations/20260323000016_storage.sql
 -- See: supabase/migrations/20260412000004_allow_all_doc_types.sql
