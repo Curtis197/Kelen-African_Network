@@ -372,22 +372,25 @@ function ProCard({
                 </>
               ) : (
                 <>
-                  <Link
-                    href={`/projets/${pro.project_id}/pros/proposal/${pro.professional_id}`}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container text-on-surface-variant rounded-lg text-xs font-medium hover:bg-surface-container-high transition-colors"
-                  >
-                    <MessageSquare className="w-3 h-3" />
-                    Voir la discussion
-                  </Link>
-                  <button
-                    onClick={() => {
-                      toast.info("Envoyer un rappel — fonctionnalité à venir");
-                    }}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container/50 text-on-surface-variant/70 rounded-lg text-xs font-medium hover:bg-surface-container transition-colors"
-                  >
-                    <Bell className="w-3 h-3" />
-                    Envoyer un rappel
-                  </button>
+                  {collab?.messages && collab.messages.length > 0 ? (
+                    <Link
+                      href={`/projets/${pro.project_id}/pros/proposal/${pro.professional_id}`}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container text-on-surface-variant rounded-lg text-xs font-medium hover:bg-surface-container-high transition-colors"
+                    >
+                      <MessageSquare className="w-3 h-3" />
+                      Voir la conversation
+                    </Link>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        toast.info("Envoyer un rappel — fonctionnalité à venir");
+                      }}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container/50 text-on-surface-variant/70 rounded-lg text-xs font-medium hover:bg-surface-container transition-colors"
+                    >
+                      <Bell className="w-3 h-3" />
+                      Envoyer un rappel
+                    </button>
+                  )}
                 </>
               )}
             </>

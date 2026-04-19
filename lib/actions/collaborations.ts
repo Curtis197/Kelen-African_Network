@@ -814,7 +814,8 @@ export async function getProjectProList(projectId: string) {
         proposal_currency,
         proposal_timeline,
         proposal_submitted_at,
-        created_at
+        created_at,
+        messages:collaboration_messages(id)
       )
     `)
     .eq('project_id', projectId)
