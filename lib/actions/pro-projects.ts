@@ -2,7 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
-import type { ProProject, ProProjectFormData, ProProjectImage } from "@/lib/types/pro-projects";
+import type { ProProject, ProProjectFormData, ProProjectImage, ProProjectStatus } from "@/lib/types/pro-projects";
 
 console.log("[pro-projects] Server action loaded");
 

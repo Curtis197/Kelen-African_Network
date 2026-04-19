@@ -482,12 +482,12 @@ export async function acceptProposal(collaborationId: string) {
   // Get collaboration details
   const { data: collabRaw4, error: collabError } = await supabase
     .from('project_collaborations')
-    .select('project_id, professional_id, project_professional_id, professional:professionals(user_id, category, area_id)')
+    .select('project_id, professional_id, project_professional_id, professional:professionals(user_id, category, area_id, profession_id)')
     .eq('id', collaborationId)
     .single();
 
   const collab = collabRaw4 as typeof collabRaw4 & { 
-    professional: { user_id: string; category: string; area_id: string } | null 
+    professional: { user_id: string; category: string; area_id: string; profession_id: string } | null 
   };
 
   console.log('[DB] Get collaboration:', { error: collabError?.message });
