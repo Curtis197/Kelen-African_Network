@@ -23,6 +23,7 @@ interface ProfessionalCardProps {
   avgRating: number | null;
   reviewCount: number;
   profilePictureUrl?: string | null;
+  customDomain?: string | null;
   selectionContext?: {
     projectId: string;
     areaName: string;
@@ -43,9 +44,16 @@ export function ProfessionalCard({
   avgRating,
   reviewCount,
   profilePictureUrl,
+  customDomain,
   selectionContext,
 }: ProfessionalCardProps) {
   const router = useRouter();
+  console.log('[COMPONENT] ProfessionalCard render:', {
+    slug,
+    businessName,
+    hasCustomDomain: !!customDomain,
+    customDomain,
+  });
   const [isAdding, setIsAdding] = useState(false);
   const [added, setAdded] = useState(false);
 
@@ -78,19 +86,36 @@ export function ProfessionalCard({
       setIsAdding(false);
     }
   };
+  const destination = customDomain
+    ? `https://${customDomain}`
+    : `/professionnels/${slug}`;
+
+  const handleCardClick = () => {
+    console.log('[COMPONENT] ProfessionalCard click:', {
+      slug,
+      hasCustomDomain: !!customDomain,
+      destination,
+    });
+    if (customDomain) {
+      window.open(destination, '_blank', 'noopener,noreferrer');
+    } else {
+      router.push(destination);
+    }
+  };
+
   return (
     <div
-      onClick={() => router.push(`/professionnels/${slug}`)}
+      onClick={handleCardClick}
       className="group block cursor-pointer rounded-[1.5rem] sm:rounded-[2rem] bg-surface-container-lowest p-5 sm:p-8 transition-all duration-500 hover:shadow-[0_32px_64px_-16px_rgba(0,0,0,0.12)] hover:-translate-y-2 hover:ring-1 hover:ring-kelen-green-100/50 relative overflow-hidden ring-1 ring-outline-variant/10"
       role="link"
       tabIndex={0}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          router.push(`/professionnels/${slug}`);
+          handleCardClick();
         }
       }}
-      aria-label={`Voir le profil de ${businessName}`}
+      aria-label={`Voir le site de ${businessName}`}
     >
       {added && (
         <div className="absolute inset-0 bg-kelen-green-600/90 backdrop-blur-sm z-30 flex flex-col items-center justify-center text-white animate-in fade-in duration-300">

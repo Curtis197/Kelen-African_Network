@@ -221,29 +221,40 @@ export function ProfessionalDirectory({
       {/* Professional Grid */}
       {filteredPros.length > 0 ? (
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {filteredPros.map((pro) => (
-            <ProfessionalCard
-              key={pro.slug}
-              id={pro.id}
-              slug={pro.slug}
-              businessName={pro.business_name}
-              ownerName={pro.owner_name}
-              category={pro.category}
-              city={pro.city}
-              country={pro.country}
-              status={pro.status}
-              recommendationCount={pro.recommendation_count}
-              signalCount={pro.signal_count}
-              avgRating={pro.avg_rating}
-              reviewCount={pro.review_count}
-              profilePictureUrl={pro.portfolio_photos?.[0]}
-              selectionContext={
-                projectId && selectedAreaName
-                  ? { projectId, areaName: selectedAreaName }
-                  : undefined
-              }
-            />
-          ))}
+          {filteredPros.map((pro) => {
+            // NOTE: customDomain will always be null here because the parent page query
+            // does not include professional_portfolio(custom_domain, domain_status) in
+            // its select. To enable custom domain links in this directory, the parent
+            // page must be updated to include that relation in its Supabase query.
+            const portfolio = (pro as any).professional_portfolio?.[0];
+            const customDomain =
+              portfolio?.domain_status === 'active' ? portfolio.custom_domain : null;
+
+            return (
+              <ProfessionalCard
+                key={pro.slug}
+                id={pro.id}
+                slug={pro.slug}
+                businessName={pro.business_name}
+                ownerName={pro.owner_name}
+                category={pro.category}
+                city={pro.city}
+                country={pro.country}
+                status={pro.status}
+                recommendationCount={pro.recommendation_count}
+                signalCount={pro.signal_count}
+                avgRating={pro.avg_rating}
+                reviewCount={pro.review_count}
+                profilePictureUrl={pro.portfolio_photos?.[0]}
+                customDomain={customDomain}
+                selectionContext={
+                  projectId && selectedAreaName
+                    ? { projectId, areaName: selectedAreaName }
+                    : undefined
+                }
+              />
+            );
+          })}
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center py-20 text-center">

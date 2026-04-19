@@ -23,6 +23,68 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // ── Custom domain routing ─────────────────────────────
+  const host = request.headers.get("host") || "";
+  const platformHosts = [
+    "kelen.africa",
+    "kelen-pro.com",
+    "localhost:3000",
+    "localhost",
+  ];
+
+  const isCustomDomain = !platformHosts.some(
+    ph => host === ph || host.endsWith(`.${ph}`)
+  );
+
+  if (isCustomDomain) {
+    middlewareLog.info(`[MIDDLEWARE] Custom domain hit: ${host}${pathname}`, { host, pathname });
+
+    const supabaseCustom = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "",
+      {
+        cookies: {
+          getAll() { return request.cookies.getAll(); },
+          setAll() {},
+        },
+      }
+    );
+
+    const { data: portfolio, error: portfolioError } = await supabaseCustom
+      .from("professional_portfolio")
+      .select("professional_id, professionals!inner(slug, is_visible)")
+      .eq("custom_domain", host)
+      .eq("domain_status", "active")
+      .single();
+
+    console.log('[MIDDLEWARE] Custom domain DB lookup:', {
+      host,
+      hasPortfolio: !!portfolio,
+      hasError: !!portfolioError,
+      errorCode: portfolioError?.code,
+    });
+
+    if (portfolioError?.code === '42501') {
+      console.error('[MIDDLEWARE] [RLS] ❌ EXPLICIT RLS BLOCKING on professional_portfolio custom domain lookup!');
+    }
+
+    const slug = (portfolio?.professionals as any)?.slug;
+    const isVisible = (portfolio?.professionals as any)?.is_visible;
+
+    if (!slug || !isVisible) {
+      middlewareLog.warn(`[MIDDLEWARE] Custom domain not found or not visible: ${host}`, { host });
+      return NextResponse.next();
+    }
+
+    const rewriteUrl = new URL(request.url);
+    const originalPath = pathname === "/" ? "" : pathname;
+    rewriteUrl.pathname = `/professionnels/${slug}${originalPath}`;
+
+    middlewareLog.info(`[MIDDLEWARE] Rewriting custom domain to portfolio`, { host, slug, rewritePath: rewriteUrl.pathname });
+    return NextResponse.rewrite(rewriteUrl);
+  }
+  // ── End custom domain routing ─────────────────────────
+
   // Log all GBP-related route hits for debugging
   const isGBPRoute =
     pathname.startsWith("/api/auth/google") ||
@@ -172,19 +234,7 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/dashboard/:path*",
-    "/projets/:path*",
-    "/recommandation/:path*",
-    "/signal/:path*",
-    "/avis/:path*",
-    "/favoris/:path*",
-    "/recherche/:path*",
-    "/pro/:path*",
-    "/admin/:path*",
-    "/connexion/:path*",
-    "/inscription/:path*",
-    // Google Business routes — logged for debugging
-    "/api/auth/google/:path*",
-    "/api/google/:path*",
+    // Must match ALL paths for custom domain routing to work
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.png$|.*\\.jpg$|.*\\.svg$).*)",
   ],
 };

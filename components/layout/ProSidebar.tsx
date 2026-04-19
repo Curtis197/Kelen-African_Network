@@ -19,6 +19,7 @@ import {
   ChevronDown,
   FileText,
   Handshake,
+  Globe,
 } from "lucide-react";
 import { NotificationDropdown } from "@/components/layout/NotificationDropdown";
 
@@ -29,6 +30,7 @@ const NAV_ITEMS = [
   { href: "/pro/documents", label: "Documents", icon: FileText },
   { href: "/pro/realisations", label: "Réalisations", icon: Award },
   { href: "/pro/portfolio", label: "Portfolio", icon: LayoutGrid },
+  { href: "/pro/site", label: "Mon Site", icon: Globe },
   { href: "/pro/validation", label: "Validation", icon: ShieldCheck },
   { href: "/pro/abonnement", label: "Abonnement", icon: Gem },
   { href: "/pro/analytique", label: "Analytique", icon: BarChart3 },
