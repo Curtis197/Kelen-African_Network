@@ -623,7 +623,6 @@ export default function ProposalReviewPage() {
                         </Badge>
                       )}
                     </div>
-                    </div>
                     <div className="text-sm whitespace-pre-wrap">{msg.content}</div>
                     
                     {/* Render Attachments */}

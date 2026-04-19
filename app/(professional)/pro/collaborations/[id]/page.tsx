@@ -278,7 +278,7 @@ export default function ProCollaborationDetailPage() {
     setIsSubmitting(false);
     console.log('[STATE] isSubmitting → false');
   };
-#+
+
   // ── ATTACHMENT LOGIC ────────────────────────────────────────────────────────
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
