@@ -10,6 +10,8 @@ import { getLatestRecommandations, getRecommandationCount } from "@/lib/actions/
 import { GoogleReviewsSection } from "@/components/pro/GoogleReviewsSection";
 import { getOrRefreshReviews } from "@/lib/google-reviews";
 import { MediaGrid, MediaContent, buildMediaItems } from "@/components/portfolio/MediaGrid";
+import { buildCssVars } from "@/lib/portfolio/style-tokens";
+import type { StyleAnswers } from "@/lib/portfolio/style-tokens";
 
 interface Props {
   params: Promise<{
@@ -219,6 +221,14 @@ export default async function ProfessionalProfilePage({ params }: Props) {
   const aboutText = portfolio?.about_text;
   const aboutImage = portfolio?.about_image_url;
 
+  // Build CSS custom properties from style quiz answers
+  const styleVars = portfolio?.style_tokens
+    ? buildCssVars(portfolio.style_tokens as Partial<StyleAnswers>)
+    : {};
+  const cssVarString = Object.entries(styleVars)
+    .map(([k, v]) => `${k}: ${v}`)
+    .join("; ");
+
   // Fetch recommendations for social proof
   const recommandationCount = await getRecommandationCount(pro.id);
   const latestRecommandations = await getLatestRecommandations(pro.id, 5);
@@ -237,16 +247,19 @@ export default async function ProfessionalProfilePage({ params }: Props) {
 
   return (
     <div className="bg-surface selection:bg-primary-container selection:text-on-primary-container min-h-screen">
+      {cssVarString && (
+        <style dangerouslySetInnerHTML={{ __html: `:root { ${cssVarString} }` }} />
+      )}
       <main>
         {/* Hero Section — Full-bleed 80vh */}
-        <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
+        <section className="relative flex items-center justify-center overflow-hidden" style={{ height: "var(--portfolio-hero-height, 80vh)" }}>
           <div className="absolute inset-0 z-0">
             <img
               className="w-full h-full object-cover"
               src={heroImage}
               alt=""
             />
-            <div className="absolute inset-0 bg-on-surface/30"></div>
+            <div className="absolute inset-0" style={{ background: "var(--portfolio-overlay, rgba(0,0,0,0.30))" }}></div>
           </div>
         </section>
 

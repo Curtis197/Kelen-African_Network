@@ -25,7 +25,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
   let browserQuery = supabase
     .from("professionals")
-    .select("*")
+    .select("*, professional_portfolio(custom_domain, domain_status)")
     .eq("is_active", true)
     .eq("is_visible", true);
 
@@ -63,8 +63,26 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     console.error("Search error:", error);
   }
 
-  const hasQuery = query.length > 0 || mode === "browse";
   const finalResults = results || [];
+
+  console.log('[DB] recherche professionals query:', {
+    count: finalResults.length,
+    withCustomDomain: finalResults.filter((p: any) => {
+      const pp = (p.professional_portfolio as any)?.[0];
+      return pp?.domain_status === 'active' && pp?.custom_domain;
+    }).length,
+    error: error?.message,
+    errorCode: error?.code,
+  });
+
+  if (error?.code === '42501') {
+    console.error('[RLS] ❌ EXPLICIT RLS BLOCKING on professionals query in recherche!');
+  }
+  if (!error && finalResults.length === 0) {
+    console.warn('[RLS] ⚠️ POTENTIAL SILENT RLS FILTERING on professionals in recherche');
+  }
+
+  const hasQuery = query.length > 0 || mode === "browse";
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
@@ -104,23 +122,37 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
               )}
             </p>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {finalResults.map((pro: any) => (
-                <ProfessionalCard
-                  key={pro.slug}
-                  id={pro.id}
-                  slug={pro.slug}
-                  businessName={pro.business_name}
-                  ownerName={pro.owner_name}
-                  category={pro.category}
-                  city={pro.city}
-                  country={pro.country}
-                  status={pro.status}
-                  recommendationCount={pro.recommendation_count}
-                  signalCount={pro.signal_count}
-                  avgRating={pro.avg_rating}
-                  reviewCount={pro.review_count}
-                />
-              ))}
+              {finalResults.map((pro: any) => {
+                const portfolio = (pro.professional_portfolio as any)?.[0];
+                const customDomain =
+                  portfolio?.domain_status === 'active' ? portfolio.custom_domain : null;
+
+                console.log('[RENDER] ProfessionalCard data:', {
+                  slug: pro.slug,
+                  hasPortfolio: !!portfolio,
+                  customDomain,
+                  domainStatus: portfolio?.domain_status,
+                });
+
+                return (
+                  <ProfessionalCard
+                    key={pro.slug}
+                    id={pro.id}
+                    slug={pro.slug}
+                    businessName={pro.business_name}
+                    ownerName={pro.owner_name}
+                    category={pro.category}
+                    city={pro.city}
+                    country={pro.country}
+                    status={pro.status}
+                    recommendationCount={pro.recommendation_count}
+                    signalCount={pro.signal_count}
+                    avgRating={pro.avg_rating}
+                    reviewCount={pro.review_count}
+                    customDomain={customDomain}
+                  />
+                );
+              })}
             </div>
           </>
         )}
