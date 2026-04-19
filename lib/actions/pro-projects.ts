@@ -21,47 +21,223 @@ async function getProfessionalId(): Promise<string | null> {
 }
 
 export async function getProProjects(status?: string): Promise<ProProject[]> {
+  console.log('[ACTION] getProProjects started, status filter:', status)
   const proId = await getProfessionalId();
-  if (!proId) return [];
+  if (!proId) {
+    console.warn('[AUTH] No professional ID found for user')
+    return [];
+  }
 
   const supabase = await createClient();
-  let query = supabase
+  
+  // 1. Fetch own pro_projects
+  let proQuery = supabase
     .from("pro_projects")
     .select("*, images:pro_project_images(*)")
     .eq("professional_id", proId)
     .order("created_at", { ascending: false });
 
   if (status) {
-    query = query.eq("status", status);
+    proQuery = proQuery.eq("status", status);
   }
 
-  const { data, error } = await query;
-  if (error) {
-    console.error("Error fetching pro projects:", error);
-    return [];
+  const { data: proData, error: proError } = await proQuery;
+  console.log('[DB] Found pro_projects:', { count: proData?.length, error: proError?.message })
+  
+  if (proError?.code === '42501') {
+    console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: pro_projects')
   }
 
-  return data || [];
+  // 2. Fetch collaborations where they are active/negotiating
+  // mapping user_projects -> ProProject
+  let collabQuery = supabase
+    .from("project_collaborations")
+    .select(`
+      id,
+      status,
+      created_at,
+      project:user_projects (
+        id,
+        user_id,
+        title,
+        description,
+        category,
+        location,
+        budget_total,
+        budget_currency,
+        status,
+        created_at,
+        images:user_project_images(*)
+      )
+    `)
+    .eq("professional_id", proId)
+    .in("status", ['pending', 'negotiating', 'active', 'terminated'])
+    .order("created_at", { ascending: false });
+
+  const { data: collabData, error: collabError } = await collabQuery;
+  console.log('[DB] Found collaborations:', { count: collabData?.length, error: collabError?.message })
+
+  if (collabError?.code === '42501') {
+    console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: project_collaborations')
+  }
+
+  // 3. Unify results
+  const unifiedProjects: ProProject[] = [
+    ...(proData || []).map(p => ({ ...p, is_collaboration: false })),
+    ...(collabData || [])
+      .filter(c => c.project) // Safety check
+      .map(c => {
+        const p = c.project as any;
+        return {
+          id: p.id,
+          professional_id: proId,
+          title: p.title,
+          description: p.description,
+          category: p.category,
+          location: p.location,
+          client_name: "Client Kelen", // We could fetch client display_name if needed
+          client_email: null,
+          client_phone: null,
+          start_date: p.created_at,
+          end_date: null,
+          actual_end_date: null,
+          budget: p.budget_total,
+          currency: p.budget_currency || 'XOF',
+          status: mapUserProjectStatusToPro(p.status, c.status),
+          is_public: false,
+          completion_notes: null,
+          created_at: c.created_at || p.created_at,
+          updated_at: p.created_at,
+          images: p.images?.map((img: any) => ({
+            id: img.id,
+            pro_project_id: p.id,
+            url: img.url,
+            is_main: img.is_main,
+            order_index: 0,
+            created_at: img.created_at,
+            updated_at: img.updated_at
+          })) || [],
+          is_collaboration: true,
+          collaboration_id: c.id,
+          client_user_id: p.user_id
+        } as ProProject;
+      })
+  ];
+
+  // 4. Sort and return
+  const result = unifiedProjects.sort((a, b) => 
+    new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  );
+
+  console.log('[ACTION] getProProjects completed, total unified projects:', result.length)
+  return result;
+}
+
+// Helper to map status
+function mapUserProjectStatusToPro(userStatus: string, collabStatus: string): ProProjectStatus {
+  if (collabStatus === 'active') return 'in_progress';
+  if (collabStatus === 'terminated') return 'completed';
+  if (userStatus === 'termine') return 'completed';
+  if (userStatus === 'annule') return 'cancelled';
+  if (userStatus === 'en_pause') return 'paused';
+  return 'in_progress';
 }
 
 export async function getProProject(id: string): Promise<ProProject | null> {
+  console.log('[ACTION] getProProject started, id:', id)
   const supabase = await createClient();
   const proId = await getProfessionalId();
-  if (!proId) return null;
+  if (!proId) {
+    console.warn('[AUTH] No professional ID found for user')
+    return null;
+  }
 
-  const { data, error } = await supabase
+  // 1. Try pro_projects first
+  const { data: proProject, error: proError } = await supabase
     .from("pro_projects")
     .select("*, images:pro_project_images(*)")
     .eq("id", id)
     .eq("professional_id", proId)
     .single();
 
-  if (error) {
-    console.error("Error fetching pro project:", error);
-    return null;
+  if (proProject) {
+    console.log('[DB] Found in pro_projects')
+    return { ...proProject, is_collaboration: false };
   }
 
-  return data;
+  if (proError && proError.code !== 'PGRST116') { // PGRST116 is "not found"
+    console.error('[DB] Error fetching from pro_projects:', proError.message)
+  }
+
+  // 2. Try collaborations/user_projects
+  const { data: collab, error: collabError } = await supabase
+    .from("project_collaborations")
+    .select(`
+      id,
+      status,
+      created_at,
+      project:user_projects (
+        id,
+        user_id,
+        title,
+        description,
+        category,
+        location,
+        budget_total,
+        budget_currency,
+        status,
+        created_at,
+        images:user_project_images(*)
+      )
+    `)
+    .eq("project_id", id) // We assume the ID passed is the user_project ID
+    .eq("professional_id", proId)
+    .single();
+
+  if (collab && collab.project) {
+    console.log('[DB] Found in collaborations')
+    const p = collab.project as any;
+    return {
+      id: p.id,
+      professional_id: proId,
+      title: p.title,
+      description: p.description,
+      category: p.category,
+      location: p.location,
+      client_name: "Client Kelen",
+      client_email: null,
+      client_phone: null,
+      start_date: p.created_at,
+      end_date: null,
+      actual_end_date: null,
+      budget: p.budget_total,
+      currency: p.budget_currency || 'XOF',
+      status: mapUserProjectStatusToPro(p.status, collab.status),
+      is_public: false,
+      completion_notes: null,
+      created_at: collab.created_at || p.created_at,
+      updated_at: p.created_at,
+      images: p.images?.map((img: any) => ({
+        id: img.id,
+        pro_project_id: p.id,
+        url: img.url,
+        is_main: img.is_main,
+        order_index: 0,
+        created_at: img.created_at,
+        updated_at: img.updated_at
+      })) || [],
+      is_collaboration: true,
+      collaboration_id: collab.id,
+      client_user_id: p.user_id
+    } as ProProject;
+  }
+
+  if (collabError && collabError.code !== 'PGRST116') {
+    console.error('[DB] Error fetching from collaborations:', collabError.message)
+  }
+
+  console.warn('[ACTION] Project not found in any source, id:', id)
+  return null;
 }
 
 export async function createProProject(data: ProProjectFormData, imageUrls?: string[]): Promise<{ data?: ProProject; error?: string }> {

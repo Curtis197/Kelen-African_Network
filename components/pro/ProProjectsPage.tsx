@@ -52,7 +52,7 @@ export function ProProjectsPage() {
     setIsLoading(true);
     const statusFilter = filter === "all" ? undefined : filter;
     const data = await getProProjects(statusFilter);
-    console.log('[ProProjectsPage] loadProjects completed, projects loaded:', data?.length || 0);
+    console.log('[ProProjectsPage] loadProjects completed, projects loaded:', data?.length || 0, 'sample:', data?.[0] ? { id: data[0].id, is_collab: data[0].is_collaboration } : 'none');
     setProjects(data);
     setIsLoading(false);
   }, [filter]);
@@ -232,6 +232,11 @@ export function ProProjectsPage() {
                                 {statusConf.icon}
                                 {statusConf.label}
                               </span>
+                              {project.is_collaboration && (
+                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-purple-100 text-purple-700 shadow">
+                                  Collaboration
+                                </span>
+                              )}
                               {project.is_public && (
                                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-700 shadow">
                                   <Eye className="w-3 h-3" />
@@ -250,6 +255,11 @@ export function ProProjectsPage() {
                               {statusConf.icon}
                               {statusConf.label}
                             </span>
+                            {project.is_collaboration && (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-purple-100 text-purple-700">
+                                Collaboration
+                              </span>
+                            )}
                             {project.is_public && (
                               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-700">
                                 <Eye className="w-3 h-3" />
@@ -378,6 +388,11 @@ export function ProProjectsPage() {
                             <div className="min-w-0 flex-1">
                               <h4 className="text-sm font-semibold text-on-surface truncate">
                                 {project.title}
+                                {project.is_collaboration && (
+                                  <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-purple-100 text-purple-700">
+                                    Collaboration
+                                  </span>
+                                )}
                               </h4>
                               <div className="flex items-center gap-2 text-xs text-on-surface-variant mt-0.5">
                                 {project.category && (

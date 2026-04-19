@@ -22,6 +22,10 @@ export interface ProProject {
   updated_at: string;
   // Related data (joined queries)
   images?: ProProjectImage[];
+  // Collaboration fields
+  is_collaboration?: boolean;
+  collaboration_id?: string;
+  client_user_id?: string;
 }
 
 export interface ProProjectImage {

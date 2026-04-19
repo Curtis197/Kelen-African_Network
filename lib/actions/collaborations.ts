@@ -522,7 +522,7 @@ export async function acceptProposal(collaborationId: string) {
   // Decline other finalists in the same domain/area
   const { data: otherFinalistsRaw, error: finalistsError } = await supabase
     .from('project_collaborations')
-    .select('id, professional_id, project_professional_id, professional:professionals(user_id, category, area_id)')
+    .select('id, professional_id, project_professional_id, professional:professionals(user_id, category, area_id, profession_id)')
     .eq('project_id', collab.project_id)
     .neq('id', collaborationId)
     .in('status', ['pending', 'negotiating']);
@@ -531,7 +531,7 @@ export async function acceptProposal(collaborationId: string) {
     id: string; 
     professional_id: string; 
     project_professional_id: string; 
-    professional: { user_id: string; category: string; area_id: string } | null 
+    professional: { user_id: string; category: string; area_id: string; profession_id: string } | null 
   };
   const otherFinalists = otherFinalistsRaw as FinalistRow[] | null;
 
@@ -540,31 +540,35 @@ export async function acceptProposal(collaborationId: string) {
     error: finalistsError?.message 
   });
 
-  if (otherFinalists) {
-    const winningCategory = collab.professional?.category;
-    const winningAreaId = collab.professional?.area_id;
+    if (otherFinalists) {
+      const winningCategory = collab.professional?.category;
+      const winningAreaId = collab.professional?.area_id;
+      const winningProfessionId = collab.professional?.profession_id;
 
-    console.log('[ACTION] Domain-based filtering:', { 
-      winningCategory, 
-      winningAreaId,
-      totalCandidates: otherFinalists.length 
-    });
-
-    for (const finalist of otherFinalists) {
-      const isSameDomain = (
-        (winningCategory && finalist.professional?.category === winningCategory) ||
-        (winningAreaId && finalist.professional?.area_id === winningAreaId)
-      );
-
-      console.log('[FILTER] Professional refusal decision:', {
-        proId: finalist.professional_id,
-        category: finalist.professional?.category,
-        areaId: finalist.professional?.area_id,
-        isSameDomain,
-        action: isSameDomain ? 'REFUSING' : 'SKIPPING'
+      console.log('[ACTION] Domain-specific filtering:', { 
+        winningCategory, 
+        winningAreaId,
+        winningProfessionId,
+        totalCandidates: otherFinalists.length 
       });
 
-      if (!isSameDomain) continue;
+      for (const finalist of otherFinalists) {
+        // We only refuse if they are in the exact same profession OR exact same category
+        // We IGNORE area_id because it's too broad (e.g. Architect and Plumber are both in 'Construction')
+        const isSameTrade = (
+          (winningProfessionId && finalist.professional?.profession_id === winningProfessionId) ||
+          (winningCategory && finalist.professional?.category === winningCategory)
+        );
+
+        console.log('[FILTER] Professional refusal decision:', {
+          proId: finalist.professional_id,
+          category: finalist.professional?.category,
+          professionId: finalist.professional?.profession_id,
+          isSameTrade,
+          action: isSameTrade ? 'REFUSING' : 'SKIPPING'
+        });
+
+        if (!isSameTrade) continue;
 
       // Update collaboration
       const { error: updateCollabError } = await supabase

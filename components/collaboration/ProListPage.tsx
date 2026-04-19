@@ -174,15 +174,13 @@ function ProCard({
   const professional = pro.professional;
   const collab = pro.collaboration;
 
-  const displayName = pro.is_external 
-    ? (pro.external_name || "Professionnel Externe") 
-    : (professional?.business_name || "Professionnel");
-
-  console.log("[ProCard] Render:", { 
+  console.log('[PRO_CARD] Render:', {
     id: pro.id,
-    name: displayName, 
-    isExternal: pro.is_external,
-    section 
+    name: pro.is_external ? pro.external_name : pro.professional?.business_name,
+    section,
+    hasCollab: !!collab,
+    msgCount: collab?.messages?.length || 0,
+    proposalAt: collab?.proposal_submitted_at
   });
 
   const initials = displayName
@@ -350,54 +348,55 @@ function ProCard({
       {(section === "finalists" || section === "active" || section === "declined") && (
         <div className="mt-4 pt-3 border-t border-outline-variant/10 flex flex-wrap gap-2">
           {section === "finalists" && (
-            <>
-              {collab?.proposal_submitted_at ? (
-                <>
-                  <Link
-                    href={`/projets/${pro.project_id}/pros/proposal/${pro.professional_id}`}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary rounded-lg text-xs font-medium hover:bg-primary/20 transition-colors"
-                  >
-                    <Eye className="w-3 h-3" />
-                    Voir la proposition
-                  </Link>
-                  <button
-                    onClick={() => {
-                      toast.info("Demander un changement — fonctionnalité à venir");
-                    }}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container text-on-surface-variant rounded-lg text-xs font-medium hover:bg-surface-container-high transition-colors"
-                  >
-                    <MessageSquare className="w-3 h-3" />
-                    Demander révision
-                  </button>
-                </>
-              ) : (
-                <>
-                  {collab?.messages && collab.messages.length > 0 ? (
-                    <Link
-                      href={`/projets/${pro.project_id}/pros/proposal/${pro.professional_id}`}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container text-on-surface-variant rounded-lg text-xs font-medium hover:bg-surface-container-high transition-colors"
-                    >
-                      <MessageSquare className="w-3 h-3" />
-                      Voir la conversation
-                    </Link>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        toast.info("Envoyer un rappel — fonctionnalité à venir");
-                      }}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container/50 text-on-surface-variant/70 rounded-lg text-xs font-medium hover:bg-surface-container transition-colors"
-                    >
-                      <Bell className="w-3 h-3" />
-                      Envoyer un rappel
-                    </button>
-                  )}
-                </>
+            <div className="flex flex-wrap gap-2 w-full">
+              {collab?.proposal_submitted_at && (
+                <Link
+                  href={`/projets/${pro.project_id}/pros/proposal/${pro.professional_id}`}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary rounded-lg text-xs font-medium hover:bg-primary/20 transition-colors"
+                >
+                  <Eye className="w-3 h-3" />
+                  Voir la proposition
+                </Link>
               )}
-            </>
+
+              {collab && (
+                <Link
+                  href={`/projets/${pro.project_id}/pros/proposal/${pro.professional_id}`}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container text-on-surface-variant rounded-lg text-xs font-medium hover:bg-surface-container-high transition-colors"
+                >
+                  <MessageSquare className="w-3 h-3" />
+                  {collab.messages && collab.messages.length > 0 ? "Voir la conversation" : "Discuter"}
+                </Link>
+              )}
+
+              {!collab?.proposal_submitted_at && (!collab?.messages || collab.messages.length === 0) && (
+                <button
+                  onClick={() => {
+                    toast.info("Envoyer un rappel — fonctionnalité à venir");
+                  }}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container/50 text-on-surface-variant/70 rounded-lg text-xs font-medium hover:bg-surface-container transition-colors"
+                >
+                  <Bell className="w-3 h-3" />
+                  Envoyer un rappel
+                </button>
+              )}
+              
+              {collab?.proposal_submitted_at && (
+                <button
+                  onClick={() => {
+                    toast.info("Demander un changement — fonctionnalité à venir");
+                  }}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container text-on-surface-variant rounded-lg text-xs font-medium hover:bg-surface-container-high transition-colors"
+                >
+                  <MessageSquare className="w-3 h-3" />
+                  Demander révision
+                </button>
+              )}
+            </div>
           )}
 
           {section === "active" && (
-            <>
+            <div className="flex flex-wrap gap-2 w-full">
               <Link
                 href={`/projets/${pro.project_id}`}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary rounded-lg text-xs font-medium hover:bg-primary/20 transition-colors"
@@ -414,7 +413,16 @@ function ProCard({
                   Voir la proposition
                 </Link>
               )}
-            </>
+              {collab && (
+                <Link
+                  href={`/projets/${pro.project_id}/pros/proposal/${pro.professional_id}`}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container text-on-surface-variant rounded-lg text-xs font-medium hover:bg-surface-container-high transition-colors"
+                >
+                  <MessageSquare className="w-3 h-3" />
+                  Messages
+                </Link>
+              )}
+            </div>
           )}
 
           {section === "declined" && !pro.is_external && (
