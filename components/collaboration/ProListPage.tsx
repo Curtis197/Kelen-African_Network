@@ -26,6 +26,7 @@ import {
   Send,
   MessageSquare,
   Eye,
+  FileText,
   Clock,
   Bell,
   Handshake,
@@ -213,9 +214,25 @@ function ProCard({
         {/* Info */}
         <div className="flex-1 min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <h4 className="text-sm font-semibold text-on-surface truncate">
-              {displayName}
-            </h4>
+            {collab?.proposal_submitted_at ? (
+              <Link 
+                href={`/projets/${pro.project_id}/pros/proposal/${pro.professional_id}`}
+                className="text-sm font-semibold text-on-surface hover:text-primary transition-colors truncate"
+              >
+                {displayName}
+              </Link>
+            ) : !pro.is_external && professional?.slug ? (
+              <Link 
+                href={`/professionnels/${professional.slug}`}
+                className="text-sm font-semibold text-on-surface hover:text-primary transition-colors truncate"
+              >
+                {displayName}
+              </Link>
+            ) : (
+              <h4 className="text-sm font-semibold text-on-surface truncate">
+                {displayName}
+              </h4>
+            )}
             {pro.is_external && (
               <Badge variant="outline" className="bg-surface-container-high text-on-surface-variant text-[10px] py-0 h-5">
                 Externe
@@ -376,6 +393,15 @@ function ProCard({
                 <Eye className="w-3 h-3" />
                 Voir l&apos;activité
               </Link>
+              {collab?.proposal_submitted_at && (
+                <Link
+                  href={`/projets/${pro.project_id}/pros/proposal/${pro.professional_id}`}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container text-on-surface-variant rounded-lg text-xs font-medium hover:bg-surface-container-high transition-colors"
+                >
+                  <FileText className="w-3 h-3" />
+                  Voir la proposition
+                </Link>
+              )}
             </>
           )}
 
