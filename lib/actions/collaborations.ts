@@ -849,18 +849,29 @@ export async function getProjectProList(projectId: string) {
 
   for (const pro of pros) {
     const selectionStatus = pro.selection_status;
-    const collab = pro.collaboration;
+    
+    // Flatten collaboration array if it exists
+    // Supabase returns an array for joins on many-to-one relationships from parent perspective
+    const collabArray = pro.collaboration as any;
+    const collab = Array.isArray(collabArray) && collabArray.length > 0 ? collabArray[0] : null;
+    
+    console.log('[DEBUG] Pro selection status:', { 
+      proId: pro.id, 
+      status: selectionStatus, 
+      hasCollab: !!collab,
+      messageCount: collab?.messages?.length || 0 
+    });
 
     if (selectionStatus === 'candidate') {
-      groups.saved.pros.push(pro);
+      groups.saved.pros.push({ ...pro, collaboration: collab });
     } else if (selectionStatus === 'shortlisted') {
-      groups.shortlisted.pros.push(pro);
+      groups.shortlisted.pros.push({ ...pro, collaboration: collab });
     } else if (selectionStatus === 'finalist') {
       groups.finalists.pros.push({ ...pro, collaboration: collab });
     } else if (selectionStatus === 'agreed') {
-      groups.active.pros.push(pro);
+      groups.active.pros.push({ ...pro, collaboration: collab });
     } else if (selectionStatus === 'not_selected') {
-      groups.declined.pros.push(pro);
+      groups.declined.pros.push({ ...pro, collaboration: collab });
     }
   }
 

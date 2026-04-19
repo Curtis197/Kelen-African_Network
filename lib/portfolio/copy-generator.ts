@@ -1,16 +1,20 @@
 // lib/portfolio/copy-generator.ts
-// Server-only: imports Anthropic SDK. Never import this from a client component.
+// Server-only. Uses Groq (free tier) for testing.
 import "server-only";
 
-import Anthropic from "@anthropic-ai/sdk";
 import type { CopyAnswers, ProContext, GeneratedCopy } from "./copy-questions";
 
-const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+const GROQ_API_KEY = process.env.GROQ_API_KEY;
+const GROQ_MODEL   = "llama-3.1-8b-instant";
 
 export async function generatePortfolioCopy(
   answers: CopyAnswers,
   pro: ProContext,
 ): Promise<GeneratedCopy> {
+  if (!GROQ_API_KEY) {
+    throw new Error("GROQ_API_KEY is not set. Get a free key at console.groq.com");
+  }
+
   const toneMap = {
     professional: "formel et expert, vouvoiement",
     warm: "chaleureux et humain, tutoiement possible",
@@ -60,13 +64,27 @@ Réponds UNIQUEMENT avec ce JSON valide, rien d'autre:
   "aboutText": "..."
 }`;
 
-  const message = await client.messages.create({
-    model: "claude-haiku-4-5-20251001",
-    max_tokens: 400,
-    messages: [{ role: "user", content: prompt }],
+  const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${GROQ_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model: GROQ_MODEL,
+      messages: [{ role: "user", content: prompt }],
+      max_tokens: 400,
+      temperature: 0.7,
+    }),
   });
 
-  const text = message.content[0].type === "text" ? message.content[0].text : "";
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Groq API error ${res.status}: ${err}`);
+  }
+
+  const data = await res.json();
+  const text: string = data.choices?.[0]?.message?.content ?? "";
   const parsed = JSON.parse(text.trim()) as GeneratedCopy;
 
   return parsed;
