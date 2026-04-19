@@ -173,10 +173,13 @@ function ProCard({
   const [isUpdating, setIsUpdating] = useState(false);
   const professional = pro.professional;
   const collab = pro.collaboration;
+  const displayName = pro.is_external 
+    ? (pro.external_name || "Professionnel Externe") 
+    : (pro.professional?.business_name || "Professionnel");
 
   console.log('[PRO_CARD] Render:', {
     id: pro.id,
-    name: pro.is_external ? pro.external_name : pro.professional?.business_name,
+    name: displayName,
     section,
     hasCollab: !!collab,
     msgCount: collab?.messages?.length || 0,
