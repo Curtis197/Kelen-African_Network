@@ -4,7 +4,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { generatePortfolioCopy } from "@/lib/portfolio/copy-generator";
 import type { StyleAnswers } from "@/lib/portfolio/style-tokens";
-import type { CopyAnswers } from "@/lib/portfolio/copy-generator";
+import type { CopyAnswers } from "@/lib/portfolio/copy-questions";
 import { revalidatePath } from "next/cache";
 
 async function getProfessional() {

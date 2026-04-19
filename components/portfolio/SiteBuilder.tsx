@@ -6,7 +6,7 @@ import { StyleQuiz } from "./StyleQuiz";
 import { CopywritingQuiz } from "./CopywritingQuiz";
 import { PortfolioPreviewFrame } from "./PortfolioPreviewFrame";
 import type { StyleAnswers } from "@/lib/portfolio/style-tokens";
-import type { CopyAnswers } from "@/lib/portfolio/copy-generator";
+import type { CopyAnswers } from "@/lib/portfolio/copy-questions";
 import { Lock } from "lucide-react";
 import Link from "next/link";
 import { DomainSearch } from "./DomainSearch";

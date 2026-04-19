@@ -2,8 +2,8 @@
 "use client";
 
 import { useState } from "react";
-import { COPY_QUESTIONS } from "@/lib/portfolio/copy-generator";
-import type { CopyAnswers } from "@/lib/portfolio/copy-generator";
+import { COPY_QUESTIONS } from "@/lib/portfolio/copy-questions";
+import type { CopyAnswers } from "@/lib/portfolio/copy-questions";
 import { saveCopyQuizAndGenerate } from "@/lib/actions/portfolio-site";
 import { Loader2 } from "lucide-react";
 

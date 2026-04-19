@@ -1,65 +1,11 @@
 // lib/portfolio/copy-generator.ts
+// Server-only: imports Anthropic SDK. Never import this from a client component.
+import "server-only";
 
 import Anthropic from "@anthropic-ai/sdk";
+import type { CopyAnswers, ProContext, GeneratedCopy } from "./copy-questions";
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-
-export const COPY_QUESTIONS = [
-  {
-    id: "tone",
-    label: "Comment voulez-vous paraître ?",
-    options: [
-      { value: "professional", label: "Professionnel & sérieux",   description: "Rigueur & expertise" },
-      { value: "warm",         label: "Chaleureux & accessible",   description: "Proche & à l'écoute" },
-      { value: "bold",         label: "Audacieux & confiant",      description: "Impact & leadership" },
-    ],
-  },
-  {
-    id: "strength",
-    label: "Votre force principale",
-    options: [
-      { value: "quality",      label: "Qualité du travail",              description: "Finitions impeccables" },
-      { value: "reliability",  label: "Rapidité & fiabilité",            description: "Dans les délais, toujours" },
-      { value: "experience",   label: "Expérience & expertise",          description: "Des années de savoir-faire" },
-      { value: "value",        label: "Meilleur rapport qualité-prix",   description: "Excellence accessible" },
-    ],
-  },
-  {
-    id: "clientRelation",
-    label: "Comment vous adressez-vous à vos clients ?",
-    options: [
-      { value: "formal",   label: "Formel",      description: '\"Nous vous accompagnons\"' },
-      { value: "direct",   label: "Direct",      description: '\"Appelez-moi\"' },
-      { value: "friendly", label: "Amical",      description: '\"Parlons de votre projet\"' },
-    ],
-  },
-  {
-    id: "differentiator",
-    label: "Ce qui vous différencie (optionnel)",
-    freeText: true,
-    placeholder: "Ex: 20 ans sur Abidjan, spécialiste béton armé...",
-  },
-] as const;
-
-export type CopyAnswers = {
-  tone: "professional" | "warm" | "bold";
-  strength: "quality" | "reliability" | "experience" | "value";
-  clientRelation: "formal" | "direct" | "friendly";
-  differentiator?: string;
-};
-
-export type ProContext = {
-  businessName: string;
-  category: string;
-  city?: string;
-  country?: string;
-  yearsOfExperience?: number;
-};
-
-export type GeneratedCopy = {
-  heroSubtitle: string;   // 1 punchy sentence, max 12 words
-  aboutText: string;      // 3-4 sentences, first person plural or singular per tone
-};
 
 export async function generatePortfolioCopy(
   answers: CopyAnswers,
@@ -79,9 +25,9 @@ export async function generatePortfolioCopy(
   };
 
   const clientMap = {
-    formal:   "\"Nous vous accompagnons\" / \"Notre équipe\"",
-    direct:   "\"Appelez-moi\" / \"Je suis là pour vous\"",
-    friendly: "\"Parlons de votre projet\" / \"Ensemble\"",
+    formal:   '"Nous vous accompagnons" / "Notre équipe"',
+    direct:   '"Appelez-moi" / "Je suis là pour vous"',
+    friendly: '"Parlons de votre projet" / "Ensemble"',
   };
 
   const location = [pro.city, pro.country].filter(Boolean).join(", ");
