@@ -130,3 +130,41 @@ export async function activateDomain(domain: string) {
   console.log('[ACTION] activateDomain: done', { domain, verified: vercel.verified });
   return { success: true, domain, verified: vercel.verified };
 }
+
+export async function disconnectDomain() {
+  console.log('[ACTION] disconnectDomain: start');
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Non authentifié");
+
+  const { data: pro, error: proError } = await supabase
+    .from("professionals")
+    .select("id, slug")
+    .eq("user_id", user.id)
+    .single();
+
+  if (!pro) throw new Error("Profil non trouvé");
+
+  const { error } = await supabase
+    .from("professional_portfolio")
+    .update({
+      custom_domain: null,
+      domain_status: null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("professional_id", pro.id);
+
+  console.log('[DB] disconnectDomain update:', {
+    hasError: !!error,
+    errorMessage: error?.message,
+    errorCode: error?.code,
+  });
+  if (error?.code === '42501') {
+    console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: professional_portfolio, User:', pro.id);
+  }
+  if (error) throw new Error(error.message);
+
+  revalidatePath("/pro/site");
+  console.log('[ACTION] disconnectDomain: done');
+  return { success: true };
+}

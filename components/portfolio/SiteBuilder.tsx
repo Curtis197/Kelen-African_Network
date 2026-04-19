@@ -4,12 +4,14 @@
 import { useState } from "react";
 import { StyleQuiz } from "./StyleQuiz";
 import { CopywritingQuiz } from "./CopywritingQuiz";
+import { CopyEditor } from "./CopyEditor";
 import { PortfolioPreviewFrame } from "./PortfolioPreviewFrame";
 import type { StyleAnswers } from "@/lib/portfolio/style-tokens";
 import type { CopyAnswers } from "@/lib/portfolio/copy-questions";
 import { Lock } from "lucide-react";
 import Link from "next/link";
 import { DomainSearch } from "./DomainSearch";
+import { DomainManager } from "./DomainManager";
 
 interface Props {
   pro: { id: string; slug: string; businessName: string };
@@ -47,6 +49,13 @@ export function SiteBuilder({ pro, portfolio, isPaid }: Props) {
             /* preview auto-reloads via key change in PortfolioPreviewFrame */
           }}
         />
+
+        <div className="border-t border-outline-variant/20" />
+
+        <CopyEditor
+          initialHeroSubtitle={portfolio?.hero_subtitle ?? ""}
+          initialAboutText={portfolio?.about_text ?? ""}
+        />
       </div>
 
       {/* Right: Preview + Domain */}
@@ -74,22 +83,10 @@ export function SiteBuilder({ pro, portfolio, isPaid }: Props) {
           </div>
 
           {portfolio?.custom_domain ? (
-            <div className="space-y-2">
-              <p className="text-sm font-medium text-on-surface">
-                Domaine actif :{" "}
-                <a
-                  href={`https://${portfolio.custom_domain}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-kelen-green-600 hover:underline"
-                >
-                  {portfolio.custom_domain}
-                </a>
-              </p>
-              <p className="text-xs text-on-surface-variant/50">
-                Statut : {portfolio.domain_status ?? "inconnu"}
-              </p>
-            </div>
+            <DomainManager
+              domain={portfolio.custom_domain}
+              status={portfolio.domain_status ?? "pending_dns"}
+            />
           ) : isPaid ? (
             <DomainSearch />
           ) : (

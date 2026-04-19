@@ -116,3 +116,40 @@ export async function saveCopyQuizAndGenerate(answers: CopyAnswers) {
   console.log('[ACTION] saveCopyQuizAndGenerate: done');
   return { success: true, copy };
 }
+
+export async function saveCopyManually(data: { heroSubtitle: string; aboutText: string }) {
+  console.log('[ACTION] saveCopyManually: start', { heroSubtitleLength: data.heroSubtitle?.length, aboutTextLength: data.aboutText?.length });
+  const { supabase, pro } = await getProfessional();
+
+  const { data: result, error } = await supabase
+    .from("professional_portfolio")
+    .upsert(
+      {
+        professional_id: pro.id,
+        hero_subtitle: data.heroSubtitle,
+        about_text: data.aboutText,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "professional_id" }
+    )
+    .select();
+
+  console.log('[DB] saveCopyManually upsert:', {
+    hasData: !!result,
+    rowCount: result?.length,
+    hasError: !!error,
+    errorMessage: error?.message,
+    errorCode: error?.code,
+  });
+  if (error?.code === '42501') {
+    console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: professional_portfolio, User:', pro.id);
+  }
+  if (!error && (!result || result.length === 0)) {
+    console.warn('[RLS] ⚠️ POTENTIAL SILENT RLS FILTERING Table: professional_portfolio');
+  }
+
+  if (error) throw new Error(error.message);
+  revalidatePath(`/professionnels/${pro.slug}`);
+  console.log('[ACTION] saveCopyManually: done');
+  return { success: true };
+}
