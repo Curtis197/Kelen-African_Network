@@ -117,6 +117,75 @@ export async function saveCopyQuizAndGenerate(answers: CopyAnswers) {
   return { success: true, copy };
 }
 
+export async function correctCopyWithAI(data: { heroSubtitle: string; aboutText: string }) {
+  console.log('[ACTION] correctCopyWithAI: start');
+  const { supabase, pro } = await getProfessional();
+
+  const GROQ_API_KEY = process.env.GROQ_API_KEY;
+  if (!GROQ_API_KEY) throw new Error("GROQ_API_KEY is not set");
+
+  const { data: portfolio } = await supabase
+    .from("professional_portfolio")
+    .select("copy_quiz_answers")
+    .eq("professional_id", pro.id)
+    .single();
+
+  const tone = (portfolio?.copy_quiz_answers as any)?.tone ?? "professional";
+  const toneMap: Record<string, string> = {
+    professional: "formel et expert",
+    warm: "chaleureux et humain",
+    bold: "audacieux et direct, phrases courtes",
+  };
+
+  const prompt = `Tu es un correcteur-rédacteur expert pour les professionnels africains.
+Améliore les textes suivants pour ce professionnel :
+- Métier : ${pro.category}
+- Ton souhaité : ${toneMap[tone] ?? toneMap.professional}
+
+TEXTE ACTUEL :
+heroSubtitle : "${data.heroSubtitle}"
+aboutText : "${data.aboutText}"
+
+RÈGLES :
+- heroSubtitle : max 12 mots, percutant, sans le nom de l'entreprise
+- aboutText : 3-4 phrases naturelles, première personne, pas de clichés, pas de bullet points
+- Corriger l'orthographe, améliorer le style, garder le sens original
+- Écrire en français
+- Ne pas mentionner "Kelen"
+
+Réponds UNIQUEMENT avec ce JSON valide, rien d'autre :
+{
+  "heroSubtitle": "...",
+  "aboutText": "..."
+}`;
+
+  const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${GROQ_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model: "llama-3.1-8b-instant",
+      messages: [{ role: "user", content: prompt }],
+      max_tokens: 400,
+      temperature: 0.5,
+    }),
+  });
+
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Groq API error ${res.status}: ${err}`);
+  }
+
+  const groqData = await res.json();
+  const text: string = groqData.choices?.[0]?.message?.content ?? "";
+  const corrected = JSON.parse(text.trim()) as { heroSubtitle: string; aboutText: string };
+
+  console.log('[ACTION] correctCopyWithAI: done');
+  return { success: true, corrected };
+}
+
 export async function saveCopyManually(data: { heroSubtitle: string; aboutText: string }) {
   console.log('[ACTION] saveCopyManually: start', { heroSubtitleLength: data.heroSubtitle?.length, aboutTextLength: data.aboutText?.length });
   const { supabase, pro } = await getProfessional();
