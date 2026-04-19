@@ -7,7 +7,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/client";
 import { uploadFile } from "@/lib/supabase/storage";
-import { Image as ImageIcon, X, Loader2, ArrowLeft, Star, FileText, Upload, Video } from "lucide-react";
+import { Image as ImageIcon, X, Loader2, ArrowLeft, Star, FileText, Upload, Video, Sparkles, RotateCcw } from "lucide-react";
+import { correctRealizationText } from "@/lib/actions/realization-copy";
 import Link from "next/link";
 import { toast } from "sonner";
 import { createRealization, updateRealization } from "@/lib/actions/portfolio";
@@ -61,6 +62,9 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
   const supabase = createClient();
 
   const isEditing = !!initialData?.id;
+  const [isCorrecting, setIsCorrecting] = useState(false);
+  const [lastCorrectionSnapshot, setLastCorrectionSnapshot] = useState<{ title: string; description: string } | null>(null);
+  const [correctionError, setCorrectionError] = useState<string | null>(null);
 
   const {
     register,
@@ -172,6 +176,31 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
       }))
     );
   };
+
+  async function handleCorrect() {
+    const currentTitle = watch("title");
+    const currentDescription = watch("description") ?? "";
+    if (!currentTitle) return;
+    setIsCorrecting(true);
+    setCorrectionError(null);
+    try {
+      const { corrected } = await correctRealizationText({ title: currentTitle, description: currentDescription });
+      setLastCorrectionSnapshot({ title: currentTitle, description: currentDescription });
+      setValue("title", corrected.title, { shouldDirty: true });
+      setValue("description", corrected.description, { shouldDirty: true });
+    } catch {
+      setCorrectionError("Erreur lors de la correction IA. Réessayez.");
+    } finally {
+      setIsCorrecting(false);
+    }
+  }
+
+  function handleUndoCorrection() {
+    if (!lastCorrectionSnapshot) return;
+    setValue("title", lastCorrectionSnapshot.title, { shouldDirty: true });
+    setValue("description", lastCorrectionSnapshot.description, { shouldDirty: true });
+    setLastCorrectionSnapshot(null);
+  }
 
   const onSubmit = async (data: RealizationFormData) => {
     setIsSaving(true);
@@ -286,9 +315,36 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
         {/* Left: Details */}
         <div className="space-y-8 lg:col-span-7">
           <section className="space-y-6">
-            <h2 className="font-headline text-xl font-bold text-on-surface">
-              {isEditing ? "Modifier la réalisation" : "Détails de la réalisation"}
-            </h2>
+            <div className="flex items-start justify-between gap-4">
+              <h2 className="font-headline text-xl font-bold text-on-surface">
+                {isEditing ? "Modifier la réalisation" : "Détails de la réalisation"}
+              </h2>
+              <div className="flex items-center gap-2 shrink-0">
+                {lastCorrectionSnapshot && (
+                  <button
+                    type="button"
+                    onClick={handleUndoCorrection}
+                    className="flex items-center gap-1.5 h-8 px-3 rounded-lg border border-outline-variant/30 text-xs font-semibold text-on-surface-variant hover:bg-surface-container transition-colors"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" />
+                    Annuler
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={handleCorrect}
+                  disabled={isCorrecting || !watch("title")}
+                  className="flex items-center gap-1.5 h-8 px-3 rounded-lg bg-violet-600 text-white text-xs font-bold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-violet-700 transition-colors"
+                >
+                  {isCorrecting
+                    ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    : <Sparkles className="w-3.5 h-3.5" />
+                  }
+                  {isCorrecting ? "Correction..." : "Améliorer avec l'IA"}
+                </button>
+              </div>
+            </div>
+            {correctionError && <p className="text-sm text-red-600">{correctionError}</p>}
 
             <div className="space-y-4">
               <div className="space-y-2">

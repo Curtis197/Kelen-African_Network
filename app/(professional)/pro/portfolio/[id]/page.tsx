@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { ArrowLeft, MapPin, Calendar, DollarSign, FileText, Download, Play, Video } from "lucide-react";
+import { RealizationCopyCorrector } from "@/components/portfolio/RealizationCopyCorrector";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -209,6 +210,12 @@ export default async function RealizationDetailPage({ params }: Props) {
           >
             Modifier cette réalisation
           </Link>
+
+          <RealizationCopyCorrector
+            id={realization.id}
+            title={realization.title}
+            description={realization.description ?? ""}
+          />
         </div>
       </div>
     </div>
