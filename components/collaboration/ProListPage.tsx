@@ -214,7 +214,7 @@ function ProCard({
         {/* Info */}
         <div className="flex-1 min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            {collab?.proposal_submitted_at ? (
+            {collab ? (
               <Link 
                 href={`/projets/${pro.project_id}/pros/proposal/${pro.professional_id}`}
                 className="text-sm font-semibold text-on-surface hover:text-primary transition-colors truncate"
@@ -371,15 +371,24 @@ function ProCard({
                   </button>
                 </>
               ) : (
-                <button
-                  onClick={() => {
-                    toast.info("Envoyer un rappel — fonctionnalité à venir");
-                  }}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container text-on-surface-variant rounded-lg text-xs font-medium hover:bg-surface-container-high transition-colors"
-                >
-                  <Bell className="w-3 h-3" />
-                  Envoyer un rappel
-                </button>
+                <>
+                  <Link
+                    href={`/projets/${pro.project_id}/pros/proposal/${pro.professional_id}`}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container text-on-surface-variant rounded-lg text-xs font-medium hover:bg-surface-container-high transition-colors"
+                  >
+                    <MessageSquare className="w-3 h-3" />
+                    Voir la discussion
+                  </Link>
+                  <button
+                    onClick={() => {
+                      toast.info("Envoyer un rappel — fonctionnalité à venir");
+                    }}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container/50 text-on-surface-variant/70 rounded-lg text-xs font-medium hover:bg-surface-container transition-colors"
+                  >
+                    <Bell className="w-3 h-3" />
+                    Envoyer un rappel
+                  </button>
+                </>
               )}
             </>
           )}
