@@ -1,7 +1,7 @@
 // components/portfolio/SiteBuilder.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { StyleQuiz } from "./StyleQuiz";
 import { CopywritingQuiz } from "./CopywritingQuiz";
 import { CopyEditor } from "./CopyEditor";
@@ -10,8 +10,10 @@ import { DomainSearch } from "./DomainSearch";
 import { DomainManager } from "./DomainManager";
 import type { StyleAnswers } from "@/lib/portfolio/style-tokens";
 import type { CopyAnswers } from "@/lib/portfolio/copy-questions";
-import { Palette, FileText, Globe, Lock } from "lucide-react";
+import { Palette, FileText, Globe, Lock, Eye } from "lucide-react";
 import Link from "next/link";
+import { updatePortfolioVisibility } from "@/lib/actions/portfolio";
+import { toast } from "sonner";
 
 interface Props {
   pro: { id: string; slug: string; businessName: string };
@@ -22,23 +24,81 @@ interface Props {
     about_text?: string;
     custom_domain?: string;
     domain_status?: string;
+    show_realizations_section?: boolean;
+    show_services_section?: boolean;
+    show_products_section?: boolean;
+    show_about_section?: boolean;
   } | null;
   isPaid: boolean;
 }
 
 const TABS = [
-  { id: "style",   label: "Style",   icon: Palette  },
-  { id: "content", label: "Contenu", icon: FileText  },
-  { id: "domain",  label: "Domaine", icon: Globe     },
+  { id: "style",      label: "Style",      icon: Palette  },
+  { id: "content",    label: "Contenu",    icon: FileText  },
+  { id: "domain",     label: "Domaine",    icon: Globe     },
+  { id: "visibility", label: "Visibilité", icon: Eye       },
 ] as const;
 
 type TabId = (typeof TABS)[number]["id"];
+
+function VisibilityToggle({
+  label,
+  description,
+  checked,
+  onChange,
+}: {
+  label: string;
+  description?: string;
+  checked: boolean;
+  onChange: (v: boolean) => void;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-4 py-4">
+      <div className="space-y-0.5">
+        <p className="text-sm font-semibold text-on-surface">{label}</p>
+        {description && (
+          <p className="text-xs text-on-surface-variant/60">{description}</p>
+        )}
+      </div>
+      <button
+        type="button"
+        role="switch"
+        aria-checked={checked}
+        onClick={() => onChange(!checked)}
+        className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-kelen-green-600 focus-visible:ring-offset-2 ${
+          checked ? "bg-kelen-green-600" : "bg-gray-200"
+        }`}
+      >
+        <span
+          className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ${
+            checked ? "translate-x-5" : "translate-x-0"
+          }`}
+        />
+      </button>
+    </div>
+  );
+}
 
 export function SiteBuilder({ pro, portfolio, isPaid }: Props) {
   const [activeTab, setActiveTab] = useState<TabId>("style");
   const [styleOverride, setStyleOverride] = useState<Partial<StyleAnswers>>(
     portfolio?.style_tokens ?? {}
   );
+
+  // Visibility state
+  const [showRealizations, setShowRealizations] = useState(
+    portfolio?.show_realizations_section ?? true
+  );
+  const [showServices, setShowServices] = useState(
+    portfolio?.show_services_section ?? true
+  );
+  const [showProducts, setShowProducts] = useState(
+    portfolio?.show_products_section ?? true
+  );
+  const [showAbout, setShowAbout] = useState(
+    portfolio?.show_about_section ?? true
+  );
+  const [isPending, startTransition] = useTransition();
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-2 gap-12">
@@ -121,6 +181,74 @@ export function SiteBuilder({ pro, portfolio, isPaid }: Props) {
                 </Link>
               </div>
             )}
+          </div>
+        )}
+
+        {activeTab === "visibility" && (
+          <div className="space-y-6">
+            <div>
+              <h3 className="font-headline text-lg font-bold text-on-surface">Visibilité des sections</h3>
+              <p className="text-sm text-on-surface-variant/70 mt-1">
+                Choisissez quelles sections afficher sur votre site portfolio.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-outline-variant/20 bg-surface-container-low divide-y divide-outline-variant/20 px-5">
+              <VisibilityToggle
+                label="Réalisations"
+                description="Vos projets et travaux réalisés"
+                checked={showRealizations}
+                onChange={setShowRealizations}
+              />
+              <VisibilityToggle
+                label="Services"
+                description="Vos prestations et offres de services"
+                checked={showServices}
+                onChange={setShowServices}
+              />
+              <VisibilityToggle
+                label="Produits"
+                description="Vos produits à vendre"
+                checked={showProducts}
+                onChange={setShowProducts}
+              />
+              <VisibilityToggle
+                label="À propos"
+                description="Votre présentation et biographie"
+                checked={showAbout}
+                onChange={setShowAbout}
+              />
+            </div>
+
+            <button
+              type="button"
+              disabled={isPending}
+              onClick={() => {
+                startTransition(async () => {
+                  try {
+                    await updatePortfolioVisibility({
+                      show_realizations_section: showRealizations,
+                      show_services_section: showServices,
+                      show_products_section: showProducts,
+                      show_about_section: showAbout,
+                    });
+                    toast.success("Visibilité mise à jour avec succès");
+                  } catch {
+                    toast.error("Erreur lors de la sauvegarde. Veuillez réessayer.");
+                  }
+                });
+              }}
+              className="h-11 px-6 rounded-xl bg-kelen-green-600 text-white text-sm font-bold hover:bg-kelen-green-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2"
+            >
+              {isPending ? (
+                <>
+                  <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                  Sauvegarde…
+                </>
+              ) : (
+                "Sauvegarder"
+              )}
+            </button>
           </div>
         )}
       </div>

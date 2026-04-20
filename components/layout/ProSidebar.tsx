@@ -29,7 +29,7 @@ const NAV_ITEMS = [
   { href: "/pro/projets", label: "Projets", icon: Briefcase },
   { href: "/pro/collaborations", label: "Boîte de réception", icon: Handshake },
   { href: "/pro/documents", label: "Documents", icon: FileText },
-  { href: "/pro/realisations", label: "Réalisations", icon: Award },
+  { href: "/pro/realisations", label: "Présentation", icon: Award },
   { href: "/pro/portfolio", label: "Portfolio", icon: LayoutGrid },
   { href: "/pro/site", label: "Mon Site", icon: Globe },
   { href: "/pro/newsletter", label: "Newsletter", icon: Mail },

@@ -216,6 +216,38 @@ export default async function ProfessionalProfilePage({ params }: Props) {
     console.log('[PROFILE PAGE] First item:', portfolioItems[0]);
   }
 
+  // Portfolio visibility settings
+  const showRealizationsSection = portfolio?.show_realizations_section !== false;
+  const showServicesSection = portfolio?.show_services_section !== false;
+  const showProductsSection = portfolio?.show_products_section !== false;
+  const showAboutSection = portfolio?.show_about_section !== false;
+
+  // Fetch featured services if section is enabled
+  let featuredServices: any[] = [];
+  if (showServicesSection) {
+    const { data: servicesData } = await supabase
+      .from("professional_services")
+      .select("*, service_images(*)")
+      .eq("professional_id", pro.id)
+      .eq("is_featured", true)
+      .order("order_index", { ascending: true })
+      .order("created_at", { ascending: false });
+    featuredServices = servicesData || [];
+  }
+
+  // Fetch featured products if section is enabled
+  let featuredProducts: any[] = [];
+  if (showProductsSection) {
+    const { data: productsData } = await supabase
+      .from("professional_products")
+      .select("*, product_images(*)")
+      .eq("professional_id", pro.id)
+      .eq("is_featured", true)
+      .order("order_index", { ascending: true })
+      .order("created_at", { ascending: false });
+    featuredProducts = productsData || [];
+  }
+
   // Use portfolio data for hero and about sections
   const heroImage = portfolio?.hero_image_url || pro.portfolio_photos?.[0] || "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80";
   const heroTagline = portfolio?.hero_title || pro.hero_tagline || pro.description || pro.category;
@@ -434,8 +466,159 @@ export default async function ProfessionalProfilePage({ params }: Props) {
         </section>
         )}
 
-        {/* Philosophy Section - Only shown if about_text exists */}
-        {aboutText && (
+        {/* Services Section */}
+        {showServicesSection && featuredServices.length > 0 && (
+        <section className="py-24 px-4 sm:px-6 md:px-8 bg-surface-container-low" id="services">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+              <div>
+                <span className="text-primary font-black tracking-[0.3em] uppercase text-xs">Ce que nous proposons</span>
+                <h2 className="font-headline font-bold text-4xl mt-2 text-on-surface">Nos Services</h2>
+              </div>
+              <div className="h-px flex-grow bg-outline-variant/20 mx-8 hidden md:block"></div>
+              <Link href={`/professionnels/${slug}/services`} className="text-primary font-semibold flex items-center gap-2 hover:gap-3 transition-all duration-300 group">
+                Voir tous les services
+                <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {featuredServices.map((service) => {
+                const mainImage = service.service_images?.find((img: any) => img.is_main) || service.service_images?.[0];
+                return (
+                  <Link
+                    key={service.id}
+                    href={`/professionnels/${slug}/services/${service.id}`}
+                    className="group bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm border border-outline-variant/10 hover:shadow-xl transition-all duration-300 flex flex-col"
+                  >
+                    {mainImage ? (
+                      <div className="relative h-48 overflow-hidden">
+                        <img
+                          src={mainImage.url}
+                          alt={service.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      </div>
+                    ) : (
+                      <div className="h-48 bg-surface-container-high flex items-center justify-center">
+                        <span className="text-on-surface-variant/30 text-4xl">✦</span>
+                      </div>
+                    )}
+                    <div className="p-6 flex-grow flex flex-col">
+                      <h3 className="font-headline font-bold text-xl text-on-surface mb-2 group-hover:text-primary transition-colors">
+                        {service.title}
+                      </h3>
+                      {service.description && (
+                        <p className="text-on-surface-variant font-body text-sm leading-relaxed line-clamp-2 flex-grow mb-4">
+                          {service.description}
+                        </p>
+                      )}
+                      <div className="flex items-center gap-3 flex-wrap mt-auto">
+                        {service.price && (
+                          <span className="font-bold text-primary text-base">
+                            {service.currency === 'XOF'
+                              ? `${service.price >= 1000000 ? `${(service.price / 1000000).toFixed(1)}M` : service.price >= 1000 ? `${(service.price / 1000).toFixed(0)}K` : service.price} FCFA`
+                              : service.currency === 'EUR'
+                              ? `${service.price.toLocaleString('fr-FR')} €`
+                              : `$${service.price.toLocaleString('en-US')}`}
+                          </span>
+                        )}
+                        {service.duration && (
+                          <span className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant bg-surface-container-high px-3 py-1 rounded-full">
+                            {service.duration}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+        )}
+
+        {/* Products Section */}
+        {showProductsSection && featuredProducts.length > 0 && (
+        <section className="py-24 px-4 sm:px-6 md:px-8 bg-surface" id="produits">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+              <div>
+                <span className="text-primary font-black tracking-[0.3em] uppercase text-xs">Notre boutique</span>
+                <h2 className="font-headline font-bold text-4xl mt-2 text-on-surface">Nos Produits</h2>
+              </div>
+              <div className="h-px flex-grow bg-outline-variant/20 mx-8 hidden md:block"></div>
+              <Link href={`/professionnels/${slug}/produits`} className="text-primary font-semibold flex items-center gap-2 hover:gap-3 transition-all duration-300 group">
+                Voir tous les produits
+                <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {featuredProducts.map((product) => {
+                const mainImage = product.product_images?.find((img: any) => img.is_main) || product.product_images?.[0];
+                const availabilityConfig: Record<string, { label: string; classes: string }> = {
+                  available: { label: "Disponible", classes: "bg-green-100 text-green-700" },
+                  limited: { label: "Stock limité", classes: "bg-amber-100 text-amber-700" },
+                  out_of_stock: { label: "Rupture", classes: "bg-red-100 text-red-700" },
+                };
+                const avail = availabilityConfig[product.availability] || availabilityConfig.available;
+                return (
+                  <Link
+                    key={product.id}
+                    href={`/professionnels/${slug}/produits/${product.id}`}
+                    className="group bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm border border-outline-variant/10 hover:shadow-xl transition-all duration-300 flex flex-col"
+                  >
+                    {mainImage ? (
+                      <div className="relative h-48 overflow-hidden">
+                        <img
+                          src={mainImage.url}
+                          alt={product.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                        {product.availability && (
+                          <span className={`absolute top-3 right-3 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full ${avail.classes}`}>
+                            {avail.label}
+                          </span>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="relative h-48 bg-surface-container-high flex items-center justify-center">
+                        <span className="text-on-surface-variant/30 text-4xl">✦</span>
+                        {product.availability && (
+                          <span className={`absolute top-3 right-3 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full ${avail.classes}`}>
+                            {avail.label}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                    <div className="p-6 flex-grow flex flex-col">
+                      <h3 className="font-headline font-bold text-xl text-on-surface mb-2 group-hover:text-primary transition-colors">
+                        {product.title}
+                      </h3>
+                      {product.description && (
+                        <p className="text-on-surface-variant font-body text-sm leading-relaxed line-clamp-2 flex-grow mb-4">
+                          {product.description}
+                        </p>
+                      )}
+                      {product.price && (
+                        <span className="font-bold text-primary text-base mt-auto">
+                          {product.currency === 'XOF'
+                            ? `${product.price >= 1000000 ? `${(product.price / 1000000).toFixed(1)}M` : product.price >= 1000 ? `${(product.price / 1000).toFixed(0)}K` : product.price} FCFA`
+                            : product.currency === 'EUR'
+                            ? `${product.price.toLocaleString('fr-FR')} €`
+                            : `$${product.price.toLocaleString('en-US')}`}
+                        </span>
+                      )}
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+        )}
+
+        {/* Philosophy Section - Only shown if about_text exists AND show_about_section is not false */}
+        {aboutText && showAboutSection && (
         <section className="py-24 bg-surface-container-low" id="about">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
             <div className="grid md:grid-cols-2 gap-16 items-center">

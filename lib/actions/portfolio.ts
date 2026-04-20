@@ -808,3 +808,134 @@ export async function deleteRealization(id: string) {
 
   revalidatePath("/pro/portfolio");
 }
+
+// ============================================
+// Portfolio Visibility Settings
+// ============================================
+
+export async function updatePortfolioVisibility(data: {
+  show_realizations_section: boolean;
+  show_services_section: boolean;
+  show_products_section: boolean;
+  show_about_section: boolean;
+}): Promise<void> {
+  console.log('[ACTION] ========================================');
+  console.log('[ACTION] updatePortfolioVisibility STARTED');
+  console.log('[ACTION] Input:', data);
+  console.log('[ACTION] ========================================');
+
+  const supabase = await createClient();
+
+  // Auth check
+  console.log('[AUTH] Checking authentication...');
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  console.log('[AUTH] Auth result:', {
+    authenticated: !!user,
+    userId: user?.id,
+    error: authError?.message
+  });
+
+  if (authError) {
+    console.error('[AUTH] ❌ Auth error:', authError);
+  }
+
+  if (!user) {
+    console.warn('[AUTH] ❌ Unauthorized - no user session');
+    throw new Error("Non authentifié");
+  }
+
+  console.log('[AUTH] ✅ Authentication successful');
+
+  // Fetch professional profile
+  console.log('[DB] Querying professionals table...');
+  console.log('[DB] Query params:', { table: 'professionals', user_id: user.id });
+
+  const { data: professional, error: profError } = await supabase
+    .from("professionals")
+    .select("id, slug")
+    .eq("user_id", user.id)
+    .single();
+
+  console.log('[DB] Professional query result:', {
+    success: !profError,
+    hasData: !!professional,
+    errorMessage: profError?.message,
+    errorCode: profError?.code
+  });
+
+  if (profError) {
+    if (profError.code === '42501') {
+      console.error('[RLS] ========================================');
+      console.error('[RLS] ❌ RLS POLICY VIOLATION - professionals table');
+      console.error('[RLS] ========================================');
+      console.error('[RLS] User ID:', user.id);
+      console.error('[RLS] Error:', profError.message);
+      console.error('[RLS] Fix: Check RLS policies on professionals table');
+      console.error('[RLS] ========================================');
+    } else {
+      console.error('[DB] ❌ Database error:', profError);
+    }
+    throw new Error("Profil professionnel non trouvé");
+  }
+
+  if (!professional) {
+    console.warn('[DB] No professional profile found for user:', user.id);
+    throw new Error("Profil professionnel non trouvé");
+  }
+
+  console.log('[DB] ✅ Professional found:', professional.id, professional.slug);
+
+  // Upsert portfolio visibility fields (merge with existing data via onConflict professional_id)
+  console.log('[DB] Upserting professional_portfolio visibility settings...');
+  console.log('[DB] Upsert payload:', {
+    professional_id: professional.id,
+    ...data
+  });
+
+  const { error: upsertError } = await supabase
+    .from("professional_portfolio")
+    .upsert(
+      {
+        professional_id: professional.id,
+        show_realizations_section: data.show_realizations_section,
+        show_services_section: data.show_services_section,
+        show_products_section: data.show_products_section,
+        show_about_section: data.show_about_section,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "professional_id" }
+    );
+
+  console.log('[DB] Upsert result:', {
+    success: !upsertError,
+    errorMessage: upsertError?.message,
+    errorCode: upsertError?.code
+  });
+
+  if (upsertError) {
+    if (upsertError.code === '42501') {
+      console.error('[RLS] ========================================');
+      console.error('[RLS] ❌ RLS POLICY VIOLATION - UPSERT professional_portfolio');
+      console.error('[RLS] ========================================');
+      console.error('[RLS] Professional ID:', professional.id);
+      console.error('[RLS] User ID:', user.id);
+      console.error('[RLS] Error:', upsertError.message);
+      console.error('[RLS] Fix: Check INSERT/UPDATE policy on professional_portfolio table');
+      console.error('[RLS] ========================================');
+    } else {
+      console.error('[DB] ❌ Upsert error:', upsertError);
+    }
+    throw new Error("Erreur lors de la mise à jour de la visibilité du portfolio");
+  }
+
+  console.log('[DB] ✅ Portfolio visibility updated successfully');
+
+  console.log('[ACTION] Revalidating paths...');
+  revalidatePath("/pro/site");
+  revalidatePath("/pro/realisations");
+  revalidatePath(`/professionnels/${professional.slug}`);
+
+  console.log('[ACTION] ========================================');
+  console.log('[ACTION] updatePortfolioVisibility COMPLETED SUCCESSFULLY');
+  console.log('[ACTION] ========================================');
+}

@@ -35,7 +35,7 @@ export default async function MySitePage() {
 
   const { data: portfolio, error: portfolioError } = await supabase
     .from("professional_portfolio")
-    .select("style_tokens, copy_quiz_answers, hero_subtitle, about_text, custom_domain, domain_status")
+    .select("style_tokens, copy_quiz_answers, hero_subtitle, about_text, custom_domain, domain_status, show_realizations_section, show_services_section, show_products_section, show_about_section")
     .eq("professional_id", pro.id)
     .single();
 
