@@ -13,6 +13,11 @@ const statusConfig: Record<CampaignStatus, { label: string; icon: React.ReactNod
     icon: <CheckCircle2 className="w-3.5 h-3.5" />,
     classes: "bg-kelen-green-50 text-kelen-green-700",
   },
+  queued: {
+    label: "Planifiée",
+    icon: <Clock className="w-3.5 h-3.5" />,
+    classes: "bg-amber-50 text-amber-700",
+  },
   sending: {
     label: "En cours",
     icon: <Send className="w-3.5 h-3.5" />,
@@ -31,7 +36,7 @@ const statusConfig: Record<CampaignStatus, { label: string; icon: React.ReactNod
 };
 
 export function CampaignHistory({ campaigns }: Props) {
-  const sent = campaigns.filter((c) => c.status === "sent");
+  const sent = campaigns.filter((c) => c.status !== "draft");
 
   if (sent.length === 0) {
     return (

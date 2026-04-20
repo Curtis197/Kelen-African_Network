@@ -5,7 +5,6 @@ import { createClient as createAdminClient } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import DOMPurify from "isomorphic-dompurify";
-import { sendNewsletterBatch } from "@/lib/utils/newsletter-email";
 import type {
   NewsletterSubscriber,
   NewsletterCampaign,
@@ -222,7 +221,7 @@ export async function sendCampaign(
 
   const { data: subscribers } = await supabase
     .from("client_newsletter")
-    .select("email, unsubscribe_token")
+    .select("id, email")
     .eq("professional_id", proId)
     .eq("is_active", true);
 
@@ -241,8 +240,8 @@ export async function sendCampaign(
       professional_id: proId,
       subject: parsed.data.subject,
       body_html: sanitizedHtml,
-      status: "sending",
-      recipient_count: 0,
+      status: "queued",
+      recipient_count: subscribers.length,
       attachments_json: attachments.length > 0 ? JSON.stringify(attachments) : null,
     })
     .select("id")
@@ -252,26 +251,24 @@ export async function sendCampaign(
     return { success: false, error: "Erreur lors de la création de la campagne." };
   }
 
-  const { successCount } = await sendNewsletterBatch(subscribers, {
-    businessName: pro.business_name,
-    replyTo: pro.email,
-    subject: parsed.data.subject,
-    bodyHtml: sanitizedHtml,
-    attachments,
-  });
+  // Populate the send queue — the Edge Function will process it on the next cron tick
+  const queueRows = subscribers.map((sub) => ({
+    campaign_id: campaign.id,
+    subscriber_id: sub.id,
+  }));
 
-  const finalStatus = successCount > 0 ? "sent" : "failed";
-  await supabase
-    .from("newsletter_campaigns")
-    .update({ status: finalStatus, sent_at: new Date().toISOString(), recipient_count: successCount })
-    .eq("id", campaign.id);
+  const { error: queueErr } = await supabase
+    .from("newsletter_send_queue")
+    .insert(queueRows);
 
-  log("newsletter.campaign.sent", { campaignId: campaign.id, successCount, proId });
-  revalidatePath("/pro/newsletter");
-
-  if (successCount === 0) {
-    return { success: false, error: "Aucun email n'a pu être envoyé. Réessayez." };
+  if (queueErr) {
+    log("newsletter.queue.error", { error: queueErr.message, campaignId: campaign.id });
+    await supabase.from("newsletter_campaigns").update({ status: "failed" }).eq("id", campaign.id);
+    return { success: false, error: "Erreur lors de la mise en file d'attente." };
   }
 
-  return { success: true, recipientCount: successCount };
+  log("newsletter.campaign.queued", { campaignId: campaign.id, recipientCount: subscribers.length, proId });
+  revalidatePath("/pro/newsletter");
+
+  return { success: true, recipientCount: subscribers.length };
 }

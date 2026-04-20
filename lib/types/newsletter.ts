@@ -6,7 +6,7 @@ export interface NewsletterAttachment {
 }
 
 export type NewsletterSource = 'public_profile' | 'manual';
-export type CampaignStatus = 'draft' | 'sending' | 'sent' | 'failed';
+export type CampaignStatus = 'draft' | 'queued' | 'sending' | 'sent' | 'failed';
 
 export interface NewsletterSubscriber {
   id: string;

@@ -107,8 +107,8 @@ export function CampaignComposer({ lastSentAt, professionalId }: Props) {
         <div className="flex items-center gap-2 text-kelen-green-700 bg-kelen-green-50 rounded-lg p-3 text-sm">
           <CheckCircle2 className="w-4 h-4 shrink-0" />
           <span>
-            Campagne envoyée à <strong>{result.recipientCount}</strong> abonné
-            {(result.recipientCount ?? 0) > 1 ? "s" : ""} !
+            Campagne planifiée pour <strong>{result.recipientCount}</strong> abonné
+            {(result.recipientCount ?? 0) > 1 ? "s" : ""}. L&apos;envoi se fera dans l&apos;heure.
             {attachments.length > 0 && ` (${attachments.length} pièce${attachments.length > 1 ? "s" : ""} jointe${attachments.length > 1 ? "s" : ""})`}
           </span>
         </div>
