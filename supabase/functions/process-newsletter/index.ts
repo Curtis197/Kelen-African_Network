@@ -1,14 +1,17 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { Resend } from "npm:resend@4";
+import { Resend } from "https://esm.sh/resend@6";
 
-const supabase = createClient(
-  Deno.env.get("SUPABASE_URL")!,
-  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-);
-
-const resend = new Resend(Deno.env.get("RESEND_API_KEY")!);
 const BASE_URL = Deno.env.get("NEXT_PUBLIC_SITE_URL") ?? "https://kelen.africa";
 const CRON_SECRET = Deno.env.get("NEWSLETTER_CRON_SECRET");
+
+function getClients() {
+  const supabase = createClient(
+    Deno.env.get("SUPABASE_URL")!,
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+  );
+  const resend = new Resend(Deno.env.get("RESEND_API_KEY") ?? "");
+  return { supabase, resend };
+}
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -101,6 +104,8 @@ Deno.serve(async (req) => {
   if (CRON_SECRET && req.headers.get("x-cron-secret") !== CRON_SECRET) {
     return new Response("Unauthorized", { status: 401 });
   }
+
+  const { supabase, resend } = getClients();
 
   // Claim a batch of pending queue items atomically
   const { data: rows, error: claimErr } = await supabase.rpc(
