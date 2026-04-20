@@ -191,17 +191,11 @@ export async function sendCampaign(
 
   const { data: pro } = await supabase
     .from("professionals")
-    .select("id, business_name, email, status")
+    .select("id, business_name, email")
     .eq("id", proId)
     .single();
 
   if (!pro) return { success: false, error: "Professionnel introuvable" };
-  if (pro.status !== "gold" && pro.status !== "silver") {
-    return {
-      success: false,
-      error: "Fonctionnalité réservée aux abonnés Gold et Silver.",
-    };
-  }
 
   const parsed = campaignSchema.safeParse({ subject, bodyHtml });
   if (!parsed.success) {
