@@ -222,3 +222,32 @@ export async function saveCopyManually(data: { heroSubtitle: string; aboutText: 
   console.log('[ACTION] saveCopyManually: done');
   return { success: true };
 }
+
+export async function saveAboutText(data: { aboutText: string; aboutImageUrl?: string | null }) {
+  console.log('[ACTION] saveAboutText: start', { aboutTextLength: data.aboutText?.length });
+  const { supabase, pro } = await getProfessional();
+
+  const payload: Record<string, unknown> = {
+    professional_id: pro.id,
+    about_text: data.aboutText,
+    updated_at: new Date().toISOString(),
+  };
+  if (data.aboutImageUrl !== undefined) {
+    payload.about_image_url = data.aboutImageUrl;
+  }
+
+  const { error } = await supabase
+    .from("professional_portfolio")
+    .upsert(payload, { onConflict: "professional_id" });
+
+  if (error?.code === '42501') {
+    console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: professional_portfolio, User:', pro.id);
+    throw new Error(error.message);
+  }
+  if (error) throw new Error(error.message);
+
+  revalidatePath(`/professionnels/${pro.slug}`);
+  revalidatePath(`/professionnels/${pro.slug}/a-propos`);
+  console.log('[ACTION] saveAboutText: done');
+  return { success: true };
+}

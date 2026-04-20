@@ -5,12 +5,13 @@ import { useState, useTransition } from "react";
 import { StyleQuiz } from "./StyleQuiz";
 import { CopywritingQuiz } from "./CopywritingQuiz";
 import { CopyEditor } from "./CopyEditor";
+import { AboutEditor } from "./AboutEditor";
 import { PortfolioPreviewFrame } from "./PortfolioPreviewFrame";
 import { DomainSearch } from "./DomainSearch";
 import { DomainManager } from "./DomainManager";
 import type { StyleAnswers } from "@/lib/portfolio/style-tokens";
 import type { CopyAnswers } from "@/lib/portfolio/copy-questions";
-import { Palette, FileText, Globe, Lock, Eye } from "lucide-react";
+import { Palette, FileText, Globe, Lock, Eye, UserRound } from "lucide-react";
 import Link from "next/link";
 import { updatePortfolioVisibility } from "@/lib/actions/portfolio";
 import { toast } from "sonner";
@@ -22,6 +23,7 @@ interface Props {
     copy_quiz_answers?: Partial<CopyAnswers>;
     hero_subtitle?: string;
     about_text?: string;
+    about_image_url?: string;
     custom_domain?: string;
     domain_status?: string;
     show_realizations_section?: boolean;
@@ -33,8 +35,9 @@ interface Props {
 }
 
 const TABS = [
-  { id: "style",      label: "Style",      icon: Palette  },
+  { id: "style",      label: "Style",      icon: Palette   },
   { id: "content",    label: "Contenu",    icon: FileText  },
+  { id: "about",      label: "À propos",   icon: UserRound },
   { id: "domain",     label: "Domaine",    icon: Globe     },
   { id: "visibility", label: "Visibilité", icon: Eye       },
 ] as const;
@@ -142,6 +145,13 @@ export function SiteBuilder({ pro, portfolio, isPaid }: Props) {
               initialAboutText={portfolio?.about_text ?? ""}
             />
           </div>
+        )}
+
+        {activeTab === "about" && (
+          <AboutEditor
+            initialAboutText={portfolio?.about_text ?? ""}
+            initialAboutImageUrl={portfolio?.about_image_url ?? ""}
+          />
         )}
 
         {activeTab === "domain" && (

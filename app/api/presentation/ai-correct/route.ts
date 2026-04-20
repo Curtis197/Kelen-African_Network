@@ -14,7 +14,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Contenu manquant" }, { status: 400 });
   }
 
-  const contextLabel = context === "product" ? "d'un produit" : "d'un service";
+  const contextLabel =
+    context === "product" ? "d'un produit" :
+    context === "about"   ? "de présentation professionnelle (page À propos)" :
+    "d'un service";
 
   const message = await anthropic.messages.create({
     model: "claude-sonnet-4-6",
