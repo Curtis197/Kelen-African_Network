@@ -2,10 +2,10 @@ import { MapPin, CheckCircle, AlertTriangle } from 'lucide-react';
 import { getGPSDistanceStatus } from '@/lib/utils/gps-distance';
 
 interface GPSDisplayProps {
-  latitude: number;
-  longitude: number;
+  latitude: number | null;
+  longitude: number | null;
   locationName?: string | null;
-  source?: 'exif' | 'browser' | 'manual';
+  source?: 'exif' | 'browser' | 'manual' | null;
   projectLocationLat?: number | null;
   projectLocationLng?: number | null;
 }

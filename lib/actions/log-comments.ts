@@ -354,20 +354,40 @@ export async function resolveLog(
 }
 
 export async function getLogComments(logId: string) {
+  console.log('[ACTION] getLogComments execution started', { logId });
   const supabase = await createClient();
+
+  const { data: { user } } = await supabase.auth.getUser();
+  console.log('[AUTH] Current user:', user?.id);
 
   const { data, error } = await supabase
     .from("project_log_comments")
     .select(`
       *,
-      author:users(first_name, last_name, role)
+      author:users(display_name, role)
     `)
     .eq("log_id", logId)
     .order("created_at", { ascending: true });
 
   if (error) {
-    console.error("Error fetching log comments:", error);
+    console.error("[DB] Error fetching log comments:", {
+      code: error.code,
+      message: error.message,
+      details: error.details,
+      hint: error.hint
+    });
+    
+    if (error.code === '42501') {
+      console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: project_log_comments');
+    }
+    
     return [];
+  }
+
+  if (!data || data.length === 0) {
+    console.warn('[RLS] ⚠️ SILENT RLS FILTERING or no comments found! Table: project_log_comments, User:', user?.id);
+  } else {
+    console.log('[DB] Log comments fetched successfully:', { count: data.length });
   }
 
   return data || [];

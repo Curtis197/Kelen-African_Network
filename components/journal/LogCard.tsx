@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { format, formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { User, AlertTriangle } from 'lucide-react';
+import { User, AlertTriangle, MapPin } from 'lucide-react';
 import type { ProjectLog } from '@/lib/types/daily-logs';
 import LogStatusBadge from './LogStatusBadge';
 import MoneyDisplay from './MoneyDisplay';
@@ -22,6 +22,8 @@ export default function LogCard({ log, projectId, proProjectId, primaryPhotoUrl,
   const timeStr = format(new Date(log.created_at), 'HH:mm');
   const relativeTime = formatDistanceToNow(new Date(log.created_at), { locale: fr, addSuffix: true });
 
+  const hasExif = log.media?.some(m => m.exif_latitude !== null && m.exif_longitude !== null) || false;
+  
   const href = proProjectId
     ? `/pro/projets/${proProjectId}/journal/${log.id}`
     : `/projets/${projectId}/journal/${log.id}`;
@@ -86,9 +88,12 @@ export default function LogCard({ log, projectId, proProjectId, primaryPhotoUrl,
           {log.money_spent > 0 && (
             <MoneyDisplay amount={log.money_spent} currency={log.money_currency} compact />
           )}
-          <span className="font-mono">
-            📍 {log.gps_latitude.toFixed(2)}°N, {log.gps_longitude.toFixed(2)}°W
-          </span>
+          {hasExif && log.location_name && (
+            <span className="flex items-center gap-1.5 text-on-surface-variant/80">
+              <MapPin className="w-3.5 h-3.5 text-primary/60" />
+              <span className="line-clamp-1">{log.location_name}</span>
+            </span>
+          )}
         </div>
 
         {/* Issues flag */}

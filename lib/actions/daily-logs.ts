@@ -38,8 +38,8 @@ const logSchema = z.object({
   issues: z.string().max(1000).nullable().optional(),
   nextSteps: z.string().max(1000).nullable().optional(),
   weather: z.enum(["sunny", "cloudy", "rainy", "stormy", "cold"]).nullable().optional(),
-  gpsLatitude: z.number().min(-90).max(90),
-  gpsLongitude: z.number().min(-180).max(180),
+  gpsLatitude: z.number().min(-90).max(90).nullable(),
+  gpsLongitude: z.number().min(-180).max(180).nullable(),
 });
 
 export async function createLog(data: z.infer<typeof logSchema>): Promise<{ data?: ProjectLog; error?: string }> {
@@ -91,8 +91,10 @@ export async function createLog(data: z.infer<typeof logSchema>): Promise<{ data
 
   // For pro projects, we don't need to verify client access
   if (!validated.isProProject && authorRole === 'professional') {
-    // Verify professional has access to client project
     const proId = await getProfessionalId();
+    if (!proId) return { error: "Professionnel introuvable" };
+
+    // Check project_professionals (legacy/direct assignment)
     const { data: proAccess } = await supabase
       .from("project_professionals")
       .select("id")
@@ -101,8 +103,21 @@ export async function createLog(data: z.infer<typeof logSchema>): Promise<{ data
       .single();
 
     if (!proAccess) {
-      return { error: "Vous n'avez pas accès à ce projet" };
+      // Check project_collaborations (collaborative workspace)
+      const { data: collabAccess } = await supabase
+        .from("project_collaborations")
+        .select("id")
+        .eq("project_id", validated.projectId)
+        .eq("professional_id", proId)
+        .in("status", ["negotiating", "active", "pending"]) // Allow logging even during negotiation/pending if needed, or stick to active
+        .single();
+
+      if (!collabAccess) {
+        console.warn("[createLog] Access denied for professional", { proId, projectId: validated.projectId });
+        return { error: "Vous n'avez pas accès à ce projet" };
+      }
     }
+
   }
 
   const insertData: Record<string, unknown> = {
@@ -211,19 +226,24 @@ export async function updateLog(
   if (data.issues !== undefined) updateData.issues = data.issues;
   if (data.nextSteps !== undefined) updateData.next_steps = data.nextSteps;
   if (data.weather !== undefined) updateData.weather = data.weather;
-  if (data.gpsLatitude) updateData.gps_latitude = data.gpsLatitude;
-  if (data.gpsLongitude) updateData.gps_longitude = data.gpsLongitude;
+  if (data.gpsLatitude !== undefined) updateData.gps_latitude = data.gpsLatitude;
+  if (data.gpsLongitude !== undefined) updateData.gps_longitude = data.gpsLongitude;
 
-  // Re-geocode if coordinates changed
-  if (data.gpsLatitude || data.gpsLongitude) {
-    const lat = data.gpsLatitude || existingLog.gps_latitude;
-    const lng = data.gpsLongitude || existingLog.gps_longitude;
-    try {
-      const geoResult = await reverseGeocode(lat, lng);
-      updateData.location_name = geoResult?.city || null;
-      console.log("[updateLog] Geocoded location:", updateData.location_name);
-    } catch (err) {
-      console.error("[updateLog] Geocoding error:", err);
+  // Re-geocode if coordinates changed and are not null
+  if (data.gpsLatitude !== undefined || data.gpsLongitude !== undefined) {
+    const lat = data.gpsLatitude !== undefined ? data.gpsLatitude : existingLog.gps_latitude;
+    const lng = data.gpsLongitude !== undefined ? data.gpsLongitude : existingLog.gps_longitude;
+    
+    if (lat !== null && lng !== null) {
+      try {
+        const geoResult = await reverseGeocode(lat, lng);
+        updateData.location_name = geoResult?.city || null;
+        console.log("[updateLog] Geocoded location:", updateData.location_name);
+      } catch (err) {
+        console.error("[updateLog] Geocoding error:", err);
+      }
+    } else {
+      updateData.location_name = null;
     }
   }
 

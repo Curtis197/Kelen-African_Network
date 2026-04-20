@@ -21,8 +21,8 @@ export interface ProjectLog {
   next_steps: string | null;
   weather: WeatherCondition | null;
   status: LogStatus;
-  gps_latitude: number;
-  gps_longitude: number;
+  gps_latitude: number | null;
+  gps_longitude: number | null;
   is_synced: boolean;
   synced_at: string | null;
   created_at: string;
@@ -98,8 +98,8 @@ export interface LogFormData {
   issues: string;
   nextSteps: string;
   weather: WeatherCondition | null;
-  gpsLatitude: number;
-  gpsLongitude: number;
+  gpsLatitude: number | null;
+  gpsLongitude: number | null;
   gpsSource: 'exif' | 'browser' | 'manual' | null;
   photos: LogMedia[];
 }
@@ -117,8 +117,8 @@ export interface LogDraft {
 
 // GPS info for display
 export interface GPSInfo {
-  latitude: number;
-  longitude: number;
+  latitude: number | null;
+  longitude: number | null;
   source: 'exif' | 'browser' | 'manual';
   sourceLabel: string;
 }

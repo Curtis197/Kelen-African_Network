@@ -67,7 +67,11 @@ export async function getProProjects(status?: string): Promise<ProProject[]> {
         budget_currency,
         status,
         created_at,
-        images:user_project_images(*)
+        images:user_project_images(*),
+        client:users!user_id (
+          display_name,
+          email
+        )
       )
     `)
     .eq("professional_id", proId)
@@ -95,8 +99,8 @@ export async function getProProjects(status?: string): Promise<ProProject[]> {
           description: p.description,
           category: p.category,
           location: p.location,
-          client_name: "Client Kelen", // We could fetch client display_name if needed
-          client_email: null,
+          client_name: p.client?.display_name || "Client Kelen",
+          client_email: p.client?.email || null,
           client_phone: null,
           start_date: p.created_at,
           end_date: null,
@@ -187,7 +191,11 @@ export async function getProProject(id: string): Promise<ProProject | null> {
         budget_currency,
         status,
         created_at,
-        images:user_project_images(*)
+        images:user_project_images(*),
+        client:users!user_id (
+          display_name,
+          email
+        )
       )
     `)
     .eq("project_id", id) // We assume the ID passed is the user_project ID
@@ -204,8 +212,8 @@ export async function getProProject(id: string): Promise<ProProject | null> {
       description: p.description,
       category: p.category,
       location: p.location,
-      client_name: "Client Kelen",
-      client_email: null,
+      client_name: p.client?.display_name || "Client Kelen",
+      client_email: p.client?.email || null,
       client_phone: null,
       start_date: p.created_at,
       end_date: null,

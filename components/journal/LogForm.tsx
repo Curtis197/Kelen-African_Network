@@ -31,8 +31,8 @@ const defaultFormData = (currency: 'XOF' | 'EUR' | 'USD'): LogFormData => ({
   issues: '',
   nextSteps: '',
   weather: null,
-  gpsLatitude: 0,
-  gpsLongitude: 0,
+  gpsLatitude: null,
+  gpsLongitude: null,
   gpsSource: null,
   photos: [],
 });
@@ -72,7 +72,7 @@ export default function LogForm({ projectId, proProjectId, stepId, projectCurren
     loadDraft();
   }, [projectId]);
 
-  const handleGPSChange = useCallback((lat: number, lng: number, source: 'exif' | 'browser' | 'manual') => {
+  const handleGPSChange = useCallback((lat: number | null, lng: number | null, source: 'exif' | 'browser' | 'manual' | null) => {
     setFormData(prev => ({
       ...prev,
       gpsLatitude: lat,
@@ -81,12 +81,12 @@ export default function LogForm({ projectId, proProjectId, stepId, projectCurren
     }));
   }, []);
 
-  const handleEXIFGPS = useCallback((lat: number, lng: number) => {
+  const handleEXIFGPS = useCallback((lat: number | null, lng: number | null) => {
     setFormData(prev => ({
       ...prev,
       gpsLatitude: lat,
       gpsLongitude: lng,
-      gpsSource: 'exif',
+      gpsSource: lat !== null ? 'exif' : null,
     }));
   }, []);
 

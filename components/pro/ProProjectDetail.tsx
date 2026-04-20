@@ -91,12 +91,14 @@ export async function ProProjectDetail({ project }: ProProjectDetailProps) {
             <BookOpen className="w-4 h-4" />
             Journal
           </Link>
-          <Link
-            href={`/pro/projets/${project.id}/edit`}
-            className="inline-flex items-center gap-2 px-5 py-3 bg-surface-container text-on-surface rounded-xl font-semibold text-sm hover:bg-surface-container-high transition-colors"
-          >
-            Modifier
-          </Link>
+          {!project.is_collaboration && (
+            <Link
+              href={`/pro/projets/${project.id}/edit`}
+              className="inline-flex items-center gap-2 px-5 py-3 bg-surface-container text-on-surface rounded-xl font-semibold text-sm hover:bg-surface-container-high transition-colors"
+            >
+              Modifier
+            </Link>
+          )}
         </div>
       </div>
 

@@ -36,12 +36,12 @@ export function formatDistance(meters: number): string {
  * Get GPS status info comparing log location to project location.
  */
 export function getGPSDistanceStatus(
-  logLat: number,
-  logLng: number,
+  logLat: number | null,
+  logLng: number | null,
   projectLat: number | null,
   projectLng: number | null
 ): { distance: number; formatted: string; isClose: boolean } | null {
-  if (!projectLat || !projectLng) return null;
+  if (logLat === null || logLng === null || !projectLat || !projectLng) return null;
 
   const distance = calculateDistance(logLat, logLng, projectLat, projectLng);
   return {

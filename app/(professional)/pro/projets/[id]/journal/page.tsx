@@ -1,57 +1,33 @@
-"use client";
-
-import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
-import { ProProject } from "@/lib/types/pro-projects";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { ProProjectJournal } from "@/components/pro/ProProjectJournal";
+import { getProProject } from "@/lib/actions/pro-projects";
 
-export default function ProProjectJournalPage() {
-  const params = useParams();
-  const router = useRouter();
-  const projectId = params.id as string;
-  const [project, setProject] = useState<ProProject | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const supabase = createClient();
+interface Props {
+  params: Promise<{ id: string }>;
+}
 
-  useEffect(() => {
-    const loadProject = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { router.push("/"); return; }
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
+  const project = await getProProject(id);
+  if (!project) return { title: "Journal introuvable" };
+  return { title: `Journal : ${project.title} — Kelen Pro` };
+}
 
-      const { data: pro } = await supabase
-        .from("professionals")
-        .select("id")
-        .eq("user_id", user.id)
-        .single();
-
-      if (!pro) { router.push("/"); return; }
-
-      const { data: proj } = await supabase
-        .from("pro_projects")
-        .select("*")
-        .eq("id", projectId)
-        .eq("professional_id", pro.id)
-        .single();
-
-      setProject(proj);
-      setIsLoading(false);
-    };
-
-    loadProject();
-  }, [projectId, router, supabase]);
-
-  if (isLoading) {
-    return <div className="animate-pulse h-96 bg-surface-container-low rounded-2xl" />;
-  }
+export default async function ProProjectJournalPage({ params }: Props) {
+  const { id } = await params;
+  const project = await getProProject(id);
 
   if (!project) {
-    return (
-      <div className="text-center py-16">
-        <h1 className="text-2xl font-bold text-on-surface mb-4">Projet introuvable</h1>
-      </div>
-    );
+    notFound();
   }
 
-  return <ProProjectJournal project={project} />;
+  // NOTE: Professionals ARE allowed to see the journal for collaborations,
+  // but they use different IDs/tables which the component now handles.
+
+  return (
+    <div className="max-w-5xl mx-auto px-4 py-8">
+      <ProProjectJournal project={project} />
+    </div>
+  );
 }

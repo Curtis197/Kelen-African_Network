@@ -35,7 +35,7 @@ export default async function EditProProjectPage({ params }: { params: Promise<{
     .eq("user_id", user.id)
     .single();
 
-  if (!professional || project.professional_id !== professional.id) {
+  if (!professional || project.professional_id !== professional.id || project.is_collaboration) {
     notFound();
   }
 

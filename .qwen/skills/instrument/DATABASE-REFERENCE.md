@@ -162,6 +162,7 @@ Displayed on public portfolio
 | `role` | text | `client`, `pro_africa`, `pro_europe`, `pro_intl`, `admin` |
 | `country` | text | User's country |
 | `phone` | text | Phone number |
+| `profile_picture_url` | text | Avatar URL |
 | `language` | text | `fr` or `en` |
 
 **Common Queries:**
@@ -351,11 +352,14 @@ const { data } = await supabase
 | `money_spent` | numeric | Amount spent |
 | `money_currency` | text | `XOF`, `EUR`, `USD` (default: `XOF`) |
 | `status` | text | `pending`, `approved`, `contested`, `resolved` |
+| `weather` | text | `sunny`, `cloudy`, `rainy`, `stormy`, `cold` |
+| `issues` | text | Reported issues |
+| `next_steps` | text | Planned next steps |
+| `payment_id` | uuid | Link to project_payment |
 | `gps_latitude` | numeric | GPS location |
 | `gps_longitude` | numeric | GPS location |
 | `location_name` | text | Human-readable city name |
 
-**Common Queries:**
 ```typescript
 // Get logs for a project
 const { data } = await supabase
@@ -363,6 +367,29 @@ const { data } = await supabase
   .select('*, project_log_media(*), author:users(display_name)')
   .eq('project_id', projectId)
   .order('log_date', { ascending: false })
+```
+
+---
+
+### `project_log_comments` - Log Feedback
+**Purpose:** Daily log feedback (approvals or contests)
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | uuid | Primary key |
+| `log_id` | uuid | FK → project_logs.id |
+| `author_id` | uuid | FK → users.id |
+| `comment_type` | text | `approval`, `contest` |
+| `comment_text` | text | Content of the feedback |
+| `evidence_urls` | text[] | Array of evidence links |
+
+**Common Queries:**
+```typescript
+// Get log comments with author details
+const { data } = await supabase
+  .from('project_log_comments')
+  .select('*, author:users(display_name, profile_picture_url, role)')
+  .eq('log_id', logId)
 ```
 
 ---
@@ -790,5 +817,18 @@ const { data } = await supabase
 | `collaboration-attachments` | **Yes** | 10MB | Images, PDFs | Negotiation message attachments |
 
 ---
+
+## 🧱 Security & RLS Helpers
+
+### `public.can_user_see_user(target_user_uuid)`
+**Purpose:** SECURITY DEFINER function to check if the current user should see another user's display details.
+Returns `true` if they share a project (collaborative or assigned).
+
+**Usage in RLS:**
+```sql
+CREATE POLICY "users_participant_view" ON public.users
+FOR SELECT TO authenticated
+USING (id = auth.uid() OR public.can_user_see_user(id));
+```
 
 **Keep this file updated as schema changes!** 📝

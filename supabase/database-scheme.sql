@@ -692,6 +692,7 @@ CREATE TABLE public.users (
   phone text,
   email_notifications boolean DEFAULT true,
   language text DEFAULT 'fr'::text CHECK (language = ANY (ARRAY['fr'::text, 'en'::text])),
+  profile_picture_url text,
   created_at timestamp with time zone DEFAULT now(),
   updated_at timestamp with time zone DEFAULT now(),
   last_login_at timestamp with time zone,
@@ -739,10 +740,83 @@ CREATE TABLE public.pro_google_reviews_cache (
   CONSTRAINT pro_google_reviews_cache_pkey PRIMARY KEY (id),
   CONSTRAINT pro_google_reviews_cache_pro_id_fkey FOREIGN KEY (pro_id) REFERENCES public.professionals(id)
 );
--- RLS Policies on pro_google_reviews_cache:
---   pro_google_reviews_cache_insert_own: INSERT — EXISTS (professionals where id = pro_id AND user_id = auth.uid())
---   pro_google_reviews_cache_public_select: SELECT — true (public read for portfolio display)
---   pro_google_reviews_cache_update_own: UPDATE — EXISTS (professionals where id = pro_id AND user_id = auth.uid())
+CREATE TABLE public.project_logs (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  project_id uuid REFERENCES public.user_projects(id),
+  pro_project_id uuid REFERENCES public.pro_projects(id),
+  step_id uuid REFERENCES public.project_steps(id),
+  author_id uuid NOT NULL REFERENCES public.users(id),
+  author_role text NOT NULL CHECK (author_role = ANY (ARRAY['client'::text, 'professional'::text])),
+  log_date date NOT NULL DEFAULT now(),
+  title text NOT NULL,
+  description text NOT NULL,
+  money_spent numeric DEFAULT 0 CHECK (money_spent >= 0),
+  money_currency text DEFAULT 'XOF'::text CHECK (money_currency = ANY (ARRAY['XOF'::text, 'EUR'::text, 'USD'::text])),
+  payment_id uuid REFERENCES public.project_payments(id),
+  issues text,
+  next_steps text,
+  weather text CHECK (weather = ANY (ARRAY['sunny'::text, 'cloudy'::text, 'rainy'::text, 'stormy'::text, 'cold'::text])),
+  status text DEFAULT 'pending'::text CHECK (status = ANY (ARRAY['pending'::text, 'approved'::text, 'contested'::text, 'resolved'::text])),
+  gps_latitude numeric,
+  gps_longitude numeric,
+  location_name text,
+  is_synced boolean DEFAULT true,
+  synced_at timestamp with time zone,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT project_logs_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE public.project_log_media (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  log_id uuid NOT NULL REFERENCES public.project_logs(id),
+  media_type text NOT NULL CHECK (media_type = 'photo'::text),
+  storage_path text NOT NULL,
+  file_name text NOT NULL,
+  file_size bigint,
+  mime_type text NOT NULL,
+  caption text,
+  exif_timestamp timestamp with time zone,
+  exif_latitude numeric,
+  exif_longitude numeric,
+  is_primary boolean DEFAULT false,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT project_log_media_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE public.project_log_comments (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  log_id uuid NOT NULL REFERENCES public.project_logs(id),
+  author_id uuid NOT NULL REFERENCES public.users(id),
+  comment_type text NOT NULL CHECK (comment_type = ANY (ARRAY['approval'::text, 'contest'::text])),
+  comment_text text NOT NULL,
+  evidence_urls text[] DEFAULT '{}'::text[],
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT project_log_comments_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE public.project_collaborations (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  project_id uuid NOT NULL REFERENCES public.user_projects(id),
+  professional_id uuid NOT NULL REFERENCES public.professionals(id),
+  project_professional_id uuid NOT NULL REFERENCES public.project_professionals(id),
+  pro_project_id uuid REFERENCES public.pro_projects(id),
+  status text DEFAULT 'pending'::text CHECK (status = ANY (ARRAY['pending'::text, 'negotiating'::text, 'active'::text, 'declined'::text, 'not_picked'::text, 'suspended'::text, 'terminated'::text])),
+  proposal_text text,
+  proposal_budget numeric,
+  proposal_currency text DEFAULT 'XOF'::text,
+  proposal_timeline text,
+  proposal_submitted_at timestamp with time zone,
+  agreed_price numeric,
+  agreed_start_date date,
+  agreed_end_date date,
+  started_at timestamp with time zone,
+  ended_at timestamp with time zone,
+  decline_reason text,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT project_collaborations_pkey PRIMARY KEY (id)
+);
 
 -- ============================================================
 -- Storage Buckets (supabase/storage)

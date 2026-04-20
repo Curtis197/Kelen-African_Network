@@ -32,13 +32,16 @@ export function ProProjectJournal({ project }: ProProjectJournalProps) {
 
   const loadLogs = useCallback(async () => {
     setIsLoading(true);
+    const filterColumn = project.is_collaboration ? "project_id" : "pro_project_id";
+    console.log("[ProProjectJournal] Loading logs for", { projectId: project.id, isCollaboration: project.is_collaboration, filterColumn });
+
     const { data, error } = await supabase
       .from("project_logs")
       .select(`
         *,
         media:project_log_media(*)
       `)
-      .eq("pro_project_id", project.id)
+      .eq(filterColumn, project.id)
       .order("log_date", { ascending: false })
       .order("created_at", { ascending: false });
 
@@ -93,7 +96,7 @@ export function ProProjectJournal({ project }: ProProjectJournalProps) {
           const result = await createLog({
             ...draft.formData,
             projectId: project.id,
-            isProProject: true,
+            isProProject: !project.is_collaboration,
           });
           if (result?.data) {
             await deleteDraft(draft.id);
@@ -129,7 +132,7 @@ export function ProProjectJournal({ project }: ProProjectJournalProps) {
           event: "*",
           schema: "public",
           table: "project_logs",
-          filter: `pro_project_id=eq.${project.id}`,
+          filter: `${project.is_collaboration ? 'project_id' : 'pro_project_id'}=eq.${project.id}`,
         },
         () => {
           loadLogs();
@@ -169,7 +172,7 @@ export function ProProjectJournal({ project }: ProProjectJournalProps) {
         </div>
         <LogForm
           projectId={project.id}
-          proProjectId={project.id}
+          proProjectId={!project.is_collaboration ? project.id : undefined}
           projectCurrency={project.currency || "XOF"}
           onSaved={() => {
             setShowNewLog(false);

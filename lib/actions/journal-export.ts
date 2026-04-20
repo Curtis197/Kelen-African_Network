@@ -33,8 +33,8 @@ interface PDFExportData {
     weather?: string;
     issues?: string;
     next_steps?: string;
-    gps_latitude?: number;
-    gps_longitude?: number;
+    gps_latitude?: number | null;
+    gps_longitude?: number | null;
     media: Array<{
       storage_path: string;
       file_name: string;
