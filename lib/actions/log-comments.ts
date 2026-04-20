@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { sendLogActionEmail } from "@/lib/utils/email-notifications";
 import { z } from "zod";
+import { getProfessionalId } from "./daily-logs";
 
 const logCommentSchema = z.object({
   logId: z.string().uuid("ID de rapport invalide"),
@@ -11,10 +12,106 @@ const logCommentSchema = z.object({
   evidenceUrls: z.array(z.string().url("URL invalide")).max(10, "Maximum 10 URLs autorisées").optional(),
 });
 
+/**
+ * Helper to check if a user has authorization to approve/contest a log.
+ * Returns { isAuthorized: boolean, error?: string }
+ */
+async function checkProjectAccess(
+  supabase: any,
+  user: any,
+  logEntry: { project_id: string | null; pro_project_id: string | null }
+): Promise<{ isAuthorized: boolean; error?: string }> {
+  console.log('[AUTH] Checking access for user:', user.id, 'on log targets:', { 
+    projectId: logEntry.project_id, 
+    proProjectId: logEntry.pro_project_id 
+  });
+
+  // 1. Check if it's a client project owner
+  if (logEntry.project_id) {
+    const { data: project, error: projectError } = await supabase
+      .from("user_projects")
+      .select("id")
+      .eq("id", logEntry.project_id)
+      .eq("user_id", user.id)
+      .single();
+    
+    if (project) {
+      console.log('[AUTH] User is project owner');
+      return { isAuthorized: true };
+    }
+    if (projectError && projectError.code !== 'PGRST116') {
+      console.error('[DB] Error checking project ownership:', projectError);
+    }
+  }
+
+  // 2. Check if it's a pro project owner
+  if (logEntry.pro_project_id) {
+    const proId = await getProfessionalId();
+    console.log('[AUTH] Professional ID:', proId);
+    
+    if (proId) {
+      const { data: proProject, error: proError } = await supabase
+        .from("pro_projects")
+        .select("id")
+        .eq("id", logEntry.pro_project_id)
+        .eq("professional_id", proId)
+        .single();
+      
+      if (proProject) {
+        console.log('[AUTH] User is pro project owner');
+        return { isAuthorized: true };
+      }
+      if (proError && proError.code !== 'PGRST116') {
+        console.error('[DB] Error checking pro project access:', proError);
+      }
+    }
+  }
+
+  // 3. Check if it's an assigned professional on a client project
+  if (logEntry.project_id) {
+    const proId = await getProfessionalId();
+    if (proId) {
+      console.log('[AUTH] Checking assignments for pro:', proId);
+      
+      // Check project_professionals (direct assignment)
+      const { data: proAccess } = await supabase
+        .from("project_professionals")
+        .select("id")
+        .eq("project_id", logEntry.project_id)
+        .eq("professional_id", proId)
+        .single();
+      
+      if (proAccess) {
+        console.log('[AUTH] User is assigned professional via project_professionals');
+        return { isAuthorized: true };
+      }
+
+      // Check project_collaborations (active status)
+      const { data: collabAccess } = await supabase
+        .from("project_collaborations")
+        .select("id")
+        .eq("project_id", logEntry.project_id)
+        .eq("professional_id", proId)
+        .eq("status", "active")
+        .single();
+      
+      if (collabAccess) {
+        console.log('[AUTH] User is active collaborator');
+        return { isAuthorized: true };
+      }
+    }
+  }
+
+  console.warn('[AUTH] Access denied for user:', user.id);
+  return { isAuthorized: false, error: "Vous n'avez pas l'autorisation d'effectuer cette action sur ce rapport." };
+}
+
 export async function approveLog(
   logId: string,
   comment: string
 ): Promise<{ success: boolean; error?: string }> {
+  console.log('[ACTION] approveLog started:', { logId });
+  
   // Validate input
   const validation = logCommentSchema.safeParse({ logId, comment });
   if (!validation.success) {
@@ -26,61 +123,26 @@ export async function approveLog(
 
   if (!user) return { success: false, error: "Non autorisé" };
 
-  // Get log info - include pro_project_id
-  const { data: logEntry } = await supabase
+  // Get log info
+  const { data: logEntry, error: logFetchError } = await supabase
     .from("project_logs")
     .select("project_id, pro_project_id, status, author_id")
     .eq("id", logId)
     .single();
 
-  if (!logEntry) return { success: false, error: "Rapport introuvable" };
-
-  // Verify ownership - check both client projects and pro projects
-  let isAuthorized = false;
-  let projectId = logEntry.project_id;
-
-  // Check if it's a client project
-  if (logEntry.project_id) {
-    const { data: project } = await supabase
-      .from("user_projects")
-      .select("id")
-      .eq("id", logEntry.project_id)
-      .eq("user_id", user.id)
-      .single();
-    
-    if (project) {
-      isAuthorized = true;
-    }
+  if (!logEntry) {
+    console.error('[DB] Log not found or RLS restricted:', logFetchError);
+    return { success: false, error: "Rapport introuvable" };
   }
 
-  // Check if it's a pro project
-  if (logEntry.pro_project_id && !isAuthorized) {
-    const { data: professional } = await supabase
-      .from("professionals")
-      .select("id")
-      .eq("user_id", user.id)
-      .single();
-    
-    if (professional) {
-      const { data: proProject } = await supabase
-        .from("pro_projects")
-        .select("id")
-        .eq("id", logEntry.pro_project_id)
-        .eq("professional_id", professional.id)
-        .single();
-      
-      if (proProject) {
-        isAuthorized = true;
-        projectId = logEntry.pro_project_id; // Use pro_project_id for revalidation
-      }
-    }
-  }
-
+  // Verify authorization using helper
+  const { isAuthorized, error: authError } = await checkProjectAccess(supabase, user, logEntry);
   if (!isAuthorized) {
-    return { success: false, error: "Non autorisé" };
+    return { success: false, error: authError || "Non autorisé" };
   }
 
   // Insert comment
+  console.log('[DB] Inserting approval comment...');
   const { error: commentError } = await supabase
     .from("project_log_comments")
     .insert([{
@@ -91,16 +153,21 @@ export async function approveLog(
     }]);
 
   if (commentError) {
+    console.error('[DB] Error inserting comment:', commentError);
+    if (commentError.code === '42501') console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: project_log_comments');
     return { success: false, error: commentError.message };
   }
 
   // Update log status
+  console.log('[DB] Updating log status to approved...');
   const { error: updateError } = await supabase
     .from("project_logs")
     .update({ status: 'approved' })
     .eq("id", logId);
 
   if (updateError) {
+    console.error('[DB] Error updating log status:', updateError);
+    if (updateError.code === '42501') console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: project_logs');
     return { success: false, error: updateError.message };
   }
 
@@ -151,6 +218,8 @@ export async function contestLog(
   comment: string,
   evidenceUrls: string[] = []
 ): Promise<{ success: boolean; error?: string }> {
+  console.log('[ACTION] contestLog started:', { logId });
+
   // Validate input
   const validation = logCommentSchema.safeParse({ logId, comment, evidenceUrls });
   if (!validation.success) {
@@ -162,59 +231,26 @@ export async function contestLog(
 
   if (!user) return { success: false, error: "Non autorisé" };
 
-  // Get log info - include pro_project_id
-  const { data: logEntry } = await supabase
+  // Get log info
+  const { data: logEntry, error: logFetchError } = await supabase
     .from("project_logs")
     .select("project_id, pro_project_id, status, author_id")
     .eq("id", logId)
     .single();
 
-  if (!logEntry) return { success: false, error: "Rapport introuvable" };
-
-  // Verify ownership - check both client projects and pro projects
-  let isAuthorized = false;
-
-  // Check if it's a client project
-  if (logEntry.project_id) {
-    const { data: project } = await supabase
-      .from("user_projects")
-      .select("id")
-      .eq("id", logEntry.project_id)
-      .eq("user_id", user.id)
-      .single();
-    
-    if (project) {
-      isAuthorized = true;
-    }
+  if (!logEntry) {
+    console.error('[DB] Log not found or RLS restricted:', logFetchError);
+    return { success: false, error: "Rapport introuvable" };
   }
 
-  // Check if it's a pro project
-  if (logEntry.pro_project_id && !isAuthorized) {
-    const { data: professional } = await supabase
-      .from("professionals")
-      .select("id")
-      .eq("user_id", user.id)
-      .single();
-    
-    if (professional) {
-      const { data: proProject } = await supabase
-        .from("pro_projects")
-        .select("id")
-        .eq("id", logEntry.pro_project_id)
-        .eq("professional_id", professional.id)
-        .single();
-      
-      if (proProject) {
-        isAuthorized = true;
-      }
-    }
-  }
-
+  // Verify authorization using helper
+  const { isAuthorized, error: authError } = await checkProjectAccess(supabase, user, logEntry);
   if (!isAuthorized) {
-    return { success: false, error: "Non autorisé" };
+    return { success: false, error: authError || "Non autorisé" };
   }
 
   // Insert comment
+  console.log('[DB] Inserting contest comment...');
   const { error: commentError } = await supabase
     .from("project_log_comments")
     .insert([{
@@ -226,16 +262,21 @@ export async function contestLog(
     }]);
 
   if (commentError) {
+    console.error('[DB] Error inserting comment:', commentError);
+    if (commentError.code === '42501') console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: project_log_comments');
     return { success: false, error: commentError.message };
   }
 
   // Update log status
+  console.log('[DB] Updating log status to contested...');
   const { error: updateError } = await supabase
     .from("project_logs")
     .update({ status: 'contested' })
     .eq("id", logId);
 
   if (updateError) {
+    console.error('[DB] Error updating log status:', updateError);
+    if (updateError.code === '42501') console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: project_logs');
     return { success: false, error: updateError.message };
   }
 
@@ -253,6 +294,8 @@ export async function resolveLog(
   logId: string,
   comment: string
 ): Promise<{ success: boolean; error?: string }> {
+  console.log('[ACTION] resolveLog started:', { logId });
+
   // Validate input
   const validation = logCommentSchema.safeParse({ logId, comment });
   if (!validation.success) {
@@ -264,62 +307,30 @@ export async function resolveLog(
 
   if (!user) return { success: false, error: "Non autorisé" };
 
-  // Get log info - include pro_project_id
-  const { data: logEntry } = await supabase
+  // Get log info
+  const { data: logEntry, error: logFetchError } = await supabase
     .from("project_logs")
     .select("project_id, pro_project_id, status, author_id")
     .eq("id", logId)
     .single();
 
-  if (!logEntry) return { success: false, error: "Rapport introuvable" };
+  if (!logEntry) {
+    console.error('[DB] Log not found or RLS restricted:', logFetchError);
+    return { success: false, error: "Rapport introuvable" };
+  }
+
   if (logEntry.status !== 'contested') {
     return { success: false, error: "Ce rapport n'est pas contesté" };
   }
 
-  // Verify ownership - check both client projects and pro projects
-  let isAuthorized = false;
-
-  // Check if it's a client project
-  if (logEntry.project_id) {
-    const { data: project } = await supabase
-      .from("user_projects")
-      .select("id")
-      .eq("id", logEntry.project_id)
-      .eq("user_id", user.id)
-      .single();
-    
-    if (project) {
-      isAuthorized = true;
-    }
-  }
-
-  // Check if it's a pro project
-  if (logEntry.pro_project_id && !isAuthorized) {
-    const { data: professional } = await supabase
-      .from("professionals")
-      .select("id")
-      .eq("user_id", user.id)
-      .single();
-    
-    if (professional) {
-      const { data: proProject } = await supabase
-        .from("pro_projects")
-        .select("id")
-        .eq("id", logEntry.pro_project_id)
-        .eq("professional_id", professional.id)
-        .single();
-      
-      if (proProject) {
-        isAuthorized = true;
-      }
-    }
-  }
-
+  // Verify authorization using helper
+  const { isAuthorized, error: authError } = await checkProjectAccess(supabase, user, logEntry);
   if (!isAuthorized) {
-    return { success: false, error: "Non autorisé" };
+    return { success: false, error: authError || "Non autorisé" };
   }
 
   // Insert comment
+  console.log('[DB] Inserting resolution comment...');
   const { error: commentError } = await supabase
     .from("project_log_comments")
     .insert([{
@@ -330,16 +341,21 @@ export async function resolveLog(
     }]);
 
   if (commentError) {
+    console.error('[DB] Error inserting comment:', commentError);
+    if (commentError.code === '42501') console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: project_log_comments');
     return { success: false, error: commentError.message };
   }
 
   // Update log status
+  console.log('[DB] Updating log status to resolved...');
   const { error: updateError } = await supabase
     .from("project_logs")
     .update({ status: 'resolved' })
     .eq("id", logId);
 
   if (updateError) {
+    console.error('[DB] Error updating log status:', updateError);
+    if (updateError.code === '42501') console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: project_logs');
     return { success: false, error: updateError.message };
   }
 

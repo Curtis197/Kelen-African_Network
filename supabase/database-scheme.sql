@@ -264,6 +264,14 @@ CREATE TABLE public.user_project_images (
   CONSTRAINT user_project_images_pkey PRIMARY KEY (id),
   CONSTRAINT user_project_images_project_id_fkey FOREIGN KEY (project_id) REFERENCES public.user_projects(id) ON DELETE CASCADE
 );
+
+-- Professional RLS Policies for project_logs:
+--   logs_pro_read_own_projects_v2: SELECT Allowed if pro owns pro_project, is author, or is assigned via project_professionals.
+--   logs_pro_create_on_projects: INSERT Allowed on owned pro_projects or assigned client projects.
+--   logs_pro_update_own_projects: UPDATE Allowed if pro owns pro_project or is author.
+--   logs_pro_update_assigned_pros: UPDATE Allowed if pro is assigned to client project via project_professionals.
+--   project_logs_collab_pro: ALL Allowed for active collaborators.
+
 -- RLS Policies on project_log_comments:
 --   comments_admin: ALL for admin
 --   comments_client_own: ALL for project owner
@@ -421,8 +429,13 @@ $$;
 -- user_projects policies that use this function:
 --   collab_pro_read:  SELECT WHERE id IN (get_collab_project_ids_for_pro(['pending','negotiating','active']))
 --   collab_pro_write: ALL    WHERE id IN (get_collab_project_ids_for_pro(['active']))
--- project_professionals policy that uses this function:
---   project_professionals_collab_view: client branch = user_projects.user_id; pro branch = get_collab_project_ids_for_pro(['active']) AND selection_status='agreed'
+-- project_p-- Professional RLS Policies for project_logs:
+-- 1. SELECT (logs_pro_read_own_projects_v2): Allows viewing if pro owns pro_project, is author, or is assigned via project_professionals.
+-- 2. INSERT (logs_pro_create_on_projects): Allows creating on owned pro_projects or assigned client projects.
+-- 3. UPDATE (logs_pro_update_own_projects): Allows editing if pro owns pro_project or is author.
+-- 4. UPDATE (logs_pro_update_assigned_pros): Allows updating log status if assigned to project via project_professionals.
+-- 5. ALL (project_logs_collab_pro): Allows full access for active collaborators.
+ject_ids_for_pro(['active']) AND selection_status='agreed'
 
 CREATE TABLE public.collaboration_messages (
   id uuid NOT NULL DEFAULT gen_random_uuid(),

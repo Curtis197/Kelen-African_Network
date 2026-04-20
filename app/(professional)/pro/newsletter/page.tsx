@@ -31,7 +31,7 @@ export default async function NewsletterPage() {
           </p>
         </div>
 
-        <NewsletterDashboard subscribers={subscribers} campaigns={campaigns} />
+        <NewsletterDashboard subscribers={subscribers} campaigns={campaigns} professionalId={pro.id} />
       </div>
     </main>
   );

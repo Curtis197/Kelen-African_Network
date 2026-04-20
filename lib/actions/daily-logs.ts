@@ -10,7 +10,7 @@ function log(action: string, data: Record<string, unknown>) {
   console.log(JSON.stringify({ ts: new Date().toISOString(), action, ...data }));
 }
 
-async function getProfessionalId(): Promise<string | null> {
+export async function getProfessionalId(): Promise<string | null> {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return null;

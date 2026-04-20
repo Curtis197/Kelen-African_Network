@@ -778,10 +778,9 @@ const { data } = await supabase
    UPDATE/DELETE for professionals where user_id = auth.uid()
    ```
 
-3. **`project_logs`** - Authors and project owners can access
-   ```sql
-   SELECT where author_id = auth.uid() OR project_id IN (SELECT id FROM user_projects WHERE user_id = auth.uid())
-   ```
+3. **`project_logs`** - Authors, project owners, and assigned professionals can access.
+   - Professionals can now update status (approve/contest) if assigned (Added 2026-04-20).
+   - `logs_pro_update_assigned_pros`: Allows `UPDATE` on status for assigned pros.
 
 4. **`project_log_comments`** - Professionals can now approve/contest logs (Added 2026-04-20)
    - `comments_pro_create_collab`: Allows `INSERT` if pro is an `active` collaborator.

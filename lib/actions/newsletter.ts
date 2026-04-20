@@ -9,6 +9,7 @@ import { sendNewsletterBatch } from "@/lib/utils/newsletter-email";
 import type {
   NewsletterSubscriber,
   NewsletterCampaign,
+  NewsletterAttachment,
   SubscribeResult,
   SendCampaignResult,
 } from "@/lib/types/newsletter";
@@ -182,7 +183,8 @@ export async function deleteSubscriber(
 
 export async function sendCampaign(
   subject: string,
-  bodyHtml: string
+  bodyHtml: string,
+  attachments: NewsletterAttachment[] = []
 ): Promise<SendCampaignResult> {
   const proId = await getProfessionalId();
   if (!proId) return { success: false, error: "Non autorisé" };
@@ -241,6 +243,7 @@ export async function sendCampaign(
       body_html: sanitizedHtml,
       status: "sending",
       recipient_count: 0,
+      attachments_json: attachments.length > 0 ? JSON.stringify(attachments) : null,
     })
     .select("id")
     .single();
@@ -254,6 +257,7 @@ export async function sendCampaign(
     replyTo: pro.email,
     subject: parsed.data.subject,
     bodyHtml: sanitizedHtml,
+    attachments,
   });
 
   const finalStatus = successCount > 0 ? "sent" : "failed";

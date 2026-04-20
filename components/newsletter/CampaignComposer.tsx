@@ -3,8 +3,9 @@
 import { useState, useTransition } from "react";
 import dynamic from "next/dynamic";
 import { sendCampaign } from "@/lib/actions/newsletter";
+import { AttachmentManager } from "./AttachmentManager";
 import { Send, AlertCircle, CheckCircle2 } from "lucide-react";
-import type { SendCampaignResult } from "@/lib/types/newsletter";
+import type { NewsletterAttachment, SendCampaignResult } from "@/lib/types/newsletter";
 
 const TipTapEditor = dynamic(
   () => import("./TipTapEditor").then((m) => m.TipTapEditor),
@@ -18,11 +19,13 @@ const TipTapEditor = dynamic(
 
 interface Props {
   lastSentAt: string | null;
+  professionalId: string;
 }
 
-export function CampaignComposer({ lastSentAt }: Props) {
+export function CampaignComposer({ lastSentAt, professionalId }: Props) {
   const [subject, setSubject] = useState("");
   const [bodyHtml, setBodyHtml] = useState("");
+  const [attachments, setAttachments] = useState<NewsletterAttachment[]>([]);
   const [result, setResult] = useState<SendCampaignResult | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -37,11 +40,12 @@ export function CampaignComposer({ lastSentAt }: Props) {
     e.preventDefault();
     setResult(null);
     startTransition(async () => {
-      const res = await sendCampaign(subject, bodyHtml);
+      const res = await sendCampaign(subject, bodyHtml, attachments);
       setResult(res);
       if (res.success) {
         setSubject("");
         setBodyHtml("");
+        setAttachments([]);
       }
     });
   }
@@ -78,8 +82,19 @@ export function CampaignComposer({ lastSentAt }: Props) {
         <label className="block text-sm font-medium text-on-surface mb-1.5">
           Contenu <span className="text-red-500">*</span>
         </label>
-        <TipTapEditor content={bodyHtml} onChange={setBodyHtml} />
+        <TipTapEditor
+          content={bodyHtml}
+          onChange={setBodyHtml}
+          professionalId={professionalId}
+        />
       </div>
+
+      <AttachmentManager
+        attachments={attachments}
+        onChange={setAttachments}
+        professionalId={professionalId}
+        disabled={isRateLimited || isPending}
+      />
 
       {result?.error && (
         <div className="flex items-start gap-2 text-red-600 bg-red-50 rounded-lg p-3 text-sm">
@@ -94,6 +109,7 @@ export function CampaignComposer({ lastSentAt }: Props) {
           <span>
             Campagne envoyée à <strong>{result.recipientCount}</strong> abonné
             {(result.recipientCount ?? 0) > 1 ? "s" : ""} !
+            {attachments.length > 0 && ` (${attachments.length} pièce${attachments.length > 1 ? "s" : ""} jointe${attachments.length > 1 ? "s" : ""})`}
           </span>
         </div>
       )}

@@ -1,4 +1,5 @@
 import { Resend } from 'resend';
+import type { NewsletterAttachment } from '@/lib/types/newsletter';
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://kelen.africa';
@@ -10,6 +11,7 @@ interface NewsletterEmailOptions {
   replyTo: string;
   subject: string;
   bodyHtml: string;
+  attachments?: NewsletterAttachment[];
 }
 
 function buildNewsletterHtml(bodyHtml: string, unsubscribeUrl: string, businessName: string): string {
@@ -52,6 +54,7 @@ export async function sendNewsletterCampaign(
       to: [options.to],
       subject: options.subject,
       html,
+      attachments: options.attachments?.map((a) => ({ filename: a.name, path: a.url })),
       headers: {
         'List-Unsubscribe': `<${unsubscribeUrl}>`,
         'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
@@ -68,6 +71,7 @@ export async function sendNewsletterBatch(
   subscribers: Array<{ email: string; unsubscribe_token: string }>,
   opts: Omit<NewsletterEmailOptions, 'to' | 'unsubscribeToken'>
 ): Promise<{ successCount: number; failCount: number }> {
+
   if (!resend) return { successCount: 0, failCount: subscribers.length };
 
   const CHUNK_SIZE = 100;
@@ -84,6 +88,7 @@ export async function sendNewsletterBatch(
         to: [sub.email],
         subject: opts.subject,
         html: buildNewsletterHtml(opts.bodyHtml, unsubscribeUrl, opts.businessName),
+        attachments: opts.attachments?.map((a) => ({ filename: a.name, path: a.url })),
         headers: {
           'List-Unsubscribe': `<${unsubscribeUrl}>`,
           'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',

@@ -12,6 +12,7 @@ type Tab = "abonnes" | "composer" | "historique";
 interface Props {
   subscribers: NewsletterSubscriber[];
   campaigns: NewsletterCampaign[];
+  professionalId: string;
 }
 
 const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
@@ -20,7 +21,7 @@ const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
   { id: "historique", label: "Historique", icon: <History className="w-4 h-4" /> },
 ];
 
-export function NewsletterDashboard({ subscribers, campaigns }: Props) {
+export function NewsletterDashboard({ subscribers, campaigns, professionalId }: Props) {
   const [activeTab, setActiveTab] = useState<Tab>("abonnes");
 
   const lastSentCampaign = campaigns.find((c) => c.status === "sent");
@@ -76,6 +77,7 @@ export function NewsletterDashboard({ subscribers, campaigns }: Props) {
         {activeTab === "composer" && (
           <CampaignComposer
             lastSentAt={lastSentCampaign?.sent_at ?? null}
+            professionalId={professionalId}
           />
         )}
         {activeTab === "historique" && <CampaignHistory campaigns={campaigns} />}

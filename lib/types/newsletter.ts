@@ -1,3 +1,10 @@
+export interface NewsletterAttachment {
+  name: string;
+  url: string;
+  type: string;
+  size: number;
+}
+
 export type NewsletterSource = 'public_profile' | 'manual';
 export type CampaignStatus = 'draft' | 'sending' | 'sent' | 'failed';
 
@@ -23,6 +30,7 @@ export interface NewsletterCampaign {
   sent_at: string | null;
   created_at: string;
   updated_at: string;
+  attachments_json: string | null;
 }
 
 export interface SubscribeResult {
