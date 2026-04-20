@@ -315,7 +315,7 @@ export async function GET(request: NextRequest) {
             <img src="${m.signedUrl || ""}" alt="${m.file_name || "Photo"}" onerror="this.style.display='none'" />
             <div class="photo-meta">
               <div class="title">${m.caption || l.title}</div>
-              ${l.gps_latitude ? `<div class="detail">📍 ${l.gps_latitude.toFixed(4)}° N, ${l.gps_longitude.toFixed(4)}° E</div>` : ""}
+              ${l.gps_latitude && l.gps_longitude ? `<div class="detail">📍 ${l.gps_latitude.toFixed(4)}° N, ${l.gps_longitude.toFixed(4)}° E</div>` : ""}
               <div class="detail">🕒 ${m.exif_timestamp ? new Date(m.exif_timestamp).toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" }) : new Date(l.log_date).toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" })}</div>
             </div>
           </div>`).join("")

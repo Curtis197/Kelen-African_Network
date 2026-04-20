@@ -254,9 +254,10 @@ export default function ProProjectLogDetail({
           isOpen={showAddClientModal}
           onClose={() => setShowAddClientModal(false)}
           onClientAdded={(info) => {
+            if (!info) return;
             setClientName(info.name);
             setClientEmail(info.email);
-            setClientPhone(info.phone);
+            setClientPhone(info.phone ?? "");
           }}
         />
       )}

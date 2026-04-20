@@ -264,6 +264,11 @@ CREATE TABLE public.user_project_images (
   CONSTRAINT user_project_images_pkey PRIMARY KEY (id),
   CONSTRAINT user_project_images_project_id_fkey FOREIGN KEY (project_id) REFERENCES public.user_projects(id) ON DELETE CASCADE
 );
+-- RLS Policies on project_log_comments:
+--   comments_admin: ALL for admin
+--   comments_client_own: ALL for project owner
+--   comments_pro_create_collab: INSERT for active collaborators (added 2026-04-20)
+--   comments_pro_create_assigned: INSERT for assigned professionals (added 2026-04-20)
 CREATE TABLE public.project_log_comments (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   log_id uuid NOT NULL,

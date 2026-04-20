@@ -9,7 +9,7 @@ interface AddClientContactModalProps {
   proProjectId: string;
   isOpen: boolean;
   onClose: () => void;
-  onClientAdded: () => void;
+  onClientAdded: (info?: { name: string; email: string; phone?: string }) => void;
 }
 
 export default function AddClientContactModal({ 

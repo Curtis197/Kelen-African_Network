@@ -783,6 +783,11 @@ const { data } = await supabase
    SELECT where author_id = auth.uid() OR project_id IN (SELECT id FROM user_projects WHERE user_id = auth.uid())
    ```
 
+4. **`project_log_comments`** - Professionals can now approve/contest logs (Added 2026-04-20)
+   - `comments_pro_create_collab`: Allows `INSERT` if pro is an `active` collaborator.
+   - `comments_pro_create_assigned`: Allows `INSERT` if pro is assigned to the project.
+   - This fixes the issue where pros couldn't comment on client project logs.
+
 ---
 
 ## 💡 Quick Tips

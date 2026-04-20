@@ -12,6 +12,7 @@ import { getOrRefreshReviews } from "@/lib/google-reviews";
 import { MediaGrid, MediaContent, buildMediaItems } from "@/components/portfolio/MediaGrid";
 import { buildCssVars } from "@/lib/portfolio/style-tokens";
 import type { StyleAnswers } from "@/lib/portfolio/style-tokens";
+import { SubscribeWidget } from "@/components/newsletter/SubscribeWidget";
 
 interface Props {
   params: Promise<{
@@ -562,6 +563,15 @@ export default async function ProfessionalProfilePage({ params }: Props) {
             </div>
           </div>
         </section>
+
+        {/* Newsletter subscribe — paid profiles only */}
+        {(pro.status === "gold" || pro.status === "silver") && (
+          <section className="py-16 px-4 sm:px-6 md:px-8 bg-surface-container-low border-t border-outline-variant/10">
+            <div className="max-w-xl mx-auto">
+              <SubscribeWidget professionalId={pro.id} businessName={pro.business_name} />
+            </div>
+          </section>
+        )}
 
         {/* Footer */}
         <footer className="bg-surface-container-low w-full py-12 px-4 sm:px-6 md:px-8 border-t border-outline-variant/10">
