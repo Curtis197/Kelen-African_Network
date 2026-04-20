@@ -56,7 +56,7 @@ export function TipTapEditor({ content, onChange, professionalId }: Props) {
       });
       const data = await res.json();
       if (data.html) {
-        editor.commands.setContent(data.html, false);
+        editor.commands.setContent(data.html);
         onChange(data.html);
       }
     } catch {
