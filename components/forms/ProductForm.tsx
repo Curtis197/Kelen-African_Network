@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/client";
 import { uploadFile } from "@/lib/supabase/storage";
-import { Image as ImageIcon, X, Loader2, ArrowLeft, Star } from "lucide-react";
+import { Image as ImageIcon, X, Loader2, ArrowLeft, Star, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { createProduct, updateProduct } from "@/lib/actions/products";
@@ -31,6 +31,7 @@ interface ProductFormProps {
 export function ProductForm({ professionalId, initialData }: ProductFormProps) {
   const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
+  const [isCorrecting, setIsCorrecting] = useState(false);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [existingImages, setExistingImages] = useState<Array<{ id: string; url: string; is_main: boolean }>>(
     initialData?.product_images?.map((img: any) => ({
@@ -47,6 +48,8 @@ export function ProductForm({ professionalId, initialData }: ProductFormProps) {
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm<ProductFormData>({
     resolver: zodResolver(productSchema),
@@ -79,6 +82,25 @@ export function ProductForm({ professionalId, initialData }: ProductFormProps) {
     setExistingImages((prev) =>
       prev.map((img) => ({ ...img, is_main: img.url === url }))
     );
+  };
+
+  const handleAiCorrect = async () => {
+    const text = watch("description");
+    if (!text || !text.trim()) return;
+    setIsCorrecting(true);
+    try {
+      const res = await fetch("/api/presentation/ai-correct", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text, context: "product" }),
+      });
+      const data = await res.json();
+      if (data.text) setValue("description", data.text);
+    } catch {
+      toast.error("Erreur lors de la correction IA");
+    } finally {
+      setIsCorrecting(false);
+    }
   };
 
   const onSubmit = async (data: ProductFormData) => {
@@ -169,7 +191,22 @@ export function ProductForm({ professionalId, initialData }: ProductFormProps) {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-bold text-on-surface">Description</label>
+                <div className="flex items-center justify-between">
+                  <label className="text-sm font-bold text-on-surface">Description</label>
+                  <button
+                    type="button"
+                    onClick={handleAiCorrect}
+                    disabled={isCorrecting || !watch("description")}
+                    className="flex items-center gap-1.5 rounded-lg bg-violet-50 px-3 py-1.5 text-xs font-bold text-violet-600 transition-all hover:bg-violet-100 disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    {isCorrecting ? (
+                      <Loader2 size={13} className="animate-spin" />
+                    ) : (
+                      <Sparkles size={13} />
+                    )}
+                    {isCorrecting ? "Correction…" : "Corriger avec l'IA"}
+                  </button>
+                </div>
                 <textarea
                   {...register("description")}
                   rows={6}
