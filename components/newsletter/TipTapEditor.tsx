@@ -12,6 +12,7 @@ interface Props {
 
 export function TipTapEditor({ content, onChange }: Props) {
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [
       StarterKit,
       Link.configure({ openOnClick: false, HTMLAttributes: { rel: "noopener noreferrer", target: "_blank" } }),
