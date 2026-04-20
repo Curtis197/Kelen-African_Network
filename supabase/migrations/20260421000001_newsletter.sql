@@ -5,7 +5,7 @@ CREATE TABLE public.client_newsletter (
   professional_id   uuid NOT NULL REFERENCES public.professionals(id) ON DELETE CASCADE,
   email             text NOT NULL,
   name              text,
-  unsubscribe_token text NOT NULL UNIQUE DEFAULT encode(gen_random_bytes(32), 'hex'),
+  unsubscribe_token text NOT NULL UNIQUE DEFAULT replace(gen_random_uuid()::text || gen_random_uuid()::text, '-', ''),
   subscribed_at     timestamptz NOT NULL DEFAULT now(),
   unsubscribed_at   timestamptz,
   is_active         boolean NOT NULL DEFAULT true,
