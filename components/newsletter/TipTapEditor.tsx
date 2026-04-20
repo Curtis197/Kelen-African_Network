@@ -5,7 +5,7 @@ import StarterKit from "@tiptap/starter-kit";
 import LinkExt from "@tiptap/extension-link";
 import ImageExt from "@tiptap/extension-image";
 import { useRef } from "react";
-import { Bold, Italic, List, ListOrdered, Link2, Heading2, ImageIcon, Loader2 } from "lucide-react";
+import { Bold, Italic, List, ListOrdered, Link2, Heading2, ImageIcon, Loader2, Sparkles } from "lucide-react";
 import { uploadFile } from "@/lib/supabase/storage";
 import { useState } from "react";
 
@@ -18,6 +18,7 @@ interface Props {
 export function TipTapEditor({ content, onChange, professionalId }: Props) {
   const imageInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
+  const [correcting, setCorrecting] = useState(false);
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -40,6 +41,29 @@ export function TipTapEditor({ content, onChange, professionalId }: Props) {
   function addLink() {
     const url = window.prompt("URL du lien");
     if (url) editor?.chain().focus().setLink({ href: url }).run();
+  }
+
+  async function handleAiCorrect() {
+    if (!editor) return;
+    const html = editor.getHTML();
+    if (!html || html === "<p></p>") return;
+    setCorrecting(true);
+    try {
+      const res = await fetch("/api/newsletter/ai-correct", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ html }),
+      });
+      const data = await res.json();
+      if (data.html) {
+        editor.commands.setContent(data.html, false);
+        onChange(data.html);
+      }
+    } catch {
+      // silent — editor content unchanged on error
+    } finally {
+      setCorrecting(false);
+    }
   }
 
   async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -100,6 +124,19 @@ export function TipTapEditor({ content, onChange, professionalId }: Props) {
         </button>
         <input ref={imageInputRef} type="file" accept="image/jpeg,image/png,image/webp"
           className="hidden" onChange={handleImageUpload} />
+        <div className="flex-1" />
+        <button
+          type="button"
+          onClick={handleAiCorrect}
+          disabled={correcting}
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-colors bg-violet-50 text-violet-700 hover:bg-violet-100 disabled:opacity-50 disabled:cursor-not-allowed"
+          title="Corriger avec l'IA"
+        >
+          {correcting
+            ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            : <Sparkles className="w-3.5 h-3.5" />}
+          {correcting ? "Correction…" : "Corriger"}
+        </button>
       </div>
       <EditorContent editor={editor} />
     </div>
