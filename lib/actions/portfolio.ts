@@ -136,6 +136,8 @@ export async function createOrUpdatePortfolio(data: {
   hero_subtitle: string | null;
   about_text: string | null;
   about_image_url: string | null;
+  corner_style?: string;
+  color_mode?: string;
 }): Promise<ProfessionalPortfolio | null> {
   console.log('[ACTION] ========================================');
   console.log('[ACTION] createOrUpdatePortfolio STARTED');
@@ -256,6 +258,8 @@ export async function createOrUpdatePortfolio(data: {
         hero_subtitle: data.hero_subtitle,
         about_text: data.about_text,
         about_image_url: data.about_image_url,
+        ...(data.corner_style !== undefined && { corner_style: data.corner_style }),
+        ...(data.color_mode !== undefined && { color_mode: data.color_mode }),
         updated_at: new Date().toISOString(),
       })
       .eq("id", existing.id)
@@ -304,6 +308,8 @@ export async function createOrUpdatePortfolio(data: {
         hero_subtitle: data.hero_subtitle,
         about_text: data.about_text,
         about_image_url: data.about_image_url,
+        ...(data.corner_style !== undefined && { corner_style: data.corner_style }),
+        ...(data.color_mode !== undefined && { color_mode: data.color_mode }),
       })
       .select()
       .single();
