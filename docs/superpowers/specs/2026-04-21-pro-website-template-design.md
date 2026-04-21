@@ -62,12 +62,20 @@ Footer
 - Gradient overlay (bottom-heavy dark)
 - Bottom-left: profession tag (uppercase, muted) + name (large bold) + one-line subtitle
 - No CTA buttons — the hero is purely visual identity
+- .8 vh
 
-### Présentation (replaces standalone À propos page)
-- This block serves as the "About" section — there is no separate `/a-propos` list or detail page
+### Présentation
 - Short bio paragraph (pro-authored)
 - Info pills: 📍 City · ⏱ Years of experience · 👥 Team size · ✓ Vérifié Kelen
+- **[En savoir plus →]** link (green, optional) — only shown if pro has authored an À propos page
 - White background
+
+### À propos page — `/professionnels/[slug]/a-propos`
+- Optional single page, not a list → detail flow
+- Accessible only via the "En savoir plus" link in the Présentation block
+- Pro can write extended philosophy, story, team presentation, values
+- Structure: full-width header (dark navy, pro name + profession) · long-form rich text body · optional team photos grid · Contact CTA at bottom
+- Not linked from nav — intentionally deep-linked only for pros who want it
 
 ### Social Proof
 - Google rating badge: score + ★★★★★ + "Google" label
@@ -184,6 +192,7 @@ All three types (service, réalisation, produit) share one detail page template.
 | `app/(marketing)/professionnels/[slug]/realisations/[id]/page.tsx` | New — detail page |
 | `app/(marketing)/professionnels/[slug]/produits/page.tsx` | New — list page |
 | `app/(marketing)/professionnels/[slug]/produits/[id]/page.tsx` | New — detail page |
+| `app/(marketing)/professionnels/[slug]/a-propos/page.tsx` | New — optional single À propos page |
 | `components/pro-site/` | New component folder for all template components |
 | `supabase/migrations/` | New migration for likes + comments tables |
 
