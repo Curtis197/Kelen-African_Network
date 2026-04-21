@@ -1,11 +1,17 @@
 import Stripe from 'stripe'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2026-03-25.dahlia',
-})
+const stripeKey = process.env.STRIPE_SECRET_KEY
+const stripe = stripeKey
+  ? new Stripe(stripeKey, { apiVersion: '2026-03-25.dahlia' })
+  : null
+
+function getStripe(): Stripe {
+  if (!stripe) throw new Error('STRIPE_SECRET_KEY is not configured')
+  return stripe
+}
 
 export async function createConnectAccount(email: string, professionalId: string) {
-  return stripe.accounts.create({
+  return getStripe().accounts.create({
     type: 'express',
     email,
     metadata: { professional_id: professionalId },
@@ -21,7 +27,7 @@ export async function createOnboardingLink(
   returnUrl: string,
   refreshUrl: string
 ) {
-  return stripe.accountLinks.create({
+  return getStripe().accountLinks.create({
     account: stripeAccountId,
     return_url: returnUrl,
     refresh_url: refreshUrl,
@@ -30,7 +36,7 @@ export async function createOnboardingLink(
 }
 
 export async function getConnectAccountStatus(stripeAccountId: string) {
-  const account = await stripe.accounts.retrieve(stripeAccountId)
+  const account = await getStripe().accounts.retrieve(stripeAccountId)
   return {
     onboarded: account.details_submitted && account.charges_enabled,
     chargesEnabled: account.charges_enabled,
@@ -39,7 +45,7 @@ export async function getConnectAccountStatus(stripeAccountId: string) {
 }
 
 export async function createExpressDashboardLink(stripeAccountId: string) {
-  return stripe.accounts.createLoginLink(stripeAccountId)
+  return getStripe().accounts.createLoginLink(stripeAccountId)
 }
 
 export async function createCheckoutSession(params: {
@@ -52,7 +58,7 @@ export async function createCheckoutSession(params: {
   cancelUrl: string
   metadata: Record<string, string>
 }) {
-  return stripe.checkout.sessions.create(
+  return getStripe().checkout.sessions.create(
     {
       mode: 'payment',
       line_items: [
@@ -81,7 +87,7 @@ export async function createPaymentLink(params: {
   currency: string
   metadata: Record<string, string>
 }) {
-  const price = await stripe.prices.create(
+  const price = await getStripe().prices.create(
     {
       currency: params.currency,
       unit_amount: params.amount,
@@ -90,7 +96,7 @@ export async function createPaymentLink(params: {
     { stripeAccount: params.stripeAccountId }
   )
 
-  return stripe.paymentLinks.create(
+  return getStripe().paymentLinks.create(
     {
       line_items: [{ price: price.id, quantity: 1 }],
       metadata: params.metadata,
