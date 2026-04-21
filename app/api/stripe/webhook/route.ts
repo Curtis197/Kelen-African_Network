@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
+import { notifyPaymentReceived } from "@/lib/notifications";
 
 const stripeKey = process.env.STRIPE_SECRET_KEY;
 const stripe = stripeKey ? new Stripe(stripeKey, {
@@ -41,6 +42,49 @@ export async function POST(request: NextRequest) {
 
   switch (event.type) {
     case "checkout.session.completed": {
+      const paymentId = session.metadata?.payment_id;
+
+      if (paymentId) {
+        // Payment session (booking deposit / invoice) — not a platform subscription
+        await supabase
+          .from("payments")
+          .update({
+            status: "paid",
+            stripe_payment_intent:
+              typeof session.payment_intent === "string"
+                ? session.payment_intent
+                : null,
+            paid_at: new Date().toISOString(),
+          })
+          .eq("id", paymentId);
+
+        // Fetch payment + pro details for WhatsApp
+        const { data: payment } = await supabase
+          .from("payments")
+          .select("*, professionals(business_name, whatsapp_phone)")
+          .eq("id", paymentId)
+          .single();
+
+        if (payment) {
+          const pro = payment.professionals as { business_name: string; whatsapp_phone: string | null };
+          notifyPaymentReceived({
+            professionalId: payment.professional_id,
+            paymentId: payment.id,
+            appointmentId: payment.appointment_id,
+            clientName: payment.client_name ?? "",
+            clientPhone: payment.client_phone ?? null,
+            proPhone: pro?.whatsapp_phone ?? null,
+            proName: pro?.business_name ?? "",
+            serviceName: payment.service_name ?? "",
+            amount: `${payment.amount} ${payment.currency.toUpperCase()}`,
+            paymentType: "booking_deposit",
+          }).catch((err) =>
+            console.error("[webhook] checkout.session.completed WhatsApp failed", String(err))
+          );
+        }
+        break;
+      }
+
       const professionalId = session.metadata?.professional_id;
       const plan = session.metadata?.plan;
 
@@ -142,6 +186,72 @@ export async function POST(request: NextRequest) {
         .update({ subscription_status: "past_due" })
         .eq("id", professionalId);
 
+      break;
+    }
+
+    case "payment_intent.succeeded": {
+      const intent = event.data.object as Stripe.PaymentIntent;
+      const piPaymentId = intent.metadata?.payment_id;
+      if (!piPaymentId) break;
+
+      await supabase
+        .from("payments")
+        .update({
+          status: "paid",
+          stripe_payment_intent: intent.id,
+          paid_at: new Date().toISOString(),
+        })
+        .eq("id", piPaymentId);
+
+      const { data: piPayment } = await supabase
+        .from("payments")
+        .select("*, professionals(business_name, whatsapp_phone)")
+        .eq("id", piPaymentId)
+        .single();
+
+      if (piPayment) {
+        const piPro = piPayment.professionals as { business_name: string; whatsapp_phone: string | null };
+        notifyPaymentReceived({
+          professionalId: piPayment.professional_id,
+          paymentId: piPayment.id,
+          appointmentId: piPayment.appointment_id,
+          clientName: piPayment.client_name ?? "",
+          clientPhone: piPayment.client_phone ?? null,
+          proPhone: piPro?.whatsapp_phone ?? null,
+          proName: piPro?.business_name ?? "",
+          serviceName: piPayment.service_name ?? "",
+          amount: `${piPayment.amount} ${piPayment.currency.toUpperCase()}`,
+          paymentType: "invoice",
+        }).catch((err) =>
+          console.error("[webhook] payment_intent.succeeded WhatsApp failed", String(err))
+        );
+      }
+      break;
+    }
+
+    case "account.updated": {
+      const account = event.data.object as Stripe.Account;
+      const onboarded = account.details_submitted && account.charges_enabled;
+      if (!onboarded) break;
+
+      await supabase
+        .from("stripe_connect_accounts")
+        .update({ onboarded: true })
+        .eq("stripe_account_id", account.id);
+
+      // Denormalise onto professionals for quick lookups
+      const { data: connectAccount } = await supabase
+        .from("stripe_connect_accounts")
+        .select("professional_id")
+        .eq("stripe_account_id", account.id)
+        .single();
+
+      if (connectAccount) {
+        await supabase
+          .from("professionals")
+          .update({ stripe_onboarded: true })
+          .eq("id", connectAccount.professional_id);
+      }
       break;
     }
   }
