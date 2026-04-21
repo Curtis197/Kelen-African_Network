@@ -38,10 +38,10 @@ export function PortfolioSettings({
     portfolio?.about_image_url || ""
   );
   const [cornerStyle, setCornerStyle] = useState<'square' | 'half-rounded' | 'rounded'>(
-    ((portfolio as Record<string, unknown>)?.corner_style as 'square' | 'half-rounded' | 'rounded') ?? 'rounded'
+    ((portfolio as unknown as Record<string, unknown>)?.corner_style as 'square' | 'half-rounded' | 'rounded') ?? 'rounded'
   )
   const [colorMode, setColorMode] = useState<'light' | 'dark' | 'logo-color'>(
-    ((portfolio as Record<string, unknown>)?.color_mode as 'light' | 'dark' | 'logo-color') ?? 'light'
+    ((portfolio as unknown as Record<string, unknown>)?.color_mode as 'light' | 'dark' | 'logo-color') ?? 'light'
   )
 
   const handleImageUpload = async (
