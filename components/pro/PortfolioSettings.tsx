@@ -37,6 +37,12 @@ export function PortfolioSettings({
   const [aboutImageUrl, setAboutImageUrl] = useState<string>(
     portfolio?.about_image_url || ""
   );
+  const [cornerStyle, setCornerStyle] = useState<'square' | 'half-rounded' | 'rounded'>(
+    ((portfolio as Record<string, unknown>)?.corner_style as 'square' | 'half-rounded' | 'rounded') ?? 'rounded'
+  )
+  const [colorMode, setColorMode] = useState<'light' | 'dark' | 'logo-color'>(
+    ((portfolio as Record<string, unknown>)?.color_mode as 'light' | 'dark' | 'logo-color') ?? 'light'
+  )
 
   const handleImageUpload = async (
     file: File,
@@ -77,6 +83,8 @@ export function PortfolioSettings({
         hero_subtitle: heroSubtitle || null,
         about_text: aboutText || null,
         about_image_url: aboutImageUrl || null,
+        corner_style: cornerStyle,
+        color_mode: colorMode,
       });
       
       console.log("[PortfolioSettings] Portfolio saved:", result?.id);
@@ -209,6 +217,57 @@ export function PortfolioSettings({
           <p className="text-xs text-on-surface-variant/60">
             {aboutText.length} caractères
           </p>
+        </div>
+      </div>
+
+      {/* Divider */}
+      <div className="border-t border-outline-variant/20" />
+
+      {/* Template customization */}
+      <div className="space-y-4">
+        <h3 className="font-headline text-lg font-bold text-on-surface">
+          Personnalisation du site
+        </h3>
+
+        {/* Corner style */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-on-surface-variant">Style des coins</label>
+          <div className="flex gap-3">
+            {(['square', 'half-rounded', 'rounded'] as const).map((style) => (
+              <button
+                key={style}
+                type="button"
+                onClick={() => setCornerStyle(style)}
+                className={[
+                  'flex-1 py-3 border-2 text-xs font-bold transition-colors',
+                  style === 'square' ? 'rounded-none' : style === 'half-rounded' ? 'rounded-lg' : 'rounded-2xl',
+                  cornerStyle === style ? 'border-[#009639] bg-green-50 text-[#009639]' : 'border-gray-200 text-gray-600',
+                ].join(' ')}
+              >
+                {style === 'square' ? 'Carré' : style === 'half-rounded' ? 'Arrondi' : 'Très arrondi'}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Color mode */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-on-surface-variant">Mode couleur</label>
+          <div className="flex gap-3">
+            {(['light', 'dark', 'logo-color'] as const).map((mode) => (
+              <button
+                key={mode}
+                type="button"
+                onClick={() => setColorMode(mode)}
+                className={[
+                  'flex-1 py-3 border-2 rounded-lg text-xs font-bold transition-colors',
+                  colorMode === mode ? 'border-[#009639] bg-green-50 text-[#009639]' : 'border-gray-200 text-gray-600',
+                ].join(' ')}
+              >
+                {mode === 'light' ? '☀️ Clair' : mode === 'dark' ? '🌙 Sombre' : '🎨 Couleur logo'}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
