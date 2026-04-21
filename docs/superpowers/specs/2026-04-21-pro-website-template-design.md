@@ -210,3 +210,4 @@ All three types (service, réalisation, produit) share one detail page template.
 8. Hide a section in dashboard — confirm section disappears from homepage
 9. Google reviews section — only visible if GBP connected
 10. Newsletter — confirm email submit works via existing service
+11. "En savoir plus" link — only visible if pro has authored À propos content; clicking it loads `/a-propos`
