@@ -137,8 +137,8 @@ export async function POST(request: NextRequest) {
         .from("subscriptions")
         .update({
           status: subscription.status,
-          current_period_end: subscription.current_period?.ends_at
-            ? new Date(subscription.current_period.ends_at * 1000).toISOString()
+          current_period_end: subscription.current_period_end
+            ? new Date(subscription.current_period_end * 1000).toISOString()
             : null,
         })
         .eq("stripe_subscription_id", subscription.id);

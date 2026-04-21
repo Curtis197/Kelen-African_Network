@@ -49,11 +49,15 @@ export async function POST(request: NextRequest) {
   }
 
   const origin = request.headers.get('origin') ?? process.env.NEXT_PUBLIC_APP_URL!
-  const link = await createOnboardingLink(
-    stripeAccountId,
-    `${origin}/dashboard/payments?onboarded=true`,
-    `${origin}/dashboard/payments?refresh=true`
-  )
-
-  return NextResponse.json({ onboarding_url: link.url, stripe_account_id: stripeAccountId })
+  try {
+    const link = await createOnboardingLink(
+      stripeAccountId,
+      `${origin}/dashboard/payments?onboarded=true`,
+      `${origin}/dashboard/payments?refresh=true`
+    )
+    return NextResponse.json({ onboarding_url: link.url, stripe_account_id: stripeAccountId })
+  } catch (err) {
+    console.error('[connect/onboard] Failed to create onboarding link', String(err))
+    return NextResponse.json({ error: 'Failed to create onboarding link' }, { status: 500 })
+  }
 }

@@ -12,6 +12,16 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Missing professional_id' }, { status: 400 })
   }
 
+  // Verify this pro belongs to the authenticated user
+  const { data: pro } = await supabase
+    .from('professionals')
+    .select('id')
+    .eq('id', professionalId)
+    .eq('user_id', user.id)
+    .single()
+
+  if (!pro) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+
   const { data: account } = await supabase
     .from('stripe_connect_accounts')
     .select('stripe_account_id, onboarded, payment_mode, deposit_type, deposit_amount, deposit_percent')

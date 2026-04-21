@@ -78,21 +78,46 @@ export async function POST(
       if (depositAmountCents > 0) {
         const origin = request.headers.get("origin") ?? process.env.NEXT_PUBLIC_APP_URL!;
         try {
-          const session = await createCheckoutSession({
-            stripeAccountId: connectAccount.stripe_account_id,
-            serviceName: body.reason ?? "Appointment",
-            amount: depositAmountCents,
-            currency: "eur",
-            clientEmail,
-            successUrl: `${origin}/booking/success`,
-            cancelUrl: `${origin}/booking/cancel`,
-            metadata: {
+          // Create payment record first to get ID for Stripe metadata
+          const { data: paymentRecord } = await supabase
+            .from("payments")
+            .insert({
               professional_id: proId,
-              appointment_id: appointmentId ?? "",
-              payment_id: "",
-            },
-          });
-          checkoutUrl = session.url;
+              type: "booking_deposit",
+              amount: connectAccount.deposit_amount,
+              currency: "eur",
+              status: "pending",
+              client_name: clientName,
+              client_email: clientEmail,
+              client_phone: body.clientPhone ?? null,
+              service_name: body.reason ?? "Appointment",
+              appointment_id: appointmentId ?? null,
+            })
+            .select("id")
+            .single();
+
+          if (paymentRecord) {
+            const session = await createCheckoutSession({
+              stripeAccountId: connectAccount.stripe_account_id,
+              serviceName: body.reason ?? "Appointment",
+              amount: depositAmountCents,
+              currency: "eur",
+              clientEmail,
+              successUrl: `${origin}/booking/success?payment_id=${paymentRecord.id}`,
+              cancelUrl: `${origin}/booking/cancel`,
+              metadata: {
+                professional_id: proId,
+                appointment_id: appointmentId ?? "",
+                payment_id: paymentRecord.id,
+              },
+            });
+            // Save session ID back to payment record
+            await supabase
+              .from("payments")
+              .update({ stripe_checkout_session: session.id })
+              .eq("id", paymentRecord.id);
+            checkoutUrl = session.url;
+          }
         } catch (err) {
           console.error("[api/calendar/book] Checkout session creation failed", String(err));
           // Non-fatal — booking is confirmed, payment is optional
@@ -129,7 +154,7 @@ export async function POST(
         proName: pro.business_name,
         serviceName: body.reason ?? "Appointment",
         startsAt,
-        withPayment: false,
+        withPayment: !!checkoutUrl,
       }),
     ]).catch((err) =>
       console.error("[api/calendar/book] Async notification failed", String(err))
