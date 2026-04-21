@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient as createServiceClient } from "@/lib/supabase/service";
 import { createAppointment, getCalendarTokensPublic } from "@/lib/google-calendar";
 import { sendClientConfirmationEmail, sendProNotificationEmail } from "@/lib/utils/calendar-email";
+import { notifyBookingConfirmed } from "@/lib/notifications";
+import { createCheckoutSession } from "@/lib/stripe-connect";
 
 export async function POST(
   request: NextRequest,
@@ -29,11 +31,10 @@ export async function POST(
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
 
-  // Fetch pro info for event description and email
   const supabase = createServiceClient();
   const { data: pro } = await supabase
     .from("professionals")
-    .select("business_name, email")
+    .select("business_name, email, whatsapp_phone")
     .eq("id", proId)
     .single();
 
@@ -47,7 +48,7 @@ export async function POST(
   }
 
   try {
-    await createAppointment(proId, {
+    const { googleEventId, appointmentId } = await createAppointment(proId, {
       clientName,
       clientEmail,
       clientPhone: body.clientPhone,
@@ -58,7 +59,48 @@ export async function POST(
       proEmail: pro.email,
     });
 
-    // Send emails — fire & forget, don't block the response
+    // Check if pro has booking-deposit payments enabled
+    const { data: connectAccount } = await supabase
+      .from("stripe_connect_accounts")
+      .select("stripe_account_id, onboarded, payment_mode, deposit_type, deposit_amount")
+      .eq("professional_id", proId)
+      .single();
+
+    const hasBookingPayments =
+      connectAccount?.onboarded &&
+      (connectAccount.payment_mode === "booking" || connectAccount.payment_mode === "both");
+
+    let checkoutUrl: string | null = null;
+
+    if (hasBookingPayments && connectAccount && connectAccount.deposit_type === "fixed") {
+      const depositAmountCents = Math.round((connectAccount.deposit_amount ?? 0) * 100);
+
+      if (depositAmountCents > 0) {
+        const origin = request.headers.get("origin") ?? process.env.NEXT_PUBLIC_APP_URL!;
+        try {
+          const session = await createCheckoutSession({
+            stripeAccountId: connectAccount.stripe_account_id,
+            serviceName: body.reason ?? "Appointment",
+            amount: depositAmountCents,
+            currency: "eur",
+            clientEmail,
+            successUrl: `${origin}/booking/success`,
+            cancelUrl: `${origin}/booking/cancel`,
+            metadata: {
+              professional_id: proId,
+              appointment_id: appointmentId ?? "",
+              payment_id: "",
+            },
+          });
+          checkoutUrl = session.url;
+        } catch (err) {
+          console.error("[api/calendar/book] Checkout session creation failed", String(err));
+          // Non-fatal — booking is confirmed, payment is optional
+        }
+      }
+    }
+
+    // Fire-and-forget: emails + WhatsApp
     Promise.all([
       sendClientConfirmationEmail({
         clientEmail,
@@ -78,9 +120,26 @@ export async function POST(
         endsAt,
         reason: body.reason,
       }),
-    ]).catch((err) => console.error("[api/calendar/book] Email send failed", String(err)));
+      notifyBookingConfirmed({
+        professionalId: proId,
+        appointmentId: appointmentId ?? null,
+        clientName,
+        clientPhone: body.clientPhone ?? null,
+        proPhone: pro.whatsapp_phone ?? null,
+        proName: pro.business_name,
+        serviceName: body.reason ?? "Appointment",
+        startsAt,
+        withPayment: false,
+      }),
+    ]).catch((err) =>
+      console.error("[api/calendar/book] Async notification failed", String(err))
+    );
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({
+      success: true,
+      googleEventId,
+      ...(checkoutUrl && { checkout_url: checkoutUrl }),
+    });
   } catch (err) {
     console.error("[api/calendar/book] Error creating appointment", String(err));
     return NextResponse.json({ error: "Failed to create appointment" }, { status: 500 });
