@@ -253,7 +253,7 @@ export interface AppointmentInput {
 export async function createAppointment(
   proId: string,
   input: AppointmentInput
-): Promise<{ googleEventId: string }> {
+): Promise<{ googleEventId: string; appointmentId: string | null }> {
   const tokens = await getCalendarTokensPublic(proId);
   if (!tokens) throw new Error("Professional Google Calendar not connected");
 
@@ -287,17 +287,21 @@ export async function createAppointment(
   const googleEventId = event.data.id!;
 
   const supabase = createServiceClient();
-  await supabase.from("pro_appointments").insert({
-    pro_id: proId,
-    google_event_id: googleEventId,
-    client_name: input.clientName,
-    client_email: input.clientEmail,
-    client_phone: input.clientPhone ?? null,
-    reason: input.reason ?? null,
-    starts_at: input.startsAt,
-    ends_at: input.endsAt,
-    status: "confirmed",
-  });
+  const { data: appointment } = await supabase
+    .from("pro_appointments")
+    .insert({
+      pro_id: proId,
+      google_event_id: googleEventId,
+      client_name: input.clientName,
+      client_email: input.clientEmail,
+      client_phone: input.clientPhone ?? null,
+      reason: input.reason ?? null,
+      starts_at: input.startsAt,
+      ends_at: input.endsAt,
+      status: "confirmed",
+    })
+    .select("id")
+    .single();
 
-  return { googleEventId };
+  return { googleEventId, appointmentId: appointment?.id ?? null };
 }
