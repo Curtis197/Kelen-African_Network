@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { GoogleReviewsSection } from "@/components/pro/GoogleReviewsSection";
+import { ProSiteGoogleReviews } from '@/components/pro-site/ProSiteGoogleReviews'
 import { ProSiteStyleProvider } from '@/components/pro-site/ProSiteStyleProvider'
 import { ProSiteNav } from '@/components/pro-site/ProSiteNav'
 import { ProSiteHero } from '@/components/pro-site/ProSiteHero'
@@ -143,7 +143,7 @@ export default async function ProfessionalProfilePage({ params }: { params: Prom
           isVerified={pro.verified ?? false}
           hasAPropos={!!portfolio?.about_text}
         />
-        <GoogleReviewsSection professionalId={pro.id} />
+        <ProSiteGoogleReviews professionalId={pro.id} />
         {(settings?.showServices ?? true) && (
           <ProSiteSectionPreview
             title="Services"
