@@ -1,0 +1,154 @@
+<h2>How does the homepage flow?</h2>
+<p class="subtitle">The homepage shows all sections. Clicking "See all" on any section takes you to its list page. Which scroll structure feels right?</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="compact" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f5f5f5;padding:16px;font-family:sans-serif;">
+      <div style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);font-size:9px;">
+        <!-- Hero -->
+        <div style="background:#1a1a2e;height:80px;display:flex;align-items:center;justify-content:center;color:#fff;">
+          <div style="text-align:center;">
+            <div style="font-size:8px;opacity:0.6;letter-spacing:2px">PLOMBIER · ABIDJAN</div>
+            <div style="font-size:14px;font-weight:800">Jean Kouassi</div>
+            <div style="margin-top:4px;display:flex;gap:4px;justify-content:center;">
+              <div style="background:#009639;border-radius:3px;padding:2px 6px;font-size:7px;font-weight:700">Contact</div>
+              <div style="border:1px solid rgba(255,255,255,0.4);border-radius:3px;padding:2px 6px;font-size:7px;color:#fff">À propos</div>
+            </div>
+          </div>
+        </div>
+        <!-- Services strip -->
+        <div style="border-bottom:1px solid #eee;padding:8px 10px;display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-weight:700;font-size:9px">Services</span>
+          <span style="color:#009639;font-size:8px">Voir tout →</span>
+        </div>
+        <div style="padding:8px 10px;display:flex;gap:6px;">
+          <div style="background:#f3f3f3;border-radius:6px;flex:1;height:36px;"></div>
+          <div style="background:#f3f3f3;border-radius:6px;flex:1;height:36px;"></div>
+          <div style="background:#f3f3f3;border-radius:6px;flex:1;height:36px;"></div>
+        </div>
+        <!-- Réalisations strip -->
+        <div style="border-bottom:1px solid #eee;border-top:1px solid #eee;padding:8px 10px;display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
+          <span style="font-weight:700;font-size:9px">Réalisations</span>
+          <span style="color:#009639;font-size:8px">Voir tout →</span>
+        </div>
+        <div style="padding:8px 10px;display:flex;gap:6px;">
+          <div style="background:#e8e8e8;border-radius:6px;flex:2;height:48px;"></div>
+          <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
+            <div style="background:#e8e8e8;border-radius:4px;flex:1;height:22px;"></div>
+            <div style="background:#e8e8e8;border-radius:4px;flex:1;height:22px;"></div>
+          </div>
+        </div>
+        <!-- Products strip -->
+        <div style="border-bottom:1px solid #eee;border-top:1px solid #eee;padding:8px 10px;display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
+          <span style="font-weight:700;font-size:9px">Produits</span>
+          <span style="color:#009639;font-size:8px">Voir tout →</span>
+        </div>
+        <div style="padding:8px 10px;display:flex;gap:6px;">
+          <div style="background:#f3f3f3;border-radius:6px;flex:1;height:40px;"></div>
+          <div style="background:#f3f3f3;border-radius:6px;flex:1;height:40px;"></div>
+          <div style="background:#f3f3f3;border-radius:6px;flex:1;height:40px;"></div>
+        </div>
+        <!-- Contact bar -->
+        <div style="background:#1a1a2e;padding:10px;display:flex;justify-content:center;gap:8px;margin-top:4px;">
+          <div style="background:#009639;border-radius:3px;padding:3px 10px;font-size:7px;color:#fff;font-weight:700">WhatsApp</div>
+          <div style="border:1px solid rgba(255,255,255,0.3);border-radius:3px;padding:3px 10px;font-size:7px;color:#fff">Appeler</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Newspaper / Strip</h3>
+      <p>Each section is a tight horizontal strip. Header + 3 preview cards + "See all" link. Very scannable. Like an app homepage. Fastest to load and navigate.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="magazine" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f5f5f5;padding:16px;font-family:sans-serif;">
+      <div style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+        <!-- Hero -->
+        <div style="background:linear-gradient(180deg,#1a1a2e 60%,transparent);height:90px;display:flex;align-items:center;justify-content:center;color:#fff;">
+          <div style="text-align:center;">
+            <div style="font-size:8px;opacity:0.6;letter-spacing:2px">ARCHITECTE · DAKAR</div>
+            <div style="font-size:15px;font-weight:800">Kofi Mensah</div>
+          </div>
+        </div>
+        <!-- Stat bar -->
+        <div style="display:flex;border-bottom:1px solid #eee;text-align:center;">
+          <div style="flex:1;padding:6px 0;font-size:8px;border-right:1px solid #eee;"><div style="font-weight:800;font-size:11px">48</div>projets</div>
+          <div style="flex:1;padding:6px 0;font-size:8px;border-right:1px solid #eee;"><div style="font-weight:800;font-size:11px">4.9</div>note</div>
+          <div style="flex:1;padding:6px 0;font-size:8px;"><div style="font-weight:800;font-size:11px">8 ans</div>exp.</div>
+        </div>
+        <!-- Services section -->
+        <div style="padding:10px;border-bottom:1px solid #eee;">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:8px;"><span style="font-weight:800">Services</span><span style="color:#009639">Voir tout →</span></div>
+          <div style="display:flex;gap:5px;">
+            <div style="background:#f8f8f8;border-radius:6px;flex:1;padding:6px;font-size:7px;border-left:2px solid #009639;">Construction</div>
+            <div style="background:#f8f8f8;border-radius:6px;flex:1;padding:6px;font-size:7px;border-left:2px solid #009639;">Rénovation</div>
+          </div>
+        </div>
+        <!-- Réalisations section -->
+        <div style="padding:10px;border-bottom:1px solid #eee;">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:8px;"><span style="font-weight:800">Réalisations</span><span style="color:#009639">Voir tout →</span></div>
+          <div style="height:50px;background:linear-gradient(90deg,#e8e8e8,#d0d0d0);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:7px;color:#888">Photo principale</div>
+        </div>
+        <!-- About teaser -->
+        <div style="padding:10px;background:#f8f8f8;">
+          <div style="font-size:8px;font-weight:800;margin-bottom:4px">À propos</div>
+          <div style="font-size:7px;color:#555;line-height:1.4">Plombier professionnel depuis 8 ans, spécialisé en installation et rénovation de salles de bains...</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Magazine Scroll</h3>
+      <p>Sections breathe more. Stats bar under hero. Services as labeled cards, realizations as full-width photo strip. More editorial, still structured.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="linktree" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f5f5f5;padding:16px;font-family:sans-serif;">
+      <div style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+        <!-- Header -->
+        <div style="background:#1a1a2e;padding:16px;text-align:center;color:#fff;">
+          <div style="width:36px;height:36px;border-radius:50%;background:#009639;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800">JK</div>
+          <div style="font-size:13px;font-weight:800">Jean Kouassi</div>
+          <div style="font-size:8px;opacity:0.6;margin-top:2px">Plombier · Abidjan</div>
+        </div>
+        <!-- Section links -->
+        <div style="padding:12px;display:flex;flex-direction:column;gap:8px;">
+          <div style="border:1px solid #eee;border-radius:8px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-size:9px;font-weight:700">Services</div>
+              <div style="font-size:7px;color:#888;margin-top:1px">6 prestations disponibles</div>
+            </div>
+            <span style="color:#009639;font-size:10px">→</span>
+          </div>
+          <div style="border:1px solid #eee;border-radius:8px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-size:9px;font-weight:700">Réalisations</div>
+              <div style="font-size:7px;color:#888;margin-top:1px">48 projets réalisés</div>
+            </div>
+            <span style="color:#009639;font-size:10px">→</span>
+          </div>
+          <div style="border:1px solid #eee;border-radius:8px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-size:9px;font-weight:700">Produits</div>
+              <div style="font-size:7px;color:#888;margin-top:1px">12 produits en stock</div>
+            </div>
+            <span style="color:#009639;font-size:10px">→</span>
+          </div>
+          <div style="border:1px solid #eee;border-radius:8px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;background:#009639;border-color:#009639;">
+            <div style="font-size:9px;font-weight:700;color:#fff">Contacter Jean</div>
+            <span style="color:#fff;font-size:10px">→</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Menu Card</h3>
+      <p>Ultra-minimal. Profile at top, then clean nav cards to each section. Like a digital business card. No preview content on homepage — sections live on their own pages.</p>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:24px;text-align:center">This is the homepage structure. Each section card links to its own list page. Which feels most "Ikea" to you?</p>
