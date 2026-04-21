@@ -30,6 +30,7 @@ interface Props {
     show_services_section?: boolean;
     show_products_section?: boolean;
     show_about_section?: boolean;
+    show_calendar_section?: boolean;
   } | null;
   isPaid: boolean;
 }
@@ -100,6 +101,9 @@ export function SiteBuilder({ pro, portfolio, isPaid }: Props) {
   );
   const [showAbout, setShowAbout] = useState(
     portfolio?.show_about_section ?? true
+  );
+  const [showCalendar, setShowCalendar] = useState(
+    portfolio?.show_calendar_section ?? true
   );
   const [isPending, startTransition] = useTransition();
 
@@ -228,6 +232,12 @@ export function SiteBuilder({ pro, portfolio, isPaid }: Props) {
                 checked={showAbout}
                 onChange={setShowAbout}
               />
+              <VisibilityToggle
+                label="Prise de rendez-vous"
+                description="Permet aux clients de réserver un créneau via Google Calendar"
+                checked={showCalendar}
+                onChange={setShowCalendar}
+              />
             </div>
 
             <button
@@ -241,6 +251,7 @@ export function SiteBuilder({ pro, portfolio, isPaid }: Props) {
                       show_services_section: showServices,
                       show_products_section: showProducts,
                       show_about_section: showAbout,
+                      show_calendar_section: showCalendar,
                     });
                     toast.success("Visibilité mise à jour avec succès");
                   } catch {

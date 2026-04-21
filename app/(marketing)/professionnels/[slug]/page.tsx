@@ -13,6 +13,7 @@ import { MediaGrid, MediaContent, buildMediaItems } from "@/components/portfolio
 import { buildCssVars } from "@/lib/portfolio/style-tokens";
 import type { StyleAnswers } from "@/lib/portfolio/style-tokens";
 import { SubscribeWidget } from "@/components/newsletter/SubscribeWidget";
+import { BookingWidget } from "@/components/calendar/BookingWidget";
 
 interface Props {
   params: Promise<{
@@ -265,6 +266,15 @@ export default async function ProfessionalProfilePage({ params }: Props) {
   // Fetch recommendations for social proof
   const recommandationCount = await getRecommandationCount(pro.id);
   const latestRecommandations = await getLatestRecommandations(pro.id, 5);
+
+  // Check if Google Calendar is connected and visible
+  const showCalendarSection = portfolio?.show_calendar_section !== false;
+  const { data: calendarTokens } = await supabase
+    .from("pro_calendar_tokens")
+    .select("pro_id")
+    .eq("pro_id", pro.id)
+    .single();
+  const calendarEnabled = showCalendarSection && !!calendarTokens;
 
   // Fetch Google reviews if a Place ID is stored (cache-first, max 24h)
   const { data: gbpTokens } = await supabase
@@ -740,6 +750,9 @@ export default async function ProfessionalProfilePage({ params }: Props) {
                       </span>
                       <ChevronRight className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity" />
                     </a>
+                    {calendarEnabled && (
+                      <BookingWidget proId={pro.id} proName={pro.business_name} />
+                    )}
                   </div>
                 </div>
               </div>

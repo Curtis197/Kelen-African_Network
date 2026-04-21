@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { SiteBuilder } from "@/components/portfolio/SiteBuilder";
+import { CalendarSettings } from "@/components/calendar/CalendarSettings";
 
 export const metadata: Metadata = {
   title: "Mon Site Web — Kelen Pro",
@@ -35,7 +36,7 @@ export default async function MySitePage() {
 
   const { data: portfolio, error: portfolioError } = await supabase
     .from("professional_portfolio")
-    .select("style_tokens, copy_quiz_answers, hero_subtitle, about_text, about_image_url, custom_domain, domain_status, show_realizations_section, show_services_section, show_products_section, show_about_section")
+    .select("style_tokens, copy_quiz_answers, hero_subtitle, about_text, about_image_url, custom_domain, domain_status, show_realizations_section, show_services_section, show_products_section, show_about_section, show_calendar_section")
     .eq("professional_id", pro.id)
     .single();
 
@@ -52,6 +53,12 @@ export default async function MySitePage() {
   const isPaid = pro.status === "gold" || pro.status === "silver";
   console.log('[ACTION] MySitePage: done', { proId: pro.id, isPaid, hasPortfolio: !!portfolio });
 
+  const { data: calendarTokens } = await supabase
+    .from("pro_calendar_tokens")
+    .select("google_email, slot_duration, buffer_time, advance_days, working_hours")
+    .eq("pro_id", pro.id)
+    .single();
+
   return (
     <div className="mx-auto max-w-7xl space-y-10">
       <div className="space-y-1">
@@ -67,6 +74,11 @@ export default async function MySitePage() {
         pro={{ id: pro.id, slug: pro.slug, businessName: pro.business_name }}
         portfolio={portfolio}
         isPaid={isPaid}
+      />
+
+      <CalendarSettings
+        proId={pro.id}
+        calendarTokens={calendarTokens}
       />
     </div>
   );

@@ -818,6 +818,7 @@ export async function updatePortfolioVisibility(data: {
   show_services_section: boolean;
   show_products_section: boolean;
   show_about_section: boolean;
+  show_calendar_section?: boolean;
 }): Promise<void> {
   console.log('[ACTION] ========================================');
   console.log('[ACTION] updatePortfolioVisibility STARTED');
@@ -901,6 +902,7 @@ export async function updatePortfolioVisibility(data: {
         show_services_section: data.show_services_section,
         show_products_section: data.show_products_section,
         show_about_section: data.show_about_section,
+        ...(data.show_calendar_section !== undefined && { show_calendar_section: data.show_calendar_section }),
         updated_at: new Date().toISOString(),
       },
       { onConflict: "professional_id" }
