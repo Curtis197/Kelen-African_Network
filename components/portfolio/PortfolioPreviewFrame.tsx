@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Loader2, Monitor, Smartphone } from "lucide-react";
+import { Loader2, Monitor, Smartphone, ExternalLink } from "lucide-react";
 import type { StyleAnswers } from "@/lib/portfolio/style-tokens";
 
 interface Props {
@@ -52,6 +52,15 @@ export function PortfolioPreviewFrame({ slug, styleOverride }: Props) {
           <Smartphone className="w-3.5 h-3.5" />
           Mobile
         </button>
+        <a
+          href={previewUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high transition-colors"
+        >
+          <ExternalLink className="w-3.5 h-3.5" />
+          Ouvrir l'aperçu
+        </a>
         {loading && <Loader2 className="w-3.5 h-3.5 animate-spin text-on-surface-variant/40 ml-2" />}
       </div>
 
