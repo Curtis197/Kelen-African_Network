@@ -16,7 +16,7 @@ async function getProfessional() {
 
   const { data: pro, error } = await supabase
     .from("professionals")
-    .select("id, slug, business_name, category, city, country, years_of_experience")
+    .select("id, slug, business_name, category, city, country, years_experience")
     .eq("user_id", user.id)
     .single();
 
@@ -76,7 +76,7 @@ export async function saveCopyQuizAndGenerate(answers: CopyAnswers) {
     category: pro.category,
     city: pro.city,
     country: pro.country,
-    yearsOfExperience: pro.years_of_experience,
+    yearsOfExperience: pro.years_experience,
   });
   console.log('[ACTION] saveCopyQuizAndGenerate: Claude generated copy', {
     heroSubtitleLength: copy.heroSubtitle?.length,
