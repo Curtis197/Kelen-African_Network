@@ -5,6 +5,7 @@ import { EmptyState } from "@/components/shared/EmptyState";
 import { PresentationTabs } from "@/components/pro/PresentationTabs";
 import { getServices } from "@/lib/actions/services";
 import { getProducts } from "@/lib/actions/products";
+import { CataloguePDFButton } from "@/components/pro/CataloguePDFButton";
 
 export const metadata: Metadata = {
   title: "Présentation — Kelen Pro",
@@ -76,13 +77,16 @@ export default async function ProRealisationsPage({ searchParams }: Props) {
 
   return (
     <div className="mx-auto max-w-7xl">
-      <div className="mb-10 space-y-1">
-        <h1 className="font-headline text-3xl font-bold tracking-tight text-on-surface lg:text-4xl">
-          Ma présentation
-        </h1>
-        <p className="text-on-surface-variant/70 leading-relaxed max-w-lg">
-          Gérez vos réalisations, services et produits affichés sur votre profil public.
-        </p>
+      <div className="mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <div className="space-y-1">
+          <h1 className="font-headline text-3xl font-bold tracking-tight text-on-surface lg:text-4xl">
+            Ma présentation
+          </h1>
+          <p className="text-on-surface-variant/70 leading-relaxed max-w-lg">
+            Gérez vos réalisations, services et produits affichés sur votre profil public.
+          </p>
+        </div>
+        <CataloguePDFButton professionalId={professional.id} />
       </div>
 
       <PresentationTabs
