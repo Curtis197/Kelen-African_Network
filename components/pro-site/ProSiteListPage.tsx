@@ -10,6 +10,7 @@ export function ProSiteListPage({
   proName,
   profession,
   items,
+  basePath,
 }: {
   slug: string
   sectionPath: string
@@ -17,11 +18,13 @@ export function ProSiteListPage({
   proName: string
   profession: string
   items: ProSiteItem[]
+  basePath?: string
 }) {
+  const base = basePath ?? `/professionnels/${slug}`
   return (
     <>
       <div className="bg-white border-b border-[var(--pro-border,#eee)] px-6 py-3 flex items-center gap-2 text-xs">
-        <Link href={`/professionnels/${slug}`} className="text-[#009639] hover:underline">
+        <Link href={base} className="text-[#009639] hover:underline">
           ← {proName}
         </Link>
         <span className="text-gray-300">/</span>
@@ -43,7 +46,7 @@ export function ProSiteListPage({
               <ProSiteItemCard
                 key={item.id}
                 item={item}
-                href={`/professionnels/${slug}/${sectionPath}/${item.id}`}
+                href={`${base}/${sectionPath}/${item.id}`}
               />
             ))}
           </div>

@@ -9,6 +9,7 @@ export function ProSitePresentation({
   teamSize,
   isVerified,
   hasAPropos,
+  basePath,
 }: {
   slug: string
   bio: string
@@ -17,7 +18,9 @@ export function ProSitePresentation({
   teamSize: number | null
   isVerified: boolean
   hasAPropos: boolean
+  basePath?: string
 }) {
+  const base = basePath ?? `/professionnels/${slug}`
   return (
     <section className="bg-[var(--pro-surface,#fff)] px-6 py-6 border-b border-[var(--pro-border,#eee)]">
       <p className="text-sm leading-relaxed text-[var(--pro-text-muted,#444)] mb-4">{bio}</p>
@@ -45,7 +48,7 @@ export function ProSitePresentation({
       </div>
       {hasAPropos && (
         <Link
-          href={`/professionnels/${slug}/a-propos`}
+          href={`${base}/a-propos`}
           className="inline-block mt-4 text-xs font-semibold text-[#009639] hover:underline"
         >
           En savoir plus →

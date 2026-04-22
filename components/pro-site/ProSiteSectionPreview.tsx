@@ -9,13 +9,16 @@ export function ProSiteSectionPreview({
   items,
   slug,
   sectionPath,
+  basePath,
 }: {
   title: string
   listHref: string
   items: ProSiteItem[]
   slug: string
   sectionPath: string
+  basePath?: string
 }) {
+  const base = basePath ?? `/professionnels/${slug}`
   if (items.length === 0) return null
 
   return (
@@ -31,7 +34,7 @@ export function ProSiteSectionPreview({
           <ProSiteItemCard
             key={item.id}
             item={item}
-            href={`/professionnels/${slug}/${sectionPath}/${item.id}`}
+            href={`${base}/${sectionPath}/${item.id}`}
           />
         ))}
       </div>
