@@ -7,6 +7,7 @@ import { deleteRealization, getPortfolio } from "@/lib/actions/portfolio";
 import { PortfolioSettings } from "@/components/pro/PortfolioSettings";
 import { DeleteButton } from "@/components/pro/DeleteButton";
 import { ToggleFeaturedButton } from "@/components/pro/ToggleFeaturedButton";
+import { PortfolioPDFButton } from "@/components/pro/PortfolioPDFButton";
 
 export const metadata: Metadata = {
   title: "Mon Portfolio — Kelen Pro",
@@ -139,6 +140,10 @@ export default async function PortfolioPage() {
                 Voir mon profil public
               </Link>
             )}
+            <PortfolioPDFButton
+              professionalId={professional.id}
+              label="Exporter portfolio PDF"
+            />
             <Link
               href="/pro/portfolio/add"
               className="flex h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-kelen-green-600 to-kelen-green-500 px-6 font-headline text-sm font-bold text-white shadow-[0_8px_16px_-4px_rgba(0,150,57,0.25)] transition-all hover:-translate-y-0.5 hover:shadow-[0_12px_20px_-4px_rgba(0,150,57,0.3)] active:scale-95"
@@ -275,6 +280,7 @@ async function RealizationCard({
               realizationId={realization.id}
               isFeatured={realization.is_featured ?? false}
             />
+            <PortfolioPDFButton realizationId={realization.id} variant="icon" />
             <Link
               href={`/pro/portfolio/${realization.id}/edit`}
               className="text-xs font-bold text-kelen-green-600 hover:text-kelen-green-700 transition-colors"
