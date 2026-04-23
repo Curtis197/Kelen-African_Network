@@ -1,59 +1,74 @@
-// components/pro-site/ProSitePresentation.tsx
-import Link from 'next/link'
-
 export function ProSitePresentation({
-  slug,
+  lead,
   bio,
   city,
   yearsExperience,
   teamSize,
-  isVerified,
-  hasAPropos,
-  basePath,
+  languages,
+  certifications,
 }: {
-  slug: string
+  lead?: string | null
   bio: string
   city: string | null
   yearsExperience: number | null
   teamSize: number | null
-  isVerified: boolean
-  hasAPropos: boolean
-  basePath?: string
+  languages?: string | null
+  certifications?: string | null
 }) {
-  const base = basePath ?? `/professionnels/${slug}`
+  const meta = [
+    certifications || city
+      ? { label: certifications ? 'Formation' : 'Ville', value: certifications ?? city }
+      : null,
+    languages
+      ? { label: 'Langues', value: languages }
+      : yearsExperience
+      ? { label: 'Expérience', value: `${yearsExperience} ans` }
+      : null,
+    teamSize
+      ? { label: 'Équipe', value: `${teamSize} personne${teamSize > 1 ? 's' : ''}` }
+      : city && certifications
+      ? { label: 'Ville', value: city }
+      : null,
+  ].filter(Boolean) as { label: string; value: string }[]
+
   return (
-    <section className="bg-[var(--pro-surface,#fff)] px-6 py-6 border-b border-[var(--pro-border,#eee)]">
-      <p className="text-sm leading-relaxed text-[var(--pro-text-muted,#444)] mb-4">{bio}</p>
-      <div className="flex flex-wrap gap-2">
-        {city && (
-          <span className="bg-gray-100 rounded-full px-3 py-1 text-xs font-semibold text-gray-600">
-            📍 {city}
-          </span>
-        )}
-        {yearsExperience && (
-          <span className="bg-gray-100 rounded-full px-3 py-1 text-xs font-semibold text-gray-600">
-            ⏱ {yearsExperience} ans d&apos;expérience
-          </span>
-        )}
-        {teamSize && (
-          <span className="bg-gray-100 rounded-full px-3 py-1 text-xs font-semibold text-gray-600">
-            👥 {teamSize} employé{teamSize > 1 ? 's' : ''}
-          </span>
-        )}
-        {isVerified && (
-          <span className="bg-green-100 rounded-full px-3 py-1 text-xs font-bold text-green-800">
-            ✓ Vérifié Kelen
-          </span>
-        )}
+    <section className="py-[88px] border-t border-stone-200" id="about">
+      <div className="max-w-[1160px] mx-auto px-8">
+        <div className="grid gap-16" style={{ gridTemplateColumns: '200px minmax(0,1fr)' }}>
+          {/* Eyebrow col */}
+          <div className="pt-1.5">
+            <span className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-stone-500">
+              À PROPOS
+            </span>
+          </div>
+
+          {/* Content col */}
+          <div>
+            {lead && (
+              <p className="font-headline font-medium text-[26px] leading-[1.35] tracking-[-0.015em] text-[#1A1A1A] mb-5 max-w-[32ch]">
+                {lead}
+              </p>
+            )}
+            <p className="text-base text-stone-500 leading-[1.7] mb-8 max-w-[60ch]">{bio}</p>
+
+            {meta.length > 0 && (
+              <div
+                className="grid gap-6 pt-6 border-t border-stone-200"
+                style={{ gridTemplateColumns: `repeat(${Math.min(meta.length, 3)}, minmax(0,1fr))` }}
+              >
+                {meta.map((m) => (
+                  <div key={m.label} className="flex flex-col gap-1">
+                    <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-stone-500">
+                      {m.label}
+                    </span>
+                    <span className="text-[15px] text-[#1A1A1A] font-medium leading-snug">{m.value}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
-      {hasAPropos && (
-        <Link
-          href={`${base}/a-propos`}
-          className="inline-block mt-4 text-xs font-semibold text-[#009639] hover:underline"
-        >
-          En savoir plus →
-        </Link>
-      )}
     </section>
   )
 }

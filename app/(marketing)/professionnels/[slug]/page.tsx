@@ -6,6 +6,7 @@ import { ProSiteStyleProvider } from '@/components/pro-site/ProSiteStyleProvider
 import { ProSiteNav } from '@/components/pro-site/ProSiteNav'
 import { ProSiteHero } from '@/components/pro-site/ProSiteHero'
 import { ProSitePresentation } from '@/components/pro-site/ProSitePresentation'
+import { ProSiteQualities } from '@/components/pro-site/ProSiteQualities'
 import { ProSiteSectionPreview } from '@/components/pro-site/ProSiteSectionPreview'
 import { ProSiteNewsletter } from '@/components/pro-site/ProSiteNewsletter'
 import { ProSiteContact } from '@/components/pro-site/ProSiteContact'
@@ -122,6 +123,7 @@ export default async function ProfessionalProfilePage({ params }: { params: Prom
       <ProSiteNav
         slug={slug}
         proName={proName}
+        role={profession}
         showServices={settings?.showServices ?? true}
         showRealisations={settings?.showRealisations ?? true}
         showProduits={settings?.showProduits ?? true}
@@ -132,20 +134,20 @@ export default async function ProfessionalProfilePage({ params }: { params: Prom
           coverImageUrl={portfolio?.hero_image_url ?? (pro.portfolio_photos as string[] | null)?.[0] ?? null}
           profession={profession}
           proName={proName}
-          subtitle={portfolio?.hero_subtitle ?? null}
+          tagline={portfolio?.hero_subtitle ?? null}
         />
         <ProSitePresentation
-          slug={slug}
+          lead={portfolio?.about_text ?? null}
           bio={pro.description ?? ''}
           city={pro.city ?? null}
           yearsExperience={pro.years_experience ?? null}
           teamSize={pro.team_size ?? null}
-          isVerified={pro.verified ?? false}
-          hasAPropos={!!portfolio?.about_text}
         />
+        <ProSiteQualities />
         <ProSiteGoogleReviews professionalId={pro.id} />
         {(settings?.showServices ?? true) && (
           <ProSiteSectionPreview
+            variant="services"
             title="Services"
             listHref={`/professionnels/${slug}/services`}
             items={services}
@@ -155,6 +157,7 @@ export default async function ProfessionalProfilePage({ params }: { params: Prom
         )}
         {(settings?.showRealisations ?? true) && (
           <ProSiteSectionPreview
+            variant="portfolio"
             title="Réalisations"
             listHref={`/professionnels/${slug}/realisations`}
             items={realisations}
@@ -164,6 +167,7 @@ export default async function ProfessionalProfilePage({ params }: { params: Prom
         )}
         {(settings?.showProduits ?? true) && (
           <ProSiteSectionPreview
+            variant="products"
             title="Produits"
             listHref={`/professionnels/${slug}/produits`}
             items={produits}
@@ -171,7 +175,7 @@ export default async function ProfessionalProfilePage({ params }: { params: Prom
             sectionPath="produits"
           />
         )}
-        <ProSiteNewsletter professionalId={pro.id} proName={proName} />
+        <ProSiteNewsletter professionalId={pro.id} proName={proName} whatsapp={pro.whatsapp ?? null} />
         <ProSiteContact
           proName={proName}
           phone={pro.phone ?? null}
@@ -180,7 +184,7 @@ export default async function ProfessionalProfilePage({ params }: { params: Prom
           calendarUrl={calendarUrl}
         />
       </main>
-      <ProSiteFooter proName={proName} />
+      <ProSiteFooter proName={proName} phone={pro.phone ?? null} email={pro.email ?? null} slug={slug} />
     </ProSiteStyleProvider>
   )
 }
