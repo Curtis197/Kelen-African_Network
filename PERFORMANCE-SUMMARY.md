@@ -137,8 +137,7 @@ These optimizations become the difference between:
 - **Working app** (what you'll have) vs **broken app** (what you'd have without them)
 - Profile pages at 200ms vs 3-5 seconds (N+1 with 200 realisations = 400 queries)
 - Dashboard at 300ms vs 5+ seconds (7 queries × growing tables)
-- Approve action at 200ms vs 3+ seconds (email API getting slower under load)
-
+ 
 ---
 
 ## Bottom Line

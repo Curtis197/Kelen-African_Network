@@ -1,0 +1,988 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Aïcha Koné · Architecte · Abidjan — Design Preview</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   KELEN — Colors & Type Foundation
+   ============================================ */
+:root {
+  --font-headline: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-body:     "Inter",   ui-sans-serif, system-ui, sans-serif;
+  --font-mono:     "Geist Mono", ui-monospace, monospace;
+
+  --color-kelen-green-50:  #ECFDF3;
+  --color-kelen-green-100: #D1FAE5;
+  --color-kelen-green-400: #10b77f;
+  --color-kelen-green-500: #009639;
+  --color-kelen-green-600: #007A2E;
+  --color-kelen-green-700: #006124;
+  --color-kelen-green-800: #004D1C;
+
+  --color-kelen-yellow-50:  #FEFCE8;
+  --color-kelen-yellow-500: #FCCF00;
+  --color-kelen-yellow-600: #D4AD00;
+
+  --color-kelen-red-500: #CE1126;
+
+  --color-bg:        #ffffff;
+  --color-fg:        #1A1A1A;
+  --color-fg-muted:  #78716C;
+  --color-fg-subtle: #A8A29E;
+
+  --color-surface:              #f9f9f8;
+  --color-surface-container-low: #f3f4f3;
+  --color-surface-container:     #eeeeed;
+
+  --color-border:         #E7E5E4;
+  --color-border-strong:  #D6D3D1;
+
+  --radius-xs:  6px;
+  --radius-sm:  10px;
+  --radius-md:  14px;
+  --radius-lg:  24px;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+  --shadow-lg: 0 12px 28px -4px rgba(0,0,0,0.08);
+  --shadow-xl: 0 32px 64px -16px rgba(0,0,0,0.12);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--color-kelen-green-600); text-decoration: none; transition: color .18s ease; }
+a:hover { color: var(--color-kelen-green-700); }
+
+/* ============================================================
+   KELEN — Pro-site · Classic professional landing page
+   ============================================================ */
+
+:root {
+  --ks-max: 1160px;
+  --ks-gutter: 32px;
+}
+
+.ks-section-inner {
+  max-width: var(--ks-max);
+  margin: 0 auto;
+  padding: 0 var(--ks-gutter);
+}
+
+.ks-sec { padding: 88px 0; border-top: 1px solid var(--color-border); }
+.ks-sec:first-of-type { border-top: 0; }
+
+.ks-sec-head { max-width: 680px; margin-bottom: 48px; }
+.ks-sec-head-row { display: flex; justify-content: space-between; align-items: flex-end; max-width: none; gap: 24px; flex-wrap: wrap; }
+.ks-sec-head .ks-eyebrow { display: inline-block; margin-bottom: 12px; }
+.ks-sec-head .ks-h2 { margin: 0; }
+
+.ks-h2 {
+  font-family: var(--font-headline);
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--color-fg);
+}
+
+.ks-eyebrow {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--color-fg-muted);
+}
+
+.ks-link-arrow {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-kelen-green-700);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.ks-link-arrow:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---------- BUTTONS ---------- */
+.ks-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1;
+  border-radius: 8px;
+  padding: 14px 22px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background .15s ease, color .15s ease, border-color .15s ease, transform .1s ease;
+  white-space: nowrap;
+}
+.ks-btn:active { transform: translateY(1px); }
+.ks-btn-sm { padding: 10px 16px; font-size: 14px; border-radius: 7px; }
+.ks-btn-block { width: 100%; }
+
+.ks-btn-primary { background: var(--color-kelen-green-700); color: #fff; }
+.ks-btn-primary:hover { background: var(--color-kelen-green-800); color: #fff; }
+
+.ks-btn-ghost { background: transparent; color: var(--color-fg); padding-left: 6px; padding-right: 6px; }
+.ks-btn-ghost:hover { color: var(--color-kelen-green-700); }
+
+/* ---------- NAV ---------- */
+.ks-nav {
+  position: sticky; top: 0; z-index: 50;
+  background: #fff;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.ks-nav.is-scrolled { border-bottom-color: var(--color-border); box-shadow: 0 1px 0 rgba(0,0,0,0.02); }
+.ks-nav-inner {
+  max-width: var(--ks-max);
+  margin: 0 auto;
+  padding: 16px var(--ks-gutter);
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+.ks-nav-brand {
+  display: inline-flex; align-items: center; gap: 12px;
+  text-decoration: none;
+  color: inherit;
+  margin-right: auto;
+}
+.ks-nav-mono {
+  width: 36px; height: 36px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--color-kelen-green-700);
+  color: #fff;
+  font-family: var(--font-headline);
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  border-radius: 8px;
+}
+.ks-nav-names { display: flex; flex-direction: column; line-height: 1.1; }
+.ks-nav-name { font-family: var(--font-headline); font-weight: 700; font-size: 15px; color: var(--color-fg); letter-spacing: -0.01em; }
+.ks-nav-role { font-size: 12px; color: var(--color-fg-muted); margin-top: 2px; }
+
+.ks-nav-links { display: flex; gap: 28px; }
+.ks-nav-links a {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-fg);
+  text-decoration: none;
+  transition: color .15s ease;
+}
+.ks-nav-links a:hover { color: var(--color-kelen-green-700); }
+
+/* ---------- HERO ---------- */
+.ks-hero {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+.ks-hero-image { position: absolute; inset: 0; width: 100%; height: 100%; }
+.ks-hero-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ks-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0) 100%);
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 64px;
+}
+.ks-hero-h1 {
+  font-family: var(--font-headline);
+  font-weight: 700;
+  font-size: clamp(42px, 5.5vw, 72px);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: #fff;
+  margin: 0 0 8px;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+.ks-hero-role {
+  font-size: 18px;
+  line-height: 1.4;
+  color: rgba(255,255,255,0.9);
+  margin: 0 0 12px;
+  font-weight: 500;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.3);
+}
+.ks-hero-subtitle {
+  font-size: 20px;
+  line-height: 1.5;
+  color: rgba(255,255,255,0.85);
+  margin: 0 0 24px;
+  font-weight: 400;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.3);
+  max-width: 42ch;
+}
+.ks-hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+.ks-btn-ghost-light {
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.3);
+  backdrop-filter: blur(8px);
+}
+.ks-btn-ghost-light:hover { background: rgba(255,255,255,0.25); border-color: rgba(255,255,255,0.5); color: #fff; }
+
+/* ---------- PRESENTATION ---------- */
+.ks-present { background: #fff; }
+.ks-present-grid {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
+  gap: 64px;
+  align-items: flex-start;
+}
+.ks-eyebrow-col { padding-top: 6px; }
+.ks-present-lead {
+  font-family: var(--font-headline);
+  font-weight: 500;
+  font-size: 26px;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+  color: var(--color-fg);
+  margin: 0 0 20px;
+  max-width: 32ch;
+}
+.ks-present-body {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--color-fg-muted);
+  margin: 0 0 32px;
+  max-width: 60ch;
+}
+.ks-present-meta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--color-border);
+}
+.ks-present-meta > div { display: flex; flex-direction: column; gap: 4px; }
+.ks-meta-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--color-fg-muted); }
+.ks-meta-val { font-size: 15px; color: var(--color-fg); font-weight: 500; line-height: 1.4; }
+
+/* ---------- QUALITIES ---------- */
+.ks-presentation { background: #fff; }
+.ks-qualities-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+.ks-quality-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 32px 28px;
+  text-align: center;
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+.ks-quality-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+.ks-quality-icon { font-size: 48px; line-height: 1; margin-bottom: 16px; }
+.ks-quality-h { font-family: var(--font-headline); font-weight: 700; font-size: 20px; color: var(--color-fg); margin: 0 0 12px; letter-spacing: -0.01em; }
+.ks-quality-d { font-size: 15px; color: var(--color-fg-muted); line-height: 1.6; margin: 0; }
+
+/* ---------- SERVICES WITH IMAGES ---------- */
+.ks-services-img-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+.ks-svc-img-card {
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: box-shadow .3s ease, transform .3s ease;
+}
+.ks-svc-img-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.08); transform: translateY(-2px); }
+.ks-svc-img { aspect-ratio: 16 / 9; overflow: hidden; background: var(--color-surface); }
+.ks-svc-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s ease; }
+.ks-svc-img-card:hover .ks-svc-img img { transform: scale(1.05); }
+.ks-svc-img-content { padding: 24px; }
+.ks-svc-num { font-family: var(--font-mono); font-size: 12px; font-weight: 500; color: var(--color-kelen-green-700); letter-spacing: 0.04em; }
+.ks-svc-h { font-family: var(--font-headline); font-weight: 700; font-size: 20px; letter-spacing: -0.01em; color: var(--color-fg); margin: 8px 0 0; }
+.ks-svc-d { font-size: 15px; color: var(--color-fg-muted); line-height: 1.6; margin: 8px 0 0; flex: 1; }
+.ks-svc-price { display: flex; flex-direction: column; gap: 2px; padding-top: 16px; border-top: 1px solid var(--color-border); margin-top: 16px; }
+.ks-svc-price span { font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--color-fg-muted); font-weight: 600; }
+.ks-svc-price strong { font-family: var(--font-headline); font-weight: 700; font-size: 15px; color: var(--color-fg); }
+
+/* ---------- SERVICES OFFERED ---------- */
+.ks-services-offered { background: var(--color-surface); }
+
+/* ---------- PORTFOLIO ---------- */
+.ks-portfolio { background: #fff; }
+.ks-port-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px 20px; }
+.ks-port-item { margin: 0; display: flex; flex-direction: column; gap: 14px; }
+.ks-port-img { overflow: hidden; border-radius: 8px; background: var(--color-surface); aspect-ratio: 4 / 3; }
+.ks-port-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s ease; }
+.ks-port-item:hover .ks-port-img img { transform: scale(1.02); }
+.ks-port-title { font-family: var(--font-headline); font-weight: 700; font-size: 16px; color: var(--color-fg); letter-spacing: -0.005em; }
+.ks-port-meta { font-size: 13px; color: var(--color-fg-muted); margin-top: 2px; }
+
+/* ---------- REVIEWS ---------- */
+.ks-reviews { background: var(--color-surface); }
+.ks-reviews-grid {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 8px;
+  -webkit-overflow-scrolling: touch;
+}
+.ks-reviews-grid::-webkit-scrollbar { height: 8px; }
+.ks-reviews-grid::-webkit-scrollbar-track { background: var(--color-surface-container); border-radius: 4px; }
+.ks-reviews-grid::-webkit-scrollbar-thumb { background: var(--color-border-strong); border-radius: 4px; }
+.ks-review {
+  flex: 0 0 360px;
+  scroll-snap-align: start;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 28px;
+  margin: 0;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.ks-review-stars { color: #D4AD00; letter-spacing: 2px; font-size: 15px; }
+.ks-review-text { font-family: var(--font-headline); font-weight: 500; font-size: 17px; line-height: 1.5; letter-spacing: -0.01em; color: var(--color-fg); margin: 0; flex: 1; }
+.ks-review footer { padding-top: 16px; border-top: 1px solid var(--color-border); }
+.ks-review-who { font-weight: 700; font-size: 14px; color: var(--color-fg); }
+.ks-review-proj { font-size: 13px; color: var(--color-fg-muted); margin-top: 2px; }
+.ks-reviews-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--color-border); font-size: 13px; color: var(--color-fg-muted); gap: 16px; flex-wrap: wrap; }
+
+/* ---------- PRODUCTS ---------- */
+.ks-products { background: #fff; }
+.ks-products-grid {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 8px;
+  -webkit-overflow-scrolling: touch;
+}
+.ks-products-grid::-webkit-scrollbar { height: 8px; }
+.ks-products-grid::-webkit-scrollbar-track { background: var(--color-surface); border-radius: 4px; }
+.ks-products-grid::-webkit-scrollbar-thumb { background: var(--color-border-strong); border-radius: 4px; }
+.ks-product-card {
+  flex: 0 0 340px;
+  scroll-snap-align: start;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: box-shadow .3s ease, transform .3s ease;
+}
+.ks-product-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.08); transform: translateY(-2px); }
+.ks-product-img { aspect-ratio: 4 / 3; overflow: hidden; background: var(--color-surface); }
+.ks-product-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s ease; }
+.ks-product-card:hover .ks-product-img img { transform: scale(1.05); }
+.ks-product-info { padding: 20px; }
+.ks-product-name { font-family: var(--font-headline); font-weight: 700; font-size: 18px; color: var(--color-fg); margin: 0 0 8px; letter-spacing: -0.01em; }
+.ks-product-desc { font-size: 14px; color: var(--color-fg-muted); line-height: 1.6; margin: 0 0 12px; }
+.ks-product-price { font-family: var(--font-headline); font-weight: 700; font-size: 20px; color: var(--color-kelen-green-700); letter-spacing: -0.01em; }
+
+/* ---------- FOLLOW ---------- */
+.ks-follow { background: var(--color-surface); }
+.ks-follow-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.ks-follow-card { background: #fff; border: 1px solid var(--color-border); border-radius: 12px; padding: 32px; display: flex; flex-direction: column; gap: 16px; }
+.ks-follow-icon { font-size: 32px; line-height: 1; }
+.ks-follow-h { font-family: var(--font-headline); font-weight: 700; font-size: 20px; color: var(--color-fg); margin: 0; letter-spacing: -0.01em; }
+.ks-follow-p { font-size: 15px; color: var(--color-fg-muted); line-height: 1.6; margin: 0; flex: 1; }
+.ks-follow-form { display: flex; gap: 8px; margin-top: 8px; }
+.ks-follow-form input { flex: 1; font-family: var(--font-body); font-size: 14px; padding: 10px 12px; border: 1px solid var(--color-border-strong); border-radius: 8px; background: #fff; }
+.ks-follow-form input:focus { outline: none; border-color: var(--color-kelen-green-600); box-shadow: 0 0 0 3px rgba(0,108,73,0.10); }
+.ks-follow-socials { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+.ks-social-link { display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border: 1px solid var(--color-border-strong); border-radius: 8px; font-size: 14px; font-weight: 600; color: var(--color-fg); text-decoration: none; transition: background .15s ease, border-color .15s ease; }
+.ks-social-link:hover { background: var(--color-surface); border-color: var(--color-kelen-green-600); }
+.ks-btn-whatsapp { background: #25D366; color: #fff; margin-top: 8px; display: inline-flex; align-items: center; gap: 8px; }
+.ks-btn-whatsapp:hover { background: #20BA5A; color: #fff; }
+
+/* ---------- FAQ ---------- */
+.ks-faq { background: #fff; }
+.ks-faq-inner { max-width: 860px; }
+.ks-faq-list { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--color-border); }
+.ks-faq-item { border-bottom: 1px solid var(--color-border); }
+.ks-faq-q { width: 100%; background: transparent; border: 0; padding: 22px 0; display: flex; justify-content: space-between; align-items: center; gap: 24px; text-align: left; font-family: var(--font-headline); font-weight: 600; font-size: 17px; line-height: 1.3; letter-spacing: -0.005em; color: var(--color-fg); cursor: pointer; }
+.ks-faq-caret { font-size: 22px; color: var(--color-fg-muted); font-weight: 300; transition: transform .2s ease; flex-shrink: 0; }
+.ks-faq-item.is-open .ks-faq-caret { transform: rotate(45deg); color: var(--color-kelen-green-700); }
+.ks-faq-a { padding: 0 32px 24px 0; font-size: 15px; line-height: 1.65; color: var(--color-fg-muted); max-width: 70ch; }
+
+/* ---------- CONTACT ---------- */
+.ks-contact { background: var(--color-surface); }
+.ks-contact-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 72px; align-items: flex-start; }
+.ks-contact-intro .ks-h2 { margin: 12px 0 12px; }
+.ks-contact-sub { font-size: 16px; line-height: 1.6; color: var(--color-fg-muted); margin: 0 0 24px; max-width: 40ch; }
+.ks-btn-calendar { margin-bottom: 24px; }
+.ks-calendar-embed { background: #fff; border: 1px solid var(--color-border); border-radius: 12px; padding: 32px; margin-bottom: 24px; }
+.ks-calendar-placeholder { text-align: center; padding: 40px 20px; background: var(--color-surface); border-radius: 8px; border: 2px dashed var(--color-border-strong); }
+.ks-calendar-placeholder p { margin: 0 0 8px; font-size: 15px; color: var(--color-fg); font-weight: 600; }
+.ks-calendar-note { font-size: 13px !important; color: var(--color-fg-muted) !important; font-weight: 400 !important; }
+.ks-contact-divider { display: flex; align-items: center; gap: 16px; margin: 24px 0; text-align: center; }
+.ks-contact-divider::before, .ks-contact-divider::after { content: ''; flex: 1; height: 1px; background: var(--color-border); }
+.ks-contact-divider span { font-size: 13px; color: var(--color-fg-muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
+.ks-contact-ways { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0; }
+.ks-contact-ways li { display: flex; justify-content: space-between; align-items: baseline; padding: 16px 0; border-top: 1px solid var(--color-border); gap: 16px; }
+.ks-contact-ways li:last-child { border-bottom: 1px solid var(--color-border); }
+.ks-way-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--color-fg-muted); }
+.ks-way-val { font-family: var(--font-mono); font-size: 14px; color: var(--color-kelen-green-800); font-weight: 500; text-decoration: none; text-align: right; }
+.ks-way-val.ks-way-plain { color: var(--color-fg); font-family: var(--font-body); font-weight: 500; }
+.ks-way-val:hover { text-decoration: underline; text-underline-offset: 3px; }
+.ks-form { background: #fff; border: 1px solid var(--color-border); border-radius: 12px; padding: 32px; display: flex; flex-direction: column; gap: 16px; }
+.ks-form-title { font-family: var(--font-headline); font-weight: 700; font-size: 18px; color: var(--color-fg); margin: 0 0 8px; letter-spacing: -0.01em; }
+.ks-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.ks-field { display: flex; flex-direction: column; gap: 6px; }
+.ks-field > span { font-size: 13px; font-weight: 600; color: var(--color-fg); }
+.ks-field input, .ks-field textarea, .ks-field select { font-family: var(--font-body); font-size: 15px; color: var(--color-fg); padding: 11px 13px; border: 1px solid var(--color-border-strong); border-radius: 8px; background: #fff; width: 100%; box-sizing: border-box; resize: none; transition: border-color .15s ease, box-shadow .15s ease; }
+.ks-field input:focus, .ks-field textarea:focus, .ks-field select:focus { outline: none; border-color: var(--color-kelen-green-600); box-shadow: 0 0 0 3px rgba(0,108,73,0.10); }
+.ks-form .ks-btn-block { margin-top: 8px; }
+.ks-form-foot { font-size: 12px; color: var(--color-fg-muted); line-height: 1.5; margin: 4px 0 0; }
+
+/* ---------- FOOTER ---------- */
+.ks-footer { background: #FAFAF9; border-top: 1px solid var(--color-border); }
+.ks-footer-inner { display: grid; grid-template-columns: 1.3fr 1fr 1fr 1.3fr; gap: 48px; padding-top: 56px; padding-bottom: 40px; }
+.ks-footer-col { display: flex; flex-direction: column; gap: 10px; }
+.ks-footer-col a { font-size: 14px; color: var(--color-fg-muted); text-decoration: none; transition: color .15s ease; }
+.ks-footer-col a:hover { color: var(--color-kelen-green-700); }
+.ks-footer-name { font-family: var(--font-headline); font-weight: 700; font-size: 16px; color: var(--color-fg); letter-spacing: -0.01em; }
+.ks-footer-addr { font-size: 13px; color: var(--color-fg-muted); line-height: 1.6; }
+.ks-footer-h { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.14em; color: var(--color-fg); margin-bottom: 4px; }
+.ks-footer-logo { font-family: var(--font-headline); font-weight: 800; font-size: 20px; color: var(--color-kelen-green-700); letter-spacing: -0.02em; }
+.ks-footer-note { font-size: 13px; color: var(--color-fg-muted); margin: 0; line-height: 1.55; }
+.ks-footer-note a { color: var(--color-kelen-green-700); font-weight: 600; }
+.ks-footer-bar { border-top: 1px solid var(--color-border); }
+.ks-footer-bar-inner { display: flex; justify-content: space-between; align-items: center; padding-top: 20px; padding-bottom: 20px; font-size: 12px; color: var(--color-fg-muted); gap: 16px; flex-wrap: wrap; }
+.ks-footer-bar a { color: inherit; text-decoration: none; }
+.ks-footer-bar a:hover { color: var(--color-kelen-green-700); }
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 960px) {
+  .ks-sec { padding: 64px 0; }
+  .ks-nav-links { display: none; }
+  .ks-hero-overlay { padding-bottom: 40px; }
+  .ks-present-grid { grid-template-columns: 1fr; gap: 24px; }
+  .ks-qualities-grid { grid-template-columns: 1fr; }
+  .ks-services-img-grid { grid-template-columns: 1fr; }
+  .ks-port-grid { grid-template-columns: 1fr 1fr; }
+  .ks-follow-grid { grid-template-columns: 1fr; }
+  .ks-contact-grid { grid-template-columns: 1fr; gap: 40px; }
+  .ks-footer-inner { grid-template-columns: 1fr 1fr; gap: 32px; }
+}
+@media (max-width: 560px) {
+  :root { --ks-gutter: 20px; }
+  .ks-hero-overlay { padding-bottom: 32px; }
+  .ks-port-grid { grid-template-columns: 1fr; }
+  .ks-present-meta { grid-template-columns: 1fr; gap: 16px; }
+  .ks-field-row { grid-template-columns: 1fr; }
+  .ks-form { padding: 24px; }
+  .ks-footer-inner { grid-template-columns: 1fr; }
+  .ks-contact-ways li { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .ks-way-val { text-align: left; }
+}
+</style>
+</head>
+<body>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+
+<div id="root"></div>
+
+<script type="text/babel">
+/* global React */
+const { useState, useEffect } = React;
+
+/* ============================================================ NAV ============================================================ */
+function Nav({ pro }) {
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+  return (
+    <nav className={`ks-nav ${scrolled ? 'is-scrolled' : ''}`}>
+      <div className="ks-nav-inner">
+        <a className="ks-nav-brand" href="#top">
+          <span className="ks-nav-mono">{pro.monogram}</span>
+          <div className="ks-nav-names">
+            <span className="ks-nav-name">{pro.name}</span>
+            <span className="ks-nav-role">{pro.role}</span>
+          </div>
+        </a>
+        <div className="ks-nav-links">
+          <a href="#about">À propos</a>
+          <a href="#presentation">Présentation</a>
+          <a href="#services">Services</a>
+          <a href="#portfolio">Réalisations</a>
+          <a href="#produits">Produits</a>
+          <a href="#reviews">Avis</a>
+          <a href="#contact">Contact</a>
+        </div>
+        <a href="#contact" className="ks-btn ks-btn-primary ks-btn-sm">Contact</a>
+      </div>
+    </nav>
+  );
+}
+
+/* ============================================================ HERO ============================================================ */
+function Hero({ pro }) {
+  return (
+    <header className="ks-hero" id="top">
+      <div className="ks-hero-image">
+        <img src={pro.portrait} alt={`Portrait de ${pro.name}`} />
+      </div>
+      <div className="ks-hero-overlay">
+        <div className="ks-section-inner">
+          <h1 className="ks-hero-h1">{pro.name}</h1>
+          <p className="ks-hero-role">{pro.role}</p>
+          <p className="ks-hero-subtitle">{pro.tagline}</p>
+          <div className="ks-hero-ctas">
+            <a className="ks-btn ks-btn-primary" href="#contact">Contact</a>
+            <a className="ks-btn ks-btn-ghost-light" href="#portfolio">Voir les réalisations →</a>
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+/* ============================================================ PRESENTATION ============================================================ */
+function Presentation({ pro }) {
+  return (
+    <section className="ks-sec ks-present" id="about">
+      <div className="ks-section-inner ks-present-grid">
+        <div className="ks-eyebrow-col">
+          <span className="ks-eyebrow">À PROPOS</span>
+        </div>
+        <div>
+          <p className="ks-present-lead">{pro.lead}</p>
+          <p className="ks-present-body">{pro.bio}</p>
+          <div className="ks-present-meta">
+            <div><span className="ks-meta-label">Formation</span><span className="ks-meta-val">{pro.certs}</span></div>
+            <div><span className="ks-meta-label">Langues</span><span className="ks-meta-val">{pro.languages}</span></div>
+            <div><span className="ks-meta-label">Équipe</span><span className="ks-meta-val">{pro.team}</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================ QUALITIES ============================================================ */
+function Qualities() {
+  const items = [
+    { icon: '⚡', title: 'Rapidité', desc: "Réponse sous 2h en journée. Devis sous 48h. Pas d'attente inutile." },
+    { icon: '💬', title: 'Réactivité', desc: 'Disponible par WhatsApp, email et téléphone. Communication claire et régulière.' },
+    { icon: '📅', title: 'Disponibilité', desc: 'Rendez-vous flexibles. Présence sur site selon vos besoins.' },
+  ];
+  return (
+    <section className="ks-sec ks-presentation" id="presentation">
+      <div className="ks-section-inner">
+        <div className="ks-sec-head">
+          <span className="ks-eyebrow">PRÉSENTATION</span>
+          <h2 className="ks-h2">Une collaboration basée sur la confiance.</h2>
+        </div>
+        <div className="ks-qualities-grid">
+          {items.map((q, i) => (
+            <article key={i} className="ks-quality-card">
+              <div className="ks-quality-icon">{q.icon}</div>
+              <h3 className="ks-quality-h">{q.title}</h3>
+              <p className="ks-quality-d">{q.desc}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================ SERVICES OFFERED ============================================================ */
+function ServicesOffered({ services }) {
+  return (
+    <section className="ks-sec ks-services-offered" id="services">
+      <div className="ks-section-inner">
+        <div className="ks-sec-head">
+          <span className="ks-eyebrow">NOS SERVICES</span>
+          <h2 className="ks-h2">Trois façons de collaborer.</h2>
+        </div>
+        <div className="ks-services-img-grid">
+          {services.map((s, i) => (
+            <article key={i} className="ks-svc-img-card">
+              <div className="ks-svc-img">
+                <img src={s.img} alt={s.title} />
+              </div>
+              <div className="ks-svc-img-content">
+                <div className="ks-svc-num">0{i + 1}</div>
+                <h3 className="ks-svc-h">{s.title}</h3>
+                <p className="ks-svc-d">{s.desc}</p>
+                <div className="ks-svc-price"><span>À partir de</span><strong>{s.price}</strong></div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================ PORTFOLIO ============================================================ */
+function Portfolio({ projects }) {
+  return (
+    <section className="ks-sec ks-portfolio" id="portfolio">
+      <div className="ks-section-inner">
+        <div className="ks-sec-head ks-sec-head-row">
+          <div>
+            <span className="ks-eyebrow">RÉALISATIONS</span>
+            <h2 className="ks-h2">Sélection de projets récents.</h2>
+          </div>
+          <a className="ks-link-arrow" href="#">Voir tous les projets →</a>
+        </div>
+        <div className="ks-port-grid">
+          {projects.map((p, i) => (
+            <figure key={i} className="ks-port-item">
+              <div className="ks-port-img"><img src={p.img} alt={p.title} /></div>
+              <figcaption>
+                <div className="ks-port-title">{p.title}</div>
+                <div className="ks-port-meta">{p.city} · {p.year} · {p.typology}</div>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================ PRODUCTS ============================================================ */
+function Products({ products }) {
+  return (
+    <section className="ks-sec ks-products" id="produits">
+      <div className="ks-section-inner">
+        <div className="ks-sec-head ks-sec-head-row">
+          <div>
+            <span className="ks-eyebrow">PRODUITS</span>
+            <h2 className="ks-h2">Ce que nous proposons.</h2>
+          </div>
+          <a className="ks-link-arrow" href="#">Voir tous les produits →</a>
+        </div>
+        <div className="ks-products-grid">
+          {products.map((p, i) => (
+            <article key={i} className="ks-product-card">
+              <div className="ks-product-img">
+                <img src={p.img} alt={p.name} />
+              </div>
+              <div className="ks-product-info">
+                <h3 className="ks-product-name">{p.name}</h3>
+                <p className="ks-product-desc">{p.description}</p>
+                <div className="ks-product-price">{p.price}</div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================ REVIEWS ============================================================ */
+function Reviews({ quotes }) {
+  return (
+    <section className="ks-sec ks-reviews" id="reviews">
+      <div className="ks-section-inner">
+        <div className="ks-sec-head">
+          <span className="ks-eyebrow">AVIS CLIENTS</span>
+          <h2 className="ks-h2">Trois clients, trois chantiers.</h2>
+        </div>
+        <div className="ks-reviews-grid">
+          {quotes.map((q, i) => (
+            <blockquote key={i} className="ks-review">
+              <div className="ks-review-stars" aria-label="5 sur 5">★★★★★</div>
+              <p className="ks-review-text">« {q.text} »</p>
+              <footer>
+                <div className="ks-review-who">{q.who}</div>
+                <div className="ks-review-proj">{q.project}</div>
+              </footer>
+            </blockquote>
+          ))}
+        </div>
+        <div className="ks-reviews-foot">
+          <span>Avis collectés depuis Google Business Profile.</span>
+          <a className="ks-link-arrow" href="#">Voir tous les avis →</a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================ FOLLOW ============================================================ */
+function Follow({ pro }) {
+  return (
+    <section className="ks-sec ks-follow">
+      <div className="ks-section-inner">
+        <div className="ks-sec-head">
+          <span className="ks-eyebrow">NOUS SUIVRE</span>
+          <h2 className="ks-h2">Restez informé de nos actualités.</h2>
+        </div>
+        <div className="ks-follow-grid">
+          <div className="ks-follow-card">
+            <div className="ks-follow-icon">📧</div>
+            <h3 className="ks-follow-h">Newsletter</h3>
+            <p className="ks-follow-p">Recevez nos actualités et nouveaux projets directement par email.</p>
+            <form className="ks-follow-form" onSubmit={(e) => e.preventDefault()}>
+              <input type="email" placeholder="votre@email.com" />
+              <button type="submit" className="ks-btn ks-btn-primary ks-btn-sm">S'abonner</button>
+            </form>
+          </div>
+          <div className="ks-follow-card">
+            <div className="ks-follow-icon">📱</div>
+            <h3 className="ks-follow-h">Réseaux sociaux</h3>
+            <p className="ks-follow-p">Suivez-nous pour découvrir nos coulisses et nos inspirations.</p>
+            <div className="ks-follow-socials">
+              <a href="#" className="ks-social-link">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M22.23 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.46c.98 0 1.77-.77 1.77-1.72V1.72C24 .77 23.21 0 22.23 0zM7.12 20.45H3.56V9h3.56v11.45zM5.34 7.43c-1.14 0-2.06-.93-2.06-2.06s.93-2.06 2.06-2.06 2.06.93 2.06 2.06-.92 2.06-2.06 2.06zM20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.95v5.66H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28z"/></svg>
+                LinkedIn
+              </a>
+              <a href="#" className="ks-social-link">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                Instagram
+              </a>
+            </div>
+          </div>
+          <div className="ks-follow-card">
+            <div className="ks-follow-icon">💬</div>
+            <h3 className="ks-follow-h">Notifications WhatsApp</h3>
+            <p className="ks-follow-p">Recevez nos nouveautés et promotions directement sur WhatsApp.</p>
+            <a href={`https://wa.me/${pro.whatsapp.replace(/\s/g, '')}`} className="ks-btn ks-btn-whatsapp">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.82 11.82 0 018.413 3.488 11.82 11.82 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+              S'abonner sur WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================ FAQ ============================================================ */
+function Faq({ faqs }) {
+  const [open, setOpen] = useState(0);
+  return (
+    <section className="ks-sec ks-faq">
+      <div className="ks-section-inner ks-faq-inner">
+        <div className="ks-sec-head">
+          <span className="ks-eyebrow">QUESTIONS FRÉQUENTES</span>
+          <h2 className="ks-h2">Ce que les clients demandent.</h2>
+        </div>
+        <ul className="ks-faq-list">
+          {faqs.map((f, i) => (
+            <li key={i} className={`ks-faq-item ${open === i ? 'is-open' : ''}`}>
+              <button className="ks-faq-q" onClick={() => setOpen(open === i ? -1 : i)}>
+                <span>{f.q}</span>
+                <span className="ks-faq-caret">+</span>
+              </button>
+              {open === i && <div className="ks-faq-a">{f.a}</div>}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================ CONTACT ============================================================ */
+function Contact({ pro }) {
+  const [showCalendar, setShowCalendar] = useState(false);
+  return (
+    <section className="ks-sec ks-contact" id="contact">
+      <div className="ks-section-inner ks-contact-grid">
+        <div className="ks-contact-intro">
+          <span className="ks-eyebrow">CONTACT</span>
+          <h2 className="ks-h2">Parlons de votre projet.</h2>
+          <p className="ks-contact-sub">Contact direct, sans intermédiaire.</p>
+          <button className="ks-btn ks-btn-primary ks-btn-block ks-btn-calendar" onClick={() => setShowCalendar(!showCalendar)}>
+            📅 Prendre rendez-vous
+          </button>
+          {showCalendar && (
+            <div className="ks-calendar-embed">
+              <div className="ks-calendar-placeholder">
+                <p>Intégration calendrier (Calendly, Google Calendar, etc.)</p>
+                <p className="ks-calendar-note">L'URL de calendrier s'affichera ici</p>
+              </div>
+            </div>
+          )}
+          <div className="ks-contact-divider"><span>ou contactez directement</span></div>
+          <ul className="ks-contact-ways">
+            <li><span className="ks-way-label">WhatsApp</span><a className="ks-way-val" href={`https://wa.me/${pro.whatsapp.replace(/\s/g,'')}`}>{pro.whatsapp}</a></li>
+            <li><span className="ks-way-label">Téléphone</span><a className="ks-way-val" href={`tel:${pro.phone}`}>{pro.phone}</a></li>
+            <li><span className="ks-way-label">Email</span><a className="ks-way-val" href={`mailto:${pro.email}`}>{pro.email}</a></li>
+            <li><span className="ks-way-label">Bureau</span><span className="ks-way-val ks-way-plain">{pro.address}</span></li>
+          </ul>
+        </div>
+        <form className="ks-form" onSubmit={(e) => e.preventDefault()}>
+          <h3 className="ks-form-title">Envoyez un message</h3>
+          <div className="ks-field-row">
+            <label className="ks-field"><span>Nom complet</span><input placeholder="Votre nom" /></label>
+            <label className="ks-field"><span>Téléphone</span><input placeholder="+33 6 00 00 00 00" /></label>
+          </div>
+          <label className="ks-field"><span>Email</span><input placeholder="vous@exemple.com" /></label>
+          <label className="ks-field"><span>Nature du projet</span>
+            <select defaultValue="">
+              <option value="" disabled>Sélectionner…</option>
+              <option>Construction neuve</option>
+              <option>Rénovation</option>
+              <option>Suivi de chantier</option>
+              <option>Conseil ou étude</option>
+            </select>
+          </label>
+          <label className="ks-field"><span>Votre projet en quelques lignes</span>
+            <textarea rows="4" placeholder="Ville, surface approximative, budget indicatif, échéance…"></textarea>
+          </label>
+          <button type="submit" className="ks-btn ks-btn-primary ks-btn-block">Envoyer le message</button>
+          <p className="ks-form-foot">En envoyant, vous acceptez d'être recontacté par {pro.name}.</p>
+        </form>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================ FOOTER ============================================================ */
+function Footer({ pro }) {
+  return (
+    <footer className="ks-footer">
+      <div className="ks-section-inner ks-footer-inner">
+        <div className="ks-footer-col">
+          <div className="ks-footer-name">{pro.studio}</div>
+          <div className="ks-footer-addr">{pro.address}</div>
+          <div style={{marginTop:'8px'}}>
+            <span className="ks-footer-logo">Kelen</span>
+            <p className="ks-footer-note" style={{marginTop:'6px'}}>Profil hébergé par <a href="/">Kelen</a> · Réseau de professionnels vérifiés</p>
+          </div>
+        </div>
+        <div className="ks-footer-col">
+          <div className="ks-footer-h">Contact</div>
+          <a href={`tel:${pro.phone}`}>{pro.phone}</a>
+          <a href={`mailto:${pro.email}`}>{pro.email}</a>
+        </div>
+        <div className="ks-footer-col">
+          <div className="ks-footer-h">Liens</div>
+          <a href="#about">À propos</a>
+          <a href="#portfolio">Réalisations</a>
+          <a href="#services">Services</a>
+          <a href="#contact">Contact</a>
+        </div>
+        <div className="ks-footer-col">
+          <div className="ks-footer-h">Réseaux</div>
+          <a href="#">LinkedIn</a>
+          <a href="#">Instagram</a>
+          <a href="#">Facebook</a>
+        </div>
+      </div>
+      <div className="ks-footer-bar">
+        <div className="ks-section-inner ks-footer-bar-inner">
+          <span>© 2025 {pro.studio} · Tous droits réservés</span>
+          <span><a href="#">Mentions légales</a> · <a href="#">Politique de confidentialité</a></span>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+/* ============================================================ DATA ============================================================ */
+const PRO = {
+  name: 'Aïcha Koné',
+  monogram: 'AK',
+  role: 'Architecte DPLG · Studio AK',
+  studio: 'Studio AK Architecture',
+  tagline: "Construire à Abidjan, sans jamais improviser.",
+  portrait: '/images/hero-africa-construction.png',
+  city: 'Abidjan · Côte d\'Ivoire',
+  years: 12,
+  team: '4 personnes',
+  languages: 'Français · Anglais · Dioula',
+  certs: "ENSA Abidjan · Ordre des Architectes de Côte d'Ivoire",
+  whatsapp: '+225 07 88 42 19 06',
+  phone: '+225 27 22 41 87 33',
+  email: 'contact@studioak.ci',
+  address: "Rue des Jardins, Lot 12 · Cocody, Abidjan",
+  lead: "Diplômée de l'ENSA Abidjan en 2013, j'accompagne chaque client de l'esquisse à la remise des clés — sans sous-traiter la présence sur le chantier.",
+  bio: "Le studio a livré 42 projets depuis 2015, dont une dizaine pour des clients basés en Europe ou au Canada. Nous travaillons en binôme architecte-conducteur sur chaque chantier, avec un reporting photo hebdomadaire et un suivi de budget mensuel. Aucun projet n'est livré sans une visite physique du client sur site — si vous ne pouvez pas venir, nous organisons la visite par visioconférence, avec un métré contradictoire.",
+};
+
+const SERVICES = [
+  { title: 'Conception',        desc: "De l'esquisse au permis de construire : analyse du terrain, APS, APD, dossier de permis, plans d'exécution.", price: '2,5 % du budget travaux', img: '/images/hero-africa-construction.png' },
+  { title: 'Suivi de chantier', desc: "Présence hebdomadaire, reporting photo, gestion des corps d'état, réception et levée des réserves.", price: '3 % du budget travaux', img: '/images/hero-client.png' },
+  { title: 'Rénovation',        desc: "Diagnostic sur site, relevés, reconception, pilotage du chantier pour maisons existantes ou appartements.", price: '3,5 % du budget travaux', img: '/images/hero-africa-construction.png' },
+];
+
+const PROJECTS = [
+  { title: 'Villa Riviera Golf',    year: 2024, city: 'Cocody',       typology: 'Maison individuelle', img: '/images/hero-africa-construction.png' },
+  { title: 'Duplex Angré Star 22',  year: 2024, city: 'Abidjan',      typology: 'Duplex',               img: '/images/hero-client.png' },
+  { title: 'Maison Samé',           year: 2023, city: 'Grand-Bassam', typology: 'Maison individuelle', img: '/images/hero-africa-construction.png' },
+];
+
+const PRODUCTS = [
+  { name: 'Pack Étude Complète',  description: 'Analyse terrain + APS + APD + Permis de construire',                          price: '2 500 000 FCFA',       img: '/images/hero-africa-construction.png' },
+  { name: 'Suivi Premium',        description: "Présence hebdomadaire + reporting photo + gestion corps d'état",               price: '3 % du budget travaux', img: '/images/hero-client.png' },
+  { name: 'Conseil Ponctuel',     description: 'Séance de 2h pour validation de projet ou choix techniques',                   price: '85 000 FCFA / séance',  img: '/images/hero-africa-construction.png' },
+  { name: 'Pack Rénovation',      description: 'Diagnostic + relevés + reconception complète',                                 price: '1 800 000 FCFA',        img: '/images/hero-client.png' },
+  { name: 'Visite de chantier',   description: 'Inspection technique avec rapport détaillé sous 48h',                         price: '125 000 FCFA',          img: '/images/hero-africa-construction.png' },
+];
+
+const QUOTES = [
+  { text: "Trois ans de chantier depuis Paris. Aïcha a refusé deux lots quand les prix n'étaient pas justes. On n'aurait pas pu construire sans elle.",       who: 'Oumar D.',   project: 'Villa Riviera Golf · 2024' },
+  { text: "J'avais eu deux mauvaises expériences avant elle. Ce qui a changé : un reporting factuel chaque semaine, pas de surprise à la réception.",           who: 'Sophie L.',  project: 'Duplex Angré Star · 2024' },
+  { text: "Budget tenu à 4 % près, dans un marché où les matériaux bougent énormément. Elle négocie, elle vérifie, elle reprend quand c'est mal fait.",        who: 'Mariam K.',  project: 'Maison Samé · 2023' },
+  { text: "Communication irréprochable. Chaque question a une réponse claire. Le chantier a été livré dans les délais.",                                        who: 'Ibrahim S.', project: 'Bureaux Soria · 2022' },
+  { text: "Elle a su adapter le projet à notre budget sans sacrifier la qualité. Recommandations de matériaux locaux excellentes.",                            who: 'Claire T.',  project: 'Rénovation Bingerville · 2023' },
+];
+
+const FAQS = [
+  { q: "Prenez-vous des projets en dehors d'Abidjan ?",       a: "Oui, sur la zone Abidjan → Grand-Bassam → Yamoussoukro, et plus ponctuellement à l'intérieur du pays pour des clients existants. Au-delà, je recommande des confrères de mon réseau." },
+  { q: "Comment fonctionne le suivi pour un client basé en Europe ?", a: "Reporting photo et vidéo hebdomadaire, appel visio fixe le vendredi, point budget mensuel détaillé. Une visite physique est prévue aux étapes clés (fondations, gros œuvre, finitions, réception)." },
+  { q: "Quels sont vos délais ?",                              a: "Six à douze semaines pour la conception et le permis, selon la commune. Le chantier d'une maison individuelle dure entre 9 et 14 mois, une rénovation entre 4 et 8 mois." },
+  { q: "Travaillez-vous avec les entreprises choisies par le client ?", a: "Oui, à condition qu'elles soient bien déclarées et assurées. Je peux aussi proposer des entreprises avec qui nous avons déjà travaillé — avec comparatif de devis." },
+];
+
+function App() {
+  return (
+    <>
+      <Nav pro={PRO} />
+      <Hero pro={PRO} />
+      <Presentation pro={PRO} />
+      <Qualities />
+      <ServicesOffered services={SERVICES} />
+      <Portfolio projects={PROJECTS} />
+      <Products products={PRODUCTS} />
+      <Reviews quotes={QUOTES} />
+      <Follow pro={PRO} />
+      <Faq faqs={FAQS} />
+      <Contact pro={PRO} />
+      <Footer pro={PRO} />
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+
+</body>
+</html>
