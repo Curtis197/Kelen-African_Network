@@ -6,7 +6,7 @@ type Variant = 'services' | 'portfolio' | 'products'
 const FALLBACK_IMG = '/images/hero-africa-construction.png'
 
 /* ── Services — 3-col image cards with numbered prefix ─────────────────── */
-function ServicesGrid({ items, listHref, base, sectionPath }: { items: ProSiteItem[]; listHref: string; base: string; sectionPath: string }) {
+function ServicesGrid({ items, listHref, base, sectionPath }: { items: ProSiteItem[]; listHref?: string; base: string; sectionPath: string }) {
   return (
     <section className="py-[88px] border-t border-stone-100 bg-stone-50" id="services">
       <div className="max-w-[1160px] mx-auto px-8">
@@ -48,7 +48,7 @@ function ServicesGrid({ items, listHref, base, sectionPath }: { items: ProSiteIt
             </Link>
           ))}
         </div>
-        {items.length > 3 && (
+        {listHref && items.length > 3 && (
           <div className="mt-10 pt-6 border-t border-stone-200 flex justify-end">
             <Link href={listHref} className="text-sm font-semibold text-kelen-green-700 hover:underline underline-offset-3 no-underline">
               Voir tous les services →
@@ -61,7 +61,7 @@ function ServicesGrid({ items, listHref, base, sectionPath }: { items: ProSiteIt
 }
 
 /* ── Portfolio — 3-col grid, 4:3 images, caption below ─────────────────── */
-function PortfolioGrid({ items, listHref, base, sectionPath }: { items: ProSiteItem[]; listHref: string; base: string; sectionPath: string }) {
+function PortfolioGrid({ items, listHref, base, sectionPath }: { items: ProSiteItem[]; listHref?: string; base: string; sectionPath: string }) {
   return (
     <section className="py-[88px] border-t border-stone-100 bg-white" id="portfolio">
       <div className="max-w-[1160px] mx-auto px-8">
@@ -75,9 +75,11 @@ function PortfolioGrid({ items, listHref, base, sectionPath }: { items: ProSiteI
               Sélection de projets récents.
             </h2>
           </div>
-          <Link href={listHref} className="text-sm font-semibold text-kelen-green-700 hover:underline underline-offset-3 no-underline whitespace-nowrap">
-            Voir toutes les réalisations →
-          </Link>
+          {listHref && (
+            <Link href={listHref} className="text-sm font-semibold text-kelen-green-700 hover:underline underline-offset-3 no-underline whitespace-nowrap">
+              Voir toutes les réalisations →
+            </Link>
+          )}
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {items.slice(0, 3).map((p) => (
@@ -109,7 +111,7 @@ function PortfolioGrid({ items, listHref, base, sectionPath }: { items: ProSiteI
 }
 
 /* ── Products — horizontal scroll carousel ──────────────────────────────── */
-function ProductsCarousel({ items, listHref, base, sectionPath }: { items: ProSiteItem[]; listHref: string; base: string; sectionPath: string }) {
+function ProductsCarousel({ items, listHref, base, sectionPath }: { items: ProSiteItem[]; listHref?: string; base: string; sectionPath: string }) {
   return (
     <section className="py-[88px] border-t border-stone-100 bg-white" id="produits">
       <div className="max-w-[1160px] mx-auto px-8">
@@ -123,9 +125,11 @@ function ProductsCarousel({ items, listHref, base, sectionPath }: { items: ProSi
               Ce que nous proposons.
             </h2>
           </div>
-          <Link href={listHref} className="text-sm font-semibold text-kelen-green-700 hover:underline underline-offset-3 no-underline whitespace-nowrap">
-            Voir tous les produits →
-          </Link>
+          {listHref && (
+            <Link href={listHref} className="text-sm font-semibold text-kelen-green-700 hover:underline underline-offset-3 no-underline whitespace-nowrap">
+              Voir tous les produits →
+            </Link>
+          )}
         </div>
         <div
           className="flex gap-5 overflow-x-auto pb-2"
@@ -179,7 +183,7 @@ export function ProSiteSectionPreview({
 }: {
   variant?: Variant
   title: string
-  listHref: string
+  listHref?: string
   items: ProSiteItem[]
   slug: string
   sectionPath: string
