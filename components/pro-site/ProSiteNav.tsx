@@ -48,7 +48,7 @@ export function ProSiteNav({
           : 'bg-transparent border-b border-transparent'
       }`}
     >
-      <div className="max-w-[1160px] mx-auto px-8 py-4 flex items-center gap-10">
+      <div className="max-w-[1160px] mx-auto px-4 sm:px-8 py-4 flex items-center gap-6 sm:gap-10">
         {/* Brand */}
         <a href="#top" className="inline-flex items-center gap-3 no-underline text-inherit mr-auto">
           <span className="w-9 h-9 inline-flex items-center justify-center bg-kelen-green-700 text-white font-headline font-extrabold text-sm rounded-lg tracking-wide shadow-[0_2px_8px_rgba(0,97,36,0.35)]">

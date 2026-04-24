@@ -20,19 +20,17 @@ export function ProSiteContact({
   const waNumber = whatsapp?.replace(/\D/g, '') ?? null
 
   return (
-    <section className="py-[88px] border-t border-stone-100 bg-stone-50" id="contact">
-      <div className="max-w-[1160px] mx-auto px-8">
-        <div
-          className="grid gap-[72px] items-start"
-          style={{ gridTemplateColumns: 'minmax(0,1fr) minmax(0,1.1fr)' }}
-        >
+    <section className="py-14 md:py-[88px] border-t border-stone-100 bg-stone-50" id="contact">
+      <div className="max-w-[1160px] mx-auto px-4 sm:px-8">
+        <div className="grid grid-cols-1 gap-10 md:gap-[72px] md:grid-cols-[1fr_1.1fr] items-start">
+
           {/* Left — contact info */}
           <div>
             <span className="flex items-center gap-2.5 text-[11px] font-extrabold uppercase tracking-[0.16em] text-stone-500 mb-3">
               <span className="w-4 h-0.5 bg-kelen-green-600 rounded-full" />
               CONTACT
             </span>
-            <h2 className="font-headline font-bold text-[32px] leading-[1.2] tracking-[-0.02em] text-[#1A1A1A] mt-3 mb-3">
+            <h2 className="font-headline font-bold text-[28px] md:text-[32px] leading-[1.2] tracking-[-0.02em] text-[#1A1A1A] mt-3 mb-3">
               Parlons de votre projet.
             </h2>
             <p className="text-base text-stone-500 leading-[1.6] mb-6 max-w-[40ch]">
@@ -59,8 +57,8 @@ export function ProSiteContact({
             )}
 
             {showCalendar && !calendarUrl && (
-              <div className="bg-white border border-stone-200 rounded-xl p-8 mb-6">
-                <div className="text-center py-10 px-5 bg-stone-50 rounded-lg border-2 border-dashed border-stone-300">
+              <div className="bg-white border border-stone-200 rounded-xl p-6 mb-6">
+                <div className="text-center py-8 px-4 bg-stone-50 rounded-lg border-2 border-dashed border-stone-300">
                   <p className="text-sm font-semibold text-[#1A1A1A] mb-1">
                     Intégration calendrier
                   </p>
@@ -83,25 +81,25 @@ export function ProSiteContact({
             {/* Contact ways */}
             <ul className="list-none p-0 m-0">
               {whatsapp && (
-                <li className="flex justify-between items-baseline py-4 border-t border-stone-200 gap-4">
-                  <span className="text-xs font-bold uppercase tracking-[0.14em] text-stone-500">WhatsApp</span>
-                  <a href={`https://wa.me/${waNumber}`} target="_blank" rel="noopener noreferrer" className="font-mono text-sm text-kelen-green-800 font-medium no-underline hover:underline underline-offset-3">
+                <li className="flex justify-between items-center py-4 border-t border-stone-200 gap-4">
+                  <span className="text-xs font-bold uppercase tracking-[0.14em] text-stone-500 shrink-0">WhatsApp</span>
+                  <a href={`https://wa.me/${waNumber}`} target="_blank" rel="noopener noreferrer" className="font-mono text-sm text-kelen-green-800 font-medium no-underline hover:underline underline-offset-3 text-right min-w-0 truncate">
                     {whatsapp}
                   </a>
                 </li>
               )}
               {phone && (
-                <li className="flex justify-between items-baseline py-4 border-t border-stone-200 gap-4">
-                  <span className="text-xs font-bold uppercase tracking-[0.14em] text-stone-500">Téléphone</span>
-                  <a href={`tel:${phone}`} className="font-mono text-sm text-kelen-green-800 font-medium no-underline hover:underline underline-offset-3">
+                <li className="flex justify-between items-center py-4 border-t border-stone-200 gap-4">
+                  <span className="text-xs font-bold uppercase tracking-[0.14em] text-stone-500 shrink-0">Téléphone</span>
+                  <a href={`tel:${phone}`} className="font-mono text-sm text-kelen-green-800 font-medium no-underline hover:underline underline-offset-3 text-right min-w-0 truncate">
                     {phone}
                   </a>
                 </li>
               )}
               {email && (
-                <li className="flex justify-between items-baseline py-4 border-t border-stone-200 border-b border-stone-200 gap-4">
-                  <span className="text-xs font-bold uppercase tracking-[0.14em] text-stone-500">Email</span>
-                  <a href={`mailto:${email}`} className="font-mono text-sm text-kelen-green-800 font-medium no-underline hover:underline underline-offset-3">
+                <li className="flex justify-between items-center py-4 border-t border-stone-200 border-b border-stone-200 gap-4">
+                  <span className="text-xs font-bold uppercase tracking-[0.14em] text-stone-500 shrink-0">Email</span>
+                  <a href={`mailto:${email}`} className="font-mono text-sm text-kelen-green-800 font-medium no-underline hover:underline underline-offset-3 text-right min-w-0 truncate">
                     {email}
                   </a>
                 </li>
@@ -111,14 +109,14 @@ export function ProSiteContact({
 
           {/* Right — message form */}
           <form
-            className="bg-white border border-stone-100 rounded-xl p-8 flex flex-col gap-4 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.05)]"
+            className="bg-white border border-stone-100 rounded-xl p-6 sm:p-8 flex flex-col gap-4 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.05)]"
             onSubmit={(e) => e.preventDefault()}
           >
             <h3 className="font-headline font-bold text-[18px] text-[#1A1A1A] tracking-[-0.01em] mb-2">
               Envoyez un message
             </h3>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <label className="flex flex-col gap-1.5">
                 <span className="text-[13px] font-semibold text-[#1A1A1A]">Nom complet</span>
                 <input

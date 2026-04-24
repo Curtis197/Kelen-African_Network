@@ -15,14 +15,11 @@ export function ProSiteFooter({
 
   return (
     <footer className="bg-[#FAFAF9] border-t border-stone-100">
-      <div className="max-w-[1160px] mx-auto px-8">
-        {/* 4-col grid */}
-        <div
-          className="grid gap-12 pt-14 pb-10"
-          style={{ gridTemplateColumns: '1.3fr 1fr 1fr 1.3fr' }}
-        >
+      <div className="max-w-[1160px] mx-auto px-4 sm:px-8">
+        {/* Responsive grid: 2-col on mobile, 4-col on md+ */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 pt-12 pb-10">
           {/* Col 1 — Studio */}
-          <div className="flex flex-col gap-2.5">
+          <div className="col-span-2 md:col-span-1 flex flex-col gap-2.5">
             <div className="font-headline font-bold text-[16px] text-[#1A1A1A] tracking-tight">
               {proName}
             </div>
@@ -46,12 +43,12 @@ export function ProSiteFooter({
               Contact
             </div>
             {phone && (
-              <a href={`tel:${phone}`} className="text-sm text-stone-500 hover:text-kelen-green-700 transition-colors no-underline">
+              <a href={`tel:${phone}`} className="text-sm text-stone-500 hover:text-kelen-green-700 transition-colors no-underline break-all">
                 {phone}
               </a>
             )}
             {email && (
-              <a href={`mailto:${email}`} className="text-sm text-stone-500 hover:text-kelen-green-700 transition-colors no-underline">
+              <a href={`mailto:${email}`} className="text-sm text-stone-500 hover:text-kelen-green-700 transition-colors no-underline break-all">
                 {email}
               </a>
             )}
@@ -82,7 +79,7 @@ export function ProSiteFooter({
 
       {/* Bar */}
       <div className="border-t border-stone-100">
-        <div className="max-w-[1160px] mx-auto px-8 py-5 flex justify-between items-center gap-4 flex-wrap text-xs text-stone-400">
+        <div className="max-w-[1160px] mx-auto px-4 sm:px-8 py-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-xs text-stone-400">
           <span>© {year} {proName} · Tous droits réservés</span>
           <span className="flex gap-3">
             <a href="#" className="hover:text-kelen-green-700 transition-colors no-underline">Mentions légales</a>

@@ -33,8 +33,8 @@ const QUALITIES = [
 
 export function ProSiteQualities() {
   return (
-    <section className="py-[88px] border-t border-stone-100" id="presentation">
-      <div className="max-w-[1160px] mx-auto px-8">
+    <section className="py-14 md:py-[88px] border-t border-stone-100" id="presentation">
+      <div className="max-w-[1160px] mx-auto px-4 sm:px-8">
         <div className="mb-12">
           <span className="flex items-center gap-2.5 text-[11px] font-extrabold uppercase tracking-[0.16em] text-stone-500 mb-3">
             <span className="w-4 h-0.5 bg-kelen-green-600 rounded-full" />

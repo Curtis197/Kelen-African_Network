@@ -8,8 +8,8 @@ const FALLBACK_IMG = '/images/hero-africa-construction.png'
 /* ── Services — 3-col image cards with numbered prefix ─────────────────── */
 function ServicesGrid({ items, listHref, base, sectionPath }: { items: ProSiteItem[]; listHref?: string; base: string; sectionPath: string }) {
   return (
-    <section className="py-[88px] border-t border-stone-100 bg-stone-50" id="services">
-      <div className="max-w-[1160px] mx-auto px-8">
+    <section className="py-14 md:py-[88px] border-t border-stone-100 bg-stone-50" id="services">
+      <div className="max-w-[1160px] mx-auto px-4 sm:px-8">
         <div className="mb-12">
           <span className="flex items-center gap-2.5 text-[11px] font-extrabold uppercase tracking-[0.16em] text-stone-500 mb-3">
             <span className="w-4 h-0.5 bg-kelen-green-600 rounded-full" />
@@ -63,8 +63,8 @@ function ServicesGrid({ items, listHref, base, sectionPath }: { items: ProSiteIt
 /* ── Portfolio — 3-col grid, 4:3 images, caption below ─────────────────── */
 function PortfolioGrid({ items, listHref, base, sectionPath }: { items: ProSiteItem[]; listHref?: string; base: string; sectionPath: string }) {
   return (
-    <section className="py-[88px] border-t border-stone-100 bg-white" id="portfolio">
-      <div className="max-w-[1160px] mx-auto px-8">
+    <section className="py-14 md:py-[88px] border-t border-stone-100 bg-white" id="portfolio">
+      <div className="max-w-[1160px] mx-auto px-4 sm:px-8">
         <div className="mb-12 flex justify-between items-end gap-6 flex-wrap">
           <div>
             <span className="flex items-center gap-2.5 text-[11px] font-extrabold uppercase tracking-[0.16em] text-stone-500 mb-3">
@@ -113,8 +113,8 @@ function PortfolioGrid({ items, listHref, base, sectionPath }: { items: ProSiteI
 /* ── Products — horizontal scroll carousel ──────────────────────────────── */
 function ProductsCarousel({ items, listHref, base, sectionPath }: { items: ProSiteItem[]; listHref?: string; base: string; sectionPath: string }) {
   return (
-    <section className="py-[88px] border-t border-stone-100 bg-white" id="produits">
-      <div className="max-w-[1160px] mx-auto px-8">
+    <section className="py-14 md:py-[88px] border-t border-stone-100 bg-white" id="produits">
+      <div className="max-w-[1160px] mx-auto px-4 sm:px-8">
         <div className="mb-12 flex justify-between items-end gap-6 flex-wrap">
           <div>
             <span className="flex items-center gap-2.5 text-[11px] font-extrabold uppercase tracking-[0.16em] text-stone-500 mb-3">
@@ -140,7 +140,7 @@ function ProductsCarousel({ items, listHref, base, sectionPath }: { items: ProSi
               key={p.id}
               href={`${base}/${sectionPath}/${p.id}`}
               className="no-underline group flex-shrink-0"
-              style={{ width: '340px', scrollSnapAlign: 'start' }}
+              style={{ width: 'min(340px, 78vw)', scrollSnapAlign: 'start' }}
             >
               <article className="bg-white border border-stone-100 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-[0_8px_32px_rgba(0,0,0,0.09)] hover:-translate-y-1 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.03)]">
                 <div className="relative overflow-hidden bg-stone-100" style={{ aspectRatio: '4/3' }}>

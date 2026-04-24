@@ -31,8 +31,8 @@ export function ProSiteHero({
       <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse 80% 60% at 0% 100%, rgba(0,0,0,0.35) 0%, transparent 70%)' }} />
 
       {/* Content anchored to bottom */}
-      <div className="absolute inset-0 flex items-end pb-20">
-        <div className="max-w-[1160px] mx-auto px-8 w-full">
+      <div className="absolute inset-0 flex items-end pb-16 sm:pb-20">
+        <div className="max-w-[1160px] mx-auto px-4 sm:px-8 w-full">
           <h1
             className="font-headline font-bold text-white leading-[1.08] tracking-[-0.03em] mb-2"
             style={{ fontSize: 'clamp(42px, 5.5vw, 72px)', textShadow: '0 2px 20px rgba(0,0,0,0.4)' }}

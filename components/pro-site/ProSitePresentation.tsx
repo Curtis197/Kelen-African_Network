@@ -32,11 +32,11 @@ export function ProSitePresentation({
   ].filter(Boolean) as { label: string; value: string }[]
 
   return (
-    <section className="py-[88px] border-t border-stone-100" id="about">
-      <div className="max-w-[1160px] mx-auto px-8">
-        <div className="grid gap-16" style={{ gridTemplateColumns: '200px minmax(0,1fr)' }}>
+    <section className="py-14 md:py-[88px] border-t border-stone-100" id="about">
+      <div className="max-w-[1160px] mx-auto px-4 sm:px-8">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-[200px_1fr] md:gap-16">
           {/* Eyebrow col */}
-          <div className="pt-1.5">
+          <div className="md:pt-1.5">
             <span className="flex items-center gap-2 text-[11px] font-extrabold uppercase tracking-[0.16em] text-stone-500">
               <span className="w-4 h-0.5 bg-kelen-green-600 rounded-full" />
               À PROPOS
@@ -46,17 +46,14 @@ export function ProSitePresentation({
           {/* Content col */}
           <div>
             {lead && (
-              <p className="font-headline font-medium text-[26px] leading-[1.35] tracking-[-0.015em] text-[#1A1A1A] mb-5 max-w-[32ch]">
+              <p className="font-headline font-medium text-[22px] md:text-[26px] leading-[1.35] tracking-[-0.015em] text-[#1A1A1A] mb-5 max-w-[32ch]">
                 {lead}
               </p>
             )}
             <p className="text-base text-stone-500 leading-[1.7] mb-8 max-w-[60ch]">{bio}</p>
 
             {meta.length > 0 && (
-              <div
-                className="grid gap-6 pt-6 border-t border-stone-200"
-                style={{ gridTemplateColumns: `repeat(${Math.min(meta.length, 3)}, minmax(0,1fr))` }}
-              >
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 pt-6 border-t border-stone-200">
                 {meta.map((m) => (
                   <div key={m.label} className="flex flex-col gap-1">
                     <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-stone-500">
