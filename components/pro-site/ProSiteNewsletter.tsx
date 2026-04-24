@@ -47,18 +47,18 @@ export function ProSiteNewsletter({
             {submitted ? (
               <p className="text-sm font-semibold text-kelen-green-700">Merci pour votre inscription !</p>
             ) : (
-              <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2 mt-2">
+              <form onSubmit={handleSubmit} className="flex flex-col gap-2 mt-2">
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="votre@email.com"
-                  className="flex-1 min-w-0 text-sm px-3 py-2.5 border border-stone-200 rounded-lg bg-white focus:outline-none focus:border-kelen-green-600 focus:ring-2 focus:ring-kelen-green-600/20 transition"
+                  className="w-full text-sm px-3 py-2.5 border border-stone-200 rounded-lg bg-white focus:outline-none focus:border-kelen-green-600 focus:ring-2 focus:ring-kelen-green-600/20 transition"
                 />
                 <button
                   type="submit"
-                  className="w-full sm:w-auto shrink-0 px-4 py-2.5 bg-gradient-to-b from-kelen-green-600 to-kelen-green-700 hover:from-kelen-green-700 hover:to-kelen-green-800 text-white text-sm font-semibold rounded-lg transition-all duration-200 active:scale-[0.97]"
+                  className="w-full px-4 py-2.5 bg-gradient-to-b from-kelen-green-600 to-kelen-green-700 hover:from-kelen-green-700 hover:to-kelen-green-800 text-white text-sm font-semibold rounded-lg transition-all duration-200 active:scale-[0.97]"
                 >
                   S&apos;abonner
                 </button>
