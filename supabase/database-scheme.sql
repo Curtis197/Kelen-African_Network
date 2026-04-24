@@ -82,11 +82,34 @@ CREATE TABLE public.professional_areas (
 CREATE TABLE public.professional_portfolio (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   professional_id uuid NOT NULL UNIQUE,
+  -- Hero / cover
   hero_image_url text,
-  hero_title text,
+  -- hero_title was removed by migration 20260411000001_remove_hero_title_from_portfolio.sql
   hero_subtitle text,
+  cover_title text,                              -- PDF front cover title (migration 20260424)
+  -- About section
   about_text text,
   about_image_url text,
+  -- Site builder — style (migration 20260418)
+  style_tokens jsonb NOT NULL DEFAULT '{}',
+  copy_quiz_answers jsonb NOT NULL DEFAULT '{}',
+  corner_style text NOT NULL DEFAULT 'rounded'   -- CHECK: 'square'|'half-rounded'|'rounded' (migration 20260421)
+    CHECK (corner_style IN ('square', 'half-rounded', 'rounded')),
+  color_mode text NOT NULL DEFAULT 'light'       -- CHECK: 'light'|'dark'|'logo-color' (migration 20260421)
+    CHECK (color_mode IN ('light', 'dark', 'logo-color')),
+  -- Custom domain (migration 20260418)
+  custom_domain text UNIQUE,
+  domain_status text
+    CHECK (domain_status IN ('pending_purchase', 'purchased', 'pending_dns', 'active', 'failed')),
+  domain_purchased_at timestamp with time zone,
+  domain_activated_at timestamp with time zone,
+  -- Section visibility toggles (migration 20260420000002)
+  show_realizations_section boolean DEFAULT true,
+  show_services_section boolean DEFAULT true,
+  show_products_section boolean DEFAULT true,
+  show_about_section boolean DEFAULT true,
+  show_calendar_section boolean DEFAULT true,    -- added migration 20260422000002
+  -- Timestamps
   created_at timestamp with time zone DEFAULT now(),
   updated_at timestamp with time zone DEFAULT now(),
   CONSTRAINT professional_portfolio_pkey PRIMARY KEY (id),
@@ -98,11 +121,16 @@ CREATE TABLE public.professional_realizations (
   title text NOT NULL,
   description text,
   location text,
+  category text,
   completion_date date,
-  created_at timestamp with time zone DEFAULT now(),
-  updated_at timestamp with time zone DEFAULT now(),
+  year integer,                                  -- original year field (co-exists with completion_date)
+  is_featured boolean DEFAULT false,
+  order_index integer DEFAULT 0,
   price numeric,
   currency text DEFAULT 'XOF'::text,
+  is_pdf_included boolean NOT NULL DEFAULT true, -- include in PDF portfolio (migration 20260424)
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
   CONSTRAINT professional_realizations_pkey PRIMARY KEY (id),
   CONSTRAINT professional_realizations_professional_id_fkey FOREIGN KEY (professional_id) REFERENCES public.professionals(id)
 );
@@ -835,6 +863,113 @@ CREATE TABLE public.project_collaborations (
   updated_at timestamp with time zone DEFAULT now(),
   CONSTRAINT project_collaborations_pkey PRIMARY KEY (id)
 );
+
+-- ============================================================
+-- Professional Services (migration 20260420000001_services_products.sql)
+-- ============================================================
+CREATE TABLE public.professional_services (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  professional_id uuid NOT NULL,
+  title text NOT NULL,
+  description text,
+  price numeric(12,2),
+  currency text DEFAULT 'XOF'::text,
+  duration text,
+  category text,
+  is_featured boolean DEFAULT false,
+  order_index integer DEFAULT 0,
+  is_pdf_included boolean NOT NULL DEFAULT false, -- opt-in for PDF portfolio (migration 20260424)
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT professional_services_pkey PRIMARY KEY (id),
+  CONSTRAINT professional_services_professional_id_fkey FOREIGN KEY (professional_id) REFERENCES public.professionals(id) ON DELETE CASCADE
+);
+-- RLS: services_public_browse (SELECT), services_pro_manage (ALL), services_admin_all (ALL)
+
+CREATE TABLE public.service_images (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  service_id uuid NOT NULL,
+  url text NOT NULL,
+  is_main boolean DEFAULT false,
+  order_index integer DEFAULT 0,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT service_images_pkey PRIMARY KEY (id),
+  CONSTRAINT service_images_service_id_fkey FOREIGN KEY (service_id) REFERENCES public.professional_services(id) ON DELETE CASCADE
+);
+-- RLS: service_images_public_browse (SELECT), service_images_pro_manage (ALL), service_images_admin_all (ALL)
+
+-- ============================================================
+-- Professional Products (migration 20260420000001_services_products.sql)
+-- ============================================================
+CREATE TABLE public.professional_products (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  professional_id uuid NOT NULL,
+  title text NOT NULL,
+  description text,
+  price numeric(12,2),
+  currency text DEFAULT 'XOF'::text,
+  availability text DEFAULT 'available'::text
+    CHECK (availability IN ('available', 'limited', 'out_of_stock')),
+  category text,
+  is_featured boolean DEFAULT false,
+  order_index integer DEFAULT 0,
+  is_pdf_included boolean NOT NULL DEFAULT false, -- opt-in for PDF portfolio (migration 20260424)
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT professional_products_pkey PRIMARY KEY (id),
+  CONSTRAINT professional_products_professional_id_fkey FOREIGN KEY (professional_id) REFERENCES public.professionals(id) ON DELETE CASCADE
+);
+-- RLS: products_public_browse (SELECT), products_pro_manage (ALL), products_admin_all (ALL)
+
+CREATE TABLE public.product_images (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  product_id uuid NOT NULL,
+  url text NOT NULL,
+  is_main boolean DEFAULT false,
+  order_index integer DEFAULT 0,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT product_images_pkey PRIMARY KEY (id),
+  CONSTRAINT product_images_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.professional_products(id) ON DELETE CASCADE
+);
+-- RLS: product_images_public_browse (SELECT), product_images_pro_manage (ALL), product_images_admin_all (ALL)
+
+-- ============================================================
+-- Google Calendar Integration (migration 20260422000002_calendar.sql)
+-- ============================================================
+CREATE TABLE public.pro_calendar_tokens (
+  pro_id uuid NOT NULL,
+  access_token text NOT NULL,
+  refresh_token text,
+  expiry_date bigint,
+  calendar_id text NOT NULL DEFAULT 'primary'::text,
+  google_email text,
+  slot_duration integer NOT NULL DEFAULT 60,
+  buffer_time integer NOT NULL DEFAULT 15,
+  advance_days integer NOT NULL DEFAULT 14,
+  working_hours jsonb NOT NULL DEFAULT '{"mon":{"start":"09:00","end":"18:00"},"tue":{"start":"09:00","end":"18:00"},"wed":{"start":"09:00","end":"18:00"},"thu":{"start":"09:00","end":"18:00"},"fri":{"start":"09:00","end":"18:00"},"sat":null,"sun":null}'::jsonb,
+  connected_at timestamp with time zone DEFAULT now(),
+  last_synced_at timestamp with time zone,
+  CONSTRAINT pro_calendar_tokens_pkey PRIMARY KEY (pro_id),
+  CONSTRAINT pro_calendar_tokens_pro_id_fkey FOREIGN KEY (pro_id) REFERENCES public.professionals(id) ON DELETE CASCADE
+);
+-- RLS: calendar_tokens_select_own, calendar_tokens_insert_own, calendar_tokens_update_own, calendar_tokens_delete_own
+
+CREATE TABLE public.pro_appointments (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  pro_id uuid NOT NULL,
+  google_event_id text NOT NULL,
+  client_name text NOT NULL,
+  client_email text NOT NULL,
+  client_phone text,
+  reason text,
+  starts_at timestamp with time zone NOT NULL,
+  ends_at timestamp with time zone NOT NULL,
+  status text NOT NULL DEFAULT 'confirmed'::text,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT pro_appointments_pkey PRIMARY KEY (id),
+  CONSTRAINT pro_appointments_pro_id_fkey FOREIGN KEY (pro_id) REFERENCES public.professionals(id) ON DELETE CASCADE
+);
+-- RLS: appointments_select_own (SELECT for pro), appointments_insert_own (INSERT for all — handled by API with service role)
 
 -- ============================================================
 -- Storage Buckets (supabase/storage)
