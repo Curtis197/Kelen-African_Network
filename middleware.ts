@@ -32,6 +32,22 @@ export async function middleware(request: NextRequest) {
     "localhost",
   ];
 
+  // Kelen subdomain routing: e.g. boutique-sene.kelen.africa → /professionnels/boutique-sene
+  const isKelenSubdomain = (
+    host.endsWith(".kelen.africa") || host.endsWith(".kelen-pro.com")
+  ) && !platformHosts.includes(host);
+
+  if (isKelenSubdomain) {
+    const slug = host.split(".")[0];
+    if (slug) {
+      const rewriteUrl = new URL(request.url);
+      const originalPath = pathname === "/" ? "" : pathname;
+      rewriteUrl.pathname = `/professionnels/${slug}${originalPath}`;
+      middlewareLog.info(`[MIDDLEWARE] Kelen subdomain rewrite: ${host} → /professionnels/${slug}${originalPath}`, { host, slug });
+      return NextResponse.rewrite(rewriteUrl);
+    }
+  }
+
   const isCustomDomain = !platformHosts.some(
     ph => host === ph || host.endsWith(`.${ph}`)
   );
