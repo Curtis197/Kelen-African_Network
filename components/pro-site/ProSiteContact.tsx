@@ -20,7 +20,7 @@ export function ProSiteContact({
   const waNumber = whatsapp?.replace(/\D/g, '') ?? null
 
   return (
-    <section className="py-[88px] border-t border-stone-200 bg-stone-50" id="contact">
+    <section className="py-[88px] border-t border-stone-100 bg-stone-50" id="contact">
       <div className="max-w-[1160px] mx-auto px-8">
         <div
           className="grid gap-[72px] items-start"
@@ -28,7 +28,8 @@ export function ProSiteContact({
         >
           {/* Left — contact info */}
           <div>
-            <span className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-stone-500 block mb-3">
+            <span className="flex items-center gap-2.5 text-[11px] font-extrabold uppercase tracking-[0.16em] text-stone-500 mb-3">
+              <span className="w-4 h-0.5 bg-kelen-green-600 rounded-full" />
               CONTACT
             </span>
             <h2 className="font-headline font-bold text-[32px] leading-[1.2] tracking-[-0.02em] text-[#1A1A1A] mt-3 mb-3">
@@ -44,14 +45,14 @@ export function ProSiteContact({
                 href={calendarUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 bg-kelen-green-700 hover:bg-kelen-green-800 text-white font-semibold text-[15px] rounded-lg transition-colors no-underline mb-6"
+                className="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 bg-gradient-to-b from-kelen-green-600 to-kelen-green-700 hover:from-kelen-green-700 hover:to-kelen-green-800 text-white font-semibold text-[15px] rounded-lg transition-all duration-200 no-underline shadow-[0_2px_8px_rgba(0,97,36,0.28)] active:scale-[0.97] mb-6"
               >
                 📅 Prendre rendez-vous
               </a>
             ) : (
               <button
                 onClick={() => setShowCalendar((v) => !v)}
-                className="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 bg-kelen-green-700 hover:bg-kelen-green-800 text-white font-semibold text-[15px] rounded-lg transition-colors mb-6"
+                className="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 bg-gradient-to-b from-kelen-green-600 to-kelen-green-700 hover:from-kelen-green-700 hover:to-kelen-green-800 text-white font-semibold text-[15px] rounded-lg transition-all duration-200 shadow-[0_2px_8px_rgba(0,97,36,0.28)] active:scale-[0.97] mb-6"
               >
                 📅 Prendre rendez-vous
               </button>
@@ -110,7 +111,7 @@ export function ProSiteContact({
 
           {/* Right — message form */}
           <form
-            className="bg-white border border-stone-200 rounded-xl p-8 flex flex-col gap-4"
+            className="bg-white border border-stone-100 rounded-xl p-8 flex flex-col gap-4 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.05)]"
             onSubmit={(e) => e.preventDefault()}
           >
             <h3 className="font-headline font-bold text-[18px] text-[#1A1A1A] tracking-[-0.01em] mb-2">
@@ -122,14 +123,14 @@ export function ProSiteContact({
                 <span className="text-[13px] font-semibold text-[#1A1A1A]">Nom complet</span>
                 <input
                   placeholder="Votre nom"
-                  className="text-[15px] px-3.5 py-3 border border-stone-300 rounded-lg bg-white focus:outline-none focus:border-kelen-green-600 focus:ring-[3px] focus:ring-kelen-green-600/10 transition"
+                  className="text-[15px] px-3.5 py-3 border border-stone-200 rounded-lg bg-white focus:outline-none focus:border-kelen-green-600 focus:ring-2 focus:ring-kelen-green-600/20 transition"
                 />
               </label>
               <label className="flex flex-col gap-1.5">
                 <span className="text-[13px] font-semibold text-[#1A1A1A]">Téléphone</span>
                 <input
                   placeholder="+33 6 00 00 00 00"
-                  className="text-[15px] px-3.5 py-3 border border-stone-300 rounded-lg bg-white focus:outline-none focus:border-kelen-green-600 focus:ring-[3px] focus:ring-kelen-green-600/10 transition"
+                  className="text-[15px] px-3.5 py-3 border border-stone-200 rounded-lg bg-white focus:outline-none focus:border-kelen-green-600 focus:ring-2 focus:ring-kelen-green-600/20 transition"
                 />
               </label>
             </div>
@@ -139,7 +140,7 @@ export function ProSiteContact({
               <input
                 type="email"
                 placeholder="vous@exemple.com"
-                className="text-[15px] px-3.5 py-3 border border-stone-300 rounded-lg bg-white focus:outline-none focus:border-kelen-green-600 focus:ring-[3px] focus:ring-kelen-green-600/10 transition"
+                className="text-[15px] px-3.5 py-3 border border-stone-200 rounded-lg bg-white focus:outline-none focus:border-kelen-green-600 focus:ring-2 focus:ring-kelen-green-600/20 transition"
               />
             </label>
 
@@ -147,7 +148,7 @@ export function ProSiteContact({
               <span className="text-[13px] font-semibold text-[#1A1A1A]">Nature du projet</span>
               <select
                 defaultValue=""
-                className="text-[15px] px-3.5 py-3 border border-stone-300 rounded-lg bg-white focus:outline-none focus:border-kelen-green-600 focus:ring-[3px] focus:ring-kelen-green-600/10 transition"
+                className="text-[15px] px-3.5 py-3 border border-stone-200 rounded-lg bg-white focus:outline-none focus:border-kelen-green-600 focus:ring-2 focus:ring-kelen-green-600/20 transition"
               >
                 <option value="" disabled>Sélectionner…</option>
                 <option>Construction neuve</option>
@@ -163,13 +164,13 @@ export function ProSiteContact({
               <textarea
                 rows={4}
                 placeholder="Localisation, surface approximative, budget indicatif, échéance…"
-                className="text-[15px] px-3.5 py-3 border border-stone-300 rounded-lg bg-white focus:outline-none focus:border-kelen-green-600 focus:ring-[3px] focus:ring-kelen-green-600/10 transition resize-none"
+                className="text-[15px] px-3.5 py-3 border border-stone-200 rounded-lg bg-white focus:outline-none focus:border-kelen-green-600 focus:ring-2 focus:ring-kelen-green-600/20 transition resize-none"
               />
             </label>
 
             <button
               type="submit"
-              className="w-full mt-2 px-5 py-3.5 bg-kelen-green-700 hover:bg-kelen-green-800 text-white font-semibold text-[15px] rounded-lg transition-colors"
+              className="w-full mt-2 px-5 py-3.5 bg-gradient-to-b from-kelen-green-600 to-kelen-green-700 hover:from-kelen-green-700 hover:to-kelen-green-800 text-white font-semibold text-[15px] rounded-lg transition-all duration-200 shadow-[0_2px_8px_rgba(0,97,36,0.28)] active:scale-[0.98]"
             >
               Envoyer le message
             </button>

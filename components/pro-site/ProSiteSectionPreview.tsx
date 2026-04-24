@@ -8,10 +8,13 @@ const FALLBACK_IMG = '/images/hero-africa-construction.png'
 /* ── Services — 3-col image cards with numbered prefix ─────────────────── */
 function ServicesGrid({ items, listHref, base, sectionPath }: { items: ProSiteItem[]; listHref: string; base: string; sectionPath: string }) {
   return (
-    <section className="py-[88px] border-t border-stone-200 bg-stone-50" id="services">
+    <section className="py-[88px] border-t border-stone-100 bg-stone-50" id="services">
       <div className="max-w-[1160px] mx-auto px-8">
         <div className="mb-12">
-          <span className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-stone-500 block mb-3">NOS SERVICES</span>
+          <span className="flex items-center gap-2.5 text-[11px] font-extrabold uppercase tracking-[0.16em] text-stone-500 mb-3">
+            <span className="w-4 h-0.5 bg-kelen-green-600 rounded-full" />
+            NOS SERVICES
+          </span>
           <h2 className="font-headline font-bold text-[32px] leading-[1.2] tracking-[-0.02em] text-[#1A1A1A]">
             Ce que nous proposons.
           </h2>
@@ -19,13 +22,14 @@ function ServicesGrid({ items, listHref, base, sectionPath }: { items: ProSiteIt
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {items.slice(0, 3).map((s, i) => (
             <Link key={s.id} href={`${base}/${sectionPath}/${s.id}`} className="no-underline group">
-              <article className="bg-white border border-stone-200 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] hover:-translate-y-0.5">
-                <div className="overflow-hidden bg-stone-100" style={{ aspectRatio: '16/9' }}>
+              <article className="bg-white border border-stone-100 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-[0_8px_32px_rgba(0,0,0,0.09)] hover:-translate-y-1 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.03)]">
+                <div className="relative overflow-hidden bg-stone-100" style={{ aspectRatio: '16/9' }}>
                   <img
                     src={s.imageUrl ?? FALLBACK_IMG}
                     alt={s.title}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/8 transition-colors duration-500" />
                 </div>
                 <div className="p-6">
                   <div className="font-mono text-xs font-medium text-kelen-green-700 tracking-wide mb-2">0{i + 1}</div>
@@ -59,11 +63,14 @@ function ServicesGrid({ items, listHref, base, sectionPath }: { items: ProSiteIt
 /* ── Portfolio — 3-col grid, 4:3 images, caption below ─────────────────── */
 function PortfolioGrid({ items, listHref, base, sectionPath }: { items: ProSiteItem[]; listHref: string; base: string; sectionPath: string }) {
   return (
-    <section className="py-[88px] border-t border-stone-200 bg-white" id="portfolio">
+    <section className="py-[88px] border-t border-stone-100 bg-white" id="portfolio">
       <div className="max-w-[1160px] mx-auto px-8">
         <div className="mb-12 flex justify-between items-end gap-6 flex-wrap">
           <div>
-            <span className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-stone-500 block mb-3">RÉALISATIONS</span>
+            <span className="flex items-center gap-2.5 text-[11px] font-extrabold uppercase tracking-[0.16em] text-stone-500 mb-3">
+              <span className="w-4 h-0.5 bg-kelen-green-600 rounded-full" />
+              RÉALISATIONS
+            </span>
             <h2 className="font-headline font-bold text-[32px] leading-[1.2] tracking-[-0.02em] text-[#1A1A1A]">
               Sélection de projets récents.
             </h2>
@@ -76,12 +83,13 @@ function PortfolioGrid({ items, listHref, base, sectionPath }: { items: ProSiteI
           {items.slice(0, 3).map((p) => (
             <Link key={p.id} href={`${base}/${sectionPath}/${p.id}`} className="no-underline group">
               <figure className="flex flex-col gap-3.5">
-                <div className="overflow-hidden rounded-lg bg-stone-100" style={{ aspectRatio: '4/3' }}>
+                <div className="relative overflow-hidden rounded-xl bg-stone-100" style={{ aspectRatio: '4/3' }}>
                   <img
                     src={p.imageUrl ?? FALLBACK_IMG}
                     alt={p.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
                   />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500" />
                 </div>
                 <figcaption>
                   <div className="font-headline font-bold text-[16px] text-[#1A1A1A] tracking-[-0.005em] group-hover:text-kelen-green-700 transition-colors">
@@ -103,11 +111,14 @@ function PortfolioGrid({ items, listHref, base, sectionPath }: { items: ProSiteI
 /* ── Products — horizontal scroll carousel ──────────────────────────────── */
 function ProductsCarousel({ items, listHref, base, sectionPath }: { items: ProSiteItem[]; listHref: string; base: string; sectionPath: string }) {
   return (
-    <section className="py-[88px] border-t border-stone-200 bg-white" id="produits">
+    <section className="py-[88px] border-t border-stone-100 bg-white" id="produits">
       <div className="max-w-[1160px] mx-auto px-8">
         <div className="mb-12 flex justify-between items-end gap-6 flex-wrap">
           <div>
-            <span className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-stone-500 block mb-3">PRODUITS</span>
+            <span className="flex items-center gap-2.5 text-[11px] font-extrabold uppercase tracking-[0.16em] text-stone-500 mb-3">
+              <span className="w-4 h-0.5 bg-kelen-green-600 rounded-full" />
+              PRODUITS
+            </span>
             <h2 className="font-headline font-bold text-[32px] leading-[1.2] tracking-[-0.02em] text-[#1A1A1A]">
               Ce que nous proposons.
             </h2>
@@ -127,13 +138,14 @@ function ProductsCarousel({ items, listHref, base, sectionPath }: { items: ProSi
               className="no-underline group flex-shrink-0"
               style={{ width: '340px', scrollSnapAlign: 'start' }}
             >
-              <article className="bg-white border border-stone-200 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] hover:-translate-y-0.5">
-                <div className="overflow-hidden bg-stone-100" style={{ aspectRatio: '4/3' }}>
+              <article className="bg-white border border-stone-100 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-[0_8px_32px_rgba(0,0,0,0.09)] hover:-translate-y-1 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.03)]">
+                <div className="relative overflow-hidden bg-stone-100" style={{ aspectRatio: '4/3' }}>
                   <img
                     src={p.imageUrl ?? FALLBACK_IMG}
                     alt={p.title}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/8 transition-colors duration-500" />
                 </div>
                 <div className="p-5">
                   <h3 className="font-headline font-bold text-[18px] tracking-[-0.01em] text-[#1A1A1A] mb-2">{p.title}</h3>

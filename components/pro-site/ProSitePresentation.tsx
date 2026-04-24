@@ -32,12 +32,13 @@ export function ProSitePresentation({
   ].filter(Boolean) as { label: string; value: string }[]
 
   return (
-    <section className="py-[88px] border-t border-stone-200" id="about">
+    <section className="py-[88px] border-t border-stone-100" id="about">
       <div className="max-w-[1160px] mx-auto px-8">
         <div className="grid gap-16" style={{ gridTemplateColumns: '200px minmax(0,1fr)' }}>
           {/* Eyebrow col */}
           <div className="pt-1.5">
-            <span className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-stone-500">
+            <span className="flex items-center gap-2 text-[11px] font-extrabold uppercase tracking-[0.16em] text-stone-500">
+              <span className="w-4 h-0.5 bg-kelen-green-600 rounded-full" />
               À PROPOS
             </span>
           </div>

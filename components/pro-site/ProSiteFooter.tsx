@@ -14,7 +14,7 @@ export function ProSiteFooter({
   const year = new Date().getFullYear()
 
   return (
-    <footer className="bg-[#FAFAF9] border-t border-stone-200">
+    <footer className="bg-[#FAFAF9] border-t border-stone-100">
       <div className="max-w-[1160px] mx-auto px-8">
         {/* 4-col grid */}
         <div
@@ -81,7 +81,7 @@ export function ProSiteFooter({
       </div>
 
       {/* Bar */}
-      <div className="border-t border-stone-200">
+      <div className="border-t border-stone-100">
         <div className="max-w-[1160px] mx-auto px-8 py-5 flex justify-between items-center gap-4 flex-wrap text-xs text-stone-400">
           <span>© {year} {proName} · Tous droits réservés</span>
           <span className="flex gap-3">
