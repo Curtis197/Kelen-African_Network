@@ -79,17 +79,26 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+// Items shown to free-tier visitors. Change these values when the paywall is finalized.
+const FREE_WEBSITE_LIMITS = {
+  maxRealisations: 3,
+  maxServices: 3,
+  maxProduits: 3,
+} as const;
+
 export default async function ProfessionalProfilePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const supabase = await createClient()
 
   const { data: pro } = await supabase
     .from('professionals')
-    .select('id, business_name, owner_name, slug, description, category, city, years_experience, team_size, verified, phone, whatsapp, email, portfolio_photos')
+    .select('id, business_name, owner_name, slug, description, category, city, years_experience, team_size, verified, phone, whatsapp, email, portfolio_photos, status')
     .eq('slug', slug)
     .single()
 
   if (!pro) notFound()
+
+  const isPaid = pro.status === 'gold' || pro.status === 'silver'
 
   const [settings, services, realisations, produits] = await Promise.all([
     getProSiteSettings(pro.id),
@@ -97,6 +106,11 @@ export default async function ProfessionalProfilePage({ params }: { params: Prom
     getProSiteRealisations(pro.id),
     getProSiteProduits(pro.id),
   ])
+
+  // Apply content limits for free tier
+  const visibleServices = isPaid ? services : (services ?? []).slice(0, FREE_WEBSITE_LIMITS.maxServices)
+  const visibleRealisations = isPaid ? realisations : (realisations ?? []).slice(0, FREE_WEBSITE_LIMITS.maxRealisations)
+  const visibleProduits = isPaid ? produits : (produits ?? []).slice(0, FREE_WEBSITE_LIMITS.maxProduits)
 
   const { data: portfolio } = await supabase
     .from('professional_portfolio')
@@ -124,9 +138,9 @@ export default async function ProfessionalProfilePage({ params }: { params: Prom
         slug={slug}
         proName={proName}
         role={profession}
-        showServices={settings?.showServices ?? true}
-        showRealisations={settings?.showRealisations ?? true}
-        showProduits={settings?.showProduits ?? true}
+        showServices={(settings?.showServices ?? true) && isPaid}
+        showRealisations={(settings?.showRealisations ?? true) && isPaid}
+        showProduits={(settings?.showProduits ?? true) && isPaid}
         calendarUrl={calendarUrl}
       />
       <main>
@@ -145,32 +159,32 @@ export default async function ProfessionalProfilePage({ params }: { params: Prom
         />
         <ProSiteQualities />
         <ProSiteGoogleReviews professionalId={pro.id} />
-        {(settings?.showServices ?? true) && (
+        {(settings?.showServices ?? true) && visibleServices.length > 0 && (
           <ProSiteSectionPreview
             variant="services"
             title="Services"
-            listHref={`/professionnels/${slug}/services`}
-            items={services}
+            listHref={isPaid ? `/professionnels/${slug}/services` : undefined}
+            items={visibleServices}
             slug={slug}
             sectionPath="services"
           />
         )}
-        {(settings?.showRealisations ?? true) && (
+        {(settings?.showRealisations ?? true) && visibleRealisations.length > 0 && (
           <ProSiteSectionPreview
             variant="portfolio"
             title="Réalisations"
-            listHref={`/professionnels/${slug}/realisations`}
-            items={realisations}
+            listHref={isPaid ? `/professionnels/${slug}/realisations` : undefined}
+            items={visibleRealisations}
             slug={slug}
             sectionPath="realisations"
           />
         )}
-        {(settings?.showProduits ?? true) && (
+        {(settings?.showProduits ?? true) && visibleProduits.length > 0 && (
           <ProSiteSectionPreview
             variant="products"
             title="Produits"
-            listHref={`/professionnels/${slug}/produits`}
-            items={produits}
+            listHref={isPaid ? `/professionnels/${slug}/produits` : undefined}
+            items={visibleProduits}
             slug={slug}
             sectionPath="produits"
           />
