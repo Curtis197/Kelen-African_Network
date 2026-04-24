@@ -353,6 +353,104 @@ export async function createOrUpdatePortfolio(data: {
 }
 
 // ============================================
+// Portfolio PDF Builder
+// ============================================
+
+export async function updatePortfolioPDF(data: {
+  cover_title: string | null;
+  hero_image_url: string | null;
+  hero_subtitle: string | null;
+  about_text: string | null;
+  about_image_url: string | null;
+  selected_realization_ids: string[];
+  selected_service_ids: string[];
+  selected_product_ids: string[];
+}): Promise<void> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Non authentifié");
+
+  const { data: professional } = await supabase
+    .from("professionals")
+    .select("id, slug")
+    .eq("user_id", user.id)
+    .single();
+  if (!professional) throw new Error("Profil professionnel non trouvé");
+
+  // 1. Upsert portfolio cover + about data
+  const { data: existing } = await supabase
+    .from("professional_portfolio")
+    .select("id")
+    .eq("professional_id", professional.id)
+    .single();
+
+  const portfolioPayload = {
+    cover_title: data.cover_title,
+    hero_image_url: data.hero_image_url,
+    hero_subtitle: data.hero_subtitle,
+    about_text: data.about_text,
+    about_image_url: data.about_image_url,
+    updated_at: new Date().toISOString(),
+  };
+
+  if (existing) {
+    await supabase
+      .from("professional_portfolio")
+      .update(portfolioPayload)
+      .eq("id", existing.id);
+  } else {
+    await supabase
+      .from("professional_portfolio")
+      .insert({ professional_id: professional.id, ...portfolioPayload });
+  }
+
+  // 2. Batch-update is_pdf_included on realizations
+  await supabase
+    .from("professional_realizations")
+    .update({ is_pdf_included: false })
+    .eq("professional_id", professional.id);
+
+  if (data.selected_realization_ids.length > 0) {
+    await supabase
+      .from("professional_realizations")
+      .update({ is_pdf_included: true })
+      .eq("professional_id", professional.id)
+      .in("id", data.selected_realization_ids);
+  }
+
+  // 3. Batch-update is_pdf_included on services
+  await supabase
+    .from("professional_services")
+    .update({ is_pdf_included: false })
+    .eq("professional_id", professional.id);
+
+  if (data.selected_service_ids.length > 0) {
+    await supabase
+      .from("professional_services")
+      .update({ is_pdf_included: true })
+      .eq("professional_id", professional.id)
+      .in("id", data.selected_service_ids);
+  }
+
+  // 4. Batch-update is_pdf_included on products
+  await supabase
+    .from("professional_products")
+    .update({ is_pdf_included: false })
+    .eq("professional_id", professional.id);
+
+  if (data.selected_product_ids.length > 0) {
+    await supabase
+      .from("professional_products")
+      .update({ is_pdf_included: true })
+      .eq("professional_id", professional.id)
+      .in("id", data.selected_product_ids);
+  }
+
+  revalidatePath("/pro/portfolio");
+  revalidatePath(`/professionnels/${professional.slug}`);
+}
+
+// ============================================
 // Professional Realizations
 // ============================================
 

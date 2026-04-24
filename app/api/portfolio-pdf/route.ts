@@ -10,16 +10,11 @@ export async function GET(request: NextRequest) {
   const professionalId = searchParams.get("professional_id");
 
   const supabase = await createClient();
-
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return new NextResponse("Non authentifié", { status: 401 });
 
-  if (id) {
-    return singleRealizationPdf(supabase, id);
-  }
-  if (professionalId) {
-    return fullPortfolioPdf(supabase, professionalId, user.id);
-  }
+  if (id) return singleRealizationPdf(supabase, id);
+  if (professionalId) return fullPortfolioPdf(supabase, professionalId, user.id);
 
   return new NextResponse("Paramètre manquant: id ou professional_id requis", { status: 400 });
 }
@@ -29,11 +24,7 @@ export async function GET(request: NextRequest) {
 async function singleRealizationPdf(supabase: any, id: string) {
   const { data: r } = await supabase
     .from("professional_realizations")
-    .select(`
-      *,
-      images:realization_images(*),
-      documents:realization_documents(id, name, url)
-    `)
+    .select("*, images:realization_images(*), documents:realization_documents(id, name, url)")
     .eq("id", id)
     .single();
 
@@ -46,13 +37,12 @@ async function singleRealizationPdf(supabase: any, id: string) {
     .single();
 
   const images: Array<{ url: string; is_main: boolean }> = r.images ?? [];
-  const mainImage = images.find((i) => i.is_main)?.url ?? images[0]?.url ?? null;
-  const gallery = images.filter((i) => i.url !== mainImage);
+  const mainImage = images.find(i => i.is_main)?.url ?? images[0]?.url ?? null;
+  const gallery = images.filter(i => i.url !== mainImage);
 
   const date = r.completion_date
     ? new Date(r.completion_date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })
     : r.year ? String(r.year) : null;
-
   const price = r.price
     ? new Intl.NumberFormat("fr-FR", { style: "currency", currency: r.currency || "XOF", maximumFractionDigits: 0 }).format(r.price)
     : null;
@@ -61,7 +51,6 @@ async function singleRealizationPdf(supabase: any, id: string) {
     `${r.title} — ${pro?.business_name ?? "Portfolio"}`,
     renderSingleRealization({ r, pro, mainImage, gallery, date, price }),
   );
-
   return new NextResponse(html, { headers: { "Content-Type": "text/html; charset=utf-8" } });
 }
 
@@ -78,23 +67,62 @@ async function fullPortfolioPdf(supabase: any, professionalId: string, userId: s
 
   if (!pro) return new NextResponse("Accès refusé", { status: 403 });
 
-  const { data: rows } = await supabase
-    .from("professional_realizations")
-    .select(`*, images:realization_images(*)`)
+  // Fetch portfolio config (cover + about)
+  const { data: portfolioConfig } = await supabase
+    .from("professional_portfolio")
+    .select("cover_title, hero_image_url, hero_subtitle, about_text, about_image_url")
     .eq("professional_id", professionalId)
-    .order("is_featured", { ascending: false })
-    .order("completion_date", { ascending: false });
+    .maybeSingle();
 
-  const realizations = rows ?? [];
-  const proName = pro.business_name ?? pro.owner_name;
+  // Fetch selected content in parallel
+  const [
+    { data: realizationRows },
+    { data: serviceRows },
+    { data: productRows },
+  ] = await Promise.all([
+    supabase
+      .from("professional_realizations")
+      .select("*, images:realization_images(*)")
+      .eq("professional_id", professionalId)
+      .eq("is_pdf_included", true)
+      .order("completion_date", { ascending: false }),
+
+    supabase
+      .from("professional_services")
+      .select("id, title, description, price, category")
+      .eq("professional_id", professionalId)
+      .eq("is_pdf_included", true),
+
+    supabase
+      .from("professional_products")
+      .select("id, title, description, price, category")
+      .eq("professional_id", professionalId)
+      .eq("is_pdf_included", true),
+  ]);
+
+  const realizations = realizationRows ?? [];
+  const services = serviceRows ?? [];
+  const products = productRows ?? [];
+
+  const proName = portfolioConfig?.cover_title || pro.business_name || pro.owner_name;
   const location = [pro.city, pro.country].filter(Boolean).join(", ");
-  const coverImage = realizations.flatMap((r: any) => r.images ?? []).find((i: any) => i.is_main)?.url
-    ?? realizations.flatMap((r: any) => r.images ?? [])[0]?.url ?? null;
 
-  const sections = realizations.map((r: any) => {
+  // Cover image: portfolio hero > first realization image
+  const coverImage =
+    portfolioConfig?.hero_image_url ??
+    realizations.flatMap((r: any) => r.images ?? []).find((i: any) => i.is_main)?.url ??
+    realizations.flatMap((r: any) => r.images ?? [])[0]?.url ??
+    null;
+
+  // About text: portfolio about > pro description
+  const aboutText = portfolioConfig?.about_text || pro.description || null;
+  const aboutImageUrl = portfolioConfig?.about_image_url ?? null;
+
+  // Build realization sections
+  const realizationSections = realizations.map((r: any) => {
     const images: Array<{ url: string; is_main: boolean }> = r.images ?? [];
-    const mainImage = images.find((i) => i.is_main)?.url ?? images[0]?.url ?? null;
-    const gallery = images.filter((i) => i.url !== mainImage).slice(0, 5);
+    const mainImage = images.find(i => i.is_main)?.url ?? images[0]?.url ?? null;
+    const gallery = images.filter(i => i.url !== mainImage).slice(0, 5);
     const date = r.completion_date
       ? new Date(r.completion_date).toLocaleDateString("fr-FR", { month: "long", year: "numeric" })
       : r.year ? String(r.year) : null;
@@ -104,27 +132,59 @@ async function fullPortfolioPdf(supabase: any, professionalId: string, userId: s
     return renderPortfolioSection({ r, mainImage, gallery, date, price });
   }).join("");
 
+  const totalItems = realizations.length + services.length + products.length;
+
   const body = `
     <!-- Cover -->
     <div class="cover">
-      ${coverImage ? `<img class="cover-img" src="${coverImage}" alt="cover" />` : ""}
+      ${coverImage ? `<img class="cover-img" src="${escHtml(coverImage)}" alt="cover" />` : ""}
       <div class="cover-overlay"></div>
       <div class="cover-content">
         <p class="cover-eyebrow">${escHtml(pro.category ?? "Portfolio")}</p>
         <h1 class="cover-title">${escHtml(proName)}</h1>
+        ${portfolioConfig?.hero_subtitle ? `<p class="cover-tagline">${escHtml(portfolioConfig.hero_subtitle)}</p>` : ""}
         ${location ? `<p class="cover-location">📍 ${escHtml(location)}</p>` : ""}
-        <div class="cover-badge">${realizations.length} réalisation${realizations.length !== 1 ? "s" : ""}</div>
+        <div class="cover-badge">${totalItems} élément${totalItems !== 1 ? "s" : ""}</div>
       </div>
       <div class="cover-footer"><span class="brand">KELEN</span> · Portfolio professionnel</div>
     </div>
 
-    ${pro.description ? `
-    <div class="page">
+    ${aboutText || aboutImageUrl ? `
+    <div class="page about-page">
       <div class="section-header">À propos</div>
-      <p class="about-text">${escHtml(pro.description)}</p>
+      ${aboutImageUrl ? `<div class="about-image-wrap"><img src="${escHtml(aboutImageUrl)}" alt="À propos" class="about-image" /></div>` : ""}
+      ${aboutText ? `<p class="about-text">${escHtml(aboutText)}</p>` : ""}
     </div>` : ""}
 
-    ${sections}
+    ${realizationSections}
+
+    ${services.length > 0 ? `
+    <div class="page page-break">
+      <div class="section-header">Services</div>
+      <div class="card-grid">
+        ${services.map((s: any) => `
+          <div class="card">
+            <h3 class="card-title">${escHtml(s.title)}</h3>
+            ${s.category ? `<span class="card-tag">${escHtml(s.category)}</span>` : ""}
+            ${s.description ? `<p class="card-desc">${escHtml(s.description)}</p>` : ""}
+            ${s.price ? `<p class="card-price">À partir de ${escHtml(String(s.price))}</p>` : ""}
+          </div>`).join("")}
+      </div>
+    </div>` : ""}
+
+    ${products.length > 0 ? `
+    <div class="page page-break">
+      <div class="section-header">Produits</div>
+      <div class="card-grid">
+        ${products.map((p: any) => `
+          <div class="card">
+            <h3 class="card-title">${escHtml(p.title)}</h3>
+            ${p.category ? `<span class="card-tag">${escHtml(p.category)}</span>` : ""}
+            ${p.description ? `<p class="card-desc">${escHtml(p.description)}</p>` : ""}
+            ${p.price ? `<p class="card-price">${escHtml(String(p.price))}</p>` : ""}
+          </div>`).join("")}
+      </div>
+    </div>` : ""}
 
     <!-- Back cover -->
     <div class="back-cover">
@@ -142,9 +202,8 @@ async function fullPortfolioPdf(supabase: any, professionalId: string, userId: s
 
 function renderSingleRealization({ r, pro, mainImage, gallery, date, price }: any) {
   return `
-    <!-- Cover -->
     <div class="cover">
-      ${mainImage ? `<img class="cover-img" src="${mainImage}" alt="${escHtml(r.title)}" />` : ""}
+      ${mainImage ? `<img class="cover-img" src="${escHtml(mainImage)}" alt="${escHtml(r.title)}" />` : ""}
       <div class="cover-overlay"></div>
       <div class="cover-content">
         ${r.category ? `<p class="cover-eyebrow">${escHtml(r.category)}</p>` : ""}
@@ -154,7 +213,6 @@ function renderSingleRealization({ r, pro, mainImage, gallery, date, price }: an
       <div class="cover-footer"><span class="brand">KELEN</span> · Portfolio professionnel</div>
     </div>
 
-    <!-- Details -->
     <div class="page">
       <div class="section-header">Présentation du projet</div>
       <div class="meta-row">
@@ -177,7 +235,6 @@ function renderSingleRealization({ r, pro, mainImage, gallery, date, price }: an
       </div>
     </div>` : ""}
 
-    <!-- Back cover -->
     <div class="back-cover">
       <div class="brand-lg">KELEN</div>
       <h2 class="back-title">Réalisation documentée</h2>
@@ -189,7 +246,6 @@ function renderSingleRealization({ r, pro, mainImage, gallery, date, price }: an
 function renderPortfolioSection({ r, mainImage, gallery, date, price }: any) {
   return `
     <div class="page realization-section">
-      ${r.is_featured ? `<span class="featured-badge">★ Portfolio</span>` : ""}
       ${mainImage ? `
         <div class="realization-hero">
           <img src="${escHtml(mainImage)}" alt="${escHtml(r.title)}" onerror="this.parentElement.style.display='none'" />
@@ -249,23 +305,30 @@ function buildHtml(title: string, body: string): string {
     /* ── Cover ── */
     .cover { display: flex; flex-direction: column; justify-content: flex-end; }
     .cover-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-    .cover-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 60%, transparent 100%); }
-    .cover-content { position: relative; z-index: 2; padding: 0 12mm 20mm; color: #fff; }
-    .cover-eyebrow { font-size: 0.75rem; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; opacity: 0.7; margin-bottom: 0.5rem; }
-    .cover-title { font-size: 2.8rem; font-weight: 900; line-height: 1.1; margin-bottom: 0.75rem; }
-    .cover-location { font-size: 1rem; opacity: 0.8; margin-bottom: 1.25rem; }
-    .cover-badge { display: inline-block; background: var(--green); color: #fff; padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700; }
-    .cover-footer { position: absolute; top: 10mm; right: 10mm; z-index: 2; color: rgba(255,255,255,0.85); font-size: 0.8rem; }
+    .cover-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 55%, transparent 100%); }
+    .cover-content { position: relative; z-index: 2; padding: 0 12mm 24mm; color: #fff; }
+    .cover-eyebrow { font-size: 0.7rem; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; opacity: 0.65; margin-bottom: 0.6rem; }
+    .cover-title { font-size: 3rem; font-weight: 900; line-height: 1.1; margin-bottom: 0.5rem; }
+    .cover-tagline { font-size: 1.05rem; opacity: 0.85; margin-bottom: 0.5rem; font-style: italic; }
+    .cover-location { font-size: 0.9rem; opacity: 0.75; margin-bottom: 1.25rem; }
+    .cover-badge { display: inline-block; background: var(--green); color: #fff; padding: 0.4rem 1.1rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700; }
+    .cover-footer { position: absolute; top: 10mm; right: 10mm; z-index: 2; color: rgba(255,255,255,0.8); font-size: 0.8rem; }
     .brand { font-weight: 900; letter-spacing: 2px; }
+
+    /* ── About page ── */
+    .about-page { padding: 14mm; }
+    .about-image-wrap { width: 100%; height: 72mm; overflow: hidden; border-radius: 10px; margin-bottom: 1.5rem; }
+    .about-image { width: 100%; height: 100%; object-fit: cover; }
+    .about-text { font-size: 1rem; color: var(--muted); line-height: 1.85; white-space: pre-wrap; }
 
     /* ── Content pages ── */
     .page { padding: 14mm; }
+    .page-break { page-break-before: always; }
     .section-header {
       font-size: 1.4rem; font-weight: 800; color: var(--text);
       margin-bottom: 1.5rem; padding-bottom: 0.75rem;
-      border-bottom: 2px solid var(--green);
+      border-bottom: 3px solid var(--green);
     }
-    .about-text { font-size: 1rem; color: var(--muted); line-height: 1.8; }
     .description { font-size: 0.95rem; color: var(--muted); line-height: 1.75; margin-top: 1rem; white-space: pre-wrap; }
 
     /* ── Meta chips ── */
@@ -278,13 +341,7 @@ function buildHtml(title: string, body: string): string {
 
     /* ── Realization section ── */
     .realization-section { page-break-before: always; }
-    .featured-badge {
-      position: absolute; top: 14mm; right: 14mm;
-      background: var(--green); color: #fff;
-      font-size: 0.7rem; font-weight: 700;
-      padding: 0.25rem 0.75rem; border-radius: 999px;
-    }
-    .realization-hero { width: 100%; height: 65mm; overflow: hidden; margin-bottom: 1.25rem; border-radius: 8px; }
+    .realization-hero { width: 100%; height: 68mm; overflow: hidden; margin-bottom: 1.25rem; border-radius: 8px; }
     .realization-hero img { width: 100%; height: 100%; object-fit: cover; }
     .realization-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 0.75rem; }
 
@@ -293,6 +350,21 @@ function buildHtml(title: string, body: string): string {
     .photo-grid.mini { grid-template-columns: repeat(3, 1fr); }
     .photo-item { border-radius: 8px; overflow: hidden; aspect-ratio: 4/3; background: var(--surface); }
     .photo-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    /* ── Services / Products card grid ── */
+    .card-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    .card {
+      border: 1px solid var(--border); border-radius: 10px;
+      padding: 1rem 1.1rem; background: var(--surface);
+    }
+    .card-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; color: var(--text); }
+    .card-tag {
+      display: inline-block; font-size: 0.7rem; font-weight: 600;
+      color: var(--green); background: #e8f7ee; border-radius: 999px;
+      padding: 0.15rem 0.6rem; margin-bottom: 0.5rem;
+    }
+    .card-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.6; margin-bottom: 0.5rem; }
+    .card-price { font-size: 0.9rem; font-weight: 700; color: var(--green); margin-top: 0.5rem; }
 
     /* ── Back cover ── */
     .back-cover {
@@ -310,11 +382,9 @@ function buildHtml(title: string, body: string): string {
     @media print {
       body { background: #fff; }
       .cover, .page, .back-cover {
-        margin: 0;
-        box-shadow: none;
+        margin: 0; box-shadow: none;
         page-break-after: always;
-        width: 100%;
-        min-height: 100vh;
+        width: 100%; min-height: 100vh;
       }
       .cover:last-child, .page:last-child, .back-cover:last-child { page-break-after: auto; }
       * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -325,10 +395,7 @@ function buildHtml(title: string, body: string): string {
 <body>
   ${body}
   <script>
-    window.addEventListener('load', () => {
-      // Give images time to load before printing
-      setTimeout(() => window.print(), 1200);
-    });
+    window.addEventListener('load', () => { setTimeout(() => window.print(), 1200); });
   </script>
 </body>
 </html>`;
@@ -336,8 +403,6 @@ function buildHtml(title: string, body: string): string {
 
 function escHtml(str: string): string {
   return String(str)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
