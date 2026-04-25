@@ -1,13 +1,18 @@
 import { IMAGE_COMPRESSION_CONFIG, type ImageBucket } from '@/lib/config/image-compression';
 
+let _webPSupported: boolean | null = null;
 function canvasSupportsWebP(): boolean {
-  const canvas = document.createElement('canvas');
-  canvas.width = 1;
-  canvas.height = 1;
-  return canvas.toDataURL('image/webp').startsWith('data:image/webp');
+  if (_webPSupported === null) {
+    const canvas = document.createElement('canvas');
+    canvas.width = 1;
+    canvas.height = 1;
+    _webPSupported = canvas.toDataURL('image/webp').startsWith('data:image/webp');
+  }
+  return _webPSupported;
 }
 
 export function compressImageClient(file: File, bucket: ImageBucket): Promise<File> {
+  if (typeof document === 'undefined') return Promise.resolve(file);
   if (!file.type.startsWith('image/')) return Promise.resolve(file);
 
   const config = IMAGE_COMPRESSION_CONFIG[bucket];

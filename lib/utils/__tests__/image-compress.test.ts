@@ -49,6 +49,7 @@ vi.stubGlobal('Image', FakeImage);
 
 describe('compressImageClient', () => {
   beforeEach(() => {
+    vi.resetModules();
     vi.stubGlobal('document', {
       createElement: vi.fn().mockReturnValue({ ...mockWebPCanvas, width: 0, height: 0 }),
     });
