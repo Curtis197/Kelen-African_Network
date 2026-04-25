@@ -6,7 +6,7 @@ import { getProjectSteps, deleteProjectStep } from "@/lib/actions/project-steps"
 import ProjectStepCard from "./ProjectStepCard";
 import AddStepDialog from "./AddStepDialog";
 import AssignStepProDialog from "./AssignStepProDialog";
-import { PlusCircle, Search, Filter, ArrowUpDown, Loader2, , GitBranch } from "lucide-react";
+import { PlusCircle, Search, Filter, ArrowUpDown, Loader2, GitBranch } from "lucide-react";
 import { toast } from "sonner";
 
 interface ProjectStepsSectionProps {
