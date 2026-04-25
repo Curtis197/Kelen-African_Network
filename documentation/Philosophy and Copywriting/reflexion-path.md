@@ -210,6 +210,33 @@ Documents mis à jour :
 
 ---
 
+### Étape 10 — Pages dédiées espace pro — création de pro-pages.md (2026-04-25)
+
+**Contexte :** La navigation pro (`Comment ça marche · Tarifs · FAQ · Contact`) pointait vers des ancres de la SaaS landing ou n'existait pas. Ces pages sont créées comme documents dédiés avec URL propres.
+
+**Document créé :**
+- [x] `pro-pages.md` — Version 1.0 : navigation pro commune mise à jour (URLs réelles), `/comment-ca-marche` (7 sections : profil source, site web, PDF, GMB, IA, recommandations/statut, collaboration), `/tarifs` (tableau complet, ce que ça ne change pas, modalités, FAQ tarifs 6 questions), `/faq` (33 questions en 6 catégories : avant inscription, profil/visibilité, portfolio/contenu, recommandations/statut, abonnement/paiement, technique), `/contact` (6 canaux pro-spécifiques segmentés par situation)
+
+**Décisions clés de cette étape :**
+| Date | Décision | Raison |
+|------|----------|--------|
+| 2026-04-25 | Navigation pro avec URLs réelles, pas des ancres | Les ancres brisent la séparation des espaces et empêchent le référencement indépendant de chaque page |
+| 2026-04-25 | Contact pro distinct du contact générique (`06-legal-contact.md`) | Les canaux de contact diffèrent : un pro a des questions de facturation, de profil, de recommandations — pas les mêmes que le client |
+| 2026-04-25 | FAQ pro exhaustive (33 questions) dans un document dédié | La FAQ ne doit pas alourdir la SaaS landing — elle a sa propre page pour les pros qui veulent aller en profondeur |
+| 2026-04-25 | "Comment ça marche" pro en 7 sections vs 3 étapes dans la landing | La landing doit convaincre — la page dédiée doit rassurer et clarifier les détails techniques pour ceux qui veulent tout comprendre |
+
+**Architecture pro complète :**
+```
+/pour-les-professionnels              → SaaS landing (marketing-pro.md)
+/pour-les-professionnels/comment-ca-marche  → pro-pages.md
+/pour-les-professionnels/tarifs             → pro-pages.md
+/pour-les-professionnels/faq               → pro-pages.md
+/pour-les-professionnels/contact           → pro-pages.md
+/pro/dashboard + /pro/*                    → 03-pro-journey.md (espace connecté)
+```
+
+---
+
 ## Questions ouvertes
 
 *(à remplir au fil de la réflexion)*

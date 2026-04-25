@@ -15,14 +15,17 @@
 ## Navigation (espace pro)
 
 ```
-Kelen          Fonctionnalités · Tarifs · Comment ça marche          [Se connecter]  [Créer mon profil →]
+Kelen     Comment ça marche · Tarifs · FAQ · Contact      [Se connecter]  [Créer mon profil →]
 ```
 
 **Notes :**
-- Navigation distincte de l'espace client
-- "Fonctionnalités" = ancre vers les sections de fonctionnalités sur cette même page
-- "Tarifs" = ancre vers la section tarifs ou `/tarifs`
-- Le CTA "Créer mon profil" est collant (sticky) sur desktop — toujours visible en scrollant
+- Navigation distincte de l'espace client — identique sur toutes les pages pro
+- "Comment ça marche" → `/pour-les-professionnels/comment-ca-marche`
+- "Tarifs" → `/pour-les-professionnels/tarifs`
+- "FAQ" → `/pour-les-professionnels/faq`
+- "Contact" → `/pour-les-professionnels/contact`
+- Le CTA "Créer mon profil" est sticky sur desktop — toujours visible en scrollant
+- "Kelen" logo ramène à `/pour-les-professionnels`, pas à `/`
 
 ---
 
