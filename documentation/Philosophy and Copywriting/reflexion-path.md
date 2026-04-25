@@ -152,6 +152,29 @@ Documents mis à jour :
 
 ---
 
+### Étape 8 — Homepage biface — création de homepage.md (2026-04-25)
+
+**Contexte :** La homepage existait comme 10 lignes dans `02-user-journey-client.md` (headline client + 2 CTA + 3 étapes + petit bloc pro). Elle devenait la dernière lacune majeure de l'architecture marketing.
+
+**Document créé :**
+- [x] `homepage.md` — Version 1.0 : navigation principale, hero biface (2 cartes égales client/pro), section client (portfolios documentés / recommandations vérifiées / zéro commission), section pro (3 sorties produit), comment ça marche en parallèle (client + pro), section réputation + statuts, section "ce que Kelen n'est pas", CTA duplex final, pied de page, états alternatifs (visiteur connecté), notes éditoriales
+
+**Décisions clés de cette étape :**
+| Date | Décision | Raison |
+|------|----------|--------|
+| 2026-04-25 | Hero biface : deux cartes d'égale importance visuelle | Le pro est la cible payante mais le client est l'audience majoritaire — ni l'un ni l'autre ne doit disparaître |
+| 2026-04-25 | Carte client à gauche, carte pro à droite | Convention de lecture occidentale (gauche = principal), mais les deux sont traitées avec le même poids |
+| 2026-04-25 | La homepage oriente — les pages de destination convainquent | Règle éditoriale explicite : ne pas surcharger la homepage de détails qui appartiennent à /pour-les-pros ou /tarifs |
+| 2026-04-25 | Section "Ce que Kelen n'est pas" | Kelen doit prendre distance du modèle "plateforme d'avis" ou "annuaire" pour éviter les fausses attentes |
+
+**État du corpus marketing :**
+- ✅ `homepage.md` — Page d'accueil biface
+- ✅ `marketing-pro.md` — Acquisition professionnelle complète
+- ⬜ `marketing-client.md` — Acquisition client (à créer)
+- ⬜ `emails-lifecycle-pro.md` — Activation + conversion abonnement
+
+---
+
 ## Questions ouvertes
 
 *(à remplir au fil de la réflexion)*
