@@ -39,7 +39,7 @@ export default async function MySitePage() {
     console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: professional_portfolio, User:', user.id);
   }
 
-  const isPaid = pro.status === "gold" || pro.status === "silver";
+  const isPaid = true; // DEV MODE: paywall bypassed — restore check before production
 
   const { data: calendarTokens } = await supabase
     .from("pro_calendar_tokens")

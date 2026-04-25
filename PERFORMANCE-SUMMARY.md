@@ -1,5 +1,7 @@
 # Performance Summary — Kelen African Network
 
+> **Status as of April 2026:** All Phase 1 and Phase 2 optimizations are ✅ COMPLETE and deployed to production.
+
 ## Africa-First Baseline (Audited April 2026)
 
 **Target environment:** Sub-Saharan Africa — 2G/3G (50-500 KB/s), 300-800ms RTT, expensive data, mid-range Android devices.
@@ -20,6 +22,8 @@ At these network conditions, **every sequential server round-trip adds 300-800ms
 | **Improvement** | baseline | **~87% faster** | **~91% faster** |
 
 ### Public Pages (Landing, Professional Profiles)
+
+> ISR is applied to **10+ public pages** (landing, contact, FAQ, CGU, mentions légales, confidentialité, comment-ça-marche, à-propos, pour-les-pros, professional profile slug). Exceeds the original plan of 5 pages.
 
 | Metric | Current | After Phase 1 | After Phase 1+2 |
 |--------|---------|----------------|-----------------|
@@ -115,19 +119,19 @@ The improvements become existential:
 
 ## Implementation Cost vs Return
 
-| Task | Effort | Latency Saved (Africa) | Status |
-|------|--------|------------------------|--------|
-| Parallelize dashboard queries | 1h | **-3500ms on dashboard** | Not done |
-| Self-host fonts (next/font) | 2h | **-1500ms every page** | Not done |
-| ISR on 5 public pages | 30min | **-1400ms repeat visits** | Not done |
-| Lazy-load Google Maps | 1h | **-1000ms on map pages** | Not done |
-| Fix reviews aggregation | 30min | -bandwidth at scale | Not done |
-| Replace img → Next.js Image | 2h | -bandwidth on image pages | Not done |
-| Dynamic imports (jspdf/xlsx/recharts) | 3h | **-2s initial JS parse** | Not done |
-| Cache middleware domain lookup | 2h | -1 DB query/request | Not done |
-| Paginate remaining list queries | 2h | -bandwidth at scale | Not done |
-| **Total Phase 1 (5h)** | **5h** | **~5-6 seconds saved** | — |
-| **Total Phase 1+2 (14h)** | **14h** | **~7-8 seconds saved** | — |
+| Task | Effort | Latency Saved (Africa) | Status | Verification |
+|------|--------|------------------------|--------|--------------|
+| Parallelize dashboard queries | 1h | **-3500ms on dashboard** | ✅ Done | `dashboard-stats.ts` — `Promise.all([...7 queries...])` |
+| Self-host fonts (next/font) | 2h | **-1500ms every page** | ✅ Done | `layout.tsx` — `Manrope`, `Inter`, `Geist` via `next/font/google`; no CDN links remain |
+| ISR on 10+ public pages | 30min | **-1400ms repeat visits** | ✅ Done | `export const revalidate` on 10 marketing routes confirmed |
+| Lazy-load Google Maps | 1h | **-1000ms on map pages** | ✅ Done | `GoogleMapsScript.tsx` — `IntersectionObserver` confirmed |
+| Fix reviews aggregation | 30min | -bandwidth at scale | ✅ Done | `dashboard-stats.ts` — uses `pro.avg_rating` column; no review rows fetched |
+| Replace img → Next.js Image | 2h | -bandwidth on image pages | ✅ Done | `ProfessionalCard.tsx`, portfolio pages — `Image` from `next/image` |
+| Dynamic imports (jspdf/xlsx/recharts) | 3h | **-2s initial JS parse** | ✅ Done | `project-export.ts` — `await import('jspdf')`, `await import('xlsx')`; `chart.tsx` — recharts via `dynamic()` |
+| Cache middleware domain lookup | 2h | -1 DB query/request | ✅ Done | `middleware.ts` — `getCachedPortfolioByDomain` (unstable_cache) + `globalThis._DOMAIN_CACHE` 10min fallback |
+| Paginate remaining list queries | 2h | -bandwidth at scale | ✅ Done | Professional search + project list — `range()` + `pageSize` pagination |
+| **Total Phase 1 (5h)** | **5h** | **~5-6 seconds saved** | ✅ **Complete** | — |
+| **Total Phase 1+2 (14h)** | **14h** | **~7-8 seconds saved** | ✅ **Complete** | — |
 
 ---
 
@@ -158,3 +162,25 @@ The improvements become existential:
 **Combined: ~7-8 seconds removed from common user journeys on African 3G connections.**
 
 At 500ms RTT, these aren't polish — they are the difference between an app that works and one that doesn't.
+
+---
+
+## Verification Audit — April 2026
+
+All Phase 1 and 2 items have been audited against the live codebase. Summary:
+
+| Area | File | Evidence |
+|------|------|----------|
+| Parallel DB queries | `lib/actions/dashboard-stats.ts:100` | `Promise.all([7 queries])` |
+| Self-hosted fonts | `app/layout.tsx:2` | `import { Manrope, Inter } from 'next/font/google'` — no CDN `<link>` tags remain |
+| ISR — landing page | `app/(marketing)/page.tsx:1` | `export const revalidate = 3600` |
+| ISR — pro profile | `app/(pro-site)/professionnels/[slug]/page.tsx:1` | `export const revalidate = 300` |
+| Lazy Maps | `components/location/GoogleMapsScript.tsx:80` | `new IntersectionObserver(...)` |
+| AVG rating — no row scan | `lib/actions/dashboard-stats.ts:124` | `const avgRating = pro.avg_rating \|\| 0` |
+| Next.js Image | `components/shared/ProfessionalCard.tsx:11` | `import Image from 'next/image'` |
+| Dynamic jspdf | `lib/utils/project-export.ts:37` | `await import('jspdf')` |
+| Dynamic xlsx | `lib/utils/project-export.ts:224` | `await import('xlsx')` |
+| Dynamic recharts | `components/ui/chart.tsx:15` | `dynamic(() => import('recharts')...)` |
+| Middleware cache | `middleware.ts:63` | `globalThis._DOMAIN_CACHE` + `getCachedPortfolioByDomain` |
+
+**Next milestone:** Phase 3 — regression monitoring after first 100 active users (Redis, AVIF, service worker).
