@@ -237,6 +237,41 @@ Documents mis à jour :
 
 ---
 
+### Étape 11 — Lifecycle pro Email & WhatsApp — création de emails-lifecycle-pro.md (2026-04-25)
+
+**Contexte :** Beaucoup de professionnels africains n'utilisent pas leur email régulièrement. WhatsApp est leur canal principal. Chaque déclencheur lifecycle a donc deux versions.
+
+**Document créé :**
+- [x] `emails-lifecycle-pro.md` — Version 1.0 : 13 étapes couvrant l'intégralité du cycle pro, chacune avec version email + version WhatsApp
+
+**Séquence documentée :**
+| # | Déclencheur | Objectif |
+|---|-------------|----------|
+| 1 | Post-inscription | Orienter vers ajout de photos |
+| 2 | J+1 sans photos | Faire revenir pour compléter |
+| 3 | J+3 profil incomplet | Concrétiser la valeur avant conversion |
+| 4 | J+7 profil complet, pas d'abo | Premier message conversion |
+| 5 | J+14 toujours pas d'abo | Relance conversion (angle différent) |
+| 6 | J+30 toujours pas d'abo | Dernier message — engagement de ne pas relancer |
+| 7 | Abonnement activé | Confirmer + ce qui se passe dans les prochaines heures |
+| 8 | Indexation Google confirmée | Moment de satisfaction tangible |
+| 9 | Résumé mensuel | Montrer la valeur concrète (données réelles) |
+| 10 | 60j sans nouveau projet | Nudge portfolio — sans culpabiliser |
+| 11 | J-5 renouvellement | Information de service |
+| 12 | Échec de paiement | Résoudre rapidement |
+| 13 | J+7 post-résiliation | Ce qui reste disponible — sans pression |
+
+**Décisions clés de cette étape :**
+| Date | Décision | Raison |
+|------|----------|--------|
+| 2026-04-25 | WhatsApp prioritaire si fourni | Canal de communication principal pour la majorité des pros africains |
+| 2026-04-25 | Jamais deux canaux pour le même message | Évite la surcharge et le sentiment d'être harcelé |
+| 2026-04-25 | Arrêt définitif de la conversion à J+30 | Kelen tient l'engagement — pas de harcèlement commercial |
+| 2026-04-25 | Messages WhatsApp : 3 à 6 lignes max | Au-delà, ignoré ou bloqué |
+| 2026-04-25 | Résumé mensuel avec données réelles uniquement | Afficher 0 est honnête — ne pas inventer des métriques flatteuses |
+
+---
+
 ## Questions ouvertes
 
 *(à remplir au fil de la réflexion)*
