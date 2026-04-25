@@ -70,6 +70,68 @@ The application adheres to a premium, editorial-grade design system characterize
     - **Middleware Caching**: Custom domain lookups cached to reduce pre-render database overhead.
 - **Bundle Optimization**: Heavy libraries (`jspdf`, `xlsx`, `framer-motion`) dynamically imported to reduce initial JS payload.
 
+### 6. Professional Portfolio & Public Site
+- **Routes**: `/pro/site`, `/pro/realisations`, `/pro/portfolio`, `/professionnels/[slug]/*`
+- **SiteBuilder**: Full drag-and-drop style customization (color mode, corner style, section visibility) via `StyleQuiz` and `CopywritingQuiz`.
+- **AI Copywriting**: Claude Sonnet generates hero taglines and about text; AI correction available for service/product descriptions and newsletter campaigns.
+- **Realisations Management**: CRUD for projects with image carousel (`ProjectImageManager`), PDF export per realisation, and public detail pages with likes + comments.
+- **Services & Products**: Full catalogue management with pricing, images, and visibility controls. Catalogue PDF export via `CataloguePDFButton`.
+- **Portfolio PDF Builder**: `PortfolioPDFBuilder` generates a branded portfolio PDF with all realisations, services, and products.
+- **Pro Site Preview**: `/pro/preview/[slug]/*` — live preview of the public site before publishing (all sub-pages: services, products, about, realisations).
+- **Custom Domain**: Domain search, mapping, and status tracking via `DomainManager` / `DomainSearch`.
+- **Public Pro Site**: Multi-page public site at `/professionnels/[slug]` with recommendations page, Google reviews, newsletter subscribe widget, and booking widget.
+
+### 7. Booking Calendar System
+- **Routes**: `app/api/calendar/[proId]/availability`, `app/api/calendar/[proId]/book`
+- **Components**: `BookingWidget.tsx`, `CalendarSettings.tsx`
+- **Google Calendar OAuth**: Professionals connect their Google Calendar via OAuth2 (`/api/auth/google/calendar/authorize` → callback). Tokens stored in `pro_calendar_tokens`.
+- **Availability Management**: Configurable slot duration, buffer time, advance days, and working hours.
+- **Client Booking**: Clients book slots from the professional's public site; optional Stripe deposit payment.
+- **Reminders**: Daily cron job (`/api/notifications/reminder-cron`) sends appointment reminders via email and WhatsApp.
+
+### 8. Google Business Profile Integration
+- **Route**: `/pro/google`
+- **Component**: `GoogleBusinessConnect.tsx`
+- **Features**: Account verification, photo sync from GBP to portfolio (`/api/google/sync-photos`), Google Reviews fetching and display (`GoogleReviewsSection`, `ProSiteGoogleReviews`).
+
+### 9. Newsletter System
+- **Route**: `/pro/newsletter`
+- **Component**: `NewsletterDashboard.tsx`
+- **Features**: Subscriber management, rich-text campaign composition via TipTap (`TipTapEditor`), AI-assisted text correction, attachment support, and public unsubscribe page (`/newsletter/unsubscribe`). Newsletter subscribe widget on public pro sites.
+
+### 10. Proposal & Collaboration System
+- **Routes**: `/projets/[id]/pros/proposal/[proId]`
+- **Components**: `ProposalCard.tsx`, `CollaborationThread.tsx`
+- **Features**: Professionals submit proposals to client projects with negotiation messaging, file attachments, and status tracking (`pending` / `negotiating` / `active`). Clients accept, decline, or request revisions. Real-time messaging within each collaboration context.
+
+### 11. Stripe Connect (Professional Payments)
+- **API Routes**: `/api/stripe/connect/onboard`, `/api/stripe/connect/status`, `/api/stripe/connect/dashboard`, `/api/stripe/invoice`
+- **Features**: Full Stripe Connect onboarding for professionals to accept payments. Invoice payment links via Stripe Checkout. Dashboard link to manage earnings.
+
+### 12. Token-Based Sharing & Invitations
+- **Shared Log Viewing**: `/journal/[token]` — public read-only access to daily journal reports with client approve/contest actions.
+- **Project Invitations**: `/invitation/[token]` — clients receive token-based invitations to join shared professional projects; auto-links account on authentication.
+
+### 13. Image Infrastructure
+- **Server-side Compression**: `/api/upload-image` uses Sharp to compress images before storage, with per-bucket configuration (`lib/config/image-compression.ts`).
+- **Log Media Management**: Photo upload with EXIF extraction for daily journal logs.
+- **Google Sign-in**: OAuth2 Google authentication (`GoogleButton`, `/api/auth/google/authorize` → callback).
+
+### 14. Client Features
+- **Favorites**: `/favoris` — bookmark and manage favorite professionals with search filtering (`user_favorites` table).
+- **Document Vault**: `/documents` — client-side document storage (contracts, plans) with grid/list view modes.
+- **Profile Settings**: `/parametres/profil` — display name, country, phone, email notification preferences, language.
+- **External Recommendations/Signals**: File recommendations or complaints against professionals not yet on Kelen (`/recommandation/externe`, `/signal/externe`).
+- **Password Reset Flow**: Full token-based reset with `UpdatePasswordForm` at `/mot-de-passe/reset`.
+
+### 15. Validation Workflows
+- **Professional Validation**: `/pro/validation` — self-validation checklist for profile completeness before going public.
+- **Client Validation**: `/client/validation` — account verification workflow for client users.
+
+### 16. Admin Enhancements
+- **Blacklist Management**: `/admin/blacklisted` — view and manage `status='black'` professionals with signal history.
+- **Client Projects Management**: `/admin/client-projects` — browse, search, edit, and track all client projects across the platform.
+
 ## Technical Architecture
 - **Framework**: Next.js (App Router)
 - **Database**: Supabase (PostgreSQL) with flexible schema support for universal categories.

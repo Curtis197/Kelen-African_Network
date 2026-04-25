@@ -23,27 +23,53 @@
 | **Profil public** | ✅ | ✅ | Mini-site avec hero, portfolio, contact |
 | **Formulaire de profil** | ✅ | ✅ | Photo, description, services, WhatsApp, hero image |
 | **Génération IA de texte** | ✅ | ✅ | Accroche hero + texte "À propos" via Claude Sonnet 4 |
-| **Projets (portfolio)** | **3 max** | **Illimité** | Projets avec photos, description, localisation |
-| **Photos** | **15 max** | **Illimité** | Upload via Supabase Storage |
+| **Correction IA** | ❌ | ✅ | Correction descriptions services/produits et newsletters |
+| **Projets portfolio (réalisations)** | **3 max** | **Illimité** | Projets avec galerie photos, description, localisation |
+| **Photos** | **15 max** | **Illimité** | Upload via Supabase Storage + compression Sharp |
 | **Vidéos** | ❌ | ✅ | Support vidéo dans le portfolio |
+| **Services & Produits** | ✅ | ✅ | Catalogue avec prix, images, contrôle de visibilité |
+| **Export PDF portfolio** | ❌ | ✅ | PDF complet avec réalisations, services, produits, branding |
+| **Export PDF catalogue** | ❌ | ✅ | Catalogue PDF services + produits |
+| **Export PDF réalisation** | ✅ | ✅ | PDF par projet individuel |
+| **Personnalisation du site** | ❌ | ✅ | Mode couleur, style coins, sections, quiz de style |
+| **Prévisualisation du site** | ❌ | ✅ | Aperçu live avant publication |
+| **Domaine personnalisé** | ❌ | ✅ | Mapping domaine avec suivi de statut |
 | **Branding automatique** | ❌ | ✅ | Couleurs extraites du logo, appliquées au profil |
 | **Indexation Google (SEO)** | ❌ | ✅ | Sitemap XML, balises OG, meta dynamiques |
 | **Rendu de la page** | SSG (statique) | SSR (dynamique) | Profils payants toujours à jour |
 | **Statistiques de base** | ✅ | ✅ | Vues du profil, interactions |
 | **Statistiques avancées** | ❌ | ✅ | Graphiques 6 mois, sources de trafic, GA4 |
+| **Google Business Profile** | ❌ | ✅ | Vérification compte, sync photos, import avis Google |
+| **Avis Google (affichage)** | ❌ | ✅ | Avis Google agrégés sur le site public |
+| **Calendrier de réservation** | ❌ | ✅ | Disponibilités, réservation client, sync Google Calendar |
+| **Rappels RDV** | ❌ | ✅ | Email + WhatsApp automatiques avant chaque RDV |
+| **Stripe Connect (paiements)** | ❌ | ✅ | Accepter paiements clients, dépôt à la réservation |
+| **Newsletter** | ❌ | ✅ | Gestion abonnés, campagnes TipTap, désinscription publique |
+| **Widget newsletter (site)** | ❌ | ✅ | Formulaire d'abonnement sur le site public |
 | **Journal de chantier** | ✅ | ✅ | Rapports quotidiens avec GPS, photos, dépenses |
 | **Sync hors-ligne** | ✅ | ✅ | Brouillons IndexedDB, sync au retour en ligne |
 | **Partage de rapports** | ✅ | ✅ | Lien public par email, WhatsApp, SMS |
-| **Export PDF** | ✅ | ✅ | Rapport projet complet (couverture, étapes, journal, finances) |
+| **Approbation / contestation logs** | ✅ | ✅ | Client approuve ou conteste chaque rapport |
+| **Export PDF journal** | ✅ | ✅ | Rapport projet complet (couverture, étapes, journal, finances) |
 | **Export Excel** | ✅ | ✅ | 4 feuilles : résumé, étapes, journal, finances |
 | **Recommandations** | ✅ | ✅ | Réception, lien au profil, affichage public |
+| **Recommandations externes** | ✅ | ✅ | Recommander un pro non inscrit sur Kelen |
 | **Signalements** | ✅ | ✅ | Réception, réponse sous 15 jours |
+| **Signalements externes** | ✅ | ✅ | Signaler un pro non inscrit sur Kelen |
+| **Likes & commentaires réalisations** | ✅ | ✅ | Engagement public sur les réalisations |
+| **Système de propositions** | ✅ | ✅ | Pros soumettent des devis, négociation par messagerie |
 | **Badge de statut** | ✅ | ✅ | Gold / Silver / White / Red (calcul automatique DB) |
 | **Notifications in-app** | ✅ | ✅ | Cloche avec compteur, dropdown, marquer tout lu |
 | **Notifications email** | ✅ | ✅ | Logs, affectations, réputation, partage |
 | **Gestion de projets** | ✅ | ✅ | CRUD, étapes, pros assignés, budget |
 | **Tableau de bord** | ✅ | ✅ | Données réelles : recommandations, signaux, vues, abonnement |
-| **Coffre-fort numérique** | ✅ | ✅ | Upload documents (contrats, plans, preuves) |
+| **Coffre-fort numérique (client)** | ✅ | ✅ | Upload documents (contrats, plans, preuves) |
+| **Coffre-fort numérique (pro)** | ✅ | ✅ | Gestion documents côté professionnel |
+| **Favoris clients** | ✅ | ✅ | Sauvegarder des profils pros favoris |
+| **Paramètres profil client** | ✅ | ✅ | Nom, pays, téléphone, préférences notifications |
+| **Invitations par token** | ✅ | ✅ | Lien invitation client vers projet partagé |
+| **Validation profil** | ✅ | ✅ | Checklist de complétion avant mise en ligne |
+| **Connexion Google** | ✅ | ✅ | OAuth2 Google pour l'authentification |
 | **PWA installable** | ✅ | ✅ | Manifest, service worker, accès hors-ligne |
 | **Mode sombre** | ✅ | ✅ | Toggle light/dark/system, persistance localStorage |
 
