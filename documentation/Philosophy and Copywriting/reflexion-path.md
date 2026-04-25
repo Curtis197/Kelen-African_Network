@@ -85,6 +85,18 @@ documentation/
 | 2026-04-25 | Rédaction de la genèse complète (00-genesis.md) | Ancrer toutes les décisions futures dans la trajectoire fondatrice |
 | 2026-04-25 | Clarification : Kelen-Pro = brique 1 du système Kelen | Positionner le produit actuel dans la vision long terme |
 | 2026-04-25 | Motto validé : "Si tu peux remplir un profil FB/WA, tu peux avoir un site" | Ancrer le positionnement sur l'accessibilité radicale |
+| 2026-04-25 | Système de statuts simplifié : Or / Argent / Non classé (suppression Rouge/Noir) | Abandon du signalement pour contrainte légale |
+| 2026-04-25 | Nouvelle phrase fondatrice : "La compétence ne se dit pas. Elle se montre." | Shift du registre défensif vers le registre positif |
+
+---
+
+### Étape 4 — Mise à jour des parcours et du copywriting (à venir)
+
+Documents à mettre à jour dans l'ordre :
+- [ ] `02-user-journey-diaspora.md` — recentrage sur sélection / création de projet / collaboration
+- [ ] `03-pro-journey.md` — le pro comme cible primaire, onboarding simplifié
+- [ ] `04-emails-notifications.md` — ton et messages à aligner
+- [ ] `07-reference-global.md` — mise à jour des règles transversales
 
 ---
 
@@ -96,10 +108,17 @@ documentation/
 
 ## Principes directeurs conservés
 
-*(à remplir après révision de la philosophie)*
+- Ton institutionnel, sobre, factuel — jamais condescendant
+- Le professionnel paie, le client bénéficie — modèle B2B2C
+- Le statut ne s'achète pas et n'influence pas le classement commercial
+- "Les faits d'abord" — montrer, ne pas décrire
+- Kelen = "un" en bambara — l'unicité comme valeur
 
 ---
 
 ## Principes directeurs modifiés
 
-*(à remplir après révision de la philosophie)*
+- **Avant :** Confiance = protection contre les mauvais pros → **Après :** Confiance = visibilité documentée du bon travail
+- **Avant :** Cible primaire = client diaspora → **Après :** Cible primaire = professionnel techno-réticent
+- **Avant :** Statut à 5 niveaux avec signalement → **Après :** Statut à 3 niveaux positifs uniquement
+- **Avant :** Phrase fondatrice = "La confiance ne se promet pas. Elle se documente." → **Après :** "La compétence ne se dit pas. Elle se montre."
