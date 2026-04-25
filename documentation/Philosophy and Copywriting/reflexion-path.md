@@ -95,7 +95,9 @@ documentation/
 Documents à mettre à jour dans l'ordre :
 - [x] `02-user-journey-client.md` — recentrage sur sélection / création de projet / collaboration (renommé depuis 02-user-journey-diaspora.md)
 - [x] `03-pro-journey.md` — le pro comme cible primaire, onboarding simplifié (Version 2.0)
-- [ ] `04-emails-notifications.md` — ton et messages à aligner
+- [x] `04-emails-notifications.md` — suppression emails signal, ajout emails projet/collaboration (Version 2.0)
+- [x] `05-admin.md` — suppression écran signal, refonte métriques sans Liste Rouge, litiges remplacent contestations (Version 2.0)
+- [x] `06-legal-contact.md` — suppression section permanence signaux, réécriture À propos, FAQ et Contact mis à jour (Version 2.0)
 - [ ] `07-reference-global.md` — mise à jour des règles transversales
 
 ---

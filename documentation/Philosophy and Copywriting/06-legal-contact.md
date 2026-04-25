@@ -1,5 +1,5 @@
 # Kelen — Legal & Contact
-*Copywriting complet — Version 1.0*
+*Copywriting complet — Version 2.0 — Mis à jour le 2026-04-25*
 
 ---
 
@@ -45,7 +45,7 @@
 
 > Kelen s'efforce d'assurer l'exactitude et la mise à jour des informations publiées. Kelen ne peut garantir l'exactitude, la complétude ou l'actualité des informations soumises par des tiers et publiées sur la plateforme après vérification.
 >
-> Pour toute contestation relative à un contenu publié, contactez : contestation@kelen.com
+> Pour toute contestation relative à un contenu publié, contactez : support@kelen.com
 
 ---
 
@@ -65,9 +65,9 @@
 
 **Pour les utilisateurs client :**
 
-> Lors de la création d'un compte : email, prénom, nom, pays de résidence.
+> Lors de la création d'un compte : email, prénom, nom, pays de résidence, ville.
 >
-> Lors d'une soumission : les informations du formulaire et les documents joints. Votre prénom et pays apparaissent publiquement sur les témoignages publiés si vous y avez consenti.
+> Lors d'une soumission de recommandation : les informations du formulaire et les documents joints. Votre prénom et ville apparaissent publiquement sur les recommandations publiées si vous y avez consenti.
 >
 > Lors de la navigation : adresse IP anonymisée, pays de connexion, pages visitées. Ces données sont agrégées et ne permettent pas de vous identifier individuellement.
 
@@ -83,7 +83,7 @@
 
 ### Pourquoi nous collectons ces données
 
-> **Fonctionnement de la plateforme** — Vérification des soumissions, gestion des profils, facturation des abonnements de visibilité.
+> **Fonctionnement de la plateforme** — Vérification des recommandations, gestion des profils et sites web, facturation des abonnements, fonctionnement du module de collaboration.
 >
 > **Communication** — Notifications transactionnelles liées à votre activité sur la plateforme. Aucun email marketing sans consentement explicite.
 >
@@ -108,7 +108,7 @@
 >
 > **Comptes supprimés :** données anonymisées ou supprimées dans un délai de 90 jours, à l'exception des données nécessaires à nos obligations légales et comptables conservées 7 ans.
 >
-> **Signaux et recommandations vérifiés :** conservés indéfiniment conformément à la nature permanente du registre Kelen. La suppression d'un compte utilisateur n'entraîne pas la suppression des contenus vérifiés et publiés associés à ce compte.
+> **Recommandations vérifiées :** conservées et associées au profil du professionnel. La suppression d'un compte client n'entraîne pas la suppression des recommandations publiées — elles sont anonymisées.
 
 ---
 
@@ -146,19 +146,20 @@
 ### Section 2 — Ce que Kelen fait et ne fait pas
 
 > **Kelen fait :**
-> - Examine les documents soumis
+> - Examine les recommandations soumises par les clients
 > - Évalue la cohérence des preuves entre elles
-> - Publie les dossiers vérifiables
+> - Publie les dossiers vérifiables sur le profil des professionnels
+> - Fournit aux professionnels les outils de présentation de leur activité (site web, PDF, fiche Google)
+> - Facilite la mise en relation et la collaboration entre clients et professionnels
 >
 > **Kelen ne fait pas :**
 > - N'enquête pas indépendamment
-> - Ne contacte pas le professionnel avant publication (sauf délai de réponse au signal)
 > - Ne se prononce pas sur la responsabilité légale des parties
+> - Ne garantit pas la qualité des prestations des professionnels référencés
 >
 > **Kelen ne garantit pas :**
 > - L'exhaustivité du registre
->
-> L'absence de signal ne signifie pas l'absence de manquement. Elle signifie uniquement l'absence de signal vérifié sur cette plateforme.
+> - Un nombre de contacts ou de projets conclus via la plateforme
 
 ---
 
@@ -166,42 +167,22 @@
 
 > En créant un profil sur Kelen, les professionnels acceptent que :
 >
-> - Des tiers peuvent soumettre des recommandations ou des signaux les concernant
-> - Kelen peut créer une fiche à leur nom sans inscription préalable de leur part
-> - Ils ne peuvent pas empêcher la publication d'un signal vérifié
-> - Leur réponse à un signal sera publiée mais ne contestera pas la validité du signal
+> - Des tiers peuvent soumettre des recommandations les concernant
+> - Kelen peut créer une fiche à leur nom sans inscription préalable de leur part si un client soumet une recommandation
+> - Les recommandations vérifiées sont publiées sur leur profil public
+> - Ils peuvent revendiquer ou contester une recommandation via leur tableau de bord
 >
-> Les professionnels non inscrits peuvent être référencés sur Kelen. Ils peuvent revendiquer leur fiche à tout moment, mais ne peuvent pas demander la suppression d'un signal vérifié sauf en cas de fraude prouvée.
-
----
-
-### Section 6 — Permanence des signaux
-
-> Un signal vérifié est permanent.
->
-> **Il ne sera pas retiré dans les cas suivants :**
-> - Demande du professionnel
-> - Paiement
-> - Nouvelles recommandations accumulées
-> - Résolution amiable postérieure au signal
-> - Durée écoulée
->
-> **Il peut être retiré uniquement si :**
-> - Le soumetteur prouve que sa soumission était frauduleuse
-> - Une décision judiciaire définitive le requiert
-> - Kelen établit que les documents étaient falsifiés
->
-> **En cas de résolution amiable postérieure :** une note de résolution peut être ajoutée au signal. Elle l'accompagne sans le retirer.
+> Les professionnels non inscrits peuvent être référencés sur Kelen. Ils peuvent revendiquer leur fiche à tout moment.
 
 ---
 
 ### Section 8 — Paiements
 
-> Les vues de profil consommées ne sont pas remboursables.
->
 > Les abonnements peuvent être annulés à tout moment. Les mois facturés et entamés ne sont pas remboursables.
 >
 > Kelen ne garantit aucun résultat en termes de contacts, demandes de devis ou projets conclus.
+>
+> L'abonnement donne accès à la visibilité sur la plateforme — il n'influence pas le statut du professionnel.
 
 ---
 
@@ -216,32 +197,17 @@
 
 ### Canaux disponibles
 
-> **Question sur une vérification en cours**
-> Vous avez soumis un dossier et souhaitez un suivi.
+> **Question sur une recommandation en cours**
+> Vous avez soumis une recommandation et souhaitez un suivi.
 > verification@kelen.com
 > *Délai de réponse : 2 jours ouvrés*
 
 ---
 
-> **Contester un signal publié**
-> Vous êtes un professionnel et estimez qu'un signal repose sur des éléments frauduleux.
-> contestation@kelen.com
-> *Délai de réponse : 7 jours ouvrés*
-> *Joignez impérativement vos contre-preuves à votre premier message.*
-
----
-
-> **Question sur votre compte ou facturation**
-> Problème technique, question sur votre abonnement, facturation.
+> **Question sur votre compte ou votre abonnement**
+> Problème technique, question sur votre abonnement, facturation, site web.
 > support@kelen.com
 > *Délai de réponse : 3 jours ouvrés*
-
----
-
-> **Presse et partenariats**
-> Vous êtes journaliste, chercheur, ou représentant d'une organisation souhaitant collaborer.
-> presse@kelen.com
-> *Délai de réponse : 5 jours ouvrés*
 
 ---
 
@@ -249,6 +215,13 @@
 > Exercice de vos droits sur vos données personnelles.
 > rgpd@kelen.com
 > *Délai de réponse : 30 jours ouvrés maximum (délai légal)*
+
+---
+
+> **Presse et partenariats**
+> Vous êtes journaliste, chercheur, ou représentant d'une organisation souhaitant collaborer.
+> presse@kelen.com
+> *Délai de réponse : 5 jours ouvrés*
 
 ---
 
@@ -264,78 +237,79 @@
 
 ---
 
-> Des millions de familles envoient de l'argent partout chaque année. Pour construire. Pour investir. Pour rentrer un jour.
+> Des millions de professionnels africains travaillent bien.
+> Artisans, entrepreneurs, prestataires de service — compétents, sérieux, expérimentés.
 >
-> Une partie significative de ces projets échoue. Pas parce que les professionnels de confiance sont moins compétents. Parce qu'il n'existait aucun moyen fiable de les distinguer.
+> La plupart n'ont aucune présence en ligne.
 
 ---
 
-> Des plateformes d'avis existent. Des groupes WhatsApp circulent. Des recommandations familiales sont données. Aucun de ces systèmes ne résiste à l'épreuve des faits — aucun n'exige de preuves, aucun ne garantit la permanence, aucun ne distingue le vérifié de l'impression.
+> Pas de site web. Pas de portfolio. Pas de fiche Google.
+>
+> Leur réputation circule par le bouche-à-oreille, des photos WhatsApp, des numéros qui changent.
+> Et des clients potentiels — locaux ou à l'étranger — ne les trouvent jamais.
 
 ---
 
-> Kelen est une réponse à ce problème. Pas une solution complète. Une réponse partielle, rigoureuse, honnête sur ses limites.
+> Kelen existe pour combler cet écart.
 >
-> Son principe : documenter les faits vérifiables. Des contrats. Des photos. Des délais tenus ou non.
+> En quelques minutes, un professionnel peut créer son profil, afficher ses réalisations, obtenir son site web, exporter son portfolio en PDF, synchroniser sa fiche Google My Business.
+>
+> Sans compétence technique. Sans designer. Sans agence.
+> Comme remplir un profil WhatsApp.
 
 ---
 
-> Le standard que Kelen a choisi est exigeant : un manquement vérifié suffit, et il est permanent.
+> La plateforme permet aussi aux clients de trouver ces professionnels — de consulter leur portfolio, de comparer les profils, de créer un projet et de collaborer directement en ligne.
 >
-> Ce n'est pas une punition. C'est la reconnaissance de ce que représente l'argent de la client. Des économies construites loin de chez soi. Une exigence à la hauteur de la confiance demandée.
->
-> Les professionnels sérieux l'acceptent. C'est ce qui distingue leur statut.
+> Chaque recommandation vérifiée renforce la crédibilité du professionnel.
+> Chaque projet documenté construit sa réputation, projet par projet.
 
 ---
 
-> Kelen n'est pas un tribunal. Il ne prétend pas être exhaustif. Il peut se tromper. Un processus de contestation existe.
->
-> Ce que Kelen fait : documenter. Ce que Kelen ne fait pas : juger.
-
----
-
-> Kelen existe pour deux communautés qui méritent mieux que le statu quo.
->
-> La client qui veut investir avec certitude.
-> Les professionnels sérieux qui veulent enfin pouvoir le prouver.
+> Kelen ne prétend pas révolutionner l'Afrique.
+> Il résout un problème concret : les bons professionnels africains méritent d'être trouvés.
 
 ---
 
 > **Kelen** — *un* en bambara et dioula.
 >
-> Un contrat. Une parole. Un manquement suffit.
+> Une présence. Un profil. Un point de départ.
 
 ---
 
 ## FAQ
 
-### Pour la client
+### Pour les clients
 
-**Q : Que signifie le statut Liste Or ?**
-> Ce professionnel a au moins 3 projets documentés et vérifiés par notre équipe, avec un taux de satisfaction de 90% ou plus, et aucun manquement enregistré à ce jour. C'est un historique documenté positif — pas une garantie pour votre projet futur.
+**Q : Que signifie le statut Or ?**
+> Ce professionnel a au moins 3 projets documentés et vérifiés par notre équipe, une note de 4,5/5 ou plus, et un taux d'avis positifs de 90% ou plus. C'est un historique documenté — pas une garantie pour votre projet futur.
 
 **Q : Un professionnel n'a pas d'entrée sur Kelen. Que faire ?**
-> Kelen ne peut pas répondre à cette question. L'absence d'entrée signifie que ce professionnel n'est pas encore documenté sur la plateforme — ni recommandation ni mise en garde.
+> Cela signifie que ce professionnel n'est pas encore référencé sur la plateforme. Vous pouvez le suggérer via la page de recherche, ou le contacter directement en dehors de Kelen.
 
-**Q : Mon projet s'est mal passé. Comment signaler ?**
-> Soumettez un signal via la plateforme. Si vérifié, il sera publié et protégera les prochains clients. Il ne récupérera pas l'argent déjà engagé.
+**Q : Comment créer un projet sur Kelen ?**
+> Depuis la page d'un professionnel ou depuis votre tableau de bord, cliquez sur "Créer un projet". Décrivez votre besoin, invitez le professionnel. L'échange se passe directement sur la plateforme.
 
 ---
 
 ### Pour les professionnels
 
-**Q : Un concurrent peut-il soumettre un faux signal contre moi ?**
-> Kelen vérifie chaque signal avant publication. Un signal sans preuves documentaires cohérentes n'est pas publié. Si une fraude est établie après publication, contactez-nous avec vos contre-preuves.
+**Q : Mon site web est-il inclus dans l'abonnement ?**
+> Votre site web de base est créé gratuitement à l'inscription. L'abonnement vous permet d'apparaître dans les résultats de recherche Kelen, d'indexer votre site sur Google et d'accéder à toutes les fonctionnalités de la plateforme.
 
-**Q : J'ai reçu un signal que je conteste. Que faire ?**
-> Vous disposez de 7 jours pour soumettre une réponse et des contre-preuves via votre tableau de bord. Si le signal est publié malgré votre réponse et que vous estimez que les documents sont frauduleux, contactez contestation@kelen.com. Un signal vérifié n'est pas retiré pour simple contestation des faits — uniquement si les documents sont prouvés falsifiés.
+**Q : Comment obtenir mon PDF portfolio ?**
+> Depuis votre tableau de bord, onglet "Ma présence", cliquez sur "Télécharger mon PDF". Il est généré automatiquement à partir de votre profil et de vos projets documentés.
 
-**Q : J'ai résolu le problème à l'amiable après le signal. Le signal sera-t-il retiré ?**
-> Non. Une note de résolution peut être ajoutée au signal, mais il reste visible.
+**Q : Un client a soumis une recommandation me concernant. Comment la lier à mon profil ?**
+> Une notification vous a été envoyée. Depuis votre tableau de bord, onglet "Mes projets", section "Recommandations", vous pouvez lier ou contester chaque recommandation vérifiée.
 
 ---
 
 ### Sur le fonctionnement de Kelen
 
 **Q : Kelen peut-il se tromper dans ses vérifications ?**
-> Oui. Kelen vérifie la cohérence des documents entre eux — pas leur authenticité absolue. Des documents falsifiés convaincants pourraient passer. Un processus de contestation existe. Nos conditions d'utilisation indiquent que les décisions sont révisables si une fraude est prouvée.
+> Kelen vérifie la cohérence des documents entre eux — pas leur authenticité absolue. En cas d'erreur avérée, contactez support@kelen.com avec les éléments justificatifs.
+
+**Q : L'abonnement améliore-t-il mon statut ?**
+> Non. Le statut (Or, Argent, Non classé) dépend uniquement des recommandations vérifiées soumises par vos clients. L'abonnement améliore votre visibilité dans les résultats — pas votre réputation.
