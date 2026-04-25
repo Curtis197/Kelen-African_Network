@@ -212,7 +212,7 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
                   <div className="flex-1 min-w-0 pt-1">
                     <div className="flex items-center gap-1.5 sm:gap-2">
                       <h5 className="font-headline font-bold text-sm sm:text-lg text-on-surface truncate max-w-[120px] sm:max-w-[150px] text-balance leading-tight">
-                        {member.business_name}
+                        {member.is_external ? member.external_name : member.professionals?.business_name}
                       </h5>
                       {member.is_external && (
                         <Globe className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-on-surface-variant/30" />
