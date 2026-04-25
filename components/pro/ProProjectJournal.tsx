@@ -8,7 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 import type { ProProject } from "@/lib/types/pro-projects";
 import type { ProjectLog } from "@/lib/types/daily-logs";
 import { getMediaUrl } from "@/lib/actions/log-media";
-import { createLog } from "@/lib/actions/daily-logs";
+import { createLog, getProjectLogs } from "@/lib/actions/daily-logs";
 import { getAllDrafts, deleteDraft, markDraftPendingSync } from "@/lib/utils/daily-log-drafts";
 import { exportJournalToPDF } from "@/lib/utils/pdf-export";
 import LogTimeline from '@/components/journal/LogTimeline';
