@@ -1,5 +1,6 @@
 import { createClient } from "./client";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import type { ImageBucket } from "@/lib/config/image-compression";
 
 const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB (images)
 const MAX_VIDEO_SIZE_BYTES = 50 * 1024 * 1024; // 50 MB (videos)
@@ -10,18 +11,18 @@ const ALLOWED_MIME_TYPES: Record<string, string[]> = {
   portfolios: ["image/jpeg", "image/png", "image/webp", "application/pdf", "video/mp4", "video/webm"],
   "verification-docs": ["application/pdf", "image/jpeg", "image/png"],
   "collaboration-attachments": ["image/jpeg", "image/png", "image/webp", "application/pdf"],
+  "log-media": ["image/jpeg", "image/png", "image/webp"],
 };
 
 function validateFile(file: File, bucket: string): string | null {
-  // Check file size based on type
   const isVideo = file.type.startsWith("video/");
   const maxSize = isVideo ? MAX_VIDEO_SIZE_BYTES : MAX_FILE_SIZE_BYTES;
-  
+
   if (file.size > maxSize) {
     const sizeMB = isVideo ? "50 Mo" : "10 Mo";
     return `${file.name} dépasse la taille maximale de ${sizeMB}.`;
   }
-  
+
   const allowed = ALLOWED_MIME_TYPES[bucket];
   if (!allowed) {
     return `Bucket "${bucket}" n'a pas de règles de type de fichier configurées.`;
@@ -32,30 +33,51 @@ function validateFile(file: File, bucket: string): string | null {
   return null;
 }
 
-// Internal: assumes auth already verified and file already validated
 async function doUpload(
   supabase: SupabaseClient,
   file: File,
   bucket: string,
   path: string
 ): Promise<string> {
-  const dotIndex = file.name.lastIndexOf(".");
-  const fileExt = dotIndex !== -1 ? file.name.slice(dotIndex + 1) : "";
-  const fileName = dotIndex !== -1
-    ? `${crypto.randomUUID()}.${fileExt}`
-    : crypto.randomUUID();
+  const isImage = file.type.startsWith("image/");
+
+  const ext = isImage
+    ? "webp"
+    : file.name.lastIndexOf(".") !== -1
+    ? file.name.slice(file.name.lastIndexOf(".") + 1)
+    : "";
+  const fileName = ext ? `${crypto.randomUUID()}.${ext}` : crypto.randomUUID();
   const filePath = `${path}/${fileName}`;
 
-  console.log("[Storage] upload:", { bucket, path, fileName, filePath });
+  if (isImage) {
+    const { compressImageClient } = await import("@/lib/utils/image-compress");
+    const compressed = await compressImageClient(file, bucket as ImageBucket);
 
+    const formData = new FormData();
+    formData.append("file", compressed);
+    formData.append("bucket", bucket);
+    formData.append("path", filePath);
+
+    const response = await fetch("/api/upload-image", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const body = await response.json().catch(() => ({ error: "Upload failed" }));
+      throw new Error(body.error ?? "Upload failed");
+    }
+
+    const { url } = await response.json();
+    return url as string;
+  }
+
+  // Non-image: direct Supabase upload
   const { error: uploadError } = await supabase.storage
     .from(bucket)
     .upload(filePath, file);
 
-  if (uploadError) {
-    console.error("[Storage] upload error:", uploadError);
-    throw uploadError;
-  }
+  if (uploadError) throw uploadError;
 
   const { data: { publicUrl } } = supabase.storage
     .from(bucket)
@@ -75,40 +97,18 @@ export async function uploadFile(
   bucket: string,
   path: string
 ): Promise<string> {
-  console.log('[Storage] uploadFile called:', { 
-    fileName: file.name, 
-    fileType: file.type, 
-    fileSize: file.size,
-    bucket, 
-    path 
-  });
-  
   const supabase = createClient();
-
   const { data: { user }, error: authError } = await supabase.auth.getUser();
-  console.log('[Storage] Auth check:', { 
-    authenticated: !!user, 
-    userId: user?.id, 
-    authError: authError?.message 
-  });
-  
+
   if (authError || !user) {
-    console.error('[Storage] ❌ Auth failed:', authError);
     throw new Error("Vous devez être connecté pour envoyer des fichiers.");
   }
 
   const validationError = validateFile(file, bucket);
-  console.log('[Storage] Validation result:', { 
-    error: validationError,
-    valid: !validationError 
-  });
-  
   if (validationError) {
-    console.error('[Storage] ❌ Validation failed:', validationError);
     throw new Error(validationError);
   }
 
-  console.log('[Storage] Calling doUpload...');
   return doUpload(supabase, file, bucket, path);
 }
 
@@ -120,8 +120,8 @@ export async function uploadMultipleFiles(
   path: string
 ): Promise<UploadResult[]> {
   const supabase = createClient();
-
   const { data: { user }, error: authError } = await supabase.auth.getUser();
+
   if (authError || !user) {
     return Array.from(files).map((file) => ({
       file: file.name,
@@ -133,9 +133,7 @@ export async function uploadMultipleFiles(
   const results = await Promise.allSettled(
     Array.from(files).map((file) => {
       const validationError = validateFile(file, bucket);
-      if (validationError) {
-        return Promise.reject(new Error(validationError));
-      }
+      if (validationError) return Promise.reject(new Error(validationError));
       return doUpload(supabase, file, bucket, path);
     })
   );
