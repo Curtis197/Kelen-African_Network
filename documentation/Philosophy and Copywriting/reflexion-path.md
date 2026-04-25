@@ -168,9 +168,44 @@ Documents mis à jour :
 | 2026-04-25 | Section "Ce que Kelen n'est pas" | Kelen doit prendre distance du modèle "plateforme d'avis" ou "annuaire" pour éviter les fausses attentes |
 
 **État du corpus marketing :**
-- ✅ `homepage.md` — Page d'accueil biface
+- ✅ `homepage.md` — Page d'accueil biface (v1, remplacée en étape 9)
 - ✅ `marketing-pro.md` — Acquisition professionnelle complète
 - ⬜ `marketing-client.md` — Acquisition client (à créer)
+- ⬜ `emails-lifecycle-pro.md` — Activation + conversion abonnement
+
+---
+
+### Étape 9 — Séparation totale des espaces pro et client (2026-04-25)
+
+**Décision :** Les espaces pro et client sont architecturalement distincts. Deux paradigmes incompatibles dans un même document — séparation complète.
+
+| Espace | Paradigme | URL | Document |
+|--------|-----------|-----|----------|
+| Client | Browser home page (outil de recherche) | `/` | `homepage.md` v2 |
+| Pro | SaaS landing page (page de conversion) | `/pour-les-professionnels` | `marketing-pro.md` v2 |
+
+**`homepage.md` — Version 2.0 :**
+- Refondu en browser home page : barre de recherche en hero (pas de headline marketing), tuiles secteur, grille de profils, "Comment ça marche" sous la ligne de flottaison
+- Pas de copy marketing dans la zone de premier regard — l'interface est le message
+- Bloc pro discret en bas de page uniquement
+- Navigation épurée : logo + search + Se connecter + Vous êtes professionnel ?
+
+**`marketing-pro.md` — Version 2.0 :**
+- Restructuré comme une SaaS landing complète (Notion / Stripe / Linear)
+- Structure : hero + bande de réassurance + problème + 5 fonctionnalités + comment ça marche + réputation + tarifs + objections + CTA final
+- Chaque section répond à une question implicite documentée
+- Visuel hero et visuels par fonctionnalité décrits pour les développeurs
+
+**Décisions clés de cette étape :**
+| Date | Décision | Raison |
+|------|----------|--------|
+| 2026-04-25 | Homepage client = outil, pas page marketing | Un client qui cherche un pro n'a pas besoin d'être convaincu que Kelen existe — il a besoin de chercher |
+| 2026-04-25 | SaaS landing pro = conversion complète en une page | Le pro techno-réticent doit trouver toutes ses réponses sans naviguer — Hero → Tarifs → Objections → CTA |
+| 2026-04-25 | Navigations séparées entre les deux espaces | Évite la confusion de rôle — un client ne voit pas les tarifs pro en naviguant |
+
+**État du corpus marketing :**
+- ✅ `homepage.md` — Homepage client browser (v2)
+- ✅ `marketing-pro.md` — SaaS landing pro (v2)
 - ⬜ `emails-lifecycle-pro.md` — Activation + conversion abonnement
 
 ---

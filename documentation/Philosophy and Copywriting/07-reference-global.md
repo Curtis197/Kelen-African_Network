@@ -15,9 +15,9 @@ Ce document est le point d'entrée du corpus copywriting Kelen. Il recense l'ens
 |---------|---------|
 | `00-genesis.md` | Genèse du projet — 9 étapes fondatrices sur 2 ans. À relire avant toute décision stratégique. |
 | `01-philosophie-positionnement.md` | Principes fondateurs, positionnement, personas, ton, deux voix, mots interdits |
-| `homepage.md` | **Page d'accueil** — hero biface, sections client et pro, réputation, CTA duplex, navigation, pied de page, états alternatifs |
-| `marketing-pro.md` | **Acquisition pro** — `/pour-les-professionnels`, `/comment-ca-marche` (pro), `/tarifs`, traitement des objections |
-| `02-user-journey-client.md` | Page d'accueil, recherche, profil public, création de projet, collaboration, recommandation, inscription, tableau de bord client |
+| `homepage.md` | **Homepage client (browser)** — barre de recherche, accès par secteur, grille de pros, états connecté/non connecté |
+| `marketing-pro.md` | **SaaS landing pro** (`/pour-les-professionnels`) — hero, 5 fonctionnalités, comment ça marche, réputation, tarifs, objections, CTA |
+| `02-user-journey-client.md` | Recherche, profil public, création de projet, collaboration, recommandation, inscription, tableau de bord client *(hero remplacé par homepage.md)* |
 | `03-pro-journey.md` | Inscription pro (3 étapes), tableau de bord pro, présence en ligne (site/PDF/GMB), réponse à invitation *(landing remplacée par marketing-pro.md)* |
 | `04-emails-notifications.md` | Tous les emails transactionnels et notifications in-app |
 | `05-admin.md` | File de vérification, écrans d'examen recommandations, journal, métriques, gestion des litiges |
