@@ -1,6 +1,6 @@
 # Professional Journey — Feature Reference
 
-> Created: 2026-04-08
+> Created: 2026-04-08 — Updated: 2026-04-25 (Version 2.0)
 > Purpose: Complete reference for all features available to professionals on the Kelen platform
 > Audience: Product, Engineering, and Stakeholder teams
 
@@ -10,7 +10,7 @@
 
 The **Professional Journey** encompasses every touchpoint, tool, and workflow a professional experiences on Kelen — from onboarding to growth. This document catalogs each feature, explains its purpose, and details how professionals interact with it in practice.
 
-Kelen is a **professional visibility and trust platform**. Professionals pay for visibility, not for trust. Trust is earned through verified recommendations and signals. Visibility is the product.
+Kelen is a **professional digitalization and visibility platform**. Professionals pay for visibility. Reputation is earned through verified recommendations. The product is the professional's digital presence: website, PDF portfolio, Google My Business listing.
 
 ---
 
@@ -183,7 +183,7 @@ Kelen is a **professional visibility and trust platform**. Professionals pay for
 - Row-based comparison layout
 - Visual ranking system within each domain
 - Status tracking: Candidate → Shortlisted → Finalist
-- Comparison includes portfolio, status badge, recommendations, and signals
+- Comparison includes portfolio, status badge, and verified recommendations
 
 **Key files:** `components/projects/DevelopmentAreaRow.tsx`
 
@@ -320,45 +320,31 @@ Kelen is a **professional visibility and trust platform**. Professionals pay for
 
 **Key files:** `components/forms/RecommendationForm.tsx`, `components/shared/RecommendationCard.tsx`, `components/recommandations/RecommandationScrollRow.tsx`
 
-### 8.2 Signals
-**What it is:** Verified negative reports of contract breach, permanent and irreversible.
+### 8.2 Status Tiers (3 Levels)
+**What it is:** Automated, server-side status calculation based on verified recommendations.
 
 **How it applies:**
-- Clients submit signals with descriptive text and evidence files
-- Signal is linked to both the submitting client and the reported professional
-- Status: pending → verified/rejected (admin review process)
-- One verified signal permanently marks the professional (Red status)
-- Zero tolerance: cannot be removed or appealed
-
-**Key files:** `components/forms/SignalForm.tsx`, `components/shared/SignalCard.tsx`
-
-### 8.3 Status Tiers (5 Levels)
-**What it is:** Automated, server-side status calculation based on reputation data.
-
-**How it applies:**
-| Status | Criteria | Meaning |
-|---|---|---|
-| 🟡 **Gold** | 3+ verified recommendations, zero signals | Safe to engage |
-| ⚪ **Silver** | 1–2 verified recommendations, zero signals | Track record in progress |
-| 🤍 **White** | No verified history | Proceed with usual precautions |
-| 🔴 **Red** | 1+ verified signals | Permanent, cannot be removed |
-| ⚫ **Black** | Platform ban | Not displayed |
+| Status | Criteria |
+|---|---|
+| 🟡 **Or** | 3+ verified recommendations, rating ≥ 4.5/5, 90%+ positive |
+| ⚪ **Argent** | 1–2 verified recommendations, rating ≥ 4.0/5, 80%+ positive |
+| — **Non classé** | No verified history yet |
 
 - Status badge appears on the professional's profile
-- Calculated automatically whenever reputation data changes
+- Calculated automatically whenever recommendation data changes
 - Tamper-proof — professionals cannot influence the calculation
+- Status is never sold — subscription does not affect the status tier
 - Kelen never says "this professional is reliable" — it shows documented evidence and lets the user conclude
 
 **Key files:** `components/shared/StatusBadge.tsx`
 
-### 8.4 Status Calculation Engine
+### 8.3 Status Calculation Engine
 **What it is:** Automated backend process that calculates professional status tiers.
 
 **How it applies:**
-- Runs server-side whenever a professional's reputation data is updated
-- Counts total verified recommendations
-- Counts total verified signals
-- Applies business rules to assign correct status
+- Runs server-side whenever a professional's verified recommendations change
+- Counts total verified recommendations, aggregate rating, and positive ratio
+- Applies business rules to assign correct status tier
 - Result is displayed on the professional's profile via StatusBadge component
 
 ---
@@ -382,8 +368,8 @@ Kelen is a **professional visibility and trust platform**. Professionals pay for
 - Profile views over time
 - Number of projects assigned
 - Number of logs created
-- Recommendation and signal counts
-- Status tier history
+- Recommendation count and status tier
+- Subscription status
 
 **Key files:** `components/layout/ProSidebar.tsx`
 
@@ -444,7 +430,7 @@ Kelen is a **professional visibility and trust platform**. Professionals pay for
 | Log contested by client | "Un rapport a été contesté — action requise" |
 | Contest response from client | "Réponse à votre contestation" |
 | New recommendation received | "Nouvelle recommandation reçue" |
-| New signal received | "Un signalement a été enregistré" |
+| Project invitation received | "Invitation à rejoindre le projet {title}" |
 
 ### 11.2 In-App Notifications
 **What it is:** Real-time push notifications via Supabase Realtime.
@@ -465,10 +451,11 @@ Kelen is a **professional visibility and trust platform**. Professionals pay for
 1. **Dashboard** — Overview, statistics, quick actions
 2. **Projects** — List of assigned projects, step management
 3. **Portfolio** — Manage realizations, photos, videos
-4. **Profile** — Edit profile information, AI copywriting
-5. **Reputation** — View recommendations, signals, status
-6. **Analytics** — Profile views, engagement metrics (paid)
-7. **Settings** — Account, subscription, branding
+4. **Ma présence** — Site web, PDF portfolio, Google My Business
+5. **Profile** — Edit profile information, AI copywriting
+6. **Réputation** — View recommendations and status tier
+7. **Analytics** — Profile views, engagement metrics (paid)
+8. **Settings** — Account, subscription, branding
 
 **Design notes:**
 - Mobile: bottom navigation bar with icons and labels
@@ -486,7 +473,7 @@ Kelen is a **professional visibility and trust platform**. Professionals pay for
 
 **How it applies:**
 - AdminSidebar provides navigation to admin functions
-- Review queue for pending recommendations and signals
+- Review queue for pending recommendations
 - User management (search, suspend, ban)
 - Evidence file review
 - Status override capability (for edge cases)
@@ -494,10 +481,10 @@ Kelen is a **professional visibility and trust platform**. Professionals pay for
 **Key files:** `components/layout/AdminSidebar.tsx`
 
 ### 13.2 Verification Queue
-**What it is:** Administrative review process for submitted recommendations and signals.
+**What it is:** Administrative review process for submitted recommendations.
 
 **How it applies:**
-- Recommendations and signals enter "pending" status upon submission
+- Recommendations enter "pending" status upon submission
 - Admin reviews evidence files, contract references, and descriptions
 - Admin marks as "verified" or "rejected"
 - Status change triggers automatic status recalculation for the professional
@@ -598,9 +585,8 @@ Professional Journey
 │   ├── Shareable Links (email/WhatsApp/SMS)
 │   └── Real-Time Sync
 ├── Reputation & Status
-│   ├── Recommendations (verified positive reviews)
-│   ├── Signals (verified negative reports)
-│   ├── Status Tiers (Gold/Silver/White/Red/Black)
+│   ├── Recommendations (verified reviews with evidence)
+│   ├── Status Tiers (Or/Argent/Non classé)
 │   └── Status Calculation Engine
 ├── Analytics & Statistics
 │   ├── Profile View Tracking
@@ -613,7 +599,7 @@ Professional Journey
 │   ├── Email (Resend)
 │   └── In-App (Supabase Realtime)
 ├── Navigation
-│   └── ProSidebar (7 items, mobile + desktop)
+│   └── ProSidebar (8 items incl. Ma présence, mobile + desktop)
 ├── Admin & Moderation
 │   ├── Admin Dashboard
 │   └── Verification Queue
@@ -643,12 +629,11 @@ Professional Journey
 
 | Term | Definition |
 |---|---|
-| **Kelen** | Professional visibility and trust platform |
+| **Kelen** | Professional digitalization and visibility platform |
 | **Digital Diplomat** | Premium, editorial-grade design system |
 | **Functional Development Area** | Professional domain (e.g., Law, Architecture, Education) |
-| **Recommendation** | Verified positive review linked to evidence |
-| **Signal** | Verified negative report of contract breach (permanent) |
-| **Status Tier** | Professional trust level (Gold/Silver/White/Red/Black) |
+| **Recommendation** | Verified review linked to evidence (contract, photos, timeline) |
+| **Status Tier** | Professional reputation level: Or / Argent / Non classé — earned through verified recommendations, never purchased |
 | **SSG** | Static Site Generation (free profiles) |
 | **SSR** | Server-Side Rendering (paid profiles) |
 | **Daily Log** | Transparency layer for project progress tracking |

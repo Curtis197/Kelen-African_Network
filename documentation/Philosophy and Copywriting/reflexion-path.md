@@ -115,6 +115,21 @@ Documents mis à jour :
 
 ---
 
+### Étape 6 — Mise à jour feature-matrix et professional-journey-reference (2026-04-25)
+
+Documents mis à jour :
+- [x] `PRODUCT/feature-matrix.md` — Version 2.0 : suppression lignes Signalements/Signalements externes, badge statut mis à jour (Or/Argent/Non classé), calcul statut simplifié (3 niveaux), revenue model summary nettoyé (suppression "Bad professionals won't pay")
+- [x] `PRODUCT/professional-journey-reference.md` — Version 2.0 : description plateforme recentrée sur la digitalisation, Section 8.2 Signals supprimée, Section 8.3 réduite à 3 statuts, navigation pro mise à jour (ajout Ma présence), notifications pro mises à jour (suppression signal, ajout invitation projet), Section 13.2 vérification recommandations uniquement, feature map et glossaire nettoyés
+
+**Décisions clés de cette étape :**
+| Date | Décision | Raison |
+|------|----------|--------|
+| 2026-04-25 | Suppression de toute référence aux signaux dans la feature matrix | Abandon du système de signalement pour contrainte légale |
+| 2026-04-25 | "Ma présence" ajouté comme item de navigation dédié | Les 3 sorties produit (site/PDF/GMB) méritent leur propre espace |
+| 2026-04-25 | Status tiers renommés en français (Or/Argent/Non classé) | Cohérence avec les règles transversales définies en étape 2 |
+
+---
+
 ## Questions ouvertes
 
 *(à remplir au fil de la réflexion)*

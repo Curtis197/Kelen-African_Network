@@ -1,6 +1,6 @@
 # Feature Matrix — Free vs Paid
 
-> Created: 2026-04-08
+> Created: 2026-04-08 — Updated: 2026-04-25 (Version 2.0)
 > Source: All implemented features from implementation plan, audit documents, and codebase
 > Purpose: Clear reference for what's included in each tier
 
@@ -54,15 +54,13 @@
 | **Export Excel** | ✅ | ✅ | 4 feuilles : résumé, étapes, journal, finances |
 | **Recommandations** | ✅ | ✅ | Réception, lien au profil, affichage public |
 | **Recommandations externes** | ✅ | ✅ | Recommander un pro non inscrit sur Kelen |
-| **Signalements** | ✅ | ✅ | Réception, réponse sous 15 jours |
-| **Signalements externes** | ✅ | ✅ | Signaler un pro non inscrit sur Kelen |
 | **Likes & commentaires réalisations** | ✅ | ✅ | Engagement public sur les réalisations |
 | **Système de propositions** | ✅ | ✅ | Pros soumettent des devis, négociation par messagerie |
-| **Badge de statut** | ✅ | ✅ | Gold / Silver / White / Red (calcul automatique DB) |
+| **Badge de statut** | ✅ | ✅ | Or / Argent / Non classé (calcul automatique DB) |
 | **Notifications in-app** | ✅ | ✅ | Cloche avec compteur, dropdown, marquer tout lu |
 | **Notifications email** | ✅ | ✅ | Logs, affectations, réputation, partage |
 | **Gestion de projets** | ✅ | ✅ | CRUD, étapes, pros assignés, budget |
-| **Tableau de bord** | ✅ | ✅ | Données réelles : recommandations, signaux, vues, abonnement |
+| **Tableau de bord** | ✅ | ✅ | Données réelles : recommandations, vues, projets, abonnement |
 | **Coffre-fort numérique (client)** | ✅ | ✅ | Upload documents (contrats, plans, preuves) |
 | **Coffre-fort numérique (pro)** | ✅ | ✅ | Gestion documents côté professionnel |
 | **Favoris clients** | ✅ | ✅ | Sauvegarder des profils pros favoris |
@@ -117,9 +115,7 @@
 | Feature | Implementation |
 |---|---|
 | Recommendations | View all, link to profile, status tracking |
-| Signals | View all, respond within 15 days, permanent record |
-| Status calculation | DB trigger: Gold (3+ recs), Silver (1-2), White (0), Red (1+ signals) |
-| Red permanence | Once Red, stays Red unless admin manually overrides |
+| Status calculation | DB trigger: Or (3+ recs, ≥4.5, 90%+ pos.), Argent (1-2, ≥4.0, 80%+ pos.), Non classé (0) |
 
 #### Notifications
 | Feature | Implementation |
@@ -129,7 +125,7 @@
 | Email: log approved | Professional notified when client approves report |
 | Email: log contested | Professional notified when client contests report |
 | Email: project assigned | Professional notified when added to a project |
-| Email: reputation | Notification on new recommendation or signal |
+| Email: reputation | Notification on new recommendation received |
 
 #### Infrastructure
 | Feature | Implementation |
@@ -235,7 +231,5 @@ All subscription gates are disabled for development. Search for `// DEV MODE` to
 
 **Incentive logic:**
 - Clients are free → maximum reach, maximum credibility
-- Validation is free → cannot be gamed or purchased
-- Visibility is paid → only professionals with something to show will pay
-- Good professionals (Gold) pay because visibility converts
-- Bad professionals (Red) won't pay — visibility would expose them
+- Reputation is earned → cannot be gamed or purchased
+- Visibility is paid → only professionals with something to show will subscribe
