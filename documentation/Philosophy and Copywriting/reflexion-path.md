@@ -93,7 +93,7 @@ documentation/
 ### Étape 4 — Mise à jour des parcours et du copywriting (à venir)
 
 Documents à mettre à jour dans l'ordre :
-- [ ] `02-user-journey-diaspora.md` — recentrage sur sélection / création de projet / collaboration
+- [x] `02-user-journey-client.md` — recentrage sur sélection / création de projet / collaboration (renommé depuis 02-user-journey-diaspora.md)
 - [ ] `03-pro-journey.md` — le pro comme cible primaire, onboarding simplifié
 - [ ] `04-emails-notifications.md` — ton et messages à aligner
 - [ ] `07-reference-global.md` — mise à jour des règles transversales
