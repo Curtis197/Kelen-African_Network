@@ -3,8 +3,13 @@
 
 ---
 
-## La phrase fondatrice
+## Les phrases fondatrices
 
+**Au client :**
+> **"Trouvez le professionnel de confiance."**
+> *Find the right professional.*
+
+**Au professionnel :**
 > **"Construisez la confiance."**
 > *Build trust.*
 
@@ -162,11 +167,11 @@ Ce renversement est fondamental dans la communication :
 
 ## Les deux voix de Kelen
 
-**À la client :**
-Sobre, direct, jamais condescendant. On ne dit pas "protège-toi". On dit "trouve le bon professionnel. Construis avec certitude."
+**Au client :**
+Direct, sans friction. On ne dit pas "protège-toi". On dit "trouvez le professionnel de confiance." Le client n'est pas là pour construire — il est là pour trouver.
 
 **Au professionnel :**
-Accessible, respectueux, ambitieux. On ne dit pas "prouve ta valeur". On dit "montre ton travail. Les clients viendront."
+Accessible, respectueux, ambitieux. On ne dit pas "prouve ta valeur". On dit "construisez la confiance. Montrez votre travail."
 
 ---
 

@@ -7,8 +7,7 @@
 
 ### Headline
 
-> Trouvez le bon professionnel.
-> Construisez avec confiance.
+> Trouvez le professionnel de confiance.
 
 ### Sous-titre
 

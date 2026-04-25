@@ -86,7 +86,7 @@ documentation/
 | 2026-04-25 | Clarification : Kelen-Pro = brique 1 du système Kelen | Positionner le produit actuel dans la vision long terme |
 | 2026-04-25 | Motto validé : "Si tu peux remplir un profil FB/WA, tu peux avoir un site" | Ancrer le positionnement sur l'accessibilité radicale |
 | 2026-04-25 | Système de statuts simplifié : Or / Argent / Non classé (suppression Rouge/Noir) | Abandon du signalement pour contrainte légale |
-| 2026-04-25 | Phrase fondatrice finale : "Construisez la confiance." / "Build trust." | Simple, positif, sans négation — universel et direct |
+| 2026-04-25 | Deux phrases fondatrices selon l'audience | Client : "Trouvez le professionnel de confiance." / Pro : "Construisez la confiance." — le client trouve, le pro construit |
 
 ---
 
