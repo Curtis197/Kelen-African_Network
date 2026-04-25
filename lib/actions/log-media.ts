@@ -14,7 +14,6 @@ export async function uploadLogMedia(
 
   if (!user) return { error: "Non autorisé" };
 
-  // Verify log ownership
   const { data: logEntry } = await supabase
     .from("project_logs")
     .select("id, author_id")
@@ -28,39 +27,31 @@ export async function uploadLogMedia(
   const entries = Array.from(files.entries());
   const uploaded: Array<{ id: string; storage_path: string }> = [];
 
-  for (const [key, value] of entries) {
+  for (const [, value] of entries) {
     if (!(value instanceof File)) continue;
 
     const file = value;
-    const fileName = file.name;
     const mimeType = file.type;
-    const fileSize = file.size;
 
-    // Validate MIME type
-    if (!['image/jpeg', 'image/png', 'image/webp'].includes(mimeType)) {
-      continue;
-    }
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(mimeType)) continue;
+    if (file.size > 10 * 1024 * 1024) continue;
 
-    // Validate file size (10MB)
-    if (fileSize > 10 * 1024 * 1024) {
-      continue;
-    }
-
-    // Generate unique filename
-    const uuid = crypto.randomUUID();
-    const ext = fileName.split('.').pop() || 'jpg';
-    const storagePath = `${projectId}/${logId}/photo/${uuid}.${ext}`;
-
-    // Read file as ArrayBuffer
     const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+    const rawBuffer = Buffer.from(arrayBuffer);
 
-    // Upload to Supabase Storage
-    const { error: uploadError } = await supabase
-      .storage
+    const { default: sharp } = await import('sharp');
+    const compressedBuffer = await sharp(rawBuffer)
+      .resize(1080, 1080, { fit: 'inside', withoutEnlargement: true })
+      .webp({ quality: 70 })
+      .toBuffer();
+
+    const uuid = crypto.randomUUID();
+    const storagePath = `${projectId}/${logId}/photo/${uuid}.webp`;
+
+    const { error: uploadError } = await supabase.storage
       .from("log-media")
-      .upload(storagePath, buffer, {
-        contentType: mimeType,
+      .upload(storagePath, compressedBuffer, {
+        contentType: 'image/webp',
         upsert: false,
       });
 
@@ -69,17 +60,16 @@ export async function uploadLogMedia(
       continue;
     }
 
-    // Save media record
     const { data: mediaRecord, error: dbError } = await supabase
       .from("project_log_media")
       .insert([{
         log_id: logId,
         media_type: 'photo',
         storage_path: storagePath,
-        file_name: fileName,
-        file_size: fileSize,
-        mime_type: mimeType,
-        is_primary: uploaded.length === 0, // First photo is primary
+        file_name: file.name,
+        file_size: compressedBuffer.length,
+        mime_type: 'image/webp',
+        is_primary: uploaded.length === 0,
       }])
       .select()
       .single();
