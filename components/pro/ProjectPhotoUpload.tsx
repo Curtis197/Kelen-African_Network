@@ -2,7 +2,6 @@
 
 import { useState, useCallback, useRef } from "react";
 import { ImagePlus, X, Upload, AlertCircle, Star } from "lucide-react";
-import { toast } from "sonner";
 
 interface ProjectPhotoUploadProps {
   photoUrls: string[];
@@ -23,81 +22,19 @@ export function ProjectPhotoUpload({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const uploadPhoto = useCallback(async (file: File): Promise<string | null> => {
-    console.log("[ProjectPhotoUpload] uploadPhoto called", { fileName: file.name, fileSize: file.size });
-
-    // Validate type
-    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
-      const errorMsg = `${file.name} n'est pas un format supporté (JPEG, PNG, WebP)`;
-      console.log("[ProjectPhotoUpload] Invalid file type", { fileName: file.name, type: file.type });
-      setError(errorMsg);
-      return null;
-    }
-
-    // Validate size (10MB)
-    if (file.size > 10 * 1024 * 1024) {
-      const errorMsg = `${file.name} dépasse 10MB`;
-      console.log("[ProjectPhotoUpload] File too large", { fileName: file.name, fileSize: file.size });
-      setError(errorMsg);
-      return null;
-    }
-
     try {
       setUploading(true);
-      console.log("[ProjectPhotoUpload] Starting upload to Supabase storage");
-
       const { createClient } = await import("@/lib/supabase/client");
-      const supabase = await createClient();
-
-      // Get current user
+      const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        const errorMsg = "Vous devez être connecté pour uploader des photos";
-        console.log("[ProjectPhotoUpload] No user found");
-        setError(errorMsg);
+        setError("Vous devez être connecté pour uploader des photos");
         return null;
       }
-
-      // Create unique file path with user ID prefix (required by RLS policy)
-      // Path structure: <user_id>/<uuid>.ext
-      const fileExt = file.name.split(".").pop();
-      const fileName = `${crypto.randomUUID()}.${fileExt}`;
-      const filePath = `${user.id}/${fileName}`;
-
-      console.log("[ProjectPhotoUpload] Uploading to storage", { bucket: "portfolios", path: filePath });
-
-      const { error: uploadError } = await supabase.storage
-        .from("portfolios")
-        .upload(filePath, file, {
-          cacheControl: "3600",
-          upsert: false,
-        });
-
-      if (uploadError) {
-        console.log("[ProjectPhotoUpload] Upload error", { 
-          error: uploadError.message,
-          statusCode: uploadError.statusCode 
-        });
-        
-        // Provide more specific error message for RLS violations
-        if (uploadError.message.includes("row-level security")) {
-          setError("Erreur de permissions. Vérifiez que vous êtes connecté et avez les droits d'upload.");
-        } else {
-          setError(uploadError.message);
-        }
-        return null;
-      }
-
-      // Get public URL
-      const { data: urlData } = supabase.storage
-        .from("portfolios")
-        .getPublicUrl(filePath);
-
-      console.log("[ProjectPhotoUpload] Upload successful", { publicUrl: urlData.publicUrl });
-      return urlData.publicUrl;
+      const { uploadFile } = await import("@/lib/supabase/storage");
+      return await uploadFile(file, "portfolios", user.id);
     } catch (err) {
-      const errorMsg = "Erreur lors de l'upload de la photo";
-      console.log("[ProjectPhotoUpload] Unexpected error", err);
-      setError(errorMsg);
+      setError(err instanceof Error ? err.message : "Erreur lors de l'upload de la photo");
       return null;
     } finally {
       setUploading(false);
@@ -106,7 +43,6 @@ export function ProjectPhotoUpload({
 
   const processFiles = useCallback(
     async (files: FileList | File[]) => {
-      console.log("[ProjectPhotoUpload] processFiles called", { fileCount: files.length });
       setError(null);
 
       const newUrls: string[] = [...photoUrls];
@@ -118,12 +54,9 @@ export function ProjectPhotoUpload({
         }
       }
 
-      console.log("[ProjectPhotoUpload] processFiles complete", { totalPhotos: newUrls.length });
       onPhotosChange(newUrls);
 
-      // Auto-set first photo as featured if none set
       if (!featuredPhoto && newUrls.length > 0) {
-        console.log("[ProjectPhotoUpload] Auto-setting first photo as featured");
         onFeaturedPhotoChange(newUrls[0]);
       }
     },
@@ -160,7 +93,6 @@ export function ProjectPhotoUpload({
 
   const removePhoto = useCallback(
     (url: string) => {
-      console.log("[ProjectPhotoUpload] removePhoto", { url, isFeatured: featuredPhoto === url });
       const newUrls = photoUrls.filter((u) => u !== url);
       onPhotosChange(newUrls);
 
@@ -174,7 +106,6 @@ export function ProjectPhotoUpload({
 
   const setFeatured = useCallback(
     (url: string) => {
-      console.log("[ProjectPhotoUpload] setFeatured", { url });
       onFeaturedPhotoChange(url);
     },
     [onFeaturedPhotoChange]
@@ -212,7 +143,7 @@ export function ProjectPhotoUpload({
         {uploading ? (
           <div className="flex flex-col items-center gap-3">
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-            <p className="text-sm text-on-surface-variant">Upload en cours...</p>
+            <p className="text-sm text-on-surface-variant">Compression et envoi en cours...</p>
           </div>
         ) : (
           <>
