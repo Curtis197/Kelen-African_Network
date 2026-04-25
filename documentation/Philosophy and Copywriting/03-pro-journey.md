@@ -1,103 +1,105 @@
 # Kelen — Pro Journey (Professionnel)
-*Copywriting complet — Version 1.0*
+*Copywriting complet — Version 2.0 — Mis à jour le 2026-04-25*
 
 ---
 
-## Page professionnels — 7 écrans
+## Page d'atterrissage professionnels — 7 écrans
 
 ### Écran 1 — L'opportunité
 
-> **La client africaine investit des milliards chaque année.**
-> **Elle cherche des professionnels à sa hauteur.**
+> **Vos clients cherchent un professionnel comme vous.**
+> **Ils ne vous trouvent pas.**
 >
-> Kelen vous donne les moyens de prouver que vous en êtes.
+> Kelen vous donne une présence en ligne en quelques minutes.
+> Un site. Un PDF. Une fiche Google. Rien de plus compliqué que remplir un profil WhatsApp.
 
 ---
 
-### Écran 2 — Le marché en chiffres
+### Écran 2 — Le problème
 
-> €47 milliards envoyés partout en 2023.
-> Des millions de projets de construction, rénovation, investissement.
+> Des millions de clients cherchent des artisans, des entrepreneurs, des prestataires sérieux.
+> La plupart ne trouvent que des contacts de bouche-à-oreille, des numéros perdus, des références incertaines.
 >
-> Un seul problème : la confiance.
+> Vous travaillez bien. Mais sans présence en ligne, vous n'existez pas pour ces clients.
 >
-> Pour les professionnels qui peuvent la prouver, c'est une opportunité sans équivalent.
-
----
-
-### Écran 3 — Le statut Liste Or
-
-> **La Liste Or ne s'achète pas. Elle se construit.**
->
-> 1. Vos clients documentent leurs projets — contrat, photos, dates.
-> 2. Vous liez ces projets à votre profil.
-> 3. Votre profil devient une référence consultable par toute la client.
->
-> *C'est ce qui le rend crédible.*
+> **Kelen règle ça.**
 
 ---
 
-### Écran 4 — L'Abonnement Visibilité
-  
-> **Votre profil Kelen est public, mais pour apparaître massivement dans les résultats de recherche, il faut être visible.**
+### Écran 3 — Ce que vous obtenez
+
+> **Un site web professionnel**
+> Vos réalisations, vos services, vos coordonnées. Prêt à être partagé et trouvé sur Google.
 >
-> 3000 FCFA / 15€ par mois.
-> Un abonnement simple et transparent. Pas de commission sur vos projets.
+> **Un PDF portfolio**
+> Exportez votre profil en un document propre. À envoyer sur WhatsApp, par email, à imprimer.
 >
-> ---
+> **Une fiche Google My Business**
+> Apparaissez dans les recherches locales. Soyez trouvé par les clients près de chez vous.
 >
-> **L'arithmétique :**
->
-> 3000 FCFA par mois.
-> Un projet client = €15 000 à €80 000 de chiffre d'affaires
->
-> *Nous ne promettons pas de taux de conversion. L'arithmétique est la vôtre à faire.*
+> **Un espace de gestion de projets**
+> Documentez vos réalisations, collaborez avec vos clients directement sur la plateforme.
 
 ---
 
-### Écran 5 — Ce que contient votre profil
+### Écran 4 — Comment ça marche
 
-> Statut vérifié · Historique de projets avec photos
-> Spécialités · Zones d'intervention · Coordonnées · Portfolio
+> **1. Créez votre profil gratuitement**
+> Nom, secteur, localisation, photos de vos réalisations. Comme remplir un profil Facebook.
 >
-> *Rien n'est modifiable par vous seul. Tout est vérifié. C'est ce qui rend votre profil crédible.*
+> **2. Votre présence en ligne est prête**
+> Site web, PDF, fiche Google — tout se génère automatiquement.
+>
+> **3. Activez votre visibilité**
+> 3 000 FCFA / 15 € par mois pour apparaître dans les résultats de recherche Kelen et être contacté directement.
 
 ---
 
-### Écran 6 — Le standard
+### Écran 5 — Le statut
 
-> **Un manquement documenté et vérifié = statut Liste Rouge permanent.**
+> **Votre réputation se construit projet par projet.**
 >
-> Ce standard existe parce que vous demandez l'accès aux économies d'une vie.
-> De l'argent gagné en travaillant 70 heures par semaine, loin de sa famille.
+> Chaque client satisfait peut documenter votre collaboration sur Kelen.
+> Ces recommandations vérifiées construisent votre statut — Or, Argent ou Non classé.
 >
-> Pour les professionnels qui livrent ce qu'ils promettent, ce standard est une garantie :
-> votre sérieux ne sera jamais dilué par ceux qui n'en ont pas.
+> Le statut ne s'achète pas. Il se mérite.
+> Et il rassure vos prochains clients avant même qu'ils vous contactent.
+
+---
+
+### Écran 6 — Le tarif
+
+> **3 000 FCFA / 15 € par mois.**
+> Sans engagement. Annulez quand vous voulez.
 >
-> *Kelen ne convient pas à tous. Il convient à ceux pour qui la qualité est déjà un standard personnel.*
+> Ce que ça inclut : site web, PDF, fiche Google, profil visible dans les résultats, projets illimités.
+>
+> Ce que ça ne change pas : votre statut. La réputation se prouve, elle ne s'achète pas.
+>
+> *Un abonnement conçu pour que la rentabilité soit évidente dès le premier client trouvé.*
 
 ---
 
 ### Écran 7 — L'appel à l'action
 
-> **Commencez maintenant. Aucun engagement aujourd'hui.**
+> **Commencez maintenant. C'est gratuit.**
 >
-> 1. Créez votre profil gratuitement
-> 2. Demandez à vos clients de documenter leurs projets
-> 3. Activez votre visibilité quand vous êtes prêt
+> Créez votre profil en quelques minutes.
+> Votre site web est prêt immédiatement.
+> Activez votre visibilité quand vous êtes prêt.
 >
 > [Créer mon profil professionnel →]
 
 ---
 
-## Page d'atterrissage pour les professionnels (version condensée)
+## Headline page d'atterrissage (version condensée)
 
-### Headline
-> Accédez à la clientèle client.
-> Prouvez que vous le méritez.
+> **Construisez la confiance. Montrez votre travail.**
 
 ### Sous-titre
-> Kelen connecte les professionnels de confiance sérieux avec des clients client qui cherchent exactement ce que vous offrez.
+
+> Votre site web, votre PDF portfolio, votre fiche Google — en quelques minutes.
+> Si vous pouvez remplir un profil WhatsApp, vous pouvez avoir un site web.
 
 ---
 
@@ -106,18 +108,19 @@
 ### En-tête de page
 
 **Titre :**
-> Créer votre profil professionnel
+> Créez votre profil professionnel
 
 **Sous-titre :**
-> Votre profil de base est gratuit. La visibilité payante s'active quand vous êtes prêt.
+> Votre profil de base est gratuit. Votre site web est prêt immédiatement.
 
 ---
 
 ### Indicateur d'étapes
+
 ```
 Étape 1 — Votre compte         ●○○
 Étape 2 — Votre activité       ●●○
-Étape 3 — Vos engagements      ●●●
+Étape 3 — Votre portfolio      ●●●
 ```
 
 ---
@@ -129,11 +132,10 @@
 ```
 Prénom *                     [Champ texte]
 Nom *                        [Champ texte]
-Email professionnel *        [Champ texte]
-                             Cet email recevra les notifications Kelen.
+Email *                      [Champ texte]
                              Utilisez une adresse que vous consultez régulièrement.
 Mot de passe *               [Champ mot de passe — minimum 8 caractères]
-Pays de résidence *          [Menu déroulant]
+Pays *                       [Menu déroulant]
 Téléphone *                  [Champ texte avec indicatif pays]
 ```
 
@@ -146,19 +148,18 @@ Téléphone *                  [Champ texte avec indicatif pays]
 ```
 Nom de votre entreprise ou activité *
 [Champ texte]
-Tel qu'il apparaîtra sur votre profil public.
+Tel qu'il apparaîtra sur votre profil et votre site web.
 
 Catégorie principale *
 [Menu déroulant]
 Construction · Rénovation · Plomberie · Électricité
 Menuiserie · Carrelage · Peinture · Architecture
-Ingénierie · Autre
+Ingénierie · Design · Autre
 
 Pays d'intervention *         [Menu déroulant — sélection multiple]
 Ville principale *            [Champ texte]
-Téléphone professionnel *     [Champ texte]
-WhatsApp (optionnel)          [Champ texte]
-                              Si différent de votre téléphone professionnel.
+WhatsApp *                    [Champ texte]
+                              Les clients vous contacteront via ce numéro.
 
 Description de votre activité (optionnel)
 [Zone de texte — maximum 300 caractères]
@@ -171,36 +172,29 @@ Décrivez ce que vous faites, pas ce que vous êtes.
 
 ---
 
-### Étape 3 — Vos engagements
+### Étape 3 — Votre portfolio
 
-**Titre :** Avant de finaliser votre inscription
+**Titre :** Montrez votre travail
 
 **Texte d'introduction :**
-> Kelen fonctionne sur un standard précis. Lisez ce qui suit avant de créer votre profil.
-
----
-
-**Trois points affichés explicitement :**
-
-> **1. Votre historique est documenté par vos clients, pas par vous.**
-> Les recommandations sont soumises par vos anciens clients avec preuves à l'appui. Vous pouvez les revendiquer — pas les créer.
-
-> **2. Un signal vérifié entraîne un statut permanent de professionnel non recommandé.**
-> Ce statut ne peut pas être retiré par un paiement ou une demande. Il peut uniquement être contesté si la soumission est prouvée frauduleuse.
-
-> **3. Votre profil peut être référencé même si vous ne l'avez pas créé.**
-> Si un client soumet un témoignage vous concernant avant votre inscription, une fiche sera créée en votre nom. Vous pouvez la revendiquer à tout moment.
-
----
-
-**Déclarations finales :**
+> Ce sont vos photos de réalisations qui parlent le mieux pour vous.
+> Ajoutez au moins 2 photos pour activer votre profil.
 
 ```
-□ J'ai lu et j'accepte les conditions générales d'utilisation.
+Photos de réalisations *
+[Zone de dépôt multiple — JPG, PNG — max 5 Mo par photo]
+Minimum 2 photos. Vous pourrez en ajouter d'autres depuis votre tableau de bord.
 
-□ J'ai compris qu'un signal vérifié entraîne un statut permanent
-  de professionnel non recommandé, irrévocable.
+Description rapide de vos réalisations (optionnel)
+[Zone de texte — maximum 200 caractères]
+```
 
+**Note :**
+> Pas de photos pour l'instant ? Passez cette étape — vous pourrez en ajouter plus tard.
+> Votre profil sera actif, mais les clients verront davantage les profils avec portfolio.
+
+```
+□ J'accepte les conditions générales d'utilisation.
 □ J'accepte la politique de confidentialité.
 ```
 
@@ -208,7 +202,19 @@ Décrivez ce que vous faites, pas ce que vous êtes.
 > Créer mon profil
 
 **Note sous le bouton :**
-> *Votre profil sera actif immédiatement. Votre statut sera non classé jusqu'à vos premiers projets vérifiés.*
+> *Votre profil et votre site web sont actifs immédiatement.*
+
+---
+
+### Confirmation d'inscription
+
+> **Votre profil est créé.**
+>
+> Votre site web est accessible dès maintenant.
+> Exportez votre PDF portfolio depuis votre tableau de bord.
+> Synchronisez votre fiche Google My Business en un clic.
+>
+> [Accéder à mon tableau de bord →]
 
 ---
 
@@ -218,9 +224,9 @@ Décrivez ce que vous faites, pas ce que vous êtes.
 
 ```
 Bonjour Moussa · Kouadio Construction
-🟡 Liste Or · 7 projets vérifiés
+🟡 Or · 7 projets documentés
 
-Navigation : Vue d'ensemble · Mon profil · Mes projets · Visibilité · Transactions · Paramètres
+Navigation : Vue d'ensemble · Mon profil · Mes projets · Ma présence · Abonnement · Paramètres
 ```
 
 ---
@@ -231,33 +237,41 @@ Navigation : Vue d'ensemble · Mon profil · Mes projets · Visibilité · Trans
 ```
 Votre statut actuel
 
-🟡 Liste Or
-7 projets vérifiés et liés · 0 manquement enregistré
-Actif sur Kelen depuis mars 2021 — 3 ans et 8 mois
+🟡 Or
+7 projets documentés · Note moyenne : 4,8 / 5
+Actif sur Kelen depuis mars 2021
 ```
 
-**Bloc visibilité (Abonnement) :**
+**Bloc présence en ligne :**
 ```
-Statut de votre abonnement
+Votre présence en ligne
 
-Statut : Actif                  Renouvellement : 24 Déc 2024
-Vues ce mois : 1 247            Contacts ce mois : 38
-Taux de contact : 3,1 %
+✓ Site web actif          kelen.com/kouadio-construction
+✓ PDF portfolio           [Télécharger]
+✓ Fiche Google            Synchronisée
 
-[Gérer mon abonnement]          [Voir les détails]
+[Gérer ma présence →]
 ```
 
-**Bloc actions en attente :**
+**Bloc visibilité :**
+```
+Visibilité
+
+Abonnement : Actif · Renouvellement le 24 déc. 2026
+Vues ce mois : 1 247
+Contacts ce mois : 38
+
+[Gérer mon abonnement]
+```
+
+**Bloc projets en attente :**
 ```
 Actions en attente
-───────────────────────────────────────
-2 recommandations à lier à votre profil
 
-Une recommandation soumise par un client peut contribuer
-à votre statut uniquement si vous la revendiquez.
+2 invitations de projet à traiter
+Un client vous a invité sur un projet.
 
-[Voir et lier mes recommandations →]
-───────────────────────────────────────
+[Voir les invitations →]
 ```
 
 **Si aucune action :**
@@ -272,13 +286,10 @@ Activité récente
 
 Aujourd'hui
 → 14 vues de profil
-→ 3 clics sur votre numéro WhatsApp
+→ 3 clics sur votre WhatsApp
 
 Cette semaine
 → 89 vues · 11 contacts · 1 nouvelle recommandation soumise
-
-Ce mois
-→ 1 247 vues · 38 contacts · 3 nouvelles recommandations soumises
 ```
 
 ---
@@ -288,7 +299,7 @@ Ce mois
 **Titre :** Votre profil public
 
 **Introduction :**
-> Ces informations sont visibles par tous les utilisateurs de Kelen lorsqu'ils consultent votre profil.
+> Ces informations apparaissent sur votre profil Kelen et sur votre site web.
 
 ```
 Informations générales
@@ -299,11 +310,11 @@ Contact             [Modifier]
 Description         [Modifier]
 
 Portfolio
-[X photos · Y vidéos]    [Gérer mon portfolio →]
+[X photos]    [Gérer mon portfolio →]
 ```
 
-**Note en bas :**
-> *Votre statut, vos recommandations et les signaux éventuels ne sont pas modifiables depuis cet espace. Ils reflètent votre historique vérifié sur Kelen.*
+**Note :**
+> *Votre statut et vos recommandations ne sont pas modifiables depuis cet espace. Ils reflètent votre historique vérifié sur Kelen.*
 
 ---
 
@@ -313,83 +324,130 @@ Portfolio
 
 **Onglets internes :**
 ```
-Liés à votre profil (7)  ·  En attente de lien (2)  ·  Tous (9)
+En cours (2)  ·  Terminés (7)  ·  Recommandations (9)
 ```
 
-**Section "En attente de lien" :**
+**Section "En cours" :**
 ```
-2 recommandations non liées
+Rénovation appartement · Abidjan
+Client : Fatou K.
+Invité le 15 avril 2026
+● En cours — dernière activité il y a 1 jour
 
-Ces recommandations ont été soumises et vérifiées par Kelen.
-Elles ne contribuent pas encore à votre statut.
+[Voir le projet →]
+```
+
+**Section "Recommandations" :**
+```
+2 recommandations à lier à votre profil
+
+Ces recommandations ont été soumises et vérifiées.
 Revendiquez-les pour qu'elles apparaissent sur votre profil.
 
 ───────────────────────────────────────
 Construction résidentielle — Dakar
-Soumis par M. D. · Paris · Vérifié le 12 novembre 2024
-
-[Lier à mon profil]    [Ce n'est pas mon projet]
-───────────────────────────────────────
-Rénovation commerciale — Abidjan
-Soumis par Mme K. · Bruxelles · Vérifié le 3 décembre 2024
+Soumis par M. D. · Vérifié le 12 novembre 2024
 
 [Lier à mon profil]    [Ce n'est pas mon projet]
 ───────────────────────────────────────
 ```
 
-**Carte projet lié :**
+**Carte projet documenté :**
 ```
 ✓ Construction résidentielle — Dakar
-Vérifié · Lié le 15 juin 2023
-Budget : 45 000 € · Livré dans les délais
+Documenté · Lié le 15 juin 2023
+Livré dans les délais
+
 [Voir la carte publique →]
 ```
 
 ---
 
-### Onglet Abonnement (Visibilité)
+### Onglet Ma présence
+
+**Titre :** Votre présence en ligne
+
+---
+
+**Mon site web**
+
+```
+URL de votre site
+kelen.com/kouadio-construction   [Copier] [Ouvrir →]
+
+Aperçu de votre site
+[Miniature du site]
+
+[Personnaliser mon site →]
+```
+
+---
+
+**Mon PDF portfolio**
+
+```
+Votre portfolio en PDF est généré automatiquement
+à partir de votre profil et de vos projets documentés.
+
+[Télécharger mon PDF]    [Partager le lien →]
+
+Dernière mise à jour : 20 avril 2026
+```
+
+---
+
+**Ma fiche Google My Business**
+
+```
+Statut : Synchronisée
+Dernière mise à jour : 15 avril 2026
+
+Votre fiche apparaît dans les recherches Google pour
+"[votre catégorie] [votre ville]".
+
+[Voir ma fiche Google →]    [Mettre à jour →]
+```
+
+---
+
+### Onglet Abonnement
 
 **Titre :** Gérer votre abonnement
 
 **Introduction :**
-> Votre profil est visible dans les résultats de recherche et listes de navigation tant que votre abonnement est actif. (3000 FCFA / 15€ par mois)
+> Votre abonnement vous rend visible dans les résultats de recherche Kelen et débloque toutes les fonctionnalités de présence en ligne.
 
-**Bloc Statut Abonnement :**
+**Bloc statut actif :**
 ```
-Statut Actuel
-Actif (Jusqu'au 24 Décembre 2024)
+Actif · Jusqu'au 24 décembre 2026
+3 000 FCFA / 15 € par mois
 
-[Gérer l'abonnement →]
+[Annuler mon abonnement]
 ```
 
-**Si aucun abonnement actif :**
+**Si inactif :**
 ```
-Statut Actuel
-Inactif
+Votre profil n'apparaît pas dans les résultats de recherche.
 
-S'abonner pour 3000 FCFA / 15€ par mois.
-Sans engagement, annulez quand vous voulez.
+3 000 FCFA / 15 € par mois — sans engagement.
 
 [S'abonner maintenant →]
 ```
 
-**Bloc Options supplémentaires (Add-ons optionnels) :**
+**Ce qui est inclus :**
 ```
-Boosts de visibilité
-
-○ Badge Vérifié (Paiement unique) — 15000 FCFA / 25€ 
-○ Portfolio Premium (Mensuel) — +2000 FCFA / 3€ / mois
-○ Classement Prioritaire (Mensuel) — +5000 FCFA / 8€ / mois
-
-[Ajouter des options]
+✓ Apparition dans les résultats de recherche
+✓ Indexation Google (SEO)
+✓ Site web personnalisable
+✓ Export PDF illimité
+✓ Synchronisation Google My Business
+✓ Projets illimités
+✓ Accès complet au module de collaboration client
 ```
 
-**Bloc Moyen de paiement :**
+**Moyen de paiement :**
 ```
-Méthode de paiement principale
-Visa ···· 4242
-
-[Modifier le moyen de paiement]
+Visa ···· 4242    [Modifier]
 ```
 
 ---
@@ -399,18 +457,15 @@ Visa ···· 4242
 **Titre :** Historique de vos transactions
 
 ```
-Décembre 2024
-
+Décembre 2026
 24/11  Renouvellement Abonnement    -15,00 €    Payé (Visa *4242)
 24/10  Renouvellement Abonnement    -15,00 €    Payé (Visa *4242)
-...
 
-Télécharger vos factures
-[Voir tout l'historique →]
+[Télécharger mes factures]    [Voir tout l'historique →]
 ```
 
 **Note :**
-> *Toutes les factures et reçus sont téléchargeables. En cas de question, contactez support@kelen.com en précisant votre numéro de facture.*
+> *Toutes les factures sont téléchargeables. Pour toute question : support@kelen.com*
 
 ---
 
@@ -425,12 +480,12 @@ Mot de passe      [Modifier]
 Téléphone         [Modifier]
 
 Notifications
-□ M'avertir lorsqu'une recommandation est soumise
-□ M'avertir lorsqu'une recommandation est disponible à lier
-□ M'avertir lorsqu'un signal est soumis me concernant
-□ M'avertir 5 jours avant le renouvellement de mon abonnement
-□ M'avertir en cas d'échec de renouvellement d'abonnement
-□ M'envoyer un résumé mensuel de mes statistiques
+□ Quand un client m'invite sur un projet
+□ Quand une recommandation est soumise me concernant
+□ Quand une recommandation est disponible à lier
+□ 5 jours avant le renouvellement de mon abonnement
+□ En cas d'échec de renouvellement
+□ Résumé mensuel de mes statistiques
 
 Méthodes de paiement
 Visa ···· 4242    [Supprimer]
@@ -446,8 +501,8 @@ Vous pouvez réactiver à tout moment.
 
 [Supprimer mon compte]
 La suppression de votre compte est définitive.
-Les recommandations et signaux vérifiés associés à votre nom
-restent dans notre base de données conformément à nos CGU.
+Les recommandations vérifiées associées à votre nom
+restent consultables conformément à nos CGU.
 ───────────────────────────────────
 ```
 
@@ -460,7 +515,8 @@ restent dans notre base de données conformément à nos CGU.
 **Titre :** Lier une recommandation à votre profil
 
 **Texte d'introduction :**
-> Cette recommandation a été soumise et vérifiée par notre équipe. Elle existe publiquement mais n'est pas encore associée à votre profil. En la liant, vous la revendiquez comme votre travail — elle contribuera à votre statut.
+> Cette recommandation a été soumise et vérifiée par notre équipe.
+> En la liant, vous la revendiquez comme votre travail — elle apparaîtra sur votre profil et contribuera à votre statut.
 
 ---
 
@@ -472,15 +528,12 @@ Recommandation vérifiée
 Type de projet : Construction résidentielle
 Localisation : Dakar, Sénégal
 Période : mars — novembre 2023
-Budget : 45 000 €
 Livraison : Dans les délais
 
-Témoignage :
-"projet livré exactement comme prévu. Communication sérieuse."
-— M. D., Paris
+"Projet livré exactement comme prévu. Communication sérieuse."
+— M. D., Dakar
 
-Soumis le : 14 décembre 2024
-Vérifié le : 17 décembre 2024
+Soumis le : 14 décembre 2024 · Vérifié le : 17 décembre 2024
 ```
 
 ---
@@ -497,13 +550,11 @@ Est-ce votre projet ?
 
 **Si "Oui" :**
 ```
-Confirmation
+En liant cette recommandation, vous déclarez avoir
+personnellement réalisé ce projet.
 
-En liant cette recommandation à votre profil, vous déclarez
-avoir personnellement réalisé ce projet.
-
-Cette recommandation contribuera à votre statut et sera
-visible sur votre profil public.
+Elle apparaîtra sur votre profil public et contribuera
+à votre statut.
 
 [Confirmer le lien]        [Annuler]
 ```
@@ -512,9 +563,8 @@ visible sur votre profil public.
 ```
 Merci de nous l'avoir signalé.
 
-Cette recommandation restera publique mais ne sera pas associée
-à votre profil. Notre équipe examinera le cas si plusieurs
-professionnels portant le même nom existent sur la plateforme.
+Cette recommandation restera publique mais ne sera pas
+associée à votre profil.
 
 Si vous pensez qu'il s'agit d'une erreur ou d'une usurpation
 d'identité, contactez-nous : support@kelen.com
@@ -524,69 +574,48 @@ d'identité, contactez-nous : support@kelen.com
 
 ---
 
-## Page de réponse à un signal
+## Page de réponse à une invitation projet
 
 ### En-tête
 
-**Titre :** Répondre au signal
+**Titre :** Invitation de projet
 
-**Texte d'introduction :**
-> Un signal a été soumis concernant un projet associé à votre profil. Vous disposez de 7 jours pour soumettre une réponse et des contre-preuves. Notre équipe examinera votre réponse avant de prendre une décision.
->
-> Votre réponse ne supprime pas le signal si celui-ci est vérifié. Elle est publiée aux côtés du signal et visible par tous les utilisateurs.
+**Contexte :**
+> Un client vous a invité à participer à son projet sur Kelen.
+> Consultez les détails ci-dessous et répondez directement depuis cette page.
 
 ---
 
-### Résumé du signal
+### Détails du projet
 
 ```
-Signal soumis concernant votre profil
+Rénovation appartement 80m²
+Client : Fatou K. · Abidjan
+Budget estimé : 3 500 000 FCFA
+Description : "Rénovation complète — sol, peinture, plomberie."
 
-Type de manquement : Abandon de projet
-Type de projet : Construction résidentielle
-Localisation déclarée : Abidjan, Côte d'Ivoire
-Période déclarée : juin 2022 — mars 2023
-Montant concerné : 38 000 €
-
-Délai de réponse : 7 jours
-Expire le : [date]
+Invité le : 15 avril 2026
 ```
 
 ---
 
-### Formulaire de réponse
-
-**Titre :** Votre réponse
+### Votre réponse
 
 ```
-Votre version des faits *
-[Zone de texte — minimum 100 caractères, maximum 2 000]
+○ J'accepte cette invitation — je suis disponible pour ce projet
 
-Restez factuel. Décrivez ce qui s'est passé selon vous,
-les raisons des difficultés éventuelles, et les tentatives
-de résolution que vous avez initiées.
-
-Documents à l'appui (fortement recommandé)
-[Zone de dépôt multiple — PDF, JPG, PNG]
-
-Contre-contrat, échanges prouvant des accords modifiés,
-photos montrant l'avancement réel des projets,
-preuves de tentatives de contact avec le client.
+○ Je décline cette invitation
+   Motif (optionnel) : [Champ texte]
 ```
 
-**Note sur les documents :**
-> *Plus votre dossier est documenté, plus notre équipe peut prendre une décision éclairée. Une réponse sans document a moins de poids qu'une réponse avec preuves.*
-
+**Si acceptation :**
 ```
-□ Je certifie que les informations soumises dans cette réponse
-  sont exactes à ma connaissance.
+[Accéder à l'espace de collaboration →]
 ```
 
-**CTA :**
-> Soumettre ma réponse
-
-**Note sous le bouton :**
-> *Votre réponse sera transmise à notre équipe de vérification. Elle sera publiée aux côtés du signal si celui-ci est vérifié. Vous ne pouvez soumettre qu'une seule réponse par signal.*
+**Si déclin :**
+> Votre réponse sera transmise au client.
+> Aucun impact sur votre profil ou votre statut.
 
 ---
 
@@ -596,9 +625,6 @@ preuves de tentatives de contact avec le client.
 
 **Titre :** Modifier mon profil
 
-**Note permanente :**
-> Vous pouvez modifier vos informations générales et votre portfolio. Votre statut, vos recommandations et vos signaux ne sont pas modifiables — ils reflètent votre historique vérifié.
-
 ---
 
 ### Section Informations générales
@@ -607,16 +633,13 @@ preuves de tentatives de contact avec le client.
 Nom de votre entreprise *
 [Champ texte — pré-rempli]
 
-Note : Si vous modifiez votre nom, votre URL de profil sera mise à jour.
-Les anciens liens resteront actifs 90 jours.
-
 Catégorie principale *            [Menu déroulant]
 Sous-catégories (optionnel)       [Cases à cocher]
 Pays d'intervention *             [Menu déroulant — sélection multiple]
 Ville principale *                [Champ texte]
-Téléphone professionnel *         [Champ texte]
+Téléphone *                       [Champ texte]
 WhatsApp (optionnel)              [Champ texte]
-Email professionnel *             [Champ texte]
+Email (optionnel)                 [Champ texte]
 
 Description (optionnel)
 [Zone de texte — maximum 300 caractères]
@@ -627,105 +650,78 @@ Description (optionnel)
 
 ### Section Portfolio
 
-**Note :**
-> La version gratuite vous permet d'ajouter un maximum de 3 projets. Passez à l'abonnement pour ajouter un nombre illimité de projets et débloquer le téléchargement de vidéos.
-
 ```
-Photos de projets
+Photos de réalisations
 [Zone de dépôt + aperçu des photos existantes]
 JPG, PNG — maximum 5 Mo par photo.
 
-Vidéos (Réservé aux abonnés)
-[Zone de dépôt]
-MP4 — maximum 50 Mo par vidéo.
+Version gratuite : 3 projets maximum.
+Abonnement : projets illimités.
 ```
 
 ---
 
 ### Section Historique vérifié (non modifiable)
 
-**Titre :** Historique vérifié
-
-**Texte :**
-> Les informations ci-dessous sont issues de dossiers soumis et vérifiés par notre équipe. Elles ne peuvent pas être modifiées depuis ce panneau.
-
 ```
-Statut actuel : 🟡 Liste Or
+Statut actuel : 🟡 Or
 Recommandations vérifiées : 7
-Signaux vérifiés : 0
 
 [Voir mes recommandations →]
 ```
 
+**Note :**
+> *Votre statut et vos recommandations ne sont pas modifiables — ils reflètent votre historique vérifié sur Kelen.*
+
 ---
 
-### Bouton de sauvegarde
+### Sauvegarde
 
 ```
 [Enregistrer les modifications]
 
-Les modifications sont prises en compte immédiatement.
+Les modifications sont prises en compte immédiatement
+sur votre profil et votre site web.
 ```
 
 ---
 
 ## Page Tarifs et Abonnement
 
-### Principe en 3 lignes
+### Principe
 
-> Un abonnement mensuel simple de 3000 FCFA / 15€.
-> Visibilité illimitée dans les résultats de recherche.
-> Sans engagement : annulez quand vous voulez.
-
----
-
-### Qu'est-ce que l'abonnement inclut ?
-
-> Vues illimitées : Votre profil apparaît pour tous les professionnels dans l'annuaire.
-> Indexation Google : Votre profil devient indexable sur Google, maximisant votre SEO.
-> Projets illimités : Exposez un nombre illimité de projets (contre 3 maximum dans la version gratuite).
-> Vidéos de projets : Ajoutez des vidéos pour présenter votre travail aux clients en haute fidélité.
->
-> L'abonnement vous maintient dans les résultats actifs de Kelen.
+> **3 000 FCFA / 15 € par mois.**
+> Sans engagement. Annulez quand vous voulez.
+> Votre profil de base reste gratuit à vie.
 
 ---
 
-### Calcul concret
+### Gratuit vs Abonnement
 
 ```
-3000 FCFA / 15€ par mois.
-
-Même avec 1 projet généré sur toute l'année :
-Un projet client = €15 000 à €80 000 de chiffre d'affaires
-
-Abonnement annuel : 36 000 FCFA / 180€
+                        Gratuit     Abonnement
+Profil public             ✓             ✓
+Site web                  ✓             ✓
+Export PDF                —             ✓
+Fiche Google My Business  —             ✓
+Projets affichés          3           Illimité
+Résultats de recherche    —             ✓
+Indexation Google (SEO)   —             ✓
+Collaboration client      —             ✓
 ```
-
-> *Un tarif accessible conçu pour que la rentabilité soit évidente.*
 
 ---
 
 ### Ce que l'abonnement ne change pas
 
-> - Pas votre statut (la Liste Or ne s'achète pas)
-> - Pas la suppression d'un signal
-> - Pas l'amélioration de votre réputation brute (basée sur les faits)
-
----
-
-### La phrase clé
-
-> **La visibilité est un standard abordable. La réputation se prouve.**
+> - Pas votre statut — la réputation se mérite, elle ne s'achète pas
+> - Pas l'ordre des résultats pour les clients — la pertinence prime sur l'abonnement
 
 ---
 
 ### Pour qui
 
 > Kelen est fait pour vous si :
-> - Vous avez un historique de projets et êtes prêt à être vu
-> - Vous voulez une dépense fixe, sans surprise
-> - Vous comprenez que la plateforme vous apporte des prospects, la conversion dépend de vous
->
-> Kelen n'est pas fait pour vous si :
-> - Vous cherchez une garantie de résultat miracle
-> - Vous êtes sur la Liste Rouge
+> - Vous avez un historique de travail et voulez être trouvé
+> - Vous voulez une dépense fixe, sans surprise, sans commission
+> - Vous comprenez que la plateforme vous apporte de la visibilité — la qualité du travail fait le reste

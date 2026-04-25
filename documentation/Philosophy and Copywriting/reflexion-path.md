@@ -94,7 +94,7 @@ documentation/
 
 Documents à mettre à jour dans l'ordre :
 - [x] `02-user-journey-client.md` — recentrage sur sélection / création de projet / collaboration (renommé depuis 02-user-journey-diaspora.md)
-- [ ] `03-pro-journey.md` — le pro comme cible primaire, onboarding simplifié
+- [x] `03-pro-journey.md` — le pro comme cible primaire, onboarding simplifié (Version 2.0)
 - [ ] `04-emails-notifications.md` — ton et messages à aligner
 - [ ] `07-reference-global.md` — mise à jour des règles transversales
 
