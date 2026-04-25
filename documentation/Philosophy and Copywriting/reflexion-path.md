@@ -130,6 +130,28 @@ Documents mis à jour :
 
 ---
 
+### Étape 7 — Marketing pro — création de marketing-pro.md (2026-04-25)
+
+**Contexte :** Audit copywriting révèle que le marketing pro n'est pas développé et que l'architecture n'est pas segmentée (marketing/produit mélangés, pas de distinction par stade du funnel).
+
+**Document créé :**
+- [x] `marketing-pro.md` — Version 1.0 : page `/pour-les-professionnels` complète (hero, problème, 3 sorties, comment ça marche, réputation, tarif, CTA), page `/comment-ca-marche` pro (7 sections détaillées), page `/tarifs` (tableau comparatif, modalités, FAQ), traitement de 7 objections, taglines alternatives, cadre preuve sociale
+
+**Décisions clés de cette étape :**
+| Date | Décision | Raison |
+|------|----------|--------|
+| 2026-04-25 | Séparation marketing/produit : `marketing-pro.md` vs `03-pro-journey.md` | Le marketing (acquisition) et le produit (utilisation) ne s'adressent pas au même stade ni au même état d'esprit |
+| 2026-04-25 | Traitement des objections documenté comme section autonome | Les objections sont transversales — elles peuvent nourrir FAQ, landing, pop-ups, email |
+| 2026-04-25 | Preuve sociale cadrée : format concret (prénom, métier, ville, résultat) | Interdit les témoignages génériques qui contredisent le ton Kelen |
+| 2026-04-25 | `03-pro-journey.md` conserve onboarding + dashboard, la landing y est remplacée | Éviter la duplication, garder la séparation propre |
+
+**Prochaines étapes identifiées :**
+- `homepage.md` — entrée biface pro+client (pas encore documentée)
+- `emails-lifecycle-pro.md` — emails d'activation et de conversion vers l'abonnement payant
+- Nettoyage de `03-pro-journey.md` — retirer la section "Page d'atterrissage 7 écrans" remplacée
+
+---
+
 ## Questions ouvertes
 
 *(à remplir au fil de la réflexion)*
