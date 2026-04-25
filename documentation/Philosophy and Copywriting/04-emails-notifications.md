@@ -1,5 +1,5 @@
 # Kelen — Emails & Notifications
-*Copywriting complet — Version 1.0*
+*Copywriting complet — Version 2.0 — Mis à jour le 2026-04-25*
 
 ---
 
@@ -24,13 +24,11 @@
 > Votre compte est créé.
 >
 > Vous pouvez maintenant :
-> - Rechercher un professionnel par son nom exact
-> - Soumettre un témoignage ou un signal
-> - Suivre l'avancement de vos dossiers
+> - Rechercher des professionnels par secteur et localisation
+> - Consulter les portfolios et réalisations documentées
+> - Créer un projet et inviter un professionnel
 >
-> La vérification d'un professionnel reste accessible sans compte.
->
-> [Accéder à mon compte →]
+> [Trouver un professionnel →]
 >
 > L'équipe Kelen
 
@@ -49,6 +47,34 @@
 > Ce lien expire dans 24 heures.
 >
 > Si vous n'avez pas créé de compte sur Kelen, ignorez cet email.
+>
+> L'équipe Kelen
+
+---
+
+### Projet — Réponse du professionnel
+
+**Objet :** [Nom du professionnel] a répondu à votre projet
+
+> Bonjour [Prénom],
+>
+> [Nom du professionnel] a répondu à votre invitation pour le projet "[Nom du projet]".
+>
+> [Voir la réponse →]
+>
+> L'équipe Kelen
+
+---
+
+### Projet — Nouvelle activité
+
+**Objet :** Nouvelle activité sur votre projet "[Nom du projet]"
+
+> Bonjour [Prénom],
+>
+> Une mise à jour a été ajoutée à votre projet "[Nom du projet]" avec [Nom du professionnel].
+>
+> [Voir le projet →]
 >
 > L'équipe Kelen
 
@@ -85,7 +111,7 @@
 
 ---
 
-### Recommandation rejetée
+### Recommandation — informations complémentaires requises
 
 **Objet :** Votre recommandation — informations complémentaires requises
 
@@ -103,57 +129,6 @@
 
 ---
 
-### Signal en cours d'examen
-
-**Objet :** Votre signal est en cours d'examen
-
-> Bonjour [Prénom],
->
-> Nous avons bien reçu votre signal concernant [nom du professionnel].
->
-> Notre équipe l'examinera dans un délai de 3 à 7 jours ouvrés.
-> Le professionnel sera notifié et disposera d'un délai pour répondre avant notre décision.
->
-> Vous recevrez un email dès qu'une décision est prise.
->
-> L'équipe Kelen
-
----
-
-### Signal vérifié — au soumetteur
-
-**Objet :** Votre signal a été vérifié et publié
-
-> Bonjour [Prénom],
->
-> Votre signal concernant [nom du professionnel] a été vérifié et publié.
->
-> Il est désormais visible sur le profil public du professionnel. Il restera accessible à tous les utilisateurs de Kelen.
->
-> [Voir le profil →]
->
-> L'équipe Kelen
-
----
-
-### Signal rejeté — au soumetteur
-
-**Objet :** Votre signal — décision de notre équipe
-
-> Bonjour [Prénom],
->
-> Votre signal concernant [nom du professionnel] n'a pas pu être publié.
->
-> Motif : [raison précise]
->
-> *Cela ne signifie pas que votre expérience n'a pas eu lieu. Cela signifie que les éléments disponibles ne permettent pas une publication permanente.*
->
-> Vous pouvez soumettre un nouveau signal si vous disposez de documents complémentaires.
->
-> L'équipe Kelen
-
----
-
 ## Emails professionnels
 
 ### Bienvenue
@@ -162,16 +137,14 @@
 
 > Bonjour [Prénom],
 >
-> Votre profil professionnel est actif.
+> Votre profil est actif. Votre site web est en ligne.
 >
-> Kelen met en contact les professionnels de confiance sérieux avec des membres de la client qui investissent. Pour accéder à cette clientèle, vous avez besoin d'un historique vérifié.
+> **Prochaines étapes :**
 >
-> **Comment construire votre statut :**
-> Demandez à vos anciens clients de documenter leurs projets sur Kelen. Chaque recommandation vérifiée que vous liez à votre profil renforce votre statut.
->
-> 3 recommandations vérifiées = Liste Or.
->
-> *Aucun raccourci. C'est ce qui rend le statut précieux.*
+> 1. Ajoutez des photos de vos réalisations — les clients veulent voir votre travail.
+> 2. Exportez votre PDF portfolio et partagez-le avec vos contacts.
+> 3. Synchronisez votre fiche Google My Business pour apparaître dans les recherches locales.
+> 4. Activez votre abonnement pour apparaître dans les résultats de recherche Kelen.
 >
 > [Accéder à mon tableau de bord →]
 >
@@ -209,81 +182,49 @@
 
 ---
 
-### Signal soumis — notification au professionnel
+### Invitation — Nouveau projet client
 
-**Objet :** Un signal a été soumis concernant votre profil
+**Objet :** Un client vous a invité sur un projet
 
 > Bonjour [Prénom],
 >
-> Un signal a été soumis concernant un projet associé à votre profil.
+> [Prénom du client] vous a invité à participer à un projet : "[Nom du projet]" — [Ville].
 >
-> Rien n'est publié à ce stade. Notre équipe examinera les éléments soumis.
+> Consultez les détails et répondez directement depuis votre tableau de bord.
 >
-> **Vous disposez de 7 jours pour soumettre une réponse et des contre-preuves** via votre tableau de bord.
->
-> Votre réponse sera prise en compte dans notre décision.
->
-> [Répondre au signal →]
+> [Voir l'invitation →]
 >
 > L'équipe Kelen
 
 ---
 
-### Signal vérifié — notification au professionnel
+### Projet — Nouvelle activité
 
-**Objet :** Décision concernant le signal — profil mis à jour
+**Objet :** Nouvelle activité sur le projet "[Nom du projet]"
 
 > Bonjour [Prénom],
 >
-> Notre équipe a examiné le signal soumis concernant votre profil.
+> Une mise à jour a été ajoutée au projet "[Nom du projet]" avec [Prénom du client].
 >
-> **Décision : signal vérifié et publié.**
->
-> Les éléments documentaires ont permis de confirmer le manquement décrit. Votre profil est désormais sur la Liste Rouge.
->
-> Ce statut est permanent. Il ne peut pas être retiré par une demande ou un paiement.
->
-> Votre profil ne sera plus visible dans les résultats de navigation. Il reste consultable par recherche de votre nom exact.
->
-> Votre historique de recommandations reste visible sur votre profil.
->
-> Si vous estimez que la soumission repose sur des éléments frauduleux, vous pouvez contester à cette adresse : contestation@kelen.com
+> [Voir le projet →]
 >
 > L'équipe Kelen
 
 ---
 
-### Signal non publié — notification au professionnel
+### Statut Or atteint
 
-**Objet :** Décision concernant le signal — aucune publication
-
-> Bonjour [Prénom],
->
-> Notre équipe a examiné le signal soumis concernant votre profil.
->
-> **Décision : signal non publié.**
->
-> Les éléments soumis ne permettent pas de confirmer le manquement décrit. Votre statut reste inchangé.
->
-> L'équipe Kelen
-
----
-
-### Abonnement — Premier statut Or atteint
-
-**Objet :** Votre profil est désormais sur la Liste Or
+**Objet :** Votre profil est désormais au statut Or
 
 > Bonjour [Prénom],
 >
-> Vous venez d'atteindre la Liste Or.
+> Vous venez d'atteindre le statut Or.
 >
-> 3 projets vérifiés. 0 manquement.
+> Votre profil apparaît désormais dans les résultats filtrés "Or" pour les clients.
 >
-> Votre profil apparaît désormais dans les résultats filtrés "Liste Or" pour les utilisateurs client.
+> *Ce statut évolue avec votre historique.*
 >
-> *Ce statut n'est pas permanent — il évolue avec votre historique.*
->
-> [Gérer mon abonnement →]
+> [Voir mon profil →]
 >
 > L'équipe Kelen
 
@@ -313,9 +254,9 @@
 >
 > Votre abonnement est expiré. Votre profil n'apparaît plus dans les résultats de navigation.
 >
-> Votre statut [Liste Or / Liste Argent] et l'ensemble de votre historique restent intacts. Votre profil reste consultable par recherche de votre nom exact.
+> Votre statut et l'ensemble de votre historique restent intacts. Votre site web reste en ligne. Votre profil reste consultable.
 >
-> Pour reprendre votre visibilité, réactivez votre abonnement.
+> Pour reprendre votre visibilité dans les résultats, réactivez votre abonnement.
 >
 > [Réactiver mon abonnement →]
 >
@@ -323,30 +264,25 @@
 
 ---
 
-### Renouvellement d'abonnement — Réussi
+### Abonnement — Renouvellement réussi
 
 **Objet :** Abonnement renouvelé avec succès
 
 > Bonjour [Prénom],
 >
-> Votre abonnement mensuel à Kelen a été renouvelé avec succès.
+> Votre abonnement mensuel a été renouvelé.
 >
-> **Détails de la transaction :**
-> Montant prélevé : 3000 FCFA / 15 €
+> Montant prélevé : 3 000 FCFA / 15 €
 > Prochain renouvellement : [Date]
 > Méthode de paiement : [type] ···· [4 derniers chiffres]
 >
-> Votre profil reste visible sans interruption.
->
 > [Télécharger la facture →]
->
-> Si vous souhaitez modifier votre abonnement, rendez-vous dans vos paramètres de facturation.
 >
 > L'équipe Kelen
 
 ---
 
-### Renouvellement d'abonnement — Échoué
+### Abonnement — Renouvellement échoué
 
 **Objet :** Échec du renouvellement de votre abonnement — action requise
 
@@ -354,11 +290,11 @@
 >
 > Le renouvellement de votre abonnement mensuel a échoué.
 >
-> **Motif :** Paiement refusé par votre établissement bancaire.
+> Motif : Paiement refusé par votre établissement bancaire.
 >
-> **Conséquence :** Votre profil vient d'être retiré des résultats de navigation. Rassurez-vous, votre statut et votre historique restent intacts.
+> Votre profil a été retiré des résultats de navigation. Votre statut et votre historique restent intacts.
 >
-> **Action requise :** Mettez à jour votre méthode de paiement pour réactiver votre visibilité.
+> Mettez à jour votre méthode de paiement pour réactiver votre visibilité.
 >
 > [Mettre à jour mon paiement →]
 >
@@ -366,7 +302,7 @@
 
 ---
 
-### Résumé mensuel — Professionnel
+### Résumé mensuel
 
 **Objet :** Votre résumé Kelen — [Mois]
 
@@ -378,12 +314,14 @@
 > Vues de profil : [X]
 > Contacts (clics) : [Y]
 > Taux de contact : [Z] %
-> Coût total : [€]
 >
 > **Statut**
-> [Liste Or / Liste Argent / Non classé]
+> [Or / Argent / Non classé]
 > Recommandations vérifiées : [N]
-> Signaux : 0
+>
+> **Projets**
+> En cours : [N]
+> Terminés ce mois : [N]
 >
 > **Abonnement**
 > Statut : Actif / Inactif
@@ -411,15 +349,17 @@ Les notifications in-app sont courtes — une ligne maximum. Elles dirigent vers
 ● 2 recommandations disponibles à lier
   [Voir →]
 
+● [Prénom] vous a invité sur un projet
+  [Voir l'invitation →]
+
+● Nouvelle activité sur le projet "[Nom du projet]"
+  [Voir →]
+
 ● Votre abonnement se renouvelle dans 5 jours
-  [Voir mes paramètres →]
+  [Gérer mon abonnement →]
 
 ● Votre visibilité a pris fin — abonnement expiré
   [Réactiver →]
-
-● Un signal a été soumis concernant votre profil
-  Délai de réponse : 7 jours
-  [Répondre →]
 
 ● Abonnement renouvelé avec succès
   [Télécharger la facture →]
@@ -433,21 +373,18 @@ Les notifications in-app sont courtes — une ligne maximum. Elles dirigent vers
 ### Utilisateurs client
 
 ```
-● Votre recommandation a été vérifiée et publiée
-  [Voir sur le profil →]
+● [Nom du professionnel] a répondu à votre invitation
+  [Voir le projet →]
 
-● Votre signal a été vérifié et publié
+● Nouvelle activité sur votre projet "[Nom du projet]"
+  [Voir →]
+
+● Votre recommandation a été vérifiée et publiée
   [Voir sur le profil →]
 
 ● Votre recommandation est en cours d'examen
   Délai estimé : 2–5 jours
 
-● Votre signal est en cours d'examen
-  Délai estimé : 3–7 jours
-
 ● Votre recommandation n'a pas pu être publiée
-  [Voir le motif →]
-
-● Votre signal n'a pas pu être publié
   [Voir le motif →]
 ```
