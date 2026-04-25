@@ -19,6 +19,8 @@ Ce document est le point d'entrée du corpus copywriting Kelen. Il recense l'ens
 | `marketing-pro.md` | **SaaS landing pro** (`/pour-les-professionnels`) — hero, 5 fonctionnalités, comment ça marche, réputation, tarifs, objections, CTA |
 | `pro-pages.md` | **Pages dédiées espace pro** — `/comment-ca-marche`, `/tarifs`, `/faq`, `/contact` (navigation, copywriting complet) |
 | `emails-lifecycle-pro.md` | **Lifecycle pro — Email & WhatsApp** — 13 étapes : activation, conversion, post-souscription, rétention, réengagement |
+| `marketing-client.md` | **Pages dédiées espace client** — navigation, `/comment-ca-marche`, `/faq`, `/contact` |
+| `emails-lifecycle-client.md` | **Lifecycle client — Email & WhatsApp** — 10 étapes : activation, engagement, collaboration, recommandation, réengagement |
 | `02-user-journey-client.md` | Recherche, profil public, création de projet, collaboration, recommandation, inscription, tableau de bord client *(hero remplacé par homepage.md)* |
 | `03-pro-journey.md` | Inscription pro (3 étapes), tableau de bord pro, présence en ligne (site/PDF/GMB), réponse à invitation *(landing remplacée par marketing-pro.md)* |
 | `04-emails-notifications.md` | Tous les emails transactionnels et notifications in-app |

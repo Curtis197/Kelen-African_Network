@@ -272,6 +272,64 @@ Documents mis à jour :
 
 ---
 
+### Étape 12 — Espace client complet — marketing-client.md + emails-lifecycle-client.md (2026-04-25)
+
+**Contexte :** Parallèle à l'espace pro. Le client ne paie rien — les pages sont informationelles, pas marketing. Le lifecycle n'a pas de séquence de conversion — uniquement activation → engagement → contribution.
+
+**Documents créés :**
+- [x] `marketing-client.md` — Pages dédiées : navigation client (avec barre de recherche), `/comment-ca-marche` (7 sections), `/faq` (25 questions en 5 catégories), `/contact` (5 canaux)
+- [x] `emails-lifecycle-client.md` — 10 étapes Email + WhatsApp couvrant l'intégralité du cycle client
+
+**Lifecycle client — séquence documentée :**
+| # | Déclencheur | Objectif |
+|---|-------------|----------|
+| 1 | Post-inscription | Orienter vers première recherche |
+| 2 | J+1 sans recherche | Revenir sur la plateforme |
+| 3 | J+7 sans projet | Franchir le pas de la création |
+| 4 | Projet créé | Confirmer + expliquer la suite |
+| 5 | Pro sans réponse (J+3) | Inviter un autre pro sans décourager |
+| 6 | Pro a accepté | Orienter vers la collaboration |
+| 7 | Projet terminé (J+3) | Nudge recommandation |
+| 8 | Recommandation soumise | Confirmer réception |
+| 9 | Recommandation publiée | Informer le client |
+| 10 | 90j inactif | Rappel doux, sans pression |
+
+**Décisions clés de cette étape :**
+| Date | Décision | Raison |
+|------|----------|--------|
+| 2026-04-25 | Pas de séquence de conversion pour le client | Le client est gratuit — la plateforme le convainc par son utilité, pas par ses messages |
+| 2026-04-25 | Nudge recommandation à J+3 après clôture | Pas immédiatement — laisser le projet se terminer vraiment |
+| 2026-04-25 | "La seule chose qui fait revenir un client : la plateforme était utile." | Règle éditoriale qui gouverne tout le ton lifecycle client |
+| 2026-04-25 | Navigation client avec barre de recherche persistante | Le premier geste d'un client est toujours de chercher — pas de s'inscrire |
+
+**État du corpus copywriting — complet :**
+```
+FONDATIONS
+  01-philosophie-positionnement.md   Principes et ton
+  00-genesis.md                      Histoire et trajectoire
+
+ESPACE CLIENT
+  homepage.md                        Browser home page
+  marketing-client.md                Pages informationelles (comment ça marche, faq, contact)
+  02-user-journey-client.md          Produit (recherche, profil, projet, dashboard)
+  emails-lifecycle-client.md         Lifecycle (10 étapes email + WhatsApp)
+
+ESPACE PRO
+  marketing-pro.md                   SaaS landing page
+  pro-pages.md                       Pages dédiées (comment ça marche, tarifs, faq, contact)
+  03-pro-journey.md                  Produit (inscription, dashboard, présence)
+  emails-lifecycle-pro.md            Lifecycle (13 étapes email + WhatsApp)
+
+TRANSVERSAL
+  04-emails-notifications.md         Emails transactionnels
+  05-admin.md                        Interface admin
+  06-legal-contact.md                Légal, À propos, FAQ générale
+  07-reference-global.md             Index et règles transversales
+  reflexion-path.md                  Journal de conception
+```
+
+---
+
 ## Questions ouvertes
 
 *(à remplir au fil de la réflexion)*
