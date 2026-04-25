@@ -1,154 +1,203 @@
 # Kelen — Master Positioning Document
+*Version 2.0 — Updated 2026-04-25*
 
-> Last updated: 2026-03-28
 > This document is the single source of truth for all product, marketing, and copywriting decisions.
-> All other documents and pages derive from it.
+> All other documents derive from it. When in doubt, come back here.
 
 ---
 
-## 1. Product Definition
+## 1. The Problem
 
-Kelen is a professional visibility and trust platform. Any professional with work to show and trust to build has a place on Kelen. Any client who needs to choose, compare, and rely on a professional has a place on Kelen.
+Millions of African professionals work well. Artisans, contractors, service providers — skilled, experienced, serious.
 
-**Entry market:** Individuals managing construction and renovation projects between Europe and Africa — not as a cultural identity, but as a concrete situation: large sums, remote supervision, limited legal recourse. This is where the pain is most acute and the product most immediately valuable.
+Most of them have no digital presence.
 
-**Product ceiling:** Any professional-client relationship where the client pays for work they can't fully control or verify themselves. A lawyer in Dakar. A caterer in Lyon. A mechanic in London. A designer in Abidjan. A coach, a baker, a nurse, a mechanic — any profession where past delivery speaks louder than promises. Geography and profession are not limits.
+No website. No portfolio. No Google listing. Their reputation travels through word of mouth, WhatsApp photos, and phone numbers that change. Clients — local or abroad — can't find them, can't compare them, can't verify their work before committing.
 
-**The rule:** Marketing targets the entry market. The product serves everyone.
+On the other side: clients have projects. They need professionals. They don't have a reliable network in the relevant sector, or they're managing from a distance. Finding the right person is slow, risky, and unreliable.
 
----
+**The gap:** Competent professionals exist. Serious clients exist. The infrastructure to connect them reliably doesn't.
 
-## 2. The Two Audiences
-
-### Client — "Build with trust"
-
-The client has a project. They need to find professionals, compare their work and track record, make a confident decision, and move forward without bad surprises. The platform gives them a verified history they can consult before they commit. They don't pay for this. They never will.
-
-**What matters to the client:**
-- Find the right professional for their project
-- Compare work quality, price range, past delivery
-- Know if this professional has a track record of keeping commitments
-- Build their project with people they can rely on
-- Share and discuss their choices with their entourage
-
-**What does NOT need to be explained to them upfront:**
-- How the validation system works technically
-- The two-system architecture
-- The status calculation logic
-
-### Professional — "Build trust"
-
-The professional has done work. Good work. Work that speaks for itself — if someone could see it. Kelen makes that work visible to qualified clients who are already looking, already serious, already willing to pay. The professional pays for visibility, not for trust. Trust is earned. Visibility is the product.
-
-**What matters to the professional:**
-- Be found by clients who are ready to engage
-- Showcase completed work proudly (photos, references, project types)
-- Attract clients who already trust them before the first call
-- Build a verified professional profile that compounds over time
-- Grow a sustainable client base, including internationally
-
-**What does NOT need to be explained to them upfront:**
-- The signal/recommendation technical workflow
-- Database logic or verification queue mechanics
-- Platform revenue model
+Kelen is that infrastructure.
 
 ---
 
-## 3. Trust as Infrastructure
+## 2. What Kelen Is
 
-Trust is the foundation that makes every exchange on Kelen possible. It is not what we sell.
+Kelen is a digitalization platform for African professionals, and a discovery platform for their clients.
 
-The validation system — recommendations and signals — is free, permanent, and non-negotiable. Nobody pays to have trust. Nobody pays to remove the absence of trust. It is the ground layer the entire platform stands on.
+**For the professional:** A simple way to get online — a website, a PDF portfolio, a Google My Business listing — without technical skills, without a designer, without an agency. As easy as filling in a WhatsApp profile.
 
-**The rule:** The validation system is explained in *Comment ça marche*. It does not lead marketing pages. It is not the headline. It is the plumbing — essential, invisible, reliable.
+**For the client:** A place to find professionals, compare their actual work, create a project, and collaborate — whether they're local or managing from abroad.
 
-This is what "La confiance ne se promet pas. Elle se documente." means. It describes the foundation. It is not the pitch.
-
----
-
-## 4. The Two Layers
-
-### Layer 1 — Validation (Foundation)
-- **What it is:** Recommendations + Signals, verified by Kelen
-- **Who accesses it:** Everyone, always, for free
-- **Purpose:** Establish whether a professional can be trusted
-- **Status tiers (5 levels):**
-  - 🟡 **Gold** — 3+ verified recommendations, zero signals. Safe to engage.
-  - ⚪ **Silver** — 1–2 verified recommendations, zero signals. Track record in progress.
-  - 🤍 **White** — No verified history. Proceed with the usual precautions.
-  - 🔴 **Red** — One or more verified signals. Permanent. Cannot be removed.
-  - ⚫ **Black** — Platform ban. Not displayed.
-- **Rule:** Good professionals want this to exist. Bad professionals cannot escape it.
-
-### Layer 2 — Visibility (Product)
-- **What it is:** Subscription-based professional profile and discovery
-- **Who pays:** Professionals who want to be found
-- **Price:** 3,000 XOF / €15 per month. No engagement.
-- **What it includes:** Profile page, portfolio, project references, category discovery
-- **Why it works:** Good professionals (Gold) pay because visibility converts. Bad professionals (Red) won't pay — visibility would expose them. The platform self-selects for quality.
+**Not a review platform. Not a directory. Not a blacklist.** A platform where reputation is built through documented work, verified project by project.
 
 ---
 
-## 5. Business Model
+## 3. Market Positioning
+
+### Primary target — The professional
+
+The professional is Kelen's paying customer and primary focus.
+
+**Profile:** Any African professional in a service or trade — construction, renovation, plumbing, electrical, carpentry, architecture, design, and beyond. Especially those who are tech-reluctant — competent at their craft, not at digital self-promotion.
+
+**The core insight:** Most African professionals who need a digital presence don't have one because existing solutions are too complex, too expensive, or too foreign to their reality. Kelen's entry bar is deliberately low: if you can fill in a WhatsApp profile, you can have a website.
+
+**What they get:** A professional website, a PDF portfolio they can share on WhatsApp or print, and a Google My Business listing — all generated automatically from one profile.
+
+### Secondary target — The client
+
+The client uses Kelen for free. They are the market the professional is trying to reach.
+
+**Profile:** Anyone with a project that requires a professional — local Africans, diaspora investing from abroad, businesses looking for subcontractors. Geography is not the defining criterion. The situation is: they need to find someone reliable and they don't have a trusted network in that sector.
+
+**What matters to them:** Finding, comparing, and choosing with confidence. Then managing the project without friction.
+
+---
+
+## 4. The Three Outputs (Core Product)
+
+Every professional who creates a profile gets three outputs automatically:
+
+**1. Website** — A professional page indexed on Google. Structured, clean, shareable. Updated in real time as the professional adds projects.
+
+**2. PDF Portfolio** — Exportable, printable, sendable on WhatsApp or email. Their work in a format that exists outside the platform.
+
+**3. Google My Business** — Local presence. Appears when someone searches for their trade in their city.
+
+These three outputs are the product. Everything else (reputation system, collaboration, discovery) builds on top of them.
+
+---
+
+## 5. The Two Offers
+
+### Free — Always available
+
+- Professional profile and website
+- Up to 3 projects displayed
+- PDF export
+- Google My Business sync
+- Searchable by name (not indexed on Google)
+
+### Subscription — 3,000 XOF / €15 per month, no commitment
+
+- Appears in Kelen search results and discovery listings
+- Google indexing (SEO) — the professional is findable organically
+- Unlimited projects
+- Full collaboration module (project management with clients)
+- Advanced analytics
+
+**The rule:** The free tier is a real product, not a teaser. The paid tier adds reach and depth. Neither tier influences the professional's status — reputation cannot be purchased.
+
+---
+
+## 6. The Reputation System
+
+Independent of the commercial profile. Cannot be influenced by payment.
+
+Clients who have worked with a professional can submit a verified recommendation — with contract, photos, and dates. Kelen verifies and publishes it.
+
+**Three status tiers:**
+
+| Status | Criteria |
+|--------|----------|
+| 🟡 **Gold** | 3+ verified recommendations, rating ≥ 4.5/5, 90%+ positive |
+| ⚪ **Silver** | 1–2 verified recommendations, rating ≥ 4.0/5, 80%+ positive |
+| — **Unclassified** | No verified history yet |
+
+**Rules:**
+- Status is never sold. Subscription does not influence status.
+- Search ranking is based on relevance, location, and documented experience — not status.
+- Status is information, not a commercial rank.
+
+---
+
+## 7. Business Model
 
 **Revenue:** Professional subscriptions only.
-- 3,000 XOF/month (West Africa — Wave, Orange Money, MTN Mobile Money)
-- €15/month (Europe — Stripe)
+- 3,000 XOF/month — West Africa (Wave, Orange Money, MTN Mobile Money)
+- €15/month — Europe (Stripe)
 
-**Not a revenue model:**
-- CPM / Google Ads (no longer the model)
-- Charging clients (never — accessibility is credibility)
-- Charging for trust (never — corrupts the foundation)
+**Not a revenue model:** Google Ads, CPM, charging clients, charging for reputation.
 
 **The incentive logic:**
 - Clients are free → maximum reach, maximum credibility
-- Validation is free → cannot be gamed or purchased
-- Visibility is paid → only professionals with something to show will pay
+- Reputation is earned → cannot be gamed or purchased
+- Visibility is paid → only professionals with something to show will subscribe
+
+**Geographic rollout:**
+- Launch: Francophone Africa (Senegal, Côte d'Ivoire, Mali, Cameroon, Gabon, Congo)
+- Phase 2: Francophone Europe (France, Belgium, Switzerland, Luxembourg)
+- Long term: any market where professionals lack digital visibility
 
 ---
 
-## 6. Tone Principles
+## 8. Kelen-Pro in the Kelen Ecosystem
+
+Kelen-Pro is the first module of a larger system. Its role is to digitalize African professionals and accumulate the data and trust layer that enables everything that follows.
+
+**Planned sequence (internal roadmap — not public):**
+1. **Kelen-Pro** — Digitalization, visibility, project collaboration ← current
+2. **Data layer** — Structured data from professional activity, sectors, geographies
+3. **Kelen-Design** — Designer marketplace for custom templates and integrations
+4. **Kelen-Market** — Simple, affordable e-commerce for professionals already on the platform
+5. **Kelen-Restaurant** — Reservation engine for restaurant websites
+
+Each module is built on the foundation laid by the previous one. Kelen-Pro's job is to build the foundation — professionals, profiles, verified reputations, client relationships.
+
+---
+
+## 9. Tone Principles
 
 **Rule 1 — Lead with outcome, not system**
 Wrong: "Kelen sépare la validation de la visibilité en deux systèmes distincts."
-Right: "Trouvez le bon professionnel. Construisez en confiance."
+Right: "Votre site web, votre PDF, votre fiche Google — en quelques minutes."
 
 **Rule 2 — Concrete over abstract**
-Wrong: "Une plateforme d'accountability professionnelle."
-Right: "Vous cherchez un électricien à Abidjan depuis Paris. Kelen vous dit ce qu'il a livré."
+Wrong: "Une plateforme de digitalisation professionnelle."
+Right: "Un plombier à Dakar qui paie 3 000 FCFA/mois apparaît sur Google quand quelqu'un cherche un plombier à Dakar."
 
 **Rule 3 — One idea per sentence**
-No compound propositions. No "à la fois X et Y." State one thing clearly, then the next.
+No compound propositions. State one thing clearly, then the next.
 
-**Rule 4 — Trust is implied, not repeated**
-Don't say "trust" in every headline. The platform *is* trust. Show it through specificity.
+**Rule 4 — Trust is shown, not claimed**
+Don't say "trust" in every headline. Show documented work. Let the user conclude.
 
-**Rule 5 — Avoid "diaspora" as identity**
-Use situation-based language: "vous gérez un projet à distance," "vous investissez depuis l'Europe," "votre chantier est à 3 000 km."
+**Rule 5 — Situation-based language, not identity-based**
+Not "diaspora" or "African client." Use: "vous gérez un projet à distance," "vous cherchez un professionnel dans un secteur que vous ne connaissez pas," "votre chantier est loin de chez vous."
+
+**Rule 6 — Accessibility is never condescension**
+The platform is simple because complexity is a barrier, not because users are unsophisticated. Never imply the latter.
 
 ---
 
-## 7. Message Map by Page
+## 10. Message Map by Page
 
-### Homepage
-- Lead: Outcome for the client. Find, compare, build.
-- Sub: Professionals with verified track records, searchable by category and location.
-- No system explanation.
+### Homepage (client-facing)
+- Lead: Find the right professional.
+- Sub: Browse portfolios, compare work, create your project.
+- No system explanation on the landing. Show, don't explain.
+
+### Homepage (pro-facing)
+- Lead: Your work, finally visible.
+- Sub: Website, PDF, Google — in minutes.
+- The WhatsApp analogy lives here.
 
 ### À propos
-- Intent of the platform: give everyone access to a trusted professional directory.
-- What it enables: build with proven professionals, develop projects, compare, involve entourage.
-- The founding phrase belongs here as philosophy, not as a headline.
-- Mention entry market context (Europe-Africa construction) as the origin story, not the limit.
+- The problem: competent professionals, no digital presence.
+- The solution: simple, immediate, affordable.
+- The context: Africa's digital gap, not just the diaspora investment angle.
+- The founding phrase belongs here.
 
-### Pour les pros
-- Lead: Your work, finally visible. Clients who trust you before they call.
-- What they get: verified profile, portfolio, qualified leads, international reach.
-- Pricing is simple and clear. No feature matrix overload.
+### Pour les professionnels
+- Lead: Three outputs, one profile.
+- What they get: site, PDF, GMB.
+- What subscription adds: Google ranking, discovery, collaboration.
+- Pricing is simple and clear. No feature matrix overload on the landing.
 
 ### Comment ça marche
-- This is where the system gets explained.
-- Criteria for a valid recommendation (what Kelen requires as evidence).
-- Criteria for a valid signal (what triggers it, what proof is required, right of response).
-- The status tiers with precise meaning.
+- This is where the reputation system gets explained.
+- Criteria for a valid recommendation.
+- The three status tiers with precise meaning.
 - What "Kelen vérifie" means in practice.

@@ -100,6 +100,19 @@ Documents à mettre à jour dans l'ordre :
 - [x] `06-legal-contact.md` — suppression section permanence signaux, réécriture À propos, FAQ et Contact mis à jour (Version 2.0)
 - [x] `07-reference-global.md` — règles transversales entièrement mises à jour (Version 2.0)
 
+### Étape 5 — Repositionnement PRODUCT/ (2026-04-25)
+
+Documents mis à jour :
+- [x] `PRODUCT/kelen_positioning.md` — réécriture complète (Version 2.0) : pro comme cible primaire, client universel (plus diaspora uniquement), 3 sorties produit (site/PDF/GMB), statuts simplifiés, écosystème Kelen documenté
+- [x] `PRODUCT/kelen_value_proposition.md` — réécriture complète (Version 2.0) : suppression Red status, ajout valeur pro/client séparée, tableau de prix mis à jour, différenciation vs concurrents recentrée
+
+**Décisions clés de cette étape :**
+| Date | Décision | Raison |
+|------|----------|--------|
+| 2026-04-25 | Marché d'entrée élargi : plus uniquement Europe-Afrique construction | Le client local africain est la cible centrale |
+| 2026-04-25 | Les 3 sorties produit (site/PDF/GMB) deviennent la proposition de valeur centrale | Concrétise la promesse "WhatsApp → site web" |
+| 2026-04-25 | Différenciation : Kelen vs Instagram / site perso / annuaires / intermédiaires | Positionner sans citer de concurrents nommés |
+
 ---
 
 ## Questions ouvertes
