@@ -16,7 +16,7 @@ import { getProjectSteps } from "@/lib/actions/project-steps";
 import { getProjectImages, type ProjectImage } from "@/lib/actions/project-images";
 import { ProjectImageCarousel } from "@/components/projects/ProjectImageCarousel";
 import { generateProjectPdf } from "@/lib/actions/project-pdf";
-import { Plus, Trash2, Users, FileJson, Edit, FolderStar, Book, LayoutGrid, MapPin, ChevronDown } from "lucide-react";
+import { Plus, Trash2, Users, FileJson, Edit, FolderSync, Book, LayoutGrid, MapPin, ChevronDown } from "lucide-react";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -285,7 +285,7 @@ export default function ProjectDetailPage() {
                 href={`/projets/${projectIdStr}/documents`}
                 className="flex-1 min-w-[120px] sm:flex-none px-3 sm:px-6 lg:px-8 py-2.5 sm:py-4 bg-surface-container-low text-on-surface font-headline font-bold rounded-lg sm:rounded-2xl border border-transparent hover:border-surface-container transition-all flex items-center justify-center gap-2 text-[10px] sm:text-sm"
               >
-                <FolderStar className="text-base sm:text-xl" />
+                <FolderSync className="text-base sm:text-xl" />
                 <span>Documents</span>
               </Link>
               <Link

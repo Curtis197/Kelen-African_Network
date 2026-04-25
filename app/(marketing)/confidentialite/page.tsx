@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Shield, CloudCheck, Key, Lock, Mail, Trash, Edit, Eye, MonitorSmartphone, LineChart, Landmark, User, ShieldCheck, Settings, Database, Info } from "lucide-react";
+import { Shield, Cloud, Key, Lock, Mail, Trash, Edit, Eye, MonitorSmartphone, LineChart, Landmark, User, ShieldCheck, Settings, Database, Info } from "lucide-react";
 
 export const revalidate = 3600;
 
@@ -246,7 +246,7 @@ export default function ConfidentialitePage() {
                       <span className="text-xs font-bold text-on-surface-variant uppercase">Double Authentification</span>
                     </div>
                     <div className="flex flex-col items-center gap-2">
-                      <CloudCheck className="text-4xl text-on-surface/30" />
+                      <Cloud className="text-4xl text-on-surface/30" />
                       <span className="text-xs font-bold text-on-surface-variant uppercase">Backup temps-réel</span>
                     </div>
                     <div className="flex flex-col items-center gap-2">
