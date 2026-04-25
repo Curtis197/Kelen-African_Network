@@ -1,155 +1,160 @@
-# Combined Performance Improvement Projection
+# Performance Summary — Kelen African Network
 
-## Consolidated from 3 Audits
-- `PERFORMANCE-PLAN.md` — Caching, pagination, architecture
-- `BACKEND-MIGRATION-PLAN.md` — Edge Functions, async processing
-- `SQL-MIGRATION-PLAN.md` — TypeScript → SQL migrations
+## Africa-First Baseline (Audited April 2026)
 
----
+**Target environment:** Sub-Saharan Africa — 2G/3G (50-500 KB/s), 300-800ms RTT, expensive data, mid-range Android devices.
 
-## Total Effort: ~24 hours (3 working days)
-
-| Source | Phase 1 (Now) | Phase 2 (Before Launch) | Phase 3 (Later) |
-|--------|--------------|------------------------|-----------------|
-| Performance Plan | 4.5h | 7h | Future |
-| Backend Migration | 6.5h | 4.5h | 5.5h |
-| SQL Migration | 2.5h | 1.5h | 0.5h |
-| **Total** | **13.5h** | **13h** | **Future** |
+At these network conditions, **every sequential server round-trip adds 300-800ms to page load**. This compounds: a page with 8 sequential DB queries is 2.4-6.4 seconds slower than a page with 1, before any bytes of HTML arrive.
 
 ---
 
-## Performance Gain by Page Type
+## Current State vs Target
 
-### Public Pages (Marketing, Profiles, Realisations)
+### Dashboard (Pro & Client) — CRITICAL PATH
 
-| Metric | Before | After All Optimizations | Improvement |
-|--------|--------|----------------------|-------------|
-| DB queries per profile load | 6-12 | 2-3 | **70-75% fewer queries** |
-| Profile page load (cold) | ~800ms | ~200ms | **75% faster** |
-| Profile page load (cached) | N/A | ~50ms (5-min cache) | **94% faster** |
-| Realisations page (20 items) | 40+ COUNT queries | 1 GROUP BY query | **97% fewer queries** |
-| Data transferred per page | Full rows (all columns) | Selected columns only | **40-60% less bandwidth** |
-| Landing page queries | ~8 | 2-3 | **60-75% fewer queries** |
+| Step | Current (Africa, 500ms RTT) | After Phase 1 | After Phase 1+2 |
+|------|-----------------------------|----------------|-----------------|
+| DB queries (dashboard stats) | 8 sequential → **4000ms minimum** | 1 parallel batch → **500ms** | 1 parallel batch → **500ms** |
+| Font render block | 3 Google CDN requests → **1500ms** | 0 (self-hosted) → **0ms** | 0ms |
+| Total time to first content | **~5500ms on 3G** | **~700ms** | **~500ms** |
+| **Improvement** | baseline | **~87% faster** | **~91% faster** |
 
-**How:**
-- `revalidate = 300` caches pages for 5 min → 90% of requests hit Next.js cache, zero DB
-- Column selection → 40-60% less data per query
-- SQL aggregation → 1 query replaces 40 (realisations) or 7 (dashboard)
-- N+1 elimination → 2 queries instead of 2×N
+### Public Pages (Landing, Professional Profiles)
 
----
+| Metric | Current | After Phase 1 | After Phase 1+2 |
+|--------|---------|----------------|-----------------|
+| DB queries per profile load | 6-12 (dynamic, every request) | 0 (ISR cache hit) | 0 |
+| First visitor experience | 600-1200ms + font block | 400-700ms | 150-300ms |
+| Repeat visitor (< 5 min) | 600-1200ms (always fresh) | **~30-80ms** (served from cache) | ~30ms |
+| Data transferred per page | All columns (est. 80-150KB HTML) | Cached HTML + selected columns | Cached + optimized images |
+| **Improvement (repeat visitors)** | baseline | **~90-95% faster** | **~95% faster** |
 
-### Authenticated Pages (Client Projects, Pro Dashboard, Journal)
+### Map Pages (Pro Listing, Location Features)
 
-| Metric | Before | After All Optimizations | Improvement |
-|--------|--------|----------------------|-------------|
-| Middleware DB queries | 1 per request | 0 (JWT claim) | **100% eliminated** |
-| Dashboard stats queries | 7+ sequential | 1-2 RPC calls | **70-85% fewer queries** |
-| Journal stats queries | 2 round-trips + JS math | 1 RPC call | **50% fewer queries** |
-| Analytics page queries | 7+ plus thousands of raw rows | 3 aggregated queries | **95% less data** |
-| File upload (10 photos) | 20+ sequential ops | 10 parallel uploads | **5-10x faster** |
-| Log approve/contest/resolve | 8-10 ops (incl. blocking email) | 4 ops + async email | **Instant response** (email decoupled) |
-| Bulk draft sync (10 drafts) | 10 sequential round-trips | 1 batch request | **10x faster** |
+| Metric | Current | After Phase 1 |
+|--------|---------|----------------|
+| Google Maps script download | Synchronous, ~200KB, blocks render | Lazy (IntersectionObserver), loads only when visible |
+| Time to interactive (users who don't scroll to map) | +1000ms for Maps load | **0ms** (never loads) |
+| Time to interactive (users who scroll to map) | Maps blocks initial render | Maps loads after content is visible |
+| **Savings for typical user** | — | **500-1000ms** |
 
-**How:**
-- JWT role in middleware → removes 1 DB query from every single page load
-- SQL RPC functions → 7 dashboard queries become 1
-- Email queue → user action returns immediately, email fires async
-- Parallel uploads → Promise.all instead of sequential for loop
-- Batch sync endpoint → 10 drafts in 1 request
+### Image-Heavy Pages (Portfolio, Journal, Proposals)
 
----
+| Metric | Current | After Phase 2 |
+|--------|---------|----------------|
+| Below-fold images | Load immediately (no lazy load) | Load only when scrolled into view |
+| Mobile image size | Full-size (1920px) served to 375px screen | Correctly sized (375px-level) |
+| WebP compression | ✅ Already active on upload | ✅ + AVIF planned (Phase 3) |
+| Estimated bandwidth saving on portfolio page | baseline | **40-60% less** |
 
-### Heavy Operations (PDF, Excel, AI, Exports)
+### Heavy Feature Pages (PDF Export, Excel, Charts)
 
-| Metric | Before | After All Optimizations | Improvement |
-|--------|--------|----------------------|-------------|
-| PDF export (journal) | HTML for browser print, sequential URLs | Server-side real PDF, parallel URLs | **Real PDF, 5-10x faster URL gen** |
-| Excel export | Blocks client UI thread | Server generates, streams download | **Zero UI freeze** |
-| AI bio generation | 2-10s blocking server action | Async Edge Function | **User not blocked** |
-| Journal PDF data aggregation | N+1 comment queries + sequential URLs | 1 batch comment query + parallel URLs | **N→1 queries for comments** |
+| Metric | Current | After Phase 2 |
+|--------|---------|----------------|
+| Initial JS bundle (jspdf + xlsx + recharts + tiptap) | ~650KB raw / ~200KB gzipped | **Not in initial bundle** |
+| PDF/Excel/Chart download | On page load (wasted if unused) | On first use only |
+| Time to Interactive improvement | +2s on 3G from unused JS | **~1-2s saved** |
 
 ---
 
-## Aggregate Numbers
+## Aggregate Impact (All Phases)
 
 ### Database Query Reduction
 
-| Area | Queries Before | Queries After | Reduction |
-|------|---------------|---------------|-----------|
-| Professional profile page | 6-12 | 2-3 | ~70% |
-| Realisations listing (20 items) | 40+ | 1-2 | ~95% |
-| Dashboard stats | 7+ | 1-2 | ~75% |
-| Analytics page | 7+ plus all raw rows | 3 aggregated | ~95% data reduction |
-| Journal stats | 2 | 1 | 50% |
-| Log authorization (approve/contest/resolve) | 4 sequential | 1 | 75% |
-| Journal PDF comments (20 logs) | 20 | 1 | 95% |
-| **Weighted average across app** | — | — | **~70-80% fewer DB queries** |
+| Area | Before | After Phase 1 | After Phase 1+2 |
+|------|--------|----------------|-----------------|
+| Dashboard stats queries | 8 sequential | 1 parallel batch | 1 parallel batch |
+| Public profile page (repeat visit) | 6-12 queries | **0** (ISR cache) | 0 |
+| Middleware custom domain lookup | 1 per request | 1 per request | **0** (cached) |
+| Reviews average | Fetch all rows + JS avg | Server-side AVG() | Server-side AVG() |
+| **Effective queries per user session** | ~20-30 | **~5-8** | **~3-5** |
+| **Reduction** | baseline | **~70-75% fewer** | **~80-85% fewer** |
 
-### Response Time Improvement (Estimated)
+### Latency Reduction (Africa, 500ms RTT baseline)
 
-| Scenario | Before | After | Gain |
-|----------|--------|-------|------|
-| Public page (first visit) | 600-1000ms | 150-300ms | **70-75%** |
-| Public page (cached, <5 min) | 600-1000ms | 30-80ms | **90-95%** |
-| Dashboard load | 800-1500ms | 200-400ms | **70-75%** |
-| Approve/contest log | 1500-3000ms (email blocking) | 200-500ms | **80-85%** |
-| File upload (10 photos) | 8-15s | 1-3s | **75-85%** |
-| Bulk draft sync (10 drafts) | 5-10s | 0.5-1s | **90%** |
-| PDF export | Browser freeze 3-8s | Server stream 2-4s | **No freeze + 30-50% faster** |
-| **Overall perceived speed** | — | — | **~70-80% improvement** |
+| Scenario | Before | After Phase 1 | Gain |
+|----------|--------|----------------|------|
+| Dashboard (Pro) — cold load | ~5500ms | ~700ms | **-87%** |
+| Professional profile — first visit | ~1500ms | ~600ms | **-60%** |
+| Professional profile — repeat visit | ~1500ms | ~50ms | **-97%** |
+| Page with Google Maps — no scroll | +1000ms Maps overhead | 0ms | **-100%** |
+| Any page — font render block | +1500ms | 0ms | **-100%** |
+| PDF/Excel export — initial page load penalty | +2s bundle parse | 0ms | **-100%** |
 
----
+### Bandwidth Reduction
 
-## What Drives Each Percentage
-
-### 70-80% Fewer DB Queries comes from:
-| Optimization | Contribution |
-|-------------|-------------|
-| Next.js revalidation cache (public pages) | ~30% of total gain |
-| SQL aggregation (N queries → 1 RPC) | ~20% of total gain |
-| Email decoupling (removes blocking API call) | ~15% of total gain |
-| N+1 elimination (realisations, comments) | ~15% of total gain |
-| JWT role in middleware | ~10% of total gain |
-| Parallel uploads + batch sync | ~10% of total gain |
-
-### 70-80% Faster Response Times comes from:
-| Factor | Contribution |
-|--------|-------------|
-| Eliminating blocking operations (email, AI) | ~25% of total gain |
-| Fewer DB round-trips (SQL functions) | ~25% of total gain |
-| Caching (Next.js revalidate) | ~20% of total gain |
-| Less data transfer (column selection) | ~15% of total gain |
-| Parallelism (Promise.all, batch endpoints) | ~15% of total gain |
+| Content Type | Before | After | Saving |
+|-------------|--------|-------|--------|
+| Fonts | 3 CDN requests + WOFF2 files | Self-hosted, pre-cached by Next.js | **First load: same; repeat: 100% cached** |
+| Images (below fold) | All load immediately | Load on demand | **Up to 60% fewer bytes on short sessions** |
+| Initial JS bundle | +200KB gzipped (heavy libs) | Heavy libs deferred | **~200KB saved on initial load** |
+| DB response data (reviews) | N rows × row size | 1 number (AVG) | **Negligible now, critical at scale** |
 
 ---
 
-## Realistic Expectations
+## Realistic Expectations by Scale
 
-### At Current Scale (< 50 users)
-You won't feel dramatic differences because the DB is already fast with small tables. The improvements are:
-- **Noticeable** on blocking operations (email approval, AI bio, bulk sync)
-- **Measurable** but not dramatic on page loads (300ms → 100ms feels snappy but not transformative)
-- **Critical infrastructure** for when you DO have 500+ users
+### Now (< 50 users)
+The improvements that matter most:
+- **Dashboard parallelization** — felt immediately by every Pro logging in
+- **Font fix** — felt by every visitor, every page
+- **ISR on profiles** — felt after the first visitor warms the cache
+- **Google Maps lazy** — felt on any page with a map widget
 
-### At Scale (500+ users, 1000+ professionals)
-These optimizations become the difference between:
-- **Working app** (what you'll have) vs **broken app** (what you'd have without them)
-- Profile pages at 200ms vs 3-5 seconds (N+1 with 200 realisations = 400 queries)
-- Dashboard at 300ms vs 5+ seconds (7 queries × growing tables)
- 
+Improvements that are "infrastructure":
+- Column selection, pagination — DB is fast at small scale, but patterns are correct for growth
+
+### At 500+ professionals, 2000+ users
+The improvements become existential:
+- Without ISR: 2000 users viewing 500 profiles = 1M+ DB queries per day
+- Without parallel dashboard queries: every Pro login takes 5+ seconds as tables grow
+- Without pagination: a professional with 500 project logs downloads all 500 on every visit
+- Without lazy images: a portfolio with 30 realisations downloads all 30 images on load
+
+---
+
+## Implementation Cost vs Return
+
+| Task | Effort | Latency Saved (Africa) | Status |
+|------|--------|------------------------|--------|
+| Parallelize dashboard queries | 1h | **-3500ms on dashboard** | Not done |
+| Self-host fonts (next/font) | 2h | **-1500ms every page** | Not done |
+| ISR on 5 public pages | 30min | **-1400ms repeat visits** | Not done |
+| Lazy-load Google Maps | 1h | **-1000ms on map pages** | Not done |
+| Fix reviews aggregation | 30min | -bandwidth at scale | Not done |
+| Replace img → Next.js Image | 2h | -bandwidth on image pages | Not done |
+| Dynamic imports (jspdf/xlsx/recharts) | 3h | **-2s initial JS parse** | Not done |
+| Cache middleware domain lookup | 2h | -1 DB query/request | Not done |
+| Paginate remaining list queries | 2h | -bandwidth at scale | Not done |
+| **Total Phase 1 (5h)** | **5h** | **~5-6 seconds saved** | — |
+| **Total Phase 1+2 (14h)** | **14h** | **~7-8 seconds saved** | — |
+
+---
+
+## What Was Already Done Well
+
+| Area | Status |
+|------|--------|
+| Image compression (sharp + WebP + quality tiers) | ✅ Complete |
+| Client-side pre-compression before upload | ✅ Complete |
+| Server Actions for all data fetching (no useEffect+fetch) | ✅ Complete |
+| Proper viewport meta tags | ✅ Complete |
+| GA with `afterInteractive` strategy | ✅ Complete |
+| Pagination on notifications and recommendations | ✅ Complete |
+| Admin dashboard uses Promise.all | ✅ Complete |
+| File validation before upload | ✅ Complete |
+
 ---
 
 ## Bottom Line
 
-| Metric | Improvement |
-|--------|------------|
-| **Database queries** | **~70-80% fewer** |
-| **Response time (public pages)** | **~70-75% faster** (first load), **~90-95% faster** (cached) |
-| **Response time (authenticated)** | **~70-80% faster** |
-| **Blocking operations (email, AI)** | **~80-85% faster perceived** (user not waiting) |
-| **Data transfer** | **~40-60% less bandwidth** |
-| **Scalability ceiling** | **10-20x more users** before hitting same bottlenecks |
+**The single most impactful 5 hours of work for African users:**
 
-**Investment: ~24 hours of work.**
-**Return: An app that handles 10-20x more users without degradation.**
+1. Parallelize dashboard queries → -3500ms dashboard load
+2. Switch to next/font (self-host) → -1500ms every page
+3. Add ISR to 5 public pages → -1400ms repeat profile visits
+4. Lazy-load Google Maps → -1000ms map pages
+
+**Combined: ~7-8 seconds removed from common user journeys on African 3G connections.**
+
+At 500ms RTT, these aren't polish — they are the difference between an app that works and one that doesn't.
