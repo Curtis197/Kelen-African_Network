@@ -9,6 +9,12 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { LocationSearch, type LocationData } from "@/components/location/LocationSearch";
+import { 
+  Fingerprint, DraftingCompass, Calendar, Banknote, Verified,
+  Pencil, Scale, GraduationCap, HeartPulse, Wrench, Building2, Leaf, Ellipsis,
+  ChevronLeft, ChevronRight, Check, Star, Trash2, ImagePlus, Image as ImageIcon, Plus, X, ArrowRight, ArrowLeft, CheckCircle 
+} from "lucide-react";
+import NextImage from "next/image";
 
 type ProjectData = {
   id?: string;
@@ -28,11 +34,11 @@ type ProjectData = {
 };
 
 const STEPS = [
-  { id: "identity", label: "Identité", icon: "fingerprint" },
-  { id: "financial", label: "Finances", icon: "architecture" },
-  { id: "timeline", label: "Calendrier", icon: "calendar_today" },
-  { id: "details", label: "Détails", icon: "payments" },
-  { id: "review", label: "Revision", icon: "verified" },
+  { id: "identity", label: "Identité", icon: Fingerprint },
+  { id: "financial", label: "Finances", icon: Banknote },
+  { id: "timeline", label: "Calendrier", icon: Calendar },
+  { id: "details", label: "Détails", icon: DraftingCompass },
+  { id: "review", label: "Revision", icon: Verified },
 ];
 
 export default function ProjectWizard({ initialId }: { initialId?: string }) {
@@ -201,14 +207,10 @@ export default function ProjectWizard({ initialId }: { initialId?: string }) {
                     : "text-on-surface opacity-60 hover:bg-surface-container"
                 )}
               >
-                <span className="material-symbols-outlined text-xl">
-                  {step.icon}
-                </span>
+                <step.icon className={`w-5 h-5 ${currentStep >= idx + 1 ? "text-primary" : "text-stone-400"}`} />
                 <span className="font-medium text-sm">{step.label}</span>
                 {isCompleted && (
-                  <span className="material-symbols-outlined text-primary text-sm ml-auto">
-                    check_circle
-                  </span>
+                  <CheckCircle className="text-primary text-sm ml-auto" />
                 )}
               </div>
             );
@@ -269,7 +271,7 @@ export default function ProjectWizard({ initialId }: { initialId?: string }) {
             disabled={currentStep === 1 || isSaving}
             className="flex items-center gap-2 bg-surface-container text-on-surface rounded-lg px-8 py-3 font-headline font-bold uppercase tracking-widest text-xs hover:brightness-110 transition-all active:scale-[0.98] disabled:opacity-30"
           >
-            <span className="material-symbols-outlined text-sm">arrow_back</span>
+            <ArrowLeft className="text-sm" />
             Précédent
           </button>
 
@@ -291,7 +293,7 @@ export default function ProjectWizard({ initialId }: { initialId?: string }) {
             className="flex items-center gap-2 bg-gradient-to-tr from-primary to-primary-container text-white rounded-lg px-8 py-3 font-headline font-bold uppercase tracking-widest text-xs hover:brightness-110 transition-all shadow-lg shadow-primary/20 active:scale-[0.98]"
           >
             {isSaving ? "Enregistrement..." : currentStep === STEPS.length ? "Terminer" : "Suivant"}
-            <span className="material-symbols-outlined text-sm">arrow_forward</span>
+            <ArrowRight className="text-sm" />
           </button>
         </div>
       </footer>
@@ -303,15 +305,16 @@ export default function ProjectWizard({ initialId }: { initialId?: string }) {
 
 function Step1Identity({ formData, onChange }: { formData: ProjectData; onChange: (d: Partial<ProjectData>) => void }) {
   const categories = [
-    { id: "construction", label: "Construction", icon: "architecture" },
-    { id: "design", label: "Design & Archi", icon: "draw" },
-    { id: "juridique", label: "Droit & Juridique", icon: "gavel" },
-    { id: "education", label: "Éducation", icon: "school" },
-    { id: "sante", label: "Santé & Bien-être", icon: "health_and_safety" },
-    { id: "renovation", label: "Rénovation", icon: "home_repair_service" },
-    { id: "immobilier", label: "Immobilier", icon: "domain" },
-    { id: "amenagement", label: "Aménagement", icon: "nest_eco_leaf" },
-    { id: "autre", label: "Autre Service", icon: "more_horiz" },
+    { id: "architecture", label: "Architecture & Design", icon: DraftingCompass },
+    { id: "construction", label: "Gros œuvre", icon: DraftingCompass },
+    { id: "renovation", label: "Rénovation", icon: Pencil },
+    { id: "juridique", label: "Conseil Juridique", icon: Scale },
+    { id: "etudes", label: "Études & Expertise", icon: GraduationCap },
+    { id: "securite", label: "Sécurité & Domotique", icon: HeartPulse },
+    { id: "maintenance", label: "Maintenance", icon: Wrench },
+    { id: "immobilier", label: "Promotion Immobilière", icon: Building2 },
+    { id: "ecologie", label: "Solutions Écologiques", icon: Leaf },
+    { id: "autre", label: "Autre projet", icon: Ellipsis },
   ];
 
   return (
@@ -391,7 +394,7 @@ function Step1Identity({ formData, onChange }: { formData: ProjectData; onChange
                     : "bg-surface-container-low border-transparent hover:border-surface-container-highest"
                 )}
               >
-                <span className="material-symbols-outlined text-3xl">{cat.icon}</span>
+                <cat.icon className={`w-6 h-6 ${formData.category === cat.id ? "text-primary" : "text-stone-400"}`} />
                 <span className="font-headline font-bold text-xs uppercase tracking-wider text-center">{cat.label}</span>
               </button>
             ))}
@@ -518,7 +521,7 @@ function Step4Objectives({ formData, onChange }: { formData: ProjectData; onChan
     <div className="space-y-12">
       <header className="mb-16 space-y-4">
         <h1 className="font-headline font-extrabold text-3xl md:text-4xl lg:text-5xl text-on-surface tracking-tight">
-          01 Identité du Projet
+          04 Détails du Projet
         </h1>
         <p className="text-base md:text-xl text-on-surface-variant opacity-80 max-w-2xl font-body leading-relaxed">
           Décrivez votre projet en quelques mots et listez les jalons clés que vous souhaitez atteindre.
@@ -547,7 +550,7 @@ function Step4Objectives({ formData, onChange }: { formData: ProjectData; onChan
                 className="px-6 py-3 rounded-full bg-primary text-white font-headline font-bold text-sm flex items-center gap-2 hover:bg-primary-container transition-colors"
               >
                 {tag}
-                <span className="material-symbols-outlined text-xs">close</span>
+                <X className="text-xs" />
               </button>
             ))}
           </div>
@@ -563,7 +566,7 @@ function Step4Objectives({ formData, onChange }: { formData: ProjectData; onChan
               type="submit"
               className="absolute right-2 top-2 h-12 w-12 rounded-full bg-primary text-white flex items-center justify-center hover:scale-105 transition-transform"
             >
-              <span className="material-symbols-outlined">add</span>
+              <Plus />
             </button>
           </form>
         </div>
@@ -628,7 +631,7 @@ function Step5Review({
           <div className="flex items-center justify-between mb-6">
             <div>
               <h3 className="text-xl font-headline font-bold text-on-surface flex items-center gap-2">
-                <span className="material-symbols-outlined">photo_library</span>
+                <ImageIcon />
                 Photos du projet
               </h3>
               <p className="text-sm text-on-surface-variant mt-1">
@@ -648,14 +651,14 @@ function Step5Review({
               onClick={() => fileInputRef.current?.click()}
               className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl font-headline font-bold text-sm hover:bg-primary-container transition-colors shadow-lg shadow-primary/20"
             >
-              <span className="material-symbols-outlined text-lg">add_photo_alternate</span>
+              <ImagePlus className="text-lg" />
               Ajouter des photos
             </button>
           </div>
 
           {imagePreviews.length === 0 ? (
             <div className="text-center py-12 bg-surface-container-lowest rounded-2xl border-2 border-dashed border-surface-container-high">
-              <span className="material-symbols-outlined text-5xl text-on-surface-variant/30 mb-3">add_photo_alternate</span>
+              <ImagePlus className="text-5xl text-on-surface-variant/30 mb-3" />
               <p className="text-sm font-medium text-on-surface-variant">
                 Aucune photo ajoutée
               </p>
@@ -670,11 +673,14 @@ function Step5Review({
                   key={index}
                   className="group relative aspect-square rounded-xl overflow-hidden bg-surface-container-low border border-surface-container-high"
                 >
-                  <img
-                    src={preview}
-                    alt={`Project image ${index + 1}`}
-                    className="w-full h-full object-cover"
-                  />
+                  <div className="relative w-full h-full">
+                    <NextImage
+                      src={preview}
+                      alt={`Project image ${index + 1}`}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center">
                     <button
                       type="button"
@@ -682,12 +688,12 @@ function Step5Review({
                       className="p-2 bg-white rounded-full hover:bg-red-50 transition-colors opacity-0 group-hover:opacity-100"
                       title="Supprimer"
                     >
-                      <span className="material-symbols-outlined text-red-600 text-sm">delete</span>
+                      <Trash2 className="text-red-600 text-sm" />
                     </button>
                   </div>
                   {index === 0 && (
                     <div className="absolute top-2 left-2 bg-primary text-white px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
-                      <span className="material-symbols-outlined text-xs fill-current">star</span>
+                      <Star className="text-xs fill-current" />
                       Principale
                     </div>
                   )}

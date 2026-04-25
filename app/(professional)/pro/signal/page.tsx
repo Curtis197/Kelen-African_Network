@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { Shield, Reply, Send, AlignLeft, AlertTriangle, Info } from "lucide-react";
 
 interface Signal {
   id: string;
@@ -99,7 +100,7 @@ export default function ProSignalsPage() {
       </header>
 
       <div className="mb-10 p-5 bg-amber-50 rounded-2xl border border-amber-200 flex gap-4 items-start">
-        <span className="material-symbols-outlined text-amber-600 text-2xl">info</span>
+        <Info className="text-amber-600 text-2xl" />
         <div className="text-sm text-amber-900">
           <p className="font-bold mb-1">Droit de réponse (15 jours)</p>
           <p>Vous disposez d&apos;un délai légal de 15 jours pour répondre à tout signalement. Passé ce délai, le signalement peut être validé automatiquement par nos services.</p>
@@ -126,7 +127,7 @@ export default function ProSignalsPage() {
                   <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-6">
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center">
-                        <span className="material-symbols-outlined">report_problem</span>
+                        <AlertTriangle />
                       </div>
                       <div>
                         <h3 className="text-lg font-bold text-on-surface">{BREACH_LABELS[signal.breach_type]}</h3>
@@ -147,7 +148,7 @@ export default function ProSignalsPage() {
 
                   <div className="bg-surface-container rounded-2xl p-5 mb-6 border border-border">
                     <p className="text-xs font-black text-on-surface-variant/60 uppercase tracking-widest mb-2 flex items-center gap-2">
-                      <span className="material-symbols-outlined text-sm">subject</span>
+                      <AlignLeft className="text-sm" />
                       Détails de l&apos;incident
                     </p>
                     <p className="text-sm text-on-surface-variant leading-relaxed italic">
@@ -176,7 +177,7 @@ export default function ProSignalsPage() {
                           {isSubmitting === signal.id ? (
                              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                           ) : (
-                            <span className="material-symbols-outlined text-lg">send</span>
+                            <Send className="text-lg" />
                           )}
                           Envoyer ma réponse
                         </button>
@@ -185,7 +186,7 @@ export default function ProSignalsPage() {
                   ) : (
                     <div className="bg-kelen-green-50/50 border border-kelen-green-100 rounded-2xl p-6">
                       <p className="text-xs font-black text-kelen-green-600 uppercase tracking-widest mb-3 flex items-center gap-2">
-                        <span className="material-symbols-outlined text-sm">reply</span>
+                        <Reply className="text-sm" />
                         Ma réponse publiée
                       </p>
                       <p className="text-sm text-on-surface-variant leading-relaxed">
@@ -201,7 +202,7 @@ export default function ProSignalsPage() {
       ) : (
         <div className="flex flex-col items-center justify-center py-24 bg-surface-container-low rounded-3xl border border-border shadow-sm">
           <div className="w-24 h-24 bg-surface-container rounded-full flex items-center justify-center mb-8">
-            <span className="material-symbols-outlined text-5xl text-on-surface-variant/40">security</span>
+            <Shield className="text-5xl text-on-surface-variant/40" />
           </div>
           <h3 className="text-2xl font-bold text-on-surface">Score de confiance impeccable</h3>
           <p className="text-on-surface-variant mt-2 max-w-sm text-center">

@@ -1,5 +1,6 @@
 // components/pro-site/ProSiteItemCard.tsx
 import Link from 'next/link'
+import Image from 'next/image'
 import type { ProSiteItem } from '@/lib/pro-site/types'
 
 export function ProSiteItemCard({
@@ -13,11 +14,15 @@ export function ProSiteItemCard({
     <Link href={href} className="block group">
       <div className="bg-[var(--pro-surface,#fff)] border border-[var(--pro-border,#eee)] rounded-[var(--pro-radius,16px)] overflow-hidden hover:shadow-md transition-shadow">
         {item.imageUrl ? (
-          <img
-            src={item.imageUrl}
-            alt={item.title}
-            className="w-full h-36 object-cover"
-          />
+          <div className="relative w-full h-36">
+            <Image
+              src={item.imageUrl}
+              alt={item.title}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+          </div>
         ) : (
           <div className="w-full h-36 bg-gray-100" />
         )}

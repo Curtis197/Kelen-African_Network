@@ -4,7 +4,8 @@ import { useState, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { uploadFile } from "@/lib/supabase/storage";
 import { addProjectImage, deleteProjectImage, setMainProjectImage } from "@/lib/actions/realisations";
-import { Image, Upload, Trash2, Star, StarOff, X } from "lucide-react";
+import { Image as ImageIcon, Upload, Trash2, Star, StarOff, X } from "lucide-react";
+import Image from "next/image";
 import type { ProjectImage } from "@/lib/supabase/types";
 
 interface ProjectImageManagerProps {
@@ -195,10 +196,12 @@ export default function ProjectImageManager({
       {mainImage && (
         <div className="relative group">
           <div className="aspect-video bg-surface-container rounded-xl overflow-hidden">
-            <img
+            <Image
               src={mainImage.url}
               alt="Image principale"
-              className="w-full h-full object-cover"
+              className="object-cover"
+              fill
+              sizes="(max-width: 1200px) 100vw, 80vw"
             />
           </div>
           <div className="absolute top-3 left-3 bg-kelen-green-600 text-white px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
@@ -230,10 +233,12 @@ export default function ProjectImageManager({
               key={image.id}
               className="relative group aspect-square bg-surface-container rounded-xl overflow-hidden"
             >
-              <img
+              <Image
                 src={image.url}
                 alt="Image du projet"
-                className="w-full h-full object-cover"
+                className="object-cover"
+                fill
+                sizes="(max-width: 768px) 50vw, 25vw"
               />
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors" />
               <div className="absolute inset-0 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -288,7 +293,7 @@ export default function ProjectImageManager({
       {/* Empty State */}
       {images.length === 0 && (
         <div className="text-center py-12 bg-surface-container-low rounded-xl">
-          <Image className="w-12 h-12 mx-auto text-on-surface-variant/40 mb-4" />
+          <ImageIcon className="w-12 h-12 mx-auto text-on-surface-variant/40 mb-4" />
           <h3 className="text-lg font-semibold text-on-surface mb-2">
             Aucune image
           </h3>

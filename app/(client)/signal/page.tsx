@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
+import { ArrowRight, UserMinus, SearchX, AlertTriangle, Search, Gavel } from "lucide-react";
 
 interface Professional {
   id: string;
@@ -56,7 +57,7 @@ export default function SelectProForSignalPage() {
 
       <div className="mb-8 p-6 bg-red-50 rounded-[2rem] border border-red-100 flex gap-4 items-start shadow-sm shadow-red-500/5 transition-all hover:scale-[1.01]">
         <div className="w-10 h-10 bg-white rounded-2xl flex items-center justify-center shrink-0 shadow-sm border border-red-100">
-          <span className="material-symbols-outlined text-red-600">gavel</span>
+          <Gavel className="text-red-600" />
         </div>
         <div className="text-xs text-red-900 leading-relaxed font-medium">
           <strong className="block mb-1 text-sm font-black uppercase tracking-wider">Avertissement Légal</strong>
@@ -67,9 +68,7 @@ export default function SelectProForSignalPage() {
 
       {/* Search */}
       <div className="relative group mb-8">
-        <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 group-focus-within:text-red-500 transition-colors">
-          manage_search
-        </span>
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 group-focus-within:text-red-500 transition-colors" />
         <input
           type="text"
           value={search}
@@ -100,13 +99,13 @@ export default function SelectProForSignalPage() {
               </div>
               <div className="flex items-center gap-2 text-red-600 font-bold text-xs uppercase tracking-widest">
                 Signaler
-                <span className="material-symbols-outlined text-sm">report_problem</span>
+                <AlertTriangle className="text-sm" />
               </div>
             </Link>
           ))
         ) : (
           <div className="text-center py-20 bg-stone-50/50 rounded-3xl border-2 border-dashed border-stone-200">
-            <span className="material-symbols-outlined text-4xl text-stone-200 mb-4">search_off</span>
+            <SearchX className="text-4xl text-stone-200 mb-4" />
             <p className="text-sm text-stone-400 font-medium italic">Aucun professionnel trouvé pour cette recherche.</p>
           </div>
         )}
@@ -118,7 +117,7 @@ export default function SelectProForSignalPage() {
             className="flex items-center gap-4 rounded-2xl border border-dashed border-stone-300 bg-stone-50/30 p-6 transition-all hover:border-red-500 hover:bg-red-50/30 group"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white text-xl shadow-sm group-hover:bg-red-500 group-hover:text-white transition-colors">
-              <span className="material-symbols-outlined">person_add_disabled</span>
+              <UserMinus />
             </div>
             <div>
               <p className="font-bold text-stone-900">Le professionnel n'est pas sur Kelen ?</p>
@@ -126,9 +125,7 @@ export default function SelectProForSignalPage() {
                 Vous pouvez quand même signaler un manquement en saisissant ses informations.
               </p>
             </div>
-            <span className="material-symbols-outlined ml-auto text-stone-300 group-hover:text-red-500 transition-colors">
-              arrow_forward
-            </span>
+            <ArrowRight className="ml-auto text-stone-300 group-hover:text-red-500 transition-colors" />
           </Link>
         </div>
       </div>

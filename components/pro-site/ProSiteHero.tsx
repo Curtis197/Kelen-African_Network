@@ -1,3 +1,5 @@
+import Image from 'next/image'
+
 export function ProSiteHero({
   coverImageUrl,
   profession,
@@ -17,10 +19,13 @@ export function ProSiteHero({
     >
       {/* Background */}
       {coverImageUrl ? (
-        <img
+        <Image
           src={coverImageUrl}
           alt={proName}
-          className="absolute inset-0 w-full h-full object-cover"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
         />
       ) : (
         <div className="absolute inset-0 bg-gradient-to-br from-[#2c3e6b] to-[#1a1a2e]" />

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import Image from "next/image";
 import { ArrowLeft, MapPin, Calendar, DollarSign, FileText, Download, Play, Video } from "lucide-react";
 import { RealizationCopyCorrector } from "@/components/portfolio/RealizationCopyCorrector";
 
@@ -51,8 +52,14 @@ export default async function RealizationDetailPage({ params }: Props) {
 
       {/* Main Image */}
       {mainImage && (
-        <div className="rounded-2xl overflow-hidden mb-10 aspect-[21/9]">
-          <img src={mainImage} alt={realization.title} className="w-full h-full object-cover" />
+        <div className="rounded-2xl overflow-hidden mb-10 aspect-[21/9] relative">
+          <Image
+            src={mainImage}
+            alt={realization.title}
+            fill
+            className="object-cover"
+            priority
+          />
         </div>
       )}
 
@@ -74,11 +81,12 @@ export default async function RealizationDetailPage({ params }: Props) {
               <h2 className="font-headline text-xl font-bold text-on-surface mb-4">Galerie</h2>
               <div className="grid grid-cols-2 gap-4">
                 {galleryImages.map((url: string, i: number) => (
-                  <div key={i} className="aspect-[4/3] rounded-xl overflow-hidden">
-                    <img
+                  <div key={i} className="aspect-[4/3] rounded-xl overflow-hidden relative">
+                    <Image
                       src={url}
                       alt={`${realization.title} - ${i + 1}`}
-                      className="w-full h-full object-cover"
+                      fill
+                      className="object-cover"
                     />
                   </div>
                 ))}
@@ -96,10 +104,11 @@ export default async function RealizationDetailPage({ params }: Props) {
                 {videos.map((video) => (
                   <div key={video.id} className="relative aspect-video overflow-hidden rounded-xl bg-stone-900">
                     {video.thumbnail_url ? (
-                      <img
+                      <Image
                         src={video.thumbnail_url}
                         alt="Miniature vidéo"
-                        className="absolute inset-0 w-full h-full object-cover"
+                        fill
+                        className="object-cover"
                       />
                     ) : (
                       <video

@@ -1,4 +1,5 @@
 import { formatDate, getCountryName } from "@/lib/utils/format";
+import { User, Star } from "lucide-react";
 
 interface ReviewCardProps {
   rating: number;
@@ -20,15 +21,7 @@ export function ReviewCard({
       {/* Stars */}
       <div className="flex items-center gap-0.5 mb-4">
         {Array.from({ length: 5 }).map((_, i) => (
-          <span
-            key={i}
-            className={`material-symbols-outlined text-lg ${
-              i < rating ? "text-primary" : "text-outline-variant/30"
-            }`}
-            style={{ fontVariationSettings: i < rating ? "'FILL' 1" : undefined }}
-          >
-            star
-          </span>
+          <Star />
         ))}
         <span className="ml-2 text-xs font-bold text-on-surface-variant/40 uppercase tracking-widest">
           {rating}.0
@@ -43,7 +36,7 @@ export function ReviewCard({
 
       <div className="mt-6 pt-4 border-t border-outline-variant/10 flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60">
         <div className="flex items-center gap-2">
-          <span className="material-symbols-outlined text-xs">person</span>
+          <User className="text-xs" />
           <span>
             {reviewerName}, {getCountryName(reviewerCountry)}
           </span>

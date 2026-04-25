@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
+import { ArrowRight, UserPlus, UserSearch, Search } from "lucide-react";
 
 interface Professional {
   id: string;
@@ -56,9 +57,7 @@ export default function SelectProForRecommendationPage() {
 
       {/* Search */}
       <div className="relative group mb-8">
-        <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 group-focus-within:text-kelen-green-600 transition-colors">
-          search
-        </span>
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 group-focus-within:text-kelen-green-600 transition-colors" />
         <input
           type="text"
           value={search}
@@ -89,13 +88,13 @@ export default function SelectProForRecommendationPage() {
               </div>
               <div className="flex items-center gap-2 text-kelen-green-600 font-bold text-xs uppercase tracking-widest">
                 Recommander
-                <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                <ArrowRight className="text-sm" />
               </div>
             </Link>
           ))
         ) : (
           <div className="text-center py-20 bg-stone-50/50 rounded-3xl border-2 border-dashed border-stone-200">
-            <span className="material-symbols-outlined text-4xl text-stone-200 mb-4">person_search</span>
+            <UserSearch className="text-4xl text-stone-200 mb-4" />
             <p className="text-sm text-stone-400 font-medium italic">Aucun professionnel trouvé pour cette recherche.</p>
           </div>
         )}
@@ -107,7 +106,7 @@ export default function SelectProForRecommendationPage() {
             className="flex items-center gap-4 rounded-2xl border border-dashed border-stone-300 bg-stone-50/30 p-6 transition-all hover:border-kelen-green-500 hover:bg-kelen-green-50/30 group"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white text-xl shadow-sm group-hover:bg-kelen-green-500 group-hover:text-white transition-colors">
-              <span className="material-symbols-outlined">person_add</span>
+              <UserPlus />
             </div>
             <div>
               <p className="font-bold text-stone-900">Le professionnel n'est pas sur Kelen ?</p>
@@ -115,9 +114,7 @@ export default function SelectProForRecommendationPage() {
                 Vous pouvez quand même le recommander en saisissant ses informations manuellement.
               </p>
             </div>
-            <span className="material-symbols-outlined ml-auto text-stone-300 group-hover:text-kelen-green-500 transition-colors">
-              arrow_forward
-            </span>
+            <ArrowRight className="ml-auto text-stone-300 group-hover:text-kelen-green-500 transition-colors" />
           </Link>
         </div>
       </div>

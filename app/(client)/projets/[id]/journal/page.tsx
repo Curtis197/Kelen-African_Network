@@ -21,38 +21,67 @@ export default function JournalListPage() {
   const router = useRouter();
   const projectId = params.id as string;
   const isOnline = useOnlineStatus();
+  const PAGE_SIZE = 15;
   const [logs, setLogs] = useState<ProjectLog[]>([]);
   const [photoUrls, setPhotoUrls] = useState<Record<string, Record<string, string>>>({});
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(0);
   const [pendingDrafts, setPendingDrafts] = useState(0);
   const [isSyncing, setIsSyncing] = useState(false);
   const supabase = createClient();
 
-  const loadLogs = useCallback(async () => {
-    setIsLoading(true);
-    const data = await getProjectLogs(projectId);
-    setLogs(data);
+  const loadLogs = useCallback(async (pageNum: number = 0, isAppend: boolean = false) => {
+    if (pageNum === 0) setIsLoading(true);
+    else setIsLoadingMore(true);
 
-    // Load signed URLs for primary photos
+    const offset = pageNum * PAGE_SIZE;
+    console.log('[JOURNAL] Fetching logs page:', pageNum, 'offset:', offset);
+    
+    const data = await getProjectLogs(projectId, false, PAGE_SIZE, offset);
+    
+    if (isAppend) {
+      setLogs(prev => [...prev, ...data]);
+    } else {
+      setLogs(data);
+    }
+    
+    setHasMore(data.length === PAGE_SIZE);
+
+    // Load signed URLs for primary photos in batch (or at least parallelized)
+    // We only fetch for the new items
     const urls: Record<string, Record<string, string>> = {};
-    for (const log of data) {
+    const fetchPromises = data.map(async (log) => {
       if (log.media && log.media.length > 0) {
-        urls[log.id] = {};
-        for (const media of log.media) {
+        const logMediaUrls: Record<string, string> = {};
+        // Parallelize media URL signing for each log
+        await Promise.all(log.media.map(async (media) => {
           const signedUrl = await getMediaUrl(media.storage_path);
           if (signedUrl) {
-            urls[log.id][media.storage_path] = signedUrl;
+            logMediaUrls[media.storage_path] = signedUrl;
           }
-        }
+        }));
+        urls[log.id] = logMediaUrls;
       }
-    }
-    setPhotoUrls(urls);
+    });
+
+    await Promise.all(fetchPromises);
+    
+    setPhotoUrls(prev => ({ ...prev, ...urls }));
     setIsLoading(false);
+    setIsLoadingMore(false);
   }, [projectId]);
 
   useEffect(() => {
-    loadLogs();
+    loadLogs(0, false);
   }, [loadLogs]);
+
+  const handleLoadMore = () => {
+    const nextPage = page + 1;
+    setPage(nextPage);
+    loadLogs(nextPage, true);
+  };
 
   // Load pending draft count
   useEffect(() => {
@@ -215,12 +244,26 @@ export default function JournalListPage() {
             ))}
           </div>
         ) : (
-          <LogTimeline
-            logs={logs}
-            projectId={projectId}
-            photoUrls={photoUrls}
-            onCreateFirst={() => router.push(`/projets/${projectId}/journal/nouveau`)}
-          />
+          <div className="space-y-12">
+            <LogTimeline
+              logs={logs}
+              projectId={projectId}
+              photoUrls={photoUrls}
+              onCreateFirst={() => router.push(`/projets/${projectId}/journal/nouveau`)}
+            />
+
+            {hasMore && (
+              <div className="flex justify-center">
+                <button
+                  onClick={handleLoadMore}
+                  disabled={isLoadingMore}
+                  className="px-8 py-3 rounded-xl bg-surface-container hover:bg-surface-container-high text-sm font-bold transition-all disabled:opacity-50"
+                >
+                  {isLoadingMore ? "Chargement..." : "Charger plus d'historique"}
+                </button>
+              </div>
+            )}
+          </div>
         )}
       </div>
     </main>

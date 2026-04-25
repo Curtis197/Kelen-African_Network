@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
@@ -709,11 +710,12 @@ function GoogleReviewCard({ review }: { review: GoogleReview }) {
     <div className="bg-surface-container-low rounded-xl p-4 border border-outline-variant/10">
       <div className="flex items-start gap-3">
         {review.profile_photo_url ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             src={review.profile_photo_url}
             alt={review.author_name}
-            className="w-9 h-9 rounded-full object-cover shrink-0"
+            width={36}
+            height={36}
+            className="rounded-full object-cover shrink-0"
           />
         ) : (
           <Avatar className="h-9 w-9 shrink-0">

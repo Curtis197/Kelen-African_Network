@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+import { Cookie, ArrowRight, Shield, AlertTriangle, Gavel, Server, Cloud, FileEdit } from "lucide-react";
+
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Mentions Légales — Kelen",
@@ -13,7 +16,7 @@ export default function MentionsLegalesPage() {
         <div className="mb-8 px-2">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-              <span className="material-symbols-outlined text-primary">gavel</span>
+              <Gavel className="text-primary" />
             </div>
             <div>
               <h2 className="font-headline font-bold text-on-surface leading-tight">Mentions Légales</h2>
@@ -26,35 +29,35 @@ export default function MentionsLegalesPage() {
             className="flex items-center gap-3 px-4 py-3 bg-surface-container-lowest text-primary rounded-lg shadow-sm font-bold transition-all duration-200"
             href="#editeur"
           >
-            <span className="material-symbols-outlined">edit_note</span>
+            <FileEdit />
             <span>Éditeur</span>
           </a>
           <a
             className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:translate-x-1 rounded-lg transition-all duration-200"
             href="#hebergement"
           >
-            <span className="material-symbols-outlined">dns</span>
+            <Server />
             <span>Hébergement</span>
           </a>
           <a
             className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:translate-x-1 rounded-lg transition-all duration-200"
             href="#propriete"
           >
-            <span className="material-symbols-outlined">gavel</span>
+            <Gavel />
             <span>Propriété</span>
           </a>
           <a
             className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:translate-x-1 rounded-lg transition-all duration-200"
             href="#donnees"
           >
-            <span className="material-symbols-outlined">security</span>
+            <Shield />
             <span>Données</span>
           </a>
           <a
             className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:translate-x-1 rounded-lg transition-all duration-200"
             href="#cookies"
           >
-            <span className="material-symbols-outlined">cookie</span>
+            <Cookie />
             <span>Cookies</span>
           </a>
         </nav>
@@ -89,7 +92,7 @@ export default function MentionsLegalesPage() {
             <div className="lg:col-span-4">
               <div className="sticky top-24">
                 <span className="inline-block p-3 rounded-2xl bg-surface-container-low text-primary mb-4">
-                  <span className="material-symbols-outlined text-3xl">edit_note</span>
+                  <FileEdit className="text-3xl" />
                 </span>
                 <h2 className="font-headline text-3xl font-bold text-on-surface mb-4 italic">Éditeur du site</h2>
                 <p className="text-on-surface-variant text-sm leading-relaxed">Informations relatives à l&apos;identité de l&apos;entreprise et à la direction de la publication.</p>
@@ -143,7 +146,7 @@ export default function MentionsLegalesPage() {
                   </p>
                   <div className="flex items-center gap-6 p-6 bg-surface-container-low rounded-xl">
                     <div className="w-16 h-16 bg-surface-container-lowest rounded-lg flex items-center justify-center shadow-sm border border-outline-variant/10">
-                      <span className="material-symbols-outlined text-4xl text-primary">cloud</span>
+                      <Cloud className="text-4xl text-primary" />
                     </div>
                     <div>
                       <p className="font-bold text-on-surface">Vercel Inc.</p>
@@ -157,7 +160,7 @@ export default function MentionsLegalesPage() {
             <div className="lg:col-span-4 order-1 lg:order-2">
               <div className="sticky top-24 lg:text-right">
                 <span className="inline-block p-3 rounded-2xl bg-surface-container-low text-secondary mb-4">
-                  <span className="material-symbols-outlined text-3xl">dns</span>
+                  <Server className="text-3xl" />
                 </span>
                 <h2 className="font-headline text-3xl font-bold text-on-surface mb-4 italic">Hébergement</h2>
                 <p className="text-on-surface-variant text-sm leading-relaxed">Localisation et identification de notre partenaire d&apos;infrastructure.</p>
@@ -170,7 +173,7 @@ export default function MentionsLegalesPage() {
             <div className="lg:col-span-4">
               <div className="sticky top-24">
                 <span className="inline-block p-3 rounded-2xl bg-surface-container-low text-error mb-4">
-                  <span className="material-symbols-outlined text-3xl">gavel</span>
+                  <Gavel className="text-3xl" />
                 </span>
                 <h2 className="font-headline text-3xl font-bold text-on-surface mb-4 italic">Propriété</h2>
                 <p className="text-on-surface-variant text-sm leading-relaxed">Protection des contenus, marques et designs de la plateforme.</p>
@@ -183,7 +186,7 @@ export default function MentionsLegalesPage() {
                   L&apos;ensemble des éléments constituant le site Kelen (textes, graphismes, logiciels, photographies, images, vidéos, sons, plans, noms, logos, marques, créations et œuvres protégeables diverses, bases de données, etc.) ainsi que le site lui-même, relèvent des législations françaises et internationales sur le droit d&apos;auteur et la propriété intellectuelle.
                 </p>
                 <div className="mt-8 pt-8 border-t border-surface-container flex gap-4">
-                  <span className="material-symbols-outlined text-error">warning</span>
+                  <AlertTriangle className="text-error" />
                   <p className="text-sm font-medium text-on-surface-variant">
                     Toute reproduction, représentation ou diffusion, totale ou partielle du contenu de ce site, sur quelque support ou par tout procédé que ce soit, est interdite sans autorisation préalable.
                   </p>
@@ -195,7 +198,7 @@ export default function MentionsLegalesPage() {
           {/* Section: Données & Cookies */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8" id="donnees">
             <div className="bg-surface-container-lowest p-10 rounded-xl shadow-xl shadow-on-surface/5 border-t-4 border-primary">
-              <span className="material-symbols-outlined text-primary text-4xl mb-6">security</span>
+              <Shield className="text-primary text-4xl mb-6" />
               <h3 className="font-headline text-2xl font-bold mb-4">Données Personnelles</h3>
               <p className="text-on-surface-variant leading-relaxed mb-6">
                 Conformément au RGPD, vous disposez d&apos;un droit d&apos;accès, de rectification et de suppression des données vous concernant. Nous utilisons vos données uniquement pour le bon fonctionnement du service Kelen.
@@ -212,11 +215,11 @@ export default function MentionsLegalesPage() {
               </ul>
               <button className="text-primary font-bold flex items-center gap-2 group">
                 Politique de confidentialité
-                <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                <ArrowRight className="group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
             <div className="bg-on-surface p-10 rounded-xl shadow-xl text-surface" id="cookies">
-              <span className="material-symbols-outlined text-secondary-container text-4xl mb-6 underline">cookie</span>
+              <Cookie className="text-secondary-container text-4xl mb-6 underline" />
               <h3 className="font-headline text-2xl font-bold mb-4">Politique des Cookies</h3>
               <p className="text-on-surface-variant leading-relaxed mb-6 opacity-80">
                 Notre site utilise des cookies essentiels au fonctionnement technique et des outils d&apos;analyse anonymisés pour améliorer votre expérience utilisateur.

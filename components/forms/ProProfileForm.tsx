@@ -4,10 +4,8 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import {
-  ImagePlus, X, Upload, Type, FileText, ExternalLink, Save,
-  Smartphone, Clock, Users, Link as LinkIcon, Plus, Wand2
-} from "lucide-react";
+import Image from "next/image";
+import { ImagePlus, X, Upload, Type, FileText, ExternalLink, Save, Smartphone, Clock, Users, Link as LinkIcon, Plus, Wand2, User } from "lucide-react";
 import AICopywritingDialog from "@/components/forms/AICopywritingDialog";
 
 interface ProProfileData {
@@ -326,7 +324,13 @@ export function ProProfileForm() {
           </label>
           {heroPreview ? (
             <div className="relative rounded-xl overflow-hidden aspect-video bg-surface-container">
-              <img src={heroPreview} alt="Hero" className="w-full h-full object-cover" />
+              <Image 
+                src={heroPreview} 
+                alt="Hero" 
+                fill 
+                sizes="(max-width: 1200px) 100vw, 800px"
+                className="object-cover" 
+              />
               <button
                 type="button"
                 onClick={() => { updateField("hero_image_url", null); setHeroPreview(null); }}
@@ -373,12 +377,18 @@ export function ProProfileForm() {
           Photo de Profil
         </h3>
         <div className="flex items-center gap-6">
-          <div className="w-24 h-24 rounded-xl overflow-hidden bg-surface-container border-2 border-outline-variant/20 flex-shrink-0">
+          <div className="w-24 h-24 relative rounded-xl overflow-hidden bg-surface-container border-2 border-outline-variant/20 flex-shrink-0">
             {profilePreview ? (
-              <img src={profilePreview} alt="Profile" className="w-full h-full object-cover" />
+              <Image 
+                src={profilePreview} 
+                alt="Profile" 
+                fill 
+                sizes="96px"
+                className="object-cover" 
+              />
             ) : (
               <div className="w-full h-full flex items-center justify-center">
-                <span className="material-symbols-outlined text-3xl text-on-surface-variant/30">person</span>
+                <User className="text-3xl text-on-surface-variant/30" />
               </div>
             )}
           </div>
@@ -426,7 +436,13 @@ export function ProProfileForm() {
           <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
             {formData.portfolio_photos.map((url, index) => (
               <div key={index} className="relative aspect-square rounded-xl overflow-hidden bg-surface-container group">
-                <img src={url} alt={`Portfolio ${index + 1}`} className="w-full h-full object-cover" />
+                <Image 
+                  src={url} 
+                  alt={`Portfolio ${index + 1}`} 
+                  fill 
+                  sizes="(max-width: 640px) 33vw, (max-width: 1024px) 25vw, 150px"
+                  className="object-cover" 
+                />
                 <button
                   type="button"
                   onClick={() => removePortfolioPhoto(index)}

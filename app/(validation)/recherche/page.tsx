@@ -6,6 +6,12 @@ import { FilterPanel } from "@/components/shared/FilterPanel";
 import { ProfessionalCard } from "@/components/shared/ProfessionalCard";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { createClient } from "@/lib/supabase/server";
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 export const metadata: Metadata = {
   title: "Rechercher un professionnel",
@@ -20,12 +26,17 @@ interface SearchPageProps {
 export default async function SearchPage({ searchParams }: SearchPageProps) {
   const params = await searchParams;
   const query = typeof params.q === "string" ? params.q : "";
+  const PAGE_SIZE = 12;
+  const page = typeof params.page === "string" ? parseInt(params.page) : 1;
+  const from = (page - 1) * PAGE_SIZE;
+  const to = from + PAGE_SIZE - 1;
+
   const mode = typeof params.mode === "string" ? params.mode : "lookup";
   const supabase = await createClient();
 
   let browserQuery = supabase
     .from("professionals")
-    .select("*, professional_portfolio(custom_domain, domain_status)")
+    .select("*, professional_portfolio(custom_domain, domain_status)", { count: "exact" })
     .eq("is_active", true)
     .eq("is_visible", true);
 
@@ -54,16 +65,19 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     }
   }
 
-  // Sort by signal_count DESC to prioritize profiles needing verification/attention
-  const { data: results, error } = await browserQuery.order("signal_count", {
-    ascending: false,
-  });
+  // Sort by signal_count DESC
+  // Range for pagination
+  const { data: results, count, error } = await browserQuery
+    .order("signal_count", { ascending: false })
+    .range(from, to);
 
   if (error) {
     console.error("Search error:", error);
   }
 
   const finalResults = results || [];
+  const totalCount = count || 0;
+  const totalPages = Math.ceil(totalCount / PAGE_SIZE);
 
   console.log('[DB] recherche professionals query:', {
     count: finalResults.length,
@@ -113,26 +127,58 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       <div className="mt-8">
         {hasQuery && finalResults.length > 0 && (
           <>
-            <p className="mb-4 text-sm text-muted-foreground">
-              {finalResults.length} résultat{finalResults.length > 1 ? "s" : ""}
-              {query && (
-                <>
-                  {" "}pour « <span className="font-medium text-foreground">{query}</span> »
-                </>
+            <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <p className="text-sm text-muted-foreground">
+                Affichage de <span className="font-medium text-foreground">{from + 1}</span> à{" "}
+                <span className="font-medium text-foreground">
+                  {Math.min(from + finalResults.length, totalCount)}
+                </span>{" "}
+                sur <span className="font-medium text-foreground">{totalCount}</span> professionnel{totalCount > 1 ? "s" : ""}
+                {query && (
+                  <>
+                    {" "}pour « <span className="font-medium text-foreground">{query}</span> »
+                  </>
+                )}
+              </p>
+
+              {totalPages > 1 && (
+                <div className="flex items-center gap-2">
+                  <Link
+                    href={{
+                      query: { ...params, page: Math.max(1, page - 1) },
+                    }}
+                    className={cn(
+                      "inline-flex items-center justify-center rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium transition-colors hover:bg-muted",
+                      page === 1 && "pointer-events-none opacity-50"
+                    )}
+                  >
+                    Précédent
+                  </Link>
+                  <div className="flex items-center gap-1 px-2 text-sm font-medium">
+                    <span>{page}</span>
+                    <span className="text-muted-foreground">/</span>
+                    <span className="text-muted-foreground">{totalPages}</span>
+                  </div>
+                  <Link
+                    href={{
+                      query: { ...params, page: Math.min(totalPages, page + 1) },
+                    }}
+                    className={cn(
+                      "inline-flex items-center justify-center rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium transition-colors hover:bg-muted",
+                      page === totalPages && "pointer-events-none opacity-50"
+                    )}
+                  >
+                    Suivant
+                  </Link>
+                </div>
               )}
-            </p>
+            </div>
+
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {finalResults.map((pro: any) => {
                 const portfolio = (pro.professional_portfolio as any)?.[0];
                 const customDomain =
                   portfolio?.domain_status === 'active' ? portfolio.custom_domain : null;
-
-                console.log('[RENDER] ProfessionalCard data:', {
-                  slug: pro.slug,
-                  hasPortfolio: !!portfolio,
-                  customDomain,
-                  domainStatus: portfolio?.domain_status,
-                });
 
                 return (
                   <ProfessionalCard
@@ -154,6 +200,34 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                 );
               })}
             </div>
+
+            {totalPages > 1 && (
+              <div className="mt-12 flex items-center justify-center gap-4">
+                <Link
+                  href={{
+                    query: { ...params, page: Math.max(1, page - 1) },
+                  }}
+                  className={cn(
+                    "inline-flex items-center justify-center rounded-xl border-2 border-outline-variant/30 bg-background px-6 py-3 text-sm font-bold text-foreground transition-all hover:bg-muted",
+                    page === 1 && "pointer-events-none opacity-30"
+                  )}
+                >
+                  Page Précédente
+                </Link>
+                <div className="h-10 w-px bg-border" />
+                <Link
+                  href={{
+                    query: { ...params, page: Math.min(totalPages, page + 1) },
+                  }}
+                  className={cn(
+                    "inline-flex items-center justify-center rounded-xl border-2 border-outline-variant/30 bg-background px-6 py-3 text-sm font-bold text-foreground transition-all hover:bg-muted",
+                    page === totalPages && "pointer-events-none opacity-30"
+                  )}
+                >
+                  Page Suivante
+                </Link>
+              </div>
+            )}
           </>
         )}
 

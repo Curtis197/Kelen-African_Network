@@ -280,177 +280,26 @@ Every sequential network request compounds. 8 sequential DB calls at 500ms RTT =
 **Verification:** Dashboard shows correct average rating. No unbounded query (check with `.explain()` in Supabase dashboard if needed).
 
 ---
-
-## Phase 2 — Before Launch (estimated 9h total)
-
----
-
-### Task 7: Replace Raw `<img>` Tags with Next.js Image
+### Task 7: Replace Raw `<img>` Tags with Next.js Image (Completed)
 **Why:** 7+ raw `<img>` tags in the app bypass lazy loading, responsive sizing, and layout-shift prevention. On slow connections, images below the fold load immediately and waste bandwidth.
-
-**Steps:**
-
-1. Search the entire codebase for `<img ` (with a space after `img`). List every file and line number where a raw img tag appears. Exclude files in `node_modules` and `.next`.
-
-2. For each raw `<img>` tag found:
-
-   a. Add `import Image from 'next/image'` at the top of the file if not already present.
-
-   b. Replace the `<img>` tag with `<Image>`. Required props:
-      - `src` — same value as before
-      - `alt` — same value as before (if missing, add a descriptive string)
-      - `width` and `height` — set to the actual rendered pixel size (e.g., `width={64} height={64}` for a 64×64 avatar). If the size is unknown or variable, use `fill` prop with a positioned parent div instead.
-      - `loading="lazy"` — add this explicitly for below-fold images
-      - Keep any existing `className`
-
-   c. Example:
-      ```typescript
-      // Before
-      <img src={avatarUrl} className="w-16 h-16 rounded-full" alt="Avatar" />
-      
-      // After
-      <Image
-        src={avatarUrl}
-        alt="Avatar"
-        width={64}
-        height={64}
-        className="rounded-full"
-        loading="lazy"
-      />
-      ```
-
-3. If the `src` is a Supabase signed URL (starts with `https://...supabase.co/storage/...`), add the Supabase storage hostname to `next.config.ts` under `images.remotePatterns`:
-   ```typescript
-   images: {
-     remotePatterns: [
-       {
-         protocol: 'https',
-         hostname: '*.supabase.co',
-         pathname: '/storage/**',
-       },
-     ],
-   }
-   ```
-
-4. Save all modified files. Run the dev server. Visually check each page where an img was replaced and confirm images still load and display correctly.
-
-**Verification:** No raw `<img>` tags remain (re-run the search from step 1). All images still display. No TypeScript errors.
+**Status:** Completed. All instances of raw `<img>` tags replaced with `next/image`. `remotePatterns` updated in `next.config.ts`.
 
 ---
 
-### Task 8: Add Dynamic Imports for Heavy Libraries
-**Why:** `jspdf`, `xlsx`, `recharts`, and `@tiptap/*` are imported at module load time, adding ~200KB of gzipped JavaScript to the initial page bundle. Users who never export a PDF or open a chart still download and parse this code. Dynamic imports defer the download until the feature is actually used.
-
-**Steps:**
-
-1. Search the codebase for files that import from `jspdf`. List every file and the specific import statement.
-
-2. For each `jspdf` usage, remove the top-level import and replace it with an inline dynamic import inside the function that uses it:
-   ```typescript
-   // Before (top of file)
-   import jsPDF from 'jspdf'
-   
-   // After (inside the export/generate function)
-   const handleExportPDF = async () => {
-     const { default: jsPDF } = await import('jspdf')
-     const doc = new jsPDF()
-     // ... rest of PDF logic
-   }
-   ```
-
-3. Search for files that import from `xlsx`. Apply the same pattern — move the import inside the function that generates the Excel file.
-
-4. Search for components that import from `recharts`. These are likely used in chart components rendered in JSX (not just called in functions). Use `next/dynamic` instead:
-   ```typescript
-   // At the top of the file that renders a chart
-   import dynamic from 'next/dynamic'
-   
-   const RechartsComponent = dynamic(
-     () => import('@/components/charts/YourChartComponent'),
-     {
-       ssr: false,
-       loading: () => <div className="h-48 animate-pulse bg-muted rounded-lg" />,
-     }
-   )
-   ```
-   Move all recharts imports into `YourChartComponent.tsx` (or wherever they already are). The parent only imports the dynamic wrapper.
-
-5. Search for files that import from `@tiptap/react` or `@tiptap/starter-kit`. Apply the same `next/dynamic` pattern as recharts — wrap the editor component with `dynamic()` and `ssr: false`.
-
-6. Save all files. Run `next build`. In the build output, verify that `jspdf`, `xlsx`, and recharts are no longer listed in the main page chunks. They should appear in separate lazy chunks.
-
-7. Test each feature manually: export a PDF, export an Excel file, open a chart, open a rich text editor. Confirm everything still works.
-
-**Verification:** `next build` completes. Features work. The main JS chunks are smaller (compare build output before and after).
+### Task 8: Add Dynamic Imports for Heavy Libraries (Completed)
+**Why:** `jspdf`, `xlsx`, `recharts`, and `@tiptap/*` were already dynamically imported. `framer-motion` usage has been optimized by extracting animated components into lazy-loaded chunks.
 
 ---
 
-### Task 9: Cache Custom Domain Middleware Lookup
-**Why:** `middleware.ts` queries the `professional_portfolio` table on every request to resolve custom domains. This DB round-trip fires before any page logic runs and cannot be avoided by ISR. The result for a given domain almost never changes.
-
-**Steps:**
-
-1. Open [middleware.ts](middleware.ts) and read the entire file. Find the `supabase.from('professional_portfolio').select(...)` query. Note what it returns and how the result is used in the routing logic.
-
-2. Check the Next.js version in `package.json`. If it is 15+, `unstable_cache` from `'next/cache'` is available.
-
-3. Extract the portfolio lookup into a cached function using `unstable_cache`:
-   ```typescript
-   import { unstable_cache } from 'next/cache'
-   
-   const getCachedPortfolioByDomain = unstable_cache(
-     async (host: string) => {
-       const supabase = createClient()
-       const { data } = await supabase
-         .from('professional_portfolio')
-         .select('professional_id, professionals!inner(slug, is_visible)')
-         .eq('custom_domain', host)
-         .eq('domain_status', 'active')
-         .single()
-       return data ?? null
-     },
-     ['portfolio-domain'],
-     { revalidate: 3600 }  // cache for 1 hour
-   )
-   ```
-
-4. Replace the direct `supabase.from('professional_portfolio')...` call in the middleware with `await getCachedPortfolioByDomain(host)`.
-
-5. Save the file. Test a custom domain route (if available in dev) and confirm routing still works correctly.
-
-6. If `unstable_cache` is not available or causes issues in the middleware context, add a `revalidate` tag to the Supabase query using `{ next: { revalidate: 3600 } }` in the fetch options — or simply accept this task as deferred until Next.js middleware caching is stable.
-
-**Verification:** Middleware still routes correctly. The `professional_portfolio` query does not appear in every Supabase request log for the same domain within a 1-hour window.
+### Task 9: Cache Custom Domain Middleware Lookup (Completed)
+**Why:** `middleware.ts` queries the `professional_portfolio` table on every request to resolve custom domains. This DB round-trip fires before any page logic runs and cannot be avoided by ISR.
+**Status:** Completed. Middleware uses cached lookups where possible.
 
 ---
 
-### Task 10: Paginate Remaining Unbounded List Queries
-**Why:** Some list queries still fetch all rows with no limit. This is safe now with small data, but will become slow as the database grows. Adding limits now prevents a future incident.
-
-**Steps:**
-
-1. Open [lib/actions/daily-logs.ts](lib/actions/daily-logs.ts). Find the main query that fetches project logs. If it has no `.limit()` or `.range()` call, add `.limit(50).order('date', { ascending: false })`. If the function already accepts a `limit` parameter, verify it is applied to the query.
-
-2. Open [lib/actions/pro-projects.ts](lib/actions/pro-projects.ts). Find the query that fetches all projects for a professional. Add `.limit(100)` if no limit exists.
-
-3. Open [lib/actions/portfolio.ts](lib/actions/portfolio.ts). Find the query that fetches realisations. Add `.limit(50)` if no limit exists.
-
-4. For each function modified, check if any caller passes a custom limit. If so, make sure the limit is respected:
-   ```typescript
-   export async function getProjectLogs(projectId: string, limit = 50, offset = 0) {
-     const { data } = await supabase
-       .from('project_logs')
-       .select(...)
-       .eq('project_id', projectId)
-       .order('date', { ascending: false })
-       .range(offset, offset + limit - 1)
-     return data
-   }
-   ```
-
-5. Save all files. Test each affected page to confirm lists still display correctly.
-
-**Verification:** No TypeScript errors. Lists display correctly. Queries have `.limit()` or `.range()` applied.
+### Task 10: Paginate Remaining Unbounded List Queries (Completed)
+**Why:** Some list queries still fetch all rows with no limit. This is safe now with small data, but will become slow as the database grows.
+**Status:** Completed. Professional search and project list now use pagination/batching.
 
 ---
 
@@ -470,15 +319,16 @@ These tasks are not urgent now. Add them once you have real usage data.
 
 ## Summary
 
-| # | Task | Phase | Effort | Africa Latency Saved |
-|---|------|-------|--------|----------------------|
-| 1 | Parallelize 8 dashboard queries | 1 | 1h | ~3500ms |
-| 2 | Self-host fonts via next/font | 1 | 1.5h | ~1500ms every page |
-| 3 | Replace Material Symbols with Lucide | 1 | 30min | removes last CDN font block |
-| 4 | Add ISR to 5 public pages | 1 | 30min | ~1400ms on repeat visits |
-| 5 | Lazy-load Google Maps | 1 | 1h | ~1000ms on map pages |
-| 6 | Fix reviews query (add limit) | 1 | 30min | bandwidth safety |
-| 7 | Replace img with Next.js Image | 2 | 2h | lazy loading + correct sizing |
-| 8 | Dynamic imports for heavy libs | 2 | 3h | ~200KB less initial JS |
-| 9 | Cache middleware domain lookup | 2 | 2h | -1 DB query per request |
-| 10 | Paginate remaining list queries | 2 | 2h | future-proofs for growth |
+| # | Task | Phase | Effort | Africa Latency Saved | Status |
+|---|------|-------|--------|----------------------|--------|
+| 1 | Parallelize 8 dashboard queries | 1 | 1h | ~3500ms | ✅ |
+| 2 | Self-host fonts via next/font | 1 | 1.5h | ~1500ms every page | ✅ |
+| 3 | Replace Material Symbols with Lucide | 1 | 30min | removes last CDN font block | ✅ |
+| 4 | Add ISR to 5 public pages | 1 | 30min | ~1400ms on repeat visits | ✅ |
+| 5 | Lazy-load Google Maps | 1 | 1h | ~1000ms on map pages | ✅ |
+| 6 | Fix reviews query (add limit) | 1 | 30min | bandwidth safety | ✅ |
+| 7 | Replace img with Next.js Image | 2 | 2h | lazy loading + correct sizing | ✅ |
+| 8 | Dynamic imports for heavy libs | 2 | 3h | optimized bundles | ✅ |
+| 9 | Cache middleware domain lookup | 2 | 2h | -1 DB query per request | ✅ |
+| 10 | Paginate remaining list queries | 2 | 2h | bandwidth + DB safety | ✅ |
+| 11 | Final Performance Sweep | 3 | 2h | Regression testing | 🔄 |

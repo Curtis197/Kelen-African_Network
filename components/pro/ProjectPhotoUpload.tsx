@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef } from "react";
 import { ImagePlus, X, Upload, AlertCircle, Star } from "lucide-react";
+import Image from "next/image";
 
 interface ProjectPhotoUploadProps {
   photoUrls: string[];
@@ -196,7 +197,13 @@ export function ProjectPhotoUpload({
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
             {photoUrls.map((url) => (
               <div key={url} className="group relative aspect-square overflow-hidden rounded-xl bg-surface-container-low">
-                <img src={url} alt="Project photo" className="h-full w-full object-cover" />
+                <Image 
+                  src={url} 
+                  alt="Project photo" 
+                  className="h-full w-full object-cover" 
+                  fill
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                />
 
                 {/* Overlay actions */}
                 <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">

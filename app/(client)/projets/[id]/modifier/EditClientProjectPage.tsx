@@ -5,11 +5,11 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
-import { motion } from "framer-motion";
 import { ArrowLeft, Save, X, AlertCircle, ImagePlus, Trash2, Star, StarOff, Upload, Loader2 } from "lucide-react";
 import { LocationSearch, type LocationData } from "@/components/location/LocationSearch";
 import { uploadFile } from "@/lib/supabase/storage";
 import { getProjectImages, uploadProjectImage, deleteProjectImage, setMainProjectImage, type ProjectImage } from "@/lib/actions/project-images";
+import NextImage from "next/image";
 
 console.log('[CLIENT-PROJECT-EDIT] Module loaded');
 
@@ -659,10 +659,11 @@ export default function EditClientProjectPage() {
                   key={img.id}
                   className="group relative aspect-square rounded-lg overflow-hidden bg-surface-container-low border border-border"
                 >
-                  <img
+                  <NextImage
                     src={img.url}
                     alt="Project image"
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
                   />
                   
                   {/* Main badge */}

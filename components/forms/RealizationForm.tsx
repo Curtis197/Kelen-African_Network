@@ -10,6 +10,7 @@ import { uploadFile } from "@/lib/supabase/storage";
 import { Image as ImageIcon, X, Loader2, ArrowLeft, Star } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
+import Image from "next/image";
 
 const projectDocumentSchema = z.object({
   title: z.string().min(3, "Le titre doit contenir au moins 3 caractères"),
@@ -302,10 +303,12 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
                 <div className="grid grid-cols-3 gap-3">
                   {existingImages.map((img, i) => (
                     <div key={`existing-${img.id}`} className="relative aspect-square overflow-hidden rounded-xl bg-stone-200 group">
-                      <img
+                      <Image
                         src={img.url}
                         alt={`Photo ${i + 1}`}
-                        className="h-full w-full object-cover"
+                        fill
+                        sizes="(max-width: 768px) 33vw, 20vw"
+                        className="object-cover"
                       />
                       <button
                         type="button"
@@ -347,10 +350,12 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
                     const isFirstNew = i === 0 && existingImages.length === 0;
                     return (
                       <div key={`new-${i}`} className="relative aspect-square overflow-hidden rounded-xl bg-stone-200 group">
-                        <img
+                        <Image
                           src={previewUrl}
                           alt="Preview"
-                          className="h-full w-full object-cover"
+                          fill
+                          sizes="(max-width: 768px) 33vw, 20vw"
+                          className="object-cover"
                         />
                         {isFirstNew && (
                           <div className="absolute left-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-kelen-green-500 text-white">

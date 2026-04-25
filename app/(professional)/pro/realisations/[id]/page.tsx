@@ -214,10 +214,11 @@ export default async function RealizationDetailPage({ params }: RealizationDetai
               {videos.map((video) => (
                 <div key={video.id} className="relative aspect-video overflow-hidden rounded-2xl bg-stone-900 group">
                   {video.thumbnail_url ? (
-                    <img
+                    <Image
                       src={video.thumbnail_url}
                       alt="Miniature vidéo"
-                      className="absolute inset-0 w-full h-full object-cover"
+                      fill
+                      className="object-cover"
                     />
                   ) : (
                     <video

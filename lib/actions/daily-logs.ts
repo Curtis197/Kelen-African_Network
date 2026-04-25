@@ -309,13 +309,13 @@ export async function deleteLog(logId: string): Promise<{ success: boolean; erro
   return { success: true };
 }
 
-export async function getProjectLogs(projectId: string, isProProject?: boolean): Promise<ProjectLog[]> {
+export async function getProjectLogs(projectId: string, isProProject?: boolean, limit: number = 100, offset: number = 0): Promise<ProjectLog[]> {
   const supabase = await createClient();
 
   // Determine which column to filter by
   const filterColumn = isProProject ? "pro_project_id" : "project_id";
 
-  console.log("[getProjectLogs] Fetching logs:", { projectId, isProProject, filterColumn });
+  console.log("[getProjectLogs] Fetching logs:", { projectId, isProProject, filterColumn, limit, offset });
 
   const { data, error } = await supabase
     .from("project_logs")
@@ -326,7 +326,8 @@ export async function getProjectLogs(projectId: string, isProProject?: boolean):
     `)
     .eq(filterColumn, projectId)
     .order("log_date", { ascending: false })
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .range(offset, offset + limit - 1);
 
   if (error) {
     console.error("Error fetching project logs:", error);
@@ -407,14 +408,15 @@ export async function getLogById(logId: string, projectId?: string, isProProject
   return { data, debug: debugInfo };
 }
 
-export async function getLogsByStep(stepId: string): Promise<ProjectLog[]> {
+export async function getLogsByStep(stepId: string, limit: number = 100, offset: number = 0): Promise<ProjectLog[]> {
   const supabase = await createClient();
 
   const { data, error } = await supabase
     .from("project_logs")
     .select("*")
     .eq("step_id", stepId)
-    .order("log_date", { ascending: false });
+    .order("log_date", { ascending: false })
+    .range(offset, offset + limit - 1);
 
   if (error) {
     console.error("Error fetching logs by step:", error);

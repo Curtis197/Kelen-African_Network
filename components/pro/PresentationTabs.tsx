@@ -2,6 +2,7 @@
 
 import { useTransition } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import {
   MapPin,
@@ -16,9 +17,10 @@ import {
 } from "lucide-react";
 import { ToggleFeaturedButton } from "@/components/pro/ToggleFeaturedButton";
 import { DeleteButton } from "@/components/pro/DeleteButton";
-import { toggleServiceFeatured } from "@/lib/actions/services";
+import { toggleServiceFeatured, deleteService } from "@/lib/actions/services";
 import { toggleProductFeatured, deleteProduct } from "@/lib/actions/products";
-import { deleteService } from "@/lib/actions/services";
+import { getProfessionalRealizations } from "@/lib/actions/portfolio";
+import { useState } from "react";
 
 // ─── Inline toggle for services ────────────────────────────────────────────
 
@@ -181,8 +183,26 @@ export function PresentationTabs({
   services,
   products,
 }: Props) {
-  const router   = useRouter();
+  const router = useRouter();
   const pathname = usePathname();
+  const [localRealizations, setLocalRealizations] = useState(realizations);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(realizations.length === 10); // Initial load is 10 in page.tsx now? No, need to check page.tsx
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const PAGE_SIZE = 10;
+
+  async function handleLoadMore() {
+    setIsLoadingMore(true);
+    const nextPage = page + 1;
+    const offset = nextPage * PAGE_SIZE;
+    
+    const more = await getProfessionalRealizations(professional.id, PAGE_SIZE, offset);
+    
+    setLocalRealizations(prev => [...prev, ...more]);
+    setPage(nextPage);
+    setHasMore(more.length === PAGE_SIZE);
+    setIsLoadingMore(false);
+  }
 
   function handleTabClick(tabId: string) {
     router.push(`${pathname}?tab=${tabId}`);
@@ -209,7 +229,12 @@ export function PresentationTabs({
 
       {/* Tab content */}
       {activeTab === "realisations" && (
-        <RealisationsTab realizations={realizations} />
+        <RealisationsTab 
+          realizations={localRealizations} 
+          hasMore={hasMore}
+          isLoadingMore={isLoadingMore}
+          onLoadMore={handleLoadMore}
+        />
       )}
       {activeTab === "services" && (
         <ServicesTab services={services} />
@@ -223,7 +248,17 @@ export function PresentationTabs({
 
 // ─── Réalisations tab ───────────────────────────────────────────────────────
 
-function RealisationsTab({ realizations }: { realizations: any[] }) {
+function RealisationsTab({ 
+  realizations,
+  hasMore,
+  isLoadingMore,
+  onLoadMore
+}: { 
+  realizations: any[];
+  hasMore: boolean;
+  isLoadingMore: boolean;
+  onLoadMore: () => void;
+}) {
   return (
     <div className="space-y-6">
       {/* Header action */}
@@ -261,10 +296,12 @@ function RealisationsTab({ realizations }: { realizations: any[] }) {
                 <Link href={`/pro/portfolio/${r.id}`}>
                   <div className="relative aspect-[4/3] overflow-hidden bg-surface-container-low">
                     {mainImage ? (
-                      <img
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      <Image
+                        className="object-cover transition-transform duration-700 group-hover:scale-110"
                         src={mainImage}
                         alt={r.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       />
                     ) : (
                       <div className="flex h-full items-center justify-center text-on-surface-variant/20">
@@ -340,6 +377,18 @@ function RealisationsTab({ realizations }: { realizations: any[] }) {
           })}
         </div>
       )}
+
+      {hasMore && (
+        <div className="flex justify-center pt-8">
+          <button
+            onClick={onLoadMore}
+            disabled={isLoadingMore}
+            className="px-10 py-4 rounded-2xl bg-surface-container hover:bg-surface-container-high text-sm font-bold transition-all disabled:opacity-50 shadow-sm"
+          >
+            {isLoadingMore ? "Chargement..." : "Afficher plus de réalisations"}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -383,10 +432,12 @@ function ServicesTab({ services }: { services: any[] }) {
               >
                 <div className="relative aspect-[4/3] overflow-hidden bg-surface-container-low">
                   {mainImage ? (
-                    <img
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    <Image
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
                       src={mainImage}
                       alt={s.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   ) : (
                     <div className="flex h-full items-center justify-center text-on-surface-variant/20">
@@ -487,10 +538,12 @@ function ProduitsTab({ products }: { products: any[] }) {
               >
                 <div className="relative aspect-[4/3] overflow-hidden bg-surface-container-low">
                   {mainImage ? (
-                    <img
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    <Image
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
                       src={mainImage}
                       alt={p.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   ) : (
                     <div className="flex h-full items-center justify-center text-on-surface-variant/20">

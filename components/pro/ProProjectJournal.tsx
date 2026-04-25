@@ -22,57 +22,67 @@ interface ProProjectJournalProps {
 
 export function ProProjectJournal({ project }: ProProjectJournalProps) {
   const router = useRouter();
+  const PAGE_SIZE = 15;
   const [logs, setLogs] = useState<ProjectLog[]>([]);
   const [photoUrls, setPhotoUrls] = useState<Record<string, Record<string, string>>>({});
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(0);
   const [showNewLog, setShowNewLog] = useState(false);
   const [pendingDrafts, setPendingDrafts] = useState(0);
   const [isSyncing, setIsSyncing] = useState(false);
   const supabase = createClient();
 
-  const loadLogs = useCallback(async () => {
-    setIsLoading(true);
-    const filterColumn = project.is_collaboration ? "project_id" : "pro_project_id";
-    console.log("[ProProjectJournal] Loading logs for", { projectId: project.id, isCollaboration: project.is_collaboration, filterColumn });
+  const loadLogs = useCallback(async (pageNum: number = 0, isAppend: boolean = false) => {
+    if (pageNum === 0) setIsLoading(true);
+    else setIsLoadingMore(true);
 
-    const { data, error } = await supabase
-      .from("project_logs")
-      .select(`
-        *,
-        media:project_log_media(*)
-      `)
-      .eq(filterColumn, project.id)
-      .order("log_date", { ascending: false })
-      .order("created_at", { ascending: false });
+    const offset = pageNum * PAGE_SIZE;
+    console.log("[ProProjectJournal] Loading logs page:", pageNum, "offset:", offset);
 
-    if (error) {
-      console.error("Error loading pro project logs:", error);
+    // Call server action instead of raw query for better consistency
+    const data = await getProjectLogs(project.id, !project.is_collaboration, PAGE_SIZE, offset);
+    
+    if (isAppend) {
+      setLogs(prev => [...prev, ...data]);
     } else {
-      setLogs(data || []);
-
-      // Load signed URLs for photos
-      const urls: Record<string, Record<string, string>> = {};
-      if (data) {
-        for (const log of data) {
-          if (log.media && log.media.length > 0) {
-            urls[log.id] = {};
-            for (const media of log.media) {
-              const signedUrl = await getMediaUrl(media.storage_path);
-              if (signedUrl) {
-                urls[log.id][media.storage_path] = signedUrl;
-              }
-            }
-          }
-        }
-      }
-      setPhotoUrls(urls);
+      setLogs(data);
     }
+    
+    setHasMore(data.length === PAGE_SIZE);
+
+    // Load signed URLs for photos in parallel
+    const urls: Record<string, Record<string, string>> = {};
+    const fetchPromises = data.map(async (log) => {
+      if (log.media && log.media.length > 0) {
+        const logMediaUrls: Record<string, string> = {};
+        await Promise.all(log.media.map(async (media) => {
+          const signedUrl = await getMediaUrl(media.storage_path);
+          if (signedUrl) {
+            logMediaUrls[media.storage_path] = signedUrl;
+          }
+        }));
+        urls[log.id] = logMediaUrls;
+      }
+    });
+
+    await Promise.all(fetchPromises);
+    
+    setPhotoUrls(prev => ({ ...prev, ...urls }));
     setIsLoading(false);
-  }, [project.id, supabase]);
+    setIsLoadingMore(false);
+  }, [project.id, project.is_collaboration]);
 
   useEffect(() => {
-    loadLogs();
+    loadLogs(0, false);
   }, [loadLogs]);
+
+  const handleLoadMore = () => {
+    const nextPage = page + 1;
+    setPage(nextPage);
+    loadLogs(nextPage, true);
+  };
 
   // Count pending drafts on mount
   useEffect(() => {
@@ -238,6 +248,7 @@ export function ProProjectJournal({ project }: ProProjectJournalProps) {
           ))}
         </div>
       ) : (
+      <div className="space-y-12">
         <LogTimeline
           logs={logs}
           projectId={project.id}
@@ -245,6 +256,19 @@ export function ProProjectJournal({ project }: ProProjectJournalProps) {
           photoUrls={photoUrls}
           onCreateFirst={() => setShowNewLog(true)}
         />
+
+        {hasMore && (
+           <div className="flex justify-center">
+             <button
+               onClick={handleLoadMore}
+               disabled={isLoadingMore}
+               className="px-8 py-3 rounded-xl bg-surface-container hover:bg-surface-container-high text-sm font-bold transition-all disabled:opacity-50"
+             >
+               {isLoadingMore ? "Chargement..." : "Charger plus d'historique"}
+             </button>
+           </div>
+        )}
+      </div>
       )}
     </div>
   );

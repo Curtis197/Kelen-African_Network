@@ -20,7 +20,7 @@ async function getProfessionalId(): Promise<string | null> {
   return data?.id || null;
 }
 
-export async function getProProjects(status?: string): Promise<ProProject[]> {
+export async function getProProjects(status?: string, limit: number = 100, offset: number = 0): Promise<ProProject[]> {
   console.log('[ACTION] getProProjects started, status filter:', status)
   const proId = await getProfessionalId();
   if (!proId) {
@@ -35,7 +35,8 @@ export async function getProProjects(status?: string): Promise<ProProject[]> {
     .from("pro_projects")
     .select("*, images:pro_project_images(*)")
     .eq("professional_id", proId)
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .range(offset, offset + limit - 1);
 
   if (status) {
     proQuery = proQuery.eq("status", status);
@@ -76,7 +77,8 @@ export async function getProProjects(status?: string): Promise<ProProject[]> {
     `)
     .eq("professional_id", proId)
     .in("status", ['pending', 'negotiating', 'active', 'terminated'])
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .range(offset, offset + limit - 1);
 
   const { data: collabData, error: collabError } = await collabQuery;
   console.log('[DB] Found collaborations:', { count: collabData?.length, error: collabError?.message })
@@ -465,7 +467,7 @@ export async function deleteProProject(id: string): Promise<{ success: boolean; 
   return { success: true };
 }
 
-export async function getPublicProProjects(slug: string): Promise<ProProject[]> {
+export async function getPublicProProjects(slug: string, limit: number = 100, offset: number = 0): Promise<ProProject[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("pro_projects")
@@ -478,7 +480,8 @@ export async function getPublicProProjects(slug: string): Promise<ProProject[]> 
     .eq("professionals.slug", slug)
     .neq("professionals.status", "black")
     .order("actual_end_date", { ascending: false, nullsFirst: false })
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .range(offset, offset + limit - 1);
 
   if (error) {
     console.error("Error fetching public pro projects:", error);

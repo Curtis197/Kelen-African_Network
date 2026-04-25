@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Loader2, Save, Sparkles, RotateCcw, ImageIcon } from "lucide-react";
 import { saveAboutText } from "@/lib/actions/portfolio-site";
 import { toast } from "sonner";
+import Image from "next/image";
 
 interface Props {
   initialAboutText?: string;
@@ -126,8 +127,8 @@ export function AboutEditor({ initialAboutText = "", initialAboutImageUrl = "" }
           className="w-full px-4 py-3 rounded-xl border border-outline-variant/30 bg-surface-container-low text-sm focus:outline-none focus:border-kelen-green-500 transition-colors"
         />
         {aboutImageUrl && (
-          <div className="mt-2 rounded-xl overflow-hidden aspect-video max-w-xs border border-outline-variant/20">
-            <img src={aboutImageUrl} alt="Aperçu" className="w-full h-full object-cover" />
+          <div className="relative mt-2 rounded-xl overflow-hidden aspect-video max-w-xs border border-outline-variant/20">
+            <Image src={aboutImageUrl} alt="Aperçu" fill className="object-cover" sizes="(max-width: 640px) 100vw, 320px" />
           </div>
         )}
       </div>

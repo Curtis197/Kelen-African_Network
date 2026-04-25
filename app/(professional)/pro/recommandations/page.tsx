@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
+import { Award, Link, BadgeCheck } from "lucide-react";
 
 interface Recommendation {
   id: string;
@@ -127,7 +128,7 @@ export default function ProRecommendationsPage() {
 
                   {rec.linked ? (
                     <div className="flex items-center gap-2 text-kelen-green-600 px-4 py-1.5 bg-kelen-green-50 rounded-xl border border-kelen-green-200/50">
-                      <span className="material-symbols-outlined text-sm font-black text-kelen-green-600">verified</span>
+                      <BadgeCheck className="text-sm font-black text-kelen-green-600" />
                       <span className="text-[10px] font-black uppercase tracking-widest">Publié</span>
                     </div>
                   ) : (
@@ -139,7 +140,7 @@ export default function ProRecommendationsPage() {
                       {isLinking === rec.id ? (
                         <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                       ) : (
-                        <span className="material-symbols-outlined text-base">link</span>
+                        <Link className="text-base" />
                       )}
                       Lier au profil
                     </button>
@@ -152,7 +153,7 @@ export default function ProRecommendationsPage() {
       ) : (
         <div className="flex flex-col items-center justify-center py-20 bg-surface-container rounded-3xl border-2 border-dashed border-border">
           <div className="w-20 h-20 bg-surface-container-low rounded-full flex items-center justify-center shadow-inner mb-6">
-            <span className="material-symbols-outlined text-4xl text-on-surface-variant/40">workspace_premium</span>
+            <Award className="text-4xl text-on-surface-variant/40" />
           </div>
           <h3 className="text-xl font-bold text-on-surface">Aucune recommandation</h3>
           <p className="text-on-surface-variant mt-2 max-w-sm text-center">

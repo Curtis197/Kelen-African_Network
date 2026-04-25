@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { uploadFile } from "@/lib/supabase/storage";
 import Link from "next/link";
+import Image from "next/image";
 import { useParams } from "next/navigation";
-import { ArrowLeft, Upload, FileText, Eye, Download, Trash2, Grid3X3, List } from "lucide-react";
+import { ArrowLeft, Upload, FileText, Eye, Download, Trash2, Grid3X3, List, ShieldCheck, X } from "lucide-react";
 
 interface ProjectDocument {
   id: string;
@@ -361,11 +362,12 @@ export default function ClientProjectDocumentsPage() {
                 >
                   <div className="aspect-[4/3] bg-surface-container flex items-center justify-center relative">
                     {isImage ? (
-                      <img
+                      <Image
                         src={doc.contract_url}
                         alt={doc.project_title}
-                        className="w-full h-full object-cover"
-                        loading="eager"
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         onLoad={(e) => {
                           const img = e.target as HTMLImageElement;
                           console.log("[DOCUMENT THUMBNAIL] ✅ Image loaded successfully:", {
@@ -385,9 +387,6 @@ export default function ClientProjectDocumentsPage() {
                             naturalHeight: img.naturalHeight,
                             error: e.type
                           });
-                          fetch(doc.contract_url, { method: 'HEAD' })
-                            .then(r => console.log("[DOCUMENT THUMBNAIL] URL accessibility test:", r.status, r.statusText))
-                            .catch(err => console.error("[DOCUMENT THUMBNAIL] URL not accessible:", err));
                         }}
                       />
                     ) : isPdf ? (
@@ -510,7 +509,7 @@ export default function ClientProjectDocumentsPage() {
                   onClick={() => setSelectedDoc(null)}
                   className="p-2 hover:bg-surface-container rounded-lg transition-colors"
                 >
-                  <span className="material-symbols-outlined">close</span>
+                  <X />
                 </button>
               </div>
 
@@ -530,11 +529,11 @@ export default function ClientProjectDocumentsPage() {
                       
                       if (['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(fileExt || '')) {
                         return (
-                          <img
+                          <Image
                             src={selectedDoc.contract_url}
                             alt={selectedDoc.project_title}
-                            className="w-full h-full object-contain"
-                            loading="eager"
+                            fill
+                            className="object-contain"
                             onLoad={(e) => {
                               const img = e.target as HTMLImageElement;
                               console.log("[DOCUMENT PREVIEW] ✅ Image loaded successfully:", {
@@ -552,10 +551,6 @@ export default function ClientProjectDocumentsPage() {
                                 naturalWidth: img.naturalWidth,
                                 naturalHeight: img.naturalHeight
                               });
-                              // Test accessibility
-                              fetch(selectedDoc.contract_url, { method: 'HEAD' })
-                                .then(r => console.log("[DOCUMENT PREVIEW] URL test:", r.status, r.statusText))
-                                .catch(err => console.error("[DOCUMENT PREVIEW] URL not accessible:", err));
                             }}
                           />
                         );
@@ -605,7 +600,7 @@ export default function ClientProjectDocumentsPage() {
                     <div className="flex justify-between text-sm">
                       <span className="text-on-surface-variant">Sécurité</span>
                       <span className="font-medium text-primary flex items-center gap-1">
-                        <span className="material-symbols-outlined text-sm">verified_user</span>
+                        <ShieldCheck className="text-sm" />
                         AES-256
                       </span>
                     </div>

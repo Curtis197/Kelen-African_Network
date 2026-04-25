@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { MapPin, ChevronDown, Inbox, LayoutDashboard } from "lucide-react";
+import { MapPin, ChevronDown, Inbox, LayoutDashboard, Loader2, Search } from "lucide-react";
 import { Professional } from "@/lib/supabase/types";
 import { ProfessionalCard } from "@/components/shared/ProfessionalCard";
 import type { ProfessionalArea, Profession } from "@/lib/types/taxonomy";
 import { LocationSearch, type LocationData } from "@/components/location/LocationSearch";
+import { getProfessionals, type ProfessionalsFilter } from "@/lib/actions/professionals";
 
 interface ProfessionalDirectoryProps {
   initialPros: Professional[];
@@ -20,7 +21,7 @@ interface ProfessionalDirectoryProps {
 
 export function ProfessionalDirectory({
   initialPros,
-  totalCount,
+  totalCount: initialTotal,
   areas,
   allProfessions,
   initialAreaId,
@@ -28,14 +29,23 @@ export function ProfessionalDirectory({
   initialProjectId,
 }: ProfessionalDirectoryProps) {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
 
   // Selection mode (coming from a project area)
   const projectId = initialProjectId;
 
+  // Filters
   const [selectedAreaId, setSelectedAreaId] = useState(initialAreaId || "");
   const [selectedProfessionId, setSelectedProfessionId] = useState(initialProfessionId || "");
   const [tier, setTier] = useState("Tous");
   const [locationData, setLocationData] = useState<LocationData | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Data
+  const [pros, setPros] = useState<Professional[]>(initialPros);
+  const [totalCount, setTotalCount] = useState(initialTotal);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 12;
 
   // Professions filtered to the selected area
   const professionsForArea = useMemo(() => {
@@ -49,24 +59,56 @@ export function ProfessionalDirectory({
     [areas, selectedAreaId]
   );
 
-  const filteredPros = useMemo(() => {
-    return initialPros.filter((pro) => {
-      const matchesArea = !selectedAreaId || pro.area_id === selectedAreaId;
-      const matchesProfession = !selectedProfessionId || pro.profession_id === selectedProfessionId;
-      const matchesTier = tier === "Tous" || (tier === "Or" && pro.status === "gold");
-      const matchesLocation =
-        !locationData ||
-        pro.city.toLowerCase().includes(locationData.name.toLowerCase()) ||
-        pro.country.toLowerCase().includes(locationData.name.toLowerCase()) ||
-        pro.city.toLowerCase().includes((locationData.city || "").toLowerCase()) ||
-        pro.country.toLowerCase().includes((locationData.country || "").toLowerCase());
-      return matchesArea && matchesProfession && matchesTier && matchesLocation;
+  const fetchFilteredResults = (page: number, isLoadMore: boolean = false) => {
+    const filter: ProfessionalsFilter = {
+      areaId: selectedAreaId || undefined,
+      professionId: selectedProfessionId || undefined,
+      tier: tier !== "Tous" ? tier : undefined,
+      city: locationData?.city || undefined,
+      country: locationData?.country || undefined,
+      query: searchQuery || undefined,
+      page,
+      pageSize
+    };
+
+    startTransition(async () => {
+      console.log('[PRO_DIRECTORY] Fetching page:', page, 'filter:', filter);
+      const results = await getProfessionals(filter);
+      
+      if (isLoadMore) {
+        setPros(prev => [...prev, ...results.professionals]);
+      } else {
+        setPros(results.professionals);
+        setTotalCount(results.totalCount);
+        setCurrentPage(1);
+      }
     });
-  }, [initialPros, selectedAreaId, selectedProfessionId, tier, locationData]);
+  };
+
+  // Re-fetch when filters change (debounced or triggered by user action)
+  useEffect(() => {
+    // Only fetch if it's not the initial mount with initial values
+    // but in practice, it's safer to just fetch if anything changed from "initial"
+    if (
+      selectedAreaId !== (initialAreaId || "") ||
+      selectedProfessionId !== (initialProfessionId || "") ||
+      tier !== "Tous" ||
+      locationData !== null ||
+      searchQuery !== ""
+    ) {
+      fetchFilteredResults(1);
+    }
+  }, [selectedAreaId, selectedProfessionId, tier, locationData, searchQuery]);
 
   const handleAreaChange = (areaId: string) => {
     setSelectedAreaId(areaId);
     setSelectedProfessionId("");
+  };
+
+  const handleLoadMore = () => {
+    const nextPage = currentPage + 1;
+    setCurrentPage(nextPage);
+    fetchFilteredResults(nextPage, true);
   };
 
   const resetFilters = () => {
@@ -74,13 +116,17 @@ export function ProfessionalDirectory({
     setSelectedProfessionId("");
     setTier("Tous");
     setLocationData(null);
+    setSearchQuery("");
+    setPros(initialPros);
+    setTotalCount(initialTotal);
+    setCurrentPage(1);
   };
 
-  console.log('[PRO_DIRECTORY] Component mounted:', {
-    initialProsCount: initialPros.length,
+  console.log('[PRO_DIRECTORY] Render state:', {
+    prosCount: pros.length,
     totalCount,
-    filteredProsCount: filteredPros.length,
-    hasMore: initialPros.length < totalCount,
+    isPending,
+    hasMore: pros.length < totalCount,
   });
 
   return (
@@ -120,21 +166,20 @@ export function ProfessionalDirectory({
             consultez leurs références, décidez sur des faits.
           </p>
         </div>
-        <div className="flex items-center gap-3 rounded-full bg-surface-container-low px-5 py-2.5 text-sm font-bold text-kelen-green-700">
-          <span className="flex h-2 w-2 rounded-full bg-kelen-green-500" />
+        <div className="flex items-center gap-3 rounded-full bg-surface-container-low px-5 py-2.5 text-sm font-bold text-kelen-green-700 h-fit">
+          {isPending ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <span className="flex h-2 w-2 rounded-full bg-kelen-green-500" />
+          )}
           <span>
-            {filteredPros.length.toLocaleString()} professionnel{filteredPros.length > 1 ? "s" : ""} vérifié{filteredPros.length > 1 ? "s" : ""} affiché{filteredPros.length > 1 ? "s" : ""}
-            {initialPros.length < totalCount && (
-              <span className="ml-1.5 text-xs opacity-75">
-                (sur {totalCount.toLocaleString()})
-              </span>
-            )}
+            {pros.length.toLocaleString()} affiché{pros.length > 1 ? "s" : ""} sur {totalCount.toLocaleString()} 
           </span>
         </div>
       </div>
 
       {/* Filter Bar */}
-      <div className="mb-16 rounded-3xl bg-surface-container-low p-6 lg:p-8">
+      <div className="mb-16 rounded-3xl bg-surface-container-low p-6 lg:p-8 space-y-6">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           {/* Area */}
           <div className="space-y-2">
@@ -146,7 +191,6 @@ export function ProfessionalDirectory({
                 id="directory-area"
                 value={selectedAreaId}
                 onChange={(e) => handleAreaChange(e.target.value)}
-                aria-label="Filtrer par domaine"
                 className="w-full appearance-none rounded-2xl border-none bg-surface-container-lowest p-4 text-sm shadow-sm transition-all focus:ring-2 focus:ring-kelen-green-500"
               >
                 <option value="">Tous les domaines</option>
@@ -158,7 +202,7 @@ export function ProfessionalDirectory({
             </div>
           </div>
 
-          {/* Profession (cascading) */}
+          {/* Profession */}
           <div className="space-y-2">
             <label htmlFor="directory-profession" className="mb-1 ml-1 block text-[11px] font-black uppercase tracking-widest text-muted-foreground">
               Profession
@@ -169,7 +213,6 @@ export function ProfessionalDirectory({
                 value={selectedProfessionId}
                 onChange={(e) => setSelectedProfessionId(e.target.value)}
                 disabled={!selectedAreaId}
-                aria-label="Filtrer par profession"
                 className="w-full appearance-none rounded-2xl border-none bg-surface-container-lowest p-4 text-sm shadow-sm transition-all focus:ring-2 focus:ring-kelen-green-500 disabled:opacity-40"
               >
                 <option value="">Toutes les professions</option>
@@ -190,21 +233,21 @@ export function ProfessionalDirectory({
               value={locationData}
               onChange={setLocationData}
               placeholder="Abidjan, Dakar..."
-              className="rounded-2xl border-none bg-surface-container-lowest shadow-sm"
+              className="rounded-2xl border-none bg-surface-container-lowest shadow-sm h-[52px]"
             />
           </div>
 
-          {/* Status */}
+          {/* Tier */}
           <div className="space-y-2">
             <label className="mb-1 ml-1 block text-[11px] font-black uppercase tracking-widest text-muted-foreground">
               Statut
             </label>
-            <div className="flex gap-1 p-1 bg-surface-container-lowest rounded-2xl shadow-sm">
-              {["Tous", "Or"].map((t) => (
+            <div className="flex gap-1 p-1 bg-surface-container-lowest rounded-2xl shadow-sm h-[52px]">
+              {["Tous", "Or", "Argent"].map((t) => (
                 <button
                   key={t}
                   onClick={() => setTier(t)}
-                  className={`flex-1 rounded-xl py-3 text-[11px] font-black uppercase tracking-tighter transition-all ${
+                  className={`flex-1 rounded-xl py-2 text-[10px] font-black uppercase tracking-tighter transition-all ${
                     tier === t
                       ? "bg-kelen-green-600 text-white"
                       : "text-muted-foreground hover:bg-surface-container-low"
@@ -216,23 +259,31 @@ export function ProfessionalDirectory({
             </div>
           </div>
         </div>
+
+        {/* Search Input */}
+        <div className="relative group max-w-xl">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground transition-colors group-focus-within:text-kelen-green-500" />
+          <input
+            type="text"
+            placeholder="Rechercher par nom d'entreprise ou propriétaire..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-11 pr-4 py-3.5 rounded-2xl border-none bg-surface-container-lowest text-sm shadow-sm transition-all focus:ring-2 focus:ring-kelen-green-500"
+          />
+        </div>
       </div>
 
       {/* Professional Grid */}
-      {filteredPros.length > 0 ? (
+      {pros.length > 0 ? (
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {filteredPros.map((pro) => {
-            // NOTE: customDomain will always be null here because the parent page query
-            // does not include professional_portfolio(custom_domain, domain_status) in
-            // its select. To enable custom domain links in this directory, the parent
-            // page must be updated to include that relation in its Supabase query.
+          {pros.map((pro) => {
             const portfolio = (pro as any).professional_portfolio?.[0];
             const customDomain =
               portfolio?.domain_status === 'active' ? portfolio.custom_domain : null;
 
             return (
               <ProfessionalCard
-                key={pro.slug}
+                key={`${pro.id}-${pro.slug}`}
                 id={pro.id}
                 slug={pro.slug}
                 businessName={pro.business_name}
@@ -274,32 +325,41 @@ export function ProfessionalDirectory({
         </div>
       )}
 
-      {/* Pagination / Load More */}
-      {filteredPros.length > 0 && (
+      {/* Load More Button */}
+      {pros.length > 0 && pros.length < totalCount && (
         <div className="mt-20 flex flex-col items-center gap-6">
-          {/* "Voir plus" button - only show if we haven't loaded all professionals */}
-          {initialPros.length < totalCount && (
-            <button
-              className="flex items-center gap-3 rounded-[1.5rem] bg-surface-container-lowest px-6 md:px-10 py-4 md:py-5 font-black text-foreground shadow-lg shadow-black/5 ring-1 ring-border transition-all hover:bg-kelen-green-50 hover:text-kelen-green-700 hover:ring-kelen-green-200 active:scale-95 text-sm md:text-base"
-              aria-label="Charger plus de professionnels"
-              onClick={() => {
-                // TODO: Implement load more functionality
-                console.log('[PRO_DIRECTORY] Load more clicked - need to implement pagination');
-              }}
-            >
-              <span>Voir plus de professionnels qualifiés</span>
-              <ChevronDown className="h-5 w-5" />
-            </button>
-          )}
-
-          {/* Pagination - only show if there are multiple pages */}
-          {totalCount > initialPros.length && (
-            <div className="flex items-center gap-2 md:gap-3" role="navigation" aria-label="Pagination">
-              <span className="text-xs md:text-sm font-bold text-muted-foreground">
-                Affichage de {initialPros.length} sur {totalCount} professionnels
-              </span>
-            </div>
-          )}
+          <button
+            className={`flex items-center gap-3 rounded-[1.5rem] bg-surface-container-lowest px-6 md:px-10 py-4 md:py-5 font-black text-foreground shadow-lg shadow-black/5 ring-1 ring-border transition-all hover:bg-kelen-green-50 hover:text-kelen-green-700 hover:ring-kelen-green-200 active:scale-95 text-sm md:text-base ${isPending ? 'opacity-50 pointer-events-none' : ''}`}
+            aria-label="Charger plus de professionnels"
+            onClick={handleLoadMore}
+            disabled={isPending}
+          >
+            {isPending ? (
+              <>
+                <Loader2 className="h-5 w-5 animate-spin" />
+                <span>Chargement...</span>
+              </>
+            ) : (
+              <>
+                <span>Voir plus de professionnels qualifiés</span>
+                <ChevronDown className="h-5 w-5" />
+              </>
+            )}
+          </button>
+          
+          <div className="flex items-center gap-2 md:gap-3" role="navigation" aria-label="Pagination">
+            <span className="text-xs md:text-sm font-bold text-muted-foreground">
+              Affichage de {pros.length} sur {totalCount} professionnels
+            </span>
+          </div>
+        </div>
+      )}
+      
+      {pros.length > 0 && pros.length >= totalCount && totalCount > 0 && (
+        <div className="mt-20 text-center py-10 border-t border-border/50">
+          <p className="text-xs font-black uppercase tracking-widest text-muted-foreground/40 italic">
+            Vous avez atteint la fin du répertoire
+          </p>
         </div>
       )}
     </section>

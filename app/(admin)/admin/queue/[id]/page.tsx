@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { History, MapPin, Clock, CheckCircle, BadgeCheck, UserCircle, Download, Paperclip, Eye, Image, ExternalLink, FileText, ArrowLeft } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Vérification — Kelen Admin",
@@ -80,7 +81,7 @@ export default async function AdminReviewPage({ params }: ReviewPageProps) {
               href="/admin/queue"
               className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-stone-400 hover:text-kelen-green-600 transition-colors"
             >
-              <span className="material-symbols-outlined text-sm">arrow_back</span>
+              <ArrowLeft className="text-sm" />
               Retour à la file d&apos;attente
             </Link>
           </nav>
@@ -158,13 +159,13 @@ export default async function AdminReviewPage({ params }: ReviewPageProps) {
                         className="flex items-center gap-4 p-4 bg-white border border-stone-200 rounded-2xl group hover:bg-kelen-green-500 hover:text-white hover:border-kelen-green-500 transition-all duration-300"
                       >
                         <div className="w-10 h-10 rounded-xl bg-stone-100 flex items-center justify-center group-hover:bg-white/20">
-                          <span className="material-symbols-outlined text-kelen-green-600 group-hover:text-white">description</span>
+                          <FileText className="text-kelen-green-600 group-hover:text-white" />
                         </div>
                         <div className="flex-1">
                           <p className="text-sm font-bold">Contrat & Accords</p>
                           <p className="text-[10px] opacity-60 uppercase font-black tracking-widest">Document PDF</p>
                         </div>
-                        <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">open_in_new</span>
+                        <ExternalLink className="text-sm group-hover:translate-x-1 transition-transform" />
                       </a>
                     )}
                     {details.photo_urls?.map((url: string, i: number) => (
@@ -175,13 +176,13 @@ export default async function AdminReviewPage({ params }: ReviewPageProps) {
                         className="flex items-center gap-4 p-4 bg-white border border-stone-200 rounded-2xl group hover:bg-kelen-green-500 hover:text-white hover:border-kelen-green-500 transition-all duration-300"
                       >
                          <div className="w-10 h-10 rounded-xl bg-stone-100 flex items-center justify-center group-hover:bg-white/20 text-kelen-yellow-600 group-hover:text-white">
-                          <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>image</span>
+                          <Image />
                         </div>
                         <div className="flex-1">
                           <p className="text-sm font-bold">Photo de preuve #{i+1}</p>
                           <p className="text-[10px] opacity-60 uppercase font-black tracking-widest">Image Source</p>
                         </div>
-                        <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">visibility</span>
+                        <Eye className="text-sm group-hover:translate-x-1 transition-transform" />
                       </a>
                     ))}
                     {details.evidence_urls?.map((url: string, i: number) => (
@@ -192,13 +193,13 @@ export default async function AdminReviewPage({ params }: ReviewPageProps) {
                         className="flex items-center gap-4 p-4 bg-white border border-stone-200 rounded-2xl group hover:bg-kelen-green-500 hover:text-white hover:border-kelen-green-500 transition-all duration-300"
                       >
                         <div className="w-10 h-10 rounded-xl bg-stone-100 flex items-center justify-center group-hover:bg-white/20 text-kelen-red-600 group-hover:text-white">
-                          <span className="material-symbols-outlined">attach_file</span>
+                          <Paperclip />
                         </div>
                         <div className="flex-1">
                           <p className="text-sm font-bold">Evidence Annex #{i+1}</p>
                           <p className="text-[10px] opacity-60 uppercase font-black tracking-widest">Fichier Zip/Autres</p>
                         </div>
-                        <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">download</span>
+                        <Download className="text-sm group-hover:translate-x-1 transition-transform" />
                       </a>
                     ))}
                   </div>
@@ -215,9 +216,9 @@ export default async function AdminReviewPage({ params }: ReviewPageProps) {
             <div className="text-center space-y-4">
               <div className="relative inline-block">
                 <div className="w-24 h-24 rounded-full mx-auto bg-stone-100 flex items-center justify-center border-4 border-stone-50 shadow-lg relative overflow-hidden">
-                   <span className="material-symbols-outlined text-5xl text-stone-300">account_circle</span>
+                   <UserCircle className="text-5xl text-stone-300" />
                    <div className="absolute bottom-0 right-0 bg-kelen-green-500 text-white p-1 rounded-full shadow-md border-2 border-white">
-                    <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
+                    <BadgeCheck className="text-sm" />
                   </div>
                 </div>
               </div>
@@ -235,21 +236,21 @@ export default async function AdminReviewPage({ params }: ReviewPageProps) {
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-4 bg-stone-50 rounded-2xl border border-stone-100 group transition-all hover:bg-white hover:shadow-md">
                   <div className="flex items-center gap-3">
-                    <span className="material-symbols-outlined text-kelen-green-600" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+                    <CheckCircle className="text-kelen-green-600" />
                     <span className="text-sm font-bold text-stone-700">Identité Confirmée</span>
                   </div>
                   <span className="text-[10px] font-black text-kelen-green-600 uppercase">Auto-Pass</span>
                 </div>
                 <div className="flex items-center justify-between p-4 bg-stone-50 rounded-2xl border border-stone-100 group transition-all hover:bg-white hover:shadow-md">
                   <div className="flex items-center gap-3">
-                    <span className="material-symbols-outlined text-kelen-green-600" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+                    <CheckCircle className="text-kelen-green-600" />
                     <span className="text-sm font-bold text-stone-700">Validité Contrat</span>
                   </div>
                   <span className="text-[10px] font-black text-kelen-green-600 uppercase">Valide</span>
                 </div>
                 <div className="flex items-center justify-between p-4 bg-stone-50 rounded-2xl border border-stone-100 group transition-all hover:bg-white hover:shadow-md">
                    <div className="flex items-center gap-3">
-                    <span className="material-symbols-outlined text-amber-500">pending</span>
+                    <Clock className="text-amber-500" />
                     <span className="text-sm font-bold text-stone-700">Évaluation Qualité</span>
                   </div>
                   <span className="text-[10px] font-black text-amber-600 uppercase">Manuel</span>
@@ -299,7 +300,7 @@ export default async function AdminReviewPage({ params }: ReviewPageProps) {
              <div className="absolute top-0 right-0 w-32 h-32 bg-kelen-green-500/10 blur-[60px] rounded-full"></div>
              <div className="relative z-10 space-y-6">
                 <div className="flex items-center gap-2 text-kelen-green-400">
-                  <span className="material-symbols-outlined text-sm">person_pin_circle</span>
+                  <MapPin className="text-sm" />
                   <span className="text-[10px] font-black uppercase tracking-[0.2em]">Émetteur (Diaspora)</span>
                 </div>
                 <div className="space-y-1">
@@ -322,7 +323,7 @@ export default async function AdminReviewPage({ params }: ReviewPageProps) {
           {/* Audit History */}
           <div className="p-6 bg-stone-50 rounded-2xl border border-stone-100 space-y-4">
             <div className="flex items-center gap-2 text-stone-400">
-              <span className="material-symbols-outlined text-sm">history</span>
+              <History className="text-sm" />
               <span className="text-[10px] font-black uppercase tracking-widest">Journal d&apos;Audit</span>
             </div>
             <div className="relative pl-4 space-y-4 before:absolute before:left-0 before:top-2 before:bottom-2 before:w-[1px] before:bg-stone-200">

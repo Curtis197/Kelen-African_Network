@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { manageProjectProfessional, updateExternalProfessional } from "@/lib/actions/projects";
 import { toast } from "sonner";
 import { LocationSearch, type LocationData } from "@/components/location/LocationSearch";
+import { X, Globe } from "lucide-react";
 
 interface AddExternalProModalProps {
   isOpen: boolean;
@@ -106,7 +107,7 @@ export function AddExternalProModal({ isOpen, onClose, projectId, areaName, area
               <div className="flex justify-between items-start mb-10">
                 <div>
                   <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-2">
-                    <span className="material-symbols-outlined text-sm">public</span>
+                    <Globe className="text-sm" />
                     Contact Externe
                   </div>
                   <h2 className="text-3xl font-headline font-bold text-on-surface tracking-tight">{isEditMode ? "Modifier l'expert" : "Ajouter un expert"}</h2>
@@ -116,7 +117,7 @@ export function AddExternalProModal({ isOpen, onClose, projectId, areaName, area
                   onClick={onClose}
                   className="w-10 h-10 flex items-center justify-center bg-surface-container rounded-full text-on-surface-variant hover:text-on-surface transition-colors"
                 >
-                  <span className="material-symbols-outlined">close</span>
+                  <X />
                 </button>
               </div>
 

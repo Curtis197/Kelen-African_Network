@@ -1,3 +1,6 @@
+import Image from "next/image";
+import { ArrowRight } from "lucide-react";
+
 interface ProfileHeroProps {
   businessName: string;
   tagline: string;
@@ -16,11 +19,13 @@ export function ProfileHero({
     <section className="relative min-h-[60vh] md:min-h-[80vh] flex items-center pt-16 overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
-        <img
-          className="w-full h-full object-cover"
+        <Image
+          className="object-cover"
           src={bgImage}
           alt=""
-          loading="eager"
+          priority={true}
+          fill
+          sizes="100vw"
         />
         {/* Gradient overlay — darker on left, lighter on right so image shows */}
         <div className="absolute inset-0 bg-gradient-to-r from-on-surface/70 via-on-surface/40 to-transparent"></div>
@@ -43,7 +48,7 @@ export function ProfileHero({
                 className="bg-primary text-on-primary px-5 py-3 rounded-xl text-sm font-bold flex items-center gap-2 hover:opacity-90 transition-opacity shadow-md shadow-primary/20"
               >
                 Consulter Profil
-                <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                <ArrowRight className="text-sm" />
               </a>
               <a
                 href="#portfolio"

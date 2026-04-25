@@ -1045,3 +1045,28 @@ export async function updatePortfolioVisibility(data: {
   console.log('[ACTION] updatePortfolioVisibility COMPLETED SUCCESSFULLY');
   console.log('[ACTION] ========================================');
 }
+
+export async function getProfessionalRealizations(
+  professionalId: string,
+  limit: number = 10,
+  offset: number = 0
+) {
+  console.log("[getProfessionalRealizations] Fetching:", { professionalId, limit, offset });
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("professional_realizations")
+    .select("*, images:realization_images(*), documents:realization_documents(*)")
+    .eq("professional_id", professionalId)
+    .order("completion_date", { ascending: false, nullsFirst: false })
+    .order("created_at", { ascending: false })
+    .range(offset, offset + limit - 1);
+
+  if (error) {
+    console.error("[getProfessionalRealizations] Error:", error);
+    return [];
+  }
+
+  return data || [];
+}
+

@@ -6,13 +6,7 @@ import { getProjectSteps, deleteProjectStep } from "@/lib/actions/project-steps"
 import ProjectStepCard from "./ProjectStepCard";
 import AddStepDialog from "./AddStepDialog";
 import AssignStepProDialog from "./AssignStepProDialog";
-import {
-  PlusCircle,
-  Search,
-  Filter,
-  ArrowUpDown,
-  Loader2,
-} from "lucide-react";
+import { PlusCircle, Search, Filter, ArrowUpDown, Loader2, , GitBranch } from "lucide-react";
 import { toast } from "sonner";
 
 interface ProjectStepsSectionProps {
@@ -124,7 +118,7 @@ export default function ProjectStepsSection({
         ) : (
           <div className="p-12 sm:p-24 text-center bg-surface-container rounded-xl sm:rounded-[2.5rem] border-2 border-dashed border-border">
             <div className="w-14 h-14 sm:w-20 sm:h-20 mx-auto bg-surface-container-low rounded-full flex items-center justify-center mb-4 sm:mb-8 shadow-sm">
-              <span className="material-symbols-outlined text-2xl sm:text-4xl text-on-surface-variant/30">alt_route</span>
+              <GitBranch className="text-2xl sm:text-4xl text-on-surface-variant/30" />
             </div>
             <h4 className="text-lg sm:text-2xl font-black text-on-surface tracking-tight">Initialisez votre roadmap</h4>
             <p className="text-on-surface-variant font-medium mt-2 sm:mt-3 max-w-sm mx-auto leading-relaxed text-xs sm:text-sm">

@@ -1,7 +1,7 @@
 "use client";
 
 import { ProjectStep } from "@/lib/types/projects";
-import { CheckCircle2, Circle, Clock, AlertCircle, Users, TrendingUp, X } from "lucide-react";
+import { CheckCircle2, Circle, Clock, AlertCircle, Users, TrendingUp, X, Trash2, Edit } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const STATUS_CONFIG: Record<string, any> = {
@@ -96,14 +96,14 @@ export default function ProjectStepCard({ step, currency, onEdit, onDelete, onMa
             aria-label={`Modifier l'étape ${step.title}`}
             className="p-2 hover:bg-muted rounded-xl text-muted-foreground hover:text-primary transition-colors"
           >
-            <span className="material-symbols-outlined text-lg">edit</span>
+            <Edit className="text-lg" />
           </button>
           <button
             onClick={onDelete}
             aria-label={`Supprimer l'étape ${step.title}`}
             className="p-2 hover:bg-muted rounded-xl text-muted-foreground hover:text-rose-500 transition-colors"
           >
-            <span className="material-symbols-outlined text-lg">delete</span>
+            <Trash2 className="text-lg" />
           </button>
         </div>
       </div>

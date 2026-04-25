@@ -1,6 +1,7 @@
 // app/(pro-preview)/pro/preview/[slug]/a-propos/page.tsx
 import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
 import { ProSiteStyleProvider } from '@/components/pro-site/ProSiteStyleProvider'
 import { ProSiteNav } from '@/components/pro-site/ProSiteNav'
@@ -72,11 +73,15 @@ export default async function PreviewAProposPage({ params, searchParams }: Props
 
         <div className="bg-[var(--pro-surface,#fff)] px-6 py-8">
           {portfolio.about_image_url && (
-            <img
-              src={portfolio.about_image_url}
-              alt={proName}
-              className="w-full h-56 object-cover rounded-[var(--pro-radius,16px)] mb-6"
-            />
+            <div className="relative w-full h-56 mb-6 overflow-hidden rounded-[var(--pro-radius,16px)]">
+              <Image
+                src={portfolio.about_image_url}
+                alt={proName}
+                fill
+                className="object-cover"
+                sizes="(max-width: 1200px) 100vw, 800px"
+              />
+            </div>
           )}
           <div
             className="prose prose-sm max-w-none text-[var(--pro-text-muted,#444)] leading-relaxed"

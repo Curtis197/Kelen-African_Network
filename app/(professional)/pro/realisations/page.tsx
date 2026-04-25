@@ -70,7 +70,8 @@ export default async function ProRealisationsPage({ searchParams }: Props) {
       .select("*, images:realization_images(*), documents:realization_documents(*)")
       .eq("professional_id", professional.id)
       .order("completion_date", { ascending: false, nullsFirst: false })
-      .order("created_at", { ascending: false }),
+      .order("created_at", { ascending: false })
+      .limit(10),
     getServices(professional.id),
     getProducts(professional.id),
   ]);

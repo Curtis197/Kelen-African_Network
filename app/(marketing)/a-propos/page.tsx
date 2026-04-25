@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 
+export const revalidate = 3600;
+
 export default function AboutPage() {
   return (
     <>

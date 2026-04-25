@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ChevronLeft, ChevronRight, Image as ImageIcon } from "lucide-react";
+import Image from "next/image";
 
 interface ProjectImageCarouselProps {
   images: Array<{
@@ -41,10 +42,12 @@ export function ProjectImageCarousel({ images, projectId }: ProjectImageCarousel
     <div className="relative w-full bg-white rounded-xl border border-border overflow-hidden">
       {/* Main Image Display */}
       <div className="relative aspect-video bg-surface-container-lowest flex items-center justify-center">
-        <img
+        <Image
           src={images[currentIndex].url}
           alt={`Image ${currentIndex + 1}`}
-          className="w-full h-full object-cover"
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-cover"
           onError={(e) => {
             console.error('[CAROUSEL] Failed to load image:', images[currentIndex].url);
           }}
@@ -99,10 +102,12 @@ export function ProjectImageCarousel({ images, projectId }: ProjectImageCarousel
                     : 'border-border hover:border-on-surface-variant'
                 }`}
               >
-                <img
+                <Image
                   src={image.url}
                   alt={`Thumbnail ${index + 1}`}
-                  className="w-full h-full object-cover"
+                  fill
+                  sizes="64px"
+                  className="object-cover"
                   onError={(e) => {
                     console.error('[CAROUSEL] Failed to load thumbnail:', image.url);
                   }}

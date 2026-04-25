@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { uploadFile } from "@/lib/supabase/storage";
 import Link from "next/link";
-import { Upload, FileText, Eye, Download, Trash2, Grid3X3, List, FolderOpen } from "lucide-react";
+import Image from "next/image";
+import { Upload, FileText, Eye, Download, Trash2, Grid3X3, List, FolderOpen, ShieldCheck, X } from "lucide-react";
 
 interface ProjectDocument {
   id: string;
@@ -372,11 +373,13 @@ export default function ClientDocumentsPage() {
                     const cleanUrl = doc.contract_url?.trim() || "";
                     if (/\.(jpg|jpeg|png|webp|gif)(\?.*)?$/i.test(cleanUrl) && !imgErrors.has(doc.id)) {
                       return (
-                        <img
+                        <Image
                           src={cleanUrl}
-                          alt=""
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          alt={doc.project_title}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-500"
                           onError={() => setImgErrors(prev => new Set([...prev, doc.id]))}
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         />
                       );
                     }
@@ -515,7 +518,7 @@ export default function ClientDocumentsPage() {
                   onClick={() => setSelectedDoc(null)}
                   className="p-2 hover:bg-surface-container rounded-lg transition-colors"
                 >
-                  <span className="material-symbols-outlined">close</span>
+                  <X />
                 </button>
               </div>
 
@@ -527,11 +530,13 @@ export default function ClientDocumentsPage() {
                       const cleanUrl = selectedDoc.contract_url?.trim() || "";
                       if (/\.(jpg|jpeg|png|webp|gif)(\?.*)?$/i.test(cleanUrl) && !imgErrors.has(selectedDoc.id)) {
                         return (
-                          <img
+                          <Image
                             src={cleanUrl}
                             alt={selectedDoc.project_title}
-                            className="w-full h-full object-cover"
+                            fill
+                            className="object-cover"
                             onError={() => setImgErrors(prev => new Set([...prev, selectedDoc.id]))}
+                            sizes="400px"
                           />
                         );
                       }
@@ -576,7 +581,7 @@ export default function ClientDocumentsPage() {
                     <div className="flex justify-between text-sm">
                       <span className="text-on-surface-variant">Sécurité</span>
                       <span className="font-medium text-primary flex items-center gap-1">
-                        <span className="material-symbols-outlined text-sm">verified_user</span>
+                        <ShieldCheck className="text-sm" />
                         AES-256
                       </span>
                     </div>

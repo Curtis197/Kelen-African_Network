@@ -20,7 +20,7 @@ export default function PdfPreviewModal({ data, isOpen, onClose }: PdfPreviewMod
     // Revoke previous URL to free memory
     if (blobUrl) URL.revokeObjectURL(blobUrl);
 
-    const blob = generateProjectPdfBlob(data);
+    const blob = await generateProjectPdfBlob(data);
     const url = URL.createObjectURL(blob);
     setBlobUrl(url);
     setIsGenerating(false);

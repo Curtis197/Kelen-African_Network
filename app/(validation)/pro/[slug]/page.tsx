@@ -6,6 +6,7 @@ import { SignalCard } from "@/components/shared/SignalCard";
 import { ReviewCard } from "@/components/shared/ReviewCard";
 import { formatTenure, formatRating, formatNumber, getCountryName } from "@/lib/utils/format";
 import { createClient } from "@/lib/supabase/server";
+import { Flag, MessageCircle, ListTodo, ArrowRight, Mail, ExternalLink, MessageSquare, Phone, Briefcase, Home, Star, Ban } from "lucide-react";
 
 interface ProfilePageProps {
   params: Promise<{ slug: string }>;
@@ -141,7 +142,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
         <div className="mt-12 space-y-4">
           {isRed && (
             <div className="rounded-2xl bg-error-container p-6 border border-error/20 flex items-center gap-4">
-              <span className="material-symbols-outlined text-4xl text-error" style={{ fontVariationSettings: "'FILL' 1" }}>report</span>
+              <Flag className="text-4xl text-error" />
               <p className="font-bold text-on-error-container text-lg">
                 VIGILANCE : Ce professionnel fait l&apos;objet d&apos;un signalement vérifié.
               </p>
@@ -149,7 +150,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
           )}
           {isBlack && (
             <div className="rounded-2xl bg-[#1A1A1A] p-6 border border-white/10 flex items-center gap-4">
-              <span className="material-symbols-outlined text-4xl text-white">block</span>
+              <Ban className="text-4xl text-white" />
               <p className="font-bold text-white text-lg">
                 RÉVOQUÉ : Plusieurs manquements contractuels graves ont été confirmés.
               </p>
@@ -219,7 +220,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                   <span className="text-2xl font-black text-on-surface">{formatRating(pro.avg_rating || 0)}</span>
                   <div className="flex">
                     {[1,2,3,4,5].map((s) => (
-                      <span key={s} className="material-symbols-outlined text-primary text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                      <Star className="text-primary text-sm" />
                     ))}
                   </div>
                 </div>
@@ -250,7 +251,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
               <div className="space-y-4">
                 <div className="flex items-center gap-4 group">
                   <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary transition-colors group-hover:bg-primary group-hover:text-on-primary">
-                    <span className="material-symbols-outlined text-sm">home</span>
+                    <Home className="text-sm" />
                   </div>
                   <div>
                     <p className="text-[10px] font-bold text-on-surface-variant/40 uppercase tracking-widest leading-none">Siège Social</p>
@@ -259,7 +260,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                 </div>
                 <div className="flex items-center gap-4 group">
                   <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary transition-colors group-hover:bg-primary group-hover:text-on-primary">
-                    <span className="material-symbols-outlined text-sm">work</span>
+                    <Briefcase className="text-sm" />
                   </div>
                   <div>
                     <p className="text-[10px] font-bold text-on-surface-variant/40 uppercase tracking-widest leading-none">Spécialité</p>
@@ -291,28 +292,28 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
               <div className="space-y-3">
                 <a href={`tel:${pro.phone}`} className="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
                   <div className="flex items-center gap-3">
-                    <span className="material-symbols-outlined text-primary">call</span>
+                    <Phone className="text-primary" />
                     <span className="font-bold text-sm tracking-tight">{pro.phone}</span>
                   </div>
-                  <span className="material-symbols-outlined text-xs opacity-40">arrow_forward</span>
+                  <ArrowRight className="text-xs opacity-40" />
                 </a>
                 
                 {pro.whatsapp && (
                   <a href={`https://wa.me/${pro.whatsapp.replace(/[^0-9]/g, "")}`} target="_blank" className="flex items-center justify-between p-4 rounded-2xl bg-[#25D366]/10 border border-[#25D366]/20 hover:bg-[#25D366]/20 transition-colors text-[#25D366]">
                     <div className="flex items-center gap-3">
-                      <span className="material-symbols-outlined">message</span>
+                      <MessageSquare />
                       <span className="font-bold text-sm tracking-tight">Direct WhatsApp</span>
                     </div>
-                    <span className="material-symbols-outlined text-xs opacity-40">open_in_new</span>
+                    <ExternalLink className="text-xs opacity-40" />
                   </a>
                 )}
 
                 <a href={`mailto:${pro.email}`} className="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
                   <div className="flex items-center gap-3">
-                    <span className="material-symbols-outlined">mail</span>
+                    <Mail />
                     <span className="font-bold text-sm tracking-tight">Email Professionnel</span>
                   </div>
-                  <span className="material-symbols-outlined text-xs opacity-40">arrow_forward</span>
+                  <ArrowRight className="text-xs opacity-40" />
                 </a>
               </div>
             </div>
@@ -321,15 +322,15 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
             <div className="grid grid-cols-1 gap-4">
               <Link href={`/recommandation/${pro.slug}`} className="flex items-center justify-center gap-2 p-5 rounded-3xl bg-surface-container-highest border border-outline-variant/30 font-bold text-on-surface hover:bg-primary hover:text-on-primary hover:border-transparent transition-all group">
                 Recommander ce Pro
-                <span className="material-symbols-outlined text-xl group-hover:translate-x-1 transition-transform">add_task</span>
+                <ListTodo className="text-xl group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link href={`/avis/${pro.slug}`} className="flex items-center justify-center gap-2 p-5 rounded-3xl bg-surface-container-high border border-outline-variant/30 font-bold text-on-surface-variant hover:bg-on-surface hover:text-surface transition-all">
                 Soumettre un Avis
-                <span className="material-symbols-outlined text-xl">reviews</span>
+                <MessageCircle className="text-xl" />
               </Link>
               <Link href={`/signal/${pro.slug}`} className="flex items-center justify-center gap-2 p-4 text-error font-bold text-xs uppercase tracking-widest hover:opacity-70 transition-opacity">
                 SIGNALER UN DIFFÉREND
-                <span className="material-symbols-outlined text-sm">flag</span>
+                <Flag className="text-sm" />
               </Link>
             </div>
 

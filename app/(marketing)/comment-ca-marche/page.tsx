@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Search, ShieldCheck, FileText, AlertTriangle } from "lucide-react";
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: "Comment ça marche — Kelen",
   description:

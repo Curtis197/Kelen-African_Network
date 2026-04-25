@@ -7,6 +7,9 @@ import { middlewareLog } from "@/lib/logger";
 // Enforces role-based access control.
 // ============================================
 
+// Simple in-memory cache for edge workers (persists until lambda is destroyed)
+
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -55,37 +58,62 @@ export async function middleware(request: NextRequest) {
   if (isCustomDomain) {
     middlewareLog.info(`[MIDDLEWARE] Custom domain hit: ${host}${pathname}`, { host, pathname });
 
-    const supabaseCustom = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "",
-      {
-        cookies: {
-          getAll() { return request.cookies.getAll(); },
-          setAll() {},
-        },
-      }
-    );
-
-    const { data: portfolio, error: portfolioError } = await supabaseCustom
-      .from("professional_portfolio")
-      .select("professional_id, professionals!inner(slug, is_visible)")
-      .eq("custom_domain", host)
-      .eq("domain_status", "active")
-      .single();
-
-    console.log('[MIDDLEWARE] Custom domain DB lookup:', {
-      host,
-      hasPortfolio: !!portfolio,
-      hasError: !!portfolioError,
-      errorCode: portfolioError?.code,
-    });
-
-    if (portfolioError?.code === '42501') {
-      console.error('[MIDDLEWARE] [RLS] ❌ EXPLICIT RLS BLOCKING on professional_portfolio custom domain lookup!');
+    // Simple in-memory cache for edge workers (persists until lambda is destroyed)
+    // We keep this purely as a fallback if unstable_cache fails
+    if (!(globalThis as any)._DOMAIN_CACHE) {
+      (globalThis as any)._DOMAIN_CACHE = new Map<string, { slug: string | null; isVisible: boolean; expiresAt: number }>();
     }
+    const FALLBACK_CACHE = (globalThis as any)._DOMAIN_CACHE;
 
-    const slug = (portfolio?.professionals as any)?.slug;
-    const isVisible = (portfolio?.professionals as any)?.is_visible;
+    let slug: string | null = null;
+    let isVisible = false;
+
+    try {
+      // NOTE: getCachedPortfolioByDomain is defined in lib/actions/cache-domains.ts
+      const { getCachedPortfolioByDomain } = await import("@/lib/actions/cache-domains");
+      const domainData = await getCachedPortfolioByDomain(host);
+      slug = domainData?.slug || null;
+      isVisible = domainData?.isVisible || false;
+    } catch (e) {
+      console.error('[MIDDLEWARE] Failed to use unstable_cache for domain lookup, using fallback:', e);
+      
+      const now = Date.now();
+      const cached = FALLBACK_CACHE.get(host);
+
+      if (cached && cached.expiresAt > now) {
+        slug = cached.slug;
+        isVisible = cached.isVisible;
+        console.log('[MIDDLEWARE] Custom domain FALLBACK CACHE HIT:', { host, slug });
+      } else {
+        const supabaseCustom = createServerClient(
+          process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+          process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "",
+          {
+            cookies: {
+              getAll() { return request.cookies.getAll(); },
+              setAll() {},
+            },
+          }
+        );
+
+        const { data: portfolio, error: portfolioError } = await supabaseCustom
+          .from("professional_portfolio")
+          .select("professional_id, professionals!inner(slug, is_visible)")
+          .eq("custom_domain", host)
+          .eq("domain_status", "active")
+          .single();
+
+        if (portfolioError?.code === '42501') {
+          console.error('[MIDDLEWARE] [RLS] ❌ EXPLICIT RLS BLOCKING on professional_portfolio custom domain lookup!');
+        }
+
+        slug = (portfolio?.professionals as any)?.slug || null;
+        isVisible = (portfolio?.professionals as any)?.is_visible || false;
+        
+        // Cache the result for 10 minutes (600000ms)
+        FALLBACK_CACHE.set(host, { slug, isVisible, expiresAt: now + 600000 });
+      }
+    }
 
     if (!slug || !isVisible) {
       middlewareLog.warn(`[MIDDLEWARE] Custom domain not found or not visible: ${host}`, { host });

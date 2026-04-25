@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { AlertTriangle, Shield, MapPin, Briefcase, Calendar, Eye } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -125,11 +126,15 @@ export default async function BlacklistedProfessionalsPage() {
                     {/* Avatar */}
                     <div className="w-20 h-20 rounded-xl overflow-hidden bg-white ring-2 ring-kelen-red-200 flex-shrink-0">
                       {pro.profile_picture_url ? (
-                        <img
-                          src={pro.profile_picture_url}
-                          alt={pro.business_name}
-                          className="w-full h-full object-cover"
-                        />
+                        <div className="relative w-full h-full">
+                          <Image
+                            src={pro.profile_picture_url}
+                            alt={pro.business_name}
+                            fill
+                            sizes="80px"
+                            className="object-cover"
+                          />
+                        </div>
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-2xl font-bold text-kelen-red-400">
                           {pro.business_name?.charAt(0).toUpperCase() || 'P'}

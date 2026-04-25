@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
-import { motion } from "framer-motion";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import ProjectStepsSection from "@/components/projects/ProjectStepsSection";
@@ -17,6 +16,7 @@ import { getProjectSteps } from "@/lib/actions/project-steps";
 import { getProjectImages, type ProjectImage } from "@/lib/actions/project-images";
 import { ProjectImageCarousel } from "@/components/projects/ProjectImageCarousel";
 import { generateProjectPdf } from "@/lib/actions/project-pdf";
+import { Plus, Trash2, Users, FileJson, Edit, FolderStar, Book, LayoutGrid, MapPin, ChevronDown } from "lucide-react";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -72,50 +72,68 @@ export default function ProjectDetailPage() {
   }, [projectIdStr]);
 
   const fetchProjectData = async () => {
+    console.log('[PROJECT-DETAIL] Starting parallel fetch for project:', projectIdStr);
     setIsLoading(true);
     
-    // Fetch Project
-    const { data: projectData, error: projectError } = await supabase
-      .from("user_projects")
-      .select("*")
-      .eq("id", projectIdStr)
-      .single();
+    try {
+      const [
+        projectRes,
+        teamRes,
+        areasData,
+        stepsData,
+        imgs
+      ] = await Promise.all([
+        // Fetch Project
+        supabase
+          .from("user_projects")
+          .select("*")
+          .eq("id", projectIdStr)
+          .single(),
+        
+        // Fetch Team
+        supabase
+          .from("project_professionals")
+          .select("*, professionals(business_name, category, portfolio_photos, status, slug)")
+          .eq("project_id", projectIdStr)
+          .order("rank_order", { ascending: true }),
+        
+        // Fetch Areas
+        getProjectAreas(projectIdStr),
+        
+        // Fetch Steps
+        getProjectSteps(projectIdStr),
+        
+        // Fetch Images
+        getProjectImages(projectIdStr)
+      ]);
 
-    if (projectError) {
-      console.error("Error fetching project:", projectError);
-    } else {
-      setProject(projectData as Project);
+      console.log('[PROJECT-DETAIL] Parallel fetch complete');
+
+      if (projectRes.error) {
+        console.error("[PROJECT-DETAIL] Error fetching project:", projectRes.error);
+        if (projectRes.error.code === '42501') {
+          console.error('[RLS] ❌ EXPLICIT RLS BLOCKING on user_projects!');
+        }
+      } else {
+        setProject(projectRes.data as Project);
+      }
+
+      if (teamRes.error) {
+        console.error("[PROJECT-DETAIL] Error fetching team:", teamRes.error);
+      } else {
+        setTeam(teamRes.data as ProjectProfessional[]);
+      }
+
+      setAreas(areasData as ProjectArea[]);
+      setSteps(stepsData as ProjectStep[]);
+      setImages(imgs);
+
+    } catch (err) {
+      console.error("[PROJECT-DETAIL] Unexpected error during fetch:", err);
+      toast.error("Erreur lors du chargement des données");
+    } finally {
+      setIsLoading(false);
     }
-
-    // Fetch Team
-    const { data: teamData, error: teamError } = await supabase
-      .from("project_professionals")
-      .select("*, professionals(business_name, category, portfolio_photos, status, slug)")
-      .eq("project_id", projectIdStr)
-      .order("rank_order", { ascending: true });
-
-    if (teamError) {
-      console.error("Error fetching team:", teamError);
-    } else {
-      setTeam(teamData as ProjectProfessional[]);
-    }
-
-    // Fetch Areas (auto-syncs from professionals)
-    console.log('[PROJECT-DETAIL] Fetching areas for project:', projectIdStr);
-    const areasData = await getProjectAreas(projectIdStr);
-    console.log('[PROJECT-DETAIL] Areas fetched:', areasData.length);
-    setAreas(areasData as ProjectArea[]);
-
-    // Fetch Steps (via server action to get associated_pros names)
-    const stepsData = await getProjectSteps(projectIdStr);
-    setSteps(stepsData as ProjectStep[]);
-
-    // Fetch images for carousel
-    const imgs = await getProjectImages(projectIdStr);
-    console.log('[PROJECT-DETAIL] Images fetched:', imgs.length);
-    setImages(imgs);
-
-    setIsLoading(false);
   };
 
   const addArea = async (area: string) => {
@@ -241,14 +259,14 @@ export default function ProjectDetailPage() {
                     <option value="termine">Terminé</option>
                     <option value="annule">Annulé</option>
                   </select>
-                  <span className="material-symbols-outlined absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 text-sm pointer-events-none opacity-50">expand_more</span>
+                  <ChevronDown className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 text-sm pointer-events-none opacity-50" />
                 </div>
                 <div className="flex items-center gap-1.5 sm:gap-2 text-on-surface-variant text-[10px] sm:text-sm font-medium">
-                  <span className="material-symbols-outlined text-sm sm:text-base flex-shrink-0">location_on</span>
+                  <MapPin className="text-sm sm:text-base flex-shrink-0" />
                   <span className="truncate">{project.location_formatted || project.location}</span>
                 </div>
                 <div className="flex items-center gap-1.5 sm:gap-2 text-on-surface-variant text-[10px] sm:text-sm font-medium">
-                  <span className="material-symbols-outlined text-sm sm:text-base flex-shrink-0">category</span>
+                  <LayoutGrid className="text-sm sm:text-base flex-shrink-0" />
                   <span className="capitalize truncate">{(project.category || 'non_defini').replace('_', ' ')}</span>
                 </div>
               </div>
@@ -260,21 +278,21 @@ export default function ProjectDetailPage() {
                 href={`/projets/${projectIdStr}/journal`}
                 className="flex-1 min-w-[120px] sm:flex-none px-3 sm:px-6 lg:px-8 py-2.5 sm:py-4 bg-surface-container-low text-on-surface font-headline font-bold rounded-lg sm:rounded-2xl border border-transparent hover:border-surface-container transition-all flex items-center justify-center gap-2 text-[10px] sm:text-sm"
               >
-                <span className="material-symbols-outlined text-base sm:text-xl">book</span>
+                <Book className="text-base sm:text-xl" />
                 <span>Journal</span>
               </Link>
               <Link
                 href={`/projets/${projectIdStr}/documents`}
                 className="flex-1 min-w-[120px] sm:flex-none px-3 sm:px-6 lg:px-8 py-2.5 sm:py-4 bg-surface-container-low text-on-surface font-headline font-bold rounded-lg sm:rounded-2xl border border-transparent hover:border-surface-container transition-all flex items-center justify-center gap-2 text-[10px] sm:text-sm"
               >
-                <span className="material-symbols-outlined text-base sm:text-xl">folder_special</span>
+                <FolderStar className="text-base sm:text-xl" />
                 <span>Documents</span>
               </Link>
               <Link
                 href={`/projets/${projectIdStr}/modifier`}
                 className="flex-1 min-w-[120px] sm:flex-none px-3 sm:px-6 lg:px-8 py-2.5 sm:py-4 bg-surface-container-low text-on-surface font-headline font-bold rounded-lg sm:rounded-2xl border border-transparent hover:border-surface-container transition-all flex items-center justify-center gap-2 text-[10px] sm:text-sm"
               >
-                <span className="material-symbols-outlined text-base sm:text-xl">edit</span>
+                <Edit className="text-base sm:text-xl" />
                 <span>Modifier</span>
               </Link>
               <button
@@ -301,7 +319,7 @@ export default function ProjectDetailPage() {
                 }}
                 className="flex-1 min-w-[120px] sm:flex-none px-3 sm:px-6 lg:px-8 py-2.5 sm:py-4 bg-surface-container-low text-on-surface font-headline font-bold rounded-lg sm:rounded-2xl border border-transparent hover:border-surface-container transition-all flex items-center justify-center gap-2 text-[10px] sm:text-sm"
               >
-                <span className="material-symbols-outlined text-base sm:text-xl">picture_as_pdf</span>
+                <FileJson className="text-base sm:text-xl" />
                 <span>Exporter PDF</span>
               </button>
             </div>
@@ -341,7 +359,7 @@ export default function ProjectDetailPage() {
                         onClick={() => setShowAreaSelector(!showAreaSelector)}
                         className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-6 py-2 sm:py-3 bg-primary text-white text-[9px] sm:text-xs font-black uppercase tracking-widest rounded-lg sm:rounded-2xl shadow-lg shadow-primary/20 hover:scale-[0.98] transition-all"
                       >
-                        <span className="material-symbols-outlined text-sm sm:text-base">add</span>
+                        <Plus className="text-sm sm:text-base" />
                         <span className="hidden sm:inline">Ajouter un domaine</span>
                         <span className="sm:hidden">Domaine</span>
                       </button>
@@ -367,7 +385,7 @@ export default function ProjectDetailPage() {
                       href={`/projets/${projectIdStr}/pros`}
                       className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-6 py-2 sm:py-3 bg-surface-container-low text-on-surface text-[9px] sm:text-xs font-black uppercase tracking-widest rounded-lg sm:rounded-2xl border border-transparent hover:border-surface-container transition-all"
                     >
-                      <span className="material-symbols-outlined text-sm sm:text-base">group</span>
+                      <Users className="text-sm sm:text-base" />
                       <span className="hidden sm:inline">Gérer les Professionnels</span>
                       <span className="sm:hidden">Pros</span>
                     </Link>
@@ -390,7 +408,7 @@ export default function ProjectDetailPage() {
                 {areas.length === 0 && (
                   <div className="p-6 sm:p-8 lg:p-12 text-center bg-surface-container-low rounded-xl sm:rounded-3xl border-2 border-dashed border-outline-variant/30">
                     <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto bg-surface-container rounded-full flex items-center justify-center mb-3 sm:mb-4">
-                      <span className="material-symbols-outlined text-xl sm:text-2xl text-on-surface-variant opacity-30">diversity_3</span>
+                      <Users className="w-6 h-6 sm:w-8 sm:h-8 text-on-surface-variant opacity-30" />
                     </div>
                     <h4 className="text-base sm:text-lg font-headline font-bold text-on-surface">Initialisez vos domaines</h4>
                     <p className="text-on-surface-variant font-medium mt-1.5 text-[10px] sm:text-sm max-w-xs mx-auto">Ajoutez des domaines d&apos;intervention pour commencer à comparer des professionnels.</p>
@@ -431,7 +449,7 @@ export default function ProjectDetailPage() {
                         className="ml-2 p-1 text-on-surface-variant/40 hover:text-kelen-red-500 transition-colors opacity-0 group-hover:opacity-100"
                         title="Retirer ce domaine"
                       >
-                        <span className="material-symbols-outlined text-sm">delete</span>
+                        <Trash2 className="text-sm" />
                       </button>
                     </div>
                   ))}
@@ -490,7 +508,7 @@ export default function ProjectDetailPage() {
                         onClick={() => addDevelopmentArea(newProjectArea.trim())}
                         className="w-full text-left px-3 py-2 text-[10px] font-bold text-primary bg-primary/5 hover:bg-primary/10 rounded-lg border border-dashed border-primary/20 transition-all flex items-center gap-1"
                       >
-                        <span className="material-symbols-outlined text-xs">add</span>
+                        <Plus className="text-xs" />
                         Créer &quot;{newProjectArea}&quot;
                       </button>
                     )}
@@ -514,7 +532,7 @@ export default function ProjectDetailPage() {
                   onClick={() => setShowProjectAreaInput(true)}
                   className="w-full py-3 border-2 border-dashed border-outline-variant/30 rounded-lg text-xs font-bold text-on-surface-variant hover:border-primary hover:text-primary transition-all flex items-center justify-center gap-2"
                 >
-                  <span className="material-symbols-outlined text-sm">add</span>
+                  <Plus className="text-sm" />
                   Ajouter un domaine
                 </button>
               )}

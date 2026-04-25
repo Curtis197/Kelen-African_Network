@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/supabase/client";
+import Image from "next/image";
 
 const log = logger("kelen:google-management");
 
@@ -732,7 +733,13 @@ export default function GoogleManagementPage() {
                               <div className="flex justify-between items-start mb-4">
                                 <div className="flex items-center gap-3">
                                   {r.reviewer?.profilePhotoUrl ? (
-                                    <img src={r.reviewer.profilePhotoUrl} alt={r.reviewer.displayName} className="w-10 h-10 rounded-full ring-2 ring-primary/10" />
+                                    <Image
+                                      src={r.reviewer.profilePhotoUrl}
+                                      alt={r.reviewer.displayName}
+                                      width={40}
+                                      height={40}
+                                      className="rounded-full ring-2 ring-primary/10 object-cover"
+                                    />
                                   ) : (
                                     <div className="w-10 h-10 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center text-sm font-bold text-gray-500 ring-2 ring-primary/10">
                                       {r.reviewer?.displayName?.charAt(0) || "?"}

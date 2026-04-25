@@ -10,6 +10,7 @@ import { uploadFile } from "@/lib/supabase/storage";
 import { Image as ImageIcon, X, Loader2, ArrowLeft, Star, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
+import Image from "next/image";
 import { createService, updateService } from "@/lib/actions/services";
 
 const serviceSchema = z.object({
@@ -307,10 +308,12 @@ export function ServiceForm({ professionalId, initialData }: ServiceFormProps) {
                       key={`existing-${img.id}`}
                       className="relative aspect-square overflow-hidden rounded-xl bg-stone-200 group"
                     >
-                      <img
+                      <Image
                         src={img.url}
                         alt={`Photo ${i + 1}`}
-                        className="h-full w-full object-cover"
+                        fill
+                        sizes="(max-width: 768px) 33vw, 20vw"
+                        className="object-cover"
                       />
                       <button
                         type="button"
@@ -355,10 +358,12 @@ export function ServiceForm({ professionalId, initialData }: ServiceFormProps) {
                         key={`new-${i}`}
                         className="relative aspect-square overflow-hidden rounded-xl bg-stone-200 group"
                       >
-                        <img
+                        <Image
                           src={previewUrl}
                           alt="Preview"
-                          className="h-full w-full object-cover"
+                          fill
+                          sizes="(max-width: 768px) 33vw, 20vw"
+                          className="object-cover"
                         />
                         {isFirstNew && (
                           <div className="absolute left-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-kelen-green-500 text-white">

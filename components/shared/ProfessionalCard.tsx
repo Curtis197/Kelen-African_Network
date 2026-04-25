@@ -8,6 +8,7 @@ import type { ProfessionalStatus } from "@/lib/supabase/types";
 import { manageProjectProfessional } from "@/lib/actions/projects";
 import { Check, Plus } from "lucide-react";
 import { toast } from "sonner";
+import Image from "next/image";
 
 interface ProfessionalCardProps {
   id: string;
@@ -128,9 +129,11 @@ export function ProfessionalCard({
       <div className="mb-5">
         <div className="w-16 h-16 rounded-2xl overflow-hidden bg-surface-container ring-2 ring-outline-variant/20 flex items-center justify-center text-on-surface-variant">
           {profilePictureUrl ? (
-            <img
+            <Image
               src={profilePictureUrl}
               alt={businessName}
+              width={64}
+              height={64}
               className="w-full h-full object-cover"
             />
           ) : (

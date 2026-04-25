@@ -345,7 +345,7 @@ export async function updateProfessionalSelection(projectId: string, linkId: str
   return { success: true };
 }
 
-export async function getUserProjects() {
+export async function getUserProjects(limit: number = 100, offset: number = 0) {
   console.log('[GET_USER_PROJECTS] Fetching projects for user');
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -356,7 +356,8 @@ export async function getUserProjects() {
     .from("user_projects")
     .select("id, title, category, location, development_areas")
     .eq("user_id", user.id)
-    .order("updated_at", { ascending: false });
+    .order("updated_at", { ascending: false })
+    .range(offset, offset + limit - 1);
 
   if (error) {
     console.error("Error fetching user projects:", error);

@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { format, formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
@@ -71,8 +72,14 @@ export default function LogCard({ log, projectId, proProjectId, primaryPhotoUrl,
         {photoCount > 0 && (
           <div className="flex gap-2 mb-4 overflow-x-auto pb-1">
             {primaryPhotoUrl && (
-              <div className="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden bg-surface-container">
-                <img src={primaryPhotoUrl} alt="" className="w-full h-full object-cover" />
+              <div className="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden bg-surface-container relative">
+                <Image
+                  src={primaryPhotoUrl}
+                  alt="Log thumbnail"
+                  fill
+                  className="object-cover"
+                  sizes="80px"
+                />
               </div>
             )}
             {photoCount > 1 && (

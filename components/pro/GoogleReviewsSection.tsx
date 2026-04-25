@@ -1,5 +1,6 @@
 import type { GoogleReview } from "@/lib/google-reviews";
 import { getGoogleReviewsLink } from "@/lib/google-reviews";
+import Image from "next/image";
 
 interface Props {
   reviews: GoogleReview[];
@@ -69,11 +70,12 @@ function ReviewCard({ review }: { review: GoogleReview }) {
     <div className="bg-surface-container-lowest rounded-xl border border-outline-variant/10 p-6 space-y-4 shadow-sm">
       <div className="flex items-center gap-3">
         {review.profile_photo_url ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             src={review.profile_photo_url}
             alt={review.author_name}
-            className="w-10 h-10 rounded-full object-cover"
+            width={40}
+            height={40}
+            className="rounded-full object-cover"
             loading="lazy"
           />
         ) : (

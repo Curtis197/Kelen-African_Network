@@ -6,6 +6,11 @@ import { useRouter } from "next/navigation";
 import { MARKETING_NAV } from "@/lib/utils/constants";
 import { createClient } from "@/lib/supabase/client";
 import { NotificationDropdown } from "@/components/layout/NotificationDropdown";
+import { 
+  LogIn, Briefcase, LogOut, ShieldCheck, 
+  LayoutDashboard, ChevronDown, UserCircle, 
+  Award, Scale, Network, Files, UserRoundCog 
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -62,7 +67,6 @@ export function Navbar() {
       if (cancelled) return;
       if (session?.user) {
         setUser(session.user);
-        // Role change may not need immediate DB fetch — middleware handles it
       } else {
         setUser(null);
         setUserRole(null);
@@ -98,11 +102,11 @@ export function Navbar() {
 
   // Client-only navigation links
   const CLIENT_NAV = [
-    { href: "/recommandation", label: "Recommander", icon: "award_star" },
-    { href: "/signal", label: "Signaler", icon: "gavel" },
-    { href: "/projets", label: "Mes projets", icon: "account_tree" },
-    { href: "/documents", label: "Documents", icon: "folder_special" },
-    { href: "/parametres/profil", label: "Mon profil", icon: "manage_accounts" },
+    { href: "/recommandation", label: "Recommander", icon: Award },
+    { href: "/signal", label: "Signaler", icon: Scale },
+    { href: "/projets", label: "Mes projets", icon: Network },
+    { href: "/documents", label: "Documents", icon: Files },
+    { href: "/parametres/profil", label: "Mon profil", icon: UserRoundCog },
   ];
 
   return (
@@ -117,7 +121,6 @@ export function Navbar() {
 
         {/* Desktop nav */}
         <div className="hidden items-center gap-6 md:flex ml-auto">
-          {/* Marketing Nav - Always Visible */}
           {MARKETING_NAV.map((item) => (
             <Link
               key={item.href}
@@ -128,16 +131,14 @@ export function Navbar() {
             </Link>
           ))}
 
-          {/* Additional links for connected users */}
           {user && (
             <>
-              {/* Show client-only links as dropdown to clients */}
               {isClient && (
                 <DropdownMenu>
                   <DropdownMenuTrigger className="text-sm font-semibold text-foreground/80 hover:text-kelen-green-600 transition-colors flex items-center gap-1.5 cursor-pointer">
-                    <span className="material-symbols-outlined text-[18px]">account_circle</span>
+                    <UserCircle className="w-5 h-5" />
                     Espace Client
-                    <span className="material-symbols-outlined text-[16px]">expand_more</span>
+                    <ChevronDown className="w-4 h-4" />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-56">
                     {CLIENT_NAV.map((item) => (
@@ -146,7 +147,7 @@ export function Navbar() {
                           href={item.href}
                           className="flex items-center gap-2 px-2 py-1.5 w-full"
                         >
-                          <span className="material-symbols-outlined text-[18px]">{item.icon}</span>
+                          <item.icon className="w-[18px] h-[18px] text-stone-400" />
                           {item.label}
                         </Link>
                       </DropdownMenuItem>
@@ -155,13 +156,12 @@ export function Navbar() {
                 </DropdownMenu>
               )}
 
-              {/* Show pro dashboard link to pros */}
               {isPro && (
                 <Link
                   href="/pro/dashboard"
                   className="text-sm font-semibold text-foreground/80 hover:text-kelen-green-600 transition-colors flex items-center gap-1.5"
                 >
-                  <span className="material-symbols-outlined text-[18px]">dashboard</span>
+                  <LayoutDashboard className="w-5 h-5" />
                   Tableau de bord
                 </Link>
               )}
@@ -175,7 +175,7 @@ export function Navbar() {
             href="/recherche"
             className="flex items-center gap-2 rounded-xl border border-kelen-green-100 bg-kelen-green-50/50 px-4 py-2 text-sm font-bold text-kelen-green-700 transition-all hover:bg-kelen-green-100 hover:text-kelen-green-800 active:scale-95"
           >
-            <span className="material-symbols-outlined text-[18px]">verified_user</span>
+            <ShieldCheck className="w-5 h-5" />
             Vérifier un pro
           </Link>
 
@@ -187,7 +187,7 @@ export function Navbar() {
                 disabled={signingOut}
                 className="flex items-center gap-2 rounded-xl border border-border px-4 py-2 text-sm font-bold text-on-surface-variant transition-all hover:bg-surface-container hover:text-on-surface active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100"
               >
-                <span className={`material-symbols-outlined text-[18px] ${signingOut ? 'animate-pulse' : ''}`}>logout</span>
+                <LogOut className="w-5 h-5" />
                 {signingOut ? 'Déconnexion...' : 'Déconnexion'}
               </button>
             </div>
@@ -197,14 +197,14 @@ export function Navbar() {
                 href="/pro/connexion"
                 className="flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2 text-sm font-bold text-amber-700 transition-all hover:bg-amber-100 hover:text-amber-800 active:scale-95"
               >
-                <span className="material-symbols-outlined text-[18px]">business_center</span>
+                <Briefcase className="w-5 h-5" />
                 Espace Pro
               </Link>
               <Link
                 href="/connexion"
                 className="flex items-center gap-2 rounded-xl bg-kelen-green-500 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-kelen-green-500/20 transition-all hover:bg-kelen-green-600 hover:shadow-xl active:scale-95"
               >
-                <span className="material-symbols-outlined text-[18px]">login</span>
+                <LogIn className="w-5 h-5" />
                 Connexion
               </Link>
             </>
@@ -233,7 +233,6 @@ export function Navbar() {
       {mobileOpen && (
         <div className="border-t border-border bg-background px-4 py-6 md:hidden">
           <div className="flex flex-col gap-4">
-            {/* Marketing Nav - Always Visible */}
             {MARKETING_NAV.map((item) => (
               <Link
                 key={item.href}
@@ -245,10 +244,8 @@ export function Navbar() {
               </Link>
             ))}
 
-            {/* Additional links for connected users */}
             {user && (
               <>
-                {/* Show client-only links to clients */}
                 {isClient && CLIENT_NAV.map((item) => (
                   <Link
                     key={item.href}
@@ -256,19 +253,18 @@ export function Navbar() {
                     onClick={() => setMobileOpen(false)}
                     className="flex items-center gap-3 text-base font-bold text-foreground hover:text-kelen-green-600 transition-colors"
                   >
-                    <span className="material-symbols-outlined text-stone-400">{item.icon}</span>
+                    <item.icon className="w-5 h-5 text-stone-400" />
                     {item.label}
                   </Link>
                 ))}
 
-                {/* Show pro dashboard link to pros */}
                 {isPro && (
                   <Link
                     href="/pro/dashboard"
                     onClick={() => setMobileOpen(false)}
                     className="flex items-center gap-3 text-base font-bold text-foreground hover:text-kelen-green-600 transition-colors"
                   >
-                    <span className="material-symbols-outlined text-stone-400">dashboard</span>
+                    <LayoutDashboard className="w-5 h-5 text-stone-400" />
                     Tableau de bord
                   </Link>
                 )}
@@ -277,25 +273,22 @@ export function Navbar() {
 
             <hr className="border-border my-2" />
             
-            {/* Mobile Actions */}
             <Link
               href="/recherche"
               onClick={() => setMobileOpen(false)}
               className="flex items-center justify-center gap-2 rounded-xl border border-kelen-green-100 bg-kelen-green-50/50 py-3 text-base font-bold text-kelen-green-700 transition-all active:scale-95"
             >
-              <span className="material-symbols-outlined">verified_user</span>
+              <ShieldCheck className="w-5 h-5" />
               Vérifier un pro
             </Link>
 
             {user ? (
               <button
-                onClick={() => {
-                  handleSignOut();
-                }}
+                onClick={() => handleSignOut()}
                 disabled={signingOut}
                 className="flex items-center justify-center gap-2 rounded-xl border border-border py-3 text-base font-bold text-stone-500 transition-all hover:bg-stone-50 disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                <span className={`material-symbols-outlined ${signingOut ? 'animate-pulse' : ''}`}>logout</span>
+                <LogOut className="w-5 h-5" />
                 {signingOut ? 'Déconnexion...' : 'Déconnexion'}
               </button>
             ) : (
@@ -305,7 +298,7 @@ export function Navbar() {
                   onClick={() => setMobileOpen(false)}
                   className="flex items-center justify-center gap-2 rounded-xl border border-amber-200 bg-amber-50 py-3 text-base font-bold text-amber-700"
                 >
-                  <span className="material-symbols-outlined">business_center</span>
+                  <Briefcase className="w-5 h-5" />
                   Espace Pro
                 </Link>
                 <Link
@@ -313,7 +306,7 @@ export function Navbar() {
                   onClick={() => setMobileOpen(false)}
                   className="flex items-center justify-center gap-2 rounded-xl bg-kelen-green-500 py-3 text-base font-bold text-white shadow-lg"
                 >
-                  <span className="material-symbols-outlined">login</span>
+                  <LogIn className="w-5 h-5" />
                   Connexion
                 </Link>
               </>

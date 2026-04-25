@@ -944,8 +944,8 @@ export async function getProjectProList(projectId: string) {
 // GET PRO INBOX
 // ============================================
 
-export async function getProInbox(professionalId: string) {
-  console.log('[ACTION] getProInbox started:', { professionalId });
+export async function getProInbox(professionalId: string, limit: number = 20, offset: number = 0) {
+  console.log('[ACTION] getProInbox started:', { professionalId, limit, offset });
 
   const supabase = await createClient();
 
@@ -971,7 +971,8 @@ export async function getProInbox(professionalId: string) {
     `)
     .eq('professional_id', professionalId)
     .in('status', ['pending', 'negotiating', 'active'])
-    .order('created_at', { ascending: false });
+    .order('created_at', { ascending: false })
+    .range(offset, offset + limit - 1);
 
   console.log('[DB] Get pro collaborations:', { 
     count: collaborations?.length, 

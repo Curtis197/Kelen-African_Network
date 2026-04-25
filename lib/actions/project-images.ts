@@ -49,6 +49,35 @@ export async function getProjectImages(projectId: string): Promise<ProjectImage[
   return (data || []) as ProjectImage[];
 }
 
+export async function getAllProjectsMainImages(projectIds: string[]): Promise<Record<string, string>> {
+  console.log('[PROJECT_IMAGES] Fetching main images for projects:', projectIds.length);
+  if (projectIds.length === 0) return {};
+  
+  const supabase = await createClient();
+  
+  // Try to get main images first
+  const { data, error } = await supabase
+    .from("user_project_images")
+    .select("project_id, url, is_main")
+    .in("project_id", projectIds);
+
+  if (error) {
+    console.error("[PROJECT_IMAGES] Error fetching multi images:", error);
+    return {};
+  }
+
+  const imagesMap: Record<string, string> = {};
+  // Sort or process to ensure we pick is_main if it exists, otherwise any image
+  (data || []).forEach(img => {
+    // If it's main, it always wins. If we don't have an image for this project yet, take this one.
+    if (img.is_main || !imagesMap[img.project_id]) {
+      imagesMap[img.project_id] = img.url;
+    }
+  });
+
+  return imagesMap;
+}
+
 export async function uploadProjectImage(projectId: string, imageUrl: string): Promise<{ success: boolean; image?: ProjectImage; error?: string }> {
   console.log('[PROJECT_IMAGES] Adding image for project:', projectId, 'URL:', imageUrl);
   const supabase = await createClient();

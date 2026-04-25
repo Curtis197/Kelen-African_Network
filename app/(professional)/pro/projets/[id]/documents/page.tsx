@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { uploadFile } from "@/lib/supabase/storage";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { ArrowLeft, Upload, FileText, Eye, Download, Trash2, Filter, Grid3X3, List, Image as ImageIcon } from "lucide-react";
+import { ArrowLeft, Upload, FileText, Eye, Download, Trash2, Filter, Grid3X3, List, Image as ImageIcon, ShieldCheck, X } from "lucide-react";
 import ProjectImageManager from "@/components/pro/ProjectImageManager";
 import type { ProjectImage } from "@/lib/supabase/types";
 
@@ -516,7 +516,7 @@ export default function ProProjectDocumentsPage() {
                 onClick={() => setSelectedDoc(null)}
                 className="p-2 hover:bg-surface-container rounded-lg transition-colors"
               >
-                <span className="material-symbols-outlined">close</span>
+                <X />
               </button>
             </div>
 
@@ -552,7 +552,7 @@ export default function ProProjectDocumentsPage() {
                   <div className="flex justify-between text-sm">
                     <span className="text-on-surface-variant">Sécurité</span>
                     <span className="font-medium text-kelen-green-600 flex items-center gap-1">
-                      <span className="material-symbols-outlined text-sm">verified_user</span>
+                      <ShieldCheck className="text-sm" />
                       AES-256
                     </span>
                   </div>

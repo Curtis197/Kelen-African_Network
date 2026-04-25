@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import Link from 'next/link';
 import { redirect } from "next/navigation";
 import { createCheckoutSession, cancelSubscription, getSubscriptionInfo } from "@/lib/actions/stripe";
+import { Lightbulb, History, CheckCircle, XCircle, CreditCard, Bell } from "lucide-react";
 
 export default async function Page() {
   const supabase = await createClient();
@@ -52,7 +53,7 @@ export default async function Page() {
         </div>
         <div className="flex items-center gap-4">
           <button className="p-2 text-on-surface-variant hover:text-kelen-green-500 transition-colors">
-            <span className="material-symbols-outlined">notifications</span>
+            <Bell />
           </button>
           <div className="h-8 w-8 rounded-full overflow-hidden border-2 border-primary-container">
             <div className="w-full h-full bg-kelen-green-100 flex items-center justify-center text-kelen-green-700 font-bold text-xs">
@@ -74,7 +75,7 @@ export default async function Page() {
             if (result.url) redirect(result.url);
           }}>
             <button className="inline-flex items-center gap-2 bg-surface-container text-on-surface px-6 py-3 rounded-xl font-semibold hover:bg-surface-container-high transition-colors">
-              <span className="material-symbols-outlined text-[20px]">credit_card</span>
+              <CreditCard />
               <span>Gérer mon moyen de paiement</span>
             </button>
           </form>
@@ -128,15 +129,15 @@ export default async function Page() {
                 <div className="text-3xl font-bold mb-8">0 FCFA<span className="text-sm font-normal text-on-surface-variant/60"> / mois</span></div>
                 <ul className="space-y-4 mb-8">
                   <li className="flex items-center gap-3 text-sm text-on-surface-variant">
-                    <span className="material-symbols-outlined text-kelen-green-600 text-lg">check_circle</span>
+                    <CheckCircle className="text-kelen-green-600 text-lg" />
                     <span>Recherche par nom exact</span>
                   </li>
                   <li className="flex items-center gap-3 text-sm text-on-surface-variant">
-                    <span className="material-symbols-outlined text-kelen-green-600 text-lg">check_circle</span>
+                    <CheckCircle className="text-kelen-green-600 text-lg" />
                     <span>Maximum 3 projets</span>
                   </li>
                   <li className="flex items-center gap-3 text-sm text-on-surface-variant/40">
-                    <span className="material-symbols-outlined text-lg">cancel</span>
+                    <XCircle className="text-lg" />
                     <span>Non indexé sur Google</span>
                   </li>
                 </ul>
@@ -156,15 +157,15 @@ export default async function Page() {
                 <div className="text-3xl font-bold mb-8 text-kelen-green-600">3000 FCFA<span className="text-sm font-normal text-on-surface-variant/60"> / mois</span></div>
                 <ul className="space-y-4 mb-8">
                   <li className="flex items-center gap-3 text-sm text-on-surface-variant">
-                    <span className="material-symbols-outlined text-kelen-green-600 text-lg">check_circle</span>
+                    <CheckCircle className="text-kelen-green-600 text-lg" />
                     <span>Indexation Google (SEO)</span>
                   </li>
                   <li className="flex items-center gap-3 text-sm text-on-surface-variant">
-                    <span className="material-symbols-outlined text-kelen-green-600 text-lg">check_circle</span>
+                    <CheckCircle className="text-kelen-green-600 text-lg" />
                     <span>Projets illimités & Vidéos</span>
                   </li>
                   <li className="flex items-center gap-3 text-sm text-on-surface-variant">
-                    <span className="material-symbols-outlined text-kelen-green-600 text-lg">check_circle</span>
+                    <CheckCircle className="text-kelen-green-600 text-lg" />
                     <span>Visibilité dans les annuaires</span>
                   </li>
                 </ul>
@@ -185,7 +186,7 @@ export default async function Page() {
             <section className="bg-surface-container-low p-6 rounded-2xl border border-border shadow-sm">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="font-headline font-bold text-lg">Facturation</h3>
-                <span className="material-symbols-outlined text-on-surface-variant/40">history</span>
+                <History className="text-on-surface-variant/40" />
               </div>
               <div className="space-y-4">
                 <div className="text-center py-6 text-on-surface-variant/40 text-sm italic">
@@ -196,7 +197,7 @@ export default async function Page() {
 
             <section className="bg-stone-900 text-white p-6 rounded-2xl shadow-xl">
               <div className="flex gap-4">
-                <span className="material-symbols-outlined text-kelen-yellow-500 text-2xl">lightbulb</span>
+                <Lightbulb className="text-kelen-yellow-500 text-2xl" />
                 <div>
                   <h4 className="font-bold mb-1">Astuce Visibilité</h4>
                   <p className="text-sm text-stone-400 leadng-relaxed">Les profils avec une photo de couverture professionnelle reçoivent 40% de vues supplémentaires en moyenne.</p>

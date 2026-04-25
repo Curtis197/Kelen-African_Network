@@ -1,3 +1,5 @@
+export const revalidate = 3600;
+
 import { Suspense } from "react";
 import { ProfessionalDirectory } from "@/components/landing/ProfessionalDirectory";
 import { createClient } from "@/lib/supabase/server";

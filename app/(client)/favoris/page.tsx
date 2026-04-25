@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
+import { UserSearch, MapPin, Heart, Search } from "lucide-react";
 
 interface Favorite {
   id: string;
@@ -83,7 +85,7 @@ export default function FavoritesPage() {
 
           <div className="relative w-full md:w-80 group">
             <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-stone-400 group-focus-within:text-kelen-green-600 transition-colors">
-              <span className="material-symbols-outlined text-xl">search</span>
+              <Search className="text-xl" />
             </div>
             <input
               className="w-full pl-12 pr-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-kelen-green-500/20 focus:bg-white transition-all placeholder:text-stone-400 text-sm"
@@ -115,13 +117,15 @@ export default function FavoritesPage() {
                     className="absolute top-4 right-4 z-10 p-2 bg-white/80 backdrop-blur-sm rounded-full text-kelen-red-500 hover:scale-110 active:scale-95 transition-all shadow-sm border border-stone-100"
                     title="Retirer des favoris"
                   >
-                    <span className="material-symbols-outlined fill-current">favorite</span>
+                    <Heart className="fill-current" />
                   </button>
                   <Link href={`/pro/${pro.slug}`} className="block">
-                    <div className="mb-4 aspect-video rounded-xl overflow-hidden bg-stone-100">
-                      <img
-                        alt={pro.business_name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    <div className="relative mb-4 aspect-video rounded-xl overflow-hidden bg-stone-100">
+                      <Image
+                        alt={`Photo de profil de ${pro.business_name}`}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 350px"
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
                         src={pro.portfolio_photos?.[0] || "https://images.unsplash.com/photo-1541888946425-d81bb19480c5?auto=format&fit=crop&q=80"}
                       />
                     </div>
@@ -144,7 +148,7 @@ export default function FavoritesPage() {
                         </p>
                       </div>
                       <div className="flex items-center gap-2 text-stone-500 text-sm border-t border-stone-100 pt-4">
-                        <span className="material-symbols-outlined text-base">location_on</span>
+                        <MapPin className="text-base" />
                         <span>{pro.city}, {pro.country}</span>
                       </div>
                     </div>
@@ -156,7 +160,7 @@ export default function FavoritesPage() {
         ) : (
           <div className="flex flex-col items-center justify-center py-24 text-center">
             <div className="w-48 h-48 mb-8 bg-stone-50 rounded-full flex items-center justify-center">
-              <span className="material-symbols-outlined text-7xl text-stone-300">person_search</span>
+              <UserSearch className="text-7xl text-stone-300" />
             </div>
             <h2 className="text-2xl font-bold text-stone-900 mb-2">
               {search ? "Aucun résultat trouvé" : "Aucun favori pour le moment"}

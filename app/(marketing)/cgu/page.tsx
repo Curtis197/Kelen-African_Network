@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+export const revalidate = 3600;
+
 export default function CGUPage() {
   return (
     <main className="min-h-screen pt-12 pb-24 px-6 md:px-8">

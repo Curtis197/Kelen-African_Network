@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import { acceptProposal, declineFinalist, requestRevision } from "@/lib/actions/collaborations";
 import type { ProjectCollaboration, ProfessionalSnapshot, CollaborationMessage } from "@/lib/types/collaborations";
@@ -639,7 +640,15 @@ export default function ProposalReviewPage() {
                               className="group relative flex items-center gap-2 bg-black/5 hover:bg-black/10 rounded-lg p-2 transition-colors overflow-hidden max-w-[200px]"
                             >
                               {isImg ? (
-                                <img src={att.url} alt={att.name} className="w-8 h-8 object-cover rounded" />
+                                <div className="relative w-8 h-8">
+                                  <Image 
+                                    src={att.url} 
+                                    alt={att.name} 
+                                    fill
+                                    sizes="32px"
+                                    className="object-cover rounded" 
+                                  />
+                                </div>
                               ) : (
                                 <File className="w-6 h-6 opacity-40 shrink-0" />
                               )}
@@ -676,7 +685,15 @@ export default function ProposalReviewPage() {
                     <div key={idx} className="relative group">
                       <div className="bg-surface-container-high rounded-lg p-2 flex items-center gap-2 pr-8 animate-in fade-in slide-in-from-bottom-2">
                         {att.type.startsWith('image/') ? (
-                          <img src={att.url} alt={att.name} className="w-10 h-10 object-cover rounded" />
+                          <div className="relative w-10 h-10 flex-shrink-0">
+                            <Image 
+                              src={att.url} 
+                              alt={att.name} 
+                              fill
+                              sizes="40px"
+                              className="object-cover rounded" 
+                            />
+                          </div>
                         ) : (
                           <File className="w-10 h-10 text-on-surface-variant/40" />
                         )}

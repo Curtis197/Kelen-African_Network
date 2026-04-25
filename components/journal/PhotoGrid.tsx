@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
+import Image from 'next/image';
 import type { LogMedia } from '@/lib/types/daily-logs';
 
 interface PhotoGridProps {
@@ -35,13 +36,15 @@ export default function PhotoGrid({ photos, signedUrls }: PhotoGridProps) {
               className="relative aspect-square rounded-xl overflow-hidden bg-surface-container-low hover:opacity-90 transition-opacity cursor-pointer"
               aria-label={`Voir ${photo.caption || photo.file_name}`}
             >
-              <img
+              <Image
                 src={url}
                 alt={photo.caption || photo.file_name}
-                className="w-full h-full object-cover"
+                fill
+                className="object-cover"
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
               />
               {photo.is_primary && (
-                <div className="absolute top-2 left-2 px-2 py-0.5 text-[10px] font-bold bg-primary text-on-primary rounded-md">
+                <div className="absolute top-2 left-2 px-2 py-0.5 text-[10px] font-bold bg-primary text-on-primary rounded-md z-10">
                   ★ Principale
                 </div>
               )}
@@ -53,7 +56,7 @@ export default function PhotoGrid({ photos, signedUrls }: PhotoGridProps) {
       {/* Lightbox */}
       {lightboxIndex !== null && photos[lightboxIndex] && (
         <div
-          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center"
+          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
           onClick={closeLightbox}
           role="dialog"
           aria-modal="true"
@@ -63,7 +66,7 @@ export default function PhotoGrid({ photos, signedUrls }: PhotoGridProps) {
           <button
             type="button"
             onClick={closeLightbox}
-            className="absolute top-4 right-4 p-2 text-white/80 hover:text-white z-10"
+            className="absolute top-4 right-4 p-2 text-white/80 hover:text-white z-[60]"
             aria-label="Fermer"
           >
             <X className="w-6 h-6" />
@@ -74,29 +77,34 @@ export default function PhotoGrid({ photos, signedUrls }: PhotoGridProps) {
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); prevPhoto(); }}
-              className="absolute left-4 p-2 text-white/80 hover:text-white z-10"
+              className="absolute left-4 p-2 text-white/80 hover:text-white z-[60]"
               aria-label="Photo précédente"
             >
               <ChevronLeft className="w-8 h-8" />
             </button>
           )}
 
-          {/* Image */}
-          {signedUrls[photos[lightboxIndex].storage_path] && (
-            <img
-              src={signedUrls[photos[lightboxIndex].storage_path]}
-              alt={photos[lightboxIndex].caption || photos[lightboxIndex].file_name}
-              className="max-w-[90vw] max-h-[90vh] object-contain"
-              onClick={(e) => e.stopPropagation()}
-            />
-          )}
+          {/* Image Container */}
+          <div className="relative w-full h-full max-w-[90vw] max-h-[90vh]">
+            {signedUrls[photos[lightboxIndex].storage_path] && (
+              <Image
+                src={signedUrls[photos[lightboxIndex].storage_path]}
+                alt={photos[lightboxIndex].caption || photos[lightboxIndex].file_name}
+                fill
+                className="object-contain"
+                onClick={(e) => e.stopPropagation()}
+                sizes="100vw"
+                priority
+              />
+            )}
+          </div>
 
           {/* Next */}
           {photos.length > 1 && (
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); nextPhoto(); }}
-              className="absolute right-4 p-2 text-white/80 hover:text-white z-10"
+              className="absolute right-4 p-2 text-white/80 hover:text-white z-[60]"
               aria-label="Photo suivante"
             >
               <ChevronRight className="w-8 h-8" />
@@ -104,7 +112,7 @@ export default function PhotoGrid({ photos, signedUrls }: PhotoGridProps) {
           )}
 
           {/* Counter */}
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-black/60 text-white text-sm rounded-full">
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-black/60 text-white text-sm rounded-full z-[60]">
             {lightboxIndex + 1} / {photos.length}
           </div>
         </div>

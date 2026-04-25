@@ -1,5 +1,6 @@
 import { formatDate } from "@/lib/utils/format";
 import type { BreachType } from "@/lib/supabase/types";
+import { Flag } from "lucide-react";
 
 interface SignalCardProps {
   breachType: BreachType;
@@ -45,9 +46,7 @@ export function SignalCard({
       <div className="flex items-start justify-between gap-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-error text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>
-              report
-            </span>
+            <Flag className="text-error text-xl" />
             <h4 className="font-headline font-bold text-lg text-on-surface">
               {BREACH_LABELS[breachType]}
             </h4>

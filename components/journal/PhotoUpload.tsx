@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef } from 'react';
 import { ImagePlus, X, Camera, Upload, AlertCircle } from 'lucide-react';
+import Image from 'next/image';
 import exifr from 'exifr';
 import type { LogMedia } from '@/lib/types/daily-logs';
 
@@ -225,10 +226,12 @@ export default function PhotoUpload({ photos, photoFiles, onPhotosChange, onPhot
               className="relative group aspect-square rounded-xl overflow-hidden bg-surface-container-low"
             >
               {photo.preview_url ? (
-                <img
+                <Image
                   src={photo.preview_url}
                   alt={photo.caption || `Photo ${photo.file_name}`}
-                  className="w-full h-full object-cover"
+                  fill
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 250px"
+                  className="object-cover"
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center">

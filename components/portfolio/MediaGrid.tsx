@@ -1,4 +1,5 @@
 import { Play } from "lucide-react";
+import Image from "next/image";
 
 export type MediaItem =
   | { type: "image"; url: string }
@@ -17,10 +18,12 @@ export function MediaContent({
 
   if (item.type === "image") {
     return (
-      <img
+      <Image
         src={item.url}
         alt=""
-        className={`absolute inset-0 w-full h-full object-cover ${scaleClass}`}
+        fill
+        className={`object-cover ${scaleClass}`}
+        sizes="(max-width: 768px) 100vw, 50vw"
       />
     );
   }
@@ -28,13 +31,15 @@ export function MediaContent({
   if (item.thumbnail_url) {
     return (
       <>
-        <img
+        <Image
           src={item.thumbnail_url}
           alt=""
-          className={`absolute inset-0 w-full h-full object-cover ${scaleClass}`}
+          fill
+          className={`object-cover ${scaleClass}`}
+          sizes="(max-width: 768px) 100vw, 50vw"
         />
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center">
+          <div className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center z-10">
             <Play className="w-5 h-5 text-white" fill="currentColor" />
           </div>
         </div>

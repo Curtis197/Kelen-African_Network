@@ -9,10 +9,10 @@ console.log("[products] Server action loaded");
 // Professional Products Management
 // ============================================
 
-export async function getProducts(professionalId: string) {
+export async function getProducts(professionalId: string, limit: number = 100, offset: number = 0) {
   console.log('[ACTION] ========================================');
   console.log('[ACTION] getProducts STARTED');
-  console.log('[ACTION] Input:', { professionalId });
+  console.log('[ACTION] Input:', { professionalId, limit, offset });
   console.log('[ACTION] ========================================');
 
   const supabase = await createClient();
@@ -46,7 +46,8 @@ export async function getProducts(professionalId: string) {
     .select("*, product_images(*)")
     .eq("professional_id", professionalId)
     .order("order_index", { ascending: true })
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .range(offset, offset + limit - 1);
 
   console.log('[DB] Products query result:', {
     success: !productsError,

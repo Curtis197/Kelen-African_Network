@@ -13,6 +13,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { createRealization, updateRealization } from "@/lib/actions/portfolio";
 import { LocationSearch, type LocationData } from "@/components/location/LocationSearch";
+import Image from "next/image";
 
 const realizationSchema = z.object({
   title: z.string().min(3, "Le titre doit contenir au moins 3 caractères"),
@@ -443,7 +444,13 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
                 <div className="grid grid-cols-3 gap-3">
                   {existingImages.map((img) => (
                     <div key={`existing-${img.id}`} className="relative aspect-square overflow-hidden rounded-xl bg-stone-200 group">
-                      <img src={img.url} alt="Photo" className="h-full w-full object-cover" />
+                      <Image 
+                        src={img.url} 
+                        alt="Photo" 
+                        fill 
+                        sizes="(max-width: 768px) 33vw, 20vw"
+                        className="object-cover" 
+                      />
                       <button
                         type="button"
                         onClick={() => setFeaturedImage(img.url)}
@@ -474,7 +481,13 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
                     const previewUrl = URL.createObjectURL(file);
                     return (
                       <div key={`new-${i}`} className="relative aspect-square overflow-hidden rounded-xl bg-stone-200 group">
-                        <img src={previewUrl} alt="Preview" className="h-full w-full object-cover" />
+                        <Image 
+                          src={previewUrl} 
+                          alt="Preview" 
+                          fill 
+                          sizes="(max-width: 768px) 33vw, 20vw"
+                          className="object-cover" 
+                        />
                         <button
                           type="button"
                           onClick={() => removeImage(i)}

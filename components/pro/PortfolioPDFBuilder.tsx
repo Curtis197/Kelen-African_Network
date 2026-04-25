@@ -6,6 +6,7 @@ import {
   FileDown, Upload, X, CheckSquare, Square,
   Image as ImageIcon, FileText, Layers, ShoppingBag, Wrench, Save
 } from "lucide-react";
+import Image from "next/image";
 import { toast } from "sonner";
 import { uploadFile } from "@/lib/supabase/storage";
 import { updatePortfolioPDF } from "@/lib/actions/portfolio";
@@ -102,7 +103,13 @@ function ImageUploadField({
       >
         {value ? (
           <>
-            <img src={value} alt={label} className="w-full h-full object-cover" />
+            <Image
+              src={value}
+              alt={label}
+              className="object-cover"
+              fill
+              sizes="(max-width: 1200px) 100vw, 50vw"
+            />
             <button
               type="button"
               className="absolute top-2 right-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80"
@@ -147,7 +154,15 @@ function SelectionItem({
         {checked ? <CheckSquare size={20} /> : <Square size={20} className="text-on-surface-variant/30" />}
       </div>
       {image && (
-        <img src={image} alt={title} className="h-10 w-14 rounded-lg object-cover shrink-0" />
+        <div className="relative h-10 w-14 shrink-0 rounded-lg overflow-hidden">
+          <Image
+            src={image}
+            alt={title}
+            className="object-cover"
+            fill
+            sizes="56px"
+          />
+        </div>
       )}
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium text-on-surface truncate">{title}</p>

@@ -14,6 +14,7 @@ import { fr } from 'date-fns/locale';
 import { CheckCircle, AlertTriangle, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import type { SharedLogData } from '@/lib/types/daily-logs';
+import Image from 'next/image';
 
 export default function SharedLogPage() {
   const params = useParams();
@@ -156,16 +157,14 @@ export default function SharedLogPage() {
                 {photos.map((photo) => (
                   <div
                     key={photo.id}
-                    className="aspect-square rounded-xl overflow-hidden bg-surface-container"
+                    className="relative aspect-square rounded-xl overflow-hidden bg-surface-container"
                   >
-                    <img
+                    <Image
                       src={`/api/log-media/${photo.storage_path}`}
                       alt={photo.caption || photo.file_name}
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        // Fallback if image fails to load
-                        (e.target as HTMLImageElement).style.display = 'none';
-                      }}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 640px) 50vw, 33vw"
                     />
                   </div>
                 ))}

@@ -1,5 +1,6 @@
 import { formatDate, getCountryName } from "@/lib/utils/format";
 import type { BudgetRange } from "@/lib/supabase/types";
+import { User, BadgeCheck } from "lucide-react";
 
 interface RecommendationCardProps {
   projectType: string;
@@ -36,9 +37,7 @@ export function RecommendationCard({
       <div className="flex items-start justify-between gap-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-primary text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>
-              verified
-            </span>
+            <BadgeCheck className="text-primary text-xl" />
             <h4 className="font-headline font-bold text-lg text-on-surface">
               {projectType}
             </h4>
@@ -63,7 +62,7 @@ export function RecommendationCard({
       </p>
 
       <div className="mt-6 flex items-center gap-2 pt-4 border-t border-outline-variant/10 text-xs font-medium text-on-surface/60">
-        <span className="material-symbols-outlined text-sm">person</span>
+        <User className="text-sm" />
         <span>
           {submitterName}, {getCountryName(submitterCountry)}
         </span>

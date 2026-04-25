@@ -1,5 +1,6 @@
 // components/pro-site/ProSiteDetailPage.tsx
 import Link from 'next/link'
+import Image from 'next/image'
 import { ProSiteGallery } from './ProSiteGallery'
 import { ProSiteVideoRow } from './ProSiteVideoRow'
 import { ProSiteSocialThread } from './ProSiteSocialThread'
@@ -48,9 +49,16 @@ export function ProSiteDetailPage({
       </div>
 
       {item.imageUrl && (
-        <div className="relative">
-          <img src={item.imageUrl} alt={item.title} className="w-full h-64 object-cover" />
-          <div className="absolute top-3 right-3 bg-black/40 rounded-full px-3 py-1 flex items-center gap-1">
+        <div className="relative h-64 w-full">
+          <Image
+            src={item.imageUrl}
+            alt={item.title}
+            fill
+            className="object-cover"
+            priority
+            sizes="100vw"
+          />
+          <div className="absolute top-3 right-3 bg-black/40 rounded-full px-3 py-1 flex items-center gap-1 z-10">
             <span className="text-white text-base">♡</span>
             <span className="text-white text-xs font-bold">{initialLikeCount}</span>
           </div>

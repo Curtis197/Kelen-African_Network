@@ -3,6 +3,8 @@ import type React from "react";
 import Link from "next/link";
 import { Check, Eye, Users, ShieldCheck, Globe } from "lucide-react";
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: "Pour les professionnels — Kelen",
   description:

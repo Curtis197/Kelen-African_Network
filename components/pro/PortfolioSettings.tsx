@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
+import Image from "next/image";
 import { Loader2, Save, Image as ImageIcon, Upload } from "lucide-react";
 import { uploadFile } from "@/lib/supabase/storage";
 import type { ProfessionalPortfolio } from "@/lib/supabase/types";
@@ -113,10 +114,12 @@ export function PortfolioSettings({
           </label>
           <div className="relative aspect-[21/9] w-full overflow-hidden rounded-xl bg-surface-container-lowest border-2 border-dashed border-outline-variant/30">
             {heroImageUrl ? (
-              <img
+              <Image
                 src={heroImageUrl}
                 alt="Hero banner"
-                className="h-full w-full object-cover"
+                className="object-cover"
+                fill
+                sizes="100vw"
               />
             ) : (
               <div className="flex h-full items-center justify-center text-on-surface-variant/40">
@@ -173,10 +176,12 @@ export function PortfolioSettings({
           </label>
           <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl bg-surface-container-lowest border-2 border-dashed border-outline-variant/30">
             {aboutImageUrl ? (
-              <img
+              <Image
                 src={aboutImageUrl}
                 alt="About section"
-                className="h-full w-full object-cover"
+                className="object-cover"
+                fill
+                sizes="(max-width: 1200px) 100vw, 50vw"
               />
             ) : (
               <div className="flex h-full items-center justify-center text-on-surface-variant/40">

@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import type { ProSiteItem } from '@/lib/pro-site/types'
 
 type Variant = 'services' | 'portfolio' | 'products'
@@ -24,10 +25,12 @@ function ServicesGrid({ items, listHref, base, sectionPath }: { items: ProSiteIt
             <Link key={s.id} href={`${base}/${sectionPath}/${s.id}`} className="no-underline group">
               <article className="bg-white border border-stone-100 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-[0_8px_32px_rgba(0,0,0,0.09)] hover:-translate-y-1 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.03)]">
                 <div className="relative overflow-hidden bg-stone-100" style={{ aspectRatio: '16/9' }}>
-                  <img
+                  <Image
                     src={s.imageUrl ?? FALLBACK_IMG}
                     alt={s.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/8 transition-colors duration-500" />
                 </div>
@@ -86,10 +89,12 @@ function PortfolioGrid({ items, listHref, base, sectionPath }: { items: ProSiteI
             <Link key={p.id} href={`${base}/${sectionPath}/${p.id}`} className="no-underline group">
               <figure className="flex flex-col gap-3.5">
                 <div className="relative overflow-hidden rounded-xl bg-stone-100" style={{ aspectRatio: '4/3' }}>
-                  <img
+                  <Image
                     src={p.imageUrl ?? FALLBACK_IMG}
                     alt={p.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500" />
                 </div>
@@ -144,10 +149,12 @@ function ProductsCarousel({ items, listHref, base, sectionPath }: { items: ProSi
             >
               <article className="bg-white border border-stone-100 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-[0_8px_32px_rgba(0,0,0,0.09)] hover:-translate-y-1 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.03)]">
                 <div className="relative overflow-hidden bg-stone-100" style={{ aspectRatio: '4/3' }}>
-                  <img
+                  <Image
                     src={p.imageUrl ?? FALLBACK_IMG}
                     alt={p.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    fill
+                    sizes="(max-width: 640px) 78vw, 340px"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/8 transition-colors duration-500" />
                 </div>

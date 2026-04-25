@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: "FAQ — Kelen",
   description: "Réponses aux questions les plus fréquentes sur l'utilisation de Kelen.",

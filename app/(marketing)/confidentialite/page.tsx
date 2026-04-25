@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+import { Shield, CloudCheck, Key, Lock, Mail, Trash, Edit, Eye, MonitorSmartphone, LineChart, Landmark, User, ShieldCheck, Settings, Database, Info } from "lucide-react";
+
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Politique de Confidentialité — Kelen",
@@ -13,7 +16,7 @@ export default function ConfidentialitePage() {
         <div className="mb-8 px-2">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-              <span className="material-symbols-outlined text-primary">security</span>
+              <Shield className="text-primary" />
             </div>
             <div>
               <h2 className="font-headline font-bold text-on-surface leading-tight">Vie Privée</h2>
@@ -26,35 +29,35 @@ export default function ConfidentialitePage() {
             className="flex items-center gap-3 px-4 py-3 bg-surface-container-lowest text-primary rounded-lg shadow-sm font-bold transition-all duration-200"
             href="#introduction"
           >
-            <span className="material-symbols-outlined">info</span>
+            <Info />
             <span>Introduction</span>
           </a>
           <a
             className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:translate-x-1 rounded-lg transition-all duration-200"
             href="#collecte"
           >
-            <span className="material-symbols-outlined">dataset</span>
+            <Database />
             <span>Collecte</span>
           </a>
           <a
             className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:translate-x-1 rounded-lg transition-all duration-200"
             href="#utilisation"
           >
-            <span className="material-symbols-outlined">settings_suggest</span>
+            <Settings />
             <span>Utilisation</span>
           </a>
           <a
             className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:translate-x-1 rounded-lg transition-all duration-200"
             href="#droits"
           >
-            <span className="material-symbols-outlined">verified_user</span>
+            <ShieldCheck />
             <span>Vos Droits</span>
           </a>
           <a
             className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:translate-x-1 rounded-lg transition-all duration-200"
             href="#securite"
           >
-            <span className="material-symbols-outlined">enhanced_encryption</span>
+            <Lock />
             <span>Sécurité</span>
           </a>
         </nav>
@@ -121,22 +124,22 @@ export default function ConfidentialitePage() {
               <div className="lg:col-span-7">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="p-6 bg-surface-container-lowest rounded-xl shadow-lg shadow-on-surface/5 border border-outline-variant/10">
-                    <span className="material-symbols-outlined text-primary mb-4">person</span>
+                    <User className="text-primary mb-4" />
                     <h4 className="font-bold mb-2">Profil</h4>
                     <p className="text-sm text-on-surface-variant">Nom, prénom, email, téléphone, pays de résidence.</p>
                   </div>
                   <div className="p-6 bg-surface-container-lowest rounded-xl shadow-lg shadow-on-surface/5 border border-outline-variant/10">
-                    <span className="material-symbols-outlined text-primary mb-4">account_balance</span>
+                    <Landmark className="text-primary mb-4" />
                     <h4 className="font-bold mb-2">Conformité</h4>
                     <p className="text-sm text-on-surface-variant">Pièces d&apos;identité, justificatifs de domicile, informations fiscales.</p>
                   </div>
                   <div className="p-6 bg-surface-container-lowest rounded-xl shadow-lg shadow-on-surface/5 border border-outline-variant/10">
-                    <span className="material-symbols-outlined text-primary mb-4">analytics</span>
+                    <LineChart className="text-primary mb-4" />
                     <h4 className="font-bold mb-2">Activité</h4>
                     <p className="text-sm text-on-surface-variant">Historique des investissements, projets suivis, interactions messagerie.</p>
                   </div>
                   <div className="p-6 bg-surface-container-lowest rounded-xl shadow-lg shadow-on-surface/5 border border-outline-variant/10">
-                    <span className="material-symbols-outlined text-primary mb-4">devices</span>
+                    <MonitorSmartphone className="text-primary mb-4" />
                     <h4 className="font-bold mb-2">Technique</h4>
                     <p className="text-sm text-on-surface-variant">Adresse IP, type de navigateur, données de navigation (via cookies).</p>
                   </div>
@@ -184,7 +187,7 @@ export default function ConfidentialitePage() {
                 <div className="space-y-6">
                   <div className="flex gap-4 group">
                     <div className="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0 transition-all group-hover:bg-primary group-hover:text-on-primary">
-                      <span className="material-symbols-outlined text-sm">visibility</span>
+                      <Eye className="text-sm" />
                     </div>
                     <div>
                       <h4 className="font-bold text-on-surface">Droit d&apos;accès et portabilité</h4>
@@ -193,7 +196,7 @@ export default function ConfidentialitePage() {
                   </div>
                   <div className="flex gap-4 group">
                     <div className="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0 transition-all group-hover:bg-primary group-hover:text-on-primary">
-                      <span className="material-symbols-outlined text-sm">edit</span>
+                      <Edit className="text-sm" />
                     </div>
                     <div>
                       <h4 className="font-bold text-on-surface">Droit de rectification</h4>
@@ -202,7 +205,7 @@ export default function ConfidentialitePage() {
                   </div>
                   <div className="flex gap-4 group">
                     <div className="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0 transition-all group-hover:bg-error group-hover:text-on-error group-hover:border-error">
-                      <span className="material-symbols-outlined text-sm">delete_forever</span>
+                      <Trash className="text-sm" />
                     </div>
                     <div>
                       <h4 className="font-bold text-on-surface">Droit à l&apos;oubli</h4>
@@ -214,7 +217,7 @@ export default function ConfidentialitePage() {
               <div className="lg:col-span-5">
                 <div className="p-8 bg-surface-container-low rounded-3xl border border-outline-variant/10 text-center">
                   <div className="w-20 h-20 bg-surface rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl">
-                    <span className="material-symbols-outlined text-primary text-4xl">mail</span>
+                    <Mail className="text-primary text-4xl" />
                   </div>
                   <h4 className="font-headline text-xl font-bold mb-2">Exercer vos droits</h4>
                   <p className="text-sm text-on-surface-variant mb-6">Contactez notre Délégué à la Protection des Données :</p>
@@ -235,19 +238,19 @@ export default function ConfidentialitePage() {
                   <span className="px-6 py-2 bg-secondary/10 text-secondary text-xs font-black uppercase tracking-[0.3em] rounded-full mb-8">Protocoles de Sécurité</span>
                   <div className="flex flex-wrap justify-center gap-12">
                     <div className="flex flex-col items-center gap-2">
-                      <span className="material-symbols-outlined text-4xl text-on-surface/30">lock</span>
+                      <Lock className="text-4xl text-on-surface/30" />
                       <span className="text-xs font-bold text-on-surface-variant uppercase">Chiffrement AES-256</span>
                     </div>
                     <div className="flex flex-col items-center gap-2">
-                      <span className="material-symbols-outlined text-4xl text-on-surface/30">key</span>
+                      <Key className="text-4xl text-on-surface/30" />
                       <span className="text-xs font-bold text-on-surface-variant uppercase">Double Authentification</span>
                     </div>
                     <div className="flex flex-col items-center gap-2">
-                      <span className="material-symbols-outlined text-4xl text-on-surface/30">cloud_done</span>
+                      <CloudCheck className="text-4xl text-on-surface/30" />
                       <span className="text-xs font-bold text-on-surface-variant uppercase">Backup temps-réel</span>
                     </div>
                     <div className="flex flex-col items-center gap-2">
-                      <span className="material-symbols-outlined text-4xl text-on-surface/30">shield_with_heart</span>
+                      <Shield className="text-4xl text-on-surface/30" />
                       <span className="text-xs font-bold text-on-surface-variant uppercase">Audit Trimestriel</span>
                     </div>
                   </div>

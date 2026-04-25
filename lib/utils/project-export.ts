@@ -1,6 +1,3 @@
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
-import * as XLSX from 'xlsx';
 import type { ExportProjectData, ExportStepData, ExportLogData } from '@/lib/actions/export-data';
 
 const STATUS_LABELS: Record<string, string> = {
@@ -26,17 +23,19 @@ function formatDate(dateStr: string): string {
 
 // ── PDF Export ─────────────────────────────────────────────
 
-export function generateProjectPdfBlob(data: ExportProjectData): Blob {
-  const doc = buildPdfDocument(data);
+export async function generateProjectPdfBlob(data: ExportProjectData): Promise<Blob> {
+  const doc = await buildPdfDocument(data);
   return doc.output('blob');
 }
 
-export function downloadProjectPdf(data: ExportProjectData): void {
-  const doc = buildPdfDocument(data);
+export async function downloadProjectPdf(data: ExportProjectData): Promise<void> {
+  const doc = await buildPdfDocument(data);
   doc.save(`kelen-projet-${data.title.replace(/\s+/g, '-').toLowerCase()}.pdf`);
 }
 
-function buildPdfDocument(data: ExportProjectData): jsPDF {
+async function buildPdfDocument(data: ExportProjectData): Promise<any> {
+  const jsPDF = (await import('jspdf')).default;
+  const autoTable = (await import('jspdf-autotable')).default;
   const doc = new jsPDF('p', 'mm', 'a4');
   const pageWidth = doc.internal.pageSize.getWidth();
   const accentColor: [number, number, number] = [0, 108, 73]; // Kelen green #006c49
@@ -221,7 +220,8 @@ function buildPdfDocument(data: ExportProjectData): jsPDF {
 
 // ── Excel Export ───────────────────────────────────────────
 
-export function downloadProjectExcel(data: ExportProjectData): void {
+export async function downloadProjectExcel(data: ExportProjectData): Promise<void> {
+  const XLSX = await import('xlsx');
   const wb = XLSX.utils.book_new();
 
   // ── Sheet 1: Project Overview ──

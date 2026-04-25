@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { manageProjectProfessional } from "@/lib/actions/projects";
 import { toast } from "sonner";
 import { Search, X, User, Star, ShieldCheck, CheckCircle2, ChevronRight, Loader2, Plus } from "lucide-react";
+import Image from "next/image";
 
 interface Professional {
   id: string;
@@ -180,12 +181,14 @@ export function AddProSearchDialog({
                     className="group relative flex items-center gap-4 p-4 rounded-3xl bg-surface-container-low hover:bg-primary/5 border border-transparent hover:border-primary/20 transition-all cursor-pointer active:scale-[0.98]"
                   >
                     {/* Avatar */}
-                    <div className="w-16 h-16 rounded-2xl overflow-hidden bg-surface-container flex items-center justify-center shrink-0 border border-outline-variant/10">
+                    <div className="relative w-16 h-16 rounded-2xl overflow-hidden bg-surface-container flex items-center justify-center shrink-0 border border-outline-variant/10">
                       {pro.portfolio_photos?.[0] ? (
-                        <img 
+                        <Image 
                           src={pro.portfolio_photos[0]} 
                           alt={pro.business_name}
-                          className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                          fill
+                          sizes="64px"
+                          className="object-cover transition-transform group-hover:scale-110"
                         />
                       ) : (
                         <User className="w-8 h-8 opacity-20" />

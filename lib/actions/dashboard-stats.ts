@@ -70,11 +70,12 @@ export async function getProDashboardStats(): Promise<DashboardStats> {
   // Get professional profile
   const { data: pro } = await supabase
     .from("professionals")
-    .select("id, business_name, status")
+    .select("id, business_name, status, avg_rating, review_count")
     .eq("user_id", user.id)
     .single();
 
   if (!pro) {
+    console.warn('[DASHBOARD] Professional profile not found for user:', user.id);
     return {
       professionalId: null,
       businessName: null,
@@ -91,68 +92,39 @@ export async function getProDashboardStats(): Promise<DashboardStats> {
     };
   }
 
-  // Count recommendations
-  const { count: recommendationCount } = await supabase
-    .from("recommendations")
-    .select("*", { count: "exact", head: true })
-    .eq("professional_id", pro.id);
+  console.log('[DASHBOARD] Fetching stats for pro:', pro.id);
 
-  // Count signals
-  const { count: signalCount } = await supabase
-    .from("signals")
-    .select("*", { count: "exact", head: true })
-    .eq("professional_id", pro.id);
-
-  // Calculate average rating from reviews
-  const { data: reviews } = await supabase
-    .from("reviews")
-    .select("rating")
-    .eq("professional_id", pro.id);
-
-  const avgRating = reviews && reviews.length > 0
-    ? Math.round((reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / reviews.length) * 10) / 10
-    : 0;
-
-  const reviewCount = reviews?.length || 0;
-
-  // Monthly views (last 30 days)
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-  const { count: monthlyViews } = await supabase
-    .from("profile_views")
-    .select("*", { count: "exact", head: true })
-    .eq("professional_id", pro.id)
-    .gte("created_at", thirtyDaysAgo.toISOString());
+  const [
+    { count: recommendationCount },
+    { count: signalCount },
+    { count: monthlyViews },
+    { data: subscription },
+    { count: pendingRecommendations },
+    { count: pendingSignals },
+    { data: gbpTokens }
+  ] = await Promise.all([
+    // Count recommendations
+    supabase.from("recommendations").select("*", { count: "exact", head: true }).eq("professional_id", pro.id),
+    // Count signals
+    supabase.from("signals").select("*", { count: "exact", head: true }).eq("professional_id", pro.id),
+    // Monthly views (last 30 days)
+    supabase.from("profile_views").select("*", { count: "exact", head: true }).eq("professional_id", pro.id).gte("created_at", thirtyDaysAgo.toISOString()),
+    // Subscription status
+    supabase.from("subscriptions").select("status").eq("professional_id", pro.id).single(),
+    // Pending items
+    supabase.from("recommendations").select("*", { count: "exact", head: true }).eq("professional_id", pro.id).eq("status", "pending"),
+    supabase.from("signals").select("*", { count: "exact", head: true }).eq("professional_id", pro.id).eq("status", "pending"),
+    // Google Business Profile connection status
+    supabase.from("pro_google_tokens").select("access_token, verification_status, last_synced_at, gbp_location_name, gbp_place_id").eq("pro_id", pro.id).single()
+  ]);
 
-  // Subscription status
-  const { data: subscription } = await supabase
-    .from("subscriptions")
-    .select("status")
-    .eq("professional_id", pro.id)
-    .single();
+  const avgRating = pro.avg_rating || 0;
+  const reviewCount = pro.review_count || 0;
 
   const subscriptionStatus = subscription?.status === "active" ? "Premium" : "Gratuit";
-
-  // Pending items (for verification queue / actions required)
-  const { count: pendingRecommendations } = await supabase
-    .from("recommendations")
-    .select("*", { count: "exact", head: true })
-    .eq("professional_id", pro.id)
-    .eq("status", "pending");
-
-  const { count: pendingSignals } = await supabase
-    .from("signals")
-    .select("*", { count: "exact", head: true })
-    .eq("professional_id", pro.id)
-    .eq("status", "pending");
-
-  // Google Business Profile connection status
-  const { data: gbpTokens } = await supabase
-    .from("pro_google_tokens")
-    .select("access_token, verification_status, last_synced_at, gbp_location_name, gbp_place_id")
-    .eq("pro_id", pro.id)
-    .single();
 
   const gbp = {
     isConnected: !!gbpTokens?.access_token,

@@ -1,12 +1,29 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { updateProfessionalRank, updateProfessionalSelection, manageProjectProfessional, updateProjectArea } from "@/lib/actions/projects";
-import { AddExternalProModal } from "./AddExternalProModal";
-import { AddProSearchDialog } from "./AddProSearchDialog";
+
+const AddProSearchDialog = dynamic(() => import("./AddProSearchDialog").then(mod => mod.AddProSearchDialog), { ssr: false });
+const AddExternalProModal = dynamic(() => import("./AddExternalProModal").then(mod => mod.AddExternalProModal), { ssr: false });
+
 import { ProfessionalStatus } from "@/lib/supabase/types";
+import { 
+  Check, 
+  X, 
+  Search, 
+  Plus, 
+  Edit2, 
+  Trash2, 
+  User, 
+  Globe, 
+  ArrowUp, 
+  ArrowDown, 
+  ExternalLink 
+} from "lucide-react";
 
 import { ProjectProfessional, Professional } from "@/lib/types/projects";
 
@@ -98,13 +115,13 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
                 disabled={isUpdating}
                 className="p-1 sm:p-1.5 text-kelen-green-600 hover:bg-kelen-green-50 rounded-lg transition-colors flex-shrink-0"
               >
-                <span className="material-symbols-outlined text-sm">check</span>
+                <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </button>
               <button
                 onClick={() => { setIsEditingName(false); setEditedName(areaName); }}
                 className="p-1 sm:p-1.5 text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors flex-shrink-0"
               >
-                <span className="material-symbols-outlined text-sm">close</span>
+                <X className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </button>
             </div>
           ) : (
@@ -119,7 +136,7 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
             onClick={() => setShowAddSearch(true)}
             className="flex items-center gap-1 sm:gap-2 text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-primary hover:underline bg-primary/5 px-2 sm:px-4 py-1.5 sm:py-2 rounded-full border border-primary/10 transition-all hover:bg-primary/10"
           >
-            <span className="material-symbols-outlined text-xs sm:text-sm" style={{ fontVariationSettings: "'FILL' 0, 'wght' 700, 'GRAD' 0, 'opsz' 24" }}>search</span>
+            <Search className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
             <span className="hidden xs:inline">Rechercher</span>
             <span className="xs:hidden">Chercher</span>
           </button>
@@ -127,7 +144,7 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
             onClick={handleAddExternal}
             className="flex items-center gap-1 sm:gap-2 text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-on-surface-variant hover:text-on-surface transition-colors"
           >
-            <span className="material-symbols-outlined text-xs sm:text-sm">add</span>
+            <Plus className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
             <span className="hidden sm:inline">Externe</span>
           </button>
           <button
@@ -135,14 +152,14 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
             className="p-1.5 text-on-surface-variant/40 hover:text-primary transition-colors"
             title="Renommer ce domaine"
           >
-            <span className="material-symbols-outlined text-sm">edit</span>
+            <Edit2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </button>
           <button
             onClick={onDelete}
             className="p-1.5 text-on-surface-variant/40 hover:text-kelen-red-500 transition-colors"
             title="Supprimer ce domaine"
           >
-            <span className="material-symbols-outlined text-sm">delete</span>
+            <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </button>
         </div>
       </div>
@@ -172,20 +189,22 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
 
                 <div className="flex gap-3 sm:gap-5">
                   <div className="relative shrink-0">
-                    <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-xl sm:rounded-2xl overflow-hidden bg-surface-container ring-2 sm:ring-4 ring-white shadow-sm flex items-center justify-center text-on-surface-variant">
+                    <div className="relative w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-xl sm:rounded-2xl overflow-hidden bg-surface-container ring-2 sm:ring-4 ring-white shadow-sm flex items-center justify-center text-on-surface-variant">
                       {member.is_external ? (
-                        <span className="material-symbols-outlined text-2xl sm:text-3xl md:text-4xl opacity-20">person</span>
+                        <User className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 opacity-20" />
                       ) : (
-                        <img
+                        <Image
                           src={member.professionals?.portfolio_photos?.[0] || "https://images.unsplash.com/photo-1541888946425-d81bb19480c5?auto=format&fit=crop&q=80"}
-                          alt={member.is_external ? member.external_name || "" : member.professionals?.business_name}
-                          className="w-full h-full object-cover"
+                          alt={member.is_external ? member.external_name || "" : member.professionals?.business_name || ""}
+                          fill
+                          sizes="(max-width: 768px) 64px, 80px"
+                          className="object-cover"
                         />
                       )}
                     </div>
                     {member.selection_status === 'finalist' && (
                       <div className="absolute -bottom-1.5 sm:-bottom-2 -right-1.5 sm:-right-2 w-6 h-6 sm:w-8 sm:h-8 bg-primary rounded-full flex items-center justify-center border-2 sm:border-4 border-white shadow-lg">
-                        <span className="material-symbols-outlined text-white text-xs sm:text-base font-bold">check</span>
+                        <Check className="text-white w-3.5 h-3.5 sm:w-4.5 sm:h-4.5" />
                       </div>
                     )}
                   </div>
@@ -193,10 +212,10 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
                   <div className="flex-1 min-w-0 pt-1">
                     <div className="flex items-center gap-1.5 sm:gap-2">
                       <h5 className="font-headline font-bold text-sm sm:text-lg text-on-surface truncate max-w-[120px] sm:max-w-[150px] text-balance leading-tight">
-                        {member.is_external ? member.external_name : member.professionals?.business_name}
+                        {member.business_name}
                       </h5>
                       {member.is_external && (
-                        <span className="material-symbols-outlined text-xs sm:text-sm text-on-surface-variant/40" title="Profil externe">public</span>
+                        <Globe className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-on-surface-variant/30" />
                       )}
                     </div>
                     <p className="text-[8px] sm:text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mt-0.5 sm:mt-1 opacity-70">
@@ -222,7 +241,7 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
                            className="w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center bg-surface-container hover:bg-surface-container-high rounded-full disabled:opacity-30 transition-colors"
                            aria-label={`Augmenter le rang de ${member.is_external ? member.external_name : member.professionals?.business_name}`}
                          >
-                           <span className="material-symbols-outlined text-xs sm:text-[14px]">arrow_upward</span>
+                           <ArrowUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                          </button>
                          <button
                            onClick={() => handleRankUpdate(member.id, member.rank_order, 'down')}
@@ -230,7 +249,7 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
                            className="w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center bg-surface-container hover:bg-surface-container-high rounded-full disabled:opacity-30 transition-colors"
                            aria-label={`Diminuer le rang de ${member.is_external ? member.external_name : member.professionals?.business_name}`}
                          >
-                           <span className="material-symbols-outlined text-xs sm:text-[14px]">arrow_downward</span>
+                           <ArrowDown className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                          </button>
                       </div>
                     </div>
@@ -272,7 +291,7 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
                         className="p-2 sm:p-2.5 text-on-surface-variant/40 hover:text-primary transition-colors"
                         title="Modifier ce contact"
                       >
-                        <span className="material-symbols-outlined text-base sm:text-xl">edit</span>
+                        <Edit2 className="w-4 h-4 sm:w-5 sm:h-5" />
                       </button>
                     ) : (
                       member.professionals?.slug && (
@@ -281,7 +300,7 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
                           className="p-2 sm:p-2.5 text-on-surface-variant/40 hover:text-primary transition-colors"
                           title="Voir le profil"
                         >
-                          <span className="material-symbols-outlined text-base sm:text-xl">open_in_new</span>
+                          <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5" />
                         </Link>
                       )
                     )}
@@ -289,7 +308,7 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
                       onClick={() => handleRemove(member)}
                       className="p-2 sm:p-2.5 text-on-surface-variant/40 hover:text-kelen-red-500 transition-colors"
                     >
-                      <span className="material-symbols-outlined text-base sm:text-xl">delete</span>
+                      <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
                     </button>
                   </div>
                 </div>
@@ -303,7 +322,7 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
                onClick={() => setShowAddSearch(true)}
                className="mt-2 sm:mt-4 text-[10px] sm:text-xs font-bold text-primary hover:underline flex items-center gap-1.5 sm:gap-2 mx-auto justify-center"
              >
-               <span className="material-symbols-outlined text-xs sm:text-sm">search</span>
+               <Search className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                Trouver un pro
              </button>
           </div>
