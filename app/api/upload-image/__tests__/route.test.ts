@@ -110,6 +110,11 @@ describe('POST /api/upload-image', () => {
 
     expect(res.status).toBe(200);
     expect(sharp).not.toHaveBeenCalled();
+    expect(mockUpload).toHaveBeenCalledWith(
+      'user-abc/uuid.webp',
+      expect.any(Buffer),
+      expect.objectContaining({ contentType: 'image/jpeg' }),
+    );
   });
 
   it('returns 500 when Supabase upload fails', async () => {
