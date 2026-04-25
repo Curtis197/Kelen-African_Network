@@ -1,5 +1,5 @@
 # Kelen — Admin
-*Copywriting complet — Version 1.0*
+*Copywriting complet — Version 2.0 — Mis à jour le 2026-04-25*
 
 ---
 
@@ -9,7 +9,6 @@ L'espace admin n'est pas public. Son copywriting est différent des pages utilis
 
 **Règles spécifiques à l'admin :**
 - Pas de langage institutionnel — ici on dit les choses clairement
-- Les mots "arnaque", "fraude", "suspicion" sont utilisés normalement
 - Chaque action irréversible demande confirmation explicite
 - Tout est journalisé — l'admin sait que ses actions sont enregistrées
 
@@ -24,24 +23,7 @@ File de vérification
 
 En attente : 12     En cours : 3     Traités aujourd'hui : 7
 
-[Signaux (4)]     [Recommandations (8)]     [Tous (12)]
-```
-
-Les signaux apparaissent en premier — priorité absolue.
-
----
-
-### Carte dans la file — Signal
-
-```
-⚠ SIGNAL
-Abandon de projet · Abidjan
-Professionnel : Kouadio Construction
-Montant concerné : 38 000 €
-Soumis le : 8 janvier 2025 · il y a 2 jours
-Documents : 4 fichiers
-
-[Examiner →]
+[Recommandations (12)]     [Tous (12)]
 ```
 
 ---
@@ -52,7 +34,7 @@ Documents : 4 fichiers
 ✓ RECOMMANDATION
 Construction résidentielle · Dakar
 Professionnel : Diallo Bâtiment
-Soumis le : 12 janvier 2025 · il y a 1 jour
+Soumis le : 12 janvier 2026 · il y a 1 jour
 Documents : 3 fichiers
 
 [Examiner →]
@@ -63,7 +45,7 @@ Documents : 3 fichiers
 ### Filtres
 
 ```
-Trier par : [Plus ancien d'abord ▼]     Type : [Tous ▼]     Assigné à : [Tous ▼]
+Trier par : [Plus ancien d'abord ▼]     Assigné à : [Tous ▼]
 ```
 
 ---
@@ -74,7 +56,7 @@ Trier par : [Plus ancien d'abord ▼]     Type : [Tous ▼]     Assigné à : [T
 
 ```
 Recommandation — Examen
-Soumis le 12 janvier 2025
+Soumis le 12 janvier 2026
 [Assigné à moi]
 ```
 
@@ -84,17 +66,19 @@ Soumis le 12 janvier 2025
 
 ```
 Professionnel : Diallo Bâtiment · Dakar
-Soumetteur : M. D. · Paris · m.d@example.com
+Soumetteur : M. D. · Dakar · m.d@example.com
 
 Type de projet : Construction résidentielle
 Localisation : Dakar, Sénégal
 Budget déclaré : 45 000 €
-Début des projets : mars 2023
+Début du projet : mars 2023
 Livraison convenue : novembre 2023
 Livraison effective : novembre 2023
 
+Note : 4,8 / 5
+
 Témoignage :
-"projet livré dans les délais. Bonne communication."
+"Projet livré dans les délais. Bonne communication."
 ```
 
 ---
@@ -142,134 +126,6 @@ Sera envoyée au soumetteur par email.
 
 ---
 
-## Écran de vérification — Signal
-
-### Alerte en haut de page
-
-```
-⚠ DÉCISION IRRÉVERSIBLE
-
-La vérification de ce signal entraîne un statut Liste Rouge
-permanent pour ce professionnel. Cette décision ne peut pas
-être annulée.
-
-Prenez le temps nécessaire.
-```
-
----
-
-### Informations déclarées
-
-```
-Professionnel : Kouadio Construction · Abidjan
-Soumetteur : Mme K. · Bruxelles · mme.k@example.com
-
-Type de manquement : Abandon de projet
-Montant concerné : 38 000 €
-
-Chronologie déclarée :
-- Contrat signé : juin 2022
-- Début projets convenu : juillet 2022
-- Livraison convenue : décembre 2022
-- Livraison effective : projet abandonné, mars 2023
-
-Acompte versé : 19 000 €
-Tentatives de résolution : 3 tentatives de contact, sans réponse
-```
-
----
-
-### Documents
-
-```
-[Contrat signé]     [Preuves de paiement (2)]
-[Photos projet (5)]     [Captures WhatsApp (8)]
-```
-
----
-
-### Réponse du professionnel (si soumise)
-
-```
-Réponse soumise le [date] :
-
-"[Texte de la réponse]"
-
-Documents fournis par le professionnel : [X fichiers]
-[Voir les documents →]
-```
-
-**Si pas de réponse après 7 jours :**
-```
-Le professionnel n'a pas soumis de réponse dans le délai imparti.
-```
-
----
-
-### Checklist de vérification
-
-```
-Points à vérifier avant décision
-
-□ Contrat signé par les deux parties
-□ Identité du professionnel correspond au profil Kelen
-□ Paiements cohérents avec le montant déclaré
-□ Photos cohérentes avec la période et le type de projet
-□ Chronologie WhatsApp cohérente avec les dates déclarées
-□ Le manquement décrit est documenté dans les preuves
-
-Note : Pas besoin de cocher toutes les cases.
-Justifiez les cases non cochées dans vos notes internes.
-```
-
----
-
-### Notes internes
-
-```
-Notes de vérification *
-[Zone de texte — minimum 50 caractères — obligatoire]
-Visible uniquement par l'équipe admin.
-```
-
----
-
-### Actions
-
-```
-[✓ Vérifier et publier le signal]        [✗ Signal insuffisant — ne pas publier]
-```
-
-**Si "Vérifier et publier" :**
-```
-⚠ Confirmation requise
-
-Cette action entraîne le statut Liste Rouge permanent
-pour Kouadio Construction.
-
-Cette décision est IRRÉVERSIBLE.
-
-Pour confirmer, tapez : CONFIRMER
-
-[                    ]
-
-[Confirmer]     [Annuler]
-```
-
-**Si "Signal insuffisant" :**
-```
-Motif *
-[Zone de texte — obligatoire]
-Ce motif sera communiqué au soumetteur.
-
-Note interne (optionnel)
-[Zone de texte]
-
-[Confirmer]     [Annuler]
-```
-
----
-
 ## Écran professionnel — Vue admin
 
 ### En-tête
@@ -277,7 +133,7 @@ Note interne (optionnel)
 ```
 Kouadio Construction
 Amadou Kouadio · Abidjan, Côte d'Ivoire
-🟡 Liste Or · 7 recommandations · 0 signal
+🟡 Or · 7 recommandations
 Inscrit depuis mars 2021
 
 [Voir le profil public →]
@@ -288,7 +144,7 @@ Inscrit depuis mars 2021
 ### Onglets
 
 ```
-Recommandations (7)     Signaux (0)     Transactions     Activité
+Recommandations (7)     Projets     Transactions     Activité
 ```
 
 ---
@@ -314,7 +170,7 @@ Toute modification manuelle est journalisée avec motif obligatoire.
 La modification manuelle du statut contourne le système automatique.
 Elle est réservée aux corrections d'erreurs techniques avérées.
 
-Nouveau statut : [Menu déroulant — Or / Argent / Non classé / Rouge]
+Nouveau statut : [Menu déroulant — Or / Argent / Non classé]
 
 Motif obligatoire *
 [Zone de texte]
@@ -339,16 +195,16 @@ Elles ne peuvent pas être modifiées ou supprimées.
 ### Entrée de journal
 
 ```
-12 janv. 2025 · 14:32 · Admin : [Prénom Nom]
-Signal #S-2025-001 — Vérifié et publié
-Professionnel : Kouadio Construction
-Motif : "Contrat signé, paiements confirmés, captures WhatsApp établissent chronologie. Abandon documenté."
+12 janv. 2026 · 14:32 · Admin : [Prénom Nom]
+Recommandation #R-2026-047 — Vérifiée et publiée
+Professionnel : Diallo Bâtiment
+Note interne : "Contrat signé, photos cohérentes, délais respectés."
 
 ──────────────────────────────────────────
 
-11 janv. 2025 · 09:15 · Admin : [Prénom Nom]
-Recommandation #R-2025-047 — Rejetée
-Professionnel : Diallo Bâtiment
+11 janv. 2026 · 09:15 · Admin : [Prénom Nom]
+Recommandation #R-2026-031 — Rejetée
+Professionnel : Traoré Services
 Motif communiqué au soumetteur : "Contrat illisible, photos insuffisantes."
 ```
 
@@ -371,10 +227,9 @@ Plateforme
 
 Utilisateurs totaux : 4 382
 Abonnements actifs : 312
-Professionnels Liste Or : 187
-Professionnels Liste Argent : 94
+Professionnels Or : 187
+Professionnels Argent : 94
 Professionnels Non classés : 198
-Professionnels Liste Rouge : 23
 
 File de vérification
 En attente : 12
@@ -383,7 +238,7 @@ Délai moyen de traitement : 2,3 jours
 
 Activité
 Recommandations vérifiées ce mois : 47
-Signaux vérifiés ce mois : 3
+Projets créés ce mois : 89
 Vues de profil aujourd'hui : 1 842
 
 Revenus
@@ -393,15 +248,15 @@ Revenus du mois précédent : 2 890 €
 
 ---
 
-## Gestion des contestations
+## Gestion des litiges
 
-### Liste des contestations
+### Liste des litiges
 
 ```
-Contestations actives
+Litiges actifs
 
-Signal #S-2024-089 · Kouadio Construction
-Reçu le : 15 décembre 2024
+Litige #L-2026-012 · Kouadio Construction
+Reçu le : 15 avril 2026
 Statut : En cours d'examen
 
 [Voir →]
@@ -409,41 +264,43 @@ Statut : En cours d'examen
 
 ---
 
-### Écran contestation
+### Écran litige
 
 ```
-Contestation — Signal #S-2024-089
+Litige — #L-2026-012
 Professionnel : Kouadio Construction
+Client : Fatou K.
 
-Motif de contestation :
-"[Texte soumis par le professionnel]"
+Nature du litige :
+"[Description soumise par l'une ou l'autre des parties]"
 
 Documents fournis :
 [Voir les pièces jointes →]
 
-Signal original :
-[Voir le signal →]
+Projet concerné :
+[Voir le projet →]
 
 Notes internes :
 [Zone de texte]
 
 Décision :
-[Contestation rejetée — signal maintenu]
-[Contestation acceptée — signal retiré]
+[Litige classé — aucune action]
+[Suspension temporaire du profil]
+[Transmission aux autorités compétentes]
 ```
 
-**Si "Contestation acceptée" :**
+**Si "Suspension temporaire" :**
 ```
 ⚠ Confirmation requise
 
-Le retrait d'un signal vérifié est exceptionnel.
-Il ne peut être effectué que si la soumission originale
-est prouvée frauduleuse.
+La suspension rend le profil invisible dans les résultats.
+Le professionnel sera notifié.
+
+Durée de la suspension : [Menu déroulant — 7 jours / 30 jours / Indéfini]
 
 Motif obligatoire *
 [Zone de texte]
+Ce motif est journalisé. Il n'est pas communiqué publiquement.
 
-Ce motif sera journalisé de façon permanente.
-
-[Confirmer le retrait]     [Annuler]
+[Confirmer]     [Annuler]
 ```
