@@ -77,6 +77,21 @@ The application adheres to a premium, editorial-grade design system characterize
 - **Animations**: Framer Motion
 - **Validation**: Zod (Schema-driven actions)
 
+## Development Overrides
+
+> These are temporary changes active on the current branch for development purposes. They must be reverted before production deployment.
+
+| Override | File | Change |
+|---|---|---|
+| Paywall bypass — tier limits | `lib/utils/subscription-gate.ts` | `getTierLimits()` always returns `PAID_LIMITS` |
+| Paywall bypass — project creation | `lib/utils/subscription-gate.ts` | `canCreateProject()` always returns `{ allowed: true, limit: -1 }` |
+| Paywall bypass — photo upload | `lib/utils/subscription-gate.ts` | `canUploadPhotos()` always returns `{ allowed: true, limit: -1 }` |
+| Paywall bypass — site builder | `app/(professional)/pro/site/page.tsx` | `isPaid` hardcoded to `true` — SiteBuilder always rendered |
+
+All overrides are marked with `// DEV MODE` comments for easy grep.
+
+---
+
 ## Planned Changes / Roadmap
 - [x] Support for incremental wizard persistence.
 - [x] Bento-style dashboard refactor.
@@ -86,7 +101,9 @@ The application adheres to a premium, editorial-grade design system characterize
 - [x] Granular Project Step Management (Phases, Budgets, Pro-Association).
 - [x] Fix ProCard rendering to support both internal and external professional profiles.
 - [x] Performance Optimization Phase 1 & 2 (Africa-First Mandate).
+- [x] Paywall bypass for development (all subscription gates disabled — restore before production).
 - [ ] Backend logic for exporting project steps (PDF/Excel)
 - [ ] Financial dashboard aggregation across all project steps
 - [ ] Role-based access control (RBAC) refinements for professional assistants
 - [ ] Progressive Web App (PWA) capabilities for offline access
+- [ ] Restore paywall enforcement before production launch

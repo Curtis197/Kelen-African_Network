@@ -169,6 +169,19 @@
 | Profile indexing | `robots: { index: isPaid }` in `generateMetadata()` — noindex for free |
 | SSR vs SSG | Subscription check in profile page — dynamic rendering for paid |
 
+### ⚠️ Dev Mode — Enforcement Currently Bypassed
+
+All subscription gates are disabled for development. Search for `// DEV MODE` to locate all overrides.
+
+| File | Override |
+|---|---|
+| `lib/utils/subscription-gate.ts` | `getTierLimits()` → always `PAID_LIMITS` |
+| `lib/utils/subscription-gate.ts` | `canCreateProject()` → always `{ allowed: true, limit: -1 }` |
+| `lib/utils/subscription-gate.ts` | `canUploadPhotos()` → always `{ allowed: true, limit: -1 }` |
+| `app/(professional)/pro/site/page.tsx` | `isPaid = true` (hardcoded) |
+
+**Restore before production:** revert `subscription-gate.ts` to query the `subscriptions` table and revert `isPaid` to `pro.status === "gold" \|\| pro.status === "silver"`.
+
 ---
 
 ## Future Features (Not Yet Implemented)
