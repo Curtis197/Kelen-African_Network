@@ -110,6 +110,40 @@ La découverte de la réalité légale autour du signalement et des mauvaises é
 
 ---
 
+## Étape 9 — L'écosystème Kelen : une vision modulaire
+*Clarification stratégique*
+
+Ce que l'on construit aujourd'hui s'appelle **Kelen-Pro**. C'est la première brique d'un système plus large — le **système Kelen** — dont chaque module peut être développé progressivement, en s'appuyant sur les données et la base utilisateur du précédent.
+
+### Le système Kelen — séquence de déploiement envisagée
+
+| Module | Rôle | Stade |
+|--------|------|-------|
+| **Kelen-Pro** | Digitalisation des professionnels africains — réputation documentée, visibilité vérifiable, site web simple | **En cours** |
+| **Données** | Organisation et structuration des données collectées via Kelen-Pro — intelligence sectorielle, géographique, comportementale | Étape suivante |
+| **Kelen-Design** | Marketplace de templates créée par des designers — les pros choisissent, personnalisent, publient | Futur |
+| **Kelen-Market** | Place de marché e-commerce simple et bon marché pour les professionnels déjà sur la plateforme | Futur |
+| **Kelen-Restaurant** | Module de réservation pour les restaurants — intégration directe dans leur site Kelen | Futur |
+
+### La promesse centrale de Kelen-Pro
+
+> **"Si tu peux remplir un profil Facebook ou WhatsApp, tu peux avoir un site web."**
+
+C'est le cœur du positionnement actuel. Kelen-Pro n'est pas un outil pour les technophiles. C'est un outil pour **tous les professionnels**, et en particulier ceux qui ont une résistance ou une peur du numérique. L'interface doit être aussi naturelle que remplir un profil sur un réseau social qu'ils utilisent déjà.
+
+**Ce que cette promesse implique pour le produit :**
+- Onboarding minimal, guidé, sans jargon technique
+- Aucune compétence en design ou en développement requise
+- Prix accessible — pas une barrière à l'entrée
+- Résultat immédiat et visible — la fierté d'avoir un site en quelques minutes
+
+**Ce que cette promesse implique pour la stratégie :**
+- Le marché principal est l'Afrique francophone dans un premier temps
+- La cible prioritaire est le professionnel techno-réticent, pas le digital native
+- L'acquisition passe par la preuve sociale et la démonstration concrète (TikTok, WhatsApp, terrain)
+
+---
+
 ## Synthèse : ce que Kelen est vraiment
 
 Kelen est l'aboutissement de deux ans de convergence. Ce n'est pas une idée née un soir. C'est la réponse à une série de problèmes réels, observés dans des contextes concrets.

@@ -33,7 +33,20 @@ documentation/
 
 ---
 
-### Étape 2 — Mise à jour de la philosophie (à venir)
+### Étape 2 — Rédaction de la genèse (2026-04-25)
+
+**Action :** Création de `00-genesis.md` — retrace les 9 étapes de l'évolution du projet sur 2 ans.
+
+**Décision clé :** Kelen-Pro est la première brique d'un écosystème modulaire (Kelen-Design, Kelen-Market, Kelen-Restaurant). La promesse centrale : *"Si tu peux remplir un profil Facebook ou WhatsApp, tu peux avoir un site web."*
+
+**Implications identifiées :**
+- Le public cible prioritaire est le professionnel techno-réticent
+- Kelen-Pro sert à collecter des données pour les modules suivants
+- Le modèle est B2B2C — le professionnel paie, le client bénéficie
+
+---
+
+### Étape 3 — Mise à jour de la philosophie (à venir)
 
 *(à documenter)*
 
@@ -44,6 +57,9 @@ documentation/
 | Date | Décision | Raison |
 |------|----------|--------|
 | 2026-04-25 | Réorganisation des MD en 6 dossiers thématiques | Lisibilité et maintenabilité du repo |
+| 2026-04-25 | Rédaction de la genèse complète (00-genesis.md) | Ancrer toutes les décisions futures dans la trajectoire fondatrice |
+| 2026-04-25 | Clarification : Kelen-Pro = brique 1 du système Kelen | Positionner le produit actuel dans la vision long terme |
+| 2026-04-25 | Motto validé : "Si tu peux remplir un profil FB/WA, tu peux avoir un site" | Ancrer le positionnement sur l'accessibilité radicale |
 
 ---
 
