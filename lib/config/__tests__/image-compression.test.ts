@@ -37,7 +37,9 @@ describe('IMAGE_COMPRESSION_CONFIG', () => {
   it('log-media: most aggressive — 1080px, quality 70', () => {
     const cfg = IMAGE_COMPRESSION_CONFIG['log-media'];
     expect(cfg!.maxWidth).toBe(1080);
+    expect(cfg!.maxHeight).toBe(1080);
     expect(cfg!.quality).toBe(70);
+    expect(cfg!.clientQuality).toBe(0.7);
   });
 
   it('evidence-photos and collaboration-attachments: same settings', () => {
