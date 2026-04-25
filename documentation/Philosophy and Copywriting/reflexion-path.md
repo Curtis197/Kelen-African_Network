@@ -46,9 +46,34 @@ documentation/
 
 ---
 
-### Étape 3 — Mise à jour de la philosophie (à venir)
+### Étape 3 — Repositionnement stratégique majeur (2026-04-25)
 
-*(à documenter)*
+**Le pivot :**
+
+| | Avant | Après |
+|--|-------|-------|
+| **Cible primaire** | Client diaspora | Professionnel africain |
+| **Cible secondaire** | Professionnel construction | Client (tous types) |
+| **Problème central** | Confiance différentielle pro/client | Absence de digitalisation des pros |
+| **Solution phare** | Signalement + vérification de réputation | Digitalisation facile (PDF, GMB, site web) |
+| **Mécanique anti-fraude** | Blacklist (abandonné — contrainte légale) | Visibilité documentée (portfolio, projets) |
+| **Relation client** | Protection contre les mauvais pros | Sélection, comparaison, collaboration |
+
+**Ce qui change dans le produit :**
+- Le pro peut exposer son travail facilement sur PDF, Google My Business et site web
+- Le client peut trouver des pros, les comparer, créer un projet, collaborer
+- Le blacklist/signalement est abandonné
+
+**Ce qui ne change pas :**
+- La confiance reste le cœur — mais elle est construite positivement (visibilité documentée) plutôt que défensivement (signalement)
+- Le marché cible reste l'Afrique et la diaspora
+- Le motto reste valide : accessibilité radicale pour le pro techno-réticent
+
+**Documents impactés :**
+- `01-philosophie-positionnement.md` — réécriture profonde
+- `02-user-journey-diaspora.md` — recentrage sur la sélection/collaboration
+- `03-pro-journey.md` — le pro devient la cible primaire
+- `07-reference-global.md` — mise à jour des règles transversales
 
 ---
 
