@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
   }
 
   const arrayBuffer = await file.arrayBuffer();
-  let buffer = Buffer.from(arrayBuffer);
+  let buffer: Buffer<ArrayBufferLike> = Buffer.from(arrayBuffer);
   let contentType = file.type;
 
   const config = IMAGE_COMPRESSION_CONFIG[bucket as ImageBucket] ?? null;
