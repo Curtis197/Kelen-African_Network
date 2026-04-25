@@ -5,7 +5,8 @@
 
 ## La phrase fondatrice
 
-> **"La compétence ne se dit pas. Elle se montre."**
+> **"Construisez la confiance."**
+> *Build trust.*
 
 ---
 

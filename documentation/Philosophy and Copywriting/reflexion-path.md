@@ -86,7 +86,7 @@ documentation/
 | 2026-04-25 | Clarification : Kelen-Pro = brique 1 du système Kelen | Positionner le produit actuel dans la vision long terme |
 | 2026-04-25 | Motto validé : "Si tu peux remplir un profil FB/WA, tu peux avoir un site" | Ancrer le positionnement sur l'accessibilité radicale |
 | 2026-04-25 | Système de statuts simplifié : Or / Argent / Non classé (suppression Rouge/Noir) | Abandon du signalement pour contrainte légale |
-| 2026-04-25 | Nouvelle phrase fondatrice : "La compétence ne se dit pas. Elle se montre." | Shift du registre défensif vers le registre positif |
+| 2026-04-25 | Phrase fondatrice finale : "Construisez la confiance." / "Build trust." | Simple, positif, sans négation — universel et direct |
 
 ---
 
@@ -121,4 +121,4 @@ Documents à mettre à jour dans l'ordre :
 - **Avant :** Confiance = protection contre les mauvais pros → **Après :** Confiance = visibilité documentée du bon travail
 - **Avant :** Cible primaire = client diaspora → **Après :** Cible primaire = professionnel techno-réticent
 - **Avant :** Statut à 5 niveaux avec signalement → **Après :** Statut à 3 niveaux positifs uniquement
-- **Avant :** Phrase fondatrice = "La confiance ne se promet pas. Elle se documente." → **Après :** "La compétence ne se dit pas. Elle se montre."
+- **Avant :** Phrase fondatrice = "La confiance ne se promet pas. Elle se documente." → **Après :** "Construisez la confiance." / "Build trust."
