@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CreditCard, FileText, QrCode, Loader2, Lock } from "lucide-react";
+import { CreditCard, FileText, QrCode, Loader2 } from "lucide-react";
 
 interface Props {
   professionalId: string;
@@ -79,38 +79,11 @@ export function MarketingToolsSection({ professionalId, isPremium }: Props) {
       </div>
 
       <div className="p-6">
-        {isPremium ? (
-          <div className="grid gap-4 sm:grid-cols-3">
-            {tools.map((tool) => (
-              <MarketingToolCard key={tool.title} {...tool} />
-            ))}
-          </div>
-        ) : (
-          <div className="relative">
-            <div className="grid gap-4 sm:grid-cols-3 select-none pointer-events-none opacity-40">
-              {tools.map((tool) => (
-                <MarketingToolCard key={tool.title} {...tool} disabled />
-              ))}
-            </div>
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-xl bg-surface-container-low/80 backdrop-blur-[2px]">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background">
-                <Lock className="h-4 w-4 text-muted-foreground" />
-              </div>
-              <div className="text-center">
-                <p className="text-sm font-semibold text-foreground">Disponible avec l'abonnement</p>
-                <p className="mt-0.5 text-xs text-muted-foreground max-w-xs">
-                  Ces outils sont générés depuis votre profil existant — sans effort supplémentaire.
-                </p>
-              </div>
-              <a
-                href="/pro/abonnement"
-                className="rounded-lg bg-kelen-green-600 px-4 py-2 text-xs font-semibold text-white hover:bg-kelen-green-700 transition-colors"
-              >
-                Activer l'abonnement →
-              </a>
-            </div>
-          </div>
-        )}
+        <div className="grid gap-4 sm:grid-cols-3">
+          {tools.map((tool) => (
+            <MarketingToolCard key={tool.title} {...tool} />
+          ))}
+        </div>
       </div>
     </div>
   );
