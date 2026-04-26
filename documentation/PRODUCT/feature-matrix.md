@@ -217,6 +217,9 @@ All subscription gates are disabled for development. Search for `// DEV MODE` to
 | Realization documents upload | Free + Paid | ✅ Table exists, UI wired in PortfolioForm |
 | Subscription billing history UI | Paid | ❌ Stripe data available, no UI built |
 | Date range selector in Analytics | Paid | ❌ Always shows last 6 months |
+| Printable business card (from profile) | Paid | 🔲 Not started — primary acquisition tool for African market |
+| Printable A5 flyer (from profile) | Paid | 🔲 Not started — hero photo, services, QR code to profile |
+| QR code sticker (to profile) | Paid | 🔲 Not started — for vehicles, storefronts, job sites |
 
 ---
 

@@ -459,6 +459,42 @@ On ne peut pas construire la confiance sans montrer son travail. On ne peut pas 
 
 ---
 
+### Étape 17 — Contexte géographique et outils marketing physiques (2026-04-26)
+
+**Décision :** La proposition de valeur de Kelen n'est pas uniforme selon le marché. La split géographique est structurelle, pas marginale.
+
+**Le constat :**
+La majorité des Africains ne cherchent pas encore un professionnel sur Internet. Le canal dominant est physique et oral : recommandation, WhatsApp, flyer, passage devant une boutique. Google indexation est une valeur réelle mais principalement pour le marché européen et la diaspora.
+
+**Split de proposition de valeur par marché :**
+
+| Marché | Outil principal | Valeur Kelen |
+|--------|----------------|--------------|
+| Afrique | PDF, lien WhatsApp, partage en face-à-face | Montrer son travail, construire la confiance en contexte physique |
+| Europe / diaspora | Google, recherche web | Être trouvable en ligne, profil indexé |
+
+**Le site web compose de la valeur dans le temps** — actif long terme, pas outil d'acquisition immédiate en Afrique aujourd'hui. Sa valeur croît à mesure que les comportements de recherche évoluent.
+
+**Direction produit identifiée : outils marketing physiques (abonnement)**
+- Carte de visite imprimable depuis le profil
+- Flyer A5 (photo hero, services, QR code)
+- Autocollant QR code (véhicule, vitrine, chantier)
+Tous générés depuis le même profil — zéro effort supplémentaire. À développer quand la base abonnée le justifie.
+
+**Documents mis à jour :**
+- [x] `01-philosophie-positionnement.md` — section "Contexte géographique" ajoutée avec le split marché et la direction outils physiques
+- [x] `07-reference-global.md` — section 7 enrichie avec la nuance géographique
+- [x] `PRODUCT/feature-matrix.md` — carte de visite, flyer, QR code ajoutés en future features
+
+**Décisions clés de cette étape :**
+| Date | Décision | Raison |
+|------|----------|--------|
+| 2026-04-26 | PDF portfolio = outil d'acquisition primaire en Afrique, pas Google | Le comportement de recherche web n'est pas encore dominant — le physique et WhatsApp le sont |
+| 2026-04-26 | Google indexation positionnée comme bénéfice long terme + marché diaspora/Europe | Honnêteté sur la valeur réelle par contexte — ne pas sur-promettre l'acquisition digitale en Afrique |
+| 2026-04-26 | Outils marketing physiques identifiés comme extension naturelle du paid tier | Même source de données (le profil), nouveaux formats de sortie — cohérent avec la logique "une source, plusieurs sorties" |
+
+---
+
 ## Questions ouvertes
 
 *(à remplir au fil de la réflexion)*

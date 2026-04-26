@@ -153,11 +153,18 @@ Ne pas surexposer — la répétition dilue l'impact.
 
 Toujours présenter les sorties dans cet ordre :
 
-1. **Site web** — professionnel, indexé Google, partageable
+1. **Site web** — professionnel, partageable, indexé Google avec l'abonnement
 2. **PDF portfolio** — exportable, envoyable sur WhatsApp, imprimable
 3. **Fiche Google My Business** — présence locale, recherches Google
 
 Ces trois sorties sont la proposition de valeur centrale pour le professionnel. Elles doivent apparaître ensemble dans tout contexte de présentation du produit.
+
+**Nuance géographique dans la présentation :**
+- En Afrique : mettre le PDF et le partage par lien au premier plan — c'est le canal d'acquisition dominant. Le site web est un actif long terme. Google est une promesse future.
+- En Europe / diaspora : Google indexation et site web en premier plan — le comportement de recherche en ligne est établi.
+
+**Direction future — outils marketing physiques (abonnement) :**
+Carte de visite imprimable, flyer A5, autocollant QR code — tous générés depuis le même profil. À documenter dans une version future du corpus quand cette direction est développée.
 
 ---
 

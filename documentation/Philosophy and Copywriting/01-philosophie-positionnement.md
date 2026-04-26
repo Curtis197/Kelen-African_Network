@@ -83,6 +83,35 @@ Pour le professionnel techno-réticent, la valeur d'un portfolio numérique et d
 
 3. **Développez votre activité (tertiaire — bénéfice pour certains)** — Un client qui ne connaît pas le professionnel peut le choisir par son travail seul — par-dessus un autre professionnel dont il a peut-être entendu parler mais sur lequel il n'a aucune information concrète. Ce bénéfice est réel mais conditionnel : il arrive quand les deux premiers niveaux sont établis. Il ne doit jamais être promis comme résultat garanti.
 
+---
+
+## Contexte géographique — usage interne uniquement
+
+**La majorité des Africains ne cherchent pas encore un professionnel sur Internet.**
+
+Le canal d'acquisition dominant en Afrique reste physique et oral : recommandation directe, passage devant un atelier, flyer reçu en main propre, WhatsApp dans un groupe de quartier. Google est un canal réel mais minoritaire dans ce contexte — et l'indexation SEO ne changera pas ce comportement à court terme.
+
+**Conséquence sur la proposition de valeur par marché :**
+
+| Marché | Canal dominant | Valeur principale de Kelen |
+|--------|---------------|---------------------------|
+| Afrique | Physique, oral, WhatsApp | PDF portfolio, partage par lien, montrer son travail en face-à-face |
+| Europe / diaspora | Internet, recherche Google | Indexation Google, profil trouvable en ligne |
+
+**Le PDF portfolio est l'outil d'acquisition primaire en Afrique** — pas le site web, pas Google. Un professionnel qui arrive en rendez-vous avec son portfolio sur son téléphone, qui l'envoie sur WhatsApp avant un devis, qui l'imprime pour le laisser chez un client potentiel : c'est la chaîne d'acquisition la plus efficace dans le contexte africain actuel.
+
+**Le site web compose de la valeur dans le temps.** Il n'est pas un outil d'acquisition immédiate pour la majorité — c'est un actif qui se renforce projet après projet, recommandation après recommandation. Dans cinq ans, quand les comportements de recherche en ligne auront progressé, un professionnel qui a documenté son travail depuis le début sera déjà positionné.
+
+**Direction produit — outils marketing physiques pour les pros abonnés :**
+
+L'offre payante a vocation à s'étendre au-delà des trois sorties numériques actuelles (site, PDF, GMB) vers des outils marketing physiques générés depuis le même profil :
+
+- Carte de visite imprimable (recto : nom, métier, contact, QR code vers le profil / verso : photo de réalisation)
+- Flyer A5 (photo hero, services, coordonnées, QR code)
+- Autocollant QR code vers le profil (à coller sur un véhicule, une vitrine, un chantier)
+
+Ces formats partent du même profil — zéro effort supplémentaire pour le professionnel. Cette direction est à développer quand la base de profils abonnés le justifie.
+
 **Ce que Kelen doit faire différemment :**
 
 - Proposer l'outil gratuitement élimine le problème du ROI non démontré
