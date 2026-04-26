@@ -364,6 +364,43 @@ L'offre payante finance l'opération et donne de l'amplification externe (Google
 
 ---
 
+### Étape 14 — Philosophie de la digitalisation : pourquoi ça a échoué et ce que Kelen fait différemment (2026-04-26)
+
+**Contexte :** Discussion approfondie sur les causes de l'échec de la digitalisation des PME, et sur la hiérarchie réelle des motivations du professionnel techno-réticent. Cette réflexion donne un cadre philosophique à toutes les décisions produit et copywriting.
+
+**Le diagnostic :**
+
+Vingt ans après Internet, la plupart des PME n'ont pas de site web. Ce n'est pas un retard — c'est le résultat d'outils mal conçus pour ce public :
+- Le site web a été vendu comme une œuvre artisanale coûteuse, pas un outil
+- L'argument ROI ne tient pas : la majorité des petits professionnels ne génèrent pas de clients via leur site
+- Aucune plateforme grand public n'a répliqué le modèle social media pour les professionnels
+
+**La hiérarchie des motivations — clé de lecture pour toutes les décisions copywriting et produit :**
+
+| Niveau | Motivation | Réalité |
+|--------|------------|---------|
+| 1 — Primaire | Vanité / fierté | Montrer son travail, en être fier. Même utilité que les réseaux sociaux au lancement. Réelle, sous-estimée, suffisante pour déclencher l'inscription. |
+| 2 — Secondaire | Conversion / confiance | Facilite la conclusion des deals. Le client arrive rassuré. La relation pendant la prestation est meilleure. |
+| 3 — Tertiaire | Acquisition réelle | Certains pros verront leurs revenus augmenter directement. Pas la majorité au départ — mais le bénéfice qui devient possible une fois les deux premiers niveaux établis. |
+
+**Implications pour Kelen :**
+- Gratuit élimine l'objection ROI
+- La vanité est une motivation légitime à honorer sans la nommer dans le copy
+- L'acquisition est un bénéfice possible, jamais une promesse centrale
+- La technologie s'adapte au professionnel (téléphone, photos, WhatsApp existants) — pas l'inverse
+
+**Document mis à jour :**
+- [x] `01-philosophie-positionnement.md` — section "Pourquoi la digitalisation des PME a échoué" ajoutée
+
+**Décisions clés de cette étape :**
+| Date | Décision | Raison |
+|------|----------|--------|
+| 2026-04-26 | La vanité est documentée comme motivation primaire légitime | Elle gouverne l'onboarding — le pro veut voir son travail bien présenté avant tout |
+| 2026-04-26 | L'acquisition n'est jamais une promesse centrale dans le copy | Promettre de l'acquisition à des gens qui n'en verront pas serait mentir — et contredirait le ton Kelen |
+| 2026-04-26 | Le gratuit est autant une réponse philosophique qu'une stratégie d'acquisition de données | Retirer la barrière financière, c'est retirer l'objection qui a bloqué la digitalisation des PME pendant 20 ans |
+
+---
+
 ## Questions ouvertes
 
 *(à remplir au fil de la réflexion)*
