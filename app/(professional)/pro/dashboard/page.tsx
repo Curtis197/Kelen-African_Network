@@ -5,6 +5,7 @@ import { getProDashboardStats } from "@/lib/actions/dashboard-stats";
 import type { ProfessionalStatus } from "@/lib/supabase/types";
 import { Suspense } from "react";
 import { GoogleBusinessConnect } from "@/components/pro/GoogleBusinessConnect";
+import { MarketingToolsSection } from "@/components/pro/MarketingToolsSection";
 
 export const metadata: Metadata = {
   title: "Tableau de bord Pro — Kelen",
@@ -100,6 +101,16 @@ export default async function ProDashboardPage() {
           )}
         </Suspense>
       </div>
+
+      {/* Marketing tools */}
+      {stats.professionalId && (
+        <div className="mb-8">
+          <MarketingToolsSection
+            professionalId={stats.professionalId}
+            isPremium={stats.subscriptionStatus === "Premium"}
+          />
+        </div>
+      )}
 
       {/* Pending actions */}
       <div className="rounded-xl border border-border bg-surface-container-low">
