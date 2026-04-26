@@ -72,7 +72,7 @@ Bonjour [Prénom] 👋
 Votre profil Kelen est en ligne :
 kelen.com/[slug]
 
-Ajoutez vos premières photos de chantier pour l'activer complètement.
+Ajoutez vos premières photos de réalisations pour l'activer complètement.
 2 photos suffisent pour commencer.
 
 → [lien tableau de bord]
@@ -80,7 +80,7 @@ Ajoutez vos premières photos de chantier pour l'activer complètement.
 
 **Notes :**
 - L'emoji 👋 est autorisé — il humanise le message d'entrée sans être excessif
-- "photos de chantier" plutôt que "photos professionnelles" — plus concret, moins intimidant
+- "photos de réalisations" fonctionne pour tous les métiers — un designer, un architecte, un plombier, un menuisier
 - Le lien est la seule action demandée
 
 ---
@@ -107,7 +107,7 @@ Ajoutez vos premières photos de chantier pour l'activer complètement.
 > Les clients qui le visitent n'ont pas de raison de vous contacter.
 >
 > Ajoutez deux photos de vos réalisations — n'importe lesquelles.
-> Une cuisine rénovée, un mur monté, un câblage propre.
+> Un projet livré, une mission terminée, une réalisation récente.
 > Vos photos de WhatsApp fonctionnent très bien.
 >
 > [Ajouter mes photos →]
@@ -121,7 +121,7 @@ Bonjour [Prénom],
 
 Votre profil Kelen est vide pour l'instant — vos clients ne voient pas encore votre travail.
 
-Ajoutez 2 photos de vos chantiers pour changer ça.
+Ajoutez 2 photos de vos réalisations pour changer ça.
 Vos photos WhatsApp font très bien l'affaire.
 
 → [lien]
@@ -195,7 +195,7 @@ et peut apparaître sur Google quand vous activez la visibilité.
 
 > Votre profil est complet.
 >
-> Pour l'instant, il est accessible uniquement par lien direct — si quelqu'un cherche "électricien à Abidjan" sur Google, vous n'apparaissez pas.
+> Pour l'instant, il est accessible uniquement par lien direct — si quelqu'un cherche "[votre métier] à [votre ville]" sur Google, vous n'apparaissez pas.
 >
 > L'abonnement Kelen change ça :
 >
@@ -505,7 +505,7 @@ Renouvellement : [date]
 > Les clients qui consultent les profils actifs voient du travail récent.
 > Un projet ajouté ce mois-ci montre que vous êtes disponible et actif.
 >
-> Vous avez terminé un chantier récemment ?
+> Vous avez livré un projet récemment ?
 > Ajoutez-le en 5 minutes — quelques photos et une courte description suffisent.
 >
 > [Ajouter un projet →]
@@ -519,7 +519,7 @@ Bonjour [Prénom],
 
 Votre profil Kelen n'a pas de nouveau projet depuis 2 mois.
 
-Si vous avez terminé un chantier, ajoutez-le — ça prend 5 minutes et ça montre que vous êtes actif.
+Si vous avez livré un projet, ajoutez-le — ça prend 5 minutes et ça montre que vous êtes actif.
 
 → [lien ajout projet]
 ```
