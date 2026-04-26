@@ -192,6 +192,75 @@ Le professionnel crée son profil en quelques minutes. Il charge ses photos de r
 
 ---
 
+## Le paysage concurrentiel et la réponse Kelen — usage interne uniquement
+
+Avant Kelen, quatre types de solutions existaient pour un professionnel qui voulait une présence en ligne. Chacune résout une partie du problème — et échoue sur l'essentiel.
+
+---
+
+**1. Les plateformes d'annuaires et de mise en relation**
+
+Fiverr, Bark, pages jaunes locales, annuaires sectoriels.
+
+Le professionnel crée un profil court, standardisé, interchangeable. Il peut créer le même profil sur dix plateformes en une heure. Il n'est pas attaché à ce profil — il est une fiche dans une base de données. La plateforme possède la relation avec le client. Le professionnel est un fournisseur, pas un acteur.
+
+*Échec central : pas d'appartenance, pas d'identité, pas de continuité. La présence disparaît si la plateforme disparaît ou change ses règles.*
+
+---
+
+**2. Les réseaux sociaux**
+
+Facebook, Instagram, TikTok.
+
+Le trafic est sans équivalent. N'importe qui peut être vu. Mais pour exister sur les réseaux sociaux, il faut produire du contenu engageant, du spectacle, de l'émotion. C'est un métier en soi — et il est mentalement très éloigné du monde d'un plombier, d'un menuisier ou d'un électricien. Le bon professionnel n'est pas nécessairement un bon créateur de contenu. Les réseaux sociaux récompensent le montage, pas la compétence.
+
+*Échec central : la posture requise (créateur de contenu, animateur) est incompatible avec la posture professionnelle. Le professionnel sérieux ne veut pas faire de show — il veut montrer son travail.*
+
+---
+
+**3. Google — le site web**
+
+Pendant des années, le site web professionnel a été la réponse officielle. Mais c'est un objet artisanal — une commande sur mesure, cher, long à produire, et utile seulement si du trafic y arrive. L'arrivée de l'IA a commencé à démocratiser la création, mais pour les professionnels qui ont raté le dernier train numérique, même l'IA reste un horizon flou et intimidant.
+
+*Échec central : coût élevé, complexité technique, et dépendance totale au trafic. Un site sans visiteurs n'existe pas. La valeur est conditionnelle.*
+
+---
+
+**4. Google Maps / Google My Business**
+
+C'est la solution qui a réussi le mieux à enrôler les petits professionnels. La friction d'inscription est faible. Recevoir des avis clients était suffisant pour beaucoup de pros — une note et quelques étoiles, c'est une forme de réputation simple et lisible.
+
+Mais Google Maps ne montre pas le travail. Le profil ne se met pas à jour au rythme des projets. Les réalisations ne s'y affichent pas bien. C'est une présence locale, pas une présence professionnelle.
+
+*Échec central : incapable d'afficher le travail réel. La réputation se résume à une note — pas à une démonstration.*
+
+---
+
+**La réponse Kelen : le site web standardisé**
+
+Kelen n'invente pas une nouvelle catégorie. Il prend ce qui a fonctionné dans chaque solution et retire ce qui a échoué.
+
+| Ce qui a fonctionné | Ce qui a échoué | La réponse Kelen |
+|---------------------|-----------------|------------------|
+| GMB : faible friction d'inscription | GMB : ne montre pas le travail | Formulaire simple → présence qui affiche les réalisations |
+| Réseaux sociaux : le pro peut être vu | Réseaux sociaux : exige une posture de créateur de contenu | Engagement (likes, commentaires, partages) sans exiger de produire du spectacle |
+| Site web : espace propre au professionnel | Site web : artisanal, cher, dépendant du trafic | Site standardisé, généré automatiquement, qui existe indépendamment du trafic |
+| Annuaires : présence facile | Annuaires : pas d'appartenance, pas d'identité | Profil permanent que le professionnel possède et contrôle |
+
+**Ce que le site web standardisé Kelen résout spécifiquement :**
+
+- **Appartenance** — Ce n'est pas un profil sur une plateforme tierce. C'est une URL au nom du professionnel. Il la possède, il la contrôle, il peut la partager à n'importe qui, sur n'importe quel canal.
+
+- **Friction minimale** — Tout le monde peut remplir un formulaire simple. La création du site ne demande pas de compétence technique, de choix de design, ni de maîtrise d'un outil. Un formulaire → un site.
+
+- **Existe sans trafic** — Contrairement à un site web classique dont la valeur est conditionnelle au nombre de visiteurs, le profil Kelen a une valeur dès le premier jour : le professionnel peut le partager à un client en rendez-vous, l'imprimer en PDF, l'envoyer sur WhatsApp. La page existe pour afficher le travail — elle ne dépend pas de l'algorithme pour exister.
+
+- **Engagement sans contenu** — Les clients peuvent liker une réalisation, commenter un projet, partager un profil. Le professionnel bénéficie des dynamiques sociales sans devoir produire de contenu engageant. Son travail est le contenu.
+
+- **Mis à jour au rythme des projets** — Chaque nouveau projet s'ajoute au profil. L'historique se construit naturellement, sans effort rédactionnel. Le profil vieillit bien — il devient plus fort avec le temps.
+
+---
+
 ## Le renversement stratégique
 
 La plupart des plateformes similaires communiquent dans le registre de la protection :

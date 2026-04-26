@@ -428,6 +428,37 @@ On ne peut pas construire la confiance sans montrer son travail. On ne peut pas 
 
 ---
 
+### Étape 16 — Paysage concurrentiel et positionnement du site web standardisé (2026-04-26)
+
+**Contexte :** Analyse approfondie des quatre solutions existantes et de leurs échecs respectifs. Formalise pourquoi Kelen est la réponse — et pas juste une autre solution.
+
+**Les quatre solutions et leurs échecs centraux :**
+
+| Solution | Ce qui marche | Échec central |
+|----------|--------------|---------------|
+| Annuaires / mise en relation | Faible friction | Pas d'appartenance — le pro est une fiche, pas un acteur |
+| Réseaux sociaux | Trafic sans équivalent | Exige une posture de créateur de contenu — incompatible avec le monde professionnel |
+| Site web classique | Espace propre | Artisanal, cher, valeur conditionnelle au trafic |
+| Google Maps / GMB | Enrôlement réussi, faible friction | N'affiche pas le travail réel — réputation = note, pas démonstration |
+
+**La réponse Kelen :**
+- Formulaire simple → site standardisé (friction GMB, résultat au-delà de GMB)
+- Engagement social sans posture de créateur de contenu
+- Existe sans trafic — la page est la valeur, pas ce qu'elle génère
+- Appartenance réelle : URL propre, profil permanent, contrôlé par le professionnel
+
+**Document mis à jour :**
+- [x] `01-philosophie-positionnement.md` — section "Le paysage concurrentiel et la réponse Kelen" ajoutée
+
+**Décisions clés de cette étape :**
+| Date | Décision | Raison |
+|------|----------|--------|
+| 2026-04-26 | "Existe sans trafic" documenté comme différenciateur clé vs site web classique | Le pro techno-réticent a été brûlé par des outils dont la valeur était conditionnelle. Kelen vaut quelque chose dès le premier jour. |
+| 2026-04-26 | L'engagement social (likes, commentaires) est une fonctionnalité, pas un nice-to-have | C'est ce qui permet les dynamiques sociales sans exiger la posture créateur de contenu |
+| 2026-04-26 | L'appartenance est explicitement positionnée contre les annuaires | Sur Kelen, le pro possède son profil. Sur un annuaire, il est une fiche. |
+
+---
+
 ## Questions ouvertes
 
 *(à remplir au fil de la réflexion)*
