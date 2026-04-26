@@ -93,11 +93,11 @@ Le statut d'un professionnel reflète son historique documenté sur la plateform
 
 ### Profil Gratuit
 
-Présence de base sur la plateforme. Recherche par nom. Jusqu'à 3 projets affichés. Pas d'indexation Google. Pas d'apparition dans les annuaires de découverte.
+Présence de base sur la plateforme. Visible dans les résultats de recherche Kelen. Jusqu'à 3 projets affichés. Export PDF du portfolio. Pas d'indexation Google.
 
 ### Profil Abonnement — 3 000 FCFA / 15 € par mois
 
-Apparition dans les annuaires et résultats de navigation. Pages indexables sur Google (SEO). Projets illimités. Export PDF du portfolio. Intégration Google My Business. Accès complet au module de collaboration client.
+Indexation Google (SEO). Rendu dynamique (SSR). Projets illimités. Intégration Google My Business. Accès complet au module de collaboration client. Personnalisation du site et branding.
 
 Ni paiement à l'acte. Ni commission sur les projets conclus.
 

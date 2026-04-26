@@ -28,8 +28,8 @@
 | **Photos** | **15 max** | **Illimité** | Upload via Supabase Storage + compression Sharp |
 | **Vidéos** | ❌ | ✅ | Support vidéo dans le portfolio |
 | **Services & Produits** | ✅ | ✅ | Catalogue avec prix, images, contrôle de visibilité |
-| **Export PDF portfolio** | ❌ | ✅ | PDF complet avec réalisations, services, produits, branding |
-| **Export PDF catalogue** | ❌ | ✅ | Catalogue PDF services + produits |
+| **Export PDF portfolio** | ✅ | ✅ | PDF complet avec réalisations, services, produits, branding |
+| **Export PDF catalogue** | ✅ | ✅ | Catalogue PDF services + produits |
 | **Export PDF réalisation** | ✅ | ✅ | PDF par projet individuel |
 | **Personnalisation du site** | ❌ | ✅ | Mode couleur, style coins, sections, quiz de style |
 | **Prévisualisation du site** | ❌ | ✅ | Aperçu live avant publication |
@@ -173,6 +173,7 @@
 | Max projects | 3 | Unlimited |
 | Max photos | 15 | Unlimited |
 | Videos | ❌ | ✅ |
+| PDF portfolio export | ✅ | ✅ |
 | Google indexing | ❌ | ✅ |
 | SSR rendering | ❌ (SSG) | ✅ |
 | Brand colors | ❌ | ✅ |

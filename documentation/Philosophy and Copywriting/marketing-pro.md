@@ -275,11 +275,11 @@ Profil récent ou sans recommandation soumise.
 Profil public et site web       ✓               ✓
 Visible dans les résultats Kelen✓               ✓
 IA copywriting                  ✓               ✓
+Export PDF portfolio            ✓               ✓
 Statistiques de base            ✓               ✓
 Projets affichés                3            Illimité
 Photos                         15            Illimité
 Vidéos                          —               ✓
-Export PDF portfolio            —               ✓
 Fiche Google My Business        —               ✓
 Indexation Google (SEO)         —               ✓
 Site dynamique (SSR)            —               ✓

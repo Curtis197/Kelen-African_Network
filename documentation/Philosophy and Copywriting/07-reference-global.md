@@ -120,13 +120,13 @@ Ne pas surexposer — la répétition dilue l'impact. Une occurrence par context
 - Profil public et site web de base (rendu statique)
 - Jusqu'à 3 projets affichés
 - Visible dans les résultats de recherche Kelen
+- Export PDF portfolio
 - Non indexé sur Google
 
 **Abonnement — 3 000 FCFA / 15 € / mois**
 - Indexation Google (SEO) — apparition dans les recherches Google
 - Site web dynamique (SSR) — toujours à jour au chargement
 - Site web complet et personnalisable
-- Export PDF portfolio
 - Synchronisation Google My Business
 - Projets illimités
 - Accès au module de collaboration client

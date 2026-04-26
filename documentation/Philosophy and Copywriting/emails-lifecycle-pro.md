@@ -201,8 +201,8 @@ et peut apparaître sur Google quand vous activez la visibilité.
 >
 > — Votre site est indexé sur Google
 > — Votre fiche Google My Business est synchronisée
-> — Votre PDF portfolio est disponible en un clic
 > — Votre profil passe en rendu dynamique — toujours à jour
+> — Vos projets sont illimités
 >
 > **3 000 FCFA / 15 € par mois. Sans engagement.**
 >
@@ -348,7 +348,6 @@ C'est le dernier message que nous vous envoyons sur ce sujet.
 >
 > **Dans les prochaines minutes :**
 > Votre profil est rendu en mode dynamique.
-> Votre PDF portfolio est disponible depuis votre tableau de bord.
 > La synchronisation Google My Business est démarrée.
 >
 > **Dans les 24 à 72 heures :**
@@ -376,7 +375,7 @@ Bonjour [Prénom],
 
 Votre profil est maintenant visible dans les résultats de recherche.
 Indexation Google : 24 à 72h.
-PDF portfolio : disponible dès maintenant.
+Projets illimités : actifs dès maintenant.
 
 → [lien tableau de bord]
 ```

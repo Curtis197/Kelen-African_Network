@@ -69,7 +69,7 @@
 
 ### Écran 6 — Le tarif
 
-> **3 000 FCFA / 15 € par mois.**
+> **10 000 FCFA / 15 € par mois.**
 > Sans engagement. Annulez quand vous voulez.
 >
 > Ce que ça inclut : site web, PDF, fiche Google, profil visible dans les résultats, projets illimités.
@@ -702,10 +702,10 @@ sur votre profil et votre site web.
                         Gratuit     Abonnement
 Profil public             ✓             ✓
 Site web                  ✓             ✓
-Export PDF                —             ✓
+Export PDF                ✓             ✓
+Résultats de recherche Kelen ✓          ✓
 Fiche Google My Business  —             ✓
 Projets affichés          3           Illimité
-Résultats de recherche    —             ✓
 Indexation Google (SEO)   —             ✓
 Collaboration client      —             ✓
 ```
@@ -715,6 +715,7 @@ Collaboration client      —             ✓
 ### Ce que l'abonnement ne change pas
 
 > - Pas votre statut — la réputation se mérite, elle ne s'achète pas
+> - Pas votre visibilité sur Kelen — vous apparaissez dans les résultats avec ou sans abonnement
 > - Pas l'ordre des résultats pour les clients — la pertinence prime sur l'abonnement
 
 ---

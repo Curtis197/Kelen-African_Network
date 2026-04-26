@@ -259,7 +259,7 @@ Photos                                15        Illimité
 Vidéos dans les projets                —           ✓
 
 SORTIES
-Export PDF portfolio                   —           ✓
+Export PDF portfolio                   ✓           ✓
 Synchronisation Google My Business     —           ✓
 
 PERSONNALISATION
