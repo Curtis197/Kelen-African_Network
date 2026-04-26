@@ -15,9 +15,11 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json().catch(() => ({}));
-    const { realizationId } = body;
+    // Accept single ID (legacy) or array of IDs
+    const realizationId: string | undefined = body.realizationId;
+    const realizationIds: string[] | undefined = body.realizationIds;
 
-    log.debug("Request parsed", { realizationId });
+    log.debug("Request parsed", { realizationId, realizationIds });
 
     const supabase = await createClient();
 
@@ -79,7 +81,9 @@ export async function POST(request: NextRequest) {
       .eq("professional_realizations.professional_id", proId)
       .not("url", "is", null);
 
-    if (realizationId) {
+    if (realizationIds && realizationIds.length > 0) {
+      query = query.in("professional_realizations.id", realizationIds);
+    } else if (realizationId) {
       query = query.eq("professional_realizations.id", realizationId);
     }
 

@@ -1,15 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { X, Loader2, ChevronDown, ChevronUp } from "lucide-react";
 import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/supabase/client";
-import Image from "next/image";
 
 const log = logger("kelen:google-management");
 
-// Development mode: set to true to bypass OAuth and show mock UI
 const DEV_MODE = process.env.NEXT_PUBLIC_DEV_MODE === "true" || false;
+
+// ── Types ─────────────────────────────────────────────────────────────────────
 
 interface GoogleConnectionState {
   isConnected: boolean;
@@ -33,9 +35,77 @@ interface DebugState {
 
 type LoadingState = "loading" | "connected" | "not_connected" | "error";
 
+interface RealizationItem {
+  id: string;
+  title: string;
+  mainImageUrl: string | null;
+}
+
+interface ServiceItem {
+  id: string;
+  title: string;
+  category: string | null;
+}
+
+interface ProductItem {
+  id: string;
+  title: string;
+  category: string | null;
+}
+
+// ── Days config ───────────────────────────────────────────────────────────────
+
+const DAYS = [
+  { key: "MONDAY", label: "Lundi" },
+  { key: "TUESDAY", label: "Mardi" },
+  { key: "WEDNESDAY", label: "Mercredi" },
+  { key: "THURSDAY", label: "Jeudi" },
+  { key: "FRIDAY", label: "Vendredi" },
+  { key: "SATURDAY", label: "Samedi" },
+  { key: "SUNDAY", label: "Dimanche" },
+] as const;
+
+interface DayHours {
+  open: boolean;
+  openTime: string;
+  closeTime: string;
+}
+
+type WeekHours = Record<string, DayHours>;
+
+function defaultWeekHours(): WeekHours {
+  return Object.fromEntries(
+    DAYS.map(({ key }) => [key, { open: key !== "SUNDAY", openTime: "08:00", closeTime: "18:00" }])
+  );
+}
+
+// ── Mock data (dev mode) ──────────────────────────────────────────────────────
+
+const mockConnection: GoogleConnectionState = {
+  isConnected: true,
+  verificationStatus: "VERIFIED",
+  gbpAccountName: "accounts/12345678901234567890",
+  gbpLocationName: "Mon Établissement - Test",
+  gbpPlaceId: "ChIJN1t_tDeuEmsRUsoyG83frYI",
+  lastSyncedAt: new Date().toISOString(),
+  connectedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+  reviewLink: "https://search.google.com/local/writereview?placeid=ChIJN1t_tDeuEmsRUsoyG83frYI",
+  allReviewsLink: "https://search.google.com/local/reviews?placeid=ChIJN1t_tDeuEmsRUsoyG83frYI",
+};
+
+const mockDebug: DebugState = {
+  envConfigured: true,
+  hasClientId: true,
+  hasClientSecret: true,
+  hasRedirectUri: true,
+  hasPlacesApiKey: true,
+};
+
+// ── Main page ─────────────────────────────────────────────────────────────────
+
 export default function GoogleManagementPage() {
   const router = useRouter();
-  const [loading, setLoading] = useState<LoadingState>("loading");
+  const [loadingState, setLoadingState] = useState<LoadingState>("loading");
   const [connection, setConnection] = useState<GoogleConnectionState | null>(null);
   const [debugState, setDebugState] = useState<DebugState | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -43,123 +113,51 @@ export default function GoogleManagementPage() {
   const [syncingPhotos, setSyncingPhotos] = useState(false);
   const [syncingProfile, setSyncingProfile] = useState(false);
   const [copiedField, setCopiedField] = useState<string | null>(null);
-  const [devModeOverride, setDevModeOverride] = useState<boolean | null>(null); // null = use env, true/false = manual override
-
-  const [realizations, setRealizations] = useState<{ id: string; title: string }[]>([]);
-  const [selectedRealizationId, setSelectedRealizationId] = useState<string>("");
+  const [devModeOverride, setDevModeOverride] = useState<boolean | null>(null);
   const [reviewsData, setReviewsData] = useState<{ rating: number | null; totalReviews: number; reviews: any[] } | null>(null);
 
-  // DEV MODE: Mock connection state for UI development
-  const mockConnectionState: GoogleConnectionState = {
-    isConnected: true,
-    verificationStatus: "VERIFIED",
-    gbpAccountName: "accounts/12345678901234567890",
-    gbpLocationName: "Mon Établissement - Test",
-    gbpPlaceId: "ChIJN1t_tDeuEmsRUsoyG83frYI",
-    lastSyncedAt: new Date().toISOString(),
-    connectedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-    reviewLink: "https://search.google.com/local/writereview?placeid=ChIJN1t_tDeuEmsRUsoyG83frYI",
-    allReviewsLink: "https://search.google.com/local/reviews?placeid=ChIJN1t_tDeuEmsRUsoyG83frYI",
-  };
+  // Modal states
+  const [isContentModalOpen, setIsContentModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const mockDebugState: DebugState = {
-    envConfigured: true,
-    hasClientId: true,
-    hasClientSecret: true,
-    hasRedirectUri: true,
-    hasPlacesApiKey: true,
-  };
+  // Content selection state
+  const [realizations, setRealizations] = useState<RealizationItem[]>([]);
+  const [services, setServices] = useState<ServiceItem[]>([]);
+  const [products, setProducts] = useState<ProductItem[]>([]);
+  const [selectedRealizationIds, setSelectedRealizationIds] = useState<Set<string>>(new Set());
+  const [contentLoading, setContentLoading] = useState(false);
+  const [contentSaving, setContentSaving] = useState(false);
 
-  // Determine if we're in dev mode (env or manual override)
+  // GMB edit form state
+  const [editForm, setEditForm] = useState({
+    title: "",
+    description: "",
+    phone: "",
+    website: "",
+    streetAddress: "",
+    city: "",
+    postalCode: "",
+    countryCode: "SN",
+  });
+  const [weekHours, setWeekHours] = useState<WeekHours>(defaultWeekHours());
+  const [editSaving, setEditSaving] = useState(false);
+
   const isDevMode = devModeOverride !== null ? devModeOverride : DEV_MODE;
 
-  // Load connection status on mount
-  useEffect(() => {
-    loadRealizations();
-    if (isDevMode) {
-      log.info("[DEV MODE] Loading mock connection state");
-      setConnection(mockConnectionState);
-      setDebugState(mockDebugState);
-      setLoading("connected");
-      setReviewsData({
-        rating: 4.8,
-        totalReviews: 12,
-        reviews: [
-          {
-            reviewer: { displayName: "Jane Doe" },
-            starRating: "FIVE",
-            comment: "Excellent travail !",
-            createTime: new Date().toISOString()
-          }
-        ]
-      });
-    } else {
-      loadConnectionStatus();
-    }
-  }, [isDevMode]);
+  // ── Data loading ─────────────────────────────────────────────────────────
 
-  async function loadRealizations() {
+  const loadConnectionStatus = useCallback(async () => {
+    setLoadingState("loading");
     try {
-      const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-      const { data: pro } = await supabase.from("professionals").select("id").eq("user_id", user.id).single();
-      if (!pro) return;
-      
-      const { data: reals } = await supabase
-        .from("professional_realizations")
-        .select("id, title")
-        .eq("professional_id", pro.id)
-        .order("created_at", { ascending: false });
-        
-      if (reals) setRealizations(reals);
-    } catch (err) {
-      log.error("Failed to load realizations", { error: err });
-    }
-  }
-
-  async function loadReviews(forceRefresh = false) {
-    try {
-      const url = forceRefresh ? "/api/google/reviews?refresh=1" : "/api/google/reviews";
-      const res = await fetch(url);
-      if (res.ok) {
-        const data = await res.json();
-        if (data.success) {
-          setReviewsData(data);
-        }
-      }
-    } catch (err) {
-      log.error("Failed to load reviews", { error: err });
-    }
-  }
-
-  async function loadConnectionStatus() {
-    log.info("Loading Google connection status");
-    setLoading("loading");
-
-    try {
-      const response = await fetch("/api/google/debug");
-      const report = await response.json();
-
-      log.debug("Debug endpoint response", { status: response.status, report });
-
-      if (!response.ok) {
-        throw new Error(report.error || "Failed to load connection status");
-      }
+      const res = await fetch("/api/google/debug");
+      const report = await res.json();
+      if (!res.ok) throw new Error(report.error || "Failed to load connection status");
 
       setDebugState(report.environment);
-
       const tokens = report.googleTokens;
       const isConnected = tokens?.isConnected === true;
 
       if (isConnected) {
-        const reviewLink = tokens?.gbp_place_id
-          ? `https://search.google.com/local/writereview?placeid=${tokens.gbp_place_id}`
-          : null;
-        const allReviewsLink = tokens?.gbp_place_id
-          ? `https://search.google.com/local/reviews?placeid=${tokens.gbp_place_id}`
-          : null;
-
         setConnection({
           isConnected: true,
           verificationStatus: tokens.verificationStatus,
@@ -168,164 +166,204 @@ export default function GoogleManagementPage() {
           gbpPlaceId: tokens.gbpPlaceId,
           lastSyncedAt: tokens.lastSyncedAt,
           connectedAt: tokens.connectedAt,
-          reviewLink,
-          allReviewsLink,
+          reviewLink: tokens.gbp_place_id
+            ? `https://search.google.com/local/writereview?placeid=${tokens.gbp_place_id}`
+            : null,
+          allReviewsLink: tokens.gbp_place_id
+            ? `https://search.google.com/local/reviews?placeid=${tokens.gbp_place_id}`
+            : null,
         });
-
-        log.info("Google connection status loaded", {
-          connected: true,
-          verificationStatus: tokens.verificationStatus,
-          hasPlaceId: !!tokens.gbpPlaceId,
-        });
-
-        setLoading("connected");
+        setLoadingState("connected");
         loadReviews();
       } else {
-        log.info("Not connected to Google Business");
-        setLoading("not_connected");
+        setLoadingState("not_connected");
       }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
-      log.error("Failed to load connection status", { error: msg });
       setError(msg);
-      setLoading("error");
+      setLoadingState("error");
     }
-  }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  async function handleConnectGoogle() {
-    log.info("Initiating Google OAuth connection");
-    setError(null);
-
-    // The authorize endpoint returns a redirect, not JSON
-    // We need to navigate directly to the endpoint
-    window.location.href = "/api/auth/google/authorize";
-  }
-
-  async function handleCreateBusiness() {
-    log.info("Creating Google Business Profile");
-    setError(null);
-    setSuccessMsg(null);
-
+  const loadReviews = useCallback(async (force = false) => {
     try {
-      const response = await fetch("/api/google/create-business", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({}),
-      });
-
-      const data = await response.json();
-      log.info("Create business response", { status: response.status, data });
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to create business profile");
+      const res = await fetch(force ? "/api/google/reviews?refresh=1" : "/api/google/reviews");
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success) setReviewsData(data);
       }
-
-      setSuccessMsg("Profil Google Maps créé avec succès. Vérification requise.");
-      log.info("Business profile created successfully");
-
-      // Reload status
-      await loadConnectionStatus();
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : String(err);
-      log.error("Failed to create business profile", { error: msg });
-      setError(msg);
+    } catch (err) {
+      log.error("Failed to load reviews", { error: err });
     }
-  }
+  }, []);
 
-  async function handleRequestVerification(method: "PHONE_CALL" | "SMS" | "EMAIL" | "ADDRESS") {
-    log.info("Requesting verification", { method });
-    setError(null);
-    setSuccessMsg(null);
-
+  const loadContentData = useCallback(async () => {
+    setContentLoading(true);
     try {
-      const response = await fetch("/api/google/request-verification", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ method }),
-      });
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
 
-      const data = await response.json();
-      log.info("Verification request response", { status: response.status, data });
+      const { data: pro } = await supabase.from("professionals").select("id").eq("user_id", user.id).single();
+      if (!pro) return;
 
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to request verification");
-      }
+      const [{ data: reals }, { data: svcs }, { data: prods }] = await Promise.all([
+        supabase
+          .from("professional_realizations")
+          .select("id, title, images:realization_images(url, is_main)")
+          .eq("professional_id", pro.id)
+          .order("completion_date", { ascending: false }),
+        supabase
+          .from("professional_services")
+          .select("id, title, category")
+          .eq("professional_id", pro.id),
+        supabase
+          .from("professional_products")
+          .select("id, title, category")
+          .eq("professional_id", pro.id),
+      ]);
 
-      setSuccessMsg(`Code de vérification envoyé via ${method}. Vérifiez votre ${method === "SMS" || method === "PHONE_CALL" ? "téléphone" : "email"}.`);
-      log.info("Verification code sent successfully", { method });
-
-      // Reload status
-      await loadConnectionStatus();
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : String(err);
-      log.error("Failed to request verification", { error: msg });
-      setError(msg);
-    }
-  }
-
-  async function handleSyncPhotos() {
-    log.info("Syncing photos to Google Business");
-    setSyncingPhotos(true);
-    setError(null);
-
-    try {
-      const response = await fetch("/api/google/sync-photos", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ realizationId: selectedRealizationId || undefined }),
-      });
-
-      const data = await response.json();
-      log.info("Sync photos response", { status: response.status, data });
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to sync photos");
-      }
-
-      setSuccessMsg(`${data.synced || 0} photos synchronisées avec Google Maps`);
-      log.info("Photos synced successfully", { synced: data.synced });
-
-      // Reload status
-      await loadConnectionStatus();
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : String(err);
-      log.error("Failed to sync photos", { error: msg });
-      setError(msg);
+      setRealizations(
+        (reals ?? []).map((r: any) => {
+          const imgs: Array<{ url: string; is_main: boolean }> = r.images ?? [];
+          return {
+            id: r.id,
+            title: r.title,
+            mainImageUrl: imgs.find(i => i.is_main)?.url ?? imgs[0]?.url ?? null,
+          };
+        })
+      );
+      setServices(svcs ?? []);
+      setProducts(prods ?? []);
+    } catch (err) {
+      log.error("Failed to load content data", { error: err });
     } finally {
-      setSyncingPhotos(false);
+      setContentLoading(false);
     }
-  }
+  }, []);
+
+  const loadProDataForEdit = useCallback(async () => {
+    try {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data: pro } = await supabase
+        .from("professionals")
+        .select("business_name, description, phone, slug, address, city, postal_code, country_code")
+        .eq("user_id", user.id)
+        .single();
+
+      if (!pro) return;
+
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://kelen.africa";
+      setEditForm({
+        title: pro.business_name ?? "",
+        description: pro.description ?? "",
+        phone: pro.phone ?? "",
+        website: `${siteUrl}/professionnels/${pro.slug}`,
+        streetAddress: pro.address ?? "",
+        city: pro.city ?? "",
+        postalCode: pro.postal_code ?? "",
+        countryCode: pro.country_code ?? "SN",
+      });
+    } catch (err) {
+      log.error("Failed to load pro data for edit", { error: err });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isDevMode) {
+      setConnection(mockConnection);
+      setDebugState(mockDebug);
+      setLoadingState("connected");
+      setReviewsData({ rating: 4.8, totalReviews: 12, reviews: [{ reviewer: { displayName: "Jane Doe" }, starRating: "FIVE", comment: "Excellent travail !", createTime: new Date().toISOString() }] });
+    } else {
+      loadConnectionStatus();
+    }
+  }, [isDevMode, loadConnectionStatus]);
+
+  // ── Actions ───────────────────────────────────────────────────────────────
 
   async function handleSyncProfile() {
-    log.info("Syncing profile to Google Business");
     setSyncingProfile(true);
     setError(null);
-
     try {
-      const response = await fetch("/api/google/sync-profile", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({}),
-      });
-
-      const data = await response.json();
-      log.info("Sync profile response", { status: response.status, data });
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to sync profile");
-      }
-
+      const res = await fetch("/api/google/sync-profile", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({}) });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to sync profile");
       setSuccessMsg("Profil synchronisé avec Google Maps");
-      log.info("Profile synced successfully");
-
-      // Reload status
       await loadConnectionStatus();
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : String(err);
-      log.error("Failed to sync profile", { error: msg });
-      setError(msg);
+      setError(err instanceof Error ? err.message : String(err));
     } finally {
       setSyncingProfile(false);
+    }
+  }
+
+  async function handleSaveContent() {
+    setContentSaving(true);
+    setError(null);
+    try {
+      const ids = Array.from(selectedRealizationIds);
+      if (ids.length === 0) {
+        setIsContentModalOpen(false);
+        return;
+      }
+      const res = await fetch("/api/google/sync-photos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ realizationIds: ids }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Erreur lors de la synchronisation");
+      setSuccessMsg(`${data.synced ?? 0} photo(s) synchronisée(s) sur Google Maps.`);
+      setIsContentModalOpen(false);
+      setSelectedRealizationIds(new Set());
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setContentSaving(false);
+    }
+  }
+
+  async function handleSaveGMB() {
+    setEditSaving(true);
+    setError(null);
+    try {
+      const hours = DAYS
+        .filter(({ key }) => weekHours[key]?.open)
+        .map(({ key }) => ({
+          openDay: key,
+          openTime: weekHours[key].openTime,
+          closeTime: weekHours[key].closeTime,
+        }));
+
+      const res = await fetch("/api/google/update-gmb", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: editForm.title,
+          description: editForm.description,
+          phone: editForm.phone,
+          website: editForm.website,
+          address: {
+            streetAddress: editForm.streetAddress,
+            locality: editForm.city,
+            postalCode: editForm.postalCode,
+            countryCode: editForm.countryCode,
+          },
+          hours,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Erreur lors de la mise à jour");
+      setSuccessMsg("Profil Google Business mis à jour.");
+      setIsEditModalOpen(false);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setEditSaving(false);
     }
   }
 
@@ -333,468 +371,678 @@ export default function GoogleManagementPage() {
     navigator.clipboard.writeText(text);
     setCopiedField(field);
     setTimeout(() => setCopiedField(null), 2000);
-    log.info("Copied to clipboard", { field });
   }
+
+  function openContentModal() {
+    setIsContentModalOpen(true);
+    loadContentData();
+  }
+
+  function openEditModal() {
+    setIsEditModalOpen(true);
+    loadProDataForEdit();
+  }
+
+  // ── Render helpers ────────────────────────────────────────────────────────
 
   function getVerificationBadge(status: string | null) {
-    switch (status) {
-      case "VERIFIED":
-        return (
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-100 text-green-800">
-            <span className="text-lg">✅</span>
-            <span className="text-sm font-semibold">Vérifié sur Google Maps</span>
-          </div>
-        );
-      case "PENDING":
-        return (
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-yellow-100 text-yellow-800">
-            <span className="text-lg">⏳</span>
-            <span className="text-sm font-semibold">Vérification en cours</span>
-          </div>
-        );
-      case "FAILED":
-        return (
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-100 text-red-800">
-            <span className="text-lg">❌</span>
-            <span className="text-sm font-semibold">Vérification échouée</span>
-          </div>
-        );
-      default:
-        return (
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 text-gray-800">
-            <span className="text-sm font-semibold">Non vérifié</span>
-          </div>
-        );
-    }
+    if (status === "VERIFIED")
+      return <span className="inline-flex items-center gap-1.5 rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700"><span className="h-1.5 w-1.5 rounded-full bg-green-500" />Vérifié</span>;
+    if (status === "PENDING")
+      return <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">En attente</span>;
+    if (status === "FAILED")
+      return <span className="inline-flex items-center gap-1.5 rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">Échoué</span>;
+    return <span className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-600">Non vérifié</span>;
   }
 
-  if (loading === "loading") {
+  // ── Loading / error states ────────────────────────────────────────────────
+
+  if (loadingState === "loading") {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Chargement de la connexion Google...</p>
-        </div>
+      <div className="flex min-h-[300px] items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
   }
 
-  if (loading === "error") {
+  if (loadingState === "error") {
     return (
-      <div className="min-h-screen bg-background p-6">
-        <div className="max-w-2xl mx-auto">
-          <div className="bg-red-50 border border-red-200 rounded-lg p-6">
-            <h2 className="text-xl font-bold text-red-800 mb-2">Erreur de chargement</h2>
-            <p className="text-red-700">{error}</p>
-            <button
-              onClick={loadConnectionStatus}
-              className="mt-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-            >
-              Réessayer
-            </button>
-          </div>
-        </div>
+      <div className="rounded-xl border border-red-200 bg-red-50 p-6">
+        <p className="font-semibold text-red-800">Erreur de chargement</p>
+        <p className="mt-1 text-sm text-red-700">{error}</p>
+        <button onClick={loadConnectionStatus} className="mt-4 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700">Réessayer</button>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="max-w-4xl mx-auto">
-        {/* Dev Mode Banner */}
-        {isDevMode && (
-          <div className="mb-6 bg-amber-50 border border-amber-200 rounded-lg p-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">🧪</span>
-                <div>
-                  <h3 className="text-sm font-bold text-amber-800">
-                    MODE DEVELOPPEMENT (OAuth bypasse)
-                  </h3>
-                  <p className="text-xs text-amber-700">
-                    Affichage de donnees mock pour tester l'interface
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={() => setDevModeOverride(false)}
-                className="px-3 py-1.5 text-xs font-medium bg-amber-100 text-amber-900 rounded-md hover:bg-amber-200 transition-colors"
-              >
-                Passer en mode Production
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Production mode toggle (only shown when NOT in dev mode) */}
-        {!isDevMode && DEV_MODE === false && (
-          <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-sm font-bold text-blue-800">
-                  MODE PRODUCTION (OAuth requis)
-                </h3>
-                <p className="text-xs text-blue-700">
-                  Connexion Google OAuth necessaire pour afficher les donnees
-                </p>
-              </div>
-              <button
-                onClick={() => setDevModeOverride(true)}
-                className="px-3 py-1.5 text-xs font-medium bg-blue-100 text-blue-900 rounded-md hover:bg-blue-200 transition-colors"
-              >
-                Passer en mode Dev
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Google Business Profile</h1>
-          <p className="text-muted-foreground">
-            Gérez votre présence sur Google Maps et Google Search
-          </p>
+    <div className="space-y-6">
+      {/* Dev mode banner */}
+      {isDevMode && (
+        <div className="flex items-center justify-between rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
+          <p className="text-sm font-medium text-amber-800">🧪 Mode développement — données fictives</p>
+          <button onClick={() => setDevModeOverride(false)} className="rounded-md bg-amber-100 px-3 py-1.5 text-xs font-medium text-amber-900 hover:bg-amber-200">Mode production</button>
         </div>
+      )}
+      {!isDevMode && DEV_MODE === false && (
+        <div className="flex items-center justify-between rounded-xl border border-blue-200 bg-blue-50 px-4 py-3">
+          <p className="text-sm font-medium text-blue-800">Mode production (OAuth requis)</p>
+          <button onClick={() => setDevModeOverride(true)} className="rounded-md bg-blue-100 px-3 py-1.5 text-xs font-medium text-blue-900 hover:bg-blue-200">Mode dev</button>
+        </div>
+      )}
 
-        {/* Success/Error Messages */}
-        {successMsg && (
-          <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4">
-            <p className="text-green-800">{successMsg}</p>
-          </div>
-        )}
+      {/* Header */}
+      <div>
+        <h1 className="text-2xl font-bold text-foreground">Google Business Profile</h1>
+        <p className="mt-1 text-sm text-muted-foreground">Gérez votre présence sur Google Maps et Google Search</p>
+      </div>
 
-        {error && (
-          <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
-            <p className="text-red-800">{error}</p>
-          </div>
-        )}
+      {/* Messages */}
+      {successMsg && (
+        <div className="rounded-xl border border-green-200 bg-green-50 px-4 py-3">
+          <p className="text-sm text-green-800">{successMsg}</p>
+        </div>
+      )}
+      {error && (
+        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3">
+          <p className="text-sm text-red-800">{error}</p>
+        </div>
+      )}
 
-        {/* Not Connected State */}
-        {loading === "not_connected" && (
-          <div className="bg-card border border-border rounded-lg p-8 text-center">
-            <div className="text-6xl mb-4">🗺️</div>
-            <h2 className="text-2xl font-bold text-foreground mb-3">
-              Apparaître sur Google Maps
-            </h2>
-            <p className="text-muted-foreground mb-6 max-w-lg mx-auto">
-              Les clients qui cherchent un professionnel dans votre domaine et votre ville vous trouveront directement sur Google Maps.
-            </p>
-            <p className="text-sm text-muted-foreground mb-6">
-              Connexion en 30 secondes • Configuration automatique • Gratuit
-            </p>
-            <button
-              onClick={handleConnectGoogle}
-              className="inline-flex items-center gap-3 px-6 py-3 bg-white text-gray-900 rounded-lg font-semibold hover:bg-gray-100 transition-colors shadow-md"
-            >
-              <svg className="w-6 h-6" viewBox="0 0 24 24">
-                <path
-                  fill="#4285F4"
-                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                />
-                <path
-                  fill="#34A853"
-                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                />
-                <path
-                  fill="#FBBC05"
-                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                />
-                <path
-                  fill="#EA4335"
-                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                />
-              </svg>
-              Connecter mon compte Google
-            </button>
-          </div>
-        )}
+      {/* Not connected */}
+      {loadingState === "not_connected" && (
+        <div className="rounded-xl border border-border bg-surface-container-low p-10 text-center">
+          <div className="mb-4 text-5xl">🗺️</div>
+          <h2 className="text-xl font-bold text-foreground">Apparaître sur Google Maps</h2>
+          <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">
+            Les clients qui cherchent votre métier dans votre ville vous trouveront directement. Connexion en 30 secondes.
+          </p>
+          <button
+            onClick={() => { window.location.href = "/api/auth/google/authorize"; }}
+            className="mt-6 inline-flex items-center gap-2 rounded-lg border border-border bg-surface px-5 py-2.5 text-sm font-semibold text-foreground shadow-sm hover:bg-muted"
+          >
+            <GoogleIcon className="h-4 w-4" />
+            Connecter mon compte Google
+          </button>
+        </div>
+      )}
 
-        {/* Connected State */}
-        {connection && (
-          <div className="space-y-6">
-            {/* Connection Status Card */}
-            <div className="bg-card border border-border rounded-lg p-6">
-              <div className="flex items-start justify-between mb-6">
+      {/* Connected */}
+      {connection && (
+        <div className="space-y-6">
+          {/* Status card */}
+          <div className="rounded-xl border border-border bg-surface-container-low p-6">
+            <div className="flex items-start justify-between">
+              <div className="flex items-center gap-3">
+                <GoogleIcon className="h-6 w-6 flex-shrink-0" />
                 <div>
-                  <h2 className="text-xl font-bold text-foreground mb-2">Statut de connexion</h2>
-                  {getVerificationBadge(connection.verificationStatus)}
-                </div>
-                <div className="text-right text-sm text-muted-foreground">
-                  <div>Connecté le {connection.connectedAt ? new Date(connection.connectedAt).toLocaleDateString("fr-FR") : "N/A"}</div>
+                  <p className="font-semibold text-foreground">
+                    {connection.gbpLocationName || "Compte Google connecté"}
+                  </p>
                   {connection.lastSyncedAt && (
-                    <div>Dernière synchro: {new Date(connection.lastSyncedAt).toLocaleDateString("fr-FR")}</div>
+                    <p className="text-xs text-muted-foreground">
+                      Dernière synchro : {new Date(connection.lastSyncedAt).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
+                    </p>
                   )}
                 </div>
               </div>
-
-              {/* Google Business Info */}
-              {connection.gbpLocationName && (
-                <div className="bg-muted rounded-lg p-4 mb-4">
-                  <h3 className="text-sm font-semibold text-foreground mb-2">Identifiants Google Business</h3>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Account:</span>
-                      <code className="text-xs bg-background px-2 py-1 rounded">{connection.gbpAccountName || "N/A"}</code>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Location:</span>
-                      <code className="text-xs bg-background px-2 py-1 rounded">{connection.gbpLocationName}</code>
-                    </div>
-                    {connection.gbpPlaceId && (
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Place ID:</span>
-                        <code className="text-xs bg-background px-2 py-1 rounded">{connection.gbpPlaceId}</code>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* Actions */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {!connection.gbpLocationName && (
-                  <button
-                    onClick={handleCreateBusiness}
-                    className="px-4 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors"
-                  >
-                    Créer le profil Google Maps
-                  </button>
-                )}
-
-                {connection.gbpLocationName && connection.verificationStatus !== "VERIFIED" && (
-                  <div className="md:col-span-2">
-                    <h3 className="text-sm font-semibold text-foreground mb-3">Demander la vérification</h3>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                      {(["SMS", "PHONE_CALL", "EMAIL", "ADDRESS"] as const).map((method) => (
-                        <button
-                          key={method}
-                          onClick={() => handleRequestVerification(method)}
-                          className="px-3 py-2 bg-secondary text-secondary-foreground rounded-md text-sm hover:bg-secondary/80 transition-colors"
-                        >
-                          {method === "SMS" && "📱 SMS"}
-                          {method === "PHONE_CALL" && "📞 Appel"}
-                          {method === "EMAIL" && "📧 Email"}
-                          {method === "ADDRESS" && "📮 Courrier"}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {connection.gbpLocationName && (
-                  <>
-                    <button
-                      onClick={handleSyncProfile}
-                      disabled={syncingProfile}
-                      className="h-fit px-4 py-3 bg-secondary text-secondary-foreground rounded-lg font-medium hover:bg-secondary/80 transition-colors disabled:opacity-50"
-                    >
-                      {syncingProfile ? "Synchronisation..." : "Synchroniser le profil"}
-                    </button>
-                    
-                    <div className="flex flex-col gap-2 rounded-lg border border-border p-3 bg-muted/30">
-                      <div className="text-sm font-semibold">Synchroniser des photos</div>
-                      <select 
-                        className="w-full text-sm rounded-md border border-border bg-background p-2"
-                        value={selectedRealizationId}
-                        onChange={(e) => setSelectedRealizationId(e.target.value)}
-                      >
-                        <option value="">Images récentes (défaut)</option>
-                        {realizations.map(r => (
-                          <option key={r.id} value={r.id}>{r.title}</option>
-                        ))}
-                      </select>
-                      <button
-                        onClick={handleSyncPhotos}
-                        disabled={syncingPhotos}
-                        className="w-full px-4 py-2 bg-secondary text-secondary-foreground rounded-md font-medium hover:bg-secondary/80 transition-colors disabled:opacity-50 mt-1"
-                      >
-                        {syncingPhotos ? "Synchronisation..." : "Synchroniser"}
-                      </button>
-                    </div>
-                  </>
-                )}
-              </div>
+              {getVerificationBadge(connection.verificationStatus)}
             </div>
 
-            {/* Review Links Card */}
-            {connection.gbpPlaceId && (
-              <div className="bg-card border border-border rounded-lg p-6">
-                <h2 className="text-xl font-bold text-foreground mb-4">Liens d'avis Google</h2>
-                <p className="text-muted-foreground mb-4 text-sm">
-                  Partagez ces liens avec vos clients après chaque projet pour collecter des avis Google.
-                </p>
-
-                <div className="space-y-4">
-                  {/* Review Link */}
-                  <div className="bg-muted rounded-lg p-4">
-                    <div className="flex items-start justify-between mb-2">
-                      <div>
-                        <h3 className="text-sm font-semibold text-foreground mb-1">Lien d'avis client</h3>
-                        <p className="text-xs text-muted-foreground">Pour demander un avis après un projet</p>
-                      </div>
-                      <button
-                        onClick={() => copyToClipboard(connection.reviewLink!, "review")}
-                        className="px-3 py-1 text-xs bg-primary text-primary-foreground rounded hover:bg-primary/90"
-                      >
-                        {copiedField === "review" ? "Copié ✓" : "Copier"}
-                      </button>
-                    </div>
-                    <code className="block text-xs bg-background p-3 rounded break-all">
-                      {connection.reviewLink}
-                    </code>
-                  </div>
-
-                  {/* All Reviews Link */}
-                  <div className="bg-muted rounded-lg p-4">
-                    <div className="flex items-start justify-between mb-2">
-                      <div>
-                        <h3 className="text-sm font-semibold text-foreground mb-1">Voir tous les avis</h3>
-                        <p className="text-xs text-muted-foreground">Lien vers tous vos avis Google Maps</p>
-                      </div>
-                      <button
-                        onClick={() => copyToClipboard(connection.allReviewsLink!, "allReviews")}
-                        className="px-3 py-1 text-xs bg-primary text-primary-foreground rounded hover:bg-primary/90"
-                      >
-                        {copiedField === "allReviews" ? "Copié ✓" : "Copier"}
-                      </button>
-                    </div>
-                    <code className="block text-xs bg-background p-3 rounded break-all">
-                      {connection.allReviewsLink}
-                    </code>
-                  </div>
-                </div>
-
-                {/* WhatsApp Share */}
-                <div className="mt-4 bg-green-50 border border-green-200 rounded-lg p-4">
-                  <h3 className="text-sm font-semibold text-green-800 mb-2">
-                    Envoyer par WhatsApp
-                  </h3>
-                  <p className="text-xs text-green-700 mb-3">
-                    Message pré-rempli avec le lien d'avis Google
-                  </p>
-                  <a
-                    href={`https://wa.me/?text=${encodeURIComponent(
-                      `Merci pour votre confiance ! Si vous êtes satisfait de mon travail, je vous invite à laisser un avis Google : ${connection.reviewLink}`
-                    )}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors text-sm font-medium"
-                  >
-                    Ouvrir WhatsApp
-                  </a>
-                </div>
-              </div>
-            )}
-
-            {/* Reviews Section */}
+            {/* GBP IDs (compact) */}
             {connection.gbpLocationName && (
-              <div className="bg-card border border-border rounded-lg p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <h2 className="text-xl font-bold text-foreground">Derniers avis Google</h2>
-                    <p className="text-sm text-muted-foreground mt-1">Vos avis synchronisés depuis Google Maps</p>
-                  </div>
-                  <button 
-                    onClick={() => loadReviews(true)}
-                    className="text-xs px-3 py-1.5 bg-secondary text-secondary-foreground rounded hover:bg-secondary/80 flex items-center gap-1 font-medium"
-                  >
-                    <span>🔄</span> Actualiser
-                  </button>
-                </div>
-
-                {!reviewsData ? (
-                  <div className="py-8 text-center text-muted-foreground bg-muted rounded-lg border border-dashed border-border text-sm">
-                    <p>Chargement des avis...</p>
-                  </div>
-                ) : (
-                  <div>
-                    <div className="flex items-center gap-5 mb-8 bg-amber-50 text-amber-900 border border-amber-200 rounded-lg p-6">
-                      <div className="text-5xl text-amber-500 font-bold tracking-tighter">
-                        {reviewsData.rating ? reviewsData.rating.toFixed(1) : "N/A"}
-                      </div>
-                      <div>
-                        <div className="flex text-amber-400 text-2xl drop-shadow-sm mb-1">
-                          {Array.from({ length: 5 }).map((_, i) => (
-                            <span key={i}>
-                              {i < Math.round(reviewsData.rating || 0) ? "★" : "☆"}
-                            </span>
-                          ))}
-                        </div>
-                        <p className="text-sm font-medium opacity-80">{reviewsData.totalReviews} avis clients</p>
-                      </div>
-                    </div>
-
-                    {reviewsData.reviews && reviewsData.reviews.length > 0 ? (
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {reviewsData.reviews.map((r, i) => {
-                          const ratingLabel = r.starRating === "FIVE" ? 5 : r.starRating === "FOUR" ? 4 : r.starRating === "THREE" ? 3 : r.starRating === "TWO" ? 2 : 1;
-                          return (
-                            <div key={r.reviewId || i} className="bg-background border border-border rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow">
-                              <div className="flex justify-between items-start mb-4">
-                                <div className="flex items-center gap-3">
-                                  {r.reviewer?.profilePhotoUrl ? (
-                                    <Image
-                                      src={r.reviewer.profilePhotoUrl}
-                                      alt={r.reviewer.displayName}
-                                      width={40}
-                                      height={40}
-                                      className="rounded-full ring-2 ring-primary/10 object-cover"
-                                    />
-                                  ) : (
-                                    <div className="w-10 h-10 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center text-sm font-bold text-gray-500 ring-2 ring-primary/10">
-                                      {r.reviewer?.displayName?.charAt(0) || "?"}
-                                    </div>
-                                  )}
-                                  <div>
-                                    <div className="font-semibold text-sm line-clamp-1">{r.reviewer?.displayName || "Anonyme"}</div>
-                                    <div className="text-xs text-muted-foreground mt-0.5">
-                                      {r.createTime ? new Date(r.createTime).toLocaleDateString("fr-FR", { year: "numeric", month: "long", day: "numeric" }) : ""}
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="flex text-amber-400 text-sm">
-                                  {Array.from({ length: 5 }).map((_, idx) => (
-                                    <span key={idx}>{(idx < ratingLabel) ? "★" : "☆"}</span>
-                                  ))}
-                                </div>
-                              </div>
-                              <p className="text-sm text-foreground mt-3 leading-relaxed break-words">
-                                {r.comment || <span className="italic text-muted-foreground">Aucun commentaire textuel partagé.</span>}
-                              </p>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    ) : (
-                      <div className="py-8 text-center text-muted-foreground bg-muted/50 rounded-lg border border-dashed border-border text-sm">
-                        <p>Aucun avis trouvé pour le moment.</p>
-                      </div>
-                    )}
-                  </div>
-                )}
+              <div className="mt-4 rounded-lg bg-muted/60 px-4 py-3 text-xs text-muted-foreground space-y-1">
+                <div className="flex gap-2"><span className="font-medium w-20">Account</span><code className="truncate">{connection.gbpAccountName}</code></div>
+                <div className="flex gap-2"><span className="font-medium w-20">Location</span><code className="truncate">{connection.gbpLocationName}</code></div>
+                {connection.gbpPlaceId && <div className="flex gap-2"><span className="font-medium w-20">Place ID</span><code className="truncate">{connection.gbpPlaceId}</code></div>}
               </div>
             )}
 
-            {/* Environment Configuration (Debug Info) */}
-            {debugState && !debugState.envConfigured && (
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-                <h2 className="text-lg font-bold text-yellow-800 mb-3">
-                  Configuration manquante
-                </h2>
-                <p className="text-sm text-yellow-700 mb-3">
-                  Certaines variables d'environnement ne sont pas configurees:
-                </p>
-                <ul className="text-sm space-y-1 text-yellow-700">
-                  {!debugState.hasClientId && <li>• GOOGLE_CLIENT_ID</li>}
-                  {!debugState.hasClientSecret && <li>• GOOGLE_CLIENT_SECRET</li>}
-                  {!debugState.hasRedirectUri && <li>• GOOGLE_REDIRECT_URI</li>}
-                  {!debugState.hasPlacesApiKey && <li>• GOOGLE_PLACES_API_KEY</li>}
-                </ul>
+            {/* Action buttons */}
+            {connection.gbpLocationName && (
+              <div className="mt-5 flex flex-wrap gap-3">
+                {/* New: Content selection */}
+                <button
+                  onClick={openContentModal}
+                  className="flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2 text-sm font-medium text-foreground hover:bg-muted transition-colors"
+                >
+                  <span>🖼️</span> Gérer le contenu Google
+                </button>
+
+                {/* New: Edit GMB */}
+                <button
+                  onClick={openEditModal}
+                  className="flex items-center gap-2 rounded-lg bg-kelen-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-kelen-green-700 transition-colors"
+                >
+                  <span>✏️</span> Modifier le profil GMB
+                </button>
+
+                {/* Existing: sync profile */}
+                <button
+                  onClick={handleSyncProfile}
+                  disabled={syncingProfile}
+                  className="flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2 text-sm font-medium text-foreground hover:bg-muted transition-colors disabled:opacity-50"
+                >
+                  {syncingProfile ? <Loader2 className="h-4 w-4 animate-spin" /> : <span>🔄</span>}
+                  Synchroniser le profil
+                </button>
               </div>
+            )}
+
+            {/* Create business if no location yet */}
+            {!connection.gbpLocationName && (
+              <button
+                onClick={async () => {
+                  setError(null); setSuccessMsg(null);
+                  try {
+                    const res = await fetch("/api/google/create-business", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({}) });
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.error || "Erreur");
+                    setSuccessMsg("Profil Google Maps créé. Vérification requise.");
+                    await loadConnectionStatus();
+                  } catch (e: unknown) { setError(e instanceof Error ? e.message : String(e)); }
+                }}
+                className="mt-4 w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-on-primary hover:opacity-90 transition-opacity"
+              >
+                Créer ma fiche Google Maps
+              </button>
             )}
           </div>
+
+          {/* Review links */}
+          {connection.gbpPlaceId && (
+            <div className="rounded-xl border border-border bg-surface-container-low p-6 space-y-4">
+              <h2 className="font-semibold text-foreground">Liens d'avis Google</h2>
+              {[
+                { key: "review", label: "Lien d'avis client", sub: "À envoyer après chaque projet", url: connection.reviewLink },
+                { key: "allReviews", label: "Voir tous les avis", sub: "Tous vos avis Google Maps", url: connection.allReviewsLink },
+              ].map(({ key, label, sub, url }) => url && (
+                <div key={key} className="rounded-lg bg-muted/60 p-4">
+                  <div className="flex items-start justify-between mb-2">
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">{label}</p>
+                      <p className="text-xs text-muted-foreground">{sub}</p>
+                    </div>
+                    <button
+                      onClick={() => copyToClipboard(url, key)}
+                      className="rounded-md bg-primary px-3 py-1 text-xs font-medium text-primary-foreground hover:opacity-90"
+                    >
+                      {copiedField === key ? "Copié ✓" : "Copier"}
+                    </button>
+                  </div>
+                  <code className="block text-xs break-all text-muted-foreground">{url}</code>
+                </div>
+              ))}
+              <a
+                href={`https://wa.me/?text=${encodeURIComponent(`Merci pour votre confiance ! Si vous êtes satisfait de mon travail, je vous invite à laisser un avis Google : ${connection.reviewLink}`)}`}
+                target="_blank" rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700"
+              >
+                Partager par WhatsApp
+              </a>
+            </div>
+          )}
+
+          {/* Reviews */}
+          {connection.gbpLocationName && (
+            <div className="rounded-xl border border-border bg-surface-container-low p-6">
+              <div className="flex items-center justify-between mb-5">
+                <div>
+                  <h2 className="font-semibold text-foreground">Avis Google</h2>
+                  <p className="text-xs text-muted-foreground mt-0.5">Synchronisés depuis Google Maps</p>
+                </div>
+                <button onClick={() => loadReviews(true)} className="flex items-center gap-1 rounded-md border border-border px-3 py-1.5 text-xs font-medium hover:bg-muted">
+                  🔄 Actualiser
+                </button>
+              </div>
+
+              {!reviewsData ? (
+                <div className="py-8 text-center text-sm text-muted-foreground">Chargement…</div>
+              ) : (
+                <>
+                  <div className="mb-6 flex items-center gap-5 rounded-lg bg-amber-50 border border-amber-200 p-5">
+                    <span className="text-4xl font-bold text-amber-500 tracking-tight">
+                      {reviewsData.rating ? reviewsData.rating.toFixed(1) : "—"}
+                    </span>
+                    <div>
+                      <div className="flex text-amber-400 text-xl">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <span key={i}>{i < Math.round(reviewsData.rating ?? 0) ? "★" : "☆"}</span>
+                        ))}
+                      </div>
+                      <p className="text-xs text-amber-700 mt-0.5">{reviewsData.totalReviews} avis</p>
+                    </div>
+                  </div>
+
+                  {reviewsData.reviews.length > 0 ? (
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      {reviewsData.reviews.map((r: any, i: number) => {
+                        const stars = { FIVE: 5, FOUR: 4, THREE: 3, TWO: 2, ONE: 1 }[r.starRating as string] ?? 0;
+                        return (
+                          <div key={r.reviewId ?? i} className="rounded-lg border border-border bg-background p-4">
+                            <div className="flex items-start justify-between gap-3 mb-3">
+                              <div className="flex items-center gap-2">
+                                {r.reviewer?.profilePhotoUrl ? (
+                                  <Image src={r.reviewer.profilePhotoUrl} alt={r.reviewer.displayName} width={36} height={36} className="rounded-full object-cover" />
+                                ) : (
+                                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-muted text-sm font-bold text-muted-foreground">
+                                    {r.reviewer?.displayName?.charAt(0) ?? "?"}
+                                  </div>
+                                )}
+                                <div>
+                                  <p className="text-sm font-semibold leading-tight">{r.reviewer?.displayName ?? "Anonyme"}</p>
+                                  <p className="text-xs text-muted-foreground">
+                                    {r.createTime ? new Date(r.createTime).toLocaleDateString("fr-FR") : ""}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="flex shrink-0 text-amber-400 text-sm">
+                                {Array.from({ length: 5 }).map((_, idx) => <span key={idx}>{idx < stars ? "★" : "☆"}</span>)}
+                              </div>
+                            </div>
+                            <p className="text-sm leading-relaxed text-foreground">
+                              {r.comment ?? <span className="italic text-muted-foreground">Aucun commentaire.</span>}
+                            </p>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <p className="py-6 text-center text-sm text-muted-foreground">Aucun avis trouvé.</p>
+                  )}
+                </>
+              )}
+            </div>
+          )}
+
+          {/* Env config warning */}
+          {debugState && !debugState.envConfigured && (
+            <div className="rounded-xl border border-amber-200 bg-amber-50 p-5">
+              <p className="font-semibold text-amber-800 mb-2">Variables d'environnement manquantes</p>
+              <ul className="text-sm text-amber-700 space-y-1">
+                {!debugState.hasClientId && <li>• GOOGLE_CLIENT_ID</li>}
+                {!debugState.hasClientSecret && <li>• GOOGLE_CLIENT_SECRET</li>}
+                {!debugState.hasRedirectUri && <li>• GOOGLE_REDIRECT_URI</li>}
+                {!debugState.hasPlacesApiKey && <li>• GOOGLE_PLACES_API_KEY</li>}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ── Content selection modal ── */}
+      {isContentModalOpen && (
+        <ContentSelectionModal
+          realizations={realizations}
+          services={services}
+          products={products}
+          loading={contentLoading}
+          saving={contentSaving}
+          selectedIds={selectedRealizationIds}
+          onToggleRealization={(id) => setSelectedRealizationIds(prev => {
+            const next = new Set(prev);
+            next.has(id) ? next.delete(id) : next.add(id);
+            return next;
+          })}
+          onSelectAll={() => setSelectedRealizationIds(new Set(realizations.map(r => r.id)))}
+          onDeselectAll={() => setSelectedRealizationIds(new Set())}
+          onSave={handleSaveContent}
+          onClose={() => { setIsContentModalOpen(false); setSelectedRealizationIds(new Set()); }}
+        />
+      )}
+
+      {/* ── GMB Edit modal ── */}
+      {isEditModalOpen && (
+        <EditGMBModal
+          form={editForm}
+          weekHours={weekHours}
+          saving={editSaving}
+          onChange={(field, value) => setEditForm(prev => ({ ...prev, [field]: value }))}
+          onHoursChange={(day, field, value) => setWeekHours(prev => ({ ...prev, [day]: { ...prev[day], [field]: value } }))}
+          onSave={handleSaveGMB}
+          onClose={() => setIsEditModalOpen(false)}
+        />
+      )}
+    </div>
+  );
+}
+
+// ── ContentSelectionModal ──────────────────────────────────────────────────────
+
+type ContentTab = "realizations" | "services" | "products";
+
+function ContentSelectionModal({
+  realizations,
+  services,
+  products,
+  loading,
+  saving,
+  selectedIds,
+  onToggleRealization,
+  onSelectAll,
+  onDeselectAll,
+  onSave,
+  onClose,
+}: {
+  realizations: RealizationItem[];
+  services: ServiceItem[];
+  products: ProductItem[];
+  loading: boolean;
+  saving: boolean;
+  selectedIds: Set<string>;
+  onToggleRealization: (id: string) => void;
+  onSelectAll: () => void;
+  onDeselectAll: () => void;
+  onSave: () => void;
+  onClose: () => void;
+}) {
+  const [tab, setTab] = useState<ContentTab>("realizations");
+
+  return (
+    <Modal title="Contenu affiché sur Google" onClose={onClose}>
+      <p className="mb-4 text-sm text-muted-foreground">
+        Sélectionnez les réalisations dont vous souhaitez synchroniser les photos vers Google Business. Les services et produits sont affichés à titre informatif.
+      </p>
+
+      {/* Tabs */}
+      <div className="flex gap-1 rounded-xl bg-muted/60 p-1 mb-5">
+        {([
+          { key: "realizations", label: `Réalisations (${realizations.length})` },
+          { key: "services", label: `Services (${services.length})` },
+          { key: "products", label: `Produits (${products.length})` },
+        ] as { key: ContentTab; label: string }[]).map(({ key, label }) => (
+          <button
+            key={key}
+            onClick={() => setTab(key)}
+            className={`flex-1 rounded-lg py-1.5 text-xs font-medium transition-colors ${tab === key ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {loading ? (
+        <div className="flex justify-center py-10"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
+      ) : (
+        <>
+          {/* Realizations tab */}
+          {tab === "realizations" && (
+            <div className="space-y-3">
+              <div className="flex gap-2 justify-end">
+                <button onClick={onSelectAll} className="text-xs text-primary hover:underline">Tout sélectionner</button>
+                <span className="text-xs text-muted-foreground">·</span>
+                <button onClick={onDeselectAll} className="text-xs text-muted-foreground hover:underline">Tout désélectionner</button>
+              </div>
+              {realizations.length === 0 ? (
+                <p className="py-8 text-center text-sm text-muted-foreground">Aucune réalisation trouvée.</p>
+              ) : (
+                <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
+                  {realizations.map((r) => (
+                    <label key={r.id} className="flex items-center gap-3 rounded-lg border border-border bg-background p-3 cursor-pointer hover:bg-muted/40 transition-colors">
+                      <input
+                        type="checkbox"
+                        checked={selectedIds.has(r.id)}
+                        onChange={() => onToggleRealization(r.id)}
+                        className="h-4 w-4 rounded accent-kelen-green-600"
+                      />
+                      {r.mainImageUrl ? (
+                        <div className="h-12 w-12 flex-shrink-0 rounded-md overflow-hidden bg-muted">
+                          <Image src={r.mainImageUrl} alt={r.title} width={48} height={48} className="h-full w-full object-cover" />
+                        </div>
+                      ) : (
+                        <div className="h-12 w-12 flex-shrink-0 rounded-md bg-muted flex items-center justify-center text-xl">🖼️</div>
+                      )}
+                      <span className="text-sm font-medium text-foreground flex-1 line-clamp-2">{r.title}</span>
+                    </label>
+                  ))}
+                </div>
+              )}
+              {selectedIds.size > 0 && (
+                <p className="text-xs text-muted-foreground text-center">{selectedIds.size} réalisation(s) sélectionnée(s) — leurs photos seront envoyées sur Google.</p>
+              )}
+            </div>
+          )}
+
+          {/* Services tab */}
+          {tab === "services" && (
+            <div className="max-h-72 overflow-y-auto space-y-2">
+              {services.length === 0 ? (
+                <p className="py-8 text-center text-sm text-muted-foreground">Aucun service trouvé.</p>
+              ) : services.map((s) => (
+                <div key={s.id} className="flex items-center gap-3 rounded-lg border border-border bg-background p-3">
+                  <span className="text-lg">🔧</span>
+                  <div>
+                    <p className="text-sm font-medium text-foreground">{s.title}</p>
+                    {s.category && <p className="text-xs text-muted-foreground">{s.category}</p>}
+                  </div>
+                </div>
+              ))}
+              <p className="text-xs text-muted-foreground text-center pt-2">Les services sont visibles sur votre fiche GMB via la synchronisation du profil.</p>
+            </div>
+          )}
+
+          {/* Products tab */}
+          {tab === "products" && (
+            <div className="max-h-72 overflow-y-auto space-y-2">
+              {products.length === 0 ? (
+                <p className="py-8 text-center text-sm text-muted-foreground">Aucun produit trouvé.</p>
+              ) : products.map((p) => (
+                <div key={p.id} className="flex items-center gap-3 rounded-lg border border-border bg-background p-3">
+                  <span className="text-lg">📦</span>
+                  <div>
+                    <p className="text-sm font-medium text-foreground">{p.title}</p>
+                    {p.category && <p className="text-xs text-muted-foreground">{p.category}</p>}
+                  </div>
+                </div>
+              ))}
+              <p className="text-xs text-muted-foreground text-center pt-2">Les produits sont visibles sur votre fiche GMB via la synchronisation du profil.</p>
+            </div>
+          )}
+        </>
+      )}
+
+      <div className="mt-6 flex justify-end gap-3">
+        <button onClick={onClose} className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground hover:bg-muted">Annuler</button>
+        {tab === "realizations" && (
+          <button
+            onClick={onSave}
+            disabled={saving || selectedIds.size === 0}
+            className="flex items-center gap-2 rounded-lg bg-kelen-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-kelen-green-700 disabled:opacity-50"
+          >
+            {saving && <Loader2 className="h-4 w-4 animate-spin" />}
+            Synchroniser {selectedIds.size > 0 ? `(${selectedIds.size})` : ""}
+          </button>
         )}
       </div>
+    </Modal>
+  );
+}
+
+// ── EditGMBModal ───────────────────────────────────────────────────────────────
+
+function EditGMBModal({
+  form,
+  weekHours,
+  saving,
+  onChange,
+  onHoursChange,
+  onSave,
+  onClose,
+}: {
+  form: { title: string; description: string; phone: string; website: string; streetAddress: string; city: string; postalCode: string; countryCode: string };
+  weekHours: WeekHours;
+  saving: boolean;
+  onChange: (field: string, value: string) => void;
+  onHoursChange: (day: string, field: string, value: string | boolean) => void;
+  onSave: () => void;
+  onClose: () => void;
+}) {
+  const [hoursOpen, setHoursOpen] = useState(false);
+  const descLen = form.description.length;
+
+  return (
+    <Modal title="Modifier le profil Google Business" onClose={onClose} wide>
+      <div className="space-y-5">
+        {/* Basic info */}
+        <fieldset className="space-y-4">
+          <legend className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Informations générales</legend>
+
+          <FormField label="Nom de l'établissement">
+            <input
+              type="text"
+              value={form.title}
+              onChange={e => onChange("title", e.target.value)}
+              className="input-field"
+            />
+          </FormField>
+
+          <FormField label={`Description (${descLen}/750)`}>
+            <textarea
+              value={form.description}
+              onChange={e => onChange("description", e.target.value)}
+              maxLength={750}
+              rows={4}
+              className="input-field resize-none"
+            />
+          </FormField>
+
+          <div className="grid grid-cols-2 gap-4">
+            <FormField label="Téléphone">
+              <input type="tel" value={form.phone} onChange={e => onChange("phone", e.target.value)} className="input-field" placeholder="+221 77 000 00 00" />
+            </FormField>
+            <FormField label="Site web">
+              <input type="url" value={form.website} onChange={e => onChange("website", e.target.value)} className="input-field" />
+            </FormField>
+          </div>
+        </fieldset>
+
+        {/* Address */}
+        <fieldset className="space-y-4">
+          <legend className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Adresse</legend>
+
+          <FormField label="Rue / Quartier">
+            <input type="text" value={form.streetAddress} onChange={e => onChange("streetAddress", e.target.value)} className="input-field" />
+          </FormField>
+
+          <div className="grid grid-cols-3 gap-4">
+            <FormField label="Ville" className="col-span-2">
+              <input type="text" value={form.city} onChange={e => onChange("city", e.target.value)} className="input-field" />
+            </FormField>
+            <FormField label="Code postal">
+              <input type="text" value={form.postalCode} onChange={e => onChange("postalCode", e.target.value)} className="input-field" />
+            </FormField>
+          </div>
+
+          <FormField label="Code pays">
+            <input type="text" value={form.countryCode} onChange={e => onChange("countryCode", e.target.value)} className="input-field" maxLength={2} style={{ textTransform: "uppercase" }} />
+          </FormField>
+        </fieldset>
+
+        {/* Hours */}
+        <fieldset>
+          <button
+            type="button"
+            onClick={() => setHoursOpen(o => !o)}
+            className="flex w-full items-center justify-between text-xs font-semibold uppercase tracking-wide text-muted-foreground hover:text-foreground"
+          >
+            <span>Horaires d'ouverture</span>
+            {hoursOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+          </button>
+
+          {hoursOpen && (
+            <div className="mt-3 space-y-2">
+              {DAYS.map(({ key, label }) => {
+                const day = weekHours[key];
+                return (
+                  <div key={key} className="flex items-center gap-3">
+                    <label className="flex items-center gap-2 w-28 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={day.open}
+                        onChange={e => onHoursChange(key, "open", e.target.checked)}
+                        className="h-4 w-4 rounded accent-kelen-green-600"
+                      />
+                      <span className="text-sm font-medium text-foreground">{label}</span>
+                    </label>
+                    {day.open ? (
+                      <div className="flex items-center gap-2 flex-1">
+                        <input
+                          type="time"
+                          value={day.openTime}
+                          onChange={e => onHoursChange(key, "openTime", e.target.value)}
+                          className="input-field w-28 text-sm"
+                        />
+                        <span className="text-muted-foreground text-sm">→</span>
+                        <input
+                          type="time"
+                          value={day.closeTime}
+                          onChange={e => onHoursChange(key, "closeTime", e.target.value)}
+                          className="input-field w-28 text-sm"
+                        />
+                      </div>
+                    ) : (
+                      <span className="text-sm text-muted-foreground italic">Fermé</span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </fieldset>
+      </div>
+
+      <div className="mt-6 flex justify-end gap-3">
+        <button onClick={onClose} className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground hover:bg-muted">Annuler</button>
+        <button
+          onClick={onSave}
+          disabled={saving}
+          className="flex items-center gap-2 rounded-lg bg-kelen-green-600 px-5 py-2 text-sm font-semibold text-white hover:bg-kelen-green-700 disabled:opacity-50"
+        >
+          {saving && <Loader2 className="h-4 w-4 animate-spin" />}
+          Enregistrer sur Google
+        </button>
+      </div>
+    </Modal>
+  );
+}
+
+// ── Shared primitives ─────────────────────────────────────────────────────────
+
+function Modal({ title, children, onClose, wide }: { title: string; children: React.ReactNode; onClose: () => void; wide?: boolean }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+      <div className={`relative w-full ${wide ? "max-w-2xl" : "max-w-lg"} max-h-[90vh] overflow-y-auto rounded-2xl border border-border bg-background shadow-xl`}>
+        <div className="sticky top-0 flex items-center justify-between border-b border-border bg-background px-6 py-4">
+          <h2 className="font-semibold text-foreground">{title}</h2>
+          <button onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors">
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+        <div className="px-6 py-5">{children}</div>
+      </div>
     </div>
+  );
+}
+
+function FormField({ label, children, className }: { label: string; children: React.ReactNode; className?: string }) {
+  return (
+    <div className={className}>
+      <label className="block text-xs font-medium text-muted-foreground mb-1.5">{label}</label>
+      {children}
+    </div>
+  );
+}
+
+// Tailwind class for consistent inputs — referenced via className="input-field"
+// Define globally in globals.css or use inline styles. Here we rely on the project's existing base input styles.
+
+function GoogleIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+      <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+    </svg>
   );
 }

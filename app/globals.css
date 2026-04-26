@@ -2,6 +2,12 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+@layer components {
+  .input-field {
+    @apply w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-kelen-green-500/30 transition-shadow;
+  }
+}
+
 /* ============================================
    KELEN — West African Flag Inspired Palette
    Green (#009639) · Yellow (#FCCF00) · Red (#CE1126)
