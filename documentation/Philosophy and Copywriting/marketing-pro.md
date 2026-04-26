@@ -77,14 +77,15 @@ Kelen     Comment ça marche · Tarifs · FAQ · Contact      [Se connecter]  [C
 > Vos réalisations partent en photo sur WhatsApp. Parfois à un client, parfois dans un groupe.
 > Elles disparaissent dans une conversation. Personne ne peut les retrouver.
 >
-> Votre réputation, elle, circule par le bouche-à-oreille — ce qui veut dire qu'elle dépend
-> entièrement de ce que les autres disent de vous, quand ils s'en souviennent.
+> Votre réputation circule par le bouche-à-oreille —
+> ce qui veut dire qu'elle dépend de ce que les autres disent de vous, quand ils s'en souviennent.
 >
-> Un client qui ne vous connaît pas encore ne peut pas vous faire confiance
-> s'il ne peut pas voir votre travail.
+> Et quand un nouveau client vous contacte, vous devez vous vendre.
+> Expliquer qui vous êtes. Convaincre. Rassurer.
+> La plupart des professionnels sont excellents dans leur métier — pas dans ce discours.
 >
-> Ce n'est pas un problème de compétence.
-> C'est un problème de visibilité documentée.
+> Vos images convainquent mieux que vos mots.
+> Encore faut-il qu'elles existent quelque part.
 
 ---
 
@@ -105,17 +106,19 @@ hero (photo de réalisation), galerie portfolio, section À propos, section Cont
 > Votre site web. Prêt immédiatement.
 
 **Corps :**
-> Une page structurée pour votre métier — pas un CV, une page de conversion.
->
-> Ce que vos clients voient en premier : votre meilleure réalisation.
+> Ce que vos clients voient en premier : votre meilleure réalisation — pas votre portrait, pas un slogan.
 > Ce qu'ils trouvent ensuite : vos projets, vos services, votre contact.
 >
+> Un client qui consulte votre profil avant de vous appeler arrive déjà convaincu.
+> Il sait ce que vous faites. Il voit ce que vous avez livré.
+> La conversation commence au bon endroit — sur son projet, pas sur votre légitimité.
+>
 > URL permanente : `kelen.com/votre-nom`
-> Partageable par lien. Toujours à jour quand vous modifiez votre profil.
+> Partageable par lien, sur WhatsApp, par email, en rendez-vous.
+> Toujours à jour quand vous modifiez votre profil.
 >
 > Avec l'abonnement : indexé sur Google.
-> Un plombier à Dakar qui paie 3 000 FCFA/mois apparaît sur Google quand quelqu'un
-> cherche un plombier à Dakar.
+> Un professionnel abonné apparaît quand quelqu'un cherche son métier dans sa ville.
 
 ---
 
