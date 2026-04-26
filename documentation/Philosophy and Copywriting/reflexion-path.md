@@ -330,6 +330,40 @@ TRANSVERSAL
 
 ---
 
+### Étape 13 — Vision long terme documentée : business intelligence pour les PME africaines (2026-04-26)
+
+**Contexte :** Discussion stratégique sur l'objectif ultime de Kelen. La vision BI n'était pas explicitée dans les documents — uniquement évoquée par la mention "collecte de données" dans la séquence de l'écosystème.
+
+**La vision articulée :**
+
+La business intelligence — l'analyse de données à grande échelle pour prendre de meilleures décisions commerciales — est ce qui a généré des milliards pour Facebook, Google et Wall Street dans les années 2000. Cette technologie est restée inaccessible aux PME. L'objectif de Kelen est de la rendre disponible aux PME africaines.
+
+Ce que la BI donnera aux PME :
+- Adapter leur offre à la volatilité du marché en temps réel
+- Proposer le meilleur prix selon le contexte
+- Améliorer l'offre de service à partir des données agrégées
+
+**Conséquence sur la stratégie produit :**
+
+L'offre gratuite est le mécanisme d'acquisition de la base de données — pas un produit dégradé. Plus elle est irrésistible, plus la base est dense, plus l'intelligence est précieuse. Le seuil de frictions du gratuit doit rester le plus bas possible.
+
+L'offre payante finance l'opération et donne de l'amplification externe (Google, GMB). Elle n'est pas la fin en soi.
+
+**Conditions de lancement BI :** Base de données suffisamment dense et transversale pour produire une analyse vendable. Pas de lancement prématuré.
+
+**Documents mis à jour :**
+- [x] `01-philosophie-positionnement.md` — section "Vision à long terme" ajoutée
+- [x] `07-reference-global.md` — section 9 "Kelen-Pro dans l'écosystème" enrichie
+
+**Décisions clés de cette étape :**
+| Date | Décision | Raison |
+|------|----------|--------|
+| 2026-04-26 | Vision BI documentée dans les docs stratégiques internes uniquement | Elle n'est pas publique — conditionne les décisions produit sans créer d'attentes prématurées |
+| 2026-04-26 | L'offre gratuite est explicitement repositionnée comme moteur d'acquisition de données | Change la façon d'évaluer les décisions de feature split free/paid |
+| 2026-04-26 | Condition de lancement BI : densité de données suffisante — pas de date fixée | Évite de promettre quelque chose que les données ne peuvent pas encore tenir |
+
+---
+
 ## Questions ouvertes
 
 *(à remplir au fil de la réflexion)*

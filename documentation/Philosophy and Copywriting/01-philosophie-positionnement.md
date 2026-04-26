@@ -53,6 +53,40 @@ Kelen-Pro est le point d'entrée. Les données collectées, les profils construi
 
 ---
 
+## La vision à long terme — usage interne uniquement
+
+**L'objectif final de Kelen est de construire une infrastructure de business intelligence pour les PME africaines.**
+
+La business intelligence — l'analyse de données à grande échelle pour prendre de meilleures décisions commerciales — est ce qui a généré des milliards pour Facebook, Google, et les grandes firmes de Wall Street dans les années 2000. Cette technologie est restée inaccessible aux petites et moyennes entreprises, en particulier en Afrique.
+
+Kelen a vocation à la rendre disponible aux PME.
+
+**Le mécanisme :**
+
+Pour produire de l'intelligence, il faut d'abord une base de données transversale et dense. Cette base se constitue par l'adoption massive — professionnels qui documentent leurs projets, clients qui évaluent, collaborations qui génèrent des données relationnelles.
+
+Chaque inscription, chaque projet documenté, chaque recommandation vérifiée, chaque interaction client-professionnel est un point de données. La valeur de la plateforme croît avec le volume et la diversité de ces données.
+
+**Conséquence directe sur le produit :**
+
+L'offre gratuite n'est pas un produit dégradé. C'est le mécanisme d'acquisition de la base de données. Plus l'offre gratuite est irrésistible, plus le nombre de professionnels actifs est élevé, plus la base de données est riche, plus l'intelligence produite est précieuse.
+
+L'offre payante finance l'opération et donne aux professionnels accès à des outils d'amplification externe (Google, GMB) et à des fonctionnalités avancées. Elle n'est pas la fin en soi.
+
+**Ce que la business intelligence permettra aux PME :**
+
+- S'adapter à la volatilité du marché (prix des matériaux, demande saisonnière, concurrence locale)
+- Proposer l'offre la plus compétitive au bon moment selon le contexte
+- Améliorer l'offre de service à partir des données agrégées de satisfaction client
+
+**Ce qui conditionne le lancement de l'offre BI :**
+
+L'offre BI ne sera pas publique tant que la base de données n'est pas suffisamment dense pour produire une analyse vendable. Elle sera construite, testée en interne, puis lancée quand les données le permettent.
+
+*Cette vision n'est jamais communiquée publiquement sauf dans les contextes presse, partenariats stratégiques ou levée de fonds.*
+
+---
+
 ## Ce que le professionnel obtient
 
 - **Un site web** — simple, professionnel, indexé sur Google

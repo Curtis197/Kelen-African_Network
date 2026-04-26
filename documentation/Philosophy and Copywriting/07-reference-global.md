@@ -175,9 +175,19 @@ Ces trois sorties sont la proposition de valeur centrale pour le professionnel. 
 
 Kelen-Pro est la première brique d'un système plus large. Ne pas le présenter comme un produit isolé dans les communications qui évoquent la vision long terme.
 
-**Séquence envisagée :** Kelen-Pro → collecte de données → Kelen-Design → Kelen-Market → Kelen-Restaurant
+**L'objectif final : business intelligence pour les PME africaines.**
 
-Cette vision est interne — elle n'est pas communiquée publiquement sauf dans les contextes presse ou partenariats.
+La business intelligence est ce qui a généré des milliards pour Facebook, Google et les grandes firmes financières dans les années 2000. Kelen a pour ambition de rendre cette technologie accessible aux PME africaines — leur permettre de s'adapter à la volatilité du marché, d'optimiser leur offre en temps réel, et d'améliorer leur service à partir de données agrégées.
+
+**Le mécanisme d'accumulation :**
+
+La base de données transversale se constitue par l'adoption massive. Chaque professionnel inscrit, chaque projet documenté, chaque recommandation, chaque collaboration est un point de données. L'offre gratuite est le moteur de cette accumulation — elle ne doit pas avoir de frictions inutiles.
+
+**Séquence envisagée :** Kelen-Pro → base de données dense → module BI (analyse, rapports sectoriels, intelligence marché) → Kelen-Design → Kelen-Market → Kelen-Restaurant
+
+**Condition de lancement du module BI :** La base de données doit être suffisamment dense et transversale pour produire une analyse vendable. Le module ne sera pas lancé prématurément.
+
+*Cette vision est interne — elle n'est pas communiquée publiquement sauf dans les contextes presse, partenariats stratégiques ou levée de fonds.*
 
 ---
 
