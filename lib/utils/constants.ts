@@ -149,15 +149,22 @@ export const FILE_LIMITS = {
 // Navigation
 export const MARKETING_NAV = [
   { href: "/comment-ca-marche", label: "Comment ça marche" },
-  { href: "/pour-les-pros", label: "Pour les pros" },
-  { href: "/a-propos", label: "À propos" },
+  { href: "/faq", label: "FAQ" },
+  { href: "/contact", label: "Contact" },
+] as const;
+
+export const MARKETING_PRO_NAV = [
+  { href: "/pour-les-professionnels/comment-ca-marche", label: "Comment ça marche" },
+  { href: "/pour-les-professionnels/tarifs", label: "Tarifs" },
+  { href: "/pour-les-professionnels/faq", label: "FAQ" },
+  { href: "/pour-les-professionnels/contact", label: "Contact" },
 ] as const;
 
 export const FOOTER_LINKS = {
   plateforme: [
     { href: "/recherche", label: "Rechercher" },
     { href: "/comment-ca-marche", label: "Comment ça marche" },
-    { href: "/pour-les-pros", label: "Pour les pros" },
+    { href: "/pour-les-professionnels", label: "Pour les professionnels" },
   ],
   legal: [
     { href: "/mentions-legales", label: "Mentions légales" },

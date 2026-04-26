@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
-export default function TarifsPage() {
-  redirect("/pour-les-pros");
+export default function TarifsLegacyPage() {
+  redirect("/pour-les-professionnels/tarifs");
 }
