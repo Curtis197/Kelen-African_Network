@@ -243,6 +243,12 @@ Les sujets suivants feront l'objet de documents séparés :
 - **Copywriting pour les partenaires** — chambres de commerce, organisations partenaires
 - **Vision Kelen-Design / Kelen-Market** — quand ces modules entrent en développement
 
+## Documents techniques associés
+
+| Fichier | Contenu |
+|---------|---------|
+| `FEATURES/physical-marketing-tools.md` | Spec d'implémentation — carte de visite, flyer A5, autocollant QR code — outils marketing physiques pour pros abonnés |
+
 ---
 
 ## Versioning
