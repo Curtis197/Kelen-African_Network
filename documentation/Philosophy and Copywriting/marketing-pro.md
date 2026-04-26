@@ -319,10 +319,13 @@ Collaboration client            —               ✓
 ---
 
 **J'ai déjà Instagram.**
-> Instagram n'est pas indexé sur Google.
-> Quand un client cherche "électricien Abidjan", votre compte Instagram n'apparaît pas.
-> Kelen génère une page avec votre URL propre, indexée sur Google, structurée pour votre métier.
-> Vous pouvez garder vos réseaux. Ce sont deux usages différents.
+> Instagram demande de produire du contenu en continu — des stories, des posts, de l'engagement.
+> C'est un métier en soi. Et il récompense le spectacle, pas nécessairement la compétence.
+>
+> Kelen ne demande pas de produire du contenu. Il demande de documenter votre travail.
+> Vous ajoutez un projet quand vous en terminez un. C'est tout.
+>
+> Votre travail est le contenu. Vous n'avez pas à devenir créateur pour être visible.
 
 ---
 
