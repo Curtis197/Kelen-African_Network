@@ -79,6 +79,7 @@ async function fullPortfolioPdf(supabase: any, professionalId: string, userId: s
     { data: realizationRows },
     { data: serviceRows },
     { data: productRows },
+    { data: reviewsCache },
   ] = await Promise.all([
     supabase
       .from("professional_realizations")
@@ -98,6 +99,12 @@ async function fullPortfolioPdf(supabase: any, professionalId: string, userId: s
       .select("id, title, description, price, category")
       .eq("professional_id", professionalId)
       .eq("is_pdf_included", true),
+
+    supabase
+      .from("pro_google_reviews_cache")
+      .select("rating, total_reviews, reviews, featured_review_ids")
+      .eq("pro_id", professionalId)
+      .maybeSingle(),
   ]);
 
   const realizations = realizationRows ?? [];
@@ -133,6 +140,15 @@ async function fullPortfolioPdf(supabase: any, professionalId: string, userId: s
   }).join("");
 
   const totalItems = realizations.length + services.length + products.length;
+
+  // Featured Google reviews for the PDF
+  const allReviews: any[] = reviewsCache?.reviews ?? [];
+  const featuredIds: string[] = reviewsCache?.featured_review_ids ?? [];
+  const featuredReviews = featuredIds.length > 0
+    ? allReviews.filter((r: any) => featuredIds.includes(r.author_name ?? ""))
+    : [];
+  const reviewRating: number | null = reviewsCache?.rating ?? null;
+  const totalReviews: number = reviewsCache?.total_reviews ?? 0;
 
   const body = `
     <!-- Cover -->
@@ -182,6 +198,34 @@ async function fullPortfolioPdf(supabase: any, professionalId: string, userId: s
             ${p.category ? `<span class="card-tag">${escHtml(p.category)}</span>` : ""}
             ${p.description ? `<p class="card-desc">${escHtml(p.description)}</p>` : ""}
             ${p.price ? `<p class="card-price">${escHtml(String(p.price))}</p>` : ""}
+          </div>`).join("")}
+      </div>
+    </div>` : ""}
+
+    ${featuredReviews.length > 0 ? `
+    <!-- Google Reviews -->
+    <div class="page page-break">
+      <div class="section-header">Avis Google vérifiés</div>
+      ${reviewRating ? `
+      <div class="review-header">
+        <span class="review-rating">${reviewRating.toFixed(1)}</span>
+        <div>
+          <div class="review-stars">${[1,2,3,4,5].map(s => `<span class="${s <= Math.round(reviewRating) ? 'star-filled' : 'star-empty'}">★</span>`).join("")}</div>
+          <p class="review-count">${totalReviews} avis Google</p>
+        </div>
+      </div>` : ""}
+      <div class="review-grid">
+        ${featuredReviews.map((r: any) => `
+          <div class="review-card">
+            <div class="review-top">
+              <div class="reviewer-avatar">${escHtml((r.author_name ?? "?").charAt(0).toUpperCase())}</div>
+              <div class="reviewer-info">
+                <p class="reviewer-name">${escHtml(r.author_name ?? "Anonyme")}</p>
+                <p class="reviewer-date">${escHtml(r.relative_time_description ?? "")}</p>
+              </div>
+              <div class="review-stars-sm">${[1,2,3,4,5].map(s => `<span class="${s <= (r.rating ?? 0) ? 'star-filled' : 'star-empty'}">★</span>`).join("")}</div>
+            </div>
+            ${r.text ? `<p class="review-text">${escHtml(r.text)}</p>` : ""}
           </div>`).join("")}
       </div>
     </div>` : ""}
@@ -365,6 +409,23 @@ function buildHtml(title: string, body: string): string {
     }
     .card-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.6; margin-bottom: 0.5rem; }
     .card-price { font-size: 0.9rem; font-weight: 700; color: var(--green); margin-top: 0.5rem; }
+
+    /* ── Google Reviews ── */
+    .review-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem; background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 0.9rem 1.1rem; }
+    .review-rating { font-size: 2.2rem; font-weight: 900; color: #f59e0b; }
+    .review-stars { display: flex; font-size: 1.1rem; }
+    .review-count { font-size: 0.8rem; color: var(--muted); margin-top: 0.2rem; }
+    .star-filled { color: #f59e0b; }
+    .star-empty { color: #d1d5db; }
+    .review-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.9rem; }
+    .review-card { border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem 1rem; background: var(--surface); }
+    .review-top { display: flex; align-items: flex-start; gap: 0.6rem; margin-bottom: 0.6rem; }
+    .reviewer-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--green); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; flex-shrink: 0; }
+    .reviewer-info { flex: 1; min-width: 0; }
+    .reviewer-name { font-size: 0.82rem; font-weight: 700; color: var(--text); }
+    .reviewer-date { font-size: 0.7rem; color: var(--muted); margin-top: 0.1rem; }
+    .review-stars-sm { display: flex; font-size: 0.75rem; flex-shrink: 0; }
+    .review-text { font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
 
     /* ── Back cover ── */
     .back-cover {

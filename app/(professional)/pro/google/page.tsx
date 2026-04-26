@@ -114,7 +114,10 @@ export default function GoogleManagementPage() {
   const [syncingProfile, setSyncingProfile] = useState(false);
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [devModeOverride, setDevModeOverride] = useState<boolean | null>(null);
-  const [reviewsData, setReviewsData] = useState<{ rating: number | null; totalReviews: number; reviews: any[] } | null>(null);
+  const [reviewsData, setReviewsData] = useState<{ rating: number | null; totalReviews: number; reviews: any[]; featuredAuthorNames: string[] } | null>(null);
+  const [selectionMode, setSelectionMode] = useState(false);
+  const [featuredSelection, setFeaturedSelection] = useState<Set<string>>(new Set());
+  const [savingFeatured, setSavingFeatured] = useState(false);
 
   // Modal states
   const [isContentModalOpen, setIsContentModalOpen] = useState(false);
@@ -190,7 +193,11 @@ export default function GoogleManagementPage() {
       const res = await fetch(force ? "/api/google/reviews?refresh=1" : "/api/google/reviews");
       if (res.ok) {
         const data = await res.json();
-        if (data.success) setReviewsData(data);
+        if (data.success) {
+          setReviewsData(data);
+          // Initialise selection from saved featured list
+          setFeaturedSelection(new Set<string>(data.featuredAuthorNames ?? []));
+        }
       }
     } catch (err) {
       log.error("Failed to load reviews", { error: err });
@@ -364,6 +371,48 @@ export default function GoogleManagementPage() {
       setError(err instanceof Error ? err.message : String(err));
     } finally {
       setEditSaving(false);
+    }
+  }
+
+  // Derive a stable author key that works for both API formats
+  function reviewAuthorName(r: any): string {
+    return r.author_name ?? r.reviewer?.displayName ?? "";
+  }
+
+  function toggleFeatured(r: any) {
+    const name = reviewAuthorName(r);
+    if (!name) return;
+    setFeaturedSelection(prev => {
+      const next = new Set(prev);
+      next.has(name) ? next.delete(name) : next.add(name);
+      return next;
+    });
+  }
+
+  async function handleSaveFeatured() {
+    setSavingFeatured(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/google/feature-reviews", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ authorNames: Array.from(featuredSelection) }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Erreur");
+      const count = featuredSelection.size;
+      setSuccessMsg(
+        count === 0
+          ? "Sélection réinitialisée — tous les avis seront affichés."
+          : `${count} avis sélectionné${count > 1 ? "s" : ""} — affichés sur le site et le portfolio.`
+      );
+      setSelectionMode(false);
+      // Refresh reviewsData to reflect saved state
+      await loadReviews();
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setSavingFeatured(false);
     }
   }
 
@@ -591,10 +640,64 @@ export default function GoogleManagementPage() {
                   <h2 className="font-semibold text-foreground">Avis Google</h2>
                   <p className="text-xs text-muted-foreground mt-0.5">Synchronisés depuis Google Maps</p>
                 </div>
-                <button onClick={() => loadReviews(true)} className="flex items-center gap-1 rounded-md border border-border px-3 py-1.5 text-xs font-medium hover:bg-muted">
-                  🔄 Actualiser
-                </button>
+                <div className="flex items-center gap-2">
+                  {reviewsData && reviewsData.reviews.length > 0 && (
+                    <button
+                      onClick={() => {
+                        if (selectionMode) {
+                          // Cancel: restore saved selection
+                          setFeaturedSelection(new Set<string>(reviewsData.featuredAuthorNames ?? []));
+                        }
+                        setSelectionMode(m => !m);
+                      }}
+                      className={`rounded-md border px-3 py-1.5 text-xs font-medium transition-colors ${
+                        selectionMode
+                          ? "border-kelen-green-600 bg-kelen-green-50 text-kelen-green-700"
+                          : "border-border hover:bg-muted"
+                      }`}
+                    >
+                      {selectionMode ? "Annuler" : "✦ Sélectionner les avis"}
+                    </button>
+                  )}
+                  <button onClick={() => loadReviews(true)} className="flex items-center gap-1 rounded-md border border-border px-3 py-1.5 text-xs font-medium hover:bg-muted">
+                    🔄 Actualiser
+                  </button>
+                </div>
               </div>
+
+              {/* Selection mode banner */}
+              {selectionMode && (
+                <div className="mb-4 flex items-center justify-between rounded-lg border border-kelen-green-200 bg-kelen-green-50 px-4 py-3">
+                  <p className="text-sm text-kelen-green-800">
+                    {featuredSelection.size === 0
+                      ? "Aucun avis sélectionné — tous seront affichés."
+                      : `${featuredSelection.size} avis sélectionné${featuredSelection.size > 1 ? "s" : ""} — affichés sur le site et le portfolio.`}
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setFeaturedSelection(new Set(reviewsData?.reviews.map(reviewAuthorName).filter(Boolean) ?? []))}
+                      className="text-xs text-kelen-green-700 hover:underline"
+                    >
+                      Tout sélectionner
+                    </button>
+                    <span className="text-kelen-green-400">·</span>
+                    <button
+                      onClick={() => setFeaturedSelection(new Set())}
+                      className="text-xs text-muted-foreground hover:underline"
+                    >
+                      Tout désélectionner
+                    </button>
+                    <button
+                      onClick={handleSaveFeatured}
+                      disabled={savingFeatured}
+                      className="ml-2 flex items-center gap-1.5 rounded-lg bg-kelen-green-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-kelen-green-700 disabled:opacity-50"
+                    >
+                      {savingFeatured && <Loader2 className="h-3 w-3 animate-spin" />}
+                      Enregistrer
+                    </button>
+                  </div>
+                </div>
+              )}
 
               {!reviewsData ? (
                 <div className="py-8 text-center text-sm text-muted-foreground">Chargement…</div>
@@ -612,43 +715,97 @@ export default function GoogleManagementPage() {
                       </div>
                       <p className="text-xs text-amber-700 mt-0.5">{reviewsData.totalReviews} avis</p>
                     </div>
+                    {reviewsData.featuredAuthorNames?.length > 0 && !selectionMode && (
+                      <span className="ml-auto text-xs text-kelen-green-700 bg-kelen-green-50 border border-kelen-green-200 rounded-full px-2.5 py-1 font-medium">
+                        {reviewsData.featuredAuthorNames.length} mis en avant
+                      </span>
+                    )}
                   </div>
 
                   {reviewsData.reviews.length > 0 ? (
                     <div className="grid gap-4 sm:grid-cols-2">
                       {reviewsData.reviews.map((r: any, i: number) => {
-                        const stars = { FIVE: 5, FOUR: 4, THREE: 3, TWO: 2, ONE: 1 }[r.starRating as string] ?? 0;
+                        const stars = { FIVE: 5, FOUR: 4, THREE: 3, TWO: 2, ONE: 1 }[r.starRating as string] ?? r.rating ?? 0;
+                        const authorName = reviewAuthorName(r);
+                        const displayName = r.reviewer?.displayName ?? r.author_name ?? "Anonyme";
+                        const photoUrl = r.reviewer?.profilePhotoUrl ?? r.profile_photo_url ?? null;
+                        const comment = r.comment ?? r.text ?? null;
+                        const dateStr = r.createTime
+                          ? new Date(r.createTime).toLocaleDateString("fr-FR")
+                          : (r.relative_time_description ?? "");
+                        const isFeatured = featuredSelection.has(authorName);
+                        const isSavedFeatured = (reviewsData.featuredAuthorNames ?? []).includes(authorName);
+
                         return (
-                          <div key={r.reviewId ?? i} className="rounded-lg border border-border bg-background p-4">
-                            <div className="flex items-start justify-between gap-3 mb-3">
-                              <div className="flex items-center gap-2">
-                                {r.reviewer?.profilePhotoUrl ? (
-                                  <Image src={r.reviewer.profilePhotoUrl} alt={r.reviewer.displayName} width={36} height={36} className="rounded-full object-cover" />
-                                ) : (
-                                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-muted text-sm font-bold text-muted-foreground">
-                                    {r.reviewer?.displayName?.charAt(0) ?? "?"}
-                                  </div>
-                                )}
-                                <div>
-                                  <p className="text-sm font-semibold leading-tight">{r.reviewer?.displayName ?? "Anonyme"}</p>
-                                  <p className="text-xs text-muted-foreground">
-                                    {r.createTime ? new Date(r.createTime).toLocaleDateString("fr-FR") : ""}
-                                  </p>
+                          <div
+                            key={r.reviewId ?? authorName ?? i}
+                            onClick={() => selectionMode && toggleFeatured(r)}
+                            className={`relative rounded-lg border bg-background p-4 transition-all ${
+                              selectionMode ? "cursor-pointer" : ""
+                            } ${
+                              selectionMode && isFeatured
+                                ? "border-kelen-green-400 ring-2 ring-kelen-green-200"
+                                : "border-border"
+                            }`}
+                          >
+                            {/* Featured badge (saved state, not selection mode) */}
+                            {!selectionMode && isSavedFeatured && reviewsData.featuredAuthorNames.length > 0 && (
+                              <span className="absolute top-3 right-3 rounded-full bg-kelen-green-100 px-2 py-0.5 text-[10px] font-semibold text-kelen-green-700">
+                                ✦ Affiché
+                              </span>
+                            )}
+
+                            {/* Selection checkbox */}
+                            {selectionMode && (
+                              <div className={`absolute top-3 right-3 flex h-5 w-5 items-center justify-center rounded-full border-2 transition-colors ${
+                                isFeatured
+                                  ? "border-kelen-green-600 bg-kelen-green-600"
+                                  : "border-border bg-background"
+                              }`}>
+                                {isFeatured && <span className="text-white text-xs font-bold">✓</span>}
+                              </div>
+                            )}
+
+                            <div className="flex items-start gap-3 mb-3 pr-8">
+                              {photoUrl ? (
+                                <Image src={photoUrl} alt={displayName} width={36} height={36} className="rounded-full object-cover flex-shrink-0" />
+                              ) : (
+                                <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-muted text-sm font-bold text-muted-foreground">
+                                  {displayName.charAt(0)}
                                 </div>
+                              )}
+                              <div className="min-w-0 flex-1">
+                                <p className="text-sm font-semibold leading-tight truncate">{displayName}</p>
+                                <p className="text-xs text-muted-foreground">{dateStr}</p>
                               </div>
                               <div className="flex shrink-0 text-amber-400 text-sm">
                                 {Array.from({ length: 5 }).map((_, idx) => <span key={idx}>{idx < stars ? "★" : "☆"}</span>)}
                               </div>
                             </div>
-                            <p className="text-sm leading-relaxed text-foreground">
-                              {r.comment ?? <span className="italic text-muted-foreground">Aucun commentaire.</span>}
-                            </p>
+                            {comment && (
+                              <p className="text-sm leading-relaxed text-foreground line-clamp-4">{comment}</p>
+                            )}
                           </div>
                         );
                       })}
                     </div>
                   ) : (
                     <p className="py-6 text-center text-sm text-muted-foreground">Aucun avis trouvé.</p>
+                  )}
+
+                  {/* Sticky save bar at bottom when in selection mode on mobile */}
+                  {selectionMode && (
+                    <div className="mt-4 pt-4 border-t border-border flex items-center justify-between sm:hidden">
+                      <p className="text-xs text-muted-foreground">{featuredSelection.size} sélectionné{featuredSelection.size > 1 ? "s" : ""}</p>
+                      <button
+                        onClick={handleSaveFeatured}
+                        disabled={savingFeatured}
+                        className="flex items-center gap-1.5 rounded-lg bg-kelen-green-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+                      >
+                        {savingFeatured && <Loader2 className="h-3 w-3 animate-spin" />}
+                        Enregistrer
+                      </button>
+                    </div>
                   )}
                 </>
               )}

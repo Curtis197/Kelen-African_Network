@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
         .select("*")
         .eq("pro_id", proId)
         .single();
-      
+
       if (!cacheErr && cache) {
         // If cached within the last 24 hours, return cache
         const hoursSinceCache = (Date.now() - new Date(cache.cached_at).getTime()) / (1000 * 60 * 60);
@@ -68,6 +68,7 @@ export async function GET(request: NextRequest) {
             rating: cache.rating,
             totalReviews: cache.total_reviews,
             reviews: cache.reviews,
+            featuredAuthorNames: (cache.featured_review_ids as string[]) ?? [],
           });
         }
       }
@@ -134,12 +135,20 @@ export async function GET(request: NextRequest) {
       log.debug("Successfully updated reviews cache", { proId });
     }
 
+    // Also read the current featured selection after the upsert
+    const { data: updatedCache } = await supabase
+      .from("pro_google_reviews_cache")
+      .select("featured_review_ids")
+      .eq("pro_id", proId)
+      .maybeSingle();
+
     return NextResponse.json({
       success: true,
       cached: false,
       rating: averageRating,
       totalReviews: totalReviewCount,
       reviews: reviews,
+      featuredAuthorNames: (updatedCache?.featured_review_ids as string[]) ?? [],
     });
 
   } catch (err: unknown) {
