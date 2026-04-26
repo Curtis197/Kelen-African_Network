@@ -401,6 +401,33 @@ Vingt ans après Internet, la plupart des PME n'ont pas de site web. Ce n'est pa
 
 ---
 
+### Étape 15 — La triade fondatrice : Show your work — Build trust — Grow your business (2026-04-26)
+
+**Décision :** La proposition de valeur professionnelle complète est une triade ordonnée. La confiance est le pilier central — pas l'acquisition.
+
+| Position | Phrase | Rôle |
+|----------|--------|------|
+| 1 | Show your work / Montrez votre travail | Déclencheur d'inscription — motivation primaire |
+| 2 | **Build trust / Construisez la confiance** | **Pilier central — le plus important** |
+| 3 | Grow your business / Développez votre activité | Bénéfice conséquent — pour certains |
+
+**Pourquoi cet ordre est fixe :**
+On ne peut pas construire la confiance sans montrer son travail. On ne peut pas développer son activité sans confiance établie. La séquence est causale, pas marketing.
+
+**Documents mis à jour :**
+- [x] `01-philosophie-positionnement.md` — triade ajoutée aux phrases fondatrices, hiérarchie d'utilité reformulée autour de la triade
+- [x] `07-reference-global.md` — table des phrases fondatrices enrichie avec règles d'usage de la triade
+- [x] `marketing-pro.md` — hero refondu sur la triade, section problème recentrée sur "montrer son travail" (niveau 1) plutôt que sur l'acquisition (niveau 3)
+
+**Décisions clés de cette étape :**
+| Date | Décision | Raison |
+|------|----------|--------|
+| 2026-04-26 | Hero landing refondu : triade complète remplace "Vos clients vous cherchent. Ils ne vous trouvent pas." | L'ancien hero était du niveau 3 (acquisition). La triade entre par le niveau 1 (montrer son travail) — plus honnête, plus universel, plus résonnant pour le techno-réticent |
+| 2026-04-26 | Problème recentré : "Il n'existe aucun endroit pour le montrer" remplace "Vous n'existez pas en ligne" | "N'exister pas en ligne" implique que c'est le professionnel qui manque à quelque chose. "Pas d'endroit pour montrer" dit que c'est l'outil qui manquait. |
+| 2026-04-26 | "Développez votre activité" ne peut jamais être utilisé seul dans le copy | L'acquisition sans la confiance est une promesse vide — et contredirait le ton Kelen |
+
+---
+
 ## Questions ouvertes
 
 *(à remplir au fil de la réflexion)*

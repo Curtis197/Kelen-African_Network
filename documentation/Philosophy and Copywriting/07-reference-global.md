@@ -75,10 +75,18 @@ Ce document est le point d'entrée du corpus copywriting Kelen. Il recense l'ens
 | Audience | Phrase |
 |----------|--------|
 | Client | **"Trouvez le professionnel de confiance."** |
-| Professionnel | **"Construisez la confiance."** |
+| Professionnel (condensé) | **"Construisez la confiance."** |
+| Professionnel (triade complète) | **"Montrez votre travail. Construisez la confiance. Développez votre activité."** |
 | Promesse produit | **"Si vous pouvez remplir un profil WhatsApp, vous pouvez avoir un site web."** |
 
-Ne pas surexposer — la répétition dilue l'impact. Une occurrence par contexte.
+**La triade — règles d'usage :**
+- "Construisez la confiance." est la phrase courante — une seule occurrence par contexte
+- La triade complète s'utilise quand le contexte permet les trois temps : hero de landing, pitch press, partenariats
+- L'ordre est fixe et non négociable — montrer → confiance → croissance
+- La confiance est le pilier central : c'est elle qui permet le reste, pas l'inverse
+- Ne jamais réduire la triade à "Développez votre activité" seul — l'acquisition n'est jamais la promesse centrale
+
+Ne pas surexposer — la répétition dilue l'impact.
 
 ---
 

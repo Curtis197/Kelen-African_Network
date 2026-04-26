@@ -36,8 +36,9 @@ Kelen     Comment ça marche · Tarifs · FAQ · Contact      [Se connecter]  [C
 ---
 
 **Headline :**
-> Vos clients vous cherchent.
-> Ils ne vous trouvent pas.
+> Montrez votre travail.
+> Construisez la confiance.
+> Développez votre activité.
 
 **Sous-titre :**
 > Kelen crée votre site web, votre portfolio PDF et votre fiche Google My Business
@@ -69,21 +70,21 @@ Kelen     Comment ça marche · Tarifs · FAQ · Contact      [Se connecter]  [C
 ## Section — Le problème
 
 **Titre :**
-> Vous travaillez bien depuis des années.
-> La plupart de vos prochains clients ne le savent pas encore.
+> Vous avez des années de travail derrière vous.
+> Il n'existe aucun endroit pour le montrer.
 
 **Corps :**
-> Votre réputation circule par le bouche-à-oreille. Des photos de chantier sur WhatsApp.
-> Un numéro qui s'échange de main en main.
+> Vos réalisations partent en photo sur WhatsApp. Parfois à un client, parfois dans un groupe.
+> Elles disparaissent dans une conversation. Personne ne peut les retrouver.
 >
-> Ce réseau fonctionne — jusqu'à sa limite.
+> Votre réputation, elle, circule par le bouche-à-oreille — ce qui veut dire qu'elle dépend
+> entièrement de ce que les autres disent de vous, quand ils s'en souviennent.
 >
-> Un client qui cherche un plombier à Dakar sur Google ne vous trouvera pas.
-> Un client à Paris qui veut faire rénover son appartement à Abidjan ne vous trouvera pas.
-> Un client local qui compare trois professionnels avant de choisir ne vous verra peut-être pas non plus.
+> Un client qui ne vous connaît pas encore ne peut pas vous faire confiance
+> s'il ne peut pas voir votre travail.
 >
-> Pas parce que vous travaillez mal.
-> Parce que vous n'existez pas en ligne.
+> Ce n'est pas un problème de compétence.
+> C'est un problème de visibilité documentée.
 
 ---
 

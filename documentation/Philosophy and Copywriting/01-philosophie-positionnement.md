@@ -9,7 +9,13 @@
 > **"Trouvez le professionnel de confiance."**
 > *Find the right professional.*
 
-**Au professionnel :**
+**Au professionnel — la triade complète :**
+> **"Montrez votre travail. Construisez la confiance. Développez votre activité."**
+> *Show your work. Build trust. Grow your business.*
+
+La confiance est le pilier central — c'est elle qui permet le reste. Montrer son travail en est la condition. Développer son activité en est la conséquence.
+
+**Phrase condensée (usage courant) :**
 > **"Construisez la confiance."**
 > *Build trust.*
 
@@ -67,15 +73,15 @@ Et même quand un professionnel accepte de payer, l'argument économique ne tien
 
 Facebook, Twitter, Instagram ont résolu le problème de la présence en ligne personnelle à grande échelle. Personne n'a jamais fait la même chose pour les professionnels.
 
-**Ce que ça révèle sur l'utilité réelle :**
+**Ce que ça révèle sur l'utilité réelle — la triade :**
 
-Pour le professionnel techno-réticent, la valeur d'un portfolio numérique et d'un site web s'échelonne en trois niveaux :
+Pour le professionnel techno-réticent, la valeur d'un portfolio numérique et d'un site web s'échelonne en trois niveaux. Ces trois niveaux sont la triade fondatrice de Kelen-Pro : **Show your work. Build trust. Grow your business.**
 
-1. **Vanité (primaire)** — Il n'existe pas de support pour montrer son travail et en être fier. WhatsApp est le seul endroit où il partage ses photos de chantier. C'est la même utilité que les réseaux sociaux ont remplie pour les particuliers — pas de la narcissisme, mais le besoin fondamental de montrer ce qu'on fait. Cette motivation est réelle, sous-estimée, et suffisante pour déclencher l'inscription.
+1. **Montrez votre travail (primaire — déclencheur d'inscription)** — Il n'existe aucun support pour montrer son travail et en être fier. WhatsApp est le seul endroit où il partage ses réalisations. C'est la même utilité que les réseaux sociaux ont remplie pour les particuliers — pas du narcissisme, mais le besoin fondamental de montrer ce qu'on fait et d'en être reconnu. Cette motivation est réelle, sous-estimée, et suffisante pour déclencher l'inscription. Le professionnel ne dira pas "je veux un site pour être fier" — mais c'est souvent ce qu'il veut.
 
-2. **Conversion et confiance (secondaire)** — Une présence numérique structurée facilite la conclusion d'un deal. Le client qui peut voir le travail passé avant un rendez-vous arrive déjà rassuré. La relation pendant la prestation est meilleure. Le professionnel n'a plus à se vendre — son travail le fait pour lui.
+2. **Construisez la confiance (central — le pilier qui tient tout)** — C'est le niveau le plus important. Une présence numérique structurée transforme la relation commerciale avant même le premier contact. Le client qui voit le travail passé arrive rassuré. La discussion porte sur le projet, pas sur la légitimité du professionnel. Le deal se conclut plus facilement. La relation pendant la prestation est meilleure. La confiance documentée remplace la confiance héritée du bouche-à-oreille — et elle scale.
 
-3. **Acquisition (tertiaire, pour certains)** — Certains professionnels verront leur acquisition et leurs revenus augmenter directement grâce à la digitalisation. Ce n'est pas la majorité au départ — mais c'est le bénéfice qui devient possible une fois les deux premiers niveaux établis.
+3. **Développez votre activité (tertiaire — bénéfice pour certains)** — Certains professionnels verront leur acquisition et leurs revenus augmenter directement. Ce n'est pas la majorité au départ — c'est le bénéfice qui devient accessible une fois les deux premiers niveaux établis. Il ne doit jamais être promis comme résultat garanti.
 
 **Ce que Kelen doit faire différemment :**
 
