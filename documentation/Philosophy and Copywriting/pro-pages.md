@@ -66,9 +66,9 @@ Contact       — Votre photo · Spécialité · Zone · Téléphone · WhatsApp
 > Votre visage n'apparaît pas en hero. Votre travail s'affiche en premier.
 > Votre portrait apparaît dans la section contact — une fois la crédibilité établie.
 
-**Profil gratuit :** Accessible par lien direct. Non indexé sur Google. Non visible dans les résultats de recherche Kelen.
+**Profil gratuit :** Accessible par lien direct et visible dans les résultats de recherche Kelen. Rendu statique. Non indexé sur Google.
 
-**Profil abonnement :** Rendu dynamique — toujours à jour au chargement. Indexé sur Google. Inclus dans le sitemap XML. Balises Open Graph complètes pour le partage sur les réseaux sociaux.
+**Profil abonnement :** Rendu dynamique (SSR) — toujours à jour au chargement. Indexé sur Google. Inclus dans le sitemap XML. Balises Open Graph complètes pour le partage sur les réseaux sociaux.
 
 ---
 
@@ -226,10 +226,10 @@ Documents   — Partage de devis, contrats, plans, photos
 
 > Votre profil de base est gratuit à vie.
 >
-> L'abonnement vous rend visible aux clients qui vous cherchent sans vous connaître :
-> vous apparaissez dans les résultats de recherche Kelen et sur Google.
+> Votre profil est visible sur Kelen dès l'inscription.
+> L'abonnement vous indexe sur Google et débloque les fonctionnalités avancées.
 >
-> **Ce que l'abonnement achète : de la visibilité.**
+> **Ce que l'abonnement achète : Google + les outils avancés.**
 > **Ce que l'abonnement n'achète pas : la réputation.**
 
 ---
@@ -247,7 +247,7 @@ URL permanente (kelen.com/votre-nom)   ✓           ✓
 Recherche par nom                      ✓           ✓
 
 VISIBILITÉ
-Apparition dans les résultats Kelen    —           ✓
+Apparition dans les résultats Kelen    ✓           ✓
 Indexation Google (SEO)                —           ✓
 Rendu dynamique (SSR)                  —           ✓    profil toujours à jour
 Balises Open Graph (partage social)    —           ✓
@@ -313,7 +313,7 @@ Europe                 15 € / mois
 
 > Sans engagement. Vous annulez quand vous voulez depuis votre tableau de bord.
 > Les mois entamés ne sont pas remboursés.
-> Votre profil gratuit reste actif après résiliation — vous disparaissez simplement des résultats de recherche.
+> Votre profil gratuit reste actif après résiliation — vous restez visible sur Kelen mais disparaissez de l'indexation Google.
 
 ---
 
@@ -323,7 +323,7 @@ Europe                 15 € / mois
 > Non. Le statut Or, Argent ou Non classé dépend uniquement des recommandations vérifiées soumises par vos clients. Vous pouvez être Or sans abonnement, et Non classé avec un abonnement.
 
 **Que se passe-t-il si j'annule ?**
-> Votre profil reste en ligne et accessible par lien direct. Vos recommandations restent publiées. Vous disparaissez des résultats de recherche Kelen et de l'indexation Google jusqu'à votre prochain abonnement.
+> Votre profil reste en ligne, visible sur Kelen et accessible par lien direct. Vos recommandations restent publiées. Vous disparaissez de l'indexation Google jusqu'à votre prochain abonnement.
 
 **Puis-je commencer gratuitement et m'abonner plus tard ?**
 > Oui. Créez votre profil, ajoutez vos réalisations, partagez votre lien à vos clients actuels. Activez l'abonnement quand vous voulez être découvert par de nouveaux clients.
@@ -371,7 +371,7 @@ Europe                 15 € / mois
 ### Profil et visibilité
 
 **Mon profil est-il visible immédiatement après l'inscription ?**
-> Oui. Votre profil est accessible par son URL dès la fin de l'inscription. Avec l'abonnement, il apparaît dans les résultats de recherche Kelen et sur Google dans les 24 à 48 heures suivant l'activation.
+> Oui. Votre profil est accessible par son URL et visible dans les résultats de recherche Kelen dès la fin de l'inscription. Avec l'abonnement, il est également indexé sur Google dans les 24 à 48 heures suivant l'activation.
 
 **Puis-je avoir plusieurs profils ?**
 > Non. Chaque professionnel dispose d'un profil unique. Si vous exercez plusieurs métiers, vous pouvez les indiquer comme spécialités secondaires sur votre profil principal.

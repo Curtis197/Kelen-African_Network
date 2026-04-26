@@ -193,16 +193,16 @@ et peut apparaître sur Google quand vous activez la visibilité.
 
 **Corps :**
 
-> Votre profil est complet.
+> Votre profil est complet et visible sur Kelen.
 >
-> Pour l'instant, il est accessible uniquement par lien direct — si quelqu'un cherche "[votre métier] à [votre ville]" sur Google, vous n'apparaissez pas.
+> Une chose manque encore : si quelqu'un cherche "[votre métier] à [votre ville]" sur Google, vous n'apparaissez pas.
 >
 > L'abonnement Kelen change ça :
 >
-> — Votre profil apparaît dans les résultats de recherche Kelen
 > — Votre site est indexé sur Google
 > — Votre fiche Google My Business est synchronisée
 > — Votre PDF portfolio est disponible en un clic
+> — Votre profil passe en rendu dynamique — toujours à jour
 >
 > **3 000 FCFA / 15 € par mois. Sans engagement.**
 >
@@ -221,9 +221,9 @@ et peut apparaître sur Google quand vous activez la visibilité.
 ```
 Bonjour [Prénom],
 
-Votre profil Kelen est complet — mais vos prochains clients ne le trouvent pas encore sur Google.
+Votre profil Kelen est complet et visible sur Kelen — mais il n'apparaît pas encore sur Google.
 
-L'abonnement (3 000 FCFA / 15 €/mois) vous rend visible dans les recherches Kelen et sur Google.
+L'abonnement (3 000 FCFA / 15 €/mois) vous indexe sur Google et débloque les outils avancés.
 Sans engagement — annulable à tout moment.
 
 → [lien activation]
@@ -296,7 +296,7 @@ Vous êtes prêt à faire la même chose.
 
 > Votre profil est en ligne depuis un mois.
 >
-> Vous avez reçu [X] visites depuis votre inscription — uniquement des personnes qui ont votre lien direct.
+> Vous avez reçu [X] visites depuis votre inscription — des clients Kelen et des personnes qui ont votre lien direct.
 >
 > Si vous activez l'abonnement, ces chiffres incluront aussi les clients qui vous cherchent sur Google sans vous connaître encore.
 >

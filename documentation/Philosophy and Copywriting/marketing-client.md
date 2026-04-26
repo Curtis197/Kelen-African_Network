@@ -55,8 +55,8 @@ Secteur         Construction · Rénovation · Plomberie · Électricité · Arc
 Statut          Tous · Or uniquement · Or et Argent
 ```
 
-> Les résultats affichent uniquement les professionnels avec abonnement actif.
-> Un professionnel sans abonnement peut exister sur Kelen — mais il n'apparaît pas dans ces résultats.
+> Les résultats affichent les professionnels disponibles dans la zone cherchée — avec ou sans abonnement.
+> Les professionnels abonnés ont des profils plus complets : plus de projets, rendu dynamique, indexation Google.
 > Si vous cherchez quelqu'un de précis, utilisez la recherche par nom.
 
 **Aucun résultat ?**

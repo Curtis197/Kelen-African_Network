@@ -187,8 +187,8 @@
 | Project creation | `canCreateProject()` in `subscription-gate.ts` — blocks if count >= 3 |
 | Photo upload | `canUploadPhotos()` in `subscription-gate.ts` — blocks if count >= 15 |
 | Video upload | `getTierLimits().hasVideo` — hides video upload UI for free |
-| Sitemap inclusion | `isPaid = pro.status === 'gold' \|\| pro.status === 'silver'` — only paid profiles listed |
-| Profile indexing | `robots: { index: isPaid }` in `generateMetadata()` — noindex for free |
+| Sitemap inclusion | `isPaid = subscription.active` — only subscribed profiles listed (Google indexing gate) |
+| Profile indexing | `robots: { index: isPaid }` in `generateMetadata()` — noindex for free (Google only, Kelen search is open) |
 | SSR vs SSG | Subscription check in profile page — dynamic rendering for paid |
 
 ### ⚠️ Dev Mode — Enforcement Currently Bypassed
@@ -202,7 +202,7 @@ All subscription gates are disabled for development. Search for `// DEV MODE` to
 | `lib/utils/subscription-gate.ts` | `canUploadPhotos()` → always `{ allowed: true, limit: -1 }` |
 | `app/(professional)/pro/site/page.tsx` | `isPaid = true` (hardcoded) |
 
-**Restore before production:** revert `subscription-gate.ts` to query the `subscriptions` table and revert `isPaid` to `pro.status === "gold" \|\| pro.status === "silver"`.
+**Restore before production:** revert `subscription-gate.ts` to query the `subscriptions` table and revert `isPaid` to `subscription.active === true`.
 
 ---
 
@@ -232,4 +232,5 @@ All subscription gates are disabled for development. Search for `// DEV MODE` to
 **Incentive logic:**
 - Clients are free → maximum reach, maximum credibility
 - Reputation is earned → cannot be gamed or purchased
-- Visibility is paid → only professionals with something to show will subscribe
+- Kelen visibility is free → every professional is discoverable on day one
+- Google + advanced features are paid → professionals invest when they want to grow beyond the platform

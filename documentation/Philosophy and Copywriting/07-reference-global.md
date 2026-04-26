@@ -117,14 +117,14 @@ Ne pas surexposer — la répétition dilue l'impact. Une occurrence par context
 ### 6. Les deux offres — ne jamais les mélanger
 
 **Profil Gratuit**
-- Profil public et site web de base
+- Profil public et site web de base (rendu statique)
 - Jusqu'à 3 projets affichés
-- Recherche par nom uniquement (non indexé Google)
-- Pas d'apparition dans les annuaires de découverte
+- Visible dans les résultats de recherche Kelen
+- Non indexé sur Google
 
 **Abonnement — 3 000 FCFA / 15 € / mois**
-- Apparition dans les résultats de recherche et annuaires
-- Indexation Google (SEO)
+- Indexation Google (SEO) — apparition dans les recherches Google
+- Site web dynamique (SSR) — toujours à jour au chargement
 - Site web complet et personnalisable
 - Export PDF portfolio
 - Synchronisation Google My Business
@@ -134,10 +134,10 @@ Ne pas surexposer — la répétition dilue l'impact. Une occurrence par context
 
 **Ce que l'abonnement ne change jamais :**
 - Le statut (Or, Argent, Non classé)
-- La position dans les résultats par rapport aux autres profils
+- La position dans les résultats Kelen par rapport aux autres profils
 
 **La phrase à retenir :**
-> La visibilité est un standard abordable. La réputation se prouve.
+> Présent sur Kelen dès le premier jour. Sur Google avec l'abonnement.
 
 ---
 

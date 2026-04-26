@@ -208,9 +208,9 @@ Page intérieure avec projet documenté (photo, description, dates).
    Site web, PDF portfolio, fiche Google —
    tout est disponible immédiatement.
    ↓
-3. Activez votre visibilité
-   3 000 FCFA / 15 € par mois pour apparaître
-   dans les résultats de recherche Kelen et sur Google.
+3. Activez Google
+   3 000 FCFA / 15 € par mois pour être indexé
+   sur Google et débloquer les fonctionnalités avancées.
 ```
 
 **CTA intermédiaire :**
@@ -258,12 +258,11 @@ Profil récent ou sans recommandation soumise.
 ## Section — Tarifs
 
 **Titre :**
-> Gratuit pour commencer. Payant pour être trouvé.
+> Gratuit pour commencer. Payant pour aller plus loin.
 
 **Principe :**
-> Votre profil de base est gratuit à vie.
-> L'abonnement fait une chose : il vous rend visible aux clients qui vous cherchent
-> sans vous connaître.
+> Votre profil est en ligne et visible sur Kelen dès l'inscription — gratuitement.
+> L'abonnement vous indexe sur Google et débloque les fonctionnalités avancées.
 
 ---
 
@@ -274,6 +273,7 @@ Profil récent ou sans recommandation soumise.
                                              3 000 FCFA / 15 €/mois
 
 Profil public et site web       ✓               ✓
+Visible dans les résultats Kelen✓               ✓
 IA copywriting                  ✓               ✓
 Statistiques de base            ✓               ✓
 Projets affichés                3            Illimité
@@ -281,8 +281,8 @@ Photos                         15            Illimité
 Vidéos                          —               ✓
 Export PDF portfolio            —               ✓
 Fiche Google My Business        —               ✓
-Apparition dans les résultats   —               ✓
 Indexation Google (SEO)         —               ✓
+Site dynamique (SSR)            —               ✓
 Site personnalisable            —               ✓
 Branding (couleurs logo)        —               ✓
 Statistiques avancées           —               ✓
@@ -293,6 +293,7 @@ Collaboration client            —               ✓
 
 **Ce que l'abonnement ne change jamais :**
 > - Pas votre statut (Or, Argent, Non classé) — il dépend uniquement de vos recommandations vérifiées
+> - Pas votre visibilité sur Kelen — vous apparaissez dans les résultats avec ou sans abonnement
 > - Pas votre position relative dans les résultats — la pertinence et la proximité priment
 > - Pas la gratuité pour vos clients — ils n'ont rien à payer pour vous trouver
 
@@ -366,8 +367,8 @@ Collaboration client            —               ✓
 
 **Corps :**
 > Créez votre profil maintenant.
-> Votre site web est prêt immédiatement.
-> Activez votre visibilité quand vous êtes prêt.
+> Votre site web est en ligne immédiatement.
+> Activez l'abonnement quand vous voulez aller sur Google.
 
 **CTA principal :**
 > [Créer mon profil gratuitement →]
