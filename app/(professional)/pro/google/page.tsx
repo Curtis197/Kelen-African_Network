@@ -284,7 +284,7 @@ export default function GoogleManagementPage() {
       setConnection(mockConnection);
       setDebugState(mockDebug);
       setLoadingState("connected");
-      setReviewsData({ rating: 4.8, totalReviews: 12, reviews: [{ reviewer: { displayName: "Jane Doe" }, starRating: "FIVE", comment: "Excellent travail !", createTime: new Date().toISOString() }] });
+      setReviewsData({ rating: 4.8, totalReviews: 12, featuredAuthorNames: [], reviews: [{ reviewer: { displayName: "Jane Doe" }, starRating: "FIVE", comment: "Excellent travail !", createTime: new Date().toISOString() }] });
     } else {
       loadConnectionStatus();
     }
