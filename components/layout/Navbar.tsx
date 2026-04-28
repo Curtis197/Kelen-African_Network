@@ -194,7 +194,7 @@ export function Navbar() {
           ) : (
             <>
               <Link
-                href="/pro/connexion"
+                href="/pour-les-professionnels"
                 className="flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2 text-sm font-bold text-amber-700 transition-all hover:bg-amber-100 hover:text-amber-800 active:scale-95"
               >
                 <Briefcase className="w-5 h-5" />
@@ -294,7 +294,7 @@ export function Navbar() {
             ) : (
               <>
                 <Link
-                  href="/pro/connexion"
+                  href="/pour-les-professionnels"
                   onClick={() => setMobileOpen(false)}
                   className="flex items-center justify-center gap-2 rounded-xl border border-amber-200 bg-amber-50 py-3 text-base font-bold text-amber-700"
                 >
