@@ -195,7 +195,7 @@ export default function ProjectsPage() {
                   <p className="text-xs sm:text-sm opacity-70 leading-relaxed">
                     Accédez à l&apos;annuaire des professionnels vérifiés et comparez-les pour votre projet.
                   </p>
-                  <Link href="/recherche" className="text-[10px] sm:text-xs font-bold uppercase tracking-widest bg-white/10 hover:bg-white/20 px-3 sm:px-4 py-2 rounded-lg transition-colors inline-block">
+                  <Link href="/" className="text-[10px] sm:text-xs font-bold uppercase tracking-widest bg-white/10 hover:bg-white/20 px-3 sm:px-4 py-2 rounded-lg transition-colors inline-block">
                     Explorer le réseau
                   </Link>
                 </div>

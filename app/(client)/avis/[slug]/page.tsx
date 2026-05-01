@@ -45,7 +45,7 @@ export default async function ReviewPage({ params }: ReviewPageProps) {
           Ce professionnel n&apos;est pas référencé sur Kelen.
         </p>
         <Link
-          href="/recherche"
+          href="/"
           className="mt-4 inline-block text-sm text-kelen-green-600 hover:text-kelen-green-700"
         >
           ← Rechercher un professionnel

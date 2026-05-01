@@ -7,35 +7,42 @@ import { createClient } from "@/lib/supabase/client";
 import {
   LayoutDashboard,
   Briefcase,
-  Award,
-  FileDown,
-  ShieldCheck,
-  Gem,
-  BarChart3,
   LogOut,
   Menu,
   X,
-  Bell,
-  ChevronDown,
-  FileText,
   Handshake,
   Globe,
   Mail,
+  Settings,
+  ChevronRight,
 } from "lucide-react";
 import { NotificationDropdown } from "@/components/layout/NotificationDropdown";
 
-const NAV_ITEMS = [
+const DIRECT_ITEMS = [
   { href: "/pro/dashboard", label: "Tableau de bord", icon: LayoutDashboard },
-  { href: "/pro/projets", label: "Projets", icon: Briefcase },
   { href: "/pro/collaborations", label: "Boîte de réception", icon: Handshake },
-  { href: "/pro/documents", label: "Documents", icon: FileText },
-  { href: "/pro/realisations", label: "Présentation", icon: Award },
-  { href: "/pro/portfolio", label: "Portfolio", icon: FileDown },
-  { href: "/pro/site", label: "Mon Site", icon: Globe },
   { href: "/pro/newsletter", label: "Newsletter", icon: Mail },
-  { href: "/pro/validation", label: "Validation", icon: ShieldCheck },
-  { href: "/pro/abonnement", label: "Abonnement", icon: Gem },
-  { href: "/pro/analytique", label: "Analytique", icon: BarChart3 },
+];
+
+const GROUP_ITEMS = [
+  {
+    href: "/pro/visibilite",
+    label: "Ma Visibilité",
+    icon: Globe,
+    childPaths: ["/pro/portfolio", "/pro/realisations", "/pro/site"],
+  },
+  {
+    href: "/pro/missions",
+    label: "Mes Missions",
+    icon: Briefcase,
+    childPaths: ["/pro/projets", "/pro/documents"],
+  },
+  {
+    href: "/pro/compte",
+    label: "Mon Compte",
+    icon: Settings,
+    childPaths: ["/pro/abonnement", "/pro/validation", "/pro/analytique"],
+  },
 ];
 
 export function ProSidebar() {
@@ -190,7 +197,10 @@ export function ProSidebar() {
 
         {/* Nav */}
         <nav className="flex-1 overflow-y-auto p-4 space-y-1">
-          {NAV_ITEMS.map((item) => {
+          <p className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-widest text-on-surface-variant/60">
+            Principal
+          </p>
+          {DIRECT_ITEMS.map((item) => {
             const isActive = pathname === item.href || pathname?.startsWith(item.href + "/");
             const Icon = item.icon;
             return (
@@ -205,6 +215,31 @@ export function ProSidebar() {
               >
                 <Icon className="w-4 h-4" />
                 {item.label}
+              </Link>
+            );
+          })}
+
+          <p className="px-3 pb-1 pt-4 text-[10px] font-semibold uppercase tracking-widest text-on-surface-variant/60">
+            Sections
+          </p>
+          {GROUP_ITEMS.map((group) => {
+            const isActive =
+              pathname === group.href ||
+              group.childPaths.some((p) => pathname?.startsWith(p));
+            const Icon = group.icon;
+            return (
+              <Link
+                key={group.href}
+                href={group.href}
+                className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+                  isActive
+                    ? "bg-kelen-green-50 text-kelen-green-700"
+                    : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container"
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                <span className="flex-1">{group.label}</span>
+                <ChevronRight className="w-3.5 h-3.5 opacity-40" />
               </Link>
             );
           })}
@@ -290,7 +325,10 @@ export function ProSidebar() {
 
             {/* Nav items */}
             <nav className="p-2 space-y-0.5">
-              {NAV_ITEMS.map((item) => {
+              <p className="px-3 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-widest text-on-surface-variant/60">
+                Principal
+              </p>
+              {DIRECT_ITEMS.map((item) => {
                 const isActive = pathname === item.href || pathname?.startsWith(item.href + "/");
                 const Icon = item.icon;
                 return (
@@ -306,6 +344,32 @@ export function ProSidebar() {
                   >
                     <Icon className="w-4 h-4" />
                     {item.label}
+                  </Link>
+                );
+              })}
+
+              <p className="px-3 pb-1 pt-4 text-[10px] font-semibold uppercase tracking-widest text-on-surface-variant/60">
+                Sections
+              </p>
+              {GROUP_ITEMS.map((group) => {
+                const isActive =
+                  pathname === group.href ||
+                  group.childPaths.some((p) => pathname?.startsWith(p));
+                const Icon = group.icon;
+                return (
+                  <Link
+                    key={group.href}
+                    href={group.href}
+                    onClick={() => setMobileOpen(false)}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                      isActive
+                        ? "bg-kelen-green-50 text-kelen-green-700"
+                        : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container"
+                    }`}
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span className="flex-1">{group.label}</span>
+                    <ChevronRight className="w-3.5 h-3.5 opacity-40" />
                   </Link>
                 );
               })}

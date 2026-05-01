@@ -170,7 +170,7 @@ export default function FavoritesPage() {
             </p>
             <Link
               className="px-8 py-3 bg-kelen-green-500 text-white rounded-xl font-bold shadow-lg shadow-kelen-green-500/20 hover:bg-kelen-green-600 transition-all active:scale-95"
-              href="/recherche"
+              href="/"
             >
               Découvrir des professionnels
             </Link>
@@ -183,7 +183,7 @@ export default function FavoritesPage() {
             <p className="text-stone-500">Notre réseau s&apos;agrandit chaque jour avec les meilleurs talents locaux.</p>
           </div>
           <Link
-            href="/recherche"
+            href="/"
             className="whitespace-nowrap px-6 py-3 bg-white text-stone-700 font-bold rounded-xl shadow-sm hover:bg-stone-100 transition-all border border-stone-200"
           >
             Utiliser la recherche avancée

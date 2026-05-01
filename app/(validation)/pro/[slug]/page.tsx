@@ -54,7 +54,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
           Ce professionnel n&apos;est pas encore référencé dans notre réseau d&apos;excellence.
         </p>
         <Link
-          href="/recherche"
+          href="/"
           className="mt-6 inline-flex rounded-xl bg-primary px-8 py-3 text-sm font-bold text-on-primary shadow-lg shadow-primary/20 hover:scale-[0.98] transition-transform"
         >
           Découvrir nos professionnels

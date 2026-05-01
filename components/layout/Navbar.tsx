@@ -172,7 +172,7 @@ export function Navbar() {
         {/* Desktop CTA */}
         <div className="hidden items-center gap-3 md:flex">
           <Link
-            href="/recherche"
+            href="/"
             className="flex items-center gap-2 rounded-xl border border-kelen-green-100 bg-kelen-green-50/50 px-4 py-2 text-sm font-bold text-kelen-green-700 transition-all hover:bg-kelen-green-100 hover:text-kelen-green-800 active:scale-95"
           >
             <ShieldCheck className="w-5 h-5" />
@@ -274,7 +274,7 @@ export function Navbar() {
             <hr className="border-border my-2" />
             
             <Link
-              href="/recherche"
+              href="/"
               onClick={() => setMobileOpen(false)}
               className="flex items-center justify-center gap-2 rounded-xl border border-kelen-green-100 bg-kelen-green-50/50 py-3 text-base font-bold text-kelen-green-700 transition-all active:scale-95"
             >

@@ -29,7 +29,7 @@ export default function AboutPage() {
 
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
               <Link
-                href="/recherche"
+                href="/"
                 className="inline-flex items-center justify-center rounded-lg bg-kelen-green-500 px-8 py-4 text-base font-semibold text-white shadow-sm transition-colors hover:bg-kelen-green-600"
               >
                 Trouver un professionnel

@@ -10,7 +10,7 @@ const NAV_ITEMS = [
   { href: "/dashboard", label: "Tableau de bord", icon: LayoutDashboard },
   { href: "/recommandation", label: "Recommander", icon: Award },
   { href: "/signal", label: "Signaler", icon: AlertTriangle },
-  { href: "/recherche", label: "Rechercher", icon: Search },
+  { href: "/", label: "Rechercher", icon: Search },
 ];
 
 export function DashboardSidebar() {

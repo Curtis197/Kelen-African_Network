@@ -162,8 +162,7 @@ export async function middleware(request: NextRequest) {
                         pathname.startsWith("/recommandation") ||
                         pathname.startsWith("/signal") ||
                         pathname.startsWith("/avis") ||
-                        pathname.startsWith("/favoris") ||
-                        pathname.startsWith("/recherche");
+                        pathname.startsWith("/favoris");
   const isProRoute = pathname.startsWith("/pro/") && !isAuthPage;
   const isAdminRoute = pathname.startsWith("/admin");
 
