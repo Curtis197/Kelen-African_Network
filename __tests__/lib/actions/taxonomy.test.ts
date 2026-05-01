@@ -78,4 +78,24 @@ describe('getAreasSortedByPopularity', () => {
     const result = await getAreasSortedByPopularity()
     expect(result).toEqual([])
   })
+
+  it('returns areas with 0 counts when professionals query fails', async () => {
+    ;(createClient as any).mockResolvedValue({
+      from: vi.fn().mockImplementation((table: string) => {
+        if (table === 'professional_areas') {
+          return { select: vi.fn().mockResolvedValue({ data: mockAreas, error: null }) }
+        }
+        if (table === 'professionals') {
+          return {
+            select: vi.fn().mockReturnValue({
+              neq: vi.fn().mockResolvedValue({ data: null, error: { message: 'timeout' } }),
+            }),
+          }
+        }
+      }),
+    })
+    const result = await getAreasSortedByPopularity({ all: true })
+    expect(result).toHaveLength(7)
+    expect(result.every(a => a.professionalCount === 0)).toBe(true)
+  })
 })

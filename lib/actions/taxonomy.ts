@@ -54,10 +54,18 @@ export async function getAreasSortedByPopularity(
 ): Promise<AreaWithCount[]> {
   const supabase = await createClient();
 
-  const [{ data: areas }, { data: counts }] = await Promise.all([
+  const [{ data: areas, error: areasError }, { data: counts, error: countsError }] = await Promise.all([
     supabase.from("professional_areas").select("*"),
     supabase.from("professionals").select("area_id").neq("status", "black"),
   ]);
+
+  if (areasError) {
+    console.error("Error fetching areas:", areasError);
+    return [];
+  }
+  if (countsError) {
+    console.error("Error fetching professional counts:", countsError);
+  }
 
   if (!areas) return [];
 
@@ -68,7 +76,10 @@ export async function getAreasSortedByPopularity(
 
   const sorted = areas
     .map((area) => ({ ...area, professionalCount: countMap[area.id] ?? 0 }))
-    .sort((a, b) => b.professionalCount - a.professionalCount);
+    .sort((a, b) =>
+      b.professionalCount - a.professionalCount ||
+      a.sort_order - b.sort_order
+    );
 
   return options?.all ? sorted : sorted.slice(0, 6);
 }
