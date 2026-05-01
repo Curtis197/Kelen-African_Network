@@ -12,7 +12,7 @@ export default async function SearchHubPage() {
     getAreasSortedByPopularity({ all: true }),
     supabase
       .from("professionals")
-      .select("*")
+      .select("*, professional_portfolio(custom_domain, domain_status)")
       .order("recommendation_count", { ascending: false })
       .limit(12),
   ]);

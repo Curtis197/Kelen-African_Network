@@ -1,5 +1,3 @@
-"use client";
-
 import { Professional } from "@/lib/supabase/types";
 import { ProfessionalCard } from "@/components/shared/ProfessionalCard";
 
