@@ -162,7 +162,7 @@ export const MARKETING_PRO_NAV = [
 
 export const FOOTER_LINKS = {
   plateforme: [
-    { href: "/recherche", label: "Rechercher" },
+    { href: "/", label: "Rechercher" },
     { href: "/comment-ca-marche", label: "Comment ça marche" },
     { href: "/pour-les-professionnels", label: "Pour les professionnels" },
   ],

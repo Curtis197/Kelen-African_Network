@@ -25,7 +25,7 @@ export function SearchBar({
     const params = new URLSearchParams(searchParams.toString());
     params.set("q", query.trim());
     params.delete("page");
-    router.push(`/recherche?${params.toString()}`);
+    router.push(`/?${params.toString()}`);
   };
 
   const sizeClasses = {

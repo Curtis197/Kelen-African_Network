@@ -27,6 +27,11 @@ const nextConfig: NextConfig = {
         destination: "/pour-les-professionnels/tarifs",
         permanent: true,
       },
+      {
+        source: "/recherche",
+        destination: "/",
+        permanent: true,
+      },
     ];
   },
 };
