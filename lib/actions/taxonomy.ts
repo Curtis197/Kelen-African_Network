@@ -47,6 +47,32 @@ export async function getAllProfessions(): Promise<Profession[]> {
   return data as Profession[];
 }
 
+export type AreaWithCount = ProfessionalArea & { professionalCount: number };
+
+export async function getAreasSortedByPopularity(
+  options?: { all?: boolean }
+): Promise<AreaWithCount[]> {
+  const supabase = await createClient();
+
+  const [{ data: areas }, { data: counts }] = await Promise.all([
+    supabase.from("professional_areas").select("*"),
+    supabase.from("professionals").select("area_id").neq("status", "black"),
+  ]);
+
+  if (!areas) return [];
+
+  const countMap = (counts || []).reduce<Record<string, number>>((acc, row) => {
+    if (row.area_id) acc[row.area_id] = (acc[row.area_id] ?? 0) + 1;
+    return acc;
+  }, {});
+
+  const sorted = areas
+    .map((area) => ({ ...area, professionalCount: countMap[area.id] ?? 0 }))
+    .sort((a, b) => b.professionalCount - a.professionalCount);
+
+  return options?.all ? sorted : sorted.slice(0, 6);
+}
+
 // Admin actions
 
 async function requireAdmin() {
