@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { ProfessionalCard } from "@/components/shared/ProfessionalCard";
 import { getProfessionalsByArea } from "@/lib/actions/professionals";
@@ -26,10 +27,17 @@ export function SectorPageClient({
   const [professionals, setProfessionals] = useState(initialProfessionals);
   const [totalCount, setTotalCount] = useState(initialTotalCount);
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
+  const pathname = usePathname();
 
   const Icon = getSectorIcon(area.slug);
 
   const refresh = (professionSlug: string | null, loc: string) => {
+    const params = new URLSearchParams();
+    if (professionSlug) params.set("profession", professionSlug);
+    if (loc) params.set("location", loc);
+    const qs = params.toString();
+    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
     startTransition(async () => {
       try {
         const result = await getProfessionalsByArea(
