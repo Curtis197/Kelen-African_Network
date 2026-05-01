@@ -79,7 +79,7 @@ export default function CommentCaMarchePage() {
 
       <div className="mt-12 text-center">
         <Link
-          href="/recherche"
+          href="/"
           className="rounded-lg bg-kelen-green-500 px-8 py-3 text-sm font-bold text-white hover:bg-kelen-green-600 transition-colors"
         >
           Rechercher un professionnel →
