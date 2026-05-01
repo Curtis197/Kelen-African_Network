@@ -36,7 +36,7 @@ export async function getProfessionals(filter: ProfessionalsFilter = {}): Promis
 
   let dbQuery = supabase
     .from("professionals")
-    .select("*", { count: "exact" })
+    .select("*, professional_portfolio(custom_domain, domain_status)", { count: "exact" })
     .neq("status", "black");
 
   if (areaId) dbQuery = dbQuery.eq("area_id", areaId);

@@ -31,13 +31,17 @@ export function SectorPageClient({
 
   const refresh = (professionSlug: string | null, loc: string) => {
     startTransition(async () => {
-      const result = await getProfessionalsByArea(
-        area.slug,
-        professionSlug ?? undefined,
-        loc || undefined
-      );
-      setProfessionals(result.professionals);
-      setTotalCount(result.totalCount);
+      try {
+        const result = await getProfessionalsByArea(
+          area.slug,
+          professionSlug ?? undefined,
+          loc || undefined
+        );
+        setProfessionals(result.professionals);
+        setTotalCount(result.totalCount);
+      } catch {
+        console.error("Failed to fetch professionals");
+      }
     });
   };
 
