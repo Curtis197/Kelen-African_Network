@@ -77,3 +77,41 @@ export async function getProfessionals(filter: ProfessionalsFilter = {}): Promis
     totalCount: count || 0
   };
 }
+
+export async function getProfessionalsByArea(
+  areaSlug: string,
+  professionSlug?: string,
+  location?: string
+): Promise<ProfessionalsData> {
+  const supabase = await createClient();
+
+  const { data: area, error: areaError } = await supabase
+    .from("professional_areas")
+    .select("id")
+    .eq("slug", areaSlug)
+    .single();
+
+  if (areaError || !area) return { professionals: [], totalCount: 0 };
+
+  const filter: ProfessionalsFilter = {
+    areaId: area.id,
+    page: 1,
+    pageSize: 12,
+  };
+
+  if (professionSlug) {
+    const { data: profession } = await supabase
+      .from("professions")
+      .select("id")
+      .eq("slug", professionSlug)
+      .eq("area_id", area.id)
+      .single();
+    if (profession) filter.professionId = profession.id;
+  }
+
+  if (location) {
+    filter.city = location;
+  }
+
+  return getProfessionals(filter);
+}
