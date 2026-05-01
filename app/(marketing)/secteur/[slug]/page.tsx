@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getAreas, getProfessionsByArea } from "@/lib/actions/taxonomy";
 import { getProfessionalsByArea } from "@/lib/actions/professionals";
+import { createStaticClient } from "@/lib/supabase/static";
 import { SectorPageClient } from "./SectorPageClient";
 
 interface SectorPageProps {
@@ -9,8 +10,9 @@ interface SectorPageProps {
 }
 
 export async function generateStaticParams() {
-  const areas = await getAreas();
-  return areas.map((area) => ({ slug: area.slug }));
+  const supabase = createStaticClient();
+  const { data: areas } = await supabase.from("professional_areas").select("slug");
+  return (areas ?? []).map((area) => ({ slug: area.slug }));
 }
 
 export async function generateMetadata({ params }: SectorPageProps): Promise<Metadata> {
