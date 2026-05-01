@@ -100,12 +100,15 @@ export async function getProfessionalsByArea(
   };
 
   if (professionSlug) {
-    const { data: profession } = await supabase
+    const { data: profession, error: professionError } = await supabase
       .from("professions")
       .select("id")
       .eq("slug", professionSlug)
       .eq("area_id", area.id)
       .single();
+    if (professionError) {
+      console.error("Error fetching profession:", professionError);
+    }
     if (profession) filter.professionId = profession.id;
   }
 
