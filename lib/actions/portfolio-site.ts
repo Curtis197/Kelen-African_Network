@@ -35,6 +35,17 @@ async function getProfessional() {
   return { supabase, pro };
 }
 
+function toCornerStyle(imageShape?: string) {
+  if (imageShape === "sharp") return "square";
+  if (imageShape === "pill") return "rounded";
+  return "half-rounded";
+}
+
+function toColorMode(mood?: string) {
+  if (mood === "dark") return "dark";
+  return "light";
+}
+
 export async function saveStyleQuiz(answers: StyleAnswers) {
   console.log('[ACTION] saveStyleQuiz: start', { answers });
   const { supabase, pro } = await getProfessional();
@@ -42,7 +53,13 @@ export async function saveStyleQuiz(answers: StyleAnswers) {
   const { data, error } = await supabase
     .from("professional_portfolio")
     .upsert(
-      { professional_id: pro.id, style_tokens: answers, updated_at: new Date().toISOString() },
+      {
+        professional_id: pro.id,
+        style_tokens: answers,
+        corner_style: toCornerStyle(answers.imageShape),
+        color_mode: toColorMode(answers.mood),
+        updated_at: new Date().toISOString(),
+      },
       { onConflict: "professional_id" }
     )
     .select();
