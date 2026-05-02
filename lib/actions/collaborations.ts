@@ -16,11 +16,8 @@ import type {
 // ============================================
 
 export async function makeFinalist(projectId: string, professionalId: string, projectProfessionalId: string) {
-  console.log('[ACTION] makeFinalist started:', { projectId, professionalId, projectProfessionalId });
-
   const supabase = await createClient();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
-  console.log('[AUTH] User:', user?.id);
   if (!user || authError) return { success: false, error: 'Unauthorized' };
 
   // Check if collaboration already exists (idempotent)
@@ -31,20 +28,11 @@ export async function makeFinalist(projectId: string, professionalId: string, pr
     .eq('professional_id', professionalId)
     .single();
 
-  console.log('[DB] Check existing collaboration:', { 
-    count: existing ? 1 : 0, 
-    status: existing?.status,
-    error: existingError?.message,
-    code: existingError?.code 
-  });
-
   if (existingError?.code === '42501') {
-    console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: project_collaborations');
     return { success: false, error: 'Access denied' };
   }
 
   if (existing) {
-    console.log('[ACTION] makeFinalist: Collaboration already exists, returning success (idempotent)');
     return { success: true, error: null };
   }
 
@@ -60,16 +48,7 @@ export async function makeFinalist(projectId: string, professionalId: string, pr
     .select('id')
     .single();
 
-  console.log('[DB] Create collaboration:', { 
-    id: collab?.id, 
-    error: collabError?.message, 
-    code: collabError?.code 
-  });
-
   if (collabError) {
-    if (collabError.code === '42501') {
-      console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: project_collaborations INSERT');
-    }
     return { success: false, error: collabError.message };
   }
 
@@ -79,12 +58,7 @@ export async function makeFinalist(projectId: string, professionalId: string, pr
     .update({ selection_status: 'finalist' })
     .eq('id', projectProfessionalId);
 
-  console.log('[DB] Update project_professionals:', { error: ppError?.message, code: ppError?.code });
-
   if (ppError) {
-    if (ppError.code === '42501') {
-      console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: project_professionals UPDATE');
-    }
     return { success: false, error: ppError.message };
   }
 
@@ -94,8 +68,6 @@ export async function makeFinalist(projectId: string, professionalId: string, pr
     .select('user_id')
     .eq('id', professionalId)
     .single();
-
-  console.log('[DB] Get professional user_id:', { userId: professional?.user_id, error: proError?.message });
 
   if (professional?.user_id) {
     const { error: notifError } = await createNotification({
@@ -107,12 +79,9 @@ export async function makeFinalist(projectId: string, professionalId: string, pr
       icon: 'award',
       metadata: { collaborationId: collab.id, projectId },
     });
-
-    console.log('[NOTIFICATION] finalist_selected:', { error: notifError });
   }
 
   revalidatePath(`/projects/${projectId}/pros`);
-  console.log('[ACTION] makeFinalist completed successfully');
   return { success: true, error: null };
 }
 
@@ -125,11 +94,8 @@ export async function updateProjectProfessionalSelectionStatus(
   newStatus: string,
   projectId: string
 ) {
-  console.log('[ACTION] updateProjectProfessionalSelectionStatus started:', { projectProfessionalId, newStatus, projectId });
-
   const supabase = await createClient();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
-  console.log('[AUTH] User:', user?.id);
   if (!user || authError) return { success: false, error: 'Unauthorized' };
 
   // 1. Get current record to identify professional_id if we need to call other actions
@@ -140,7 +106,6 @@ export async function updateProjectProfessionalSelectionStatus(
     .single();
 
   if (fetchError || !current) {
-    console.error('[DB] Fetch current project_professional failed:', fetchError);
     return { success: false, error: 'Record not found' };
   }
 
@@ -169,7 +134,7 @@ export async function updateProjectProfessionalSelectionStatus(
         .from('project_professionals')
         .update({ selection_status: 'agreed' })
         .eq('id', projectProfessionalId);
-      
+
       if (ppError) return { success: false, error: ppError.message };
     }
   }
@@ -179,13 +144,10 @@ export async function updateProjectProfessionalSelectionStatus(
   const isFinalistOrAgreed = newStatus === 'finalist' || newStatus === 'agreed';
 
   if (wasFinalistOrAgreed && !isFinalistOrAgreed) {
-    console.log('[ACTION] Moving away from finalist/agreed: DELETING collaboration record');
     const { error: collabError } = await supabase
       .from('project_collaborations')
       .delete()
       .eq('project_professional_id', projectProfessionalId);
-    
-    console.log('[DB] Collaboration delete result:', { error: collabError?.message });
   }
 
   // 4. Update the status
@@ -193,8 +155,6 @@ export async function updateProjectProfessionalSelectionStatus(
     .from('project_professionals')
     .update({ selection_status: newStatus })
     .eq('id', projectProfessionalId);
-
-  console.log('[DB] Update project_professional status:', { error: updateError?.message });
 
   if (updateError) return { success: false, error: updateError.message };
 
@@ -210,11 +170,8 @@ export async function removeProjectProfessionalById(
   projectProfessionalId: string,
   projectId: string
 ) {
-  console.log('[ACTION] removeProjectProfessionalById started:', { projectProfessionalId, projectId });
-
   const supabase = await createClient();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
-  console.log('[AUTH] User:', user?.id);
   if (!user || authError) return { success: false, error: 'Unauthorized' };
 
   // 1. Cleanup associated collaborations (cascade confirmed by user)
@@ -223,20 +180,13 @@ export async function removeProjectProfessionalById(
     .delete()
     .eq('project_professional_id', projectProfessionalId);
 
-  console.log('[DB] Delete associated collaborations:', { error: collabError?.message });
-
   // 2. Delete the professional record
   const { error: deleteError } = await supabase
     .from('project_professionals')
     .delete()
     .eq('id', projectProfessionalId);
 
-  console.log('[DB] Delete project_professional:', { error: deleteError?.message });
-
   if (deleteError) {
-    if (deleteError.code === '42501') {
-      console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: project_professionals DELETE');
-    }
     return { success: false, error: deleteError.message };
   }
 
@@ -252,11 +202,8 @@ export async function submitProposal(
   collaborationId: string,
   data: ProposalFormData
 ) {
-  console.log('[ACTION] submitProposal started:', { collaborationId, data });
-
   const supabase = await createClient();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
-  console.log('[AUTH] User:', user?.id);
   if (!user || authError) return { success: false, error: 'Unauthorized' };
 
   const { error: updateError } = await supabase
@@ -271,12 +218,7 @@ export async function submitProposal(
     })
     .eq('id', collaborationId);
 
-  console.log('[DB] Update collaboration:', { error: updateError?.message, code: updateError?.code });
-
   if (updateError) {
-    if (updateError.code === '42501') {
-      console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: project_collaborations UPDATE');
-    }
     return { success: false, error: updateError.message };
   }
 
@@ -291,14 +233,6 @@ export async function submitProposal(
       content: data.text,
     }]);
 
-  console.log('[DB] Create proposal message:', { error: messageError?.message });
-
-  if (messageError) {
-    if (messageError.code === '42501') {
-      console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: collaboration_messages INSERT');
-    }
-  }
-
   // Notify client
   const { data: collabRaw, error: collabError } = await supabase
     .from('project_collaborations')
@@ -307,11 +241,6 @@ export async function submitProposal(
     .single();
 
   const collab = collabRaw as typeof collabRaw & { project: { user_id: string } | null };
-
-  console.log('[DB] Get collaboration for notification:', {
-    clientId: collab?.project?.user_id,
-    error: collabError?.message
-  });
 
   if (collab?.project?.user_id) {
     const { error: notifError } = await createNotification({
@@ -323,13 +252,10 @@ export async function submitProposal(
       icon: 'file-text',
       metadata: { collaborationId, projectId: collab.project_id },
     });
-
-    console.log('[NOTIFICATION] proposal_submitted:', { error: notifError });
   }
 
   revalidatePath(`/projects/${collab?.project_id}/pros`);
   revalidatePath(`/pro/collaborations/${collaborationId}`);
-  console.log('[ACTION] submitProposal completed');
   return { success: true, error: null };
 }
 
@@ -338,11 +264,8 @@ export async function submitProposal(
 // ============================================
 
 export async function declineCollaboration(collaborationId: string, reason: string) {
-  console.log('[ACTION] declineCollaboration started:', { collaborationId, reason });
-
   const supabase = await createClient();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
-  console.log('[AUTH] User:', user?.id);
   if (!user || authError) return { success: false, error: 'Unauthorized' };
 
   const { error: updateError } = await supabase
@@ -354,12 +277,7 @@ export async function declineCollaboration(collaborationId: string, reason: stri
     })
     .eq('id', collaborationId);
 
-  console.log('[DB] Update collaboration:', { error: updateError?.message, code: updateError?.code });
-
   if (updateError) {
-    if (updateError.code === '42501') {
-      console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: project_collaborations UPDATE');
-    }
     return { success: false, error: updateError.message };
   }
 
@@ -372,15 +290,11 @@ export async function declineCollaboration(collaborationId: string, reason: stri
 
   const collab = collabRaw2 as typeof collabRaw2 & { project: { user_id: string } | null };
 
-  console.log('[DB] Get collaboration for update:', { error: collabError?.message });
-
   if (collab?.project_professional_id) {
     const { error: ppError } = await supabase
       .from('project_professionals')
       .update({ selection_status: 'not_selected' })
       .eq('id', collab.project_professional_id);
-
-    console.log('[DB] Update project_professionals:', { error: ppError?.message });
   }
 
   // Notify client
@@ -394,12 +308,9 @@ export async function declineCollaboration(collaborationId: string, reason: stri
       icon: 'x-circle',
       metadata: { collaborationId, projectId: collab.project_id },
     });
-
-    console.log('[NOTIFICATION] collaboration_declined:', { error: notifError });
   }
 
   revalidatePath(`/projects/${collab?.project_id}/pros`);
-  console.log('[ACTION] declineCollaboration completed');
   return { success: true, error: null };
 }
 
@@ -408,11 +319,8 @@ export async function declineCollaboration(collaborationId: string, reason: stri
 // ============================================
 
 export async function requestRevision(collaborationId: string, message: string) {
-  console.log('[ACTION] requestRevision started:', { collaborationId });
-
   const supabase = await createClient();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
-  console.log('[AUTH] User:', user?.id);
   if (!user || authError) return { success: false, error: 'Unauthorized' };
 
   const { error: messageError } = await supabase
@@ -425,12 +333,7 @@ export async function requestRevision(collaborationId: string, message: string) 
       content: message,
     }]);
 
-  console.log('[DB] Create revision message:', { error: messageError?.message, code: messageError?.code });
-
   if (messageError) {
-    if (messageError.code === '42501') {
-      console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: collaboration_messages INSERT');
-    }
     return { success: false, error: messageError.message };
   }
 
@@ -443,11 +346,6 @@ export async function requestRevision(collaborationId: string, message: string) 
 
   const collab = collabRaw3 as typeof collabRaw3 & { professional: { user_id: string } | null };
 
-  console.log('[DB] Get collaboration for notification:', {
-    proUserId: collab?.professional?.user_id,
-    error: collabError?.message
-  });
-
   if (collab?.professional?.user_id) {
     const { error: notifError } = await createNotification({
       userId: collab.professional.user_id,
@@ -458,12 +356,9 @@ export async function requestRevision(collaborationId: string, message: string) 
       icon: 'refresh-cw',
       metadata: { collaborationId, projectId: collab.project_id },
     });
-
-    console.log('[NOTIFICATION] revision_requested:', { error: notifError });
   }
 
   revalidatePath(`/projects/${collab?.project_id}/pros`);
-  console.log('[ACTION] requestRevision completed');
   return { success: true, error: null };
 }
 
@@ -472,11 +367,8 @@ export async function requestRevision(collaborationId: string, message: string) 
 // ============================================
 
 export async function acceptProposal(collaborationId: string) {
-  console.log('[ACTION] acceptProposal started:', { collaborationId });
-
   const supabase = await createClient();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
-  console.log('[AUTH] User:', user?.id);
   if (!user || authError) return { success: false, error: 'Unauthorized' };
 
   // Get collaboration details
@@ -486,11 +378,10 @@ export async function acceptProposal(collaborationId: string) {
     .eq('id', collaborationId)
     .single();
 
-  const collab = collabRaw4 as typeof collabRaw4 & { 
-    professional: { user_id: string; category: string; area_id: string; profession_id: string } | null 
+  const collab = collabRaw4 as typeof collabRaw4 & {
+    professional: { user_id: string; category: string; area_id: string; profession_id: string } | null
   };
 
-  console.log('[DB] Get collaboration:', { error: collabError?.message });
   if (!collab) return { success: false, error: 'Collaboration not found' };
 
   // Activate this collaboration
@@ -502,12 +393,7 @@ export async function acceptProposal(collaborationId: string) {
     })
     .eq('id', collaborationId);
 
-  console.log('[DB] Activate collaboration:', { error: updateError?.message, code: updateError?.code });
-
   if (updateError) {
-    if (updateError.code === '42501') {
-      console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: project_collaborations UPDATE');
-    }
     return { success: false, error: updateError.message };
   }
 
@@ -517,8 +403,6 @@ export async function acceptProposal(collaborationId: string) {
     .update({ selection_status: 'agreed' })
     .eq('id', collab.project_professional_id);
 
-  console.log('[DB] Update winner project_professionals:', { error: ppError?.message });
-
   // Decline other finalists in the same domain/area
   const { data: otherFinalistsRaw, error: finalistsError } = await supabase
     .from('project_collaborations')
@@ -527,48 +411,28 @@ export async function acceptProposal(collaborationId: string) {
     .neq('id', collaborationId)
     .in('status', ['pending', 'negotiating']);
 
-  type FinalistRow = { 
-    id: string; 
-    professional_id: string; 
-    project_professional_id: string; 
-    professional: { user_id: string; category: string; area_id: string; profession_id: string } | null 
+  type FinalistRow = {
+    id: string;
+    professional_id: string;
+    project_professional_id: string;
+    professional: { user_id: string; category: string; area_id: string; profession_id: string } | null
   };
   const otherFinalists = otherFinalistsRaw as FinalistRow[] | null;
 
-  console.log('[DB] Find candidate finalists for refusal:', { 
-    count: otherFinalists?.length, 
-    error: finalistsError?.message 
-  });
+  if (otherFinalists) {
+    const winningCategory = collab.professional?.category;
+    const winningAreaId = collab.professional?.area_id;
+    const winningProfessionId = collab.professional?.profession_id;
 
-    if (otherFinalists) {
-      const winningCategory = collab.professional?.category;
-      const winningAreaId = collab.professional?.area_id;
-      const winningProfessionId = collab.professional?.profession_id;
+    for (const finalist of otherFinalists) {
+      // We only refuse if they are in the exact same profession OR exact same category
+      // We IGNORE area_id because it's too broad (e.g. Architect and Plumber are both in 'Construction')
+      const isSameTrade = (
+        (winningProfessionId && finalist.professional?.profession_id === winningProfessionId) ||
+        (winningCategory && finalist.professional?.category === winningCategory)
+      );
 
-      console.log('[ACTION] Domain-specific filtering:', { 
-        winningCategory, 
-        winningAreaId,
-        winningProfessionId,
-        totalCandidates: otherFinalists.length 
-      });
-
-      for (const finalist of otherFinalists) {
-        // We only refuse if they are in the exact same profession OR exact same category
-        // We IGNORE area_id because it's too broad (e.g. Architect and Plumber are both in 'Construction')
-        const isSameTrade = (
-          (winningProfessionId && finalist.professional?.profession_id === winningProfessionId) ||
-          (winningCategory && finalist.professional?.category === winningCategory)
-        );
-
-        console.log('[FILTER] Professional refusal decision:', {
-          proId: finalist.professional_id,
-          category: finalist.professional?.category,
-          professionId: finalist.professional?.profession_id,
-          isSameTrade,
-          action: isSameTrade ? 'REFUSING' : 'SKIPPING'
-        });
-
-        if (!isSameTrade) continue;
+      if (!isSameTrade) continue;
 
       // Update collaboration
       const { error: updateCollabError } = await supabase
@@ -580,7 +444,6 @@ export async function acceptProposal(collaborationId: string) {
         .eq('id', finalist.id);
 
       if (updateCollabError) {
-        console.error('[DB] Failed to refuse collaboration:', { id: finalist.id, error: updateCollabError.message });
         continue;
       }
 
@@ -590,10 +453,6 @@ export async function acceptProposal(collaborationId: string) {
           .from('project_professionals')
           .update({ selection_status: 'not_selected' })
           .eq('id', finalist.project_professional_id);
-        
-        if (updatePPError) {
-          console.error('[DB] Failed to update PP status:', { id: finalist.project_professional_id, error: updatePPError.message });
-        }
       }
 
       // Notify declined finalist
@@ -607,10 +466,6 @@ export async function acceptProposal(collaborationId: string) {
           icon: 'info',
           metadata: { collaborationId: finalist.id, projectId: collab.project_id },
         });
-
-        if (notifError) {
-          console.warn('[NOTIFICATION] Failed to send refusal notification:', { proId: finalist.professional_id, error: notifError });
-        }
       }
     }
   }
@@ -626,8 +481,6 @@ export async function acceptProposal(collaborationId: string) {
       icon: 'check-circle',
       metadata: { collaborationId, projectId: collab.project_id },
     });
-
-    console.log('[NOTIFICATION] proposal_accepted:', { error: notifError });
   }
 
   // Notify client about activation
@@ -637,11 +490,8 @@ export async function acceptProposal(collaborationId: string) {
     .eq('id', collab.project_id)
     .single();
 
-  console.log('[DB] Get project for notification:', { error: projError?.message });
-
   revalidatePath(`/projects/${collab.project_id}/pros`);
   revalidatePath(`/pro/collaborations`);
-  console.log('[ACTION] acceptProposal completed');
   return { success: true, error: null };
 }
 
@@ -650,11 +500,8 @@ export async function acceptProposal(collaborationId: string) {
 // ============================================
 
 export async function declineFinalist(collaborationId: string, reason: string) {
-  console.log('[ACTION] declineFinalist started:', { collaborationId });
-
   const supabase = await createClient();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
-  console.log('[AUTH] User:', user?.id);
   if (!user || authError) return { success: false, error: 'Unauthorized' };
 
   const { error: updateError } = await supabase
@@ -666,12 +513,7 @@ export async function declineFinalist(collaborationId: string, reason: string) {
     })
     .eq('id', collaborationId);
 
-  console.log('[DB] Update collaboration:', { error: updateError?.message, code: updateError?.code });
-
   if (updateError) {
-    if (updateError.code === '42501') {
-      console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: project_collaborations UPDATE');
-    }
     return { success: false, error: updateError.message };
   }
 
@@ -683,8 +525,6 @@ export async function declineFinalist(collaborationId: string, reason: string) {
     .single();
 
   const collab = collabRaw5 as typeof collabRaw5 & { professional: { user_id: string } | null };
-
-  console.log('[DB] Get collaboration:', { error: collabError?.message });
 
   if (collab?.project_professional_id) {
     await supabase
@@ -707,7 +547,6 @@ export async function declineFinalist(collaborationId: string, reason: string) {
   }
 
   revalidatePath(`/projects/${collab?.project_id}/pros`);
-  console.log('[ACTION] declineFinalist completed');
   return { success: true, error: null };
 }
 
@@ -716,11 +555,8 @@ export async function declineFinalist(collaborationId: string, reason: string) {
 // ============================================
 
 export async function terminateCollaboration(collaborationId: string, reason: string) {
-  console.log('[ACTION] terminateCollaboration started:', { collaborationId });
-
   const supabase = await createClient();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
-  console.log('[AUTH] User:', user?.id);
   if (!user || authError) return { success: false, error: 'Unauthorized' };
 
   const { error: updateError } = await supabase
@@ -732,12 +568,7 @@ export async function terminateCollaboration(collaborationId: string, reason: st
     })
     .eq('id', collaborationId);
 
-  console.log('[DB] Update collaboration:', { error: updateError?.message, code: updateError?.code });
-
   if (updateError) {
-    if (updateError.code === '42501') {
-      console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: project_collaborations UPDATE');
-    }
     return { success: false, error: updateError.message };
   }
 
@@ -749,8 +580,6 @@ export async function terminateCollaboration(collaborationId: string, reason: st
     .single();
 
   const collab = collabRaw6 as typeof collabRaw6 & { professional: { user_id: string } | null };
-
-  console.log('[DB] Get collaboration:', { error: collabError?.message });
 
   if (collab?.project_professional_id) {
     await supabase
@@ -774,7 +603,6 @@ export async function terminateCollaboration(collaborationId: string, reason: st
 
   revalidatePath(`/projects/${collab?.project_id}/pros`);
   revalidatePath(`/projects/${collab?.project_id}`);
-  console.log('[ACTION] terminateCollaboration completed');
   return { success: true, error: null };
 }
 
@@ -787,11 +615,8 @@ export async function sendCollaborationMessage(
   data: MessageFormData,
   senderRole: 'client' | 'professional' = 'professional'
 ) {
-  console.log('[ACTION] sendCollaborationMessage started:', { collaborationId, type: data.type });
-
   const supabase = await createClient();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
-  console.log('[AUTH] User:', user?.id);
   if (!user || authError) return { success: false, error: 'Unauthorized' };
 
   const { data: message, error: messageError } = await supabase
@@ -807,22 +632,12 @@ export async function sendCollaborationMessage(
     .select()
     .single();
 
-  console.log('[DB] Create message:', { 
-    messageId: message?.id, 
-    error: messageError?.message, 
-    code: messageError?.code 
-  });
-
   if (messageError) {
-    if (messageError.code === '42501') {
-      console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: collaboration_messages INSERT');
-    }
     return { success: false, error: messageError.message };
   }
 
   revalidatePath(`/projects/[projectId]/pros/proposal/[proId]`);
   revalidatePath(`/pro/collaborations/${collaborationId}`);
-  console.log('[ACTION] sendCollaborationMessage completed');
   return { success: true, data: message, error: null };
 }
 
@@ -831,11 +646,8 @@ export async function sendCollaborationMessage(
 // ============================================
 
 export async function getProjectProList(projectId: string) {
-  console.log('[ACTION] getProjectProList started:', { projectId });
-
   const supabase = await createClient();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
-  console.log('[AUTH] User:', user?.id);
   if (!user || authError) return { groups: null, error: 'Unauthorized' };
 
   const { data: pros, error: prosError } = await supabase
@@ -869,21 +681,8 @@ export async function getProjectProList(projectId: string) {
     .eq('project_id', projectId)
     .order('added_at', { ascending: false });
 
-  console.log('[DB] Get project professionals:', { 
-    count: pros?.length, 
-    error: prosError?.message,
-    code: prosError?.code
-  });
-
   if (prosError) {
-    if (prosError.code === '42501') {
-      console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: project_professionals');
-    }
     return { groups: null, error: prosError.message };
-  }
-
-  if (!pros || pros.length === 0) {
-    console.warn('[RLS] ⚠️ SILENT RLS FILTERING! Table: project_professionals, expected data but got 0 rows');
   }
 
   // Group by status
@@ -897,18 +696,11 @@ export async function getProjectProList(projectId: string) {
 
   for (const pro of pros) {
     const selectionStatus = pro.selection_status;
-    
+
     // Flatten collaboration array if it exists
     // Supabase returns an array for joins on many-to-one relationships from parent perspective
     const collabArray = pro.collaboration as any;
     const collab = Array.isArray(collabArray) && collabArray.length > 0 ? collabArray[0] : null;
-    
-    console.log('[DEBUG] Pro selection status:', { 
-      proId: pro.id, 
-      status: selectionStatus, 
-      hasCollab: !!collab,
-      messageCount: collab?.messages?.length || 0 
-    });
 
     if (selectionStatus === 'candidate') {
       groups.saved.pros.push({ ...pro, collaboration: collab });
@@ -929,14 +721,6 @@ export async function getProjectProList(projectId: string) {
   groups.active.count = groups.active.pros.length;
   groups.declined.count = groups.declined.pros.length;
 
-  console.log('[ACTION] getProjectProList completed:', {
-    saved: groups.saved.count,
-    shortlisted: groups.shortlisted.count,
-    finalists: groups.finalists.count,
-    active: groups.active.count,
-    declined: groups.declined.count,
-  });
-
   return { groups, error: null };
 }
 
@@ -945,8 +729,6 @@ export async function getProjectProList(projectId: string) {
 // ============================================
 
 export async function getProInbox(professionalId: string, limit: number = 20, offset: number = 0) {
-  console.log('[ACTION] getProInbox started:', { professionalId, limit, offset });
-
   const supabase = await createClient();
 
   const { data: collaborations, error: collabError } = await supabase
@@ -974,36 +756,18 @@ export async function getProInbox(professionalId: string, limit: number = 20, of
     .order('created_at', { ascending: false })
     .range(offset, offset + limit - 1);
 
-  console.log('[DB] Get pro collaborations:', { 
-    count: collaborations?.length, 
-    error: collabError?.message,
-    code: collabError?.code
-  });
-
   if (collabError) {
-    if (collabError.code === '42501') {
-      console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: project_collaborations');
-    }
     return { proposals: null, unreadProposalCount: 0, error: collabError.message };
   }
 
-  if (!collaborations || collaborations.length === 0) {
-    console.warn('[RLS] ⚠️ SILENT RLS FILTERING! Table: project_collaborations, expected data but got 0 rows');
-  }
-
-  const unreadCount = collaborations?.filter(c => 
+  const unreadCount = collaborations?.filter(c =>
     c.status === 'pending' && !c.proposal_submitted_at
   ).length || 0;
 
-  console.log('[ACTION] getProInbox completed:', { 
-    proposals: collaborations?.length,
-    unread: unreadCount 
-  });
-
-  return { 
-    proposals: collaborations || [], 
+  return {
+    proposals: collaborations || [],
     unreadProposalCount: unreadCount,
-    error: null 
+    error: null
   };
 }
 
@@ -1012,8 +776,6 @@ export async function getProInbox(professionalId: string, limit: number = 20, of
 // ============================================
 
 export async function getFinalistProjectView(collaborationId: string) {
-  console.log('[ACTION] getFinalistProjectView started:', { collaborationId });
-
   const supabase = await createClient();
 
   const { data: collab, error: collabError } = await supabase
@@ -1029,29 +791,15 @@ export async function getFinalistProjectView(collaborationId: string) {
     .eq('id', collaborationId)
     .single();
 
-  console.log('[DB] Get finalist project view:', { 
-    hasProject: !!collab?.project,
-    error: collabError?.message,
-    code: collabError?.code
-  });
-
   if (collabError) {
-    if (collabError.code === '42501') {
-      console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: project_collaborations');
-    }
     return { project: null, steps: null, areas: null, error: collabError.message };
   }
 
-  if (!collab) {
-    console.warn('[RLS] ⚠️ SILENT RLS FILTERING! Table: project_collaborations, expected data but got 0 rows');
-  }
-
-  console.log('[ACTION] getFinalistProjectView completed');
-  return { 
+  return {
     project: collab?.project || null,
     steps: collab?.project?.steps || [],
     areas: collab?.project?.areas || [],
-    error: null 
+    error: null
   };
 }
 
@@ -1060,8 +808,6 @@ export async function getFinalistProjectView(collaborationId: string) {
 // ============================================
 
 export async function getProposalDetail(collaborationId: string) {
-  console.log('[ACTION] getProposalDetail started:', { collaborationId });
-
   const supabase = await createClient();
 
   const { data: collab, error: collabError } = await supabase
@@ -1084,28 +830,14 @@ export async function getProposalDetail(collaborationId: string) {
     .eq('id', collaborationId)
     .single();
 
-  console.log('[DB] Get proposal detail:', { 
-    hasMessages: collab?.messages?.length,
-    error: collabError?.message,
-    code: collabError?.code
-  });
-
   if (collabError) {
-    if (collabError.code === '42501') {
-      console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: project_collaborations');
-    }
     return { collaboration: null, messages: [], professional: null, error: collabError.message };
   }
 
-  if (!collab) {
-    console.warn('[RLS] ⚠️ SILENT RLS FILTERING! Table: project_collaborations, expected data but got 0 rows');
-  }
-
-  console.log('[ACTION] getProposalDetail completed');
-  return { 
+  return {
     collaboration: collab,
     messages: collab?.messages || [],
     professional: collab?.professional,
-    error: null 
+    error: null
   };
 }

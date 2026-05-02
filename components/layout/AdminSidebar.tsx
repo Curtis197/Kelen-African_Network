@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -8,10 +8,10 @@ import { LayoutDashboard, ListChecks, ScrollText, LogOut, Shield, Menu, X, Ban, 
 
 const NAV_ITEMS = [
   { href: "/admin", label: "Vue d'ensemble", icon: LayoutDashboard, exact: true },
-  { href: "/admin/queue", label: "File de vérification", icon: ListChecks, exact: false },
+  { href: "/admin/queue", label: "File de vÃ©rification", icon: ListChecks, exact: false },
   { href: "/admin/blacklisted", label: "Liste Noire", icon: Ban, exact: false },
   { href: "/admin/client-projects", label: "Projets Clients", icon: FolderOpen, exact: false },
-  { href: "/admin/journal", label: "Journal d'activité", icon: ScrollText, exact: false },
+  { href: "/admin/journal", label: "Journal d'activitÃ©", icon: ScrollText, exact: false },
 ];
 
 export function AdminSidebar() {
@@ -31,7 +31,6 @@ export function AdminSidebar() {
         const { data: { session }, error } = await supabase.auth.getSession();
         
         if (error) {
-          console.error('[AdminSidebar] Session fetch error:', error.message, error.code);
           setUserEmail(null);
           return;
         }
@@ -44,7 +43,6 @@ export function AdminSidebar() {
           setUserEmail(null);
         }
       } catch (err) {
-        console.error('[AdminSidebar] Unexpected error fetching session:', err);
         setUserEmail(null);
       }
     };
@@ -128,7 +126,6 @@ export function AdminSidebar() {
     try {
       await supabase.auth.signOut({ scope: 'global' });
     } catch (err) {
-      console.error('Sign out error:', err);
     } finally {
       setUserEmail(null);
       setSigningOut(false);
@@ -192,7 +189,7 @@ export function AdminSidebar() {
               className="mt-2 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <LogOut className={`h-4 w-4 ${signingOut ? 'animate-pulse' : ''}`} />
-              {signingOut ? 'Déconnexion...' : 'Se déconnecter'}
+              {signingOut ? 'DÃ©connexion...' : 'Se dÃ©connecter'}
             </button>
           </div>
         </div>
@@ -276,7 +273,7 @@ export function AdminSidebar() {
                 className="mt-2 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 <LogOut className={`h-4 w-4 ${signingOut ? 'animate-pulse' : ''}`} />
-                {signingOut ? 'Déconnexion...' : 'Se déconnecter'}
+                {signingOut ? 'DÃ©connexion...' : 'Se dÃ©connecter'}
               </button>
             </div>
           </div>

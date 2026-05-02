@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -7,7 +7,6 @@ import { motion } from "framer-motion";
 import { FolderOpen, Edit, Save, X, Search, MapPin, Calendar, DollarSign, Eye } from "lucide-react";
 import Link from "next/link";
 
-console.log('[CLIENT-PROJECTS-ADMIN] Module loaded');
 
 interface UserProject {
   id: string;
@@ -31,17 +30,17 @@ const STATUS_CONFIG = {
   en_preparation: { label: "Brouillon", color: "bg-stone-100 text-stone-700 border-stone-300" },
   en_cours: { label: "En cours", color: "bg-blue-50 text-blue-700 border-blue-200" },
   en_pause: { label: "En pause", color: "bg-orange-50 text-orange-700 border-orange-200" },
-  termine: { label: "Terminé", color: "bg-green-50 text-green-700 border-green-200" },
-  annule: { label: "Annulé", color: "bg-red-50 text-red-700 border-red-200" },
+  termine: { label: "TerminÃ©", color: "bg-green-50 text-green-700 border-green-200" },
+  annule: { label: "AnnulÃ©", color: "bg-red-50 text-red-700 border-red-200" },
 };
 
 const CATEGORIES = [
   "Construction",
-  "Rénovation",
+  "RÃ©novation",
   "Architecture",
   "Design",
-  "Ingénierie",
-  "Électricité",
+  "IngÃ©nierie",
+  "Ã‰lectricitÃ©",
   "Plomberie",
   "Peinture",
   "Menuiserie",
@@ -60,7 +59,6 @@ export default function ClientProjectsAdminPage() {
   const [editForm, setEditForm] = useState<Partial<UserProject>>({});
   const supabase = createClient();
 
-  console.log('[CLIENT-PROJECTS-ADMIN] Component mounted');
 
   useEffect(() => {
     fetchProjects();
@@ -81,15 +79,12 @@ export default function ClientProjectsAdminPage() {
   }, [searchQuery, projects]);
 
   const fetchProjects = async () => {
-    console.log('[CLIENT-PROJECTS-ADMIN] Fetching all projects');
     setIsLoading(true);
 
     const { data: { user } } = await supabase.auth.getUser();
-    console.log('[CLIENT-PROJECTS-ADMIN] Auth user:', user?.id);
 
     if (!user) {
-      console.error('[CLIENT-PROJECTS-ADMIN] No user authenticated');
-      toast.error("Non authentifié");
+      toast.error("Non authentifiÃ©");
       setIsLoading(false);
       return;
     }
@@ -99,37 +94,25 @@ export default function ClientProjectsAdminPage() {
       .select("*")
       .order("created_at", { ascending: false });
 
-    console.log('[CLIENT-PROJECTS-ADMIN] Fetch result:', {
-      count: data?.length || 0,
-      error: error?.message,
-      code: error?.code,
-    });
 
     if (error?.code === '42501') {
-      console.error('[CLIENT-PROJECTS-ADMIN] [RLS] ❌ EXPLICIT RLS BLOCKING!');
-      console.error('[CLIENT-PROJECTS-ADMIN] [RLS] Table: user_projects');
-      console.error('[CLIENT-PROJECTS-ADMIN] [RLS] Fix: Add admin SELECT policy for user_projects');
-      toast.error("Accès refusé - Contactez un super-admin");
+      toast.error("AccÃ¨s refusÃ© - Contactez un super-admin");
     } else if (error) {
-      console.error('[CLIENT-PROJECTS-ADMIN] Error fetching projects:', error);
       toast.error("Erreur lors du chargement");
     } else {
       setProjects(data || []);
       setFilteredProjects(data || []);
-      console.log('[CLIENT-PROJECTS-ADMIN] ✅ Projects loaded:', data?.length);
     }
 
     setIsLoading(false);
   };
 
   const startEditing = (project: UserProject) => {
-    console.log('[CLIENT-PROJECTS-ADMIN] Start editing:', project.id);
     setEditingProject(project);
     setEditForm({ ...project });
   };
 
   const cancelEditing = () => {
-    console.log('[CLIENT-PROJECTS-ADMIN] Cancel editing');
     setEditingProject(null);
     setEditForm({});
   };
@@ -137,7 +120,6 @@ export default function ClientProjectsAdminPage() {
   const saveProject = async () => {
     if (!editingProject) return;
 
-    console.log('[CLIENT-PROJECTS-ADMIN] Saving project:', editingProject.id, editForm);
 
     const { error } = await supabase
       .from("user_projects")
@@ -156,22 +138,13 @@ export default function ClientProjectsAdminPage() {
       })
       .eq("id", editingProject.id);
 
-    console.log('[CLIENT-PROJECTS-ADMIN] Save result:', {
-      error: error?.message,
-      code: error?.code,
-    });
 
     if (error?.code === '42501') {
-      console.error('[CLIENT-PROJECTS-ADMIN] [RLS] ❌ EXPLICIT RLS BLOCKING on update!');
-      console.error('[CLIENT-PROJECTS-ADMIN] [RLS] Table: user_projects');
-      console.error('[CLIENT-PROJECTS-ADMIN] [RLS] Fix: Add admin UPDATE policy for user_projects');
-      toast.error("Modification refusée - Accès non autorisé");
+      toast.error("Modification refusÃ©e - AccÃ¨s non autorisÃ©");
     } else if (error) {
-      console.error('[CLIENT-PROJECTS-ADMIN] Error updating project:', error);
       toast.error("Erreur lors de la modification");
     } else {
-      console.log('[CLIENT-PROJECTS-ADMIN] ✅ Project updated successfully');
-      toast.success("Projet modifié avec succès");
+      toast.success("Projet modifiÃ© avec succÃ¨s");
       setEditingProject(null);
       setEditForm({});
       fetchProjects();
@@ -183,7 +156,7 @@ export default function ClientProjectsAdminPage() {
   };
 
   const formatDate = (dateStr?: string) => {
-    if (!dateStr) return "—";
+    if (!dateStr) return "â€”";
     return new Date(dateStr).toLocaleDateString("fr-FR", {
       day: "numeric",
       month: "long",
@@ -208,7 +181,7 @@ export default function ClientProjectsAdminPage() {
           href="/admin"
           className="px-4 py-2 bg-surface-container text-foreground rounded-lg hover:bg-surface-container-high transition-colors text-sm font-medium"
         >
-          ← Retour
+          â† Retour
         </Link>
       </div>
 
@@ -225,7 +198,7 @@ export default function ClientProjectsAdminPage() {
           </p>
         </div>
         <div className="rounded-xl border border-border bg-white p-4">
-          <p className="text-sm text-muted-foreground">Terminés</p>
+          <p className="text-sm text-muted-foreground">TerminÃ©s</p>
           <p className="text-2xl font-bold text-green-600 mt-1">
             {projects.filter((p) => p.status === "termine").length}
           </p>
@@ -306,14 +279,14 @@ export default function ClientProjectsAdminPage() {
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-foreground mb-1">
-                          Catégorie
+                          CatÃ©gorie
                         </label>
                         <select
                           value={editForm.category || ""}
                           onChange={(e) => updateEditField("category", e.target.value)}
                           className="w-full px-3 py-2 border border-border rounded-lg bg-white text-foreground focus:outline-none focus:ring-2 focus:ring-kelen-green-500"
                         >
-                          <option value="">Non définie</option>
+                          <option value="">Non dÃ©finie</option>
                           {CATEGORIES.map((cat) => (
                             <option key={cat} value={cat}>
                               {cat}
@@ -387,7 +360,7 @@ export default function ClientProjectsAdminPage() {
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-foreground mb-1">
-                          Date de début
+                          Date de dÃ©but
                         </label>
                         <input
                           type="date"
@@ -509,11 +482,11 @@ export default function ClientProjectsAdminPage() {
       ) : (
         <div className="rounded-xl border border-border bg-white p-12 text-center">
           <FolderOpen className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-          <p className="text-lg font-semibold text-foreground">Aucun projet trouvé</p>
+          <p className="text-lg font-semibold text-foreground">Aucun projet trouvÃ©</p>
           <p className="text-sm text-muted-foreground mt-2">
             {searchQuery
               ? "Essayez avec d'autres termes de recherche"
-              : "Aucun projet client n'a été trouvé"}
+              : "Aucun projet client n'a Ã©tÃ© trouvÃ©"}
           </p>
         </div>
       )}

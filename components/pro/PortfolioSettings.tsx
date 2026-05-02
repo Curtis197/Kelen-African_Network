@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -20,7 +20,6 @@ export function PortfolioSettings({
   professionalId,
   professionalSlug,
 }: PortfolioSettingsProps) {
-  console.log("[PortfolioSettings] Initializing:", { portfolioId: portfolio?.id, professionalId });
   
   const router = useRouter();
   const supabase = createClient();
@@ -49,15 +48,13 @@ export function PortfolioSettings({
     file: File,
     type: "hero" | "about"
   ) => {
-    console.log("[PortfolioSettings] Uploading image:", type, file.name);
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("Non authentifié");
+      if (!user) throw new Error("Non authentifiÃ©");
 
       const path = `portfolios/${user.id}`;
       const url = await uploadFile(file, "portfolios", path);
       
-      console.log("[PortfolioSettings] Image uploaded:", url);
       
       if (type === "hero") {
         setHeroImageUrl(url);
@@ -65,15 +62,13 @@ export function PortfolioSettings({
         setAboutImageUrl(url);
       }
       
-      toast.success("Image téléchargée avec succès");
+      toast.success("Image tÃ©lÃ©chargÃ©e avec succÃ¨s");
     } catch (error) {
-      console.error("[PortfolioSettings] Upload error:", error);
-      toast.error("Erreur lors du téléchargement de l'image");
+      toast.error("Erreur lors du tÃ©lÃ©chargement de l'image");
     }
   };
 
   const handleSave = async () => {
-    console.log("[PortfolioSettings] Saving portfolio");
     setIsSaving(true);
     
     try {
@@ -88,11 +83,9 @@ export function PortfolioSettings({
         color_mode: colorMode,
       });
       
-      console.log("[PortfolioSettings] Portfolio saved:", result?.id);
-      toast.success("Portfolio mis à jour avec succès");
+      toast.success("Portfolio mis Ã  jour avec succÃ¨s");
       router.refresh();
     } catch (error) {
-      console.error("[PortfolioSettings] Save error:", error);
       toast.error(error instanceof Error ? error.message : "Erreur lors de la sauvegarde");
     } finally {
       setIsSaving(false);
@@ -104,13 +97,13 @@ export function PortfolioSettings({
       {/* Hero Section */}
       <div className="space-y-4">
         <h3 className="font-headline text-lg font-bold text-on-surface">
-          Section Héros (Bannière)
+          Section HÃ©ros (BanniÃ¨re)
         </h3>
         
         {/* Hero Image Preview */}
         <div className="space-y-2">
           <label className="text-sm font-medium text-on-surface-variant">
-            Image de bannière
+            Image de banniÃ¨re
           </label>
           <div className="relative aspect-[21/9] w-full overflow-hidden rounded-xl bg-surface-container-lowest border-2 border-dashed border-outline-variant/30">
             {heroImageUrl ? (
@@ -125,7 +118,7 @@ export function PortfolioSettings({
               <div className="flex h-full items-center justify-center text-on-surface-variant/40">
                 <div className="text-center">
                   <ImageIcon className="mx-auto mb-2 h-8 w-8" />
-                  <p className="text-sm">Aucune image de bannière</p>
+                  <p className="text-sm">Aucune image de banniÃ¨re</p>
                 </div>
               </div>
             )}
@@ -148,7 +141,7 @@ export function PortfolioSettings({
         {/* Hero Subtitle */}
         <div className="space-y-2">
           <label className="text-sm font-medium text-on-surface-variant">
-            Sous-titre du héros
+            Sous-titre du hÃ©ros
           </label>
           <input
             type="text"
@@ -166,13 +159,13 @@ export function PortfolioSettings({
       {/* About Section */}
       <div className="space-y-4">
         <h3 className="font-headline text-lg font-bold text-on-surface">
-          Section "À propos"
+          Section "Ã€ propos"
         </h3>
         
         {/* About Image Preview */}
         <div className="space-y-2">
           <label className="text-sm font-medium text-on-surface-variant">
-            Image "À propos" (optionnelle)
+            Image "Ã€ propos" (optionnelle)
           </label>
           <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl bg-surface-container-lowest border-2 border-dashed border-outline-variant/30">
             {aboutImageUrl ? (
@@ -210,17 +203,17 @@ export function PortfolioSettings({
         {/* About Text */}
         <div className="space-y-2">
           <label className="text-sm font-medium text-on-surface-variant">
-            Texte "À propos"
+            Texte "Ã€ propos"
           </label>
           <textarea
             value={aboutText}
             onChange={(e) => setAboutText(e.target.value)}
-            placeholder="Présentez votre entreprise, votre expérience et vos valeurs..."
+            placeholder="PrÃ©sentez votre entreprise, votre expÃ©rience et vos valeurs..."
             rows={8}
             className="w-full rounded-xl bg-surface-container-lowest px-4 py-3 text-sm transition-all focus:bg-white focus:ring-4 focus:ring-kelen-green-500/5 outline-none resize-none"
           />
           <p className="text-xs text-on-surface-variant/60">
-            {aboutText.length} caractères
+            {aboutText.length} caractÃ¨res
           </p>
         </div>
       </div>
@@ -249,7 +242,7 @@ export function PortfolioSettings({
                   cornerStyle === style ? 'border-[#009639] bg-green-50 text-[#009639]' : 'border-gray-200 text-gray-600',
                 ].join(' ')}
               >
-                {style === 'square' ? 'Carré' : style === 'half-rounded' ? 'Arrondi' : 'Très arrondi'}
+                {style === 'square' ? 'CarrÃ©' : style === 'half-rounded' ? 'Arrondi' : 'TrÃ¨s arrondi'}
               </button>
             ))}
           </div>
@@ -269,7 +262,7 @@ export function PortfolioSettings({
                   colorMode === mode ? 'border-[#009639] bg-green-50 text-[#009639]' : 'border-gray-200 text-gray-600',
                 ].join(' ')}
               >
-                {mode === 'light' ? '☀️ Clair' : mode === 'dark' ? '🌙 Sombre' : '🎨 Couleur logo'}
+                {mode === 'light' ? 'â˜€ï¸ Clair' : mode === 'dark' ? 'ðŸŒ™ Sombre' : 'ðŸŽ¨ Couleur logo'}
               </button>
             ))}
           </div>

@@ -1,4 +1,4 @@
-// components/portfolio/CopywritingQuiz.tsx
+﻿// components/portfolio/CopywritingQuiz.tsx
 "use client";
 
 import { useState } from "react";
@@ -13,7 +13,6 @@ interface Props {
 }
 
 export function CopywritingQuiz({ initialAnswers, onCopyGenerated }: Props) {
-  console.log('[COMPONENT] CopywritingQuiz render:', { initialAnswers });
   const [answers, setAnswers] = useState<Partial<CopyAnswers>>(initialAnswers);
   const [generating, setGenerating] = useState(false);
   const [generated, setGenerated] = useState(false);
@@ -34,7 +33,6 @@ export function CopywritingQuiz({ initialAnswers, onCopyGenerated }: Props) {
   const allRequired = requiredQuestions.every(q => answers[q.id as keyof CopyAnswers]);
 
   async function handleGenerate() {
-    console.log('[COMPONENT] CopywritingQuiz handleGenerate:', { answers });
     setGenerating(true);
     setError(null);
     try {
@@ -42,8 +40,7 @@ export function CopywritingQuiz({ initialAnswers, onCopyGenerated }: Props) {
       onCopyGenerated(result.copy);
       setGenerated(true);
     } catch (e: any) {
-      console.error('[COMPONENT] CopywritingQuiz handleGenerate error:', e);
-      setError("Erreur lors de la génération. Réessayez.");
+      setError("Erreur lors de la gÃ©nÃ©ration. RÃ©essayez.");
     } finally {
       setGenerating(false);
     }
@@ -54,7 +51,7 @@ export function CopywritingQuiz({ initialAnswers, onCopyGenerated }: Props) {
       <div>
         <h3 className="font-headline text-lg font-bold text-on-surface">Voix & Contenu</h3>
         <p className="text-sm text-on-surface-variant/70 mt-1">
-          4 questions pour générer le texte de votre site automatiquement.
+          4 questions pour gÃ©nÃ©rer le texte de votre site automatiquement.
         </p>
       </div>
 
@@ -111,7 +108,7 @@ export function CopywritingQuiz({ initialAnswers, onCopyGenerated }: Props) {
         className="h-11 px-6 rounded-xl bg-kelen-green-600 text-white font-bold text-sm flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-kelen-green-700 transition-colors"
       >
         {generating && <Loader2 className="w-4 h-4 animate-spin" />}
-        {generating ? "Génération en cours..." : generated ? "Texte généré ✓" : "Générer mon contenu"}
+        {generating ? "GÃ©nÃ©ration en cours..." : generated ? "Texte gÃ©nÃ©rÃ© âœ“" : "GÃ©nÃ©rer mon contenu"}
       </button>
     </div>
   );

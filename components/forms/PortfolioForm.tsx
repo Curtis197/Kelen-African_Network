@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -16,7 +16,7 @@ import { LocationSearch, type LocationData } from "@/components/location/Locatio
 import Image from "next/image";
 
 const realizationSchema = z.object({
-  title: z.string().min(3, "Le titre doit contenir au moins 3 caractères"),
+  title: z.string().min(3, "Le titre doit contenir au moins 3 caractÃ¨res"),
   description: z.string().optional(),
   location: z.string().optional(),
   completion_date: z.string().optional(),
@@ -133,7 +133,6 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
         .delete()
         .eq("id", imageId);
       if (error) {
-        console.error("[RealizationForm] Error deleting image:", error);
         toast.error("Erreur lors de la suppression de l'image");
       }
     }
@@ -148,8 +147,7 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
         .delete()
         .eq("id", videoId);
       if (error) {
-        console.error("[RealizationForm] Error deleting video:", error);
-        toast.error("Erreur lors de la suppression de la vidéo");
+        toast.error("Erreur lors de la suppression de la vidÃ©o");
       }
     }
   };
@@ -163,7 +161,6 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
         .delete()
         .eq("id", docId);
       if (error) {
-        console.error("[RealizationForm] Error deleting document:", error);
         toast.error("Erreur lors de la suppression du document");
       }
     }
@@ -190,7 +187,7 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
       setValue("title", corrected.title, { shouldDirty: true });
       setValue("description", corrected.description, { shouldDirty: true });
     } catch {
-      setCorrectionError("Erreur lors de la correction IA. Réessayez.");
+      setCorrectionError("Erreur lors de la correction IA. RÃ©essayez.");
     } finally {
       setIsCorrecting(false);
     }
@@ -205,12 +202,11 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
 
   const onSubmit = async (data: RealizationFormData) => {
     setIsSaving(true);
-    console.log("[RealizationForm] Submitting:", { isEditing, data, existingImagesCount: existingImages.length, newImagesCount: imageFiles.length, existingVideosCount: existingVideos.length, newVideosCount: videoFiles.length });
     try {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      if (!user) throw new Error("Non authentifié");
+      if (!user) throw new Error("Non authentifiÃ©");
 
       // Upload new images
       const newImageUrls: string[] = [];
@@ -227,7 +223,6 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
       // Upload new video files
       const newVideoUrls: string[] = [];
       if (videoFiles.length > 0) {
-        console.log("[RealizationForm] Uploading videos...", videoFiles.length);
         const uploads = videoFiles.map(async (file) => {
           const path = `portfolios/${user.id}/videos`;
           const url = await uploadFile(file, "portfolios", path);
@@ -235,7 +230,6 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
         });
         const results = await Promise.all(uploads);
         newVideoUrls.push(...results.filter(Boolean));
-        console.log("[RealizationForm] Videos uploaded:", newVideoUrls.length);
       }
 
       // Upload new document files
@@ -273,7 +267,7 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
           removed_document_ids: removedDocumentIds,
           updated_images: updatedImages,
         });
-        toast.success("Réalisation mise à jour avec succès");
+        toast.success("RÃ©alisation mise Ã  jour avec succÃ¨s");
       } else {
         await createRealization({
           professional_id: professionalId,
@@ -287,13 +281,12 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
           video_urls: newVideoUrls,
           document_files: newDocFiles.length > 0 ? newDocFiles : undefined,
         });
-        toast.success("Réalisation ajoutée avec succès");
+        toast.success("RÃ©alisation ajoutÃ©e avec succÃ¨s");
       }
 
       router.push("/pro/portfolio");
       router.refresh();
     } catch (error) {
-      console.error("[RealizationForm] Error:", error);
       toast.error("Erreur lors de l'enregistrement");
     } finally {
       setIsSaving(false);
@@ -318,7 +311,7 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
           <section className="space-y-6">
             <div className="flex items-start justify-between gap-4">
               <h2 className="font-headline text-xl font-bold text-on-surface">
-                {isEditing ? "Modifier la réalisation" : "Détails de la réalisation"}
+                {isEditing ? "Modifier la rÃ©alisation" : "DÃ©tails de la rÃ©alisation"}
               </h2>
               <div className="flex items-center gap-2 shrink-0">
                 {lastCorrectionSnapshot && (
@@ -341,7 +334,7 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
                     ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
                     : <Sparkles className="w-3.5 h-3.5" />
                   }
-                  {isCorrecting ? "Correction..." : "Améliorer avec l'IA"}
+                  {isCorrecting ? "Correction..." : "AmÃ©liorer avec l'IA"}
                 </button>
               </div>
             </div>
@@ -352,18 +345,18 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
                 <label className="text-sm font-bold text-on-surface">Titre</label>
                 <input
                   {...register("title")}
-                  placeholder="Ex: Construction Villa Moderne à Abidjan"
+                  placeholder="Ex: Construction Villa Moderne Ã  Abidjan"
                   className="w-full rounded-xl bg-surface-container-low px-4 py-3 text-sm transition-all focus:bg-white focus:ring-4 focus:ring-kelen-green-500/5 outline-none"
                 />
                 {errors.title && <p className="text-xs text-kelen-red-500">{errors.title.message}</p>}
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-bold text-on-surface">Description détaillée</label>
+                <label className="text-sm font-bold text-on-surface">Description dÃ©taillÃ©e</label>
                 <textarea
                   {...register("description")}
                   rows={6}
-                  placeholder="Décrivez les défis relevés, les matériaux utilisés, et le résultat final..."
+                  placeholder="DÃ©crivez les dÃ©fis relevÃ©s, les matÃ©riaux utilisÃ©s, et le rÃ©sultat final..."
                   className="w-full rounded-xl bg-surface-container-low px-4 py-3 text-sm transition-all focus:bg-white focus:ring-4 focus:ring-kelen-green-500/5 outline-none resize-none"
                 />
               </div>
@@ -374,11 +367,11 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
                   <LocationSearch
                     value={watch("location") ? { name: watch("location") || "", formatted_address: watch("location") || "", lat: 0, lng: 0 } : null}
                     onChange={(loc: LocationData | null) => setValue("location", loc?.formatted_address || "")}
-                    placeholder="Ex: Abidjan, Côte d'Ivoire"
+                    placeholder="Ex: Abidjan, CÃ´te d'Ivoire"
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-on-surface">Date de réalisation</label>
+                  <label className="text-sm font-bold text-on-surface">Date de rÃ©alisation</label>
                   <input
                     type="date"
                     {...register("completion_date")}
@@ -403,9 +396,9 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
                     {...register("currency")}
                     className="w-full rounded-xl bg-surface-container-low px-4 py-3 text-sm transition-all focus:bg-white focus:ring-4 focus:ring-kelen-green-500/5 outline-none"
                   >
-                    <option value="XOF">XOF — Franc CFA</option>
-                    <option value="EUR">EUR — Euro</option>
-                    <option value="USD">USD — Dollar US</option>
+                    <option value="XOF">XOF â€” Franc CFA</option>
+                    <option value="EUR">EUR â€” Euro</option>
+                    <option value="USD">USD â€” Dollar US</option>
                   </select>
                 </div>
               </div>
@@ -505,7 +498,7 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
             {imageFiles.length === 0 && existingImages.length === 0 && (
               <div className="flex flex-col items-center justify-center py-8 text-center border-2 border-dashed border-on-surface-variant/10 rounded-xl">
                 <ImageIcon size={32} className="mb-2 text-on-surface-variant/20" />
-                <p className="text-xs text-on-surface-variant/50">Aucune photo ajoutée</p>
+                <p className="text-xs text-on-surface-variant/50">Aucune photo ajoutÃ©e</p>
               </div>
             )}
           </section>
@@ -515,7 +508,7 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
             <div className="flex items-center justify-between">
               <h3 className="font-headline font-bold text-on-surface flex items-center gap-2">
                 <Video size={18} className="text-kelen-green-600" />
-                Vidéos
+                VidÃ©os
               </h3>
               <label className="cursor-pointer rounded-lg bg-white px-3 py-1.5 text-xs font-bold text-on-surface shadow-sm transition-all hover:bg-stone-50">
                 <input type="file" multiple accept="video/mp4,video/webm" className="hidden" onChange={handleVideoChange} />
@@ -524,12 +517,12 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
             </div>
 
             <p className="text-xs text-on-surface-variant/60">
-              Vidéos de démonstration (MP4, WebM - max 50 Mo par vidéo).
+              VidÃ©os de dÃ©monstration (MP4, WebM - max 50 Mo par vidÃ©o).
             </p>
 
             {isEditing && existingVideos.length > 0 && (
               <div className="space-y-3">
-                <p className="text-xs font-medium text-on-surface-variant">Vidéos existantes :</p>
+                <p className="text-xs font-medium text-on-surface-variant">VidÃ©os existantes :</p>
                 <div className="grid grid-cols-2 gap-3">
                   {existingVideos.map((video) => (
                     <div key={`existing-video-${video.id}`} className="relative aspect-video overflow-hidden rounded-xl bg-stone-900 group">
@@ -559,7 +552,7 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
 
             {videoFiles.length > 0 && (
               <div className="space-y-3">
-                <p className="text-xs font-medium text-on-surface-variant">Nouvelles vidéos :</p>
+                <p className="text-xs font-medium text-on-surface-variant">Nouvelles vidÃ©os :</p>
                 <div className="grid grid-cols-2 gap-3">
                   {videoFiles.map((file, i) => {
                     const previewUrl = URL.createObjectURL(file);
@@ -591,7 +584,7 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
             {videoFiles.length === 0 && existingVideos.length === 0 && (
               <div className="flex flex-col items-center justify-center py-8 text-center border-2 border-dashed border-on-surface-variant/10 rounded-xl">
                 <Video size={32} className="mb-2 text-on-surface-variant/20" />
-                <p className="text-xs text-on-surface-variant/50">Aucune vidéo ajoutée</p>
+                <p className="text-xs text-on-surface-variant/50">Aucune vidÃ©o ajoutÃ©e</p>
               </div>
             )}
           </section>
@@ -610,7 +603,7 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
             </div>
 
             <p className="text-xs text-on-surface-variant/60">
-              Plans, certificats, ou tout document à afficher sur le portfolio.
+              Plans, certificats, ou tout document Ã  afficher sur le portfolio.
             </p>
 
             {isEditing && existingDocuments.length > 0 && (
@@ -658,7 +651,7 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
             {documentFiles.length === 0 && existingDocuments.length === 0 && (
               <div className="flex flex-col items-center justify-center py-6 text-center border-2 border-dashed border-on-surface-variant/10 rounded-xl">
                 <FileText size={28} className="mb-2 text-on-surface-variant/20" />
-                <p className="text-xs text-on-surface-variant/50">Aucun document ajouté</p>
+                <p className="text-xs text-on-surface-variant/50">Aucun document ajoutÃ©</p>
               </div>
             )}
           </section>

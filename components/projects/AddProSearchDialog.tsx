@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -52,7 +52,6 @@ export function AddProSearchDialog({
       }
 
       setIsSearching(true);
-      console.log('[ADD_PRO_SEARCH] Searching for:', searchQuery);
 
       const { data, error } = await supabase
         .from("professionals")
@@ -62,10 +61,8 @@ export function AddProSearchDialog({
         .limit(10);
 
       if (error) {
-        console.error('[ADD_PRO_SEARCH] Error:', error.message);
         toast.error("Erreur lors de la recherche");
       } else {
-        console.log('[ADD_PRO_SEARCH] Results found:', data?.length);
         setResults(data || []);
       }
       setIsSearching(false);
@@ -80,7 +77,6 @@ export function AddProSearchDialog({
 
   const handleAddPro = async (pro: Professional) => {
     setIsAdding(pro.id);
-    console.log('[ADD_PRO_SEARCH] Adding pro to project:', { projectId, proId: pro.id, area: areaName });
     
     try {
       const result = await manageProjectProfessional(
@@ -96,12 +92,11 @@ export function AddProSearchDialog({
       if (result?.error) {
         toast.error(result.error);
       } else {
-        toast.success(`${pro.business_name} ajouté au projet`);
+        toast.success(`${pro.business_name} ajoutÃ© au projet`);
         onSuccess();
         onClose();
       }
     } catch (error) {
-      console.error('[ADD_PRO_SEARCH] Runtime error:', error);
       toast.error("Une erreur est survenue");
     } finally {
       setIsAdding(null);
@@ -138,7 +133,7 @@ export function AddProSearchDialog({
                     Ajouter un professionnel
                   </h2>
                   <p className="text-on-surface-variant text-sm mt-1">
-                    Recherchez parmi nos experts vérifiés pour le domaine <span className="font-bold text-primary">{areaName}</span>.
+                    Recherchez parmi nos experts vÃ©rifiÃ©s pour le domaine <span className="font-bold text-primary">{areaName}</span>.
                   </p>
                 </div>
                 <button 
@@ -157,7 +152,7 @@ export function AddProSearchDialog({
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Nom, entreprise, métier..."
+                  placeholder="Nom, entreprise, mÃ©tier..."
                   className="w-full bg-surface-container-low rounded-2xl pl-14 pr-6 py-5 font-headline font-bold text-on-surface border-none focus:ring-2 focus:ring-primary/20 placeholder:opacity-30 text-lg transition-all"
                 />
                 {isSearching && (
@@ -232,12 +227,12 @@ export function AddProSearchDialog({
                   <div className="w-20 h-20 bg-surface-container rounded-full flex items-center justify-center mb-4">
                     <Search className="w-8 h-8" />
                   </div>
-                  <p className="font-headline font-bold">Aucun professionnel trouvé</p>
-                  <p className="text-sm mt-1">Réessayez avec d'autres mots-clés</p>
+                  <p className="font-headline font-bold">Aucun professionnel trouvÃ©</p>
+                  <p className="text-sm mt-1">RÃ©essayez avec d'autres mots-clÃ©s</p>
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center py-12 text-center text-on-surface-variant/30">
-                  <p className="text-sm italic font-medium">Commencez à taper pour rechercher...</p>
+                  <p className="text-sm italic font-medium">Commencez Ã  taper pour rechercher...</p>
                 </div>
               )}
             </div>
@@ -246,7 +241,7 @@ export function AddProSearchDialog({
             <div className="p-6 bg-surface-container-low/50 border-t border-outline-variant/10 shrink-0">
               <div className="flex items-center justify-between gap-4">
                 <p className="text-[10px] sm:text-xs text-on-surface-variant font-medium max-w-[280px]">
-                  Tous ces professionnels sont vérifiés et suivis par nos équipes techniques pour garantir la qualité.
+                  Tous ces professionnels sont vÃ©rifiÃ©s et suivis par nos Ã©quipes techniques pour garantir la qualitÃ©.
                 </p>
                 <button
                   onClick={onClose}

@@ -1,4 +1,4 @@
-// components/portfolio/DomainSearch.tsx
+﻿// components/portfolio/DomainSearch.tsx
 "use client";
 
 import { useState, useTransition } from "react";
@@ -13,7 +13,6 @@ type DomainResult = {
 };
 
 export function DomainSearch() {
-  console.log('[COMPONENT] DomainSearch render');
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<DomainResult[]>([]);
   const [activating, setActivating] = useState<string | null>(null);
@@ -24,7 +23,6 @@ export function DomainSearch() {
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
     if (!query.trim()) return;
-    console.log('[COMPONENT] DomainSearch handleSearch:', { query });
     setError(null);
     setResults([]);
     startSearch(async () => {
@@ -32,21 +30,18 @@ export function DomainSearch() {
         const data = await searchDomain(query.trim());
         setResults(data);
       } catch (e: any) {
-        console.error('[COMPONENT] DomainSearch search error:', e);
-        setError("Erreur lors de la recherche. Réessayez.");
+        setError("Erreur lors de la recherche. RÃ©essayez.");
       }
     });
   }
 
   async function handleActivate(domain: string) {
-    console.log('[COMPONENT] DomainSearch handleActivate:', { domain });
     setActivating(domain);
     setError(null);
     try {
       await activateDomain(domain);
       setActivated(domain);
     } catch (e: any) {
-      console.error('[COMPONENT] DomainSearch activate error:', e);
       setError(e.message || "Erreur lors de l'activation.");
     } finally {
       setActivating(null);
@@ -59,7 +54,7 @@ export function DomainSearch() {
         <Globe className="w-5 h-5 text-kelen-green-600 shrink-0" />
         <div>
           <p className="font-bold text-sm text-kelen-green-800">
-            {activated} — Activation en cours
+            {activated} â€” Activation en cours
           </p>
           <p className="text-xs text-kelen-green-600 mt-0.5">
             Votre site sera accessible dans quelques minutes le temps que le DNS se propage.
@@ -112,7 +107,7 @@ export function DomainSearch() {
                     </p>
                   )}
                   {!r.available && (
-                    <p className="text-xs text-red-400">Déjà pris</p>
+                    <p className="text-xs text-red-400">DÃ©jÃ  pris</p>
                   )}
                 </div>
               </div>

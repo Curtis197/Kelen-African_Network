@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -41,7 +41,7 @@ const MESSAGE_TYPE_CONFIG: Record<MessageType, { label: string; icon: React.Reac
     color: "bg-purple-100 text-purple-700",
   },
   revision_request: {
-    label: "Demande de révision",
+    label: "Demande de rÃ©vision",
     icon: <RefreshCw className="w-3.5 h-3.5" />,
     color: "bg-amber-100 text-amber-700",
   },
@@ -72,30 +72,14 @@ export function CollaborationThread({
   const [newMessage, setNewMessage] = useState("");
   const [isSending, setIsSending] = useState(false);
 
-  console.log('[COMPONENT] ========================================');
-  console.log('[COMPONENT] CollaborationThread RENDER');
-  console.log('[COMPONENT] collaborationId:', collaborationId);
-  console.log('[COMPONENT] messageCount:', messages.length);
-  console.log('[COMPONENT] currentUserId:', currentUserId);
-  console.log('[COMPONENT] currentUserRole:', currentUserRole);
-  console.log('[COMPONENT] isSending:', isSending);
-  console.log('[COMPONENT] ========================================');
 
   const handleSend = async () => {
-    console.log('[ACTION] ========================================');
-    console.log('[ACTION] CollaborationThread handleSend STARTED');
-    console.log('[ACTION] collaborationId:', collaborationId);
-    console.log('[ACTION] senderRole:', currentUserRole);
-    console.log('[ACTION] messageLength:', newMessage.trim().length);
-    console.log('[ACTION] ========================================');
 
     if (!newMessage.trim()) {
-      console.warn('[ACTION] ⚠️ Empty message — aborting send');
       return;
     }
 
     setIsSending(true);
-    console.log('[STATE] isSending → true');
 
     try {
       const { success, error } = await sendCollaborationMessage(collaborationId, {
@@ -103,21 +87,15 @@ export function CollaborationThread({
         content: newMessage,
       }, currentUserRole);
 
-      console.log('[ACTION] sendCollaborationMessage result:', { success, error });
 
       if (success) {
-        console.log('[ACTION] ✅ Message sent successfully');
-        console.log('[STATE] Clearing newMessage, calling onMessageSent');
         setNewMessage("");
         onMessageSent?.();
       } else {
-        console.error('[ACTION] ❌ sendCollaborationMessage failed:', error);
       }
     } catch (err) {
-      console.error('[ACTION] ❌ handleSend threw exception:', err);
     } finally {
       setIsSending(false);
-      console.log('[STATE] isSending → false');
     }
   };
 
@@ -188,7 +166,7 @@ export function CollaborationThread({
           <Textarea
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            placeholder="Écrivez votre message..."
+            placeholder="Ã‰crivez votre message..."
             className="mb-2"
             disabled={isSending}
           />

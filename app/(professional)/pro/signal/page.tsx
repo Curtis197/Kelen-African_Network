@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -18,8 +18,8 @@ interface Signal {
 
 const BREACH_LABELS: Record<string, string> = {
   timeline: "Retard de livraison",
-  budget: "Dépassement budgétaire",
-  quality: "Défaut de qualité",
+  budget: "DÃ©passement budgÃ©taire",
+  quality: "DÃ©faut de qualitÃ©",
   abandonment: "Abandon de chantier",
   fraud: "Suspicion de fraude",
 };
@@ -60,7 +60,6 @@ export default function ProSignalsPage() {
         .order("created_at", { ascending: false });
 
       if (error) {
-        console.error("Error fetching signals:", error);
       } else {
         setSignals((data as Signal[]) || []);
       }
@@ -99,7 +98,7 @@ export default function ProSignalsPage() {
         <div>
           <h1 className="text-2xl font-bold text-on-surface tracking-tight">Signalements & Litiges</h1>
           <p className="text-sm text-on-surface-variant mt-0.5">
-            Gérez les incidents rapportés par vos clients et apportez votre version des faits.
+            GÃ©rez les incidents rapportÃ©s par vos clients et apportez votre version des faits.
           </p>
         </div>
       </header>
@@ -107,8 +106,8 @@ export default function ProSignalsPage() {
       <div className="mb-10 p-5 bg-amber-50 rounded-2xl border border-amber-200 flex gap-4 items-start">
         <Info className="text-amber-600 text-2xl" />
         <div className="text-sm text-amber-900">
-          <p className="font-bold mb-1">Droit de réponse (15 jours)</p>
-          <p>Vous disposez d&apos;un délai légal de 15 jours pour répondre à tout signalement. Passé ce délai, le signalement peut être validé automatiquement par nos services.</p>
+          <p className="font-bold mb-1">Droit de rÃ©ponse (15 jours)</p>
+          <p>Vous disposez d&apos;un dÃ©lai lÃ©gal de 15 jours pour rÃ©pondre Ã  tout signalement. PassÃ© ce dÃ©lai, le signalement peut Ãªtre validÃ© automatiquement par nos services.</p>
         </div>
       </div>
 
@@ -136,7 +135,7 @@ export default function ProSignalsPage() {
                       </div>
                       <div>
                         <h3 className="text-lg font-bold text-on-surface">{BREACH_LABELS[signal.breach_type]}</h3>
-                        <p className="text-xs text-on-surface-variant font-medium">Signalé le {createdAt.toLocaleDateString('fr-FR')}</p>
+                        <p className="text-xs text-on-surface-variant font-medium">SignalÃ© le {createdAt.toLocaleDateString('fr-FR')}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
@@ -154,7 +153,7 @@ export default function ProSignalsPage() {
                   <div className="bg-surface-container rounded-2xl p-5 mb-6 border border-border">
                     <p className="text-xs font-black text-on-surface-variant/60 uppercase tracking-widest mb-2 flex items-center gap-2">
                       <AlignLeft className="text-sm" />
-                      Détails de l&apos;incident
+                      DÃ©tails de l&apos;incident
                     </p>
                     <p className="text-sm text-on-surface-variant leading-relaxed italic">
                       &quot;{signal.breach_description}&quot;
@@ -164,14 +163,14 @@ export default function ProSignalsPage() {
                   {!signal.pro_response ? (
                     <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2">
                       <label className="block text-sm font-bold text-on-surface">
-                        Votre réponse officielle
+                        Votre rÃ©ponse officielle
                       </label>
                       <textarea
                         value={responseInput[signal.id] || ""}
                         onChange={(e) => setResponseInput({ ...responseInput, [signal.id]: e.target.value })}
                         rows={4}
                         className="w-full rounded-2xl border border-border bg-surface-container px-5 py-4 text-sm focus:border-kelen-green-500 focus:bg-surface-container-low focus:outline-none focus:ring-4 focus:ring-kelen-green-500/5 transition-all"
-                        placeholder="Apportez des éléments factuels pour répondre à ce signalement..."
+                        placeholder="Apportez des Ã©lÃ©ments factuels pour rÃ©pondre Ã  ce signalement..."
                       />
                       <div className="flex justify-end">
                         <button
@@ -184,7 +183,7 @@ export default function ProSignalsPage() {
                           ) : (
                             <Send className="text-lg" />
                           )}
-                          Envoyer ma réponse
+                          Envoyer ma rÃ©ponse
                         </button>
                       </div>
                     </div>
@@ -192,7 +191,7 @@ export default function ProSignalsPage() {
                     <div className="bg-kelen-green-50/50 border border-kelen-green-100 rounded-2xl p-6">
                       <p className="text-xs font-black text-kelen-green-600 uppercase tracking-widest mb-3 flex items-center gap-2">
                         <Reply className="text-sm" />
-                        Ma réponse publiée
+                        Ma rÃ©ponse publiÃ©e
                       </p>
                       <p className="text-sm text-on-surface-variant leading-relaxed">
                         {signal.pro_response}
@@ -211,7 +210,7 @@ export default function ProSignalsPage() {
           </div>
           <h3 className="text-2xl font-bold text-on-surface">Score de confiance impeccable</h3>
           <p className="text-on-surface-variant mt-2 max-w-sm text-center">
-            Aucun signalement n&apos;a été enregistré sur votre profil. Continuez à offrir un service d&apos;excellence !
+            Aucun signalement n&apos;a Ã©tÃ© enregistrÃ© sur votre profil. Continuez Ã  offrir un service d&apos;excellence !
           </p>
         </div>
       )}

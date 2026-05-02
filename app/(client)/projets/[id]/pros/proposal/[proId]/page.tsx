@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
@@ -32,7 +32,7 @@ import { useRef } from "react";
 
 const STATUS_BADGE_CONFIG: Record<string, { label: string; className: string }> = {
   pending: { label: "En attente", className: "bg-yellow-100 text-yellow-700" },
-  negotiating: { label: "Négociation", className: "bg-purple-100 text-purple-700" },
+  negotiating: { label: "NÃ©gociation", className: "bg-purple-100 text-purple-700" },
   active: { label: "Actif", className: "bg-green-500 text-white" },
 };
 
@@ -52,34 +52,19 @@ export default function ProposalReviewPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  console.log('[COMPONENT] ========================================');
-  console.log('[COMPONENT] ProposalReviewPage RENDER');
-  console.log('[COMPONENT] projectId:', projectIdStr, 'proId:', proIdStr);
-  console.log('[COMPONENT] isLoading:', isLoading, 'isSubmitting:', isSubmitting);
-  console.log('[COMPONENT] ========================================');
 
   useEffect(() => {
     if (!projectIdStr || !proIdStr) {
-      console.warn('[EFFECT] ⚠️ Missing params — projectId:', projectIdStr, 'proId:', proIdStr);
       return;
     }
 
-    console.log('[EFFECT] ========================================');
-    console.log('[EFFECT] ProposalReviewPage useEffect triggered');
-    console.log('[EFFECT] projectId:', projectIdStr, 'proId:', proIdStr);
-    console.log('[EFFECT] ========================================');
 
     const fetchProposal = async () => {
-      console.log('[FETCH] Starting proposal + messages fetch...');
       setIsLoading(true);
 
       const supabase = createClient();
 
-      // ── COLLABORATION + PROFESSIONAL ─────────────────
-      console.log('[DB] ========================================');
-      console.log('[DB] Querying project_collaborations + professionals');
-      console.log('[DB] project_id:', projectIdStr, 'professional_id:', proIdStr);
-      console.log('[DB] ========================================');
+      // â”€â”€ COLLABORATION + PROFESSIONAL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
       const { data: collabData, error: collabError } = await supabase
         .from("project_collaborations")
@@ -101,29 +86,11 @@ export default function ProposalReviewPage() {
         .eq("professional_id", proIdStr)
         .single();
 
-      console.log('[DB] project_collaborations result:', {
-        found: !!collabData,
-        status: collabData?.status,
-        hasProposal: !!collabData?.proposal_submitted_at,
-        proposalBudget: collabData?.proposal_budget,
-        error: collabError?.message,
-        code: collabError?.code,
-      });
 
       if (collabError) {
         if (collabError.code === "42501") {
-          console.error('[RLS] ========================================');
-          console.error('[RLS] ❌ EXPLICIT RLS BLOCKING!');
-          console.error('[RLS] Table: project_collaborations');
-          console.error('[RLS] Operation: SELECT');
-          console.error('[RLS] project_id:', projectIdStr);
-          console.error('[RLS] professional_id:', proIdStr);
-          console.error('[RLS] Fix: Client needs collab_client_all policy (project_id in own projects)');
-          console.error('[RLS] ========================================');
         } else if (collabError.code === 'PGRST116') {
-          console.warn('[DB] ⚠️ No collaboration found (PGRST116) — wrong IDs or RLS silent filter');
         } else {
-          console.error('[DB] ❌ Database error (NOT RLS):', { message: collabError.message, code: collabError.code });
         }
         toast.error("Impossible de charger la proposition");
         setIsLoading(false);
@@ -131,29 +98,17 @@ export default function ProposalReviewPage() {
       }
 
       if (!collabData) {
-        console.warn('[RLS] ========================================');
-        console.warn('[RLS] ⚠️ SILENT RLS FILTERING — .single() returned null with no error');
-        console.warn('[RLS] Table: project_collaborations');
-        console.warn('[RLS] project_id:', projectIdStr, 'professional_id:', proIdStr);
-        console.warn('[RLS] Verify: check Supabase table editor for this collaboration row');
-        console.warn('[RLS] ========================================');
         toast.error("Proposition introuvable");
         setIsLoading(false);
         return;
       }
 
-      console.log('[DB] ✅ Collaboration loaded:', collabData.id, 'status:', collabData.status);
       setCollaboration(collabData);
       if (collabData.professional) {
-        console.log('[STATE] Setting professional:', (collabData.professional as ProfessionalSnapshot).business_name);
         setProfessional(collabData.professional as ProfessionalSnapshot);
       }
 
-      // ── MESSAGES ─────────────────────────────────────
-      console.log('[DB] ========================================');
-      console.log('[DB] Querying collaboration_messages');
-      console.log('[DB] collaboration_id:', collabData.id);
-      console.log('[DB] ========================================');
+      // â”€â”€ MESSAGES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
       const { data: messagesData, error: messagesError } = await supabase
         .from("collaboration_messages")
@@ -161,30 +116,14 @@ export default function ProposalReviewPage() {
         .eq("collaboration_id", collabData.id)
         .order("created_at", { ascending: true });
 
-      console.log('[DB] collaboration_messages result:', {
-        count: messagesData?.length,
-        error: messagesError?.message,
-        code: messagesError?.code,
-      });
 
       if (messagesError?.code === "42501") {
-        console.error('[RLS] ========================================');
-        console.error('[RLS] ❌ EXPLICIT RLS BLOCKING!');
-        console.error('[RLS] Table: collaboration_messages');
-        console.error('[RLS] Operation: SELECT');
-        console.error('[RLS] collaboration_id:', collabData.id);
-        console.error('[RLS] Fix: collab_messages_read policy (collaboration belongs to client project)');
-        console.error('[RLS] ========================================');
       } else if (!messagesError && (!messagesData || messagesData.length === 0)) {
-        console.warn('[RLS] ⚠️ SILENT RLS or no messages yet — collaboration_messages returned 0 rows');
-        console.warn('[RLS] collaboration_id:', collabData.id);
       } else if (messagesData) {
-        console.log('[DB] ✅ Messages loaded:', messagesData.length, 'messages');
         setMessages(messagesData as CollaborationMessage[]);
       }
 
       setIsLoading(false);
-      console.log('[FETCH] ✅ Fetch complete');
     };
 
     fetchProposal();
@@ -193,105 +132,67 @@ export default function ProposalReviewPage() {
   const handleAccept = async () => {
     if (!collaboration) return;
 
-    console.log('[ACTION] ========================================');
-    console.log('[ACTION] handleAccept STARTED');
-    console.log('[ACTION] collaborationId:', collaboration.id);
-    console.log('[ACTION] currentStatus:', collaboration.status);
-    console.log('[ACTION] projectId:', projectIdStr, 'proId:', proIdStr);
-    console.log('[ACTION] ========================================');
 
-    if (!confirm("Accepter cette proposition ? Les autres finalistes seront automatiquement refusés.")) {
-      console.log('[ACTION] handleAccept — user cancelled confirm dialog');
+    if (!confirm("Accepter cette proposition ? Les autres finalistes seront automatiquement refusÃ©s.")) {
       return;
     }
 
     setIsSubmitting(true);
-    console.log('[STATE] isSubmitting → true (handleAccept)');
 
     const result = await acceptProposal(collaboration.id);
 
-    console.log('[ACTION] acceptProposal result:', { success: result.success, error: result.error });
 
     if (result.error) {
-      console.error('[ACTION] ❌ acceptProposal failed:', result.error);
       toast.error(result.error);
     } else {
-      console.log('[ACTION] ✅ acceptProposal succeeded — redirecting to pros list');
-      toast.success("Proposition acceptée ! Le professionnel a maintenant accès au projet.");
+      toast.success("Proposition acceptÃ©e ! Le professionnel a maintenant accÃ¨s au projet.");
       router.push(`/projets/${projectIdStr}/pros`);
     }
     setIsSubmitting(false);
-    console.log('[STATE] isSubmitting → false (handleAccept)');
   };
 
   const handleDecline = async () => {
     if (!collaboration) return;
 
-    console.log('[ACTION] ========================================');
-    console.log('[ACTION] handleDecline STARTED');
-    console.log('[ACTION] collaborationId:', collaboration.id);
-    console.log('[ACTION] currentStatus:', collaboration.status);
-    console.log('[ACTION] projectId:', projectIdStr, 'proId:', proIdStr);
-    console.log('[ACTION] ========================================');
 
     const reason = prompt("Raison du refus (optionnel) :");
     if (reason === null) {
-      console.log('[ACTION] handleDecline — user cancelled prompt dialog');
       return;
     }
-    console.log('[ACTION] decline reason:', reason || '(none provided)');
 
     setIsSubmitting(true);
-    console.log('[STATE] isSubmitting → true (handleDecline)');
 
-    const result = await declineFinalist(collaboration.id, reason || "Non sélectionné");
+    const result = await declineFinalist(collaboration.id, reason || "Non sÃ©lectionnÃ©");
 
-    console.log('[ACTION] declineFinalist result:', { success: result.success, error: result.error });
 
     if (result.error) {
-      console.error('[ACTION] ❌ declineFinalist failed:', result.error);
       toast.error(result.error);
     } else {
-      console.log('[ACTION] ✅ declineFinalist succeeded — redirecting to pros list');
-      toast.success("Professionnel refusé.");
+      toast.success("Professionnel refusÃ©.");
       router.push(`/projets/${projectIdStr}/pros`);
     }
     setIsSubmitting(false);
-    console.log('[STATE] isSubmitting → false (handleDecline)');
   };
 
   const handleRequestRevision = async () => {
     if (!collaboration) return;
 
-    console.log('[ACTION] ========================================');
-    console.log('[ACTION] handleRequestRevision STARTED');
-    console.log('[ACTION] collaborationId:', collaboration.id);
-    console.log('[ACTION] currentStatus:', collaboration.status);
-    console.log('[ACTION] projectId:', projectIdStr, 'proId:', proIdStr);
-    console.log('[ACTION] ========================================');
 
-    const message = prompt("Votre demande de révision :");
+    const message = prompt("Votre demande de rÃ©vision :");
     if (!message) {
-      console.log('[ACTION] handleRequestRevision — user cancelled or empty message');
       return;
     }
-    console.log('[ACTION] revision message length:', message.length);
 
     setIsSubmitting(true);
-    console.log('[STATE] isSubmitting → true (handleRequestRevision)');
 
     const result = await requestRevision(collaboration.id, message);
 
-    console.log('[ACTION] requestRevision result:', { success: result.success, error: result.error });
 
     if (result.error) {
-      console.error('[ACTION] ❌ requestRevision failed:', result.error);
       toast.error(result.error);
     } else {
-      console.log('[ACTION] ✅ requestRevision succeeded — reloading messages');
-      toast.success("Demande de révision envoyée.");
+      toast.success("Demande de rÃ©vision envoyÃ©e.");
 
-      console.log('[DB] Reloading collaboration_messages after revision request');
       const supabase = createClient();
       const { data, error: reloadError } = await supabase
         .from("collaboration_messages")
@@ -299,35 +200,28 @@ export default function ProposalReviewPage() {
         .eq("collaboration_id", collaboration.id)
         .order("created_at", { ascending: true });
 
-      console.log('[DB] messages reload result:', { count: data?.length, error: reloadError?.message });
       if (reloadError?.code === '42501') {
-        console.error('[RLS] ❌ EXPLICIT RLS BLOCKING on messages reload! Table: collaboration_messages');
       }
       if (data) {
         setMessages(data as CollaborationMessage[]);
-        console.log('[STATE] messages updated after revision request:', data.length, 'messages');
       }
     }
     setIsSubmitting(false);
-    console.log('[STATE] isSubmitting → false (handleRequestRevision)');
   };
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    console.log('[ACTION] handleFileSelect STARTED, files:', files.length);
     setIsUploading(true);
     
     try {
       const file = files[0]; // Instant upload handle one by one for better UX
-      console.log('[STORAGE] Uploading file:', file.name, file.type, file.size);
       
       const bucket = "collaboration-attachments";
       const path = `${proIdStr}/${Date.now()}`;
       
       const publicUrl = await uploadFile(file, bucket, path);
-      console.log('[STORAGE] ✅ Upload success, URL:', publicUrl);
       
       setAttachments(prev => [...prev, {
         url: publicUrl,
@@ -335,9 +229,8 @@ export default function ProposalReviewPage() {
         type: file.type
       }]);
       
-      toast.success("Fichier ajouté");
+      toast.success("Fichier ajoutÃ©");
     } catch (error: any) {
-      console.error('[STORAGE] ❌ Upload failed:', error);
       toast.error(error.message || "Erreur lors de l'envoi du fichier");
     } finally {
       setIsUploading(false);
@@ -346,42 +239,25 @@ export default function ProposalReviewPage() {
   };
 
   const removeAttachment = (index: number) => {
-    console.log('[ACTION] removeAttachment index:', index);
     setAttachments(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleSendReply = async () => {
     if (!collaboration || !replyText.trim()) return;
 
-    console.log('[ACTION] ========================================');
-    console.log('[ACTION] handleSendReply STARTED');
-    console.log('[ACTION] collaborationId:', collaboration.id);
-    console.log('[ACTION] currentStatus:', collaboration.status);
-    console.log('[ACTION] messageLength:', replyText.trim().length);
-    console.log('[ACTION] ========================================');
 
     setIsSubmitting(true);
-    console.log('[STATE] isSubmitting → true (handleSendReply)');
 
     const supabase = createClient();
 
     const { data: authData } = await supabase.auth.getUser();
     const senderId = authData.user?.id;
-    console.log('[AUTH] senderId for message insert:', senderId);
     if (!senderId) {
-      console.error('[AUTH] ❌ No authenticated user — aborting message insert');
-      toast.error("Non authentifié");
+      toast.error("Non authentifiÃ©");
       setIsSubmitting(false);
       return;
     }
 
-    console.log('[DB] ========================================');
-    console.log('[DB] INSERT collaboration_messages');
-    console.log('[DB] collaboration_id:', collaboration.id);
-    console.log('[DB] sender_id:', senderId);
-    console.log('[DB] sender_role: client');
-    console.log('[DB] message_type: general');
-    console.log('[DB] ========================================');
 
     const { data, error } = await supabase
       .from("collaboration_messages")
@@ -396,39 +272,23 @@ export default function ProposalReviewPage() {
       .select()
       .single();
 
-    console.log('[DB] collaboration_messages INSERT result:', { inserted: !!data, error: error?.message, code: error?.code });
 
     if (error?.code === "42501") {
-      console.error('[RLS] ========================================');
-      console.error('[RLS] ❌ EXPLICIT RLS BLOCKING!');
-      console.error('[RLS] Table: collaboration_messages');
-      console.error('[RLS] Operation: INSERT');
-      console.error('[RLS] collaboration_id:', collaboration.id);
-      console.error('[RLS] sender_id:', senderId);
-      console.error('[RLS] Fix: collab_messages_insert policy (client owns project)');
-      console.error('[RLS] ========================================');
-      toast.error("Accès refusé");
+      toast.error("AccÃ¨s refusÃ©");
     } else if (error) {
-      console.error('[ACTION] ❌ handleSendReply INSERT error (NOT RLS):', { message: error.message, code: error.code });
       toast.error(error.message);
     } else {
-      console.log('[ACTION] ✅ Message inserted successfully');
       setReplyText("");
-      console.log('[STATE] replyText cleared');
       if (data) {
         setMessages((prev) => [...prev, data as CollaborationMessage]);
-        console.log('[STATE] messages appended, new count:', messages.length + 1);
       }
-      toast.success("Message envoyé");
+      toast.success("Message envoyÃ©");
       setAttachments([]);
-      console.log('[STATE] attachments cleared');
     }
     setIsSubmitting(false);
-    console.log('[STATE] isSubmitting → false (handleSendReply)');
   };
 
   if (isLoading) {
-    console.log('[RENDER] Showing loading spinner — isLoading:', isLoading);
     return (
       <div className="min-h-screen bg-surface flex items-center justify-center">
         <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
@@ -437,20 +297,17 @@ export default function ProposalReviewPage() {
   }
 
   if (!collaboration || !professional) {
-    console.warn('[RENDER] ⚠️ Not-found state — collaboration:', !!collaboration, 'professional:', !!professional);
-    console.warn('[RENDER] projectId:', projectIdStr, 'proId:', proIdStr);
     return (
       <div className="min-h-screen bg-surface flex flex-col items-center justify-center p-8 text-center">
         <FileText className="w-12 h-12 text-on-surface-variant/40 mb-4" />
         <h1 className="text-2xl font-bold text-on-surface mb-2">Proposition introuvable</h1>
         <Link href={`/projets/${projectIdStr}/pros`} className="text-primary font-semibold hover:underline">
-          ← Retour aux professionnels
+          â† Retour aux professionnels
         </Link>
       </div>
     );
   }
 
-  console.log('[RENDER] Rendering full proposal page — collaborationId:', collaboration.id, 'status:', collaboration.status, 'messages:', messages.length);
 
   const statusBadge = STATUS_BADGE_CONFIG[collaboration.status];
   const initials = professional.business_name
@@ -513,7 +370,7 @@ export default function ProposalReviewPage() {
                 <span className="capitalize">{professional.category}</span>
                 {professional.city && (
                   <>
-                    <span>•</span>
+                    <span>â€¢</span>
                     <span className="flex items-center gap-1">
                       <MapPin className="w-3.5 h-3.5" />
                       {professional.city}
@@ -522,7 +379,7 @@ export default function ProposalReviewPage() {
                 )}
                 {professional.avg_rating && (
                   <>
-                    <span>•</span>
+                    <span>â€¢</span>
                     <span className="flex items-center gap-1">
                       <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
                       {professional.avg_rating.toFixed(1)} ({professional.review_count || 0})
@@ -546,7 +403,7 @@ export default function ProposalReviewPage() {
               <div className="bg-surface-container rounded-xl p-4">
                 <div className="flex items-center gap-2 text-sm text-on-surface-variant mb-1">
                   <DollarSign className="w-4 h-4" />
-                  Budget proposé
+                  Budget proposÃ©
                 </div>
                 <div className="text-xl font-bold text-on-surface">
                   {collaboration.proposal_budget.toLocaleString("fr-FR")} {collaboration.proposal_currency || "XOF"}
@@ -558,7 +415,7 @@ export default function ProposalReviewPage() {
               <div className="bg-surface-container rounded-xl p-4">
                 <div className="flex items-center gap-2 text-sm text-on-surface-variant mb-1">
                   <Calendar className="w-4 h-4" />
-                  Durée estimée
+                  DurÃ©e estimÃ©e
                 </div>
                 <div className="text-xl font-bold text-on-surface">
                   {collaboration.proposal_timeline}
@@ -617,7 +474,7 @@ export default function ProposalReviewPage() {
                       {msg.message_type !== "general" && (
                         <Badge className="ml-2 bg-surface-container-high text-on-surface-variant text-[10px]">
                           {msg.message_type === "proposal" && "Proposition"}
-                          {msg.message_type === "revision_request" && "Demande de révision"}
+                          {msg.message_type === "revision_request" && "Demande de rÃ©vision"}
                           {msg.message_type === "counter_offer" && "Contre-offre"}
                           {msg.message_type === "acceptance" && "Acceptation"}
                           {msg.message_type === "decline" && "Refus"}
@@ -767,7 +624,7 @@ export default function ProposalReviewPage() {
               className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 bg-green-500 text-white rounded-xl font-semibold text-sm hover:bg-green-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <CheckCircle2 className="w-5 h-5" />
-              Accepter — Sélectionner ce pro
+              Accepter â€” SÃ©lectionner ce pro
             </button>
             <button
               onClick={handleRequestRevision}
@@ -793,7 +650,7 @@ export default function ProposalReviewPage() {
             <CheckCircle2 className="w-8 h-8 text-green-500 mx-auto mb-2" />
             <h3 className="text-lg font-bold text-green-700">Collaboration active</h3>
             <p className="text-sm text-green-600 mt-1">
-              Ce professionnel a accès complet au projet.
+              Ce professionnel a accÃ¨s complet au projet.
             </p>
             <Link
               href={`/projets/${projectIdStr}`}

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -30,7 +30,6 @@ export function DashboardSidebar() {
         const { data: { session }, error } = await supabase.auth.getSession();
         
         if (error) {
-          console.error('[DashboardSidebar] Session fetch error:', error.message, error.code);
           setUserEmail(null);
           return;
         }
@@ -43,7 +42,6 @@ export function DashboardSidebar() {
           setUserEmail(null);
         }
       } catch (err) {
-        console.error('[DashboardSidebar] Unexpected error fetching session:', err);
         setUserEmail(null);
       }
     };
@@ -127,7 +125,6 @@ export function DashboardSidebar() {
     try {
       await supabase.auth.signOut({ scope: 'global' });
     } catch (err) {
-      console.error('Sign out error:', err);
     } finally {
       setUserEmail(null);
       setSigningOut(false);
@@ -181,7 +178,7 @@ export function DashboardSidebar() {
               disabled={signingOut}
               className="mt-2 w-full rounded-lg px-3 py-2 text-left text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              {signingOut ? 'Déconnexion...' : 'Se déconnecter'}
+              {signingOut ? 'DÃ©connexion...' : 'Se dÃ©connecter'}
             </button>
           </div>
         </div>
@@ -264,7 +261,7 @@ export function DashboardSidebar() {
                 className="mt-2 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 <LogOut className={`h-4 w-4 ${signingOut ? 'animate-pulse' : ''}`} />
-                {signingOut ? 'Déconnexion...' : 'Se déconnecter'}
+                {signingOut ? 'DÃ©connexion...' : 'Se dÃ©connecter'}
               </button>
             </div>
           </div>

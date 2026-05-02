@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -28,7 +28,6 @@ export default function ClientProjectDocumentsPage() {
   const [projectTitle, setProjectTitle] = useState<string>("");
   const supabase = createClient();
 
-  console.log("[ClientProjectDocuments] Page mounted, projectId:", projectId);
 
   useEffect(() => {
     if (projectId) {
@@ -38,14 +37,11 @@ export default function ClientProjectDocumentsPage() {
   }, [projectId]);
 
   const fetchProject = async () => {
-    console.log("[ClientProjectDocuments] Fetching project details for:", projectId);
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      console.error("[ClientProjectDocuments] No user authenticated");
       return;
     }
 
-    console.log("[ClientProjectDocuments] User ID:", user.id);
 
     const { data: project, error } = await supabase
       .from("user_projects")
@@ -55,30 +51,22 @@ export default function ClientProjectDocumentsPage() {
       .single();
 
     if (error) {
-      console.error("[ClientProjectDocuments] Error fetching project:", error);
       if (error.code === '42501') {
-        console.error('[ClientProjectDocuments] [RLS] ❌ RLS POLICY VIOLATION - user_projects table');
-        console.error('[ClientProjectDocuments] [RLS] User ID:', user.id);
-        console.error('[ClientProjectDocuments] [RLS] Fix: Check SELECT policy on user_projects table');
       }
       return;
     }
 
-    console.log("[ClientProjectDocuments] Project fetched:", project);
     setProjectTitle(project?.title || "Projet");
   };
 
   const fetchDocuments = async () => {
-    console.log("[ClientProjectDocuments] Fetching documents for project:", projectId);
     setIsLoading(true);
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      console.error("[ClientProjectDocuments] No user authenticated");
       setIsLoading(false);
       return;
     }
 
-    console.log("[ClientProjectDocuments] User ID:", user.id);
 
     // Fetch documents linked to this project
     const { data, error } = await supabase
@@ -88,23 +76,13 @@ export default function ClientProjectDocumentsPage() {
       .order("created_at", { ascending: false });
 
     if (error) {
-      console.error("[ClientProjectDocuments] Error fetching documents:", error);
       if (error.code === '42501') {
-        console.error('[ClientProjectDocuments] [RLS] ❌ RLS POLICY VIOLATION - project_documents table');
-        console.error('[ClientProjectDocuments] [RLS] User ID:', user.id);
-        console.error('[ClientProjectDocuments] [RLS] Fix: Check SELECT policy on project_documents table for clients');
       }
     } else {
-      console.log("[ClientProjectDocuments] Documents fetched:", data?.length || 0);
-      console.log("[ClientProjectDocuments] [RLS] ✅ No RLS violation - documents loaded");
       
       // Log each document URL for debugging
       if (data && data.length > 0) {
-        console.log("[ClientProjectDocuments] Document URLs:");
         data.forEach((doc: any, idx: number) => {
-          console.log(`  [DOC ${idx}] ID: ${doc.id}`);
-          console.log(`  [DOC ${idx}] URL: ${doc.contract_url}`);
-          console.log(`  [DOC ${idx}] Type: ${doc.contract_url?.split('.').pop()}`);
         });
       }
       
@@ -116,15 +94,12 @@ export default function ClientProjectDocumentsPage() {
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) {
-      console.log("[ClientProjectDocuments] No file selected");
       return;
     }
 
-    console.log("[ClientProjectDocuments] File selected:", file.name, file.type, file.size);
 
     // Validate file size (10MB max)
     if (file.size > 10 * 1024 * 1024) {
-      console.error("[ClientProjectDocuments] File too large:", file.size);
       alert("Le fichier est trop volumineux. Taille maximale : 10 Mo.");
       return;
     }
@@ -132,8 +107,7 @@ export default function ClientProjectDocumentsPage() {
     // Validate file type
     const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
     if (!allowedTypes.includes(file.type)) {
-      console.error("[ClientProjectDocuments] Invalid file type:", file.type);
-      alert("Format non accepté. Formats acceptés : PDF, JPG, PNG.");
+      alert("Format non acceptÃ©. Formats acceptÃ©s : PDF, JPG, PNG.");
       return;
     }
 
@@ -142,12 +116,10 @@ export default function ClientProjectDocumentsPage() {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        console.error("[ClientProjectDocuments] No user authenticated");
-        alert("Vous devez être connecté pour uploader un document.");
+        alert("Vous devez Ãªtre connectÃ© pour uploader un document.");
         return;
       }
 
-      console.log("[ClientProjectDocuments] User authenticated:", user.id);
 
       // Get professional_id if exists (client may not have one)
       const { data: professional } = await supabase
@@ -160,9 +132,7 @@ export default function ClientProjectDocumentsPage() {
       const bucket = 'portfolios';
       const path = `${user.id}/projects/${projectId}`;
 
-      console.log("[ClientProjectDocuments] Uploading to bucket:", bucket, "path:", path);
       const fileUrl = await uploadFile(file, bucket, path);
-      console.log("[ClientProjectDocuments] Upload successful:", fileUrl);
 
       // Insert record into project_documents
       const { error } = await supabase.from("project_documents").insert({
@@ -173,16 +143,7 @@ export default function ClientProjectDocumentsPage() {
       });
 
       if (error) {
-        console.error("[ClientProjectDocuments] Database insert error:", error);
         if (error.code === '42501') {
-          console.error('[ClientProjectDocuments] [RLS] ========================================');
-          console.error('[ClientProjectDocuments] [RLS] ❌ RLS POLICY VIOLATION - project_documents table');
-          console.error('[ClientProjectDocuments] [RLS] ========================================');
-          console.error('[ClientProjectDocuments] [RLS] User ID:', user.id);
-          console.error('[ClientProjectDocuments] [RLS] Project ID:', projectId);
-          console.error('[ClientProjectDocuments] [RLS] Error:', error.message);
-          console.error('[ClientProjectDocuments] [RLS] Fix: Check INSERT policy on project_documents table for clients');
-          console.error('[ClientProjectDocuments] [RLS] ========================================');
           alert("Erreur de permissions. Veuillez contacter le support.");
         } else {
           alert("Erreur lors de l'enregistrement du document.");
@@ -190,11 +151,9 @@ export default function ClientProjectDocumentsPage() {
         return;
       }
 
-      console.log("[ClientProjectDocuments] ✅ Document saved successfully");
-      alert("Document uploadé avec succès !");
+      alert("Document uploadÃ© avec succÃ¨s !");
       fetchDocuments();
     } catch (err) {
-      console.error("[ClientProjectDocuments] Upload error:", err);
       alert("Erreur lors de l'upload du document.");
     } finally {
       setIsUploading(false);
@@ -204,19 +163,16 @@ export default function ClientProjectDocumentsPage() {
   const handleDelete = async (docId: string) => {
     if (!confirm("Supprimer ce document ?")) return;
 
-    console.log("[ClientProjectDocuments] Deleting document:", docId);
     const { error } = await supabase
       .from("project_documents")
       .delete()
       .eq("id", docId);
 
     if (error) {
-      console.error("[ClientProjectDocuments] Delete error:", error);
       alert("Erreur lors de la suppression du document.");
       return;
     }
 
-    console.log("[ClientProjectDocuments] ✅ Document deleted successfully");
     fetchDocuments();
     if (selectedDoc?.id === docId) {
       setSelectedDoc(null);
@@ -253,10 +209,10 @@ export default function ClientProjectDocumentsPage() {
               </Link>
               <div>
                 <h1 className="text-xl sm:text-2xl lg:text-3xl font-headline font-bold text-on-surface">
-                  Documents — {projectTitle}
+                  Documents â€” {projectTitle}
                 </h1>
                 <p className="text-sm text-on-surface-variant mt-1">
-                  Gérez les documents et fichiers de ce projet
+                  GÃ©rez les documents et fichiers de ce projet
                 </p>
               </div>
             </div>
@@ -272,12 +228,12 @@ export default function ClientProjectDocumentsPage() {
               <Upload className="w-8 h-8 text-on-surface-variant/40 group-hover:text-primary transition-colors" />
             )}
           </div>
-          <h3 className="text-lg font-headline font-bold text-on-surface mb-2">Déposez vos documents ici</h3>
+          <h3 className="text-lg font-headline font-bold text-on-surface mb-2">DÃ©posez vos documents ici</h3>
           <p className="text-sm text-on-surface-variant mb-4 italic">
-            Chiffrement AES-256 de bout en bout. Formats acceptés : PDF, JPG, PNG (Max 10Mo).
+            Chiffrement AES-256 de bout en bout. Formats acceptÃ©s : PDF, JPG, PNG (Max 10Mo).
           </p>
           <button className="px-6 py-3 bg-primary text-on-primary rounded-xl font-headline font-bold text-sm shadow-lg shadow-primary/20 active:scale-95 transition-all">
-            SÉLECTIONNER FICHIER
+            SÃ‰LECTIONNER FICHIER
           </button>
           <input
             type="file"
@@ -339,19 +295,11 @@ export default function ClientProjectDocumentsPage() {
               const isImage = ['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(fileExt || '');
               const isPdf = fileExt === 'pdf';
               
-              console.log("[DOCUMENT THUMBNAIL] Rendering:", {
-                id: doc.id,
-                url: doc.contract_url,
-                extension: fileExt,
-                isImage,
-                isPdf
-              });
               
               return (
                 <div
                   key={doc.id}
                   onClick={() => {
-                    console.log("[DOCUMENT THUMBNAIL] Clicked, setting selected doc:", doc.id);
                     setSelectedDoc(doc);
                   }}
                   className={`group cursor-pointer bg-surface-container-low rounded-xl overflow-hidden border-2 transition-all hover:shadow-lg ${
@@ -370,23 +318,9 @@ export default function ClientProjectDocumentsPage() {
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         onLoad={(e) => {
                           const img = e.target as HTMLImageElement;
-                          console.log("[DOCUMENT THUMBNAIL] ✅ Image loaded successfully:", {
-                            url: doc.contract_url,
-                            naturalWidth: img.naturalWidth,
-                            naturalHeight: img.naturalHeight,
-                            currentSrc: img.currentSrc
-                          });
                         }}
                         onError={(e) => {
                           const img = e.target as HTMLImageElement;
-                          console.error("[DOCUMENT THUMBNAIL] ❌ FAILED to load image:", {
-                            url: doc.contract_url,
-                            src: img.src,
-                            currentSrc: img.currentSrc,
-                            naturalWidth: img.naturalWidth,
-                            naturalHeight: img.naturalHeight,
-                            error: e.type
-                          });
                         }}
                       />
                     ) : isPdf ? (
@@ -472,7 +406,7 @@ export default function ClientProjectDocumentsPage() {
                             window.open(doc.contract_url, '_blank');
                           }}
                           className="p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded transition-colors"
-                          title="Télécharger"
+                          title="TÃ©lÃ©charger"
                         >
                           <Download className="w-4 h-4" />
                         </button>
@@ -504,7 +438,7 @@ export default function ClientProjectDocumentsPage() {
             />
             <div className="relative w-96 bg-surface shadow-2xl overflow-y-auto border-l border-outline-variant/20">
               <div className="sticky top-0 bg-surface border-b border-outline-variant/10 px-6 py-4 flex items-center justify-between z-10">
-                <h2 className="text-lg font-headline font-bold text-on-surface">Détails du document</h2>
+                <h2 className="text-lg font-headline font-bold text-on-surface">DÃ©tails du document</h2>
                 <button
                   onClick={() => setSelectedDoc(null)}
                   className="p-2 hover:bg-surface-container rounded-lg transition-colors"
@@ -519,13 +453,6 @@ export default function ClientProjectDocumentsPage() {
                   <div className="aspect-square bg-surface-container-low rounded-lg flex items-center justify-center mb-4 overflow-hidden relative">
                     {(() => {
                       const fileExt = selectedDoc.contract_url?.split('.').pop()?.toLowerCase();
-                      console.log("[DOCUMENT PREVIEW] Rendering preview for:", {
-                        id: selectedDoc.id,
-                        url: selectedDoc.contract_url,
-                        extension: fileExt,
-                        isImage: ['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(fileExt || ''),
-                        isPdf: fileExt === 'pdf'
-                      });
                       
                       if (['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(fileExt || '')) {
                         return (
@@ -536,40 +463,23 @@ export default function ClientProjectDocumentsPage() {
                             className="object-contain"
                             onLoad={(e) => {
                               const img = e.target as HTMLImageElement;
-                              console.log("[DOCUMENT PREVIEW] ✅ Image loaded successfully:", {
-                                url: selectedDoc.contract_url,
-                                naturalWidth: img.naturalWidth,
-                                naturalHeight: img.naturalHeight
-                              });
                             }}
                             onError={(e) => {
                               const img = e.target as HTMLImageElement;
-                              console.error("[DOCUMENT PREVIEW] ❌ FAILED to load image:", {
-                                url: selectedDoc.contract_url,
-                                src: img.src,
-                                currentSrc: img.currentSrc,
-                                naturalWidth: img.naturalWidth,
-                                naturalHeight: img.naturalHeight
-                              });
                             }}
                           />
                         );
                       } else if (fileExt === 'pdf') {
-                        console.log("[DOCUMENT PREVIEW] Rendering PDF iframe:", selectedDoc.contract_url);
                         return (
                           <iframe
                             src={selectedDoc.contract_url}
                             className="w-full h-full"
                             title="PDF Preview"
-                            onLoad={() => console.log("[DOCUMENT PREVIEW] ✅ PDF iframe loaded:", selectedDoc.contract_url)}
                             onError={(e) => {
-                              console.error("[DOCUMENT PREVIEW] ❌ PDF iframe error:", selectedDoc.contract_url);
-                              console.error("[DOCUMENT PREVIEW] Error:", e);
                             }}
                           />
                         );
                       } else {
-                        console.warn("[DOCUMENT PREVIEW] ⚠️ Unsupported file type:", fileExt);
                         return <FileText className="w-16 h-16 text-on-surface-variant/30" />;
                       }
                     })()}
@@ -582,11 +492,11 @@ export default function ClientProjectDocumentsPage() {
                 {/* Metadata */}
                 <div className="space-y-4">
                   <p className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/10 pb-2">
-                    Métadonnées
+                    MÃ©tadonnÃ©es
                   </p>
                   <div className="space-y-3">
                     <div className="flex justify-between text-sm">
-                      <span className="text-on-surface-variant">Créé le</span>
+                      <span className="text-on-surface-variant">CrÃ©Ã© le</span>
                       <span className="font-medium text-on-surface">
                         {new Date(selectedDoc.created_at).toLocaleDateString('fr-FR')}
                       </span>
@@ -598,7 +508,7 @@ export default function ClientProjectDocumentsPage() {
                       </span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-on-surface-variant">Sécurité</span>
+                      <span className="text-on-surface-variant">SÃ©curitÃ©</span>
                       <span className="font-medium text-primary flex items-center gap-1">
                         <ShieldCheck className="text-sm" />
                         AES-256

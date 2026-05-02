@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { ProjectProfessional } from "@/lib/types/projects";
@@ -41,7 +41,6 @@ export default function AssignStepProDialog({
       const teamData = await getProjectTeam(projectId);
       setTeam(teamData as ProjectProfessional[]);
     } catch (err) {
-      console.error("Failed to fetch team:", err);
     } finally {
       setIsFetching(false);
     }
@@ -75,7 +74,6 @@ export default function AssignStepProDialog({
       onSuccess();
       onClose();
     } catch (err) {
-      console.error("Failed to update assignments:", err);
     } finally {
       setIsLoading(false);
     }
@@ -97,7 +95,7 @@ export default function AssignStepProDialog({
               <Users className="w-5 h-5 sm:w-6 sm:h-6 text-kelen-green-600 flex-shrink-0" />
               <span className="truncate">Assigner des experts</span>
             </h2>
-            <p className="text-xs sm:text-sm text-stone-500 font-medium pt-1 truncate">Experts impliqués dans cette étape</p>
+            <p className="text-xs sm:text-sm text-stone-500 font-medium pt-1 truncate">Experts impliquÃ©s dans cette Ã©tape</p>
           </div>
           <button
             onClick={onClose}
@@ -135,7 +133,7 @@ export default function AssignStepProDialog({
             })
           ) : (
             <div className="text-center py-8 sm:py-12 bg-stone-50 rounded-xl sm:rounded-3xl border-2 border-dashed border-stone-100">
-              <p className="text-stone-400 font-medium px-4 sm:px-8 italic text-xs sm:text-sm">Aucun professionnel dans l&apos;équipe pour le moment.</p>
+              <p className="text-stone-400 font-medium px-4 sm:px-8 italic text-xs sm:text-sm">Aucun professionnel dans l&apos;Ã©quipe pour le moment.</p>
             </div>
           )}
         </div>

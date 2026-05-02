@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import Link from "next/link";
@@ -22,7 +22,7 @@ import { NotificationDropdown } from "@/components/layout/NotificationDropdown";
 const NAV_ITEMS = [
   { href: "/pro/dashboard", label: "Tableau de bord", icon: LayoutDashboard },
   { href: "/pro/projets", label: "Projets", icon: Briefcase },
-  { href: "/pro/realisations", label: "Réalisations", icon: Award },
+  { href: "/pro/realisations", label: "RÃ©alisations", icon: Award },
   { href: "/pro/portfolio", label: "Portfolio", icon: LayoutGrid },
   { href: "/pro/abonnement", label: "Abonnement", icon: Gem },
   { href: "/pro/analytique", label: "Analytique", icon: BarChart3 },
@@ -50,15 +50,12 @@ export function ProNavbar() {
   useEffect(() => {
     let cancelled = false;
 
-    console.log('[ProNavbar] useEffect mounted — fetching session');
 
     const fetchUser = async () => {
-      console.log('[ProNavbar] getSession() called');
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
         
         if (error) {
-          console.error('[ProNavbar] Session fetch error:', error.message, error.code);
           // Clear local state on auth error
           if (!cancelled) {
             setUserEmail(null);
@@ -68,11 +65,9 @@ export function ProNavbar() {
         }
         
         if (cancelled) {
-          console.log('[ProNavbar] getSession returned — component unmounted, skipping');
           return;
         }
         if (session?.user) {
-          console.log('[ProNavbar] Session found:', session.user.email);
           setUserEmail(session.user.email ?? null);
           const { data: profile } = await supabase
             .from("professionals")
@@ -80,16 +75,13 @@ export function ProNavbar() {
             .eq("user_id", session.user.id)
             .single();
           if (profile?.business_name && !cancelled) {
-            console.log('[ProNavbar] Business name set:', profile.business_name);
             setBusinessName(profile.business_name);
           }
         } else {
-          console.log('[ProNavbar] No session found — clearing user state');
           setUserEmail(null);
           setBusinessName("Mon profil");
         }
       } catch (err) {
-        console.error('[ProNavbar] Unexpected error fetching session:', err);
         if (!cancelled) {
           setUserEmail(null);
           setBusinessName("Mon profil");
@@ -101,18 +93,15 @@ export function ProNavbar() {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (cancelled) return;
-      console.log('[ProNavbar] onAuthStateChange:', event, session?.user?.email ?? 'no user');
       if (session?.user) {
         setUserEmail(session.user.email ?? null);
       } else {
-        console.log('[ProNavbar] Auth event cleared session');
         setUserEmail(null);
         setBusinessName("Mon profil");
       }
     });
 
     return () => {
-      console.log('[ProNavbar] useEffect cleanup — unmounting');
       cancelled = true;
       subscription.unsubscribe();
     };
@@ -177,7 +166,6 @@ export function ProNavbar() {
     try {
       await supabase.auth.signOut({ scope: 'global' });
     } catch (err) {
-      console.error('Sign out error:', err);
     } finally {
       setUserEmail(null);
       setBusinessName("Mon profil");
@@ -276,8 +264,8 @@ export function ProNavbar() {
                 onClick={handleSignOut}
                 disabled={signingOut}
                 className="p-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                aria-label="Se déconnecter"
-                title="Se déconnecter"
+                aria-label="Se dÃ©connecter"
+                title="Se dÃ©connecter"
               >
                 <LogOut className={`w-4 h-4 ${signingOut ? 'animate-pulse' : ''}`} />
               </button>
@@ -371,7 +359,7 @@ export function ProNavbar() {
                 className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 <LogOut className={`w-4 h-4 ${signingOut ? 'animate-pulse' : ''}`} />
-                {signingOut ? 'Déconnexion...' : 'Se déconnecter'}
+                {signingOut ? 'DÃ©connexion...' : 'Se dÃ©connecter'}
               </button>
             </div>
           </div>

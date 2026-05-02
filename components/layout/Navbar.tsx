@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useMemo, useCallback } from "react";
 import Link from "next/link";
@@ -34,7 +34,6 @@ export function Navbar() {
         const { data: { session }, error } = await supabase.auth.getSession();
         
         if (error) {
-          console.error('[Navbar] Session fetch error:', error.message, error.code);
           setUser(null);
           setUserRole(null);
           return;
@@ -55,7 +54,6 @@ export function Navbar() {
           setUserRole(null);
         }
       } catch (err) {
-        console.error('[Navbar] Unexpected error fetching session:', err);
         setUser(null);
         setUserRole(null);
       }
@@ -85,7 +83,6 @@ export function Navbar() {
     try {
       await supabase.auth.signOut({ scope: 'global' });
     } catch (err) {
-      console.error('Sign out error:', err);
     } finally {
       setUser(null);
       setUserRole(null);
@@ -176,7 +173,7 @@ export function Navbar() {
             className="flex items-center gap-2 rounded-xl border border-kelen-green-100 bg-kelen-green-50/50 px-4 py-2 text-sm font-bold text-kelen-green-700 transition-all hover:bg-kelen-green-100 hover:text-kelen-green-800 active:scale-95"
           >
             <ShieldCheck className="w-5 h-5" />
-            Vérifier un pro
+            VÃ©rifier un pro
           </Link>
 
           {user ? (
@@ -188,7 +185,7 @@ export function Navbar() {
                 className="flex items-center gap-2 rounded-xl border border-border px-4 py-2 text-sm font-bold text-on-surface-variant transition-all hover:bg-surface-container hover:text-on-surface active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100"
               >
                 <LogOut className="w-5 h-5" />
-                {signingOut ? 'Déconnexion...' : 'Déconnexion'}
+                {signingOut ? 'DÃ©connexion...' : 'DÃ©connexion'}
               </button>
             </div>
           ) : (
@@ -279,7 +276,7 @@ export function Navbar() {
               className="flex items-center justify-center gap-2 rounded-xl border border-kelen-green-100 bg-kelen-green-50/50 py-3 text-base font-bold text-kelen-green-700 transition-all active:scale-95"
             >
               <ShieldCheck className="w-5 h-5" />
-              Vérifier un pro
+              VÃ©rifier un pro
             </Link>
 
             {user ? (
@@ -289,7 +286,7 @@ export function Navbar() {
                 className="flex items-center justify-center gap-2 rounded-xl border border-border py-3 text-base font-bold text-stone-500 transition-all hover:bg-stone-50 disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 <LogOut className="w-5 h-5" />
-                {signingOut ? 'Déconnexion...' : 'Déconnexion'}
+                {signingOut ? 'DÃ©connexion...' : 'DÃ©connexion'}
               </button>
             ) : (
               <>

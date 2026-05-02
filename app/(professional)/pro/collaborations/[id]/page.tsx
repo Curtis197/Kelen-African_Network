@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
@@ -42,9 +42,9 @@ const STATUS_CONFIG: Record<string, { label: string; className: string }> = {
   pending:     { label: "Invitation en attente",   className: "bg-yellow-100 text-yellow-700" },
   negotiating: { label: "Proposition soumise",     className: "bg-purple-100 text-purple-700" },
   active:      { label: "Collaboration active",    className: "bg-green-500 text-white" },
-  declined:    { label: "Refusé",                  className: "bg-red-100 text-red-700" },
+  declined:    { label: "RefusÃ©",                  className: "bg-red-100 text-red-700" },
   not_picked:  { label: "Non retenu",              className: "bg-surface-container text-on-surface-variant" },
-  terminated:  { label: "Terminé",                 className: "bg-surface-container text-on-surface-variant" },
+  terminated:  { label: "TerminÃ©",                 className: "bg-surface-container text-on-surface-variant" },
 };
 
 type FullCollaboration = Omit<ProjectCollaboration, 'project' | 'messages'> & {
@@ -68,10 +68,6 @@ export default function ProCollaborationDetailPage() {
   const collabIdStr = Array.isArray(collaborationId) ? collaborationId[0] : collaborationId || '';
   const router = useRouter();
 
-  console.log('[COMPONENT] ========================================');
-  console.log('[COMPONENT] ProCollaborationDetailPage RENDER START');
-  console.log('[COMPONENT] collaborationId:', collabIdStr);
-  console.log('[COMPONENT] ========================================');
 
   const [collab, setCollab]               = useState<FullCollaboration | null>(null);
   const [isLoading, setIsLoading]         = useState(true);
@@ -85,41 +81,26 @@ export default function ProCollaborationDetailPage() {
     text: '', budget: 0, currency: 'XOF', timeline: '',
   });
 
-  console.log('[STATE] collab:', collab?.id, 'status:', collab?.status, 'isLoading:', isLoading, 'isSubmitting:', isSubmitting);
 
-  // ── DATA FETCH ───────────────────────────────────────────────────────────────
+  // â”€â”€ DATA FETCH â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   useEffect(() => {
     if (!collabIdStr) {
-      console.warn('[EFFECT] ⚠️ No collaborationId in params — skipping fetch');
       return;
     }
 
-    console.log('[EFFECT] ========================================');
-    console.log('[EFFECT] ProCollaborationDetailPage useEffect triggered');
-    console.log('[EFFECT] collabIdStr:', collabIdStr);
-    console.log('[EFFECT] ========================================');
 
     const fetchCollab = async () => {
-      console.log('[FETCH] Starting collaboration detail fetch...');
       const supabase = createClient();
 
-      // ── AUTH ────────────────────────────────────────────
-      console.log('[AUTH] Checking user session...');
+      // â”€â”€ AUTH â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       const { data: { user }, error: authError } = await supabase.auth.getUser();
-      console.log('[AUTH] Result:', { userId: user?.id, error: authError?.message });
 
       if (authError || !user) {
-        console.error('[AUTH] ❌ No authenticated user — cannot load collaboration');
         setIsLoading(false);
         return;
       }
-      console.log('[AUTH] ✅ User authenticated:', user.id);
 
-      // ── COLLABORATION + PROJECT + MESSAGES ──────────────
-      console.log('[DB] ========================================');
-      console.log('[DB] Querying project_collaborations + user_projects + collaboration_messages');
-      console.log('[DB] collaborationId:', collabIdStr);
-      console.log('[DB] ========================================');
+      // â”€â”€ COLLABORATION + PROJECT + MESSAGES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
       const { data, error } = await supabase
         .from('project_collaborations')
@@ -143,34 +124,14 @@ export default function ProCollaborationDetailPage() {
         .order('created_at', { ascending: true, referencedTable: 'collaboration_messages' })
         .single();
 
-      console.log('[DB] project_collaborations result:', {
-        found: !!data,
-        status: data?.status,
-        hasProject: !!(data as FullCollaboration)?.project,
-        messageCount: (data as FullCollaboration)?.messages?.length ?? 0,
-        stepsCount: (data as FullCollaboration)?.project?.steps?.length ?? 0,
-        error: error?.message,
-        code: error?.code,
-      });
 
-      // ── RLS DETECTION ──────────────────────────────────
+      // â”€â”€ RLS DETECTION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       if (error) {
         if (error.code === '42501') {
-          console.error('[RLS] ========================================');
-          console.error('[RLS] ❌ EXPLICIT RLS BLOCKING!');
-          console.error('[RLS] Table: project_collaborations');
-          console.error('[RLS] Operation: SELECT');
-          console.error('[RLS] collaborationId:', collabIdStr);
-          console.error('[RLS] User:', user.id);
-          console.error('[RLS] Fix: collab_pro_read policy must allow SELECT where professional_id matches auth uid');
-          console.error('[RLS] ========================================');
-          toast.error('Accès refusé — politique RLS');
+          toast.error('AccÃ¨s refusÃ© â€” politique RLS');
         } else if (error.code === 'PGRST116') {
-          console.warn('[DB] ⚠️ No row found (PGRST116) for collaborationId:', collabIdStr);
-          console.warn('[DB] Either the ID is wrong or RLS is silently filtering it');
           toast.error('Collaboration introuvable');
         } else {
-          console.error('[DB] ❌ Database error (NOT RLS):', { message: error.message, code: error.code });
           toast.error('Impossible de charger la collaboration');
         }
         setIsLoading(false);
@@ -178,126 +139,83 @@ export default function ProCollaborationDetailPage() {
       }
 
       if (!data) {
-        console.warn('[RLS] ========================================');
-        console.warn('[RLS] ⚠️ SILENT RLS FILTERING — .single() returned null with no error');
-        console.warn('[RLS] collaborationId:', collabIdStr);
-        console.warn('[RLS] User:', user.id);
-        console.warn('[RLS] Verify: check Supabase table editor for this collaboration row');
-        console.warn('[RLS] ========================================');
         toast.error('Collaboration introuvable');
         setIsLoading(false);
         return;
       }
 
-      console.log('[DB] ✅ Collaboration loaded successfully');
-      console.log('[DB] Project:', (data as FullCollaboration).project?.title);
-      console.log('[DB] Messages:', (data as FullCollaboration).messages?.length ?? 0);
-      console.log('[DB] Steps:', (data as FullCollaboration).project?.steps?.length ?? 0);
 
-      console.log('[STATE] Setting collab data');
       setCollab(data as FullCollaboration);
       setIsLoading(false);
 
-      console.log('[FETCH] ✅ Fetch complete');
     };
 
     fetchCollab();
   }, [collabIdStr]);
 
-  // ── ACTION: SUBMIT PROPOSAL ──────────────────────────────────────────────────
+  // â”€â”€ ACTION: SUBMIT PROPOSAL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const handleSubmitProposal = async () => {
-    console.log('[ACTION] ========================================');
-    console.log('[ACTION] handleSubmitProposal STARTED');
-    console.log('[ACTION] collaborationId:', collabIdStr);
-    console.log('[ACTION] Proposal data:', {
-      textLength: proposal.text.length,
-      budget: proposal.budget,
-      currency: proposal.currency,
-      timeline: proposal.timeline,
-    });
-    console.log('[ACTION] ========================================');
 
     if (!proposal.text.trim() || !proposal.timeline.trim()) {
-      console.warn('[ACTION] ❌ Validation failed — text or timeline missing');
       toast.error('Veuillez remplir tous les champs obligatoires');
       return;
     }
 
     setIsSubmitting(true);
-    console.log('[STATE] isSubmitting → true');
 
     const result = await submitProposal(collabIdStr, proposal);
 
-    console.log('[ACTION] submitProposal result:', { success: result.success, error: result.error });
 
     if (result.error) {
-      console.error('[ACTION] ❌ submitProposal failed:', result.error);
       toast.error(result.error);
     } else {
-      console.log('[ACTION] ✅ Proposal submitted successfully');
-      toast.success('Proposition soumise avec succès !');
+      toast.success('Proposition soumise avec succÃ¨s !');
       setShowProposalForm(false);
-      console.log('[STATE] showProposalForm → false, reloading page...');
       setTimeout(() => window.location.reload(), 500);
     }
 
     setIsSubmitting(false);
-    console.log('[STATE] isSubmitting → false');
   };
 
-  // ── ACTION: DECLINE ──────────────────────────────────────────────────────────
+  // â”€â”€ ACTION: DECLINE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const handleDecline = async () => {
-    console.log('[ACTION] ========================================');
-    console.log('[ACTION] handleDecline STARTED');
-    console.log('[ACTION] collaborationId:', collabIdStr);
-    console.log('[ACTION] ========================================');
 
-    if (!confirm('Refuser cette invitation ? Cette action est irréversible.')) {
-      console.log('[ACTION] Decline cancelled by user');
+    if (!confirm('Refuser cette invitation ? Cette action est irrÃ©versible.')) {
       return;
     }
 
-    const reason = prompt('Raison du refus (optionnel) :') || 'Refusé par le professionnel';
-    console.log('[ACTION] Decline reason:', reason);
+    const reason = prompt('Raison du refus (optionnel) :') || 'RefusÃ© par le professionnel';
 
     setIsSubmitting(true);
-    console.log('[STATE] isSubmitting → true');
 
     const result = await declineCollaboration(collabIdStr, reason);
 
-    console.log('[ACTION] declineCollaboration result:', { success: result.success, error: result.error });
 
     if (result.error) {
-      console.error('[ACTION] ❌ declineCollaboration failed:', result.error);
       toast.error(result.error);
     } else {
-      console.log('[ACTION] ✅ Collaboration declined — redirecting to /pro/collaborations');
-      toast.success('Invitation refusée.');
+      toast.success('Invitation refusÃ©e.');
       router.push('/pro/collaborations');
     }
 
     setIsSubmitting(false);
-    console.log('[STATE] isSubmitting → false');
   };
 
-  // ── ATTACHMENT LOGIC ────────────────────────────────────────────────────────
+  // â”€â”€ ATTACHMENT LOGIC â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    console.log('[ACTION] handleFileSelect STARTED, files:', files.length);
     setIsUploading(true);
     
     try {
       const file = files[0]; // Instant upload handle one by one for better UX
-      console.log('[STORAGE] Uploading file:', file.name, file.type, file.size);
       
       const bucket = "collaboration-attachments";
       // Using professional_id (user id) in path for organization
       const path = `pro/${Date.now()}`; 
       
       const publicUrl = await uploadFile(file, bucket, path);
-      console.log('[STORAGE] ✅ Upload success, URL:', publicUrl);
       
       setAttachments(prev => [...prev, {
         url: publicUrl,
@@ -305,9 +223,8 @@ export default function ProCollaborationDetailPage() {
         type: file.type
       }]);
       
-      toast.success("Fichier ajouté");
+      toast.success("Fichier ajoutÃ©");
     } catch (error: any) {
-      console.error('[STORAGE] ❌ Upload failed:', error);
       toast.error(error.message || "Erreur lors de l'envoi du fichier");
     } finally {
       setIsUploading(false);
@@ -316,25 +233,17 @@ export default function ProCollaborationDetailPage() {
   };
 
   const removeAttachment = (index: number) => {
-    console.log('[ACTION] removeAttachment index:', index);
     setAttachments(prev => prev.filter((_, i) => i !== index));
   };
 
-  // ── ACTION: SEND MESSAGE ─────────────────────────────────────────────────────
+  // â”€â”€ ACTION: SEND MESSAGE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const handleSendMessage = async () => {
-    console.log('[ACTION] ========================================');
-    console.log('[ACTION] handleSendMessage STARTED');
-    console.log('[ACTION] collaborationId:', collabIdStr);
-    console.log('[ACTION] messageLength:', replyText.trim().length);
-    console.log('[ACTION] ========================================');
 
     if (!replyText.trim()) {
-      console.warn('[ACTION] Empty message — aborting');
       return;
     }
 
     setIsSubmitting(true);
-    console.log('[STATE] isSubmitting → true');
 
     const result = await sendCollaborationMessage(collabIdStr, {
       type: 'general',
@@ -342,20 +251,12 @@ export default function ProCollaborationDetailPage() {
       attachments: attachments,
     }, 'professional');
 
-    console.log('[ACTION] sendCollaborationMessage result:', {
-      success: result.success,
-      messageId: (result as { data?: { id: string } }).data?.id,
-      error: result.error,
-    });
 
     if (result.error) {
-      console.error('[ACTION] ❌ sendCollaborationMessage failed:', result.error);
       toast.error(result.error);
     } else {
-      console.log('[ACTION] ✅ Message sent — updating local state');
       setReplyText('');
       setAttachments([]);
-      console.log('[STATE] replyText and attachments cleared');
       if ((result as { data?: CollaborationMessage }).data) {
         setCollab(prev => {
           if (!prev) return prev;
@@ -363,21 +264,17 @@ export default function ProCollaborationDetailPage() {
             ...prev,
             messages: [...(prev.messages || []), (result as { data: CollaborationMessage }).data],
           };
-          console.log('[STATE] Updated messages count:', updated.messages.length);
           return updated;
         });
       }
     }
 
     setIsSubmitting(false);
-    console.log('[STATE] isSubmitting → false');
   };
 
-  // ── RENDER GUARDS ────────────────────────────────────────────────────────────
-  console.log('[RENDER] State:', { isLoading, collabId: collab?.id, status: collab?.status });
+  // â”€â”€ RENDER GUARDS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   if (isLoading) {
-    console.log('[RENDER] → Loading spinner');
     return (
       <div className="min-h-screen bg-surface flex items-center justify-center">
         <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
@@ -386,16 +283,15 @@ export default function ProCollaborationDetailPage() {
   }
 
   if (!collab) {
-    console.warn('[RENDER] → Not found / access denied state');
     return (
       <div className="min-h-screen bg-surface flex flex-col items-center justify-center p-8 text-center">
         <Handshake className="w-12 h-12 text-on-surface-variant/40 mb-4" />
         <h1 className="text-2xl font-bold text-on-surface mb-2">Collaboration introuvable</h1>
         <p className="text-sm text-on-surface-variant mb-4">
-          Vérifiez l'URL ou consultez vos collaborations.
+          VÃ©rifiez l'URL ou consultez vos collaborations.
         </p>
         <Link href="/pro/collaborations" className="text-primary font-semibold hover:underline">
-          ← Retour aux collaborations
+          â† Retour aux collaborations
         </Link>
       </div>
     );
@@ -410,7 +306,6 @@ export default function ProCollaborationDetailPage() {
   const isArchived = ['declined', 'not_picked', 'terminated'].includes(collab.status);
   const canAct     = isPending || isNegotiating;
 
-  console.log('[RENDER] → Main UI, status:', collab.status, 'messages:', messages.length, 'canAct:', canAct);
 
   return (
     <main className="min-h-screen bg-surface font-body text-on-surface">
@@ -422,7 +317,7 @@ export default function ProCollaborationDetailPage() {
             Collaborations
           </Link>
           <span className="opacity-30">/</span>
-          <span className="text-primary truncate">{project?.title || 'Détail'}</span>
+          <span className="text-primary truncate">{project?.title || 'DÃ©tail'}</span>
         </nav>
 
         <Link
@@ -450,7 +345,7 @@ export default function ProCollaborationDetailPage() {
             <div className="font-semibold text-sm text-on-surface">{statusCfg.label}</div>
             {isPending && (
               <div className="text-xs text-on-surface-variant mt-0.5">
-                Invitation reçue le {new Date(collab.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
+                Invitation reÃ§ue le {new Date(collab.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
               </div>
             )}
             {isActive && collab.started_at && (
@@ -489,7 +384,7 @@ export default function ProCollaborationDetailPage() {
             {/* Steps */}
             {project.steps?.length > 0 && (
               <div className="mb-4">
-                <h3 className="text-sm font-semibold text-on-surface mb-2">Étapes du projet</h3>
+                <h3 className="text-sm font-semibold text-on-surface mb-2">Ã‰tapes du projet</h3>
                 <div className="space-y-2">
                   {project.steps.map((step, idx) => (
                     <div key={step.id} className="flex items-center gap-3 bg-surface-container rounded-xl px-4 py-3 text-sm">
@@ -511,7 +406,7 @@ export default function ProCollaborationDetailPage() {
             {/* Areas */}
             {project.areas?.length > 0 && (
               <div>
-                <h3 className="text-sm font-semibold text-on-surface mb-2">Zones / périmètres</h3>
+                <h3 className="text-sm font-semibold text-on-surface mb-2">Zones / pÃ©rimÃ¨tres</h3>
                 <div className="flex flex-wrap gap-2">
                   {project.areas.map(area => (
                     <span key={area.id} className="px-3 py-1 bg-surface-container rounded-full text-xs text-on-surface-variant">
@@ -533,7 +428,7 @@ export default function ProCollaborationDetailPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
               {collab.proposal_budget && (
                 <div className="bg-surface-container rounded-xl p-4">
-                  <div className="text-xs text-on-surface-variant mb-1">Budget proposé</div>
+                  <div className="text-xs text-on-surface-variant mb-1">Budget proposÃ©</div>
                   <div className="text-xl font-bold text-on-surface">
                     {collab.proposal_budget.toLocaleString('fr-FR')} {collab.proposal_currency || 'XOF'}
                   </div>
@@ -541,7 +436,7 @@ export default function ProCollaborationDetailPage() {
               )}
               {collab.proposal_timeline && (
                 <div className="bg-surface-container rounded-xl p-4">
-                  <div className="text-xs text-on-surface-variant mb-1">Durée estimée</div>
+                  <div className="text-xs text-on-surface-variant mb-1">DurÃ©e estimÃ©e</div>
                   <div className="text-xl font-bold text-on-surface">{collab.proposal_timeline}</div>
                 </div>
               )}
@@ -573,7 +468,7 @@ export default function ProCollaborationDetailPage() {
                       {msg.message_type !== 'general' && (
                         <Badge className="ml-2 bg-surface-container-high text-on-surface-variant text-[10px]">
                           {msg.message_type === 'proposal'          && 'Proposition'}
-                          {msg.message_type === 'revision_request'  && 'Demande de révision'}
+                          {msg.message_type === 'revision_request'  && 'Demande de rÃ©vision'}
                           {msg.message_type === 'counter_offer'     && 'Contre-offre'}
                           {msg.message_type === 'acceptance'        && 'Acceptation'}
                           {msg.message_type === 'decline'           && 'Refus'}
@@ -676,7 +571,6 @@ export default function ProCollaborationDetailPage() {
                       value={replyText}
                       onChange={e => {
                         setReplyText(e.target.value);
-                        console.log('[STATE] replyText updated, length:', e.target.value.length);
                       }}
                       placeholder="Votre message..."
                       className="w-full bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/50 resize-none focus:outline-none focus:border-primary/50 pr-12 min-h-[100px]"
@@ -715,7 +609,7 @@ export default function ProCollaborationDetailPage() {
           </div>
         )}
 
-        {/* No messages yet but active collaboration — show reply box */}
+        {/* No messages yet but active collaboration â€” show reply box */}
         {messages.length === 0 && !isArchived && (
           <div className="bg-surface-container-low rounded-2xl p-6 mb-6">
             <h2 className="text-lg font-bold text-on-surface mb-4 flex items-center gap-2">
@@ -809,7 +703,6 @@ export default function ProCollaborationDetailPage() {
             {!showProposalForm ? (
               <button
                 onClick={() => {
-                  console.log('[STATE] showProposalForm → true');
                   setShowProposalForm(true);
                 }}
                 className="w-full flex items-center justify-between bg-primary text-on-primary rounded-2xl px-6 py-4 font-semibold hover:opacity-90 transition-opacity"
@@ -825,13 +718,12 @@ export default function ProCollaborationDetailPage() {
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-on-surface mb-1.5">Budget proposé</label>
+                      <label className="block text-sm font-medium text-on-surface mb-1.5">Budget proposÃ©</label>
                       <input
                         type="number"
                         value={proposal.budget || ''}
                         onChange={e => {
                           const val = Number(e.target.value);
-                          console.log('[FORM] proposal.budget changed:', val);
                           setProposal(prev => ({ ...prev, budget: val }));
                         }}
                         placeholder="25000000"
@@ -839,12 +731,11 @@ export default function ProCollaborationDetailPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-on-surface mb-1.5">Durée estimée *</label>
+                      <label className="block text-sm font-medium text-on-surface mb-1.5">DurÃ©e estimÃ©e *</label>
                       <input
                         type="text"
                         value={proposal.timeline}
                         onChange={e => {
-                          console.log('[FORM] proposal.timeline changed:', e.target.value);
                           setProposal(prev => ({ ...prev, timeline: e.target.value }));
                         }}
                         placeholder="ex: 4 mois"
@@ -857,10 +748,9 @@ export default function ProCollaborationDetailPage() {
                     <textarea
                       value={proposal.text}
                       onChange={e => {
-                        console.log('[FORM] proposal.text length:', e.target.value.length);
                         setProposal(prev => ({ ...prev, text: e.target.value }));
                       }}
-                      placeholder="Décrivez votre approche, vos méthodes, vos conditions..."
+                      placeholder="DÃ©crivez votre approche, vos mÃ©thodes, vos conditions..."
                       rows={6}
                       className="w-full bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/50 resize-none focus:outline-none focus:border-primary/50"
                     />
@@ -876,7 +766,6 @@ export default function ProCollaborationDetailPage() {
                     </button>
                     <button
                       onClick={() => {
-                        console.log('[STATE] showProposalForm → false (cancelled)');
                         setShowProposalForm(false);
                       }}
                       className="px-6 py-3 bg-surface-container text-on-surface rounded-xl font-semibold text-sm hover:bg-surface-container-high transition-colors"
@@ -894,9 +783,9 @@ export default function ProCollaborationDetailPage() {
         {isActive && project && (
           <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-center mb-6">
             <CheckCircle2 className="w-8 h-8 text-green-500 mx-auto mb-2" />
-            <h3 className="text-lg font-bold text-green-700">Vous avez accès au projet</h3>
+            <h3 className="text-lg font-bold text-green-700">Vous avez accÃ¨s au projet</h3>
             <p className="text-sm text-green-600 mt-1 mb-4">
-              Vous pouvez créer des journaux, uploader des médias et gérer les documents.
+              Vous pouvez crÃ©er des journaux, uploader des mÃ©dias et gÃ©rer les documents.
             </p>
             <Link
               href={`/projets/${project.id}`}
@@ -923,7 +812,7 @@ export default function ProCollaborationDetailPage() {
         {/* Archived notice */}
         {isArchived && (
           <div className="bg-surface-container rounded-xl p-4 text-center text-sm text-on-surface-variant">
-            Cette collaboration est archivée.
+            Cette collaboration est archivÃ©e.
           </div>
         )}
 

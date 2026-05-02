@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { ChevronLeft, ChevronRight, Image as ImageIcon } from "lucide-react";
@@ -16,25 +16,20 @@ interface ProjectImageCarouselProps {
 export function ProjectImageCarousel({ images, projectId }: ProjectImageCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  console.log('[CAROUSEL] Render, images:', images.length, 'currentIndex:', currentIndex);
 
   if (!images || images.length === 0) {
-    console.log('[CAROUSEL] No images to display');
     return null;
   }
 
   const goToPrevious = () => {
-    console.log('[CAROUSEL] Going to previous image');
     setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
   };
 
   const goToNext = () => {
-    console.log('[CAROUSEL] Going to next image');
     setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
   };
 
   const goToSlide = (index: number) => {
-    console.log('[CAROUSEL] Going to slide:', index);
     setCurrentIndex(index);
   };
 
@@ -49,7 +44,6 @@ export function ProjectImageCarousel({ images, projectId }: ProjectImageCarousel
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-cover"
           onError={(e) => {
-            console.error('[CAROUSEL] Failed to load image:', images[currentIndex].url);
           }}
         />
 
@@ -59,7 +53,7 @@ export function ProjectImageCarousel({ images, projectId }: ProjectImageCarousel
             <button
               onClick={goToPrevious}
               className="absolute left-3 p-2 bg-black/50 hover:bg-black/70 text-white rounded-full transition-all"
-              aria-label="Image précédente"
+              aria-label="Image prÃ©cÃ©dente"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
@@ -109,7 +103,6 @@ export function ProjectImageCarousel({ images, projectId }: ProjectImageCarousel
                   sizes="64px"
                   className="object-cover"
                   onError={(e) => {
-                    console.error('[CAROUSEL] Failed to load thumbnail:', image.url);
                   }}
                 />
                 {image.is_main && (

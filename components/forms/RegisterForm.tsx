@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { UserRole } from "@/lib/supabase/types";
@@ -93,7 +93,6 @@ export function RegisterForm({ defaultMode = "client", allowSwitch = true }: Reg
         city: mode === "professional" ? data.city : null,
       };
 
-      console.log("[Register] Step 1 — submitting signup", { mode, email: data.email, metadata });
 
       // 1. Sign up with Supabase Auth (Trigger handles user and pro creation)
       const { data: authData, error: authError } = await supabase.auth.signUp({
@@ -123,8 +122,7 @@ export function RegisterForm({ defaultMode = "client", allowSwitch = true }: Reg
         router.refresh();
       }
     } catch (err: any) {
-      console.error("[Register] ERROR", err);
-      setError(err.message || "Une erreur est survenue. Veuillez réessayer.");
+      setError(err.message || "Une erreur est survenue. Veuillez rÃ©essayer.");
     } finally {
       setIsLoading(false);
     }
@@ -135,9 +133,9 @@ export function RegisterForm({ defaultMode = "client", allowSwitch = true }: Reg
   if (success) {
     return (
       <div className="rounded-lg border border-kelen-green-200 bg-kelen-green-50 p-6 text-center shadow-sm">
-        <h3 className="mb-2 text-lg font-bold text-kelen-green-800">Inscription réussie !</h3>
+        <h3 className="mb-2 text-lg font-bold text-kelen-green-800">Inscription rÃ©ussie !</h3>
         <p className="text-kelen-green-700">
-          Veuillez vérifier votre boîte mail. Un lien de confirmation vous a été envoyé pour activer votre compte.
+          Veuillez vÃ©rifier votre boÃ®te mail. Un lien de confirmation vous a Ã©tÃ© envoyÃ© pour activer votre compte.
         </p>
       </div>
     );
@@ -227,7 +225,7 @@ export function RegisterForm({ defaultMode = "client", allowSwitch = true }: Reg
             autoComplete="new-password"
             {...register("password")}
             className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors placeholder:text-muted-foreground focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
-            placeholder="8 caractères minimum"
+            placeholder="8 caractÃ¨res minimum"
           />
           {errors.password && (
             <p className="mt-1 text-xs text-kelen-red-500">{errors.password.message?.toString()}</p>
@@ -237,14 +235,14 @@ export function RegisterForm({ defaultMode = "client", allowSwitch = true }: Reg
         {/* Country */}
         <div>
           <label htmlFor="country" className="mb-1.5 block text-sm font-medium text-foreground">
-            Pays de résidence
+            Pays de rÃ©sidence
           </label>
           <select
             id="country"
             {...register("country")}
             className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
           >
-            <option value="">Sélectionner un pays</option>
+            <option value="">SÃ©lectionner un pays</option>
             {countries.map((c) => (
               <option key={c.value} value={c.value}>
                 {c.label}
@@ -265,7 +263,7 @@ export function RegisterForm({ defaultMode = "client", allowSwitch = true }: Reg
             {/* Business name */}
             <div>
               <label htmlFor="business_name" className="mb-1.5 block text-sm font-medium text-foreground">
-                Nom de l&apos;entreprise / activité
+                Nom de l&apos;entreprise / activitÃ©
               </label>
               <input
                 id="business_name"
@@ -283,7 +281,7 @@ export function RegisterForm({ defaultMode = "client", allowSwitch = true }: Reg
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label htmlFor="area_id" className="mb-1.5 block text-sm font-medium text-foreground">
-                  Domaine d&apos;activité
+                  Domaine d&apos;activitÃ©
                 </label>
                 <select
                   id="area_id"
@@ -291,7 +289,7 @@ export function RegisterForm({ defaultMode = "client", allowSwitch = true }: Reg
                   onChange={(e) => setSelectedAreaId(e.target.value)}
                   className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
                 >
-                  <option value="">Sélectionner un domaine</option>
+                  <option value="">SÃ©lectionner un domaine</option>
                   {areas.map((a) => (
                     <option key={a.id} value={a.id}>{a.name}</option>
                   ))}
@@ -308,7 +306,7 @@ export function RegisterForm({ defaultMode = "client", allowSwitch = true }: Reg
                   disabled={!selectedAreaId}
                   className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20 disabled:opacity-40"
                 >
-                  <option value="">Sélectionner une profession</option>
+                  <option value="">SÃ©lectionner une profession</option>
                   {professions.map((p) => (
                     <option key={p.id} value={p.id}>{p.name}</option>
                   ))}
@@ -334,7 +332,7 @@ export function RegisterForm({ defaultMode = "client", allowSwitch = true }: Reg
             {/* Phone */}
             <div>
               <label htmlFor="phone" className="mb-1.5 block text-sm font-medium text-foreground">
-                Téléphone
+                TÃ©lÃ©phone
               </label>
               <input
                 id="phone"
@@ -357,8 +355,8 @@ export function RegisterForm({ defaultMode = "client", allowSwitch = true }: Reg
                   className="mt-0.5 h-4 w-4 rounded border-border text-kelen-green-500 focus:ring-kelen-green-500/20"
                 />
                 <span className="text-xs text-muted-foreground">
-                  Je comprends que tout manquement contractuel documenté peut faire l&apos;objet
-                  d&apos;un signalement vérifié sur mon profil public.
+                  Je comprends que tout manquement contractuel documentÃ© peut faire l&apos;objet
+                  d&apos;un signalement vÃ©rifiÃ© sur mon profil public.
                 </span>
               </label>
                {errors.signal_understood && (
@@ -374,7 +372,7 @@ export function RegisterForm({ defaultMode = "client", allowSwitch = true }: Reg
                 <span className="text-xs text-muted-foreground">
                   J&apos;accepte la{" "}
                   <a href="/confidentialite" className="text-kelen-green-600 underline">
-                    politique de confidentialité
+                    politique de confidentialitÃ©
                   </a>
                   .
                 </span>
@@ -396,7 +394,7 @@ export function RegisterForm({ defaultMode = "client", allowSwitch = true }: Reg
           <span className="text-xs text-muted-foreground">
             J&apos;accepte les{" "}
             <a href="/cgu" className="text-kelen-green-600 underline">
-              conditions générales d&apos;utilisation
+              conditions gÃ©nÃ©rales d&apos;utilisation
             </a>
             .
           </span>
@@ -411,7 +409,7 @@ export function RegisterForm({ defaultMode = "client", allowSwitch = true }: Reg
           disabled={isLoading}
           className="w-full rounded-lg bg-kelen-green-500 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-kelen-green-600 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {isLoading ? "Création en cours..." : "Créer mon compte"}
+          {isLoading ? "CrÃ©ation en cours..." : "CrÃ©er mon compte"}
         </button>
       </form>
     </div>

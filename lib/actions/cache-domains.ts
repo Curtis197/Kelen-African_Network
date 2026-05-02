@@ -1,4 +1,4 @@
-// lib/actions/cache-domains.ts
+﻿// lib/actions/cache-domains.ts
 import { unstable_cache } from "next/cache";
 import { createClient } from "@supabase/supabase-js";
 
@@ -11,7 +11,6 @@ import { createClient } from "@supabase/supabase-js";
  */
 export const getCachedPortfolioByDomain = unstable_cache(
   async (domain: string) => {
-    console.log('[CACHE] Fetching portfolio from DB for domain:', domain);
     
     // Use a service client or public client for these lookups.
     // Since this is public data (custom domains), the anon key is sufficient.
@@ -29,11 +28,6 @@ export const getCachedPortfolioByDomain = unstable_cache(
 
     if (error) {
       if (error.code !== 'PGRST116') { // PGRST116 is 'no rows returned'
-        console.error('[CACHE] Error looking up domain:', {
-          domain,
-          error: error.message,
-          code: error.code
-        });
       }
       return null;
     }
@@ -43,7 +37,6 @@ export const getCachedPortfolioByDomain = unstable_cache(
       isVisible: (portfolio?.professionals as any)?.is_visible || false
     };
 
-    console.log('[CACHE] Found portfolio:', result);
     return result;
   },
   ["portfolio-by-domain"],

@@ -1,4 +1,4 @@
-// components/portfolio/StyleQuiz.tsx
+﻿// components/portfolio/StyleQuiz.tsx
 "use client";
 
 import { useState } from "react";
@@ -14,7 +14,6 @@ interface Props {
 }
 
 export function StyleQuiz({ initialAnswers, onAnswersChange, hasBrandColor = false, brandPrimary }: Props) {
-  console.log('[COMPONENT] StyleQuiz render:', { initialAnswers });
   const [answers, setAnswers] = useState<Partial<StyleAnswers>>(initialAnswers);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -27,13 +26,11 @@ export function StyleQuiz({ initialAnswers, onAnswersChange, hasBrandColor = fal
   }
 
   async function handleSave() {
-    console.log('[COMPONENT] StyleQuiz handleSave:', { answers });
     setSaving(true);
     try {
       await saveStyleQuiz(answers as StyleAnswers);
       setSaved(true);
     } catch (e) {
-      console.error('[COMPONENT] StyleQuiz handleSave error:', e);
     } finally {
       setSaving(false);
     }
@@ -72,7 +69,7 @@ export function StyleQuiz({ initialAnswers, onAnswersChange, hasBrandColor = fal
               );
             })}
 
-            {/* Logo-color option — only on the mood question */}
+            {/* Logo-color option â€” only on the mood question */}
             {question.id === "mood" && (
               <button
                 key="logo-color"
@@ -94,7 +91,7 @@ export function StyleQuiz({ initialAnswers, onAnswersChange, hasBrandColor = fal
                 )}
                 <p className="font-bold text-sm text-on-surface">Couleur du logo</p>
                 <p className="text-xs text-on-surface-variant/60 mt-0.5">
-                  {hasBrandColor ? "Teinte issue de votre marque" : "Téléversez votre logo d'abord"}
+                  {hasBrandColor ? "Teinte issue de votre marque" : "TÃ©lÃ©versez votre logo d'abord"}
                 </p>
               </button>
             )}
@@ -107,7 +104,7 @@ export function StyleQuiz({ initialAnswers, onAnswersChange, hasBrandColor = fal
         disabled={!allAnswered || saving}
         className="h-11 px-6 rounded-xl bg-kelen-green-600 text-white font-bold text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-kelen-green-700 transition-colors"
       >
-        {saving ? "Enregistrement..." : saved ? "Enregistré ✓" : "Enregistrer le style"}
+        {saving ? "Enregistrement..." : saved ? "EnregistrÃ© âœ“" : "Enregistrer le style"}
       </button>
     </div>
   );

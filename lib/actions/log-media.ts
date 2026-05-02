@@ -1,4 +1,4 @@
-"use server";
+﻿"use server";
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
@@ -12,7 +12,7 @@ export async function uploadLogMedia(
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) return { error: "Non autorisé" };
+  if (!user) return { error: "Non autorisÃ©" };
 
   const { data: logEntry } = await supabase
     .from("project_logs")
@@ -21,7 +21,7 @@ export async function uploadLogMedia(
     .single();
 
   if (!logEntry || logEntry.author_id !== user.id) {
-    return { error: "Non autorisé" };
+    return { error: "Non autorisÃ©" };
   }
 
   const entries = Array.from(files.entries());
@@ -56,7 +56,6 @@ export async function uploadLogMedia(
       });
 
     if (uploadError) {
-      console.error("Upload error:", uploadError);
       continue;
     }
 
@@ -75,7 +74,6 @@ export async function uploadLogMedia(
       .single();
 
     if (dbError) {
-      console.error("DB error:", dbError);
       continue;
     }
 
@@ -93,7 +91,7 @@ export async function deleteLogMedia(
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) return { success: false, error: "Non autorisé" };
+  if (!user) return { success: false, error: "Non autorisÃ©" };
 
   const { data: media } = await supabase
     .from("project_log_media")
@@ -101,7 +99,7 @@ export async function deleteLogMedia(
     .eq("id", mediaId)
     .single();
 
-  if (!media) return { success: false, error: "Média introuvable" };
+  if (!media) return { success: false, error: "MÃ©dia introuvable" };
 
   // Verify ownership via log
   const { data: logEntry } = await supabase
@@ -111,7 +109,7 @@ export async function deleteLogMedia(
     .single();
 
   if (!logEntry || logEntry.author_id !== user.id) {
-    return { success: false, error: "Non autorisé" };
+    return { success: false, error: "Non autorisÃ©" };
   }
 
   // Delete from storage
@@ -153,7 +151,6 @@ export async function getLogMedia(logId: string) {
     .order("created_at", { ascending: true });
 
   if (error) {
-    console.error("Error fetching log media:", error);
     return [];
   }
 

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -34,7 +34,6 @@ export default function ProProjectDocumentsPage() {
   const [selectedDocumentImages, setSelectedDocumentImages] = useState<ProjectImage[]>([]);
   const supabase = createClient();
 
-  console.log("[ProjectDocuments] Page mounted, projectId:", projectId);
 
   useEffect(() => {
     if (projectId) {
@@ -44,10 +43,8 @@ export default function ProProjectDocumentsPage() {
   }, [projectId]);
 
   const fetchProject = async () => {
-    console.log("[ProjectDocuments] Fetching project details for:", projectId);
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      console.error("[ProjectDocuments] No user authenticated");
       return;
     }
 
@@ -58,7 +55,6 @@ export default function ProProjectDocumentsPage() {
       .single();
 
     if (!pro) {
-      console.error("[ProjectDocuments] No professional profile found");
       return;
     }
 
@@ -70,20 +66,16 @@ export default function ProProjectDocumentsPage() {
       .single();
 
     if (error) {
-      console.error("[ProjectDocuments] Error fetching project:", error);
       return;
     }
 
-    console.log("[ProjectDocuments] Project fetched:", project);
     setProjectTitle(project?.title || "Projet");
   };
 
   const fetchDocuments = async () => {
-    console.log("[ProjectDocuments] Fetching documents for project:", projectId);
     setIsLoading(true);
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      console.error("[ProjectDocuments] No user authenticated");
       setIsLoading(false);
       return;
     }
@@ -95,12 +87,10 @@ export default function ProProjectDocumentsPage() {
       .single();
 
     if (!pro) {
-      console.error("[ProjectDocuments] No professional profile found");
       setIsLoading(false);
       return;
     }
 
-    console.log("[ProjectDocuments] Professional ID:", pro.id);
 
     const { data, error } = await supabase
       .from("project_documents")
@@ -110,15 +100,9 @@ export default function ProProjectDocumentsPage() {
       .order("created_at", { ascending: false });
 
     if (error) {
-      console.error("[ProjectDocuments] Error fetching documents:", error);
       if (error.code === '42501') {
-        console.error('[ProjectDocuments] [RLS] ❌ RLS POLICY VIOLATION - project_documents table');
-        console.error('[ProjectDocuments] [RLS] User ID:', user.id);
-        console.error('[ProjectDocuments] [RLS] Professional ID:', pro.id);
-        console.error('[ProjectDocuments] [RLS] Fix: Check SELECT policy on project_documents table');
       }
     } else {
-      console.log("[ProjectDocuments] Documents fetched:", data?.length || 0);
       setDocuments((data as ProjectDocument[]) || []);
     }
     setIsLoading(false);
@@ -127,15 +111,12 @@ export default function ProProjectDocumentsPage() {
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) {
-      console.log("[ProjectDocuments] No file selected");
       return;
     }
 
-    console.log("[ProjectDocuments] File selected:", file.name, file.type, file.size);
 
     // Validate file size (10MB max)
     if (file.size > 10 * 1024 * 1024) {
-      console.error("[ProjectDocuments] File too large:", file.size);
       alert("Le fichier est trop volumineux. Taille maximale : 10 Mo.");
       return;
     }
@@ -143,8 +124,7 @@ export default function ProProjectDocumentsPage() {
     // Validate file type
     const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
     if (!allowedTypes.includes(file.type)) {
-      console.error("[ProjectDocuments] Invalid file type:", file.type);
-      alert("Format non accepté. Formats acceptés : PDF, JPG, PNG.");
+      alert("Format non acceptÃ©. Formats acceptÃ©s : PDF, JPG, PNG.");
       return;
     }
 
@@ -153,12 +133,10 @@ export default function ProProjectDocumentsPage() {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        console.error("[ProjectDocuments] No user authenticated");
-        alert("Vous devez être connecté pour uploader un document.");
+        alert("Vous devez Ãªtre connectÃ© pour uploader un document.");
         return;
       }
 
-      console.log("[ProjectDocuments] User authenticated:", user.id);
 
       const { data: pro } = await supabase
         .from("professionals")
@@ -167,20 +145,16 @@ export default function ProProjectDocumentsPage() {
         .single();
 
       if (!pro) {
-        console.error("[ProjectDocuments] No professional profile found");
-        alert("Profil professionnel non trouvé. Veuillez compléter votre profil.");
+        alert("Profil professionnel non trouvÃ©. Veuillez complÃ©ter votre profil.");
         return;
       }
 
-      console.log("[ProjectDocuments] Professional ID:", pro.id);
 
       // Upload file to storage - use portfolios bucket for all files (works reliably)
       const bucket = 'portfolios';
       const path = `${user.id}/projects/${projectId}`;
 
-      console.log("[ProjectDocuments] Uploading to bucket:", bucket, "path:", path);
       const fileUrl = await uploadFile(file, bucket, path);
-      console.log("[ProjectDocuments] Upload successful:", fileUrl);
 
       // Insert record into project_documents
       const { error } = await supabase.from("project_documents").insert({
@@ -191,16 +165,7 @@ export default function ProProjectDocumentsPage() {
       });
 
       if (error) {
-        console.error("[ProjectDocuments] Database insert error:", error);
         if (error.code === '42501') {
-          console.error('[ProjectDocuments] [RLS] ========================================');
-          console.error('[ProjectDocuments] [RLS] ❌ RLS POLICY VIOLATION - project_documents table');
-          console.error('[ProjectDocuments] [RLS] ========================================');
-          console.error('[ProjectDocuments] [RLS] Professional ID:', pro.id);
-          console.error('[ProjectDocuments] [RLS] User ID:', user.id);
-          console.error('[ProjectDocuments] [RLS] Error:', error.message);
-          console.error('[ProjectDocuments] [RLS] Fix: Check INSERT policy on project_documents table');
-          console.error('[ProjectDocuments] [RLS] ========================================');
           alert("Erreur de permissions. Veuillez contacter le support.");
         } else {
           alert("Erreur lors de l'enregistrement du document.");
@@ -208,11 +173,9 @@ export default function ProProjectDocumentsPage() {
         return;
       }
 
-      console.log("[ProjectDocuments] ✅ Document saved successfully");
-      alert("Document uploadé avec succès !");
+      alert("Document uploadÃ© avec succÃ¨s !");
       fetchDocuments();
     } catch (err) {
-      console.error("[ProjectDocuments] Upload error:", err);
       alert("Erreur lors de l'upload du document.");
     } finally {
       setIsUploading(false);
@@ -222,19 +185,16 @@ export default function ProProjectDocumentsPage() {
   const handleDelete = async (docId: string) => {
     if (!confirm("Supprimer ce document ?")) return;
 
-    console.log("[ProjectDocuments] Deleting document:", docId);
     const { error } = await supabase
       .from("project_documents")
       .delete()
       .eq("id", docId);
 
     if (error) {
-      console.error("[ProjectDocuments] Delete error:", error);
       alert("Erreur lors de la suppression du document.");
       return;
     }
 
-    console.log("[ProjectDocuments] ✅ Document deleted successfully");
     fetchDocuments();
     if (selectedDoc?.id === docId) {
       setSelectedDoc(null);
@@ -243,7 +203,6 @@ export default function ProProjectDocumentsPage() {
   };
 
   const handleDocumentSelect = (doc: ProjectDocument) => {
-    console.log("[ProjectDocuments] Document selected:", doc.id);
     setSelectedDoc(doc);
     setSelectedDocumentImages(doc.images || []);
   };
@@ -261,10 +220,10 @@ export default function ProProjectDocumentsPage() {
             Retour au projet
           </Link>
           <h1 className="text-2xl font-bold text-on-surface">
-            Documents & Images — {projectTitle}
+            Documents & Images â€” {projectTitle}
           </h1>
           <p className="text-sm text-on-surface-variant mt-1">
-            Gérez les documents et images de ce projet
+            GÃ©rez les documents et images de ce projet
           </p>
         </div>
       </div>
@@ -312,12 +271,12 @@ export default function ProProjectDocumentsPage() {
             <Upload className="w-8 h-8 text-on-surface-variant/40 group-hover:text-kelen-green-600 transition-colors" />
           )}
         </div>
-        <h3 className="text-lg font-semibold text-on-surface mb-2">Déposez vos documents ici</h3>
+        <h3 className="text-lg font-semibold text-on-surface mb-2">DÃ©posez vos documents ici</h3>
         <p className="text-sm text-on-surface-variant mb-4 italic">
-          Chiffrement AES-256 de bout en bout. Formats acceptés : PDF, JPG, PNG (Max 10Mo).
+          Chiffrement AES-256 de bout en bout. Formats acceptÃ©s : PDF, JPG, PNG (Max 10Mo).
         </p>
         <button className="px-6 py-3 bg-kelen-green-600 text-white rounded-xl font-semibold text-sm shadow-lg shadow-kelen-green-600/20 active:scale-95 transition-all">
-          SÉLECTIONNER FICHIER
+          SÃ‰LECTIONNER FICHIER
         </button>
         <input
           type="file"
@@ -479,7 +438,7 @@ export default function ProProjectDocumentsPage() {
                           window.open(doc.contract_url, '_blank');
                         }}
                         className="p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded transition-colors"
-                        title="Télécharger"
+                        title="TÃ©lÃ©charger"
                       >
                         <Download className="w-4 h-4" />
                       </button>
@@ -511,7 +470,7 @@ export default function ProProjectDocumentsPage() {
           />
           <div className="relative w-96 bg-surface shadow-2xl overflow-y-auto border-l border-outline-variant/20">
             <div className="sticky top-0 bg-surface border-b border-outline-variant/10 px-6 py-4 flex items-center justify-between z-10">
-              <h2 className="text-lg font-bold text-on-surface">Détails du document</h2>
+              <h2 className="text-lg font-bold text-on-surface">DÃ©tails du document</h2>
               <button
                 onClick={() => setSelectedDoc(null)}
                 className="p-2 hover:bg-surface-container rounded-lg transition-colors"
@@ -534,11 +493,11 @@ export default function ProProjectDocumentsPage() {
               {/* Metadata */}
               <div className="space-y-4">
                 <p className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/10 pb-2">
-                  Métadonnées
+                  MÃ©tadonnÃ©es
                 </p>
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
-                    <span className="text-on-surface-variant">Créé le</span>
+                    <span className="text-on-surface-variant">CrÃ©Ã© le</span>
                     <span className="font-medium text-on-surface">
                       {new Date(selectedDoc.created_at).toLocaleDateString('fr-FR')}
                     </span>
@@ -550,7 +509,7 @@ export default function ProProjectDocumentsPage() {
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-on-surface-variant">Sécurité</span>
+                    <span className="text-on-surface-variant">SÃ©curitÃ©</span>
                     <span className="font-medium text-kelen-green-600 flex items-center gap-1">
                       <ShieldCheck className="text-sm" />
                       AES-256
@@ -592,7 +551,7 @@ export default function ProProjectDocumentsPage() {
               Gestion des images du projet
             </h2>
             <p className="text-sm text-on-surface-variant mb-6">
-              Uploadez et gérez les images associées à ce projet. Les images sont stockées de manière sécurisée et peuvent être utilisées pour illustrer vos réalisations.
+              Uploadez et gÃ©rez les images associÃ©es Ã  ce projet. Les images sont stockÃ©es de maniÃ¨re sÃ©curisÃ©e et peuvent Ãªtre utilisÃ©es pour illustrer vos rÃ©alisations.
             </p>
             
             {/* Image Manager Component */}
@@ -600,7 +559,6 @@ export default function ProProjectDocumentsPage() {
               documentId={projectId}
               images={[]}
               onImagesChange={() => {
-                console.log("[ProjectDocuments] Images changed, refetching...");
                 // Refetch documents to get updated images
                 fetchDocuments();
               }}
@@ -614,14 +572,13 @@ export default function ProProjectDocumentsPage() {
                 Images du document: {selectedDoc.project_title}
               </h3>
               <p className="text-sm text-on-surface-variant mb-4">
-                Ces images sont associées à ce document spécifique
+                Ces images sont associÃ©es Ã  ce document spÃ©cifique
               </p>
               
               <ProjectImageManager
                 documentId={selectedDoc.id}
                 images={selectedDocumentImages}
                 onImagesChange={() => {
-                  console.log("[ProjectDocuments] Document images changed, refetching...");
                   fetchDocuments();
                   // Update selected doc images
                   if (selectedDoc) {

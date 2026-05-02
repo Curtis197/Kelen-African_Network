@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -15,7 +15,6 @@ export function GoogleButton({ role = "client" }: GoogleButtonProps) {
   const supabase = createClient();
 
   const handleGoogleSignIn = async () => {
-    console.log("[Google OAuth] Starting sign-in flow", { role });
     setIsLoading(true);
     setError(null);
 
@@ -32,19 +31,12 @@ export function GoogleButton({ role = "client" }: GoogleButtonProps) {
       });
 
       if (oauthError) {
-        console.error("[Google OAuth] ERROR during signIn", {
-          message: oauthError.message,
-          code: oauthError.code,
-          status: oauthError.status,
-        });
         throw oauthError;
       }
 
       // Note: This will redirect to Google, so we won't reach here immediately
-      console.log("[Google OAuth] Redirecting to Google consent screen");
     } catch (err: any) {
-      console.error("[Google OAuth] UNEXPECTED ERROR", err);
-      setError(err.message || "Échec de la connexion avec Google.");
+      setError(err.message || "Ã‰chec de la connexion avec Google.");
       setIsLoading(false);
     }
   };

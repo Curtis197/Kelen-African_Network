@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import Link from "next/link";
@@ -20,14 +20,14 @@ import { NotificationDropdown } from "@/components/layout/NotificationDropdown";
 
 const DIRECT_ITEMS = [
   { href: "/pro/dashboard", label: "Tableau de bord", icon: LayoutDashboard },
-  { href: "/pro/collaborations", label: "Boîte de réception", icon: Handshake },
+  { href: "/pro/collaborations", label: "BoÃ®te de rÃ©ception", icon: Handshake },
   { href: "/pro/newsletter", label: "Newsletter", icon: Mail },
 ];
 
 const GROUP_ITEMS = [
   {
     href: "/pro/visibilite",
-    label: "Ma Visibilité",
+    label: "Ma VisibilitÃ©",
     icon: Globe,
     childPaths: ["/pro/portfolio", "/pro/realisations", "/pro/site", "/pro/identite"],
   },
@@ -58,15 +58,12 @@ export function ProSidebar() {
   useEffect(() => {
     let cancelled = false;
 
-    console.log('[ProSidebar] useEffect mounted — fetching session');
 
     const getUser = async () => {
-      console.log('[ProSidebar] getSession() called');
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
         
         if (error) {
-          console.error('[ProSidebar] Session fetch error:', error.message, error.code);
           if (!cancelled) {
             setUserEmail(null);
             setBusinessName("Mon profil");
@@ -75,11 +72,9 @@ export function ProSidebar() {
         }
         
         if (cancelled) {
-          console.log('[ProSidebar] getSession returned — component unmounted, skipping');
           return;
         }
         if (session?.user) {
-          console.log('[ProSidebar] Session found:', session.user.email);
           setUserEmail(session.user.email ?? null);
           const { data: profile } = await supabase
             .from("professionals")
@@ -87,16 +82,13 @@ export function ProSidebar() {
             .eq("user_id", session.user.id)
             .single();
           if (profile?.business_name && !cancelled) {
-            console.log('[ProSidebar] Business name set:', profile.business_name);
             setBusinessName(profile.business_name);
           }
         } else {
-          console.log('[ProSidebar] No session found — clearing user state');
           setUserEmail(null);
           setBusinessName("Mon profil");
         }
       } catch (err) {
-        console.error('[ProSidebar] Unexpected error fetching session:', err);
         if (!cancelled) {
           setUserEmail(null);
           setBusinessName("Mon profil");
@@ -107,18 +99,15 @@ export function ProSidebar() {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (cancelled) return;
-      console.log('[ProSidebar] onAuthStateChange:', event, session?.user?.email ?? 'no user');
       if (session?.user) {
         setUserEmail(session.user.email ?? null);
       } else {
-        console.log('[ProSidebar] Auth event cleared session');
         setUserEmail(null);
         setBusinessName("Mon profil");
       }
     });
 
     return () => {
-      console.log('[ProSidebar] useEffect cleanup — unmounting');
       cancelled = true;
       subscription.unsubscribe();
     };
@@ -172,7 +161,6 @@ export function ProSidebar() {
     try {
       await supabase.auth.signOut({ scope: 'global' });
     } catch (err) {
-      console.error('Sign out error:', err);
     } finally {
       setUserEmail(null);
       setBusinessName("Mon profil");
@@ -264,7 +252,7 @@ export function ProSidebar() {
             className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:text-red-600 hover:bg-red-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <LogOut className={`w-4 h-4 ${signingOut ? 'animate-pulse' : ''}`} />
-            {signingOut ? 'Déconnexion...' : 'Se déconnecter'}
+            {signingOut ? 'DÃ©connexion...' : 'Se dÃ©connecter'}
           </button>
         </div>
       </aside>
@@ -383,7 +371,7 @@ export function ProSidebar() {
                 className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 <LogOut className={`w-4 h-4 ${signingOut ? 'animate-pulse' : ''}`} />
-                {signingOut ? 'Déconnexion...' : 'Se déconnecter'}
+                {signingOut ? 'DÃ©connexion...' : 'Se dÃ©connecter'}
               </button>
             </div>
           </div>

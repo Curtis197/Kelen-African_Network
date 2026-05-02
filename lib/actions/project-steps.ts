@@ -1,11 +1,10 @@
-"use server";
+﻿"use server";
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 function log(action: string, data: Record<string, unknown>) {
-  console.log(JSON.stringify({ ts: new Date().toISOString(), action, ...data }));
 }
 
 const stepSchema = z.object({
@@ -39,7 +38,6 @@ export async function getProjectSteps(projectId: string) {
     .order("order_index", { ascending: true });
 
   if (error) {
-    console.error("Error fetching project steps:", error);
     return [];
   }
 
@@ -55,7 +53,7 @@ export async function getProjectSteps(projectId: string) {
 export async function upsertProjectStep(data: z.infer<typeof stepSchema>) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) throw new Error("Non autorisé");
+  if (!user) throw new Error("Non autorisÃ©");
 
   const validatedData = stepSchema.parse(data);
   const stepId = validatedData.id;
@@ -70,7 +68,7 @@ export async function upsertProjectStep(data: z.infer<typeof stepSchema>) {
     .eq("user_id", user.id)
     .single();
 
-  if (projectError || !project) return { error: "Projet introuvable ou accès refusé." };
+  if (projectError || !project) return { error: "Projet introuvable ou accÃ¨s refusÃ©." };
 
   if (stepId) {
     const { data: updated, error } = await supabase
@@ -107,7 +105,7 @@ export async function upsertProjectStep(data: z.infer<typeof stepSchema>) {
 export async function deleteProjectStep(stepId: string, projectId: string) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: "Non autorisé" };
+  if (!user) return { error: "Non autorisÃ©" };
 
   // Verify project ownership
   const { data: project, error: projectError } = await supabase
@@ -117,7 +115,7 @@ export async function deleteProjectStep(stepId: string, projectId: string) {
     .eq("user_id", user.id)
     .single();
 
-  if (projectError || !project) return { error: "Projet introuvable ou accès refusé." };
+  if (projectError || !project) return { error: "Projet introuvable ou accÃ¨s refusÃ©." };
 
   const { error } = await supabase
     .from("project_steps")
@@ -142,7 +140,7 @@ export async function manageStepProfessional(
 ) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: "Non autorisé" };
+  if (!user) return { error: "Non autorisÃ©" };
 
   // Verify project ownership
   const { data: project, error: projectError } = await supabase
@@ -152,7 +150,7 @@ export async function manageStepProfessional(
     .eq("user_id", user.id)
     .single();
 
-  if (projectError || !project) return { error: "Projet introuvable ou accès refusé." };
+  if (projectError || !project) return { error: "Projet introuvable ou accÃ¨s refusÃ©." };
 
   if (action === 'add') {
     const { error } = await supabase

@@ -1,4 +1,4 @@
-"use server";
+﻿"use server";
 
 import { createClient } from "@/lib/supabase/server";
 
@@ -75,7 +75,6 @@ export async function getProDashboardStats(): Promise<DashboardStats> {
     .single();
 
   if (!pro) {
-    console.warn('[DASHBOARD] Professional profile not found for user:', user.id);
     return {
       professionalId: null,
       businessName: null,
@@ -92,7 +91,6 @@ export async function getProDashboardStats(): Promise<DashboardStats> {
     };
   }
 
-  console.log('[DASHBOARD] Fetching stats for pro:', pro.id);
 
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -25,18 +25,13 @@ export default function ProjectImageManager({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const supabase = createClient();
 
-  console.log("[ProjectImageManager] Component mounted, documentId:", documentId, {
-    imageCount: images.length,
-  });
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) {
-      console.log("[ProjectImageManager] No files selected");
       return;
     }
 
-    console.log("[ProjectImageManager] Files selected:", files.length);
     setIsUploading(true);
     setError(null);
 
@@ -45,12 +40,10 @@ export default function ProjectImageManager({
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) {
-        console.error("[ProjectImageManager] No user authenticated");
-        setError("Vous devez être connecté pour uploader des images.");
+        setError("Vous devez Ãªtre connectÃ© pour uploader des images.");
         return;
       }
 
-      console.log("[ProjectImageManager] User authenticated:", user.id);
 
       const { data: pro } = await supabase
         .from("professionals")
@@ -59,14 +52,12 @@ export default function ProjectImageManager({
         .single();
 
       if (!pro) {
-        console.error("[ProjectImageManager] No professional profile found");
         setError(
-          "Profil professionnel non trouvé. Veuillez compléter votre profil."
+          "Profil professionnel non trouvÃ©. Veuillez complÃ©ter votre profil."
         );
         return;
       }
 
-      console.log("[ProjectImageManager] Professional ID:", pro.id);
 
       // Upload all files
       const uploadedUrls: string[] = [];
@@ -75,7 +66,6 @@ export default function ProjectImageManager({
 
         // Validate file size (10MB max)
         if (file.size > 10 * 1024 * 1024) {
-          console.error("[ProjectImageManager] File too large:", file.size);
           setError("Un ou plusieurs fichiers sont trop volumineux. Taille maximale : 10 Mo.");
           continue;
         }
@@ -83,8 +73,7 @@ export default function ProjectImageManager({
         // Validate file type
         const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
         if (!allowedTypes.includes(file.type)) {
-          console.error("[ProjectImageManager] Invalid file type:", file.type);
-          setError("Format non accepté. Formats acceptés : JPG, PNG, WEBP.");
+          setError("Format non acceptÃ©. Formats acceptÃ©s : JPG, PNG, WEBP.");
           continue;
         }
 
@@ -92,34 +81,25 @@ export default function ProjectImageManager({
         const bucket = "portfolios";
         const path = `${user.id}/projects/${documentId}/images`;
 
-        console.log("[ProjectImageManager] Uploading to bucket:", bucket, "path:", path);
         const fileUrl = await uploadFile(file, bucket, path);
-        console.log("[ProjectImageManager] Upload successful:", fileUrl);
         uploadedUrls.push(fileUrl);
       }
 
       if (uploadedUrls.length === 0) {
-        console.error("[ProjectImageManager] No files uploaded successfully");
         return;
       }
 
-      console.log("[ProjectImageManager] Uploading complete, adding to database:", {
-        count: uploadedUrls.length,
-      });
 
       // Add images to database
       const result = await addProjectImage(documentId, uploadedUrls);
 
       if (!result.success) {
-        console.error("[ProjectImageManager] Error adding images:", result.error);
         setError(result.error || "Erreur lors de l'ajout des images.");
         return;
       }
 
-      console.log("[ProjectImageManager] ✅ Images added successfully");
       onImagesChange();
     } catch (err) {
-      console.error("[ProjectImageManager] Upload error:", err);
       setError("Erreur lors de l'upload des images.");
     } finally {
       setIsUploading(false);
@@ -131,41 +111,34 @@ export default function ProjectImageManager({
   };
 
   const handleSetMain = async (imageId: string) => {
-    console.log("[ProjectImageManager] Setting main image:", imageId);
     setError(null);
 
     const result = await setMainProjectImage(documentId, imageId);
 
     if (!result.success) {
-      console.error("[ProjectImageManager] Error setting main image:", result.error);
-      setError(result.error || "Erreur lors de la définition de l'image principale.");
+      setError(result.error || "Erreur lors de la dÃ©finition de l'image principale.");
       return;
     }
 
-    console.log("[ProjectImageManager] ✅ Main image set successfully");
     onImagesChange();
   };
 
   const handleDelete = async (imageId: string) => {
     if (!confirm("Supprimer cette image ?")) {
-      console.log("[ProjectImageManager] Delete cancelled by user");
       return;
     }
 
-    console.log("[ProjectImageManager] Deleting image:", imageId);
     setIsDeleting(imageId);
     setError(null);
 
     const result = await deleteProjectImage(imageId);
 
     if (!result.success) {
-      console.error("[ProjectImageManager] Error deleting image:", result.error);
       setError(result.error || "Erreur lors de la suppression de l'image.");
       setIsDeleting(null);
       return;
     }
 
-    console.log("[ProjectImageManager] ✅ Image deleted successfully");
     onImagesChange();
     setIsDeleting(null);
   };
@@ -173,12 +146,6 @@ export default function ProjectImageManager({
   const mainImage = images.find((img) => img.is_main);
   const otherImages = images.filter((img) => !img.is_main);
 
-  console.log("[ProjectImageManager] Render state:", {
-    totalImages: images.length,
-    hasMain: !!mainImage,
-    isUploading,
-    error,
-  });
 
   return (
     <div className="space-y-4">
@@ -245,7 +212,7 @@ export default function ProjectImageManager({
                 <button
                   onClick={() => handleSetMain(image.id)}
                   className="p-2 bg-white text-on-surface rounded-lg hover:bg-gray-100 transition-colors"
-                  title="Définir comme image principale"
+                  title="DÃ©finir comme image principale"
                 >
                   <Star className="w-4 h-4" />
                 </button>
@@ -302,7 +269,7 @@ export default function ProjectImageManager({
           </p>
           <label className="inline-flex items-center gap-2 px-6 py-3 bg-kelen-green-600 text-white rounded-xl font-semibold text-sm hover:bg-kelen-green-700 transition-colors cursor-pointer">
             <Upload className="w-4 h-4" />
-            Sélectionner des images
+            SÃ©lectionner des images
             <input
               ref={fileInputRef}
               type="file"

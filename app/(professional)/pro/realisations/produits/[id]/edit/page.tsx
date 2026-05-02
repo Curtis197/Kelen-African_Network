@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { ProductForm } from "@/components/forms/ProductForm";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "Modifier le produit — Kelen Pro",
+  title: "Modifier le produit â€” Kelen Pro",
 };
 
 interface EditProductPageProps {
@@ -24,7 +24,6 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
   } = await supabase.auth.getUser();
 
   if (authError) {
-    console.error("[EditProductPage] Auth error:", authError);
   }
 
   if (!user) {
@@ -39,7 +38,6 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
     .single();
 
   if (profError) {
-    console.error("[EditProductPage] Professional fetch error:", profError);
   }
 
   if (!professional) {
@@ -55,7 +53,6 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
     .single();
 
   if (productError) {
-    console.error("[EditProductPage] Product fetch error:", productError);
     notFound();
   }
 
@@ -70,7 +67,7 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
           Modifier : {product.title}
         </h1>
         <p className="mt-2 text-on-surface-variant/70">
-          Mettez à jour les informations et les médias de votre produit.
+          Mettez Ã  jour les informations et les mÃ©dias de votre produit.
         </p>
       </div>
 

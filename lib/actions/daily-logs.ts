@@ -6,10 +6,6 @@ import { z } from "zod";
 import type { ProjectLog, LogFormData } from "@/lib/types/daily-logs";
 import { reverseGeocode } from "@/lib/utils/geocoding";
 
-function log(action: string, data: Record<string, unknown>) {
-  console.log(JSON.stringify({ ts: new Date().toISOString(), action, ...data }));
-}
-
 export async function getProfessionalId(): Promise<string | null> {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -109,11 +105,10 @@ export async function createLog(data: z.infer<typeof logSchema>): Promise<{ data
         .select("id")
         .eq("project_id", validated.projectId)
         .eq("professional_id", proId)
-        .in("status", ["negotiating", "active", "pending"]) // Allow logging even during negotiation/pending if needed, or stick to active
+        .in("status", ["negotiating", "active", "pending"])
         .single();
 
       if (!collabAccess) {
-        console.warn("[createLog] Access denied for professional", { proId, projectId: validated.projectId });
         return { error: "Vous n'avez pas accès à ce projet" };
       }
     }
@@ -142,21 +137,9 @@ export async function createLog(data: z.infer<typeof logSchema>): Promise<{ data
     // For pro projects: set pro_project_id, leave project_id as NULL
     insertData.pro_project_id = validated.projectId;
     insertData.project_id = null;
-    console.log("[createLog] Inserting pro_project log:", {
-      pro_project_id: validated.projectId,
-      project_id: null,
-      author_id: user.id,
-      author_role: authorRole
-    });
   } else {
     // For client projects: set project_id, leave pro_project_id as NULL
     insertData.project_id = targetProjectId;
-    console.log("[createLog] Inserting client_project log:", {
-      project_id: targetProjectId,
-      pro_project_id: null,
-      author_id: user.id,
-      author_role: authorRole
-    });
   }
 
   // Perform reverse geocoding if coordinates are provided
@@ -165,15 +148,11 @@ export async function createLog(data: z.infer<typeof logSchema>): Promise<{ data
     try {
       const geoResult = await reverseGeocode(validated.gpsLatitude, validated.gpsLongitude);
       locationName = geoResult?.city || null;
-      console.log("[createLog] Geocoded location:", locationName);
     } catch (err) {
-      console.error("[createLog] Geocoding error:", err);
+      // Geocoding is optional — don't fail the action
     }
   }
   insertData.location_name = locationName;
-
-  // Debug log before insert
-  console.log("[createLog] Final insertData:", JSON.stringify(insertData, null, 2));
 
   const { data: newLog, error } = await supabase
     .from("project_logs")
@@ -182,12 +161,9 @@ export async function createLog(data: z.infer<typeof logSchema>): Promise<{ data
     .single();
 
   if (error) {
-    log("log.create.error", { userId: user.id, projectId: validated.projectId, error: error.message });
     return { error: error.message };
   }
 
-  log("log.create.ok", { userId: user.id, projectId: validated.projectId, logId: newLog.id, isProProject: validated.isProProject });
-  
   if (validated.isProProject) {
     revalidatePath(`/pro/projets/${validated.projectId}/journal`);
   } else {
@@ -233,14 +209,13 @@ export async function updateLog(
   if (data.gpsLatitude !== undefined || data.gpsLongitude !== undefined) {
     const lat = data.gpsLatitude !== undefined ? data.gpsLatitude : existingLog.gps_latitude;
     const lng = data.gpsLongitude !== undefined ? data.gpsLongitude : existingLog.gps_longitude;
-    
+
     if (lat !== null && lng !== null) {
       try {
         const geoResult = await reverseGeocode(lat, lng);
         updateData.location_name = geoResult?.city || null;
-        console.log("[updateLog] Geocoded location:", updateData.location_name);
       } catch (err) {
-        console.error("[updateLog] Geocoding error:", err);
+        // Geocoding is optional — don't fail the action
       }
     } else {
       updateData.location_name = null;
@@ -255,19 +230,16 @@ export async function updateLog(
     .single();
 
   if (error) {
-    log("log.update.error", { logId, error: error.message });
     return { error: error.message };
   }
 
-  log("log.update.ok", { logId });
-  
   // Revalidate the correct path based on project type
   if (existingLog.pro_project_id) {
     revalidatePath(`/pro/projets/${existingLog.pro_project_id}/journal`);
   } else if (existingLog.project_id) {
     revalidatePath(`/projets/${existingLog.project_id}/journal`);
   }
-  
+
   return { data: updatedLog };
 }
 
@@ -293,19 +265,16 @@ export async function deleteLog(logId: string): Promise<{ success: boolean; erro
     .eq("id", logId);
 
   if (error) {
-    log("log.delete.error", { logId, error: error.message });
     return { success: false, error: error.message };
   }
 
-  log("log.delete.ok", { logId });
-  
   // Revalidate the correct path based on project type
   if (existingLog.pro_project_id) {
     revalidatePath(`/pro/projets/${existingLog.pro_project_id}/journal`);
   } else if (existingLog.project_id) {
     revalidatePath(`/projets/${existingLog.project_id}/journal`);
   }
-  
+
   return { success: true };
 }
 
@@ -314,8 +283,6 @@ export async function getProjectLogs(projectId: string, isProProject?: boolean, 
 
   // Determine which column to filter by
   const filterColumn = isProProject ? "pro_project_id" : "project_id";
-
-  console.log("[getProjectLogs] Fetching logs:", { projectId, isProProject, filterColumn, limit, offset });
 
   const { data, error } = await supabase
     .from("project_logs")
@@ -330,7 +297,6 @@ export async function getProjectLogs(projectId: string, isProProject?: boolean, 
     .range(offset, offset + limit - 1);
 
   if (error) {
-    console.error("Error fetching project logs:", error);
     return [];
   }
 
@@ -339,9 +305,6 @@ export async function getProjectLogs(projectId: string, isProProject?: boolean, 
 
 export async function getLogById(logId: string, projectId?: string, isProProject?: boolean): Promise<{ data?: ProjectLog | null; error?: string; debug?: Record<string, unknown> }> {
   const supabase = await createClient();
-
-  console.log("[getLogById] === START ===");
-  console.log("[getLogById] Input params:", { logId, projectId, isProProject });
 
   let query = supabase
     .from("project_logs")
@@ -360,17 +323,11 @@ export async function getLogById(logId: string, projectId?: string, isProProject
     // For pro projects, filter by pro_project_id
     if (isProProject) {
       query = query.eq("pro_project_id", projectId);
-      console.log("[getLogById] Filtering by pro_project_id:", projectId);
     } else {
       // For client projects, filter by project_id
       query = query.eq("project_id", projectId);
-      console.log("[getLogById] Filtering by project_id:", projectId);
     }
-  } else {
-    console.log("[getLogById] No project filter applied");
   }
-
-  console.log("[getLogById] Executing query...");
 
   const { data, error } = await query.single();
 
@@ -387,23 +344,13 @@ export async function getLogById(logId: string, projectId?: string, isProProject
     errorHint: error?.hint || null,
   };
 
-  console.log("[getLogById] Query result:", debugInfo);
-
   if (error) {
-    console.error("[getLogById] Error fetching log:", error);
-    return { 
-      data: null, 
+    return {
+      data: null,
       error: error.message,
-      debug: debugInfo 
+      debug: debugInfo
     };
   }
-
-  console.log("[getLogById] === SUCCESS ===", {
-    logId: data?.id,
-    title: data?.title,
-    project_id: data?.project_id,
-    pro_project_id: data?.pro_project_id,
-  });
 
   return { data, debug: debugInfo };
 }
@@ -419,7 +366,6 @@ export async function getLogsByStep(stepId: string, limit: number = 100, offset:
     .range(offset, offset + limit - 1);
 
   if (error) {
-    console.error("Error fetching logs by step:", error);
     return [];
   }
 

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
@@ -39,7 +39,6 @@ export function ProProjectJournal({ project }: ProProjectJournalProps) {
     else setIsLoadingMore(true);
 
     const offset = pageNum * PAGE_SIZE;
-    console.log("[ProProjectJournal] Loading logs page:", pageNum, "offset:", offset);
 
     // Call server action instead of raw query for better consistency
     const data = await getProjectLogs(project.id, !project.is_collaboration, PAGE_SIZE, offset);
@@ -113,19 +112,17 @@ export function ProProjectJournal({ project }: ProProjectJournalProps) {
             syncedCount++;
           }
         } catch (err) {
-          console.error(`Failed to sync draft ${draft.id}:`, err);
         }
       }
 
       if (syncedCount > 0) {
-        toast.success(`${syncedCount} brouillon(s) synchronisé(s)`);
+        toast.success(`${syncedCount} brouillon(s) synchronisÃ©(s)`);
         setPendingDrafts(0);
         loadLogs();
       } else {
-        toast.info('Aucun brouillon à synchroniser');
+        toast.info('Aucun brouillon Ã  synchroniser');
       }
     } catch (err) {
-      console.error('Sync error:', err);
       toast.error('Erreur lors de la synchronisation');
     } finally {
       setIsSyncing(false);
@@ -158,7 +155,7 @@ export function ProProjectJournal({ project }: ProProjectJournalProps) {
   const handleExportPDF = async () => {
     try {
       await exportJournalToPDF(project.id, true);
-      toast.success('Export PDF lancé');
+      toast.success('Export PDF lancÃ©');
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Erreur lors de l'export");
     }

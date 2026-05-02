@@ -21,11 +21,6 @@ async function checkProjectAccess(
   user: any,
   logEntry: { project_id: string | null; pro_project_id: string | null }
 ): Promise<{ isAuthorized: boolean; error?: string }> {
-  console.log('[AUTH] Checking access for user:', user.id, 'on log targets:', { 
-    projectId: logEntry.project_id, 
-    proProjectId: logEntry.pro_project_id 
-  });
-
   // 1. Check if it's a client project owner
   if (logEntry.project_id) {
     const { data: project, error: projectError } = await supabase
@@ -34,21 +29,16 @@ async function checkProjectAccess(
       .eq("id", logEntry.project_id)
       .eq("user_id", user.id)
       .single();
-    
+
     if (project) {
-      console.log('[AUTH] User is project owner');
       return { isAuthorized: true };
-    }
-    if (projectError && projectError.code !== 'PGRST116') {
-      console.error('[DB] Error checking project ownership:', projectError);
     }
   }
 
   // 2. Check if it's a pro project owner
   if (logEntry.pro_project_id) {
     const proId = await getProfessionalId();
-    console.log('[AUTH] Professional ID:', proId);
-    
+
     if (proId) {
       const { data: proProject, error: proError } = await supabase
         .from("pro_projects")
@@ -56,13 +46,9 @@ async function checkProjectAccess(
         .eq("id", logEntry.pro_project_id)
         .eq("professional_id", proId)
         .single();
-      
+
       if (proProject) {
-        console.log('[AUTH] User is pro project owner');
         return { isAuthorized: true };
-      }
-      if (proError && proError.code !== 'PGRST116') {
-        console.error('[DB] Error checking pro project access:', proError);
       }
     }
   }
@@ -71,8 +57,6 @@ async function checkProjectAccess(
   if (logEntry.project_id) {
     const proId = await getProfessionalId();
     if (proId) {
-      console.log('[AUTH] Checking assignments for pro:', proId);
-      
       // Check project_professionals (direct assignment)
       const { data: proAccess } = await supabase
         .from("project_professionals")
@@ -80,9 +64,8 @@ async function checkProjectAccess(
         .eq("project_id", logEntry.project_id)
         .eq("professional_id", proId)
         .single();
-      
+
       if (proAccess) {
-        console.log('[AUTH] User is assigned professional via project_professionals');
         return { isAuthorized: true };
       }
 
@@ -94,15 +77,13 @@ async function checkProjectAccess(
         .eq("professional_id", proId)
         .eq("status", "active")
         .single();
-      
+
       if (collabAccess) {
-        console.log('[AUTH] User is active collaborator');
         return { isAuthorized: true };
       }
     }
   }
 
-  console.warn('[AUTH] Access denied for user:', user.id);
   return { isAuthorized: false, error: "Vous n'avez pas l'autorisation d'effectuer cette action sur ce rapport." };
 }
 
@@ -110,8 +91,6 @@ export async function approveLog(
   logId: string,
   comment: string
 ): Promise<{ success: boolean; error?: string }> {
-  console.log('[ACTION] approveLog started:', { logId });
-  
   // Validate input
   const validation = logCommentSchema.safeParse({ logId, comment });
   if (!validation.success) {
@@ -131,7 +110,6 @@ export async function approveLog(
     .single();
 
   if (!logEntry) {
-    console.error('[DB] Log not found or RLS restricted:', logFetchError);
     return { success: false, error: "Rapport introuvable" };
   }
 
@@ -142,7 +120,6 @@ export async function approveLog(
   }
 
   // Insert comment
-  console.log('[DB] Inserting approval comment...');
   const { error: commentError } = await supabase
     .from("project_log_comments")
     .insert([{
@@ -153,21 +130,16 @@ export async function approveLog(
     }]);
 
   if (commentError) {
-    console.error('[DB] Error inserting comment:', commentError);
-    if (commentError.code === '42501') console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: project_log_comments');
     return { success: false, error: commentError.message };
   }
 
   // Update log status
-  console.log('[DB] Updating log status to approved...');
   const { error: updateError } = await supabase
     .from("project_logs")
     .update({ status: 'approved' })
     .eq("id", logId);
 
   if (updateError) {
-    console.error('[DB] Error updating log status:', updateError);
-    if (updateError.code === '42501') console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: project_logs');
     return { success: false, error: updateError.message };
   }
 
@@ -209,7 +181,7 @@ export async function approveLog(
   } else if (logEntry.project_id) {
     revalidatePath(`/projets/${logEntry.project_id}/journal`);
   }
-  
+
   return { success: true };
 }
 
@@ -218,8 +190,6 @@ export async function contestLog(
   comment: string,
   evidenceUrls: string[] = []
 ): Promise<{ success: boolean; error?: string }> {
-  console.log('[ACTION] contestLog started:', { logId });
-
   // Validate input
   const validation = logCommentSchema.safeParse({ logId, comment, evidenceUrls });
   if (!validation.success) {
@@ -239,7 +209,6 @@ export async function contestLog(
     .single();
 
   if (!logEntry) {
-    console.error('[DB] Log not found or RLS restricted:', logFetchError);
     return { success: false, error: "Rapport introuvable" };
   }
 
@@ -250,7 +219,6 @@ export async function contestLog(
   }
 
   // Insert comment
-  console.log('[DB] Inserting contest comment...');
   const { error: commentError } = await supabase
     .from("project_log_comments")
     .insert([{
@@ -262,21 +230,16 @@ export async function contestLog(
     }]);
 
   if (commentError) {
-    console.error('[DB] Error inserting comment:', commentError);
-    if (commentError.code === '42501') console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: project_log_comments');
     return { success: false, error: commentError.message };
   }
 
   // Update log status
-  console.log('[DB] Updating log status to contested...');
   const { error: updateError } = await supabase
     .from("project_logs")
     .update({ status: 'contested' })
     .eq("id", logId);
 
   if (updateError) {
-    console.error('[DB] Error updating log status:', updateError);
-    if (updateError.code === '42501') console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: project_logs');
     return { success: false, error: updateError.message };
   }
 
@@ -286,7 +249,7 @@ export async function contestLog(
   } else if (logEntry.project_id) {
     revalidatePath(`/projets/${logEntry.project_id}/journal`);
   }
-  
+
   return { success: true };
 }
 
@@ -294,8 +257,6 @@ export async function resolveLog(
   logId: string,
   comment: string
 ): Promise<{ success: boolean; error?: string }> {
-  console.log('[ACTION] resolveLog started:', { logId });
-
   // Validate input
   const validation = logCommentSchema.safeParse({ logId, comment });
   if (!validation.success) {
@@ -315,7 +276,6 @@ export async function resolveLog(
     .single();
 
   if (!logEntry) {
-    console.error('[DB] Log not found or RLS restricted:', logFetchError);
     return { success: false, error: "Rapport introuvable" };
   }
 
@@ -330,7 +290,6 @@ export async function resolveLog(
   }
 
   // Insert comment
-  console.log('[DB] Inserting resolution comment...');
   const { error: commentError } = await supabase
     .from("project_log_comments")
     .insert([{
@@ -341,21 +300,16 @@ export async function resolveLog(
     }]);
 
   if (commentError) {
-    console.error('[DB] Error inserting comment:', commentError);
-    if (commentError.code === '42501') console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: project_log_comments');
     return { success: false, error: commentError.message };
   }
 
   // Update log status
-  console.log('[DB] Updating log status to resolved...');
   const { error: updateError } = await supabase
     .from("project_logs")
     .update({ status: 'resolved' })
     .eq("id", logId);
 
   if (updateError) {
-    console.error('[DB] Error updating log status:', updateError);
-    if (updateError.code === '42501') console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: project_logs');
     return { success: false, error: updateError.message };
   }
 
@@ -365,16 +319,14 @@ export async function resolveLog(
   } else if (logEntry.project_id) {
     revalidatePath(`/projets/${logEntry.project_id}/journal`);
   }
-  
+
   return { success: true };
 }
 
 export async function getLogComments(logId: string) {
-  console.log('[ACTION] getLogComments execution started', { logId });
   const supabase = await createClient();
 
   const { data: { user } } = await supabase.auth.getUser();
-  console.log('[AUTH] Current user:', user?.id);
 
   const { data, error } = await supabase
     .from("project_log_comments")
@@ -386,24 +338,7 @@ export async function getLogComments(logId: string) {
     .order("created_at", { ascending: true });
 
   if (error) {
-    console.error("[DB] Error fetching log comments:", {
-      code: error.code,
-      message: error.message,
-      details: error.details,
-      hint: error.hint
-    });
-    
-    if (error.code === '42501') {
-      console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: project_log_comments');
-    }
-    
     return [];
-  }
-
-  if (!data || data.length === 0) {
-    console.warn('[RLS] ⚠️ SILENT RLS FILTERING or no comments found! Table: project_log_comments, User:', user?.id);
-  } else {
-    console.log('[DB] Log comments fetched successfully:', { count: data.length });
   }
 
   return data || [];

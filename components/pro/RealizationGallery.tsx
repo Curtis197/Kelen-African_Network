@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Image from "next/image";
 
@@ -24,10 +24,6 @@ export function RealizationGallery({
             fill
             className="object-cover"
             onError={(e) => {
-              console.error(
-                `[RealizationGallery] Failed to load image ${index}:`,
-                url
-              );
               (e.target as HTMLImageElement).style.display = "none";
             }}
           />

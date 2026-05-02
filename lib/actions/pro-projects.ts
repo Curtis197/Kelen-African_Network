@@ -4,8 +4,6 @@ import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import type { ProProject, ProProjectFormData, ProProjectImage, ProProjectStatus } from "@/lib/types/pro-projects";
 
-console.log("[pro-projects] Server action loaded");
-
 async function getProfessionalId(): Promise<string | null> {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -21,15 +19,13 @@ async function getProfessionalId(): Promise<string | null> {
 }
 
 export async function getProProjects(status?: string, limit: number = 100, offset: number = 0): Promise<ProProject[]> {
-  console.log('[ACTION] getProProjects started, status filter:', status)
   const proId = await getProfessionalId();
   if (!proId) {
-    console.warn('[AUTH] No professional ID found for user')
     return [];
   }
 
   const supabase = await createClient();
-  
+
   // 1. Fetch own pro_projects
   let proQuery = supabase
     .from("pro_projects")
@@ -43,11 +39,6 @@ export async function getProProjects(status?: string, limit: number = 100, offse
   }
 
   const { data: proData, error: proError } = await proQuery;
-  console.log('[DB] Found pro_projects:', { count: proData?.length, error: proError?.message })
-  
-  if (proError?.code === '42501') {
-    console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: pro_projects')
-  }
 
   // 2. Fetch collaborations where they are active/negotiating
   // mapping user_projects -> ProProject
@@ -81,11 +72,6 @@ export async function getProProjects(status?: string, limit: number = 100, offse
     .range(offset, offset + limit - 1);
 
   const { data: collabData, error: collabError } = await collabQuery;
-  console.log('[DB] Found collaborations:', { count: collabData?.length, error: collabError?.message })
-
-  if (collabError?.code === '42501') {
-    console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: project_collaborations')
-  }
 
   // 3. Unify results
   const unifiedProjects: ProProject[] = [
@@ -131,11 +117,10 @@ export async function getProProjects(status?: string, limit: number = 100, offse
   ];
 
   // 4. Sort and return
-  const result = unifiedProjects.sort((a, b) => 
+  const result = unifiedProjects.sort((a, b) =>
     new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
   );
 
-  console.log('[ACTION] getProProjects completed, total unified projects:', result.length)
   return result;
 }
 
@@ -150,11 +135,9 @@ function mapUserProjectStatusToPro(userStatus: string, collabStatus: string): Pr
 }
 
 export async function getProProject(id: string): Promise<ProProject | null> {
-  console.log('[ACTION] getProProject started, id:', id)
   const supabase = await createClient();
   const proId = await getProfessionalId();
   if (!proId) {
-    console.warn('[AUTH] No professional ID found for user')
     return null;
   }
 
@@ -167,12 +150,7 @@ export async function getProProject(id: string): Promise<ProProject | null> {
     .single();
 
   if (proProject) {
-    console.log('[DB] Found in pro_projects')
     return { ...proProject, is_collaboration: false };
-  }
-
-  if (proError && proError.code !== 'PGRST116') { // PGRST116 is "not found"
-    console.error('[DB] Error fetching from pro_projects:', proError.message)
   }
 
   // 2. Try collaborations/user_projects
@@ -205,7 +183,6 @@ export async function getProProject(id: string): Promise<ProProject | null> {
     .single();
 
   if (collab && collab.project) {
-    console.log('[DB] Found in collaborations')
     const p = collab.project as any;
     return {
       id: p.id,
@@ -242,19 +219,12 @@ export async function getProProject(id: string): Promise<ProProject | null> {
     } as ProProject;
   }
 
-  if (collabError && collabError.code !== 'PGRST116') {
-    console.error('[DB] Error fetching from collaborations:', collabError.message)
-  }
-
-  console.warn('[ACTION] Project not found in any source, id:', id)
   return null;
 }
 
 export async function createProProject(data: ProProjectFormData, imageUrls?: string[]): Promise<{ data?: ProProject; error?: string }> {
   const proId = await getProfessionalId();
   if (!proId) return { error: "Non autorisé" };
-
-  console.log("[createProProject] Creating project", { proId, imageCount: imageUrls?.length });
 
   const supabase = await createClient();
   const { data: project, error } = await supabase
@@ -280,13 +250,11 @@ export async function createProProject(data: ProProjectFormData, imageUrls?: str
     .single();
 
   if (error) {
-    console.error("[createProProject] Error", { error: error.message });
     return { error: error.message };
   }
 
   // Insert images into pro_project_images table
   if (imageUrls && imageUrls.length > 0 && project) {
-    console.log("[createProProject] Inserting images", { count: imageUrls.length });
     const imageRows = imageUrls.map((url, idx) => ({
       pro_project_id: project.id,
       url,
@@ -299,12 +267,10 @@ export async function createProProject(data: ProProjectFormData, imageUrls?: str
       .insert(imageRows);
 
     if (imgError) {
-      console.error("[createProProject] Image insert error", { error: imgError.message });
       // Don't fail the whole operation, just log the error
     }
   }
 
-  console.log("[createProProject] OK", { projectId: project.id });
   revalidatePath("/pro/projets");
   return { data: project };
 }
@@ -316,8 +282,6 @@ export async function updateProProject(
 ): Promise<{ data?: ProProject; error?: string }> {
   const proId = await getProfessionalId();
   if (!proId) return { error: "Non autorisé" };
-
-  console.log("[updateProProject] Updating project", { id, imageCount: imageUrls?.length });
 
   const supabase = await createClient();
 
@@ -355,14 +319,11 @@ export async function updateProProject(
     .single();
 
   if (error) {
-    console.error("[updateProProject] Error", { error: error.message });
     return { error: error.message };
   }
 
   // Update images if provided
   if (imageUrls && imageUrls.length > 0) {
-    console.log("[updateProProject] Updating images", { count: imageUrls.length });
-    
     // Delete existing images
     await supabase
       .from("pro_project_images")
@@ -382,11 +343,10 @@ export async function updateProProject(
       .insert(imageRows);
 
     if (imgError) {
-      console.error("[updateProProject] Image update error", { error: imgError.message });
+      // Non-fatal
     }
   }
 
-  console.log("[updateProProject] OK", { id });
   revalidatePath("/pro/projets");
   return { data: project };
 }
@@ -412,11 +372,9 @@ export async function updateProProjectStatus(
     .eq("professional_id", proId);
 
   if (error) {
-    console.error("[updateProProjectStatus] Error", { error: error.message });
     return { success: false, error: error.message };
   }
 
-  console.log("[updateProProjectStatus] OK", { id, status });
   revalidatePath("/pro/projets");
   return { success: true };
 }
@@ -436,11 +394,9 @@ export async function toggleProProjectPublic(
     .eq("professional_id", proId);
 
   if (error) {
-    console.error("[toggleProProjectPublic] Error", { error: error.message });
     return { success: false, error: error.message };
   }
 
-  console.log("[toggleProProjectPublic] OK", { id, isPublic });
   revalidatePath("/pro/projets");
   revalidatePath(`/pro/projets/${id}`);
   return { success: true };
@@ -458,11 +414,9 @@ export async function deleteProProject(id: string): Promise<{ success: boolean; 
     .eq("professional_id", proId);
 
   if (error) {
-    console.error("[deleteProProject] Error", { error: error.message });
     return { success: false, error: error.message };
   }
 
-  console.log("[deleteProProject] OK", { id });
   revalidatePath("/pro/projets");
   return { success: true };
 }
@@ -484,7 +438,6 @@ export async function getPublicProProjects(slug: string, limit: number = 100, of
     .range(offset, offset + limit - 1);
 
   if (error) {
-    console.error("Error fetching public pro projects:", error);
     return [];
   }
 
@@ -524,11 +477,9 @@ export async function setMainProjectImage(
     .eq("pro_project_id", projectId);
 
   if (error) {
-    console.error("[setMainProjectImage] Error", { error: error.message });
     return { success: false, error: error.message };
   }
 
-  console.log("[setMainProjectImage] OK", { projectId, imageId });
   revalidatePath(`/pro/projets/${projectId}`);
   return { success: true };
 }
@@ -559,11 +510,9 @@ export async function deleteProjectImage(
     .eq("pro_project_id", projectId);
 
   if (error) {
-    console.error("[deleteProjectImage] Error", { error: error.message });
     return { success: false, error: error.message };
   }
 
-  console.log("[deleteProjectImage] OK", { projectId, imageId });
   revalidatePath(`/pro/projets/${projectId}`);
   return { success: true };
 }

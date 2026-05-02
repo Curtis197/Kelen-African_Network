@@ -1,4 +1,4 @@
-"use server";
+﻿"use server";
 
 import { createClient } from "@/lib/supabase/server";
 
@@ -6,9 +6,9 @@ export async function createRealizationComment(realizationId: string, content: s
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) throw new Error("Vous devez être connecté");
-  if (!content.trim()) return { success: false, error: "Le commentaire ne peut pas être vide" };
-  if (content.length < 10) return { success: false, error: "Le commentaire doit contenir au moins 10 caractères" };
+  if (!user) throw new Error("Vous devez Ãªtre connectÃ©");
+  if (!content.trim()) return { success: false, error: "Le commentaire ne peut pas Ãªtre vide" };
+  if (content.length < 10) return { success: false, error: "Le commentaire doit contenir au moins 10 caractÃ¨res" };
 
   const { error } = await supabase
     .from("realization_comments")
@@ -20,7 +20,6 @@ export async function createRealizationComment(realizationId: string, content: s
     });
 
   if (error) {
-    console.error("Error creating comment:", error);
     return { success: false, error: error.message };
   }
 
@@ -28,7 +27,6 @@ export async function createRealizationComment(realizationId: string, content: s
 }
 
 export async function getRealizationComments(realizationId: string): Promise<Array<any>> {
-  console.log('[COMMENTS] Fetching comments for realization:', realizationId);
   const supabase = await createClient();
 
   const { data, error } = await supabase
@@ -41,21 +39,14 @@ export async function getRealizationComments(realizationId: string): Promise<Arr
     .eq("status", "approved")
     .order("created_at", { ascending: true });
 
-  console.log('[COMMENTS] Result:', { count: data?.length || 0, error: error?.message, code: error?.code });
 
   if (error?.code === '42501') {
-    console.error('[RLS] ❌ EXPLICIT RLS BLOCKING on realization_comments!');
-    console.error('[RLS] Table: realization_comments');
-    console.error('[RLS] Realization ID:', realizationId);
-    console.error('[RLS] Fix: Add RLS policy allowing SELECT for approved comments');
   }
 
   if (!error && data?.length === 0) {
-    console.log('[COMMENTS] No approved comments found for realization:', realizationId);
   }
 
   if (error) {
-    console.error("Error fetching comments:", error);
     return [];
   }
 
@@ -66,7 +57,7 @@ export async function moderateRealizationComment(commentId: string, status: "app
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) throw new Error("Vous devez être connecté");
+  if (!user) throw new Error("Vous devez Ãªtre connectÃ©");
 
   // Verify user owns the realization
   const { data: comment } = await supabase
@@ -81,7 +72,7 @@ export async function moderateRealizationComment(commentId: string, status: "app
     .single();
 
   const proUserId = (comment as any)?.realization_id?.professional?.user_id;
-  if (proUserId !== user.id) throw new Error("Non autorisé");
+  if (proUserId !== user.id) throw new Error("Non autorisÃ©");
 
   const { error } = await supabase
     .from("realization_comments")
@@ -89,7 +80,6 @@ export async function moderateRealizationComment(commentId: string, status: "app
     .eq("id", commentId);
 
   if (error) {
-    console.error("Error moderating comment:", error);
     return { success: false };
   }
 

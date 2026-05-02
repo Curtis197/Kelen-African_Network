@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -30,8 +30,8 @@ export function RecommendationForm({
   const effectiveIsExternal = isExternal || !professionalId;
   
   const STEPS = effectiveIsExternal 
-    ? ["Professionnel", "Type de projet", "Détails du projet", "Budget & dates", "Pièces jointes", "Confirmation"]
-    : ["Type de projet", "Détails du projet", "Budget & dates", "Pièces jointes", "Confirmation"];
+    ? ["Professionnel", "Type de projet", "DÃ©tails du projet", "Budget & dates", "PiÃ¨ces jointes", "Confirmation"]
+    : ["Type de projet", "DÃ©tails du projet", "Budget & dates", "PiÃ¨ces jointes", "Confirmation"];
   const [isLoading, setIsLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -89,7 +89,7 @@ export function RecommendationForm({
       // 1. Get current user
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        setError("Vous devez être connecté pour soumettre une recommandation.");
+        setError("Vous devez Ãªtre connectÃ© pour soumettre une recommandation.");
         return;
       }
 
@@ -101,7 +101,7 @@ export function RecommendationForm({
         .single();
 
       if (!profile) {
-        setError("Impossible de récupérer votre profil.");
+        setError("Impossible de rÃ©cupÃ©rer votre profil.");
         return;
       }
 
@@ -150,8 +150,7 @@ export function RecommendationForm({
 
       setSubmitted(true);
     } catch (err: any) {
-      console.error("Submission error:", err);
-      setError("Une erreur est survenue lors de l'envoi. Veuillez réessayer.");
+      setError("Une erreur est survenue lors de l'envoi. Veuillez rÃ©essayer.");
     } finally {
       setIsLoading(false);
     }
@@ -161,21 +160,21 @@ export function RecommendationForm({
     return (
       <div className="text-center py-8">
         <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-kelen-green-50">
-          <span className="text-3xl text-kelen-green-500">✓</span>
+          <span className="text-3xl text-kelen-green-500">âœ“</span>
         </div>
         <h2 className="text-xl font-bold text-foreground">
           Recommandation soumise
         </h2>
         <p className="mt-2 text-muted-foreground text-sm">
-          Votre recommandation pour <strong>{professionalName || watch("external_name")}</strong> a été
-          envoyée. Elle sera vérifiée par notre équipe avant publication.
+          Votre recommandation pour <strong>{professionalName || watch("external_name")}</strong> a Ã©tÃ©
+          envoyÃ©e. Elle sera vÃ©rifiÃ©e par notre Ã©quipe avant publication.
         </p>
         <div className="mt-8 flex justify-center">
           <Link
             href={professionalSlug ? `/pro/${professionalSlug}` : "/"}
             className="rounded-lg bg-kelen-green-500 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-kelen-green-600"
           >
-            {professionalSlug ? "Retour au profil" : "Retour à l'accueil"}
+            {professionalSlug ? "Retour au profil" : "Retour Ã  l'accueil"}
           </Link>
         </div>
       </div>
@@ -202,7 +201,7 @@ export function RecommendationForm({
                     : "bg-muted text-muted-foreground"
               }`}
             >
-              {i < step ? "✓" : i + 1}
+              {i < step ? "âœ“" : i + 1}
             </div>
             {i < STEPS.length - 1 && (
               <div
@@ -251,13 +250,13 @@ export function RecommendationForm({
 
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-foreground">
-                  Catégorie / Métier
+                  CatÃ©gorie / MÃ©tier
                 </label>
                 <input
                   type="text"
                   {...register("external_category")}
                   className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
-                  placeholder="Ex : Architecte, Maçon, Électricien..."
+                  placeholder="Ex : Architecte, MaÃ§on, Ã‰lectricien..."
                 />
                 {errors.external_category && (
                   <p className="mt-1 text-xs text-kelen-red-500">
@@ -314,14 +313,14 @@ export function RecommendationForm({
               Type de projet
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Quel type de projet avez-vous réalisé avec {professionalName || watch("external_name") || "ce professionnel"} ?
+              Quel type de projet avez-vous rÃ©alisÃ© avec {professionalName || watch("external_name") || "ce professionnel"} ?
             </p>
             <div className="mt-4">
               <input
                 type="text"
                 {...register("project_type")}
                 className="w-full rounded-lg border border-border bg-white px-4 py-3 text-sm transition-colors placeholder:text-muted-foreground focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
-                placeholder="Ex : Construction résidentielle, Rénovation, Installation électrique..."
+                placeholder="Ex : Construction rÃ©sidentielle, RÃ©novation, Installation Ã©lectrique..."
               />
               {errors.project_type && (
                 <p className="mt-1 text-xs text-kelen-red-500">
@@ -336,17 +335,17 @@ export function RecommendationForm({
         {step === (effectiveIsExternal ? 2 : 1) && (
           <div className="animate-in fade-in slide-in-from-right-2 duration-300">
             <h2 className="text-lg font-semibold text-foreground">
-              Détails du projet
+              DÃ©tails du projet
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Décrivez le projet réalisé et votre expérience.
+              DÃ©crivez le projet rÃ©alisÃ© et votre expÃ©rience.
             </p>
             <div className="mt-4">
               <textarea
                 {...register("project_description")}
                 rows={6}
                 className="w-full rounded-lg border border-border bg-white px-4 py-3 text-sm transition-colors placeholder:text-muted-foreground focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
-                placeholder="Décrivez le projet, la qualité du travail, le respect des délais et du budget, la communication..."
+                placeholder="DÃ©crivez le projet, la qualitÃ© du travail, le respect des dÃ©lais et du budget, la communication..."
               />
               {errors.project_description && (
                 <p className="mt-1 text-xs text-kelen-red-500">
@@ -355,10 +354,10 @@ export function RecommendationForm({
               )}
               <div className="mt-2 flex items-center justify-between">
                 <p className="text-xs text-muted-foreground">
-                  Minimum 20 caractères
+                  Minimum 20 caractÃ¨res
                 </p>
                 <p className="text-xs font-medium text-muted-foreground">
-                  {watch("project_description")?.length || 0} caractères
+                  {watch("project_description")?.length || 0} caractÃ¨res
                 </p>
               </div>
             </div>
@@ -372,7 +371,7 @@ export function RecommendationForm({
               Budget & dates
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Informations complémentaires sur le projet.
+              Informations complÃ©mentaires sur le projet.
             </p>
             <div className="mt-4 space-y-4">
               <div>
@@ -393,13 +392,13 @@ export function RecommendationForm({
 
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-foreground">
-                  Fourchette budgétaire
+                  Fourchette budgÃ©taire
                 </label>
                 <select
                   {...register("budget_range")}
                   className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
                 >
-                  <option value="">Sélectionner</option>
+                  <option value="">SÃ©lectionner</option>
                   {BUDGET_RANGES.map((b) => (
                     <option key={b.value} value={b.value}>
                       {b.label}
@@ -435,9 +434,9 @@ export function RecommendationForm({
         {/* Piece Jointes */}
         {step === (effectiveIsExternal ? 4 : 3) && (
           <div className="animate-in fade-in slide-in-from-right-2 duration-300">
-            <h2 className="text-lg font-semibold text-foreground">Pièces jointes</h2>
+            <h2 className="text-lg font-semibold text-foreground">PiÃ¨ces jointes</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Ajoutez des preuves de la réalisation du projet (contrat, factures, photos).
+              Ajoutez des preuves de la rÃ©alisation du projet (contrat, factures, photos).
             </p>
             
             <div className="mt-6 space-y-6">
@@ -454,7 +453,7 @@ export function RecommendationForm({
                   />
                   <div className={`flex items-center gap-3 rounded-lg border border-dashed p-4 transition-colors ${contractFile ? "border-kelen-green-500 bg-kelen-green-50" : "border-border bg-muted/30 hover:bg-muted/50"}`}>
                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-xl">
-                      {contractFile ? "📄" : "📁"}
+                      {contractFile ? "ðŸ“„" : "ðŸ“"}
                     </div>
                     <div>
                       <p className="text-sm font-medium text-foreground">
@@ -470,7 +469,7 @@ export function RecommendationForm({
 
               <div>
                 <label className="mb-2 block text-sm font-medium text-foreground">
-                  Photos du projet terminé
+                  Photos du projet terminÃ©
                 </label>
                 <div className="relative">
                   <input
@@ -482,11 +481,11 @@ export function RecommendationForm({
                   />
                   <div className={`flex items-center gap-3 rounded-lg border border-dashed p-4 transition-colors ${photoFiles.length > 0 ? "border-kelen-green-500 bg-kelen-green-50" : "border-border bg-muted/30 hover:bg-muted/50"}`}>
                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-xl">
-                      {photoFiles.length > 0 ? "📸" : "📷"}
+                      {photoFiles.length > 0 ? "ðŸ“¸" : "ðŸ“·"}
                     </div>
                     <div>
                       <p className="text-sm font-medium text-foreground">
-                        {photoFiles.length > 0 ? `${photoFiles.length} photos sélectionnées` : "Cliquer pour uploader des photos"}
+                        {photoFiles.length > 0 ? `${photoFiles.length} photos sÃ©lectionnÃ©es` : "Cliquer pour uploader des photos"}
                       </p>
                       <p className="text-xs text-muted-foreground">
                         Images (JPG, PNG), max 5 photos
@@ -542,8 +541,8 @@ export function RecommendationForm({
                 />
                 <span className="text-sm leading-relaxed text-muted-foreground group-hover:text-foreground transition-colors">
                   Je confirme que les informations fournies sont authentiques et
-                  basées sur une expérience réelle avec ce professionnel. Je
-                  comprends que de fausses recommandations entraîneront la
+                  basÃ©es sur une expÃ©rience rÃ©elle avec ce professionnel. Je
+                  comprends que de fausses recommandations entraÃ®neront la
                   suspension de mon compte.
                 </span>
               </label>
@@ -564,7 +563,7 @@ export function RecommendationForm({
               onClick={prevStep}
               className="rounded-lg border border-border px-6 py-2.5 text-sm font-semibold text-foreground transition-all hover:bg-muted hover:border-foreground/20"
             >
-              Précédent
+              PrÃ©cÃ©dent
             </button>
           ) : (
             <div />

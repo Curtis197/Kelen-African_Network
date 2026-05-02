@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Loader2, MapPin, X, Navigation } from "lucide-react";
@@ -49,7 +49,6 @@ export function LocationSearch({ value, onChange, placeholder = "Rechercher une 
     // Poll every 200ms until Google is loaded
     checkInterval.current = setInterval(() => {
       if (window.google?.maps?.places) {
-        console.log('[LocationSearch] Google Maps API loaded');
         setIsGoogleLoaded(true);
         autocompleteService.current = new google.maps.places.AutocompleteService();
         const dummyDiv = document.createElement("div");
@@ -124,8 +123,7 @@ export function LocationSearch({ value, onChange, placeholder = "Rechercher une 
           // Show only city name in the input
           setInputValue(city?.long_name || place.name || "");
         } else {
-          console.error("Place details error:", status);
-          setError("Impossible de récupérer les détails du lieu");
+          setError("Impossible de rÃ©cupÃ©rer les dÃ©tails du lieu");
         }
       }
     );
@@ -151,7 +149,7 @@ export function LocationSearch({ value, onChange, placeholder = "Rechercher une 
 
     debounceTimer.current = setTimeout(() => {
       if (!isGoogleLoaded || !autocompleteService.current) {
-        // Silently skip — Google Maps still loading, poll will catch it
+        // Silently skip â€” Google Maps still loading, poll will catch it
         return;
       }
 
@@ -180,7 +178,7 @@ export function LocationSearch({ value, onChange, placeholder = "Rechercher une 
   // Get user's current location
   const handleGetCurrentLocation = useCallback(() => {
     if (!navigator.geolocation) {
-      setError("La géolocalisation n'est pas supportée par votre navigateur");
+      setError("La gÃ©olocalisation n'est pas supportÃ©e par votre navigateur");
       return;
     }
 
@@ -217,14 +215,12 @@ export function LocationSearch({ value, onChange, placeholder = "Rechercher une 
             // Show only city name in the input
             setInputValue(cityName);
           } else {
-            console.error("Geocoding error:", status);
-            setError("Impossible de déterminer votre position");
+            setError("Impossible de dÃ©terminer votre position");
           }
         });
       },
       (err) => {
-        console.error("Geolocation error:", err);
-        setError("Impossible d'accéder à votre position. Vérifiez les permissions.");
+        setError("Impossible d'accÃ©der Ã  votre position. VÃ©rifiez les permissions.");
         setIsGettingLocation(false);
       },
       { enableHighAccuracy: true, timeout: 10000 }

@@ -1,4 +1,4 @@
-"use server";
+﻿"use server";
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
@@ -32,7 +32,7 @@ export async function createNotification(input: CreateNotificationInput): Promis
   // Require authentication
   const { data: { user }, error: authError } = await supabase.auth.getUser();
   if (authError || !user) {
-    return { error: "Non autorisé" };
+    return { error: "Non autorisÃ©" };
   }
 
   // Allow system notifications (when userId matches authenticated user or is from admin)
@@ -45,7 +45,7 @@ export async function createNotification(input: CreateNotificationInput): Promis
       .single();
 
     if (userData?.role !== 'admin') {
-      return { error: "Non autorisé: impossible de notifier un autre utilisateur" };
+      return { error: "Non autorisÃ©: impossible de notifier un autre utilisateur" };
     }
   }
 
@@ -103,7 +103,6 @@ export async function getNotifications(limit = 20, offset = 0) {
     .range(offset, offset + limit - 1);
 
   if (error) {
-    console.error("Error fetching notifications:", error);
     return [];
   }
 
@@ -116,7 +115,7 @@ export async function getNotifications(limit = 20, offset = 0) {
 export async function markNotificationRead(notificationId: string): Promise<{ error?: string }> {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: "Non autorisé" };
+  if (!user) return { error: "Non autorisÃ©" };
 
   const { error } = await supabase
     .from("notifications")
@@ -136,7 +135,7 @@ export async function markNotificationRead(notificationId: string): Promise<{ er
 export async function markAllNotificationsRead(): Promise<{ error?: string }> {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: "Non autorisé" };
+  if (!user) return { error: "Non autorisÃ©" };
 
   const { error } = await supabase
     .from("notifications")
@@ -157,7 +156,7 @@ export async function markAllNotificationsRead(): Promise<{ error?: string }> {
 export async function deleteOldNotifications(olderThanDays = 30): Promise<{ count: number; error?: string }> {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { count: 0, error: "Non autorisé" };
+  if (!user) return { count: 0, error: "Non autorisÃ©" };
 
   // Verify admin
   const { data: profile } = await supabase
@@ -167,7 +166,7 @@ export async function deleteOldNotifications(olderThanDays = 30): Promise<{ coun
     .single();
 
   if (profile?.role !== "admin") {
-    return { count: 0, error: "Accès refusé" };
+    return { count: 0, error: "AccÃ¨s refusÃ©" };
   }
 
   const cutoffDate = new Date();

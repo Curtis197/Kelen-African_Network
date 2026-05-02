@@ -1,4 +1,4 @@
-"use server";
+﻿"use server";
 
 import { createClient } from "@/lib/supabase/server";
 import { Professional } from "@/lib/supabase/types";
@@ -20,7 +20,6 @@ export interface ProfessionalsFilter {
 }
 
 export async function getProfessionals(filter: ProfessionalsFilter = {}): Promise<ProfessionalsData> {
-  console.log('[ACTION] getProfessionals started, filter:', filter);
   const supabase = await createClient();
   
   const { 
@@ -66,11 +65,9 @@ export async function getProfessionals(filter: ProfessionalsFilter = {}): Promis
   const { data, count, error } = await dbQuery;
 
   if (error) {
-    console.error('[DB] Error fetching professionals:', { error: error.message, code: error.code });
     return { professionals: [], totalCount: 0 };
   }
 
-  console.log('[DB] Results:', { count: data?.length, total: count });
 
   return {
     professionals: (data as Professional[]) || [],
@@ -107,7 +104,6 @@ export async function getProfessionalsByArea(
       .eq("area_id", area.id)
       .single();
     if (professionError) {
-      console.error("Error fetching profession:", professionError);
     }
     if (profession) filter.professionId = profession.id;
   }

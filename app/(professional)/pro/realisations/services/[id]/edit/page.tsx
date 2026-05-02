@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { ServiceForm } from "@/components/forms/ServiceForm";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "Modifier le service — Kelen Pro",
+  title: "Modifier le service â€” Kelen Pro",
 };
 
 interface EditServicePageProps {
@@ -24,7 +24,6 @@ export default async function EditServicePage({ params }: EditServicePageProps) 
   } = await supabase.auth.getUser();
 
   if (authError) {
-    console.error("[EditServicePage] Auth error:", authError);
   }
 
   if (!user) {
@@ -39,7 +38,6 @@ export default async function EditServicePage({ params }: EditServicePageProps) 
     .single();
 
   if (profError) {
-    console.error("[EditServicePage] Professional fetch error:", profError);
   }
 
   if (!professional) {
@@ -55,7 +53,6 @@ export default async function EditServicePage({ params }: EditServicePageProps) 
     .single();
 
   if (serviceError) {
-    console.error("[EditServicePage] Service fetch error:", serviceError);
     notFound();
   }
 
@@ -70,7 +67,7 @@ export default async function EditServicePage({ params }: EditServicePageProps) 
           Modifier : {service.title}
         </h1>
         <p className="mt-2 text-on-surface-variant/70">
-          Mettez à jour les informations et les médias de votre service.
+          Mettez Ã  jour les informations et les mÃ©dias de votre service.
         </p>
       </div>
 

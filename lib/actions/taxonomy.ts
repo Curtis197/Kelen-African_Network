@@ -1,4 +1,4 @@
-"use server";
+﻿"use server";
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
@@ -12,7 +12,6 @@ export async function getAreas(): Promise<ProfessionalArea[]> {
     .order("sort_order", { ascending: true });
 
   if (error) {
-    console.error("Error fetching areas:", error);
     return [];
   }
   return data as ProfessionalArea[];
@@ -27,7 +26,6 @@ export async function getProfessionsByArea(areaId: string): Promise<Profession[]
     .order("sort_order", { ascending: true });
 
   if (error) {
-    console.error("Error fetching professions:", error);
     return [];
   }
   return data as Profession[];
@@ -41,7 +39,6 @@ export async function getAllProfessions(): Promise<Profession[]> {
     .order("sort_order", { ascending: true });
 
   if (error) {
-    console.error("Error fetching professions:", error);
     return [];
   }
   return data as Profession[];
@@ -60,11 +57,9 @@ export async function getAreasSortedByPopularity(
   ]);
 
   if (areasError) {
-    console.error("Error fetching areas:", areasError);
     return [];
   }
   if (countsError) {
-    console.error("Error fetching professional counts:", countsError);
   }
 
   if (!areas) return [];
@@ -91,7 +86,7 @@ async function requireAdmin() {
   const { data: { user }, error: authError } = await supabase.auth.getUser();
   
   if (authError || !user) {
-    return { error: "Vous devez être connecté" as string };
+    return { error: "Vous devez Ãªtre connectÃ©" as string };
   }
 
   // Check if user is admin
@@ -102,7 +97,7 @@ async function requireAdmin() {
     .single();
 
   if (userError || !userData || userData.role !== 'admin') {
-    return { error: "Non autorisé: accès admin requis" as string };
+    return { error: "Non autorisÃ©: accÃ¨s admin requis" as string };
   }
 
   return { success: true };

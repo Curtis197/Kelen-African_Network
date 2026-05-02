@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
@@ -21,7 +21,7 @@ const STATUS_CONFIG: Record<ProProjectStatus, { label: string; icon: React.React
     color: "bg-blue-100 text-blue-700",
   },
   completed: {
-    label: "Terminé",
+    label: "TerminÃ©",
     icon: <CheckCircle className="w-3.5 h-3.5" />,
     color: "bg-green-100 text-green-700",
   },
@@ -31,7 +31,7 @@ const STATUS_CONFIG: Record<ProProjectStatus, { label: string; icon: React.React
     color: "bg-amber-100 text-amber-700",
   },
   cancelled: {
-    label: "Annulé",
+    label: "AnnulÃ©",
     icon: <XCircle className="w-3.5 h-3.5" />,
     color: "bg-red-100 text-red-700",
   },
@@ -45,14 +45,11 @@ export function ProProjectsPage() {
   const [statusDropdownOpen, setStatusDropdownOpen] = useState<string | null>(null);
   const supabase = createClient();
 
-  console.log('[ProProjectsPage] Render, state:', { viewMode, filter, projectCount: projects.length, isLoading });
 
   const loadProjects = useCallback(async () => {
-    console.log('[ProProjectsPage] loadProjects started, filter:', filter);
     setIsLoading(true);
     const statusFilter = filter === "all" ? undefined : filter;
     const data = await getProProjects(statusFilter);
-    console.log('[ProProjectsPage] loadProjects completed, projects loaded:', data?.length || 0, 'sample:', data?.[0] ? { id: data[0].id, is_collab: data[0].is_collaboration } : 'none');
     setProjects(data);
     setIsLoading(false);
   }, [filter]);
@@ -74,14 +71,11 @@ export function ProProjectsPage() {
   }, [statusDropdownOpen]);
 
   const handleStatusChange = async (id: string, status: ProProjectStatus) => {
-    console.log('[ProProjectsPage] handleStatusChange, project:', id, 'new status:', status);
     const result = await updateProProjectStatus(id, status);
     if (result.error) {
-      console.error('[ProProjectsPage] handleStatusChange error:', result.error);
       toast.error(result.error);
     } else {
-      console.log('[ProProjectsPage] handleStatusChange success');
-      toast.success(`Statut mis à jour : ${STATUS_CONFIG[status].label}`);
+      toast.success(`Statut mis Ã  jour : ${STATUS_CONFIG[status].label}`);
       loadProjects();
     }
     setStatusDropdownOpen(null);
@@ -93,7 +87,7 @@ export function ProProjectsPage() {
     if (result.error) {
       toast.error(result.error);
     } else {
-      toast.success("Projet supprimé");
+      toast.success("Projet supprimÃ©");
       loadProjects();
     }
   };
@@ -104,7 +98,7 @@ export function ProProjectsPage() {
     if (result.error) {
       toast.error(result.error);
     } else {
-      toast.success(project.is_public ? "Projet retiré du portfolio" : "Projet ajouté au portfolio");
+      toast.success(project.is_public ? "Projet retirÃ© du portfolio" : "Projet ajoutÃ© au portfolio");
       loadProjects();
     }
   };
@@ -112,26 +106,26 @@ export function ProProjectsPage() {
   const filters = [
     { value: "all", label: "Tous" },
     { value: "in_progress", label: "En cours" },
-    { value: "completed", label: "Terminés" },
+    { value: "completed", label: "TerminÃ©s" },
     { value: "paused", label: "En pause" },
   ];
 
-  // ── Derived stats ────────────────────────────────────────
+  // â”€â”€ Derived stats â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const stats = [
     { label: "Total", value: projects.length, color: "text-on-surface", bg: "bg-surface-container" },
     { label: "En cours", value: projects.filter(p => p.status === "in_progress").length, color: "text-blue-700", bg: "bg-blue-50" },
-    { label: "Terminés", value: projects.filter(p => p.status === "completed").length, color: "text-kelen-green-700", bg: "bg-kelen-green-50" },
+    { label: "TerminÃ©s", value: projects.filter(p => p.status === "completed").length, color: "text-kelen-green-700", bg: "bg-kelen-green-50" },
     { label: "Portfolio public", value: projects.filter(p => p.is_public).length, color: "text-amber-700", bg: "bg-amber-50" },
   ];
 
   return (
     <div className="space-y-6">
-      {/* ── Header ───────────────────────────────────────── */}
+      {/* â”€â”€ Header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-on-surface tracking-tight">Mes projets</h1>
           <p className="text-sm text-on-surface-variant mt-1">
-            Gérez vos chantiers et documentez votre expertise
+            GÃ©rez vos chantiers et documentez votre expertise
           </p>
         </div>
         <Link
@@ -143,7 +137,7 @@ export function ProProjectsPage() {
         </Link>
       </div>
 
-      {/* ── Stat cards ───────────────────────────────────── */}
+      {/* â”€â”€ Stat cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       {!isLoading && projects.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {stats.map((s) => (
@@ -155,7 +149,7 @@ export function ProProjectsPage() {
         </div>
       )}
 
-      {/* ── Filters & View Toggle ─────────────────────── */}
+      {/* â”€â”€ Filters & View Toggle â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap gap-2">
           {filters.map((f) => (
@@ -214,14 +208,14 @@ export function ProProjectsPage() {
           </div>
           <h3 className="text-lg font-bold text-on-surface mb-2">Aucun projet pour l'instant</h3>
           <p className="text-sm text-on-surface-variant mb-6 max-w-xs">
-            Créez votre premier projet pour documenter votre travail et enrichir votre portfolio
+            CrÃ©ez votre premier projet pour documenter votre travail et enrichir votre portfolio
           </p>
           <Link
             href="/pro/projets/nouveau"
             className="inline-flex items-center gap-2 px-5 py-3 bg-primary text-on-primary rounded-xl font-semibold text-sm shadow-md shadow-primary/20 hover:opacity-90 transition-opacity"
           >
             <Plus className="w-4 h-4" />
-            Créer mon premier projet
+            CrÃ©er mon premier projet
           </Link>
         </div>
       ) : (
@@ -353,7 +347,7 @@ export function ProProjectsPage() {
                           href={`/pro/projets/${project.id}`}
                           className="text-xs font-medium text-primary hover:underline"
                         >
-                          Voir détails
+                          Voir dÃ©tails
                         </Link>
                         <div className="flex items-center gap-1">
                           <button
@@ -379,7 +373,7 @@ export function ProProjectsPage() {
                   <tr>
                     <th className="px-6 py-4 text-left text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Projet</th>
                     <th className="px-6 py-4 text-left text-[10px] font-bold text-on-surface-variant uppercase tracking-wider hidden md:table-cell">Statut</th>
-                    <th className="px-6 py-4 text-left text-[10px] font-bold text-on-surface-variant uppercase tracking-wider hidden lg:table-cell">Détails</th>
+                    <th className="px-6 py-4 text-left text-[10px] font-bold text-on-surface-variant uppercase tracking-wider hidden lg:table-cell">DÃ©tails</th>
                     <th className="px-6 py-4 text-right text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Actions</th>
                   </tr>
                 </thead>
@@ -422,7 +416,7 @@ export function ProProjectsPage() {
                                 )}
                                 {project.client_name && (
                                   <>
-                                    <span>•</span>
+                                    <span>â€¢</span>
                                     <span className="truncate">Client: {project.client_name}</span>
                                   </>
                                 )}
@@ -499,7 +493,7 @@ export function ProProjectsPage() {
                             <Link
                               href={`/pro/projets/${project.id}`}
                               className="p-2 text-on-surface-variant hover:text-on-surface rounded-lg hover:bg-surface-container transition-colors"
-                              aria-label="Voir détails"
+                              aria-label="Voir dÃ©tails"
                             >
                               <Eye className="w-4 h-4" />
                             </Link>

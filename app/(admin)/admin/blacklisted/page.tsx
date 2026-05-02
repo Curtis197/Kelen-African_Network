@@ -1,17 +1,16 @@
-import { createClient } from "@/lib/supabase/server";
+﻿import { createClient } from "@/lib/supabase/server";
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { AlertTriangle, Shield, MapPin, Briefcase, Calendar, Eye } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Liste Noire — Professionnels bannis | Kelen Admin",
+  title: "Liste Noire â€” Professionnels bannis | Kelen Admin",
 };
 
 export default async function BlacklistedProfessionalsPage() {
   const supabase = await createClient();
 
-  console.log('[BLACKLISTED] Fetching blacklisted professionals');
 
   // Fetch all professionals with status = 'black'
   const { data: blacklistedPros, error: prosError } = await supabase
@@ -20,12 +19,8 @@ export default async function BlacklistedProfessionalsPage() {
     .eq("status", "black")
     .order("signal_count", { ascending: false });
 
-  console.log('[BLACKLISTED] Result:', { count: blacklistedPros?.length || 0, error: prosError?.message, code: prosError?.code });
 
   if (prosError?.code === '42501') {
-    console.error('[RLS] ❌ EXPLICIT RLS BLOCKING on professionals!');
-    console.error('[RLS] Table: professionals');
-    console.error('[RLS] Fix: Add RLS policy allowing admin SELECT for status=black filter');
   }
 
   // Fetch signals for each blacklisted pro
@@ -39,7 +34,6 @@ export default async function BlacklistedProfessionalsPage() {
       .eq("verified", true)
       .order("created_at", { ascending: false });
 
-    console.log('[BLACKLISTED] Signals fetched:', signals?.length || 0);
 
     // Group signals by professional
     if (signals) {
@@ -60,9 +54,9 @@ export default async function BlacklistedProfessionalsPage() {
   };
 
   const breachTypeLabels = {
-    timeline: "Retard / Délais",
-    budget: "Dépassement budget",
-    quality: "Qualité non conforme",
+    timeline: "Retard / DÃ©lais",
+    budget: "DÃ©passement budget",
+    quality: "QualitÃ© non conforme",
     abandonment: "Abandon de chantier",
     fraud: "Fraude / Arnaque",
   };
@@ -83,7 +77,7 @@ export default async function BlacklistedProfessionalsPage() {
         <div>
           <h1 className="text-2xl font-bold text-foreground">Liste Noire</h1>
           <p className="text-sm text-muted-foreground">
-            Professionnels bannis de la plateforme — Action admin requise
+            Professionnels bannis de la plateforme â€” Action admin requise
           </p>
         </div>
       </div>
@@ -105,7 +99,7 @@ export default async function BlacklistedProfessionalsPage() {
             </div>
           </div>
           <div className="text-right">
-            <p className="text-xs text-muted-foreground">Total signaux vérifiés</p>
+            <p className="text-xs text-muted-foreground">Total signaux vÃ©rifiÃ©s</p>
             <p className="text-xl font-bold text-foreground">
               {blacklistedPros?.reduce((sum, pro) => sum + (pro.signal_count || 0), 0) || 0}
             </p>
@@ -150,7 +144,7 @@ export default async function BlacklistedProfessionalsPage() {
                             {pro.business_name}
                           </h2>
                           <p className="text-sm text-muted-foreground mt-1">
-                            {pro.owner_name || 'Propriétaire inconnu'}
+                            {pro.owner_name || 'PropriÃ©taire inconnu'}
                           </p>
                         </div>
                         <div className="flex items-center gap-2">
@@ -164,7 +158,7 @@ export default async function BlacklistedProfessionalsPage() {
                       <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                         <div className="flex items-center gap-2 text-muted-foreground">
                           <Briefcase className="w-4 h-4" />
-                          <span>{pro.category || 'Non catégorisé'}</span>
+                          <span>{pro.category || 'Non catÃ©gorisÃ©'}</span>
                         </div>
                         <div className="flex items-center gap-2 text-muted-foreground">
                           <MapPin className="w-4 h-4" />
@@ -198,7 +192,7 @@ export default async function BlacklistedProfessionalsPage() {
                 {signals.length > 0 && (
                   <div className="p-6">
                     <h3 className="text-sm font-bold text-foreground uppercase tracking-wider mb-4">
-                      Signaux vérifiés ({signals.length})
+                      Signaux vÃ©rifiÃ©s ({signals.length})
                     </h3>
                     <div className="space-y-4">
                       {signals.map((signal) => (
@@ -229,13 +223,13 @@ export default async function BlacklistedProfessionalsPage() {
                           {/* Footer */}
                           <div className="flex items-center justify-between text-xs text-muted-foreground">
                             <div className="flex items-center gap-2">
-                              <span>Signalé par: {signal.submitter_name}</span>
+                              <span>SignalÃ© par: {signal.submitter_name}</span>
                               {signal.submitter_country && (
-                                <span>· {signal.submitter_country}</span>
+                                <span>Â· {signal.submitter_country}</span>
                               )}
                             </div>
                             {signal.verified_at && (
-                              <span>Vérifié le {formatDate(signal.verified_at)}</span>
+                              <span>VÃ©rifiÃ© le {formatDate(signal.verified_at)}</span>
                             )}
                           </div>
 
@@ -279,7 +273,7 @@ export default async function BlacklistedProfessionalsPage() {
           <Shield className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
           <p className="text-lg font-semibold text-foreground">Aucun professionnel banni</p>
           <p className="text-sm text-muted-foreground mt-2">
-            La liste noire est vide. Aucun professionnel n'a été banni de la plateforme.
+            La liste noire est vide. Aucun professionnel n'a Ã©tÃ© banni de la plateforme.
           </p>
         </div>
       )}

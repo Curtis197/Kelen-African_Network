@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -66,7 +66,6 @@ export function ProProfileForm() {
       .single();
 
     if (error) {
-      console.error("Error fetching pro profile:", error);
     } else if (data) {
       setFormData({
         description: data.description || "",
@@ -93,7 +92,7 @@ export function ProProfileForm() {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  // ── Image Upload Helpers ──────────────────────────────────
+  // â”€â”€ Image Upload Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   const uploadImage = async (file: File, bucket: string, path: string): Promise<string | null> => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -126,7 +125,7 @@ export function ProProfileForm() {
     if (url) {
       updateField("hero_image_url", url);
       setHeroPreview(url);
-      toast.success("Image hero mise à jour");
+      toast.success("Image hero mise Ã  jour");
     }
   };
 
@@ -141,7 +140,7 @@ export function ProProfileForm() {
     if (url) {
       updateField("profile_picture_url", url);
       setProfilePreview(url);
-      toast.success("Photo de profil mise à jour");
+      toast.success("Photo de profil mise Ã  jour");
     }
   };
 
@@ -181,19 +180,19 @@ export function ProProfileForm() {
     }
 
     if (remaining < filesToUpload.length) {
-      toast.info(`${remaining} photo(s) ajoutée(s). Maximum ${MAX_PHOTOS} atteint.`);
+      toast.info(`${remaining} photo(s) ajoutÃ©e(s). Maximum ${MAX_PHOTOS} atteint.`);
     } else {
-      toast.success(`${filesToUpload.length} photo(s) ajoutée(s)`);
+      toast.success(`${filesToUpload.length} photo(s) ajoutÃ©e(s)`);
     }
   };
 
   const removePortfolioPhoto = (index: number) => {
     const newPhotos = formData.portfolio_photos.filter((_, i) => i !== index);
     updateField("portfolio_photos", newPhotos);
-    toast.success("Photo retirée");
+    toast.success("Photo retirÃ©e");
   };
 
-  // ── Services ──────────────────────────────────────────────
+  // â”€â”€ Services â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   const addService = () => {
     const trimmed = servicesInput.trim();
@@ -210,7 +209,7 @@ export function ProProfileForm() {
     );
   };
 
-  // ── Submit ────────────────────────────────────────────────
+  // â”€â”€ Submit â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   const onSubmit = async () => {
     setIsSaving(true);
@@ -238,10 +237,9 @@ export function ProProfileForm() {
 
       if (error) throw error;
 
-      toast.success("Profil mis à jour avec succès");
+      toast.success("Profil mis Ã  jour avec succÃ¨s");
     } catch (error) {
-      console.error("Error updating profile:", error);
-      toast.error("Erreur lors de la mise à jour du profil");
+      toast.error("Erreur lors de la mise Ã  jour du profil");
     } finally {
       setIsSaving(false);
     }
@@ -251,7 +249,7 @@ export function ProProfileForm() {
     if (slug) {
       window.open(`/professionnels/${slug}`, '_blank');
     } else {
-      toast.info("Sauvegardez d'abord le profil pour générer le slug");
+      toast.info("Sauvegardez d'abord le profil pour gÃ©nÃ©rer le slug");
     }
   };
 
@@ -260,15 +258,15 @@ export function ProProfileForm() {
     updateField("about_text", presentation);
   };
 
-  // ── Section completion ────────────────────────────────────
+  // â”€â”€ Section completion â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const sectionStatus = [
     { key: "hero",        label: "Hero",        done: !!(formData.hero_image_url || formData.hero_tagline) },
     { key: "photo",       label: "Photo",       done: !!formData.profile_picture_url },
-    { key: "about",       label: "À propos",    done: formData.about_text.length > 20 },
+    { key: "about",       label: "Ã€ propos",    done: formData.about_text.length > 20 },
     { key: "portfolio",   label: "Portfolio",   done: formData.portfolio_photos.length > 0 },
     { key: "description", label: "Description", done: formData.description.length > 20 },
     { key: "services",    label: "Services",    done: formData.services_offered.length > 0 },
-    { key: "details",     label: "Détails",     done: !!(formData.years_experience || formData.team_size) },
+    { key: "details",     label: "DÃ©tails",     done: !!(formData.years_experience || formData.team_size) },
     { key: "whatsapp",    label: "WhatsApp",    done: !!formData.whatsapp },
   ];
   const completedCount = sectionStatus.filter((s) => s.done).length;
@@ -290,14 +288,14 @@ export function ProProfileForm() {
 
   return (
     <div className="space-y-8">
-      {/* ── Progress + Actions ───────────────────────────── */}
+      {/* â”€â”€ Progress + Actions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="rounded-2xl border border-border bg-white p-5 shadow-sm">
         {/* Top row */}
         <div className="flex items-center justify-between gap-4 mb-4">
           <div>
             <div className="flex items-center gap-2">
               <span className="text-sm font-bold text-on-surface">
-                Complétude du profil
+                ComplÃ©tude du profil
               </span>
               <span
                 className={`text-xs font-black px-2 py-0.5 rounded-full ${
@@ -333,7 +331,7 @@ export function ProProfileForm() {
               className="inline-flex items-center gap-1.5 px-3 py-2 bg-surface-container text-on-surface rounded-xl text-xs font-semibold hover:bg-surface-container-high transition-colors"
             >
               <ExternalLink className="w-3.5 h-3.5" />
-              Aperçu
+              AperÃ§u
             </button>
           </div>
         </div>
@@ -376,7 +374,7 @@ export function ProProfileForm() {
         </div>
       </div>
 
-      {/* ── Section 1: Hero Section ─────────────────────── */}
+      {/* â”€â”€ Section 1: Hero Section â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="rounded-2xl border border-border bg-white overflow-hidden shadow-sm">
         <div className="flex items-center justify-between gap-3 border-b border-border px-6 py-4">
           <h3 className="flex items-center gap-2.5 text-sm font-bold text-on-surface">
@@ -387,7 +385,7 @@ export function ProProfileForm() {
           </h3>
           {sectionStatus[0].done && (
             <span className="flex items-center gap-1 text-xs font-medium text-kelen-green-600">
-              <CheckCircle2 className="w-3.5 h-3.5" /> Complété
+              <CheckCircle2 className="w-3.5 h-3.5" /> ComplÃ©tÃ©
             </span>
           )}
         </div>
@@ -396,7 +394,7 @@ export function ProProfileForm() {
         {/* Hero Image */}
         <div>
           <label className="block text-sm font-medium text-on-surface-variant mb-2">
-            Image d'arrière-plan
+            Image d'arriÃ¨re-plan
           </label>
           {heroPreview ? (
             <div className="relative rounded-xl overflow-hidden aspect-video bg-surface-container">
@@ -420,7 +418,7 @@ export function ProProfileForm() {
             <label className="flex flex-col items-center justify-center aspect-video rounded-xl border-2 border-dashed border-outline-variant/40 bg-surface-container-lowest cursor-pointer hover:border-primary/50 transition-colors">
               <Upload className="w-8 h-8 text-on-surface-variant/40 mb-2" />
               <span className="text-sm text-on-surface-variant">Cliquer pour ajouter une image hero</span>
-              <span className="text-xs text-on-surface-variant/60 mt-1">1920x800 recommandé</span>
+              <span className="text-xs text-on-surface-variant/60 mt-1">1920x800 recommandÃ©</span>
               <input type="file" accept="image/*" onChange={handleHeroUpload} className="hidden" />
             </label>
           )}
@@ -436,7 +434,7 @@ export function ProProfileForm() {
             type="text"
             value={formData.hero_tagline}
             onChange={(e) => updateField("hero_tagline", e.target.value)}
-            placeholder="Ex: Construction de qualité, livrée dans les délais"
+            placeholder="Ex: Construction de qualitÃ©, livrÃ©e dans les dÃ©lais"
             maxLength={150}
             className="w-full px-4 py-3 text-sm rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface placeholder:text-on-surface-variant/40"
           />
@@ -447,7 +445,7 @@ export function ProProfileForm() {
         </div>
       </div>
 
-      {/* ── Section 2: Profile Photo ────────────────────── */}
+      {/* â”€â”€ Section 2: Profile Photo â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="rounded-2xl border border-border bg-white overflow-hidden shadow-sm">
         <div className="flex items-center justify-between gap-3 border-b border-border px-6 py-4">
           <h3 className="flex items-center gap-2.5 text-sm font-bold text-on-surface">
@@ -458,7 +456,7 @@ export function ProProfileForm() {
           </h3>
           {sectionStatus[1].done && (
             <span className="flex items-center gap-1 text-xs font-medium text-kelen-green-600">
-              <CheckCircle2 className="w-3.5 h-3.5" /> Complété
+              <CheckCircle2 className="w-3.5 h-3.5" /> ComplÃ©tÃ©
             </span>
           )}
         </div>
@@ -486,25 +484,25 @@ export function ProProfileForm() {
               <input type="file" accept="image/*" onChange={handleProfilePicUpload} className="hidden" />
             </label>
             <p className="text-xs text-on-surface-variant/60 mt-2">
-              Apparaît dans la section contact
+              ApparaÃ®t dans la section contact
             </p>
           </div>
         </div>
         </div>
       </div>
 
-      {/* ── Section 3: About Text ───────────────────────── */}
+      {/* â”€â”€ Section 3: About Text â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="rounded-2xl border border-border bg-white overflow-hidden shadow-sm">
         <div className="flex items-center justify-between gap-3 border-b border-border px-6 py-4">
           <h3 className="flex items-center gap-2.5 text-sm font-bold text-on-surface">
             <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-orange-50 text-orange-600 flex-shrink-0">
               <FileText className="w-3.5 h-3.5" />
             </span>
-            Texte « À propos »
+            Texte Â« Ã€ propos Â»
           </h3>
           {sectionStatus[2].done && (
             <span className="flex items-center gap-1 text-xs font-medium text-kelen-green-600">
-              <CheckCircle2 className="w-3.5 h-3.5" /> Complété
+              <CheckCircle2 className="w-3.5 h-3.5" /> ComplÃ©tÃ©
             </span>
           )}
         </div>
@@ -513,7 +511,7 @@ export function ProProfileForm() {
           value={formData.about_text}
           onChange={(e) => updateField("about_text", e.target.value)}
           rows={5}
-          placeholder="Décrivez votre philosophie, votre parcours et ce qui vous distingue..."
+          placeholder="DÃ©crivez votre philosophie, votre parcours et ce qui vous distingue..."
           maxLength={2000}
           className="w-full px-4 py-3 text-sm rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface placeholder:text-on-surface-variant/40 resize-none"
         />
@@ -523,7 +521,7 @@ export function ProProfileForm() {
         </div>
       </div>
 
-      {/* ── Section 4: Portfolio Photos ─────────────────── */}
+      {/* â”€â”€ Section 4: Portfolio Photos â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="rounded-2xl border border-border bg-white overflow-hidden shadow-sm">
         <div className="flex items-center justify-between gap-3 border-b border-border px-6 py-4">
           <h3 className="flex items-center gap-2.5 text-sm font-bold text-on-surface">
@@ -537,7 +535,7 @@ export function ProProfileForm() {
           </h3>
           {sectionStatus[3].done && (
             <span className="flex items-center gap-1 text-xs font-medium text-kelen-green-600">
-              <CheckCircle2 className="w-3.5 h-3.5" /> Complété
+              <CheckCircle2 className="w-3.5 h-3.5" /> ComplÃ©tÃ©
             </span>
           )}
         </div>
@@ -595,18 +593,18 @@ export function ProProfileForm() {
         </div>
       </div>
 
-      {/* ── Section 5: Description ──────────────────────── */}
+      {/* â”€â”€ Section 5: Description â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="rounded-2xl border border-border bg-white overflow-hidden shadow-sm">
         <div className="flex items-center justify-between gap-3 border-b border-border px-6 py-4">
           <h3 className="flex items-center gap-2.5 text-sm font-bold text-on-surface">
             <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-teal-50 text-teal-600 flex-shrink-0">
               <FileText className="w-3.5 h-3.5" />
             </span>
-            Description de l'activité
+            Description de l'activitÃ©
           </h3>
           {sectionStatus[4].done && (
             <span className="flex items-center gap-1 text-xs font-medium text-kelen-green-600">
-              <CheckCircle2 className="w-3.5 h-3.5" /> Complété
+              <CheckCircle2 className="w-3.5 h-3.5" /> ComplÃ©tÃ©
             </span>
           )}
         </div>
@@ -616,7 +614,7 @@ export function ProProfileForm() {
           onChange={(e) => updateField("description", e.target.value)}
           rows={4}
           maxLength={500}
-          placeholder="Décrivez votre expertise, votre parcours..."
+          placeholder="DÃ©crivez votre expertise, votre parcours..."
           className="w-full px-4 py-3 text-sm rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface placeholder:text-on-surface-variant/40 resize-none"
         />
         <p className="text-xs text-on-surface-variant/60 text-right">
@@ -625,18 +623,18 @@ export function ProProfileForm() {
         </div>
       </div>
 
-      {/* ── Section 6: Services ─────────────────────────── */}
+      {/* â”€â”€ Section 6: Services â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="rounded-2xl border border-border bg-white overflow-hidden shadow-sm">
         <div className="flex items-center justify-between gap-3 border-b border-border px-6 py-4">
           <h3 className="flex items-center gap-2.5 text-sm font-bold text-on-surface">
             <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-50 text-amber-600 flex-shrink-0">
               <Plus className="w-3.5 h-3.5" />
             </span>
-            Services & Spécialités
+            Services & SpÃ©cialitÃ©s
           </h3>
           {sectionStatus[5].done && (
             <span className="flex items-center gap-1 text-xs font-medium text-kelen-green-600">
-              <CheckCircle2 className="w-3.5 h-3.5" /> Complété
+              <CheckCircle2 className="w-3.5 h-3.5" /> ComplÃ©tÃ©
             </span>
           )}
         </div>
@@ -647,7 +645,7 @@ export function ProProfileForm() {
             value={servicesInput}
             onChange={(e) => setServicesInput(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addService(); } }}
-            placeholder="Ex: Construction Villa, Électricité..."
+            placeholder="Ex: Construction Villa, Ã‰lectricitÃ©..."
             className="flex-1 px-4 py-2.5 text-sm rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface placeholder:text-on-surface-variant/40"
           />
           <button
@@ -681,18 +679,18 @@ export function ProProfileForm() {
         </div>
       </div>
 
-      {/* ── Section 7: Details ──────────────────────────── */}
+      {/* â”€â”€ Section 7: Details â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="rounded-2xl border border-border bg-white overflow-hidden shadow-sm">
         <div className="flex items-center justify-between gap-3 border-b border-border px-6 py-4">
           <h3 className="flex items-center gap-2.5 text-sm font-bold text-on-surface">
             <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-50 text-slate-600 flex-shrink-0">
               <Clock className="w-3.5 h-3.5" />
             </span>
-            Expérience & Équipe
+            ExpÃ©rience & Ã‰quipe
           </h3>
           {sectionStatus[6].done && (
             <span className="flex items-center gap-1 text-xs font-medium text-kelen-green-600">
-              <CheckCircle2 className="w-3.5 h-3.5" /> Complété
+              <CheckCircle2 className="w-3.5 h-3.5" /> ComplÃ©tÃ©
             </span>
           )}
         </div>
@@ -700,7 +698,7 @@ export function ProProfileForm() {
           <div className="space-y-2">
             <label className="text-sm font-medium text-on-surface-variant flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5" />
-              Années d'expérience
+              AnnÃ©es d'expÃ©rience
             </label>
             <input
               type="number"
@@ -712,7 +710,7 @@ export function ProProfileForm() {
           <div className="space-y-2">
             <label className="text-sm font-medium text-on-surface-variant flex items-center gap-1.5">
               <Users className="w-3.5 h-3.5" />
-              Taille de l'équipe
+              Taille de l'Ã©quipe
             </label>
             <input
               type="number"
@@ -724,7 +722,7 @@ export function ProProfileForm() {
         </div>
       </div>
 
-      {/* ── Section 8: WhatsApp ─────────────────────────── */}
+      {/* â”€â”€ Section 8: WhatsApp â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="rounded-2xl border border-border bg-white overflow-hidden shadow-sm">
         <div className="flex items-center justify-between gap-3 border-b border-border px-6 py-4">
           <h3 className="flex items-center gap-2.5 text-sm font-bold text-on-surface">
@@ -735,7 +733,7 @@ export function ProProfileForm() {
           </h3>
           {sectionStatus[7].done && (
             <span className="flex items-center gap-1 text-xs font-medium text-kelen-green-600">
-              <CheckCircle2 className="w-3.5 h-3.5" /> Complété
+              <CheckCircle2 className="w-3.5 h-3.5" /> ComplÃ©tÃ©
             </span>
           )}
         </div>
@@ -748,19 +746,19 @@ export function ProProfileForm() {
             className="w-full px-4 py-3 text-sm rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface placeholder:text-on-surface-variant/40"
           />
           <p className="mt-2 text-xs text-on-surface-variant/60">
-            Affiché sur votre page publique pour que les clients puissent vous contacter directement
+            AffichÃ© sur votre page publique pour que les clients puissent vous contacter directement
           </p>
         </div>
       </div>
 
-      {/* ── Sticky save footer ──────────────────────────── */}
+      {/* â”€â”€ Sticky save footer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="sticky bottom-4 z-10">
         <div className="rounded-2xl border border-border bg-white/90 p-3 shadow-xl shadow-black/10 backdrop-blur-md flex items-center gap-3">
           {/* Completion mini-bar */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between mb-1">
               <span className="text-xs text-on-surface-variant">
-                {completedCount}/{sectionStatus.length} sections complétées
+                {completedCount}/{sectionStatus.length} sections complÃ©tÃ©es
               </span>
               <span className="text-xs font-bold text-on-surface">{completionPct}%</span>
             </div>
@@ -789,7 +787,7 @@ export function ProProfileForm() {
             {isSaving ? (
               <>
                 <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                Enregistrement…
+                Enregistrementâ€¦
               </>
             ) : (
               <>

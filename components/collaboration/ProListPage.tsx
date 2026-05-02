@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
@@ -42,12 +42,12 @@ import { toast } from "sonner";
 
 const STATUS_BADGE_CONFIG: Record<string, { label: string; variant: "default" | "secondary" | "outline" | "destructive"; className: string; icon?: React.ReactNode }> = {
   candidate: {
-    label: "Sauvegardé",
+    label: "SauvegardÃ©",
     variant: "outline",
     className: "bg-surface-container text-on-surface-variant",
   },
   shortlisted: {
-    label: "Shortlisté",
+    label: "ShortlistÃ©",
     variant: "secondary",
     className: "bg-blue-100 text-blue-700",
   },
@@ -62,7 +62,7 @@ const STATUS_BADGE_CONFIG: Record<string, { label: string; variant: "default" | 
     className: "bg-green-100 text-green-700",
   },
   "finalist-negotiating": {
-    label: "Négociation",
+    label: "NÃ©gociation",
     variant: "secondary",
     className: "bg-purple-100 text-purple-700",
   },
@@ -72,7 +72,7 @@ const STATUS_BADGE_CONFIG: Record<string, { label: string; variant: "default" | 
     className: "bg-green-500 text-white",
   },
   declined: {
-    label: "Refusé",
+    label: "RefusÃ©",
     variant: "destructive",
     className: "bg-red-100 text-red-700",
   },
@@ -84,31 +84,31 @@ const STATUS_BADGE_CONFIG: Record<string, { label: string; variant: "default" | 
 
 const SECTION_CONFIG: Record<keyof ProListGrouped, { title: string; icon: React.ReactNode; defaultCollapsed: boolean; color: string }> = {
   saved: {
-    title: "SAUVEGARDÉS",
+    title: "SAUVEGARDÃ‰S",
     icon: <Users className="w-4 h-4" />,
     defaultCollapsed: false,
     color: "text-on-surface-variant",
   },
   shortlisted: {
-    title: "SHORTLISTÉS",
+    title: "SHORTLISTÃ‰S",
     icon: <Star className="w-4 h-4" />,
     defaultCollapsed: false,
     color: "text-blue-600",
   },
   finalists: {
-    title: "FINALISTES — PHASE PROPOSITION",
+    title: "FINALISTES â€” PHASE PROPOSITION",
     icon: <Award className="w-4 h-4" />,
     defaultCollapsed: false,
     color: "text-yellow-600",
   },
   active: {
-    title: "SÉLECTIONNÉ — ACTIF",
+    title: "SÃ‰LECTIONNÃ‰ â€” ACTIF",
     icon: <CheckCircle2 className="w-4 h-4" />,
     defaultCollapsed: false,
     color: "text-green-600",
   },
   declined: {
-    title: "REFUSÉS",
+    title: "REFUSÃ‰S",
     icon: <XCircle className="w-4 h-4" />,
     defaultCollapsed: true,
     color: "text-red-600",
@@ -123,12 +123,6 @@ function getProStatusBadge(pro: ProjectProfessionalWithProfile) {
   const selectionStatus = pro.selection_status;
   const collab = pro.collaboration;
 
-  console.log('[Component] getProStatusBadge:', { 
-    id: pro.id, 
-    status: selectionStatus, 
-    hasCollab: !!collab,
-    isExternal: pro.is_external 
-  });
 
   if (selectionStatus === "candidate") {
     return STATUS_BADGE_CONFIG["candidate"];
@@ -177,14 +171,6 @@ function ProCard({
     ? (pro.external_name || "Professionnel Externe") 
     : (pro.professional?.business_name || "Professionnel");
 
-  console.log('[PRO_CARD] Render:', {
-    id: pro.id,
-    name: displayName,
-    section,
-    hasCollab: !!collab,
-    msgCount: collab?.messages?.length || 0,
-    proposalAt: collab?.proposal_submitted_at
-  });
 
   const initials = displayName
     ? displayName
@@ -256,13 +242,13 @@ function ProCard({
             )}
             {location && (
               <>
-                <span>•</span>
+                <span>â€¢</span>
                 <span>{location}</span>
               </>
             )}
             {!pro.is_external && rating && (
               <>
-                <span>•</span>
+                <span>â€¢</span>
                 <span className="flex items-center gap-1">
                   <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
                   {rating.toFixed(1)} ({reviewCount})
@@ -278,7 +264,7 @@ function ProCard({
                 collab.status === "negotiating" ? (
                   <span className="text-purple-600 flex items-center gap-1">
                     <MessageSquare className="w-3 h-3" />
-                    Négociation en cours
+                    NÃ©gociation en cours
                   </span>
                 ) : (
                   <span className="text-green-600 flex items-center gap-1">
@@ -289,7 +275,7 @@ function ProCard({
               ) : (
                 <span className="text-yellow-600 flex items-center gap-1">
                   <Clock className="w-3 h-3" />
-                  En attente de réponse
+                  En attente de rÃ©ponse
                 </span>
               )}
             </div>
@@ -300,7 +286,7 @@ function ProCard({
             <div className="mt-2 text-xs text-green-600 flex items-center gap-1.5">
               <CheckCircle2 className="w-3 h-3" />
               Actif depuis {new Date(collab.started_at).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })}
-              <span className="text-on-surface-variant ml-1">• Accès complet</span>
+              <span className="text-on-surface-variant ml-1">â€¢ AccÃ¨s complet</span>
             </div>
           )}
         </div>
@@ -319,13 +305,13 @@ function ProCard({
             }}
           >
             <SelectTrigger className="h-8 text-xs min-w-[130px] bg-surface-container-high border-outline-variant/20 hover:border-outline-variant/50">
-              <SelectValue placeholder="Changer d'état" />
+              <SelectValue placeholder="Changer d'Ã©tat" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="candidate">Sauvegardé</SelectItem>
-              <SelectItem value="shortlisted">Shortlisté</SelectItem>
+              <SelectItem value="candidate">SauvegardÃ©</SelectItem>
+              <SelectItem value="shortlisted">ShortlistÃ©</SelectItem>
               <SelectItem value="finalist" disabled={pro.is_external}>Rendre finaliste</SelectItem>
-              <SelectItem value="agreed">Sélectionner (Actif)</SelectItem>
+              <SelectItem value="agreed">SÃ©lectionner (Actif)</SelectItem>
               <SelectItem value="not_selected">Refuser</SelectItem>
             </SelectContent>
           </Select>
@@ -334,7 +320,7 @@ function ProCard({
             title="Retirer du projet"
             disabled={isUpdating}
             onClick={async () => {
-              if (confirm("Voulez-vous vraiment retirer ce professionnel du projet ? Cela annulera également toute collaboration en cours.")) {
+              if (confirm("Voulez-vous vraiment retirer ce professionnel du projet ? Cela annulera Ã©galement toute collaboration en cours.")) {
                 setIsUpdating(true);
                 await onRemove(pro.id);
                 setIsUpdating(false);
@@ -375,7 +361,7 @@ function ProCard({
               {!collab?.proposal_submitted_at && (!collab?.messages || collab.messages.length === 0) && (
                 <button
                   onClick={() => {
-                    toast.info("Envoyer un rappel — fonctionnalité à venir");
+                    toast.info("Envoyer un rappel â€” fonctionnalitÃ© Ã  venir");
                   }}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container/50 text-on-surface-variant/70 rounded-lg text-xs font-medium hover:bg-surface-container transition-colors"
                 >
@@ -387,12 +373,12 @@ function ProCard({
               {collab?.proposal_submitted_at && (
                 <button
                   onClick={() => {
-                    toast.info("Demander un changement — fonctionnalité à venir");
+                    toast.info("Demander un changement â€” fonctionnalitÃ© Ã  venir");
                   }}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container text-on-surface-variant rounded-lg text-xs font-medium hover:bg-surface-container-high transition-colors"
                 >
                   <MessageSquare className="w-3 h-3" />
-                  Demander révision
+                  Demander rÃ©vision
                 </button>
               )}
             </div>
@@ -405,7 +391,7 @@ function ProCard({
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary rounded-lg text-xs font-medium hover:bg-primary/20 transition-colors"
               >
                 <Eye className="w-3 h-3" />
-                Voir l&apos;activité
+                Voir l&apos;activitÃ©
               </Link>
               {collab?.proposal_submitted_at && (
                 <Link
@@ -462,7 +448,6 @@ function ProSection({
   onStatusChange: (ppId: string, status: string) => Promise<void>;
   onRemove: (ppId: string) => Promise<void>;
 }) {
-  console.log("[ProSection] Render, section:", section, "count:", group.count, "collapsed:", collapsed);
 
   const config = SECTION_CONFIG[section as keyof typeof SECTION_CONFIG];
   if (group.count === 0 || !config) return null;
@@ -518,31 +503,14 @@ export function ProListPage() {
     declined: true,
   });
 
-  console.log('[COMPONENT] ========================================');
-  console.log('[COMPONENT] ProListPage RENDER');
-  console.log('[COMPONENT] projectId:', projectId, 'isLoading:', isLoading, 'groups:', !!groups);
-  console.log('[COMPONENT] ========================================');
 
   const loadProList = useCallback(async () => {
-    console.log('[EFFECT] ========================================');
-    console.log('[EFFECT] loadProList triggered, projectId:', projectId);
-    console.log('[EFFECT] ========================================');
     setIsLoading(true);
 
     const result = await getProjectProList(projectId);
 
-    console.log('[DB] getProjectProList result:', {
-      hasGroups: !!result.groups,
-      saved: result.groups?.saved.count,
-      shortlisted: result.groups?.shortlisted.count,
-      finalists: result.groups?.finalists.count,
-      active: result.groups?.active.count,
-      declined: result.groups?.declined.count,
-      error: result.error,
-    });
 
     if (result.error) {
-      console.error('[DB] ❌ getProjectProList error:', result.error);
       toast.error(result.error);
       setIsLoading(false);
       return;
@@ -570,15 +538,7 @@ export function ProListPage() {
         result.groups.finalists.count === 0 &&
         result.groups.active.count === 0 &&
         result.groups.declined.count === 0)) {
-      console.warn('[RLS] ========================================');
-      console.warn('[RLS] ⚠️ SILENT RLS FILTERING — getProjectProList returned 0 total pros');
-      console.warn('[RLS] Table: project_professionals');
-      console.warn('[RLS] projectId:', projectId);
-      console.warn('[RLS] Could be: no pros added yet, or RLS silently filtering');
-      console.warn('[RLS] Verify: check Supabase table editor for rows with this project_id');
-      console.warn('[RLS] ========================================');
     } else {
-      console.log('[DB] ✅ Pro list loaded successfully');
     }
 
     setIsLoading(false);
@@ -593,7 +553,6 @@ export function ProListPage() {
     if (!projectId) return;
 
     const fetchProjectTitle = async () => {
-      console.log('[FETCH] Fetching project title, projectId:', projectId);
       const { createClient } = await import("@/lib/supabase/client");
       const supabase = createClient();
 
@@ -603,22 +562,10 @@ export function ProListPage() {
         .eq("id", projectId)
         .single();
 
-      console.log('[DB] user_projects title result:', { title: data?.title, error: error?.message, code: error?.code });
 
       if (error?.code === '42501') {
-        console.error('[RLS] ========================================');
-        console.error('[RLS] ❌ EXPLICIT RLS BLOCKING!');
-        console.error('[RLS] Table: user_projects');
-        console.error('[RLS] Operation: SELECT (title)');
-        console.error('[RLS] projectId:', projectId);
-        console.error('[RLS] Fix: Ensure client owns the project (user_id = auth.uid())');
-        console.error('[RLS] ========================================');
       } else if (!error && !data) {
-        console.warn('[RLS] ⚠️ SILENT RLS FILTERING — user_projects returned null');
-        console.warn('[RLS] Table: user_projects, projectId:', projectId);
-        console.warn('[RLS] Verify: check if this project exists in Supabase table editor');
       } else if (data?.title) {
-        console.log('[FETCH] ✅ Project title:', data.title);
         setProjectTitle(data.title);
       }
     };
@@ -627,23 +574,21 @@ export function ProListPage() {
   }, [projectId]);
 
   const handleStatusChange = async (ppId: string, status: string) => {
-    console.log('[ACTION] handleStatusChange:', { ppId, status });
     const result = await updateProjectProfessionalSelectionStatus(ppId, status, projectId);
     
     if (result.success) {
-      toast.success("Statut mis à jour");
+      toast.success("Statut mis Ã  jour");
       loadProList();
     } else {
-      toast.error(result.error || "Erreur lors de la mise à jour");
+      toast.error(result.error || "Erreur lors de la mise Ã  jour");
     }
   };
 
   const handleRemove = async (ppId: string) => {
-    console.log('[ACTION] handleRemove:', { ppId });
     const result = await removeProjectProfessionalById(ppId, projectId);
     
     if (result.success) {
-      toast.success("Professionnel retiré du projet");
+      toast.success("Professionnel retirÃ© du projet");
       loadProList();
     } else {
       toast.error(result.error || "Erreur lors du retrait");
@@ -651,17 +596,14 @@ export function ProListPage() {
   };
 
   const toggleSection = (section: string) => {
-    console.log("[ProListPage] toggleSection:", section);
     setCollapsedSections((prev) => ({
       ...prev,
       [section]: !prev[section],
     }));
   };
 
-  console.log('[RENDER] State:', { isLoading, hasGroups: !!groups, projectTitle });
 
   if (isLoading) {
-    console.log('[RENDER] → Skeleton loading state');
     return (
       <div className="space-y-4">
         <div className="h-8 bg-surface-container-low rounded-lg animate-pulse" />
@@ -673,13 +615,12 @@ export function ProListPage() {
   }
 
   if (!groups) {
-    console.warn('[RENDER] → Empty state (no groups — possible first load or RLS issue)');
     return (
       <div className="text-center py-16 bg-surface-container-low rounded-2xl">
         <Users className="w-12 h-12 mx-auto text-on-surface-variant/40 mb-4" />
         <h3 className="text-lg font-semibold text-on-surface mb-2">Aucun professionnel</h3>
         <p className="text-sm text-on-surface-variant">
-          Sauvegardez des professionnels pour commencer à les comparer.
+          Sauvegardez des professionnels pour commencer Ã  les comparer.
         </p>
       </div>
     );
@@ -714,7 +655,7 @@ export function ProListPage() {
               {projectTitle || "Projet"}
             </h1>
             <p className="text-sm text-on-surface-variant mt-1">
-              {totalCount} professionnel{totalCount > 1 ? "s" : ""} • Gérez votre processus de sélection
+              {totalCount} professionnel{totalCount > 1 ? "s" : ""} â€¢ GÃ©rez votre processus de sÃ©lection
             </p>
           </div>
         </div>
@@ -779,7 +720,7 @@ export function ProListPage() {
           <Users className="w-12 h-12 mx-auto text-on-surface-variant/40 mb-4" />
           <h3 className="text-lg font-semibold text-on-surface mb-2">Aucun professionnel</h3>
           <p className="text-sm text-on-surface-variant mb-6">
-            Explorez les professionnels et sauvegardez ceux qui vous intéressent.
+            Explorez les professionnels et sauvegardez ceux qui vous intÃ©ressent.
           </p>
           <Link
             href="/professionnels"

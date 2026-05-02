@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useTransition } from "react";
 import { useRouter, usePathname } from "next/navigation";
@@ -48,7 +48,6 @@ export function SectorPageClient({
         setProfessionals(result.professionals);
         setTotalCount(result.totalCount);
       } catch {
-        console.error("Failed to fetch professionals");
       }
     });
   };
@@ -156,7 +155,7 @@ export function SectorPageClient({
         </div>
       ) : (
         <div className="py-20 text-center">
-          <p className="text-lg font-bold text-on-surface">Aucun professionnel dans cette catégorie</p>
+          <p className="text-lg font-bold text-on-surface">Aucun professionnel dans cette catÃ©gorie</p>
           <p className="mt-2 text-sm text-muted-foreground">
             Essayez une autre ville ou retirez le filtre de profession.
           </p>

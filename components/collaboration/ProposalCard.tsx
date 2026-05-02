@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -31,7 +31,7 @@ const STATUS_CONFIG: Record<string, { label: string; badgeColor: string; icon: R
     icon: <Clock className="w-3 h-3" />,
   },
   negotiating: {
-    label: "En négociation",
+    label: "En nÃ©gociation",
     badgeColor: "bg-purple-100 text-purple-700",
     icon: <MessageSquare className="w-3 h-3" />,
   },
@@ -56,30 +56,14 @@ export function ProposalCard({
   const hasProposal  = !!collaboration?.proposal_submitted_at;
   const config       = STATUS_CONFIG[collabStatus] || STATUS_CONFIG.pending;
 
-  console.log('[COMPONENT] ========================================');
-  console.log('[COMPONENT] ProposalCard RENDER');
-  console.log('[COMPONENT] proId:', pro.professional_id);
-  console.log('[COMPONENT] businessName:', pro.professional?.business_name);
-  console.log('[COMPONENT] selectionStatus:', pro.selection_status);
-  console.log('[COMPONENT] collabStatus:', collabStatus);
-  console.log('[COMPONENT] hasProposal:', hasProposal);
-  console.log('[COMPONENT] proposalBudget:', collaboration?.proposal_budget);
-  console.log('[COMPONENT] ========================================');
 
   const handleAction = async (actionName: string, action: () => void) => {
-    console.log('[ACTION] ProposalCard action triggered:', actionName);
-    console.log('[ACTION] proId:', pro.professional_id);
-    console.log('[ACTION] collabId:', collaboration?.id);
     setIsLoading(true);
-    console.log('[STATE] isLoading → true');
     try {
       action();
-      console.log('[ACTION] ✅', actionName, 'called successfully');
     } catch (err) {
-      console.error('[ACTION] ❌', actionName, 'threw exception:', err);
     } finally {
       setIsLoading(false);
-      console.log('[STATE] isLoading → false');
     }
   };
 
@@ -101,7 +85,7 @@ export function ProposalCard({
                   {pro.professional?.business_name || "Professional"}
                 </h3>
                 <p className="text-sm text-gray-500">
-                  {pro.professional?.category} • {pro.professional?.city}, {pro.professional?.country}
+                  {pro.professional?.category} â€¢ {pro.professional?.city}, {pro.professional?.country}
                 </p>
                 {pro.professional?.avg_rating && (
                   <div className="flex items-center gap-1 mt-1">
@@ -141,7 +125,7 @@ export function ProposalCard({
 
             {!hasProposal && collabStatus === 'pending' && (
               <p className="text-sm text-yellow-600 mt-2">
-                ⏳ En attente de réponse du professionnel
+                â³ En attente de rÃ©ponse du professionnel
               </p>
             )}
 
@@ -189,7 +173,7 @@ export function ProposalCard({
                   {isLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : (
                     <>
                       <Check className="w-3 h-3 mr-1" />
-                      Sélectionner
+                      SÃ©lectionner
                     </>
                   )}
                 </Button>

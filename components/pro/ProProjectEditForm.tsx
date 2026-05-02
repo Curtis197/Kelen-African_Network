@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -72,12 +72,11 @@ export function ProProjectEditForm({ project }: ProProjectEditFormProps) {
         return;
       }
 
-      toast.success("Projet mis à jour avec succès");
+      toast.success("Projet mis Ã  jour avec succÃ¨s");
       router.push(`/pro/projets/${project.id}`);
       router.refresh();
     } catch (err) {
       toast.error("Erreur inattendue");
-      console.error(err);
     } finally {
       setIsSubmitting(false);
     }
@@ -130,7 +129,7 @@ export function ProProjectEditForm({ project }: ProProjectEditFormProps) {
             onChange={(e) => updateField("description", e.target.value)}
             rows={4}
             className="w-full rounded-lg border border-stone-300 px-4 py-2.5 focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
-            placeholder="Décrivez le projet en détail..."
+            placeholder="DÃ©crivez le projet en dÃ©tail..."
           />
         </div>
 
@@ -138,7 +137,7 @@ export function ProProjectEditForm({ project }: ProProjectEditFormProps) {
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label htmlFor="category" className="mb-2 block text-sm font-medium text-stone-700">
-              Catégorie
+              CatÃ©gorie
             </label>
             <select
               id="category"
@@ -165,9 +164,9 @@ export function ProProjectEditForm({ project }: ProProjectEditFormProps) {
               className="w-full rounded-lg border border-stone-300 px-4 py-2.5 focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
             >
               <option value="in_progress">En cours</option>
-              <option value="completed">Terminé</option>
+              <option value="completed">TerminÃ©</option>
               <option value="on_hold">En pause</option>
-              <option value="cancelled">Annulé</option>
+              <option value="cancelled">AnnulÃ©</option>
             </select>
           </div>
         </div>
@@ -217,7 +216,7 @@ export function ProProjectEditForm({ project }: ProProjectEditFormProps) {
 
             <div>
               <label htmlFor="client_phone" className="mb-2 block text-sm text-stone-600">
-                Téléphone
+                TÃ©lÃ©phone
               </label>
               <input
                 id="client_phone"
@@ -234,7 +233,7 @@ export function ProProjectEditForm({ project }: ProProjectEditFormProps) {
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label htmlFor="start_date" className="mb-2 block text-sm font-medium text-stone-700">
-              Date de début
+              Date de dÃ©but
             </label>
             <input
               id="start_date"
@@ -303,7 +302,7 @@ export function ProProjectEditForm({ project }: ProProjectEditFormProps) {
             onChange={(e) => updateField("completion_notes", e.target.value)}
             rows={3}
             className="w-full rounded-lg border border-stone-300 px-4 py-2.5 focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
-            placeholder="Notes optionnelles sur la réalisation du projet..."
+            placeholder="Notes optionnelles sur la rÃ©alisation du projet..."
           />
         </div>
 
@@ -311,7 +310,7 @@ export function ProProjectEditForm({ project }: ProProjectEditFormProps) {
         <div className="space-y-4 rounded-lg bg-stone-50 p-4">
           <h3 className="text-sm font-semibold text-stone-700">Photos du projet</h3>
           <p className="text-xs text-stone-600">
-            Ajoutez ou modifiez les photos de votre projet. Cliquez sur l'étoile pour définir la photo principale.
+            Ajoutez ou modifiez les photos de votre projet. Cliquez sur l'Ã©toile pour dÃ©finir la photo principale.
           </p>
           <ProjectPhotoUpload
             photoUrls={imageUrls}

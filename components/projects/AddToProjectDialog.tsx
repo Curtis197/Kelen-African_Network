@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { Plus, X, FolderOpen, ChevronRight, Check } from "lucide-react";
@@ -40,19 +40,15 @@ export function AddToProjectDialog({
   const [isLoadingAreas, setIsLoadingAreas] = useState(false);
   const router = useRouter();
 
-  console.log('[ADD_TO_PROJECT_DIALOG] Props received:', { professionalId, professionalName, projectsCount: userProjects.length });
 
   // Fetch available areas when dialog opens
   useEffect(() => {
     if (isOpen && step === "area" && availableAreas.length === 0) {
-      console.log('[ADD_TO_PROJECT_DIALOG] Fetching available areas...');
       setIsLoadingAreas(true);
       getAreas().then(areas => {
-        console.log('[ADD_TO_PROJECT_DIALOG] Areas loaded:', areas.length);
         setAvailableAreas(areas);
         setIsLoadingAreas(false);
       }).catch(err => {
-        console.error('[ADD_TO_PROJECT_DIALOG] Error fetching areas:', err);
         setIsLoadingAreas(false);
       });
     }
@@ -62,15 +58,12 @@ export function AddToProjectDialog({
   useEffect(() => {
     if (!selectedProjectId || step !== "area") return;
 
-    console.log('[ADD_TO_PROJECT_DIALOG] Fetching project areas for project:', selectedProjectId);
     setIsLoadingAreas(true);
     
     getProjectAreas(selectedProjectId).then(areas => {
-      console.log('[ADD_TO_PROJECT_DIALOG] ✅ Project areas fetched:', areas.length);
       setProjectAreas(areas || []);
       setIsLoadingAreas(false);
     }).catch(err => {
-      console.error('[ADD_TO_PROJECT_DIALOG] Error fetching project areas:', err);
       setIsLoadingAreas(false);
     });
   }, [selectedProjectId, step]);
@@ -78,7 +71,6 @@ export function AddToProjectDialog({
   // Reset state when dialog opens
   useEffect(() => {
     if (isOpen) {
-      console.log('[ADD_TO_PROJECT_DIALOG] Dialog opened, resetting state');
       setStep("project");
       setSelectedProjectId(null);
       setSelectedArea(null);
@@ -91,22 +83,14 @@ export function AddToProjectDialog({
 
   const handleAdd = async () => {
     if (!selectedProjectId) {
-      console.error('[ADD_TO_PROJECT_DIALOG] No project selected!');
       return;
     }
 
     const area = areaMode === "custom" ? customArea : selectedArea;
     if (!area) {
-      console.error('[ADD_TO_PROJECT_DIALOG] No area selected!');
       return;
     }
 
-    console.log('[ADD_TO_PROJECT_DIALOG] Attempting to add pro to project:', {
-      projectId: selectedProjectId,
-      professionalId,
-      area,
-      areaMode,
-    });
 
     setIsSubmitting(true);
     try {
@@ -120,19 +104,15 @@ export function AddToProjectDialog({
         selectedAreaId || undefined
       );
 
-      console.log('[ADD_TO_PROJECT_DIALOG] Server action result:', result);
 
       if (result.success) {
-        console.log('[ADD_TO_PROJECT_DIALOG] Success! Redirecting to project:', selectedProjectId);
-        toast.success(`${professionalName} ajouté au projet`);
+        toast.success(`${professionalName} ajoutÃ© au projet`);
         setIsOpen(false);
         router.push(`/projets/${selectedProjectId}`);
       } else {
-        console.error('[ADD_TO_PROJECT_DIALOG] Server action returned error:', result.error);
         toast.error(`Erreur lors de l'ajout: ${result.error || 'Erreur inconnue'}`);
       }
     } catch (error) {
-      console.error('[ADD_TO_PROJECT_DIALOG] Exception caught:', error);
       toast.error("Erreur de connexion");
     } finally {
       setIsSubmitting(false);
@@ -162,12 +142,12 @@ export function AddToProjectDialog({
         <div className="p-8 pb-4 flex items-center justify-between border-b border-stone-50">
           <div>
             <h2 className="text-2xl font-black text-stone-900 tracking-tight">
-              {step === "project" ? "Choisir un projet" : "Définir le domaine"}
+              {step === "project" ? "Choisir un projet" : "DÃ©finir le domaine"}
             </h2>
             <p className="text-sm text-stone-500 font-medium">Pour {professionalName}</p>
             {step === "area" && (
               <p className="text-xs text-kelen-green-600 font-bold mt-1">
-                Étape 2/2 — Sélectionnez un domaine
+                Ã‰tape 2/2 â€” SÃ©lectionnez un domaine
               </p>
             )}
           </div>
@@ -185,11 +165,6 @@ export function AddToProjectDialog({
               {userProjects.length > 0 ? (
                 userProjects.map((project) => {
                   const hasAreas = project.development_areas && project.development_areas.length > 0;
-                  console.log(`[ADD_TO_PROJECT_DIALOG] Project ${project.id}:`, {
-                    title: project.title,
-                    hasAreas,
-                    areas: project.development_areas
-                  });
                   
                   return (
                     <button
@@ -229,7 +204,7 @@ export function AddToProjectDialog({
                     onClick={() => router.push("/projets/nouveau")}
                     className="text-kelen-green-600 font-black uppercase tracking-widest text-xs"
                   >
-                    Créer mon premier projet
+                    CrÃ©er mon premier projet
                   </button>
                 </div>
               )}
@@ -246,7 +221,7 @@ export function AddToProjectDialog({
                       : "text-stone-500 hover:text-stone-700"
                   }`}
                 >
-                  Prédéfinis
+                  PrÃ©dÃ©finis
                 </button>
                 <button
                   onClick={() => { setAreaMode("project"); setSelectedArea(null); }}
@@ -266,7 +241,7 @@ export function AddToProjectDialog({
                       : "text-stone-500 hover:text-stone-700"
                   }`}
                 >
-                  Personnalisé
+                  PersonnalisÃ©
                 </button>
               </div>
 
@@ -316,7 +291,7 @@ export function AddToProjectDialog({
                   {projectAreas.length > 0 ? (
                     <>
                       <p className="text-[9px] text-stone-400 font-medium mb-2">
-                        Ces domaines ont été définis pour ce projet. Sélectionnez-en un.
+                        Ces domaines ont Ã©tÃ© dÃ©finis pour ce projet. SÃ©lectionnez-en un.
                       </p>
                       <div className="space-y-2 max-h-[40vh] overflow-y-auto pr-2 custom-scrollbar">
                         {projectAreas.map((areaData) => (
@@ -361,7 +336,6 @@ export function AddToProjectDialog({
                         type="text"
                         value={customArea}
                         onChange={(e) => {
-                          console.log('[ADD_TO_PROJECT_DIALOG] Custom area input:', e.target.value);
                           setCustomArea(e.target.value);
                         }}
                         placeholder="Rechercher ou entrer un domaine..."
@@ -389,7 +363,6 @@ export function AddToProjectDialog({
                           <button
                             key={area}
                             onClick={() => {
-                              console.log('[ADD_TO_PROJECT_DIALOG] Suggestion selected:', area);
                               setCustomArea(area);
                             }}
                             className={cn(
@@ -407,7 +380,7 @@ export function AddToProjectDialog({
                         <div className="w-full mt-2 p-3 bg-kelen-green-50 rounded-xl border border-kelen-green-100">
                           <p className="text-[10px] text-kelen-green-700 font-bold flex items-center gap-2">
                             <Plus className="w-3 h-3" />
-                            Créer un nouveau domaine : &quot;{customArea}&quot;
+                            CrÃ©er un nouveau domaine : &quot;{customArea}&quot;
                           </p>
                         </div>
                       )}

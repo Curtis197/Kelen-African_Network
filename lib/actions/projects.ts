@@ -1,13 +1,9 @@
-"use server";
+﻿"use server";
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-
-function log(action: string, data: Record<string, unknown>) {
-  console.log(JSON.stringify({ ts: new Date().toISOString(), action, ...data }));
-}
 
 const projectSchema = z.object({
   id: z.string().uuid().optional(),
@@ -18,7 +14,7 @@ const projectSchema = z.object({
   location_lng: z.number().optional(),
   location_country: z.string().optional(),
   location_formatted: z.string().optional(),
-  budget_total: z.number().min(0, "Le budget doit être positif").optional(),
+  budget_total: z.number().min(0, "Le budget doit Ãªtre positif").optional(),
   budget_currency: z.enum(["EUR", "XOF", "USD"]).optional(),
   start_date: z.string().optional(),
   end_date: z.string().optional(),
@@ -31,7 +27,7 @@ export async function upsertProject(data: z.infer<typeof projectSchema>) {
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    throw new Error("Vous devez être connecté");
+    throw new Error("Vous devez Ãªtre connectÃ©");
   }
 
   const validatedData = projectSchema.parse(data);
@@ -50,11 +46,8 @@ export async function upsertProject(data: z.infer<typeof projectSchema>) {
       .single();
 
     if (error) {
-      log("project.update.error", { userId: user.id, projectId, error: error.message });
-      console.error("Error updating project:", error);
       return { error: error.message };
     }
-    log("project.update.ok", { userId: user.id, projectId, title: validatedData.title });
     return { data: updated };
   } else {
     // Create
@@ -69,12 +62,9 @@ export async function upsertProject(data: z.infer<typeof projectSchema>) {
       .single();
 
     if (error) {
-      log("project.create.error", { userId: user.id, title: validatedData.title, error: error.message });
-      console.error("Error creating project:", error);
       return { error: error.message };
     }
 
-    log("project.create.ok", { userId: user.id, projectId: created.id, title: created.title });
 
     return { data: created };
   }
@@ -108,7 +98,7 @@ export async function updateProjectStatus(id: string, status: string) {
   // Authentication check
   const { data: { user }, error: authError } = await supabase.auth.getUser();
   if (authError || !user) {
-    return { error: "Vous devez être connecté" };
+    return { error: "Vous devez Ãªtre connectÃ©" };
   }
 
   // Verify user owns the project
@@ -123,7 +113,7 @@ export async function updateProjectStatus(id: string, status: string) {
   }
 
   if (project.user_id !== user.id) {
-    return { error: "Non autorisé" };
+    return { error: "Non autorisÃ©" };
   }
 
   const { error } = await supabase
@@ -132,7 +122,6 @@ export async function updateProjectStatus(id: string, status: string) {
     .eq("id", id);
 
   if (error) {
-    console.error("Error updating project status:", error);
     return { error: error.message };
   }
 
@@ -153,7 +142,6 @@ export async function getProject(id: string) {
     .single();
 
   if (error) {
-    console.error("Error fetching project:", error);
     return null;
   }
 
@@ -169,7 +157,6 @@ export async function getProjectTeam(projectId: string) {
     .order("rank_order", { ascending: true });
 
   if (error) {
-    console.error("Error fetching project team:", error);
     return [];
   }
 
@@ -186,16 +173,13 @@ export async function manageProjectProfessional(
   externalData?: { name?: string; phone?: string; category?: string; location?: string; note?: string },
   areaId?: string
 ) {
-  console.log('[MANAGE_PROJECT_PROFESSIONAL] Called with:', { projectId, proId, area, action, isExternal, areaId });
   
   const supabase = await createClient();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-  console.log('[MANAGE_PROJECT_PROFESSIONAL] Auth result:', { hasUser: !!user, authError: authError?.message });
 
   if (!user) {
-    console.error('[MANAGE_PROJECT_PROFESSIONAL] ❌ No authenticated user!');
-    throw new Error("Non autorisé");
+    throw new Error("Non autorisÃ©");
   }
 
   if (action === 'add') {
@@ -219,7 +203,6 @@ export async function manageProjectProfessional(
       insertData.project_area_id = areaId;
     }
 
-    console.log('[MANAGE_PROJECT_PROFESSIONAL] Inserting to project_professionals:', insertData);
 
     // Check if the area exists in project_areas, if not create it
     const { data: existingArea } = await supabase
@@ -229,10 +212,8 @@ export async function manageProjectProfessional(
       .eq("name", area)
       .single();
 
-    console.log('[MANAGE_PROJECT_PROFESSIONAL] Existing area check:', { exists: !!existingArea, areaName: area });
 
     if (!existingArea) {
-      console.log('[MANAGE_PROJECT_PROFESSIONAL] Area not found, creating it...');
       const { data: newArea, error: areaError } = await supabase
         .from("project_areas")
         .insert([{ project_id: projectId, name: area }])
@@ -240,9 +221,7 @@ export async function manageProjectProfessional(
         .single();
 
       if (areaError) {
-        console.error('[MANAGE_PROJECT_PROFESSIONAL] ❌ Failed to create area:', areaError.message);
       } else {
-        console.log('[MANAGE_PROJECT_PROFESSIONAL] ✅ Created area:', newArea.id);
         insertData.project_area_id = newArea.id;
       }
     } else {
@@ -254,21 +233,13 @@ export async function manageProjectProfessional(
       .insert([insertData])
       .select();
 
-    console.log('[MANAGE_PROJECT_PROFESSIONAL] Insert result:', { data, error: error?.message, errorCode: error?.code });
 
     if (error) {
-      console.error('[MANAGE_PROJECT_PROFESSIONAL] ❌ Database insert error:', error.message);
       if (error.code === '42501') {
-        console.error('[MANAGE_PROJECT_PROFESSIONAL] ❌ EXPLICIT RLS BLOCKING! Table: project_professionals');
-        console.error('[MANAGE_PROJECT_PROFESSIONAL] RLS policy is blocking insert for user:', user.id);
       }
-      log("project.pro.add.error", { userId: user.id, projectId, area, isExternal, proId, error: error.message });
       return { success: false, error: error.message };
     }
-    console.log('[MANAGE_PROJECT_PROFESSIONAL] ✅ Successfully added pro to project:', data);
-    log("project.pro.add.ok", { userId: user.id, projectId, area, isExternal, proId: isExternal ? null : proId, externalName: isExternal ? externalData?.name : null });
   } else {
-    console.log('[MANAGE_PROJECT_PROFESSIONAL] Action: remove', { projectId, proId, area, isExternal, externalName: externalData?.name });
     
     // We try to be as precise as possible for deletion
     const query = supabase
@@ -293,19 +264,14 @@ export async function manageProjectProfessional(
 
     const { error, count } = await query;
 
-    console.log('[MANAGE_PROJECT_PROFESSIONAL] Delete result:', { error: error?.message, count });
 
     if (error) {
-      console.error('[MANAGE_PROJECT_PROFESSIONAL] ❌ Delete error:', error.message);
-      log("project.pro.remove.error", { userId: user.id, projectId, area, isExternal, proId, error: error.message });
       return { error: error.message };
     }
     
     if (count === 0) {
-      console.warn('[MANAGE_PROJECT_PROFESSIONAL] ⚠️ SILENT RLS FILTERING or no record found! Action: remove');
     }
 
-    log("project.pro.remove.ok", { userId: user.id, projectId, area, isExternal, proId: isExternal ? null : proId });
   }
 
   revalidatePath(`/projets/${projectId}`);
@@ -321,10 +287,8 @@ export async function updateProfessionalRank(projectId: string, linkId: string, 
     .eq("id", linkId);
 
   if (error) {
-    log("project.pro.rank.error", { projectId, linkId, rank, error: error.message });
     return { error: error.message };
   }
-  log("project.pro.rank.ok", { projectId, linkId, rank });
   revalidatePath(`/projets/${projectId}`);
   return { success: true };
 }
@@ -337,16 +301,13 @@ export async function updateProfessionalSelection(projectId: string, linkId: str
     .eq("id", linkId);
 
   if (error) {
-    log("project.pro.selection.error", { projectId, linkId, status, error: error.message });
     return { error: error.message };
   }
-  log("project.pro.selection.ok", { projectId, linkId, status });
   revalidatePath(`/projets/${projectId}`);
   return { success: true };
 }
 
 export async function getUserProjects(limit: number = 100, offset: number = 0) {
-  console.log('[GET_USER_PROJECTS] Fetching projects for user');
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -360,24 +321,15 @@ export async function getUserProjects(limit: number = 100, offset: number = 0) {
     .range(offset, offset + limit - 1);
 
   if (error) {
-    console.error("Error fetching user projects:", error);
     return [];
   }
 
-  console.log('[GET_USER_PROJECTS] Fetched', data?.length, 'projects');
-  data?.forEach((project, idx) => {
-    console.log(`[GET_USER_PROJECTS] Project ${idx + 1}:`, {
-      id: project.id,
-      title: project.title,
-      development_areas: project.development_areas
-    });
   });
 
   return data;
 }
 
 export async function getProjectAreas(projectId: string) {
-  console.log('[GET_PROJECT_AREAS] Fetching areas for project:', projectId);
   const supabase = await createClient();
   
   // First, get all unique development_area values from project_professionals
@@ -388,12 +340,10 @@ export async function getProjectAreas(projectId: string) {
     .not("development_area", "is", null);
 
   if (proError) {
-    console.error('[GET_PROJECT_AREAS] Error fetching professionals:', proError.message);
   }
 
   // Extract unique area names from professionals
   const uniqueAreasFromPros = [...new Set(professionals?.map(p => p.development_area).filter(Boolean))] as string[];
-  console.log('[GET_PROJECT_AREAS] Unique areas from professionals:', uniqueAreasFromPros);
 
   // Get existing project_areas
   const { data: existingAreas, error: areaError } = await supabase
@@ -403,16 +353,13 @@ export async function getProjectAreas(projectId: string) {
     .order("created_at", { ascending: true });
 
   if (areaError) {
-    console.error('[GET_PROJECT_AREAS] Error fetching project_areas:', areaError.message);
     return [];
   }
 
   const existingAreaNames = existingAreas?.map(a => a.name) || [];
-  console.log('[GET_PROJECT_AREAS] Existing project_areas:', existingAreaNames);
 
   // Create missing areas
   const missingAreas = uniqueAreasFromPros.filter(name => !existingAreaNames.includes(name));
-  console.log('[GET_PROJECT_AREAS] Missing areas to create:', missingAreas);
 
   if (missingAreas.length > 0) {
     const { data: newAreas, error: insertError } = await supabase
@@ -421,9 +368,7 @@ export async function getProjectAreas(projectId: string) {
       .select();
 
     if (insertError) {
-      console.error('[GET_PROJECT_AREAS] Error creating missing areas:', insertError.message);
     } else {
-      console.log('[GET_PROJECT_AREAS] Created', newAreas?.length, 'new areas');
     }
   }
 
@@ -435,18 +380,16 @@ export async function getProjectAreas(projectId: string) {
     .order("created_at", { ascending: true });
 
   if (finalError) {
-    console.error('[GET_PROJECT_AREAS] Final fetch error:', finalError.message);
     return [];
   }
 
-  console.log('[GET_PROJECT_AREAS] Returning', allAreas?.length, 'areas');
   return allAreas;
 }
 
 export async function createProjectArea(projectId: string, name: string) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: "Non autorisé" };
+  if (!user) return { error: "Non autorisÃ©" };
 
   const { data: project } = await supabase
     .from("user_projects")
@@ -455,7 +398,7 @@ export async function createProjectArea(projectId: string, name: string) {
     .eq("user_id", user.id)
     .single();
 
-  if (!project) return { error: "Projet introuvable ou accès refusé." };
+  if (!project) return { error: "Projet introuvable ou accÃ¨s refusÃ©." };
 
   const { data, error } = await supabase
     .from("project_areas")
@@ -464,10 +407,8 @@ export async function createProjectArea(projectId: string, name: string) {
     .single();
 
   if (error) {
-    log("area.create.error", { userId: user.id, projectId, name, error: error.message });
     return { error: error.message };
   }
-  log("area.create.ok", { userId: user.id, projectId, areaId: data.id, name });
   revalidatePath(`/projets/${projectId}`);
   return { data };
 }
@@ -477,10 +418,9 @@ export async function createProjectArea(projectId: string, name: string) {
  * Ensures all areas used by professionals exist in project_areas table
  */
 export async function syncProjectAreasFromProfessionals(projectId: string) {
-  console.log('[SYNC_AREAS] Syncing areas for project:', projectId);
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: "Non autorisé" };
+  if (!user) return { error: "Non autorisÃ©" };
 
   // Verify project ownership
   const { data: project } = await supabase
@@ -490,7 +430,7 @@ export async function syncProjectAreasFromProfessionals(projectId: string) {
     .eq("user_id", user.id)
     .single();
 
-  if (!project) return { error: "Projet introuvable ou accès refusé." };
+  if (!project) return { error: "Projet introuvable ou accÃ¨s refusÃ©." };
 
   // Get unique areas from professionals
   const { data: professionals, error: proError } = await supabase
@@ -500,12 +440,10 @@ export async function syncProjectAreasFromProfessionals(projectId: string) {
     .not("development_area", "is", null);
 
   if (proError) {
-    console.error('[SYNC_AREAS] Error fetching professionals:', proError.message);
     return { error: proError.message };
   }
 
   const uniqueAreasFromPros = [...new Set(professionals?.map(p => p.development_area).filter(Boolean))] as string[];
-  console.log('[SYNC_AREAS] Unique areas from professionals:', uniqueAreasFromPros);
 
   // Get existing areas
   const { data: existingAreas, error: areaError } = await supabase
@@ -514,14 +452,12 @@ export async function syncProjectAreasFromProfessionals(projectId: string) {
     .eq("project_id", projectId);
 
   if (areaError) {
-    console.error('[SYNC_AREAS] Error fetching existing areas:', areaError.message);
     return { error: areaError.message };
   }
 
   const existingAreaNames = existingAreas?.map(a => a.name) || [];
   const missingAreas = uniqueAreasFromPros.filter(name => !existingAreaNames.includes(name));
 
-  console.log('[SYNC_AREAS] Missing areas:', missingAreas);
 
   // Create missing areas
   if (missingAreas.length > 0) {
@@ -531,11 +467,9 @@ export async function syncProjectAreasFromProfessionals(projectId: string) {
       .select();
 
     if (insertError) {
-      console.error('[SYNC_AREAS] Error creating areas:', insertError.message);
       return { error: insertError.message };
     }
 
-    console.log('[SYNC_AREAS] Created', newAreas?.length, 'new areas');
   }
 
   revalidatePath(`/projets/${projectId}`);
@@ -549,7 +483,7 @@ export async function updateExternalProfessional(
 ) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: "Non autorisé" };
+  if (!user) return { error: "Non autorisÃ©" };
 
   const { data: updated, error } = await supabase
     .from("project_professionals")
@@ -566,10 +500,8 @@ export async function updateExternalProfessional(
     .single();
 
   if (error) {
-    log("project.pro.external.update.error", { userId: user.id, projectId, linkId, error: error.message });
     return { error: error.message };
   }
-  log("project.pro.external.update.ok", { userId: user.id, projectId, linkId });
   revalidatePath(`/projets/${projectId}`);
   return { data: updated };
 }
@@ -577,7 +509,7 @@ export async function updateExternalProfessional(
 export async function updateProjectArea(areaId: string, projectId: string, newName: string) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: "Non autorisé" };
+  if (!user) return { error: "Non autorisÃ©" };
 
   const { data: project } = await supabase
     .from("user_projects")
@@ -586,7 +518,7 @@ export async function updateProjectArea(areaId: string, projectId: string, newNa
     .eq("user_id", user.id)
     .single();
 
-  if (!project) return { error: "Projet introuvable ou accès refusé." };
+  if (!project) return { error: "Projet introuvable ou accÃ¨s refusÃ©." };
 
   const { data, error } = await supabase
     .from("project_areas")
@@ -596,10 +528,8 @@ export async function updateProjectArea(areaId: string, projectId: string, newNa
     .single();
 
   if (error) {
-    log("area.update.error", { userId: user.id, projectId, areaId, newName, error: error.message });
     return { error: error.message };
   }
-  log("area.update.ok", { userId: user.id, projectId, areaId, newName });
   revalidatePath(`/projets/${projectId}`);
   return { data };
 }
@@ -607,7 +537,7 @@ export async function updateProjectArea(areaId: string, projectId: string, newNa
 export async function deleteProjectArea(areaId: string, projectId: string) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: "Non autorisé" };
+  if (!user) return { error: "Non autorisÃ©" };
 
   const { data: project } = await supabase
     .from("user_projects")
@@ -616,9 +546,8 @@ export async function deleteProjectArea(areaId: string, projectId: string) {
     .eq("user_id", user.id)
     .single();
 
-  if (!project) return { error: "Projet introuvable ou accès refusé." };
+  if (!project) return { error: "Projet introuvable ou accÃ¨s refusÃ©." };
 
-  console.log('[DELETE_PROJECT_AREA] Cleaning up professionals in area:', areaId);
   // FIRST: Delete all professionals associated with this area to ensure sync with /pros page
   const { error: proDeleteError, count: proCount } = await supabase
     .from("project_professionals")
@@ -626,13 +555,11 @@ export async function deleteProjectArea(areaId: string, projectId: string) {
     .eq("project_area_id", areaId);
 
   if (proDeleteError) {
-    console.error('[DELETE_PROJECT_AREA] ❌ Error cleaning up professionals:', proDeleteError.message);
     // We continue even if this fails, or should we abort? 
     // Usually it's better to keep the area if cleanup fails to avoid orphans.
-    return { error: `Échec du nettoyage des professionnels: ${proDeleteError.message}` };
+    return { error: `Ã‰chec du nettoyage des professionnels: ${proDeleteError.message}` };
   }
   
-  console.log('[DELETE_PROJECT_AREA] Removed', proCount, 'professionals from area');
 
   const { error } = await supabase
     .from("project_areas")
@@ -640,13 +567,9 @@ export async function deleteProjectArea(areaId: string, projectId: string) {
     .eq("id", areaId);
 
   if (error) {
-    console.error('[DELETE_PROJECT_AREA] ❌ Error deleting area:', error.message);
-    log("area.delete.error", { userId: user.id, projectId, areaId, error: error.message });
     return { error: error.message };
   }
 
-  console.log('[DELETE_PROJECT_AREA] ✅ Area successfully deleted');
-  log("area.delete.ok", { userId: user.id, projectId, areaId });
   
   revalidatePath(`/projets/${projectId}`);
   revalidatePath(`/projets/${projectId}/pros`); // Added sync for pros page
@@ -657,10 +580,9 @@ export async function deleteProjectArea(areaId: string, projectId: string) {
  * Add a development area to user_projects.development_areas array
  */
 export async function addProjectDevelopmentArea(projectId: string, area: string) {
-  console.log('[ADD_PROJECT_DEVELOPMENT_AREA] Adding area to project:', { projectId, area });
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: "Non autorisé" };
+  if (!user) return { error: "Non autorisÃ©" };
 
   // Verify project ownership
   const { data: project } = await supabase
@@ -670,18 +592,16 @@ export async function addProjectDevelopmentArea(projectId: string, area: string)
     .eq("user_id", user.id)
     .single();
 
-  if (!project) return { error: "Projet introuvable ou accès refusé." };
+  if (!project) return { error: "Projet introuvable ou accÃ¨s refusÃ©." };
 
   const currentAreas = (project.development_areas as string[]) || [];
   
   // Don't add if already exists
   if (currentAreas.includes(area)) {
-    console.log('[ADD_PROJECT_DEVELOPMENT_AREA] Area already exists:', area);
     return { success: true, data: currentAreas };
   }
 
   const newAreas = [...currentAreas, area];
-  console.log('[ADD_PROJECT_DEVELOPMENT_AREA] New areas array:', newAreas);
 
   const { data, error } = await supabase
     .from("user_projects")
@@ -691,12 +611,9 @@ export async function addProjectDevelopmentArea(projectId: string, area: string)
     .single();
 
   if (error) {
-    console.error('[ADD_PROJECT_DEVELOPMENT_AREA] Error:', error.message);
-    log("project.development_area.add.error", { userId: user.id, projectId, area, error: error.message });
     return { error: error.message };
   }
 
-  log("project.development_area.add.ok", { userId: user.id, projectId, area });
   revalidatePath(`/projets/${projectId}`);
   return { success: true, data: newAreas };
 }
@@ -705,10 +622,9 @@ export async function addProjectDevelopmentArea(projectId: string, area: string)
  * Remove a development area from user_projects.development_areas array
  */
 export async function removeProjectDevelopmentArea(projectId: string, area: string) {
-  console.log('[REMOVE_PROJECT_DEVELOPMENT_AREA] Removing area from project:', { projectId, area });
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: "Non autorisé" };
+  if (!user) return { error: "Non autorisÃ©" };
 
   // Verify project ownership
   const { data: project } = await supabase
@@ -718,11 +634,10 @@ export async function removeProjectDevelopmentArea(projectId: string, area: stri
     .eq("user_id", user.id)
     .single();
 
-  if (!project) return { error: "Projet introuvable ou accès refusé." };
+  if (!project) return { error: "Projet introuvable ou accÃ¨s refusÃ©." };
 
   const currentAreas = (project.development_areas as string[]) || [];
   const newAreas = currentAreas.filter(a => a !== area);
-  console.log('[REMOVE_PROJECT_DEVELOPMENT_AREA] New areas array:', newAreas);
 
   const { data, error } = await supabase
     .from("user_projects")
@@ -732,12 +647,9 @@ export async function removeProjectDevelopmentArea(projectId: string, area: stri
     .single();
 
   if (error) {
-    console.error('[REMOVE_PROJECT_DEVELOPMENT_AREA] Error:', error.message);
-    log("project.development_area.remove.error", { userId: user.id, projectId, area, error: error.message });
     return { error: error.message };
   }
 
-  log("project.development_area.remove.ok", { userId: user.id, projectId, area });
   revalidatePath(`/projets/${projectId}`);
   return { success: true, data: newAreas };
 }

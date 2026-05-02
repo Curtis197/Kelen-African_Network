@@ -7,7 +7,6 @@ import { addDomainToVercel } from "@/lib/domain/vercel-domains";
 import { revalidatePath } from "next/cache";
 
 async function getPaidProfessional() {
-  console.log('[ACTION] getPaidProfessional: start');
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Non authentifié");
@@ -18,28 +17,15 @@ async function getPaidProfessional() {
     .eq("user_id", user.id)
     .single();
 
-  console.log('[DB] getPaidProfessional professionals query:', {
-    hasData: !!pro,
-    hasError: !!error,
-    errorMessage: error?.message,
-    errorCode: error?.code,
-  });
-  if (error?.code === '42501') {
-    console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: professionals, User:', user.id);
-  }
-
   if (!pro) throw new Error("Profil non trouvé");
   if (pro.status !== "gold" && pro.status !== "silver") {
     throw new Error("Fonctionnalité réservée aux membres Gold et Silver");
   }
 
-  console.log('[ACTION] getPaidProfessional: done', { proId: pro.id, status: pro.status });
   return { supabase, pro };
 }
 
 export async function searchDomain(query: string) {
-  console.log('[ACTION] searchDomain: start', { query });
-
   const cleaned = query
     .toLowerCase()
     .replace(/\s+/g, "-")
@@ -52,12 +38,10 @@ export async function searchDomain(query: string) {
     tlds.map(tld => checkDomainAvailability(`${cleaned}${tld}`))
   );
 
-  console.log('[ACTION] searchDomain: done', { cleaned, results: results.map(r => ({ domain: r.domain, available: r.available })) });
   return results;
 }
 
 export async function activateDomain(domain: string) {
-  console.log('[ACTION] activateDomain: start', { domain });
   const { supabase, pro } = await getPaidProfessional();
 
   const availability = await checkDomainAvailability(domain);
@@ -74,15 +58,6 @@ export async function activateDomain(domain: string) {
       },
       { onConflict: "professional_id" }
     );
-
-  console.log('[DB] activateDomain pending_purchase upsert:', {
-    hasError: !!pendingError,
-    errorMessage: pendingError?.message,
-    errorCode: pendingError?.code,
-  });
-  if (pendingError?.code === '42501') {
-    console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: professional_portfolio, User:', pro.id);
-  }
 
   const nameParts = (pro.owner_name || "").split(" ");
   const purchase = await purchaseDomain(domain, {
@@ -120,19 +95,11 @@ export async function activateDomain(domain: string) {
     })
     .eq("professional_id", pro.id);
 
-  console.log('[DB] activateDomain final status update:', {
-    status: vercel.verified ? "active" : "pending_dns",
-    hasError: !!activateError,
-    errorMessage: activateError?.message,
-  });
-
   revalidatePath("/pro/site");
-  console.log('[ACTION] activateDomain: done', { domain, verified: vercel.verified });
   return { success: true, domain, verified: vercel.verified };
 }
 
 export async function disconnectDomain() {
-  console.log('[ACTION] disconnectDomain: start');
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Non authentifié");
@@ -154,17 +121,8 @@ export async function disconnectDomain() {
     })
     .eq("professional_id", pro.id);
 
-  console.log('[DB] disconnectDomain update:', {
-    hasError: !!error,
-    errorMessage: error?.message,
-    errorCode: error?.code,
-  });
-  if (error?.code === '42501') {
-    console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: professional_portfolio, User:', pro.id);
-  }
   if (error) throw new Error(error.message);
 
   revalidatePath("/pro/site");
-  console.log('[ACTION] disconnectDomain: done');
   return { success: true };
 }

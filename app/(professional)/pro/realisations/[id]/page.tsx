@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound, redirect } from "next/navigation";
@@ -7,7 +7,7 @@ import { ArrowLeft, Calendar, DollarSign, ImageIcon, Edit2, MapPin, Play, Video 
 import { RealizationGallery } from "@/components/pro/RealizationGallery";
 
 export const metadata: Metadata = {
-  title: "Détails de la réalisation — Kelen Pro",
+  title: "DÃ©tails de la rÃ©alisation â€” Kelen Pro",
 };
 
 interface RealizationDetailPageProps {
@@ -17,69 +17,40 @@ interface RealizationDetailPageProps {
 }
 
 export default async function RealizationDetailPage({ params }: RealizationDetailPageProps) {
-  console.log("[RealizationDetailPage] Loading realization:", (await params).id);
   const { id } = await params;
   const supabase = await createClient();
 
   // Auth check
-  console.log("[RealizationDetailPage] Checking authentication...");
   const { data: { user }, error: authError } = await supabase.auth.getUser();
-  console.log("[RealizationDetailPage] Auth result:", {
-    authenticated: !!user,
-    userId: user?.id,
-    error: authError?.message
-  });
 
   if (authError) {
-    console.error("[RealizationDetailPage] Auth error:", authError);
   }
 
   if (!user) {
-    console.warn("[RealizationDetailPage] No user session - redirecting to login");
     redirect("/login");
   }
 
-  console.log("[RealizationDetailPage] ✅ Authentication successful");
 
   // Fetch professional profile
-  console.log("[RealizationDetailPage] Fetching professional profile...");
   const { data: professional, error: profError } = await supabase
     .from("professionals")
     .select("id, slug")
     .eq("user_id", user.id)
     .single();
 
-  console.log("[RealizationDetailPage] Professional query result:", {
-    success: !profError,
-    hasData: !!professional,
-    professionalId: professional?.id,
-    errorMessage: profError?.message,
-    errorCode: profError?.code
-  });
 
   if (profError) {
     if (profError.code === '42501') {
-      console.error('[RLS] ========================================');
-      console.error('[RLS] ❌ RLS POLICY VIOLATION - professionals table');
-      console.error('[RLS] ========================================');
-      console.error('[RLS] User ID:', user.id);
-      console.error('[RLS] Error:', profError.message);
-      console.error('[RLS] Fix: Check RLS policies on professionals table');
-      console.error('[RLS] ========================================');
     } else {
-      console.error("[RealizationDetailPage] Professional fetch error:", profError);
     }
   }
 
   if (!professional) {
-    console.warn("[RealizationDetailPage] No professional profile found - redirecting to profil");
     redirect("/pro/profil");
   }
 
-  console.log("[RealizationDetailPage] ✅ Professional found:", professional.id);
 
   // Fetch realization from professional_realizations table (NOT project_documents)
-  console.log("[RealizationDetailPage] Fetching realization from professional_realizations...");
   const { data: realization, error: realizationError } = await supabase
     .from("professional_realizations")
     .select(`
@@ -92,38 +63,18 @@ export default async function RealizationDetailPage({ params }: RealizationDetai
     .eq("professional_id", professional.id)
     .single();
 
-  console.log("[RealizationDetailPage] Realization query result:", {
-    success: !realizationError,
-    hasData: !!realization,
-    realizationId: realization?.id,
-    title: realization?.title,
-    errorMessage: realizationError?.message,
-    errorCode: realizationError?.code
-  });
 
   if (realizationError) {
     if (realizationError.code === '42501') {
-      console.error('[RLS] ========================================');
-      console.error('[RLS] ❌ RLS POLICY VIOLATION - professional_realizations table');
-      console.error('[RLS] ========================================');
-      console.error('[RLS] Realization ID:', id);
-      console.error('[RLS] Professional ID:', professional.id);
-      console.error('[RLS] User ID:', user.id);
-      console.error('[RLS] Error:', realizationError.message);
-      console.error('[RLS] Fix: Check RLS policies on professional_realizations table');
-      console.error('[RLS] ========================================');
     } else {
-      console.error("[RealizationDetailPage] Realization fetch error:", realizationError);
     }
     notFound();
   }
 
   if (!realization) {
-    console.warn("[RealizationDetailPage] Realization not found");
     notFound();
   }
 
-  console.log("[RealizationDetailPage] ✅ Realization found:", realization.title);
 
   const featuredPhoto = realization.images?.find((img: any) => img.is_main)?.url || realization.images?.[0]?.url;
   const allPhotos = realization.images?.map((img: any) => img.url) || [];
@@ -170,7 +121,7 @@ export default async function RealizationDetailPage({ params }: RealizationDetai
               {videos.length > 0 && (
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-surface-container px-3 py-1 text-xs font-medium text-on-surface-variant">
                   <Video size={12} />
-                  {videos.length} vidéo{videos.length > 1 ? 's' : ''}
+                  {videos.length} vidÃ©o{videos.length > 1 ? 's' : ''}
                 </span>
               )}
             </div>
@@ -189,7 +140,7 @@ export default async function RealizationDetailPage({ params }: RealizationDetai
       <div className="space-y-8">
         {/* Image Gallery */}
         <div className="rounded-[2.5rem] bg-white p-8 shadow-sm lg:p-12">
-          <h2 className="font-headline text-xl font-bold text-on-surface mb-6">Photos de la réalisation</h2>
+          <h2 className="font-headline text-xl font-bold text-on-surface mb-6">Photos de la rÃ©alisation</h2>
           {allPhotos.length > 0 ? (
             <RealizationGallery
               photoUrls={allPhotos}
@@ -208,7 +159,7 @@ export default async function RealizationDetailPage({ params }: RealizationDetai
           <div className="rounded-[2.5rem] bg-white p-8 shadow-sm lg:p-12">
             <h2 className="font-headline text-xl font-bold text-on-surface mb-6 flex items-center gap-2">
               <Video size={20} className="text-kelen-green-600" />
-              Vidéos
+              VidÃ©os
             </h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {videos.map((video) => (
@@ -216,7 +167,7 @@ export default async function RealizationDetailPage({ params }: RealizationDetai
                   {video.thumbnail_url ? (
                     <Image
                       src={video.thumbnail_url}
-                      alt="Miniature vidéo"
+                      alt="Miniature vidÃ©o"
                       fill
                       className="object-cover"
                     />
@@ -252,7 +203,7 @@ export default async function RealizationDetailPage({ params }: RealizationDetai
 
         {/* Project Details */}
         <div className="rounded-[2.5rem] bg-white p-8 shadow-sm lg:p-12">
-          <h2 className="font-headline text-xl font-bold text-on-surface mb-6">Détails de la réalisation</h2>
+          <h2 className="font-headline text-xl font-bold text-on-surface mb-6">DÃ©tails de la rÃ©alisation</h2>
 
           <div className="space-y-6">
             {realization.description && (
@@ -277,7 +228,7 @@ export default async function RealizationDetailPage({ params }: RealizationDetai
                 <div className="flex items-start gap-3">
                   <Calendar size={18} className="mt-0.5 text-kelen-green-600" />
                   <div>
-                    <h3 className="text-sm font-bold text-on-surface-variant mb-1">Date d'achèvement</h3>
+                    <h3 className="text-sm font-bold text-on-surface-variant mb-1">Date d'achÃ¨vement</h3>
                     <p className="text-on-surface">
                       {new Date(realization.completion_date).toLocaleDateString('fr-FR', {
                         day: 'numeric',
