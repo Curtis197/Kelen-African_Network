@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
   // Ownership check
   const { data: pro } = await supabase
     .from("professionals")
-    .select("id, business_name, owner_name, category, city, country, description")
+    .select("id, business_name, owner_name, category, city, country, description, brand_primary, brand_secondary")
     .eq("id", professionalId)
     .eq("user_id", user.id)
     .single();
@@ -133,7 +133,10 @@ export async function GET(request: NextRequest) {
     </div>
   `;
 
-  return new NextResponse(buildHtml(`Catalogue — ${proName}`, body), {
+  const brand = pro.brand_primary
+    ? { primary: pro.brand_primary, secondary: pro.brand_secondary ?? pro.brand_primary }
+    : null;
+  return new NextResponse(buildHtml(`Catalogue — ${proName}`, body, brand), {
     headers: { "Content-Type": "text/html; charset=utf-8" },
   });
 }
@@ -209,7 +212,7 @@ function renderProductCard(p: any): string {
 
 // ── HTML shell ────────────────────────────────────────────────────────────────
 
-function buildHtml(title: string, body: string): string {
+function buildHtml(title: string, body: string, brand?: { primary: string; secondary: string } | null): string {
   return `<!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -219,8 +222,8 @@ function buildHtml(title: string, body: string): string {
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --green: #009639;
-      --green-dark: #006c49;
+      --green: ${brand?.primary ?? '#009639'};
+      --green-dark: ${brand?.secondary ?? '#006c49'};
       --text: #1a1a2e;
       --muted: #6b7280;
       --border: #e5e7eb;

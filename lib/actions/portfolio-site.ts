@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { generatePortfolioCopy } from "@/lib/portfolio/copy-generator";
 import type { StyleAnswers } from "@/lib/portfolio/style-tokens";
 import type { CopyAnswers } from "@/lib/portfolio/copy-questions";
+import type { ColorMode } from "@/lib/pro-site/types";
 import { revalidatePath } from "next/cache";
 
 async function getProfessional() {
@@ -270,5 +271,18 @@ export async function saveAboutText(data: { aboutText: string; aboutImageUrl?: s
   revalidatePath(`/professionnels/${pro.slug}`);
   revalidatePath(`/professionnels/${pro.slug}/a-propos`);
   console.log('[ACTION] saveAboutText: done');
+  return { success: true };
+}
+
+export async function saveBrandTheme(colorMode: ColorMode) {
+  const { supabase, pro } = await getProfessional();
+  const { error } = await supabase
+    .from("professional_portfolio")
+    .upsert(
+      { professional_id: pro.id, color_mode: colorMode, updated_at: new Date().toISOString() },
+      { onConflict: "professional_id" }
+    );
+  if (error) throw new Error(error.message);
+  revalidatePath(`/professionnels/${pro.slug}`);
   return { success: true };
 }

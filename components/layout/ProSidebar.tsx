@@ -29,7 +29,7 @@ const GROUP_ITEMS = [
     href: "/pro/visibilite",
     label: "Ma Visibilité",
     icon: Globe,
-    childPaths: ["/pro/portfolio", "/pro/realisations", "/pro/site"],
+    childPaths: ["/pro/portfolio", "/pro/realisations", "/pro/site", "/pro/identite"],
   },
   {
     href: "/pro/missions",
