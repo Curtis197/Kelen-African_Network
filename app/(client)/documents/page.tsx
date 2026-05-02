@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { uploadFile } from "@/lib/supabase/storage";
 import Link from "next/link";
 import Image from "next/image";
-import { Upload, FileText, Eye, Download, Trash2, Grid3X3, List, FolderOpen, ShieldCheck, X } from "lucide-react";
+import { Upload, FileText, Eye, Download, Trash2, Grid3X3, List, FolderOpen, ShieldCheck, X, Archive } from "lucide-react";
 
 interface ProjectDocument {
   id: string;
@@ -75,88 +75,49 @@ export default function ClientDocumentsPage() {
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) {
-      console.log("[ClientDocuments] No file selected");
-      return;
-    }
+    if (!file) return;
 
-    console.log("[ClientDocuments] File selected:", file.name, file.type, file.size);
-
-    // Validate file size (10MB max)
     if (file.size > 10 * 1024 * 1024) {
-      console.error("[ClientDocuments] File too large:", file.size);
       alert("Le fichier est trop volumineux. Taille maximale : 10 Mo.");
       return;
     }
 
-    // Validate file type
     const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
     if (!allowedTypes.includes(file.type)) {
-      console.error("[ClientDocuments] Invalid file type:", file.type);
       alert("Format non accepté. Formats acceptés : PDF, JPG, PNG.");
       return;
     }
 
     setIsUploading(true);
-
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        console.error("[ClientDocuments] No user authenticated");
-        alert("Vous devez être connecté pour uploader un document.");
-        return;
-      }
+      if (!user) { alert("Vous devez être connecté pour uploader un document."); return; }
 
-      console.log("[ClientDocuments] User authenticated:", user.id);
-
-      // Validate project selection - must have a project to upload
       const projectId = selectedProject !== "all" ? selectedProject : null;
       if (!projectId) {
-        console.error("[ClientDocuments] No project selected — required for upload");
         alert("Veuillez sélectionner un projet avant d'uploader un document.");
         setIsUploading(false);
         return;
       }
 
-      console.log("[ClientDocuments] Uploading to project:", projectId);
+      const fileUrl = await uploadFile(file, 'portfolios', `${user.id}/documents`);
 
-      // Upload file to storage - use portfolios bucket for all files (works reliably)
-      const bucket = 'portfolios';
-      const path = `${user.id}/documents`;
-
-      console.log("[ClientDocuments] Uploading to bucket:", bucket, "path:", path);
-      const fileUrl = await uploadFile(file, bucket, path);
-      console.log("[ClientDocuments] Upload successful:", fileUrl);
-
-      // Insert record into project_documents WITH valid project_id
       const { error } = await supabase.from("project_documents").insert({
-        project_id: projectId,  // ← Always a valid project ID
+        project_id: projectId,
         project_title: file.name.split('.')[0],
-        contract_url: fileUrl
+        contract_url: fileUrl,
       });
 
       if (error) {
-        console.error("[ClientDocuments] Database insert error:", error);
-        if (error.code === '42501') {
-          console.error('[ClientDocuments] [RLS] ========================================');
-          console.error('[ClientDocuments] [RLS] ❌ RLS POLICY VIOLATION - project_documents table');
-          console.error('[ClientDocuments] [RLS] ========================================');
-          console.error('[ClientDocuments] [RLS] User ID:', user.id);
-          console.error('[ClientDocuments] [RLS] Error:', error.message);
-          console.error('[ClientDocuments] [RLS] Fix: Check INSERT policy on project_documents table for clients');
-          console.error('[ClientDocuments] [RLS] ========================================');
-          alert("Erreur de permissions. Veuillez contacter le support.");
-        } else {
-          alert("Erreur lors de l'enregistrement du document.");
-        }
+        alert(error.code === '42501'
+          ? "Erreur de permissions. Veuillez contacter le support."
+          : "Erreur lors de l'enregistrement du document.");
         return;
       }
 
-      console.log("[ClientDocuments] ✅ Document saved successfully");
       alert("Document uploadé avec succès !");
       fetchDocuments();
-    } catch (err) {
-      console.error("[ClientDocuments] Upload error:", err);
+    } catch {
       alert("Erreur lors de l'upload du document.");
     } finally {
       setIsUploading(false);
@@ -165,24 +126,10 @@ export default function ClientDocumentsPage() {
 
   const handleDelete = async (docId: string) => {
     if (!confirm("Supprimer ce document ?")) return;
-
-    console.log("[ClientDocuments] Deleting document:", docId);
-    const { error } = await supabase
-      .from("project_documents")
-      .delete()
-      .eq("id", docId);
-
-    if (error) {
-      console.error("[ClientDocuments] Delete error:", error);
-      alert("Erreur lors de la suppression du document.");
-      return;
-    }
-
-    console.log("[ClientDocuments] ✅ Document deleted successfully");
+    const { error } = await supabase.from("project_documents").delete().eq("id", docId);
+    if (error) { alert("Erreur lors de la suppression du document."); return; }
     fetchDocuments();
-    if (selectedDoc?.id === docId) {
-      setSelectedDoc(null);
-    }
+    if (selectedDoc?.id === docId) setSelectedDoc(null);
   };
 
   const getProjectTitle = (projectId: string) => {
@@ -207,17 +154,16 @@ export default function ClientDocumentsPage() {
           <span className="text-primary truncate">Documents</span>
         </nav>
 
-        {/* Header */}
-        <div className="mb-6 sm:mb-8">
-          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-            <div>
-              <h1 className="text-xl sm:text-2xl lg:text-3xl font-headline font-bold text-on-surface">
-                Mes Documents
-              </h1>
-              <p className="text-sm text-on-surface-variant mt-1">
-                Coffre-fort numérique — Tous vos documents de projet
-              </p>
-            </div>
+        {/* ── Header ──────────────────────────────────────── */}
+        <div className="mb-6 sm:mb-8 flex items-center gap-4">
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-50 text-amber-600 flex-shrink-0">
+            <Archive className="w-5 h-5" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-on-surface tracking-tight">Mes Documents</h1>
+            <p className="text-sm text-on-surface-variant mt-0.5">
+              Coffre-fort numérique — tous vos documents de projet
+            </p>
           </div>
         </div>
 

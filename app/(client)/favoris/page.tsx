@@ -41,11 +41,7 @@ export default function FavoritesPage() {
       .select("*, professionals(*)")
       .eq("user_id", user.id);
 
-    if (error) {
-      console.error("Error fetching favorites:", error);
-    } else {
-      setFavorites((data as any[]) || []);
-    }
+    if (!error) setFavorites((data as any[]) || []);
     setIsLoading(false);
   };
 
