@@ -23,21 +23,13 @@ export default async function MySitePage() {
     .eq("user_id", user.id)
     .single();
 
-  if (proError?.code === '42501') {
-    console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: professionals, User:', user.id);
-  }
-
   if (!pro) redirect("/pro/profil");
 
-  const { data: portfolio, error: portfolioError } = await supabase
+  const { data: portfolio } = await supabase
     .from("professional_portfolio")
     .select("copy_quiz_answers, hero_subtitle, about_text, about_image_url, custom_domain, domain_status, show_realizations_section, show_services_section, show_products_section, show_about_section, show_calendar_section")
     .eq("professional_id", pro.id)
     .single();
-
-  if (portfolioError?.code === '42501') {
-    console.error('[RLS] ❌ EXPLICIT RLS BLOCKING! Table: professional_portfolio, User:', user.id);
-  }
 
   const isPaid = true; // DEV MODE: paywall bypassed — restore check before production
 

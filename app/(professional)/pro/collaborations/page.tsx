@@ -106,10 +106,6 @@ const COMMENT_STATUS_CONFIG: Record<string, { label: string; className: string }
 // ── Page ─────────────────────────────────────────────────────────────────────
 
 export default function ProCollaborationsPage() {
-  console.log('[COMPONENT] ========================================');
-  console.log('[COMPONENT] ProCollaborationsPage (social inbox) RENDER');
-  console.log('[COMPONENT] ========================================');
-
   // ── Shared state ────────────────────────────────────────────────────────────
   const [professionalId, setProfessionalId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -132,42 +128,24 @@ export default function ProCollaborationsPage() {
 
   // ── Initial load: auth + professional + collaborations ──────────────────────
   useEffect(() => {
-    console.log('[EFFECT] ProCollaborationsPage mount — fetching initial data');
-
     const init = async () => {
       const supabase = createClient();
 
-      // AUTH
-      console.log('[AUTH] Checking session...');
       const { data: { user }, error: authError } = await supabase.auth.getUser();
-      console.log('[AUTH] Result:', { userId: user?.id, error: authError?.message });
-
       if (authError || !user) {
-        console.error('[AUTH] ❌ Not authenticated');
         setError('Non authentifié');
         setIsLoading(false);
         return;
       }
 
-      // PROFESSIONAL ID
-      console.log('[DB] Fetching professional for user:', user.id);
-      const { data: pro, error: proError } = await supabase
+      const { data: pro } = await supabase
         .from('professionals')
         .select('id')
         .eq('user_id', user.id)
         .single();
 
-      console.log('[DB] Professional result:', { id: pro?.id, error: proError?.message, code: proError?.code });
-      if (proError?.code === '42501') console.error('[RLS] ❌ EXPLICIT RLS on professionals');
       if (!pro) { setIsLoading(false); return; }
-
       setProfessionalId(pro.id);
-      console.log('[STATE] professionalId set:', pro.id);
-
-      // COLLABORATIONS
-      console.log('[DB] ========================================');
-      console.log('[DB] Querying project_collaborations for pro:', pro.id);
-      console.log('[DB] ========================================');
 
       const { data: collabs, error: collabError } = await supabase
         .from('project_collaborations')
@@ -181,22 +159,10 @@ export default function ProCollaborationsPage() {
         .eq('professional_id', pro.id)
         .order('created_at', { ascending: false });
 
-      console.log('[DB] Collaborations result:', { count: collabs?.length, error: collabError?.message, code: collabError?.code });
-
-      if (collabError?.code === '42501') {
-        console.error('[RLS] ========================================');
-        console.error('[RLS] ❌ EXPLICIT RLS on project_collaborations SELECT');
-        console.error('[RLS] Fix: collab_pro_read policy (professional_id = own)');
-        console.error('[RLS] ========================================');
-      } else if (!collabError && (!collabs || collabs.length === 0)) {
-        console.warn('[RLS] ⚠️ SILENT — 0 collaborations returned. Check table for pro_id:', pro.id);
-      }
-
       if (collabError) { setError(collabError.message); }
       else { setCollaborations((collabs as CollaborationWithProject[]) || []); }
 
       setIsLoading(false);
-      console.log('[FETCH] ✅ Initial load complete');
     };
 
     init();
@@ -205,17 +171,10 @@ export default function ProCollaborationsPage() {
   // ── Lazy load Tab 2: Comments ───────────────────────────────────────────────
   const loadComments = async () => {
     if (commentsLoaded || commentsLoading || !professionalId) return;
-
-    console.log('[EFFECT] Loading comments for pro:', professionalId);
     setCommentsLoading(true);
 
     const supabase = createClient();
-
-    console.log('[DB] ========================================');
-    console.log('[DB] Querying realization_comments for pro:', professionalId);
-    console.log('[DB] ========================================');
-
-    const { data, error: commentsError } = await supabase
+    const { data } = await supabase
       .from('realization_comments')
       .select(`
         id, content, status, created_at, realization_id,
@@ -225,20 +184,6 @@ export default function ProCollaborationsPage() {
       .eq('realization:professional_realizations.professional_id', professionalId)
       .order('created_at', { ascending: false });
 
-    console.log('[DB] realization_comments result:', { count: data?.length, error: commentsError?.message, code: commentsError?.code });
-
-    if (commentsError?.code === '42501') {
-      console.error('[RLS] ========================================');
-      console.error('[RLS] ❌ EXPLICIT RLS on realization_comments SELECT');
-      console.error('[RLS] Fix: realization_comments_pro_read policy — migration 20260414000009');
-      console.error('[RLS] ========================================');
-    } else if (!commentsError && (!data || data.length === 0)) {
-      console.warn('[RLS] ⚠️ SILENT or no comments yet. Pro:', professionalId);
-      console.warn('[RLS] Check: realization_comments_pro_read policy is applied');
-    } else {
-      console.log('[DB] ✅ Comments loaded:', data?.length);
-    }
-
     setComments(((data as unknown) as PendingComment[]) || []);
     setCommentsLoaded(true);
     setCommentsLoading(false);
@@ -247,36 +192,14 @@ export default function ProCollaborationsPage() {
   // ── Lazy load Tab 3: Google Reviews ────────────────────────────────────────
   const loadGoogleReviews = async () => {
     if (googleLoaded || googleLoading || !professionalId) return;
-
-    console.log('[EFFECT] Loading Google reviews cache for pro:', professionalId);
     setGoogleLoading(true);
 
     const supabase = createClient();
-
-    console.log('[DB] ========================================');
-    console.log('[DB] Querying pro_google_reviews_cache for pro:', professionalId);
-    console.log('[DB] ========================================');
-
-    const { data, error: googleError } = await supabase
+    const { data } = await supabase
       .from('pro_google_reviews_cache')
       .select('*')
       .eq('pro_id', professionalId)
       .single();
-
-    console.log('[DB] Google reviews cache result:', {
-      found: !!data,
-      totalReviews: data?.total_reviews,
-      rating: data?.rating,
-      cachedAt: data?.cached_at,
-      error: googleError?.message,
-      code: googleError?.code,
-    });
-
-    if (googleError?.code === '42501') {
-      console.error('[RLS] ❌ EXPLICIT RLS on pro_google_reviews_cache SELECT');
-    } else if (googleError?.code === 'PGRST116') {
-      console.warn('[DB] No Google reviews cache for this pro — not connected yet');
-    }
 
     setGoogleCache(data as GoogleReviewsCache | null);
     setGoogleLoaded(true);
