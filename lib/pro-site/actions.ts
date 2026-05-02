@@ -6,16 +6,25 @@ import type { ProSiteItem, ProSiteSettings, ProSiteComment } from './types'
 
 export async function getProSiteSettings(professionalId: string): Promise<ProSiteSettings | null> {
   const supabase = await createClient()
-  const { data } = await supabase
-    .from('professional_portfolio')
-    .select('corner_style, color_mode, show_services_section, show_realizations_section, show_products_section, show_calendar_section')
-    .eq('professional_id', professionalId)
-    .single()
+  const [{ data }, { data: pro }] = await Promise.all([
+    supabase
+      .from('professional_portfolio')
+      .select('corner_style, color_mode, image_weight, spacing, show_services_section, show_realizations_section, show_products_section, show_calendar_section')
+      .eq('professional_id', professionalId)
+      .single(),
+    supabase
+      .from('professionals')
+      .select('brand_primary')
+      .eq('id', professionalId)
+      .single(),
+  ])
   if (!data) return null
   return {
     cornerStyle: (data.corner_style as ProSiteSettings['cornerStyle']) ?? 'rounded',
     colorMode: (data.color_mode as ProSiteSettings['colorMode']) ?? 'light',
-    logoColor: null,
+    logoColor: pro?.brand_primary ?? null,
+    imageWeight: (data.image_weight as ProSiteSettings['imageWeight']) ?? 'balanced',
+    spacing: (data.spacing as ProSiteSettings['spacing']) ?? 'standard',
     showServices: data.show_services_section ?? true,
     showRealisations: data.show_realizations_section ?? true,
     showProduits: data.show_products_section ?? true,

@@ -129,13 +129,16 @@ export default async function ProfessionalProfilePage({ params }: { params: Prom
 
   const cornerStyle = settings?.cornerStyle ?? 'rounded'
   const colorMode = settings?.colorMode ?? 'light'
+  const logoColor = settings?.logoColor ?? null
+  const imageWeight = settings?.imageWeight ?? 'balanced'
+  const spacing = settings?.spacing ?? 'standard'
   const proName = pro.business_name ?? pro.owner_name ?? slug
   const profession = pro.category ?? ''
   // If calendar is connected, link to the booking sub-page (to be created later)
   const calendarUrl = calendarToken ? `/professionnels/${slug}/prendre-rdv` : null
 
   return (
-    <ProSiteStyleProvider cornerStyle={cornerStyle} colorMode={colorMode} logoColor={null}>
+    <ProSiteStyleProvider cornerStyle={cornerStyle} colorMode={colorMode} logoColor={logoColor} imageWeight={imageWeight} spacing={spacing}>
       <ProSiteNav
         slug={slug}
         proName={proName}

@@ -1,5 +1,7 @@
 export type CornerStyle = 'square' | 'half-rounded' | 'rounded'
-export type ColorMode = 'light' | 'dark' | 'logo-color'
+export type ColorMode = 'light' | 'dark' | 'warm' | 'logo-color'
+export type ImageWeight = 'image' | 'balanced' | 'text'
+export type Spacing = 'spacious' | 'standard' | 'compact'
 export type ItemType = 'service' | 'realisation' | 'produit'
 
 export interface ProSiteItem {
@@ -24,6 +26,8 @@ export interface ProSiteSettings {
   cornerStyle: CornerStyle
   colorMode: ColorMode
   logoColor: string | null
+  imageWeight: ImageWeight
+  spacing: Spacing
   showServices: boolean
   showRealisations: boolean
   showProduits: boolean

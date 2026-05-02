@@ -52,7 +52,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
   const relatedItems = allServices.filter((s) => s.id !== id)
 
   return (
-    <ProSiteStyleProvider cornerStyle={settings?.cornerStyle ?? 'rounded'} colorMode={settings?.colorMode ?? 'light'} logoColor={null}>
+    <ProSiteStyleProvider cornerStyle={settings?.cornerStyle ?? 'rounded'} colorMode={settings?.colorMode ?? 'light'} logoColor={settings?.logoColor ?? null} imageWeight={settings?.imageWeight} spacing={settings?.spacing}>
       <ProSiteNav slug={pro.slug} proName={proName} showServices={true} showRealisations={settings?.showRealisations ?? true} showProduits={settings?.showProduits ?? true} calendarUrl={null} />
       <main>
         <ProSiteDetailPage

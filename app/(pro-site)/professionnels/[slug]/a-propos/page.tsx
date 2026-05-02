@@ -31,7 +31,7 @@ export default async function AProposPage({ params }: { params: Promise<{ slug: 
   const proName = pro.business_name ?? pro.owner_name ?? slug
 
   return (
-    <ProSiteStyleProvider cornerStyle={settings?.cornerStyle ?? 'rounded'} colorMode={settings?.colorMode ?? 'light'} logoColor={null}>
+    <ProSiteStyleProvider cornerStyle={settings?.cornerStyle ?? 'rounded'} colorMode={settings?.colorMode ?? 'light'} logoColor={settings?.logoColor ?? null} imageWeight={settings?.imageWeight} spacing={settings?.spacing}>
       <ProSiteNav
         slug={pro.slug}
         proName={proName}

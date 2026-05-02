@@ -8,11 +8,11 @@ import { ProSiteNav } from '@/components/pro-site/ProSiteNav'
 import { ProSiteContact } from '@/components/pro-site/ProSiteContact'
 import { ProSiteFooter } from '@/components/pro-site/ProSiteFooter'
 import { getProSiteSettings } from '@/lib/pro-site/actions'
-import type { CornerStyle, ColorMode } from '@/lib/pro-site/types'
+import type { CornerStyle, ColorMode, ImageWeight, Spacing } from '@/lib/pro-site/types'
 
 interface Props {
   params: Promise<{ slug: string }>
-  searchParams: Promise<{ corner_style?: string; color_mode?: string }>
+  searchParams: Promise<{ corner_style?: string; color_mode?: string; image_weight?: string; spacing?: string }>
 }
 
 export default async function PreviewAProposPage({ params, searchParams }: Props) {
@@ -47,9 +47,11 @@ export default async function PreviewAProposPage({ params, searchParams }: Props
   const basePath = `/pro/preview/${slug}`
   const cornerStyle = (sp.corner_style as CornerStyle | undefined) ?? settings?.cornerStyle ?? 'rounded'
   const colorMode = (sp.color_mode as ColorMode | undefined) ?? settings?.colorMode ?? 'light'
+  const imageWeight = (sp.image_weight as ImageWeight | undefined) ?? settings?.imageWeight ?? 'balanced'
+  const spacing = (sp.spacing as Spacing | undefined) ?? settings?.spacing ?? 'standard'
 
   return (
-    <ProSiteStyleProvider cornerStyle={cornerStyle} colorMode={colorMode} logoColor={null}>
+    <ProSiteStyleProvider cornerStyle={cornerStyle} colorMode={colorMode} logoColor={settings?.logoColor ?? null} imageWeight={imageWeight} spacing={spacing}>
       <div className="sticky top-0 z-[100] bg-amber-400 text-amber-900 text-center text-xs font-bold py-1.5">
         MODE APERÇU
       </div>

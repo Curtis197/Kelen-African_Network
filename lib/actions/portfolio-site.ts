@@ -43,6 +43,7 @@ function toCornerStyle(imageShape?: string) {
 
 function toColorMode(mood?: string) {
   if (mood === "dark") return "dark";
+  if (mood === "warm") return "warm";
   return "light";
 }
 
@@ -58,6 +59,8 @@ export async function saveStyleQuiz(answers: StyleAnswers) {
         style_tokens: answers,
         corner_style: toCornerStyle(answers.imageShape),
         color_mode: toColorMode(answers.mood),
+        image_weight: answers.imageWeight,
+        spacing: answers.spacing,
         updated_at: new Date().toISOString(),
       },
       { onConflict: "professional_id" }

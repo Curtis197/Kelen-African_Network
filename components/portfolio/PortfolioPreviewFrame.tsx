@@ -37,10 +37,12 @@ export function PortfolioPreviewFrame({ slug, styleOverride }: Props) {
 
   const cornerStyle = toCornerStyle(styleOverride?.imageShape);
   const colorMode = toColorMode(styleOverride?.mood);
+  const imageWeight = styleOverride?.imageWeight ?? 'balanced';
+  const spacing = styleOverride?.spacing ?? 'standard';
 
   const previewUrl =
     `/pro/preview/${slug}` +
-    `?corner_style=${cornerStyle}&color_mode=${colorMode}`;
+    `?corner_style=${cornerStyle}&color_mode=${colorMode}&image_weight=${imageWeight}&spacing=${spacing}`;
 
   return (
     <div className="space-y-3">

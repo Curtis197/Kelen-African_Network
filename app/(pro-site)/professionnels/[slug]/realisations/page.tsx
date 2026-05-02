@@ -20,7 +20,7 @@ export default async function RealisationsListPage({ params }: { params: Promise
   const proName = pro.business_name ?? pro.owner_name ?? slug
 
   return (
-    <ProSiteStyleProvider cornerStyle={settings?.cornerStyle ?? 'rounded'} colorMode={settings?.colorMode ?? 'light'} logoColor={null}>
+    <ProSiteStyleProvider cornerStyle={settings?.cornerStyle ?? 'rounded'} colorMode={settings?.colorMode ?? 'light'} logoColor={settings?.logoColor ?? null} imageWeight={settings?.imageWeight} spacing={settings?.spacing}>
       <ProSiteNav slug={pro.slug} proName={proName} showServices={settings?.showServices ?? true} showRealisations={true} showProduits={settings?.showProduits ?? true} calendarUrl={null} />
       <main>
         <ProSiteListPage slug={pro.slug} sectionPath="realisations" sectionTitle="Réalisations" proName={proName} profession={pro.category ?? ''} items={items} />
