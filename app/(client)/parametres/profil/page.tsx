@@ -32,20 +32,12 @@ export default function ProfileSettingsPage() {
   // Fetch profile on mount
   useEffect(() => {
     const fetchProfile = async () => {
-      console.log('[PROFILE PAGE] Fetching profile data');
       const result = await getUserProfile();
-      console.log('[PROFILE PAGE] Result:', result);
-
       if (!result.success) {
-        console.error('[PROFILE PAGE] Failed to fetch profile:', result.error);
         toast.error("Erreur lors du chargement du profil");
         return;
       }
-
-      if (result.data) {
-        console.log('[PROFILE PAGE] Profile loaded:', result.data);
-        setFormData(result.data);
-      }
+      if (result.data) setFormData(result.data);
       setLoading(false);
     };
 
@@ -54,25 +46,18 @@ export default function ProfileSettingsPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('[PROFILE PAGE] Form submitted:', formData);
-
     startTransition(async () => {
       const result = await updateUserProfile(formData);
-      console.log('[PROFILE PAGE] Update result:', result);
-
       if (result.success) {
-        console.log('[PROFILE PAGE] Profile updated successfully');
         toast.success("Profil mis à jour avec succès");
         router.refresh();
       } else {
-        console.error('[PROFILE PAGE] Update failed:', result.error);
         toast.error(result.error || "Erreur lors de la mise à jour");
       }
     });
   };
 
   const handleChange = (field: keyof ProfileFormData, value: string | boolean) => {
-    console.log('[PROFILE PAGE] Field changed:', field, value);
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 

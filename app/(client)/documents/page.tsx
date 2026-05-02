@@ -31,88 +31,45 @@ export default function ClientDocumentsPage() {
   const [imgErrors, setImgErrors] = useState<Set<string>>(new Set());
   const supabase = createClient();
 
-  console.log("[ClientDocuments] Page mounted");
-
   useEffect(() => {
     fetchProjects();
     fetchDocuments();
   }, []);
 
   const fetchProjects = async () => {
-    console.log("[ClientDocuments] Fetching user projects");
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      console.error("[ClientDocuments] No user authenticated");
-      return;
-    }
-
-    console.log("[ClientDocuments] User ID:", user.id);
-
-    const { data, error } = await supabase
+    if (!user) return;
+    const { data } = await supabase
       .from("user_projects")
       .select("id, title")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false });
-
-    if (error) {
-      console.error("[ClientDocuments] Error fetching projects:", error);
-      if (error.code === '42501') {
-        console.error('[ClientDocuments] [RLS] ❌ RLS POLICY VIOLATION - user_projects table');
-        console.error('[ClientDocuments] [RLS] User ID:', user.id);
-        console.error('[ClientDocuments] [RLS] Fix: Check SELECT policy on user_projects table');
-      }
-      return;
-    }
-
-    console.log("[ClientDocuments] Projects fetched:", data?.length || 0);
-    setProjects((data as UserProject[]) || []);
+    if (data) setProjects((data as UserProject[]) || []);
   };
 
   const fetchDocuments = async () => {
-    console.log("[ClientDocuments] Fetching all documents");
     setIsLoading(true);
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      console.error("[ClientDocuments] No user authenticated");
-      setIsLoading(false);
-      return;
-    }
+    if (!user) { setIsLoading(false); return; }
 
-    console.log("[ClientDocuments] User ID:", user.id);
-
-    // Get all projects first
     const { data: projectsData } = await supabase
       .from("user_projects")
       .select("id")
       .eq("user_id", user.id);
 
     if (!projectsData || projectsData.length === 0) {
-      console.log("[ClientDocuments] No projects found");
       setDocuments([]);
       setIsLoading(false);
       return;
     }
 
-    const projectIds = projectsData.map(p => p.id);
-
-    // Fetch documents for all user's projects
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("project_documents")
       .select("*")
-      .in("project_id", projectIds)
+      .in("project_id", projectsData.map(p => p.id))
       .order("created_at", { ascending: false });
 
-    if (error) {
-      console.error("[ClientDocuments] Error fetching documents:", error);
-      if (error.code === '42501') {
-        console.error('[ClientDocuments] [RLS] ❌ RLS POLICY VIOLATION - project_documents table');
-        console.error('[ClientDocuments] [RLS] User ID:', user.id);
-        console.error('[ClientDocuments] [RLS] Fix: Check SELECT policy on project_documents table for clients');
-      }
-    } else {
-      console.log("[ClientDocuments] Documents fetched:", data?.length || 0);
-      setDocuments((data as ProjectDocument[]) || []);
-    }
+    if (data) setDocuments((data as ProjectDocument[]) || []);
     setIsLoading(false);
   };
 

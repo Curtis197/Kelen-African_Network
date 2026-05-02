@@ -8,7 +8,7 @@ import { getProjectLogs } from '@/lib/actions/daily-logs';
 import { getMediaUrl } from '@/lib/actions/log-media';
 import LogTimeline from '@/components/journal/LogTimeline';
 import OfflineIndicator from '@/components/journal/OfflineIndicator';
-import { Plus, ArrowLeft } from 'lucide-react';
+import { Plus, ArrowLeft, BookOpen } from 'lucide-react';
 import type { ProjectLog } from '@/lib/types/daily-logs';
 import { getAllDrafts, getSyncQueue, deleteDraft, markDraftPendingSync, clearSyncQueue, getDraft } from '@/lib/utils/daily-log-drafts';
 import { useOnlineStatus } from '@/hooks/use-online-status';
@@ -37,8 +37,6 @@ export default function JournalListPage() {
     else setIsLoadingMore(true);
 
     const offset = pageNum * PAGE_SIZE;
-    console.log('[JOURNAL] Fetching logs page:', pageNum, 'offset:', offset);
-    
     const data = await getProjectLogs(projectId, false, PAGE_SIZE, offset);
     
     if (isAppend) {
@@ -138,8 +136,7 @@ export default function JournalListPage() {
         // Delete draft on success
         await deleteDraft(draftId);
         synced++;
-      } catch (err) {
-        console.error('Draft sync failed:', err);
+      } catch {
         failed++;
       }
     }
@@ -197,16 +194,19 @@ export default function JournalListPage() {
           <div className="flex items-center gap-4">
             <button
               onClick={() => router.back()}
-              className="p-2 rounded-xl hover:bg-surface-container transition-colors"
+              className="flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-white text-on-surface-variant hover:text-on-surface transition-colors"
               aria-label="Retour"
             >
-              <ArrowLeft className="w-5 h-5" />
+              <ArrowLeft className="w-4 h-4" />
             </button>
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-50 text-amber-600 flex-shrink-0">
+              <BookOpen className="w-5 h-5" />
+            </div>
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-on-surface">
+              <h1 className="text-2xl font-bold text-on-surface tracking-tight">
                 Journal du chantier
               </h1>
-              <p className="text-sm text-on-surface-variant mt-1">
+              <p className="text-sm text-on-surface-variant mt-0.5">
                 Rapports quotidiens d'avancement
               </p>
             </div>
