@@ -116,36 +116,56 @@ export function ProProjectsPage() {
     { value: "paused", label: "En pause" },
   ];
 
+  // ── Derived stats ────────────────────────────────────────
+  const stats = [
+    { label: "Total", value: projects.length, color: "text-on-surface", bg: "bg-surface-container" },
+    { label: "En cours", value: projects.filter(p => p.status === "in_progress").length, color: "text-blue-700", bg: "bg-blue-50" },
+    { label: "Terminés", value: projects.filter(p => p.status === "completed").length, color: "text-kelen-green-700", bg: "bg-kelen-green-50" },
+    { label: "Portfolio public", value: projects.filter(p => p.is_public).length, color: "text-amber-700", bg: "bg-amber-50" },
+  ];
+
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      {/* ── Header ───────────────────────────────────────── */}
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-on-surface">Mes projets</h1>
+          <h1 className="text-2xl font-bold text-on-surface tracking-tight">Mes projets</h1>
           <p className="text-sm text-on-surface-variant mt-1">
-            Gérez vos projets et ajoutez-les à votre portfolio
+            Gérez vos chantiers et documentez votre expertise
           </p>
         </div>
         <Link
           href="/pro/projets/nouveau"
-          className="inline-flex items-center gap-2 px-5 py-3 bg-primary text-on-primary rounded-xl font-semibold text-sm hover:opacity-90 transition-opacity w-fit"
+          className="inline-flex items-center gap-2 px-5 py-3 bg-primary text-on-primary rounded-xl font-semibold text-sm hover:opacity-90 transition-opacity w-fit shadow-md shadow-primary/20"
         >
           <Plus className="w-4 h-4" />
           Nouveau projet
         </Link>
       </div>
 
-      {/* Filters & View Toggle */}
-      <div className="flex flex-wrap items-center justify-between gap-4">
+      {/* ── Stat cards ───────────────────────────────────── */}
+      {!isLoading && projects.length > 0 && (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {stats.map((s) => (
+            <div key={s.label} className={`rounded-xl border border-border bg-white p-4 shadow-sm`}>
+              <p className="text-xs font-medium text-on-surface-variant">{s.label}</p>
+              <p className={`mt-1 text-2xl font-black ${s.color}`}>{s.value}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* ── Filters & View Toggle ─────────────────────── */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap gap-2">
           {filters.map((f) => (
             <button
               key={f.value}
               onClick={() => setFilter(f.value)}
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
+              className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
                 filter === f.value
-                  ? "bg-primary text-on-primary"
-                  : "bg-surface-container text-on-surface-variant hover:bg-surface-container-high"
+                  ? "bg-primary text-on-primary shadow-sm shadow-primary/20"
+                  : "bg-white border border-border text-on-surface-variant hover:border-primary/30 hover:text-on-surface"
               }`}
             >
               {f.label}
@@ -188,18 +208,20 @@ export function ProProjectsPage() {
           ))}
         </div>
       ) : projects.length === 0 ? (
-        <div className="text-center py-16 bg-surface-container-low rounded-2xl">
-          <Construction className="w-12 h-12 mx-auto text-on-surface-variant/40 mb-4" />
-          <h3 className="text-lg font-semibold text-on-surface mb-2">Aucun projet</h3>
-          <p className="text-sm text-on-surface-variant mb-6">
-            Créez votre premier projet pour commencer à documenter votre travail
+        <div className="flex flex-col items-center justify-center py-20 rounded-2xl border-2 border-dashed border-border bg-white text-center px-6">
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-surface-container mb-5">
+            <Construction className="w-8 h-8 text-on-surface-variant/40" />
+          </div>
+          <h3 className="text-lg font-bold text-on-surface mb-2">Aucun projet pour l'instant</h3>
+          <p className="text-sm text-on-surface-variant mb-6 max-w-xs">
+            Créez votre premier projet pour documenter votre travail et enrichir votre portfolio
           </p>
           <Link
             href="/pro/projets/nouveau"
-            className="inline-flex items-center gap-2 px-5 py-3 bg-primary text-on-primary rounded-xl font-semibold text-sm"
+            className="inline-flex items-center gap-2 px-5 py-3 bg-primary text-on-primary rounded-xl font-semibold text-sm shadow-md shadow-primary/20 hover:opacity-90 transition-opacity"
           >
             <Plus className="w-4 h-4" />
-            Créer un projet
+            Créer mon premier projet
           </Link>
         </div>
       ) : (
@@ -350,10 +372,10 @@ export function ProProjectsPage() {
             </div>
           ) : (
             /* List View */
-            <div className="bg-surface-container-low rounded-2xl">
-              <div className="overflow-hidden">
+            <div className="rounded-2xl border border-border bg-white shadow-sm overflow-hidden">
+              <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-surface-container-high/30 border-b border-outline-variant/20">
+                <thead className="bg-surface-container-low border-b border-border">
                   <tr>
                     <th className="px-6 py-4 text-left text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Projet</th>
                     <th className="px-6 py-4 text-left text-[10px] font-bold text-on-surface-variant uppercase tracking-wider hidden md:table-cell">Statut</th>
