@@ -208,46 +208,21 @@ export default function ProCollaborationsPage() {
 
   // ── Inline comment moderation ───────────────────────────────────────────────
   const moderateComment = async (commentId: string, status: 'approved' | 'rejected') => {
-    console.log('[ACTION] ========================================');
-    console.log('[ACTION] moderateComment STARTED');
-    console.log('[ACTION] commentId:', commentId, 'status:', status);
-    console.log('[ACTION] ========================================');
-
     setModeratingId(commentId);
-    console.log('[STATE] moderatingId →', commentId);
-
     const supabase = createClient();
-
     const { error } = await supabase
       .from('realization_comments')
       .update({ status })
       .eq('id', commentId);
 
-    console.log('[DB] realization_comments UPDATE result:', { error: error?.message, code: error?.code });
-
-    if (error?.code === '42501') {
-      console.error('[RLS] ========================================');
-      console.error('[RLS] ❌ EXPLICIT RLS on realization_comments UPDATE');
-      console.error('[RLS] commentId:', commentId);
-      console.error('[RLS] Fix: realization_comments_moderate policy (UPDATE for own realizations)');
-      console.error('[RLS] ========================================');
-    } else if (error) {
-      console.error('[ACTION] ❌ Moderation failed (NOT RLS):', error.message);
-    } else {
-      console.log('[ACTION] ✅ Comment moderated:', commentId, '→', status);
-      setComments(prev =>
-        prev.map(c => c.id === commentId ? { ...c, status } : c)
-      );
-      console.log('[STATE] comments updated locally for:', commentId);
+    if (!error) {
+      setComments(prev => prev.map(c => c.id === commentId ? { ...c, status } : c));
     }
-
     setModeratingId(null);
-    console.log('[STATE] moderatingId → null');
   };
 
   // ── Render guards ────────────────────────────────────────────────────────────
   if (isLoading) {
-    console.log('[RENDER] → Loading spinner');
     return (
       <div className="min-h-screen bg-surface flex items-center justify-center">
         <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
@@ -256,7 +231,6 @@ export default function ProCollaborationsPage() {
   }
 
   if (error) {
-    console.error('[RENDER] → Error state:', error);
     return (
       <div className="min-h-screen bg-surface flex flex-col items-center justify-center p-8 text-center">
         <XCircle className="w-12 h-12 text-red-400 mb-4" />
@@ -265,8 +239,6 @@ export default function ProCollaborationsPage() {
       </div>
     );
   }
-
-  console.log('[RENDER] → Main 3-tab social inbox');
 
   const activeCollabs  = collaborations.filter(c => ['pending', 'negotiating', 'active'].includes(c.status));
   const archivedCollabs = collaborations.filter(c => ['declined', 'not_picked', 'terminated'].includes(c.status));
@@ -296,7 +268,6 @@ export default function ProCollaborationsPage() {
         <Tabs
           defaultValue="proposals"
           onValueChange={(tab) => {
-            console.log('[ACTION] Tab switched to:', tab);
             if (tab === 'comments') loadComments();
             if (tab === 'google') loadGoogleReviews();
           }}
@@ -379,10 +350,7 @@ export default function ProCollaborationsPage() {
                   {(['pending', 'approved', 'all'] as const).map(f => (
                     <button
                       key={f}
-                      onClick={() => {
-                        console.log('[ACTION] Comment filter changed to:', f);
-                        setCommentFilter(f);
-                      }}
+                      onClick={() => setCommentFilter(f)}
                       className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${
                         commentFilter === f
                           ? 'bg-primary text-on-primary'
@@ -463,7 +431,6 @@ export default function ProCollaborationsPage() {
                     href={`https://business.google.com/reviews`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    onClick={() => console.log('[ACTION] Opening Google Business reviews')}
                     className="inline-flex items-center gap-2 px-4 py-2 bg-surface-container border border-outline-variant/20 rounded-xl text-sm font-semibold text-on-surface hover:bg-surface-container-high transition-colors"
                   >
                     <ExternalLink className="w-4 h-4" />
@@ -493,7 +460,6 @@ export default function ProCollaborationsPage() {
 // ── Sub-components ────────────────────────────────────────────────────────────
 
 function CollaborationCard({ collab }: { collab: CollaborationWithProject }) {
-  console.log('[COMPONENT] CollaborationCard render:', { id: collab.id, status: collab.status });
   const cfg = COLLAB_STATUS_CONFIG[collab.status] || COLLAB_STATUS_CONFIG['pending'];
   const project = collab.project;
 
@@ -555,7 +521,6 @@ function CommentCard({
   onApprove: () => void;
   onReject: () => void;
 }) {
-  console.log('[COMPONENT] CommentCard render:', { id: comment.id, status: comment.status });
   const statusCfg = COMMENT_STATUS_CONFIG[comment.status];
   const initials = comment.author?.display_name
     ? comment.author.display_name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase()
