@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { getNewsletterContacts, getSentNewsletters } from "@/lib/actions/newsletters";
 import { NewsletterComposer } from "@/components/pro/NewsletterComposer";
+import { Mail, Users, Send, BarChart2 } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Newsletter — Kelen Pro",
@@ -26,35 +27,65 @@ export default async function NewsletterPage() {
     getSentNewsletters(),
   ]);
 
-  return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">Newsletter</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Envoyez des mises à jour à vos clients directement depuis votre dashboard.
-        </p>
-      </div>
+  const totalRecipients = sentNewsletters.reduce((sum, n) => sum + n.recipient_count, 0);
 
-      {/* Stats row */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-        <div className="rounded-xl border border-border bg-surface-container-low p-5">
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Contacts</p>
-          <p className="mt-1 text-2xl font-bold text-foreground">{contacts.length}</p>
+  const stats = [
+    {
+      label: "Contacts",
+      value: contacts.length,
+      icon: <Users className="w-4 h-4" />,
+      color: "bg-blue-50 text-blue-600",
+    },
+    {
+      label: "Envois effectués",
+      value: sentNewsletters.length,
+      icon: <Send className="w-4 h-4" />,
+      color: "bg-kelen-green-50 text-kelen-green-600",
+    },
+    {
+      label: "Total destinataires",
+      value: totalRecipients,
+      icon: <BarChart2 className="w-4 h-4" />,
+      color: "bg-amber-50 text-amber-600",
+    },
+  ];
+
+  return (
+    <div className="max-w-4xl space-y-8">
+      {/* ── Header ────────────────────────────────────────── */}
+      <div className="flex items-center gap-4">
+        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-kelen-green-50 text-kelen-green-600 flex-shrink-0">
+          <Mail className="w-5 h-5" />
         </div>
-        <div className="rounded-xl border border-border bg-surface-container-low p-5">
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Envois</p>
-          <p className="mt-1 text-2xl font-bold text-foreground">{sentNewsletters.length}</p>
-        </div>
-        <div className="rounded-xl border border-border bg-surface-container-low p-5">
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Total destinataires</p>
-          <p className="mt-1 text-2xl font-bold text-foreground">
-            {sentNewsletters.reduce((sum, n) => sum + n.recipient_count, 0)}
+        <div>
+          <h1 className="text-2xl font-bold text-on-surface tracking-tight">Newsletter</h1>
+          <p className="text-sm text-on-surface-variant mt-0.5">
+            Envoyez des mises à jour à vos clients directement depuis votre dashboard.
           </p>
         </div>
       </div>
 
-      {/* Composer + history */}
+      {/* ── Stat cards ────────────────────────────────────── */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        {stats.map((s) => (
+          <div
+            key={s.label}
+            className="rounded-2xl border border-border bg-white p-4 shadow-sm flex items-center gap-4"
+          >
+            <div className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl ${s.color}`}>
+              {s.icon}
+            </div>
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-on-surface-variant">
+                {s.label}
+              </p>
+              <p className="text-2xl font-black text-on-surface leading-none mt-0.5">{s.value}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Composer + history ────────────────────────────── */}
       <NewsletterComposer
         contacts={contacts}
         sentNewsletters={sentNewsletters}
