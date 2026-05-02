@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { RegisterForm } from "@/components/forms/RegisterForm";
 import { GoogleButton } from "@/components/auth/GoogleButton";
+import { WhatsAppButton } from "@/components/auth/WhatsAppButton";
 
 export const metadata: Metadata = {
   title: "Inscription Pro — Kelen",
@@ -40,8 +41,11 @@ export default function ProRegisterPage() {
         </p>
       </div>
 
-      {/* Google OAuth */}
-      <GoogleButton role="professional" />
+      {/* OAuth buttons */}
+      <div className="space-y-2.5">
+        <GoogleButton role="professional" />
+        <WhatsAppButton role="professional" />
+      </div>
 
       {/* Divider */}
       <div className="relative my-5">

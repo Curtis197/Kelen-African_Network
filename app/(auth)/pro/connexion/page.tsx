@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LoginForm } from "@/components/forms/LoginForm";
+import { GoogleButton } from "@/components/auth/GoogleButton";
+import { WhatsAppButton } from "@/components/auth/WhatsAppButton";
 
 export const dynamic = "force-dynamic";
 
@@ -40,6 +42,24 @@ export default function ProLoginPage() {
         <p className="mt-1.5 text-sm text-muted-foreground">
           Accédez à votre tableau de bord professionnel
         </p>
+      </div>
+
+      {/* OAuth buttons */}
+      <div className="mb-5 space-y-2.5">
+        <GoogleButton role="professional" />
+        <WhatsAppButton role="professional" />
+      </div>
+
+      {/* Divider */}
+      <div className="relative mb-5">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t border-border" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-white px-2.5 text-muted-foreground tracking-wider">
+            Ou continuer avec email
+          </span>
+        </div>
       </div>
 
       <LoginForm defaultRole="professional" />

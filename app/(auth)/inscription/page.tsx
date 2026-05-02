@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { RegisterForm } from "@/components/forms/RegisterForm";
 import { GoogleButton } from "@/components/auth/GoogleButton";
+import { WhatsAppButton } from "@/components/auth/WhatsAppButton";
 
 export const dynamic = "force-dynamic";
 
@@ -32,8 +33,11 @@ export default function RegisterPage() {
         </p>
       </div>
 
-      {/* Google OAuth */}
-      <GoogleButton role="client" />
+      {/* OAuth buttons */}
+      <div className="space-y-2.5">
+        <GoogleButton role="client" />
+        <WhatsAppButton role="client" />
+      </div>
 
       {/* Divider */}
       <div className="relative my-5">
