@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { ImagePlus, X, Upload, Type, FileText, ExternalLink, Save, Smartphone, Clock, Users, Link as LinkIcon, Plus, Wand2, User } from "lucide-react";
+import { ImagePlus, X, Upload, Type, FileText, ExternalLink, Save, Smartphone, Clock, Users, Link as LinkIcon, Plus, Wand2, User, CheckCircle2 } from "lucide-react";
 import AICopywritingDialog from "@/components/forms/AICopywritingDialog";
 
 interface ProProfileData {
@@ -260,6 +260,20 @@ export function ProProfileForm() {
     updateField("about_text", presentation);
   };
 
+  // ── Section completion ────────────────────────────────────
+  const sectionStatus = [
+    { key: "hero",        label: "Hero",        done: !!(formData.hero_image_url || formData.hero_tagline) },
+    { key: "photo",       label: "Photo",       done: !!formData.profile_picture_url },
+    { key: "about",       label: "À propos",    done: formData.about_text.length > 20 },
+    { key: "portfolio",   label: "Portfolio",   done: formData.portfolio_photos.length > 0 },
+    { key: "description", label: "Description", done: formData.description.length > 20 },
+    { key: "services",    label: "Services",    done: formData.services_offered.length > 0 },
+    { key: "details",     label: "Détails",     done: !!(formData.years_experience || formData.team_size) },
+    { key: "whatsapp",    label: "WhatsApp",    done: !!formData.whatsapp },
+  ];
+  const completedCount = sectionStatus.filter((s) => s.done).length;
+  const completionPct  = Math.round((completedCount / sectionStatus.length) * 100);
+
   if (isLoading) {
     return (
       <div className="space-y-6 animate-pulse p-4">
@@ -276,46 +290,108 @@ export function ProProfileForm() {
 
   return (
     <div className="space-y-8">
-      {/* Preview Button + AI Copywriting */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-        <div>
-          <p className="text-sm text-on-surface-variant">
-            Gérez l'apparence de votre page professionnelle
-          </p>
-          {slug && (
-            <p className="text-xs text-on-surface-variant/60 mt-0.5">
-              Votre page est visible à l'adresse:{' '}
-              <code className="text-primary">kelen.africa/professionnels/{slug}</code>
-            </p>
-          )}
+      {/* ── Progress + Actions ───────────────────────────── */}
+      <div className="rounded-2xl border border-border bg-white p-5 shadow-sm">
+        {/* Top row */}
+        <div className="flex items-center justify-between gap-4 mb-4">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-bold text-on-surface">
+                Complétude du profil
+              </span>
+              <span
+                className={`text-xs font-black px-2 py-0.5 rounded-full ${
+                  completionPct === 100
+                    ? "bg-kelen-green-100 text-kelen-green-700"
+                    : completionPct >= 50
+                    ? "bg-kelen-yellow-100 text-kelen-yellow-700"
+                    : "bg-kelen-red-50 text-kelen-red-600"
+                }`}
+              >
+                {completionPct}%
+              </span>
+            </div>
+            {slug && (
+              <p className="text-xs text-on-surface-variant/60 mt-0.5">
+                kelen.africa/professionnels/
+                <span className="text-primary font-medium">{slug}</span>
+              </p>
+            )}
+          </div>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <button
+              type="button"
+              onClick={() => setShowAIDialog(true)}
+              className="inline-flex items-center gap-1.5 px-3 py-2 bg-primary/10 text-primary rounded-xl text-xs font-semibold hover:bg-primary/20 transition-colors"
+            >
+              <Wand2 className="w-3.5 h-3.5" />
+              IA
+            </button>
+            <button
+              type="button"
+              onClick={openPreview}
+              className="inline-flex items-center gap-1.5 px-3 py-2 bg-surface-container text-on-surface rounded-xl text-xs font-semibold hover:bg-surface-container-high transition-colors"
+            >
+              <ExternalLink className="w-3.5 h-3.5" />
+              Aperçu
+            </button>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => setShowAIDialog(true)}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-xl text-sm font-semibold hover:bg-primary/20 transition-colors"
-          >
-            <Wand2 className="w-4 h-4" />
-            Générer avec l'IA
-          </button>
-          <button
-            type="button"
-            onClick={openPreview}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-surface-container text-on-surface rounded-xl text-sm font-semibold hover:bg-surface-container-high transition-colors"
-            title="Ouvrir la page publique dans un nouvel onglet"
-          >
-            <ExternalLink className="w-4 h-4" />
-            Aperçu
-          </button>
+
+        {/* Progress bar */}
+        <div className="h-2 rounded-full bg-surface-container-high overflow-hidden">
+          <div
+            className="h-full rounded-full transition-all duration-500"
+            style={{
+              width: `${completionPct}%`,
+              background:
+                completionPct === 100
+                  ? "#009639"
+                  : completionPct >= 50
+                  ? "#FCCF00"
+                  : "#CE1126",
+            }}
+          />
+        </div>
+
+        {/* Section pills */}
+        <div className="mt-3 flex flex-wrap gap-1.5">
+          {sectionStatus.map((s) => (
+            <span
+              key={s.key}
+              className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium ${
+                s.done
+                  ? "bg-kelen-green-50 text-kelen-green-700"
+                  : "bg-surface-container text-on-surface-variant"
+              }`}
+            >
+              {s.done ? (
+                <CheckCircle2 className="w-2.5 h-2.5" />
+              ) : (
+                <span className="w-2.5 h-2.5 rounded-full border border-current opacity-40" />
+              )}
+              {s.label}
+            </span>
+          ))}
         </div>
       </div>
 
       {/* ── Section 1: Hero Section ─────────────────────── */}
-      <div className="bg-surface-container-low rounded-2xl p-6 space-y-5">
-        <h3 className="text-base font-bold text-on-surface flex items-center gap-2">
-          <ImagePlus className="w-4 h-4 text-primary" />
-          Section Hero
-        </h3>
+      <div className="rounded-2xl border border-border bg-white overflow-hidden shadow-sm">
+        <div className="flex items-center justify-between gap-3 border-b border-border px-6 py-4">
+          <h3 className="flex items-center gap-2.5 text-sm font-bold text-on-surface">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-50 text-blue-600 flex-shrink-0">
+              <ImagePlus className="w-3.5 h-3.5" />
+            </span>
+            Section Hero
+          </h3>
+          {sectionStatus[0].done && (
+            <span className="flex items-center gap-1 text-xs font-medium text-kelen-green-600">
+              <CheckCircle2 className="w-3.5 h-3.5" /> Complété
+            </span>
+          )}
+        </div>
+        <div className="p-6 space-y-5">
 
         {/* Hero Image */}
         <div>
@@ -368,14 +444,25 @@ export function ProProfileForm() {
             {formData.hero_tagline.length}/150
           </p>
         </div>
+        </div>
       </div>
 
       {/* ── Section 2: Profile Photo ────────────────────── */}
-      <div className="bg-surface-container-low rounded-2xl p-6 space-y-4">
-        <h3 className="text-base font-bold text-on-surface flex items-center gap-2">
-          <ImagePlus className="w-4 h-4 text-primary" />
-          Photo de Profil
-        </h3>
+      <div className="rounded-2xl border border-border bg-white overflow-hidden shadow-sm">
+        <div className="flex items-center justify-between gap-3 border-b border-border px-6 py-4">
+          <h3 className="flex items-center gap-2.5 text-sm font-bold text-on-surface">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-green-50 text-green-600 flex-shrink-0">
+              <User className="w-3.5 h-3.5" />
+            </span>
+            Photo de Profil
+          </h3>
+          {sectionStatus[1].done && (
+            <span className="flex items-center gap-1 text-xs font-medium text-kelen-green-600">
+              <CheckCircle2 className="w-3.5 h-3.5" /> Complété
+            </span>
+          )}
+        </div>
+        <div className="p-6 space-y-4">
         <div className="flex items-center gap-6">
           <div className="w-24 h-24 relative rounded-xl overflow-hidden bg-surface-container border-2 border-outline-variant/20 flex-shrink-0">
             {profilePreview ? (
@@ -403,14 +490,25 @@ export function ProProfileForm() {
             </p>
           </div>
         </div>
+        </div>
       </div>
 
       {/* ── Section 3: About Text ───────────────────────── */}
-      <div className="bg-surface-container-low rounded-2xl p-6 space-y-4">
-        <h3 className="text-base font-bold text-on-surface flex items-center gap-2">
-          <FileText className="w-4 h-4 text-primary" />
-          Texte « À propos »
-        </h3>
+      <div className="rounded-2xl border border-border bg-white overflow-hidden shadow-sm">
+        <div className="flex items-center justify-between gap-3 border-b border-border px-6 py-4">
+          <h3 className="flex items-center gap-2.5 text-sm font-bold text-on-surface">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-orange-50 text-orange-600 flex-shrink-0">
+              <FileText className="w-3.5 h-3.5" />
+            </span>
+            Texte « À propos »
+          </h3>
+          {sectionStatus[2].done && (
+            <span className="flex items-center gap-1 text-xs font-medium text-kelen-green-600">
+              <CheckCircle2 className="w-3.5 h-3.5" /> Complété
+            </span>
+          )}
+        </div>
+        <div className="p-6 space-y-4">
         <textarea
           value={formData.about_text}
           onChange={(e) => updateField("about_text", e.target.value)}
@@ -422,14 +520,28 @@ export function ProProfileForm() {
         <p className="text-xs text-on-surface-variant/60 text-right">
           {formData.about_text.length}/2000
         </p>
+        </div>
       </div>
 
       {/* ── Section 4: Portfolio Photos ─────────────────── */}
-      <div className="bg-surface-container-low rounded-2xl p-6 space-y-4">
-        <h3 className="text-base font-bold text-on-surface flex items-center gap-2">
-          <ImagePlus className="w-4 h-4 text-primary" />
-          Portfolio ({formData.portfolio_photos.length}/{MAX_PHOTOS})
-        </h3>
+      <div className="rounded-2xl border border-border bg-white overflow-hidden shadow-sm">
+        <div className="flex items-center justify-between gap-3 border-b border-border px-6 py-4">
+          <h3 className="flex items-center gap-2.5 text-sm font-bold text-on-surface">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-purple-50 text-purple-600 flex-shrink-0">
+              <ImagePlus className="w-3.5 h-3.5" />
+            </span>
+            Portfolio
+            <span className="text-xs font-normal text-on-surface-variant">
+              ({formData.portfolio_photos.length}/{MAX_PHOTOS})
+            </span>
+          </h3>
+          {sectionStatus[3].done && (
+            <span className="flex items-center gap-1 text-xs font-medium text-kelen-green-600">
+              <CheckCircle2 className="w-3.5 h-3.5" /> Complété
+            </span>
+          )}
+        </div>
+        <div className="p-6 space-y-4">
 
         {/* Existing photos */}
         {formData.portfolio_photos.length > 0 && (
@@ -480,11 +592,25 @@ export function ProProfileForm() {
             </span>
           </div>
         )}
+        </div>
       </div>
 
       {/* ── Section 5: Description ──────────────────────── */}
-      <div className="bg-surface-container-low rounded-2xl p-6 space-y-4">
-        <h3 className="text-base font-bold text-on-surface">À propos de votre activité</h3>
+      <div className="rounded-2xl border border-border bg-white overflow-hidden shadow-sm">
+        <div className="flex items-center justify-between gap-3 border-b border-border px-6 py-4">
+          <h3 className="flex items-center gap-2.5 text-sm font-bold text-on-surface">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-teal-50 text-teal-600 flex-shrink-0">
+              <FileText className="w-3.5 h-3.5" />
+            </span>
+            Description de l'activité
+          </h3>
+          {sectionStatus[4].done && (
+            <span className="flex items-center gap-1 text-xs font-medium text-kelen-green-600">
+              <CheckCircle2 className="w-3.5 h-3.5" /> Complété
+            </span>
+          )}
+        </div>
+        <div className="p-6 space-y-4">
         <textarea
           value={formData.description}
           onChange={(e) => updateField("description", e.target.value)}
@@ -496,11 +622,25 @@ export function ProProfileForm() {
         <p className="text-xs text-on-surface-variant/60 text-right">
           {formData.description.length}/500
         </p>
+        </div>
       </div>
 
       {/* ── Section 6: Services ─────────────────────────── */}
-      <div className="bg-surface-container-low rounded-2xl p-6 space-y-4">
-        <h3 className="text-base font-bold text-on-surface">Services & Spécialités</h3>
+      <div className="rounded-2xl border border-border bg-white overflow-hidden shadow-sm">
+        <div className="flex items-center justify-between gap-3 border-b border-border px-6 py-4">
+          <h3 className="flex items-center gap-2.5 text-sm font-bold text-on-surface">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-50 text-amber-600 flex-shrink-0">
+              <Plus className="w-3.5 h-3.5" />
+            </span>
+            Services & Spécialités
+          </h3>
+          {sectionStatus[5].done && (
+            <span className="flex items-center gap-1 text-xs font-medium text-kelen-green-600">
+              <CheckCircle2 className="w-3.5 h-3.5" /> Complété
+            </span>
+          )}
+        </div>
+        <div className="p-6 space-y-4">
         <div className="flex gap-2">
           <input
             type="text"
@@ -538,70 +678,128 @@ export function ProProfileForm() {
             ))}
           </div>
         )}
+        </div>
       </div>
 
       {/* ── Section 7: Details ──────────────────────────── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="bg-surface-container-low rounded-2xl p-5 space-y-3">
-          <label className="text-sm font-medium text-on-surface-variant flex items-center gap-1.5">
-            <Clock className="w-3.5 h-3.5" />
-            Expérience (années)
-          </label>
-          <input
-            type="number"
-            value={formData.years_experience ?? ""}
-            onChange={(e) => updateField("years_experience", e.target.value ? parseInt(e.target.value) : null)}
-            className="w-full px-4 py-2.5 text-sm rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface"
-          />
+      <div className="rounded-2xl border border-border bg-white overflow-hidden shadow-sm">
+        <div className="flex items-center justify-between gap-3 border-b border-border px-6 py-4">
+          <h3 className="flex items-center gap-2.5 text-sm font-bold text-on-surface">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-50 text-slate-600 flex-shrink-0">
+              <Clock className="w-3.5 h-3.5" />
+            </span>
+            Expérience & Équipe
+          </h3>
+          {sectionStatus[6].done && (
+            <span className="flex items-center gap-1 text-xs font-medium text-kelen-green-600">
+              <CheckCircle2 className="w-3.5 h-3.5" /> Complété
+            </span>
+          )}
         </div>
-        <div className="bg-surface-container-low rounded-2xl p-5 space-y-3">
-          <label className="text-sm font-medium text-on-surface-variant flex items-center gap-1.5">
-            <Users className="w-3.5 h-3.5" />
-            Équipe (personnes)
-          </label>
-          <input
-            type="number"
-            value={formData.team_size ?? ""}
-            onChange={(e) => updateField("team_size", e.target.value ? parseInt(e.target.value) : null)}
-            className="w-full px-4 py-2.5 text-sm rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface"
-          />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-6">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-on-surface-variant flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5" />
+              Années d'expérience
+            </label>
+            <input
+              type="number"
+              value={formData.years_experience ?? ""}
+              onChange={(e) => updateField("years_experience", e.target.value ? parseInt(e.target.value) : null)}
+              className="w-full px-4 py-2.5 text-sm rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface"
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-on-surface-variant flex items-center gap-1.5">
+              <Users className="w-3.5 h-3.5" />
+              Taille de l'équipe
+            </label>
+            <input
+              type="number"
+              value={formData.team_size ?? ""}
+              onChange={(e) => updateField("team_size", e.target.value ? parseInt(e.target.value) : null)}
+              className="w-full px-4 py-2.5 text-sm rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface"
+            />
+          </div>
         </div>
       </div>
 
       {/* ── Section 8: WhatsApp ─────────────────────────── */}
-      <div className="bg-surface-container-low rounded-2xl p-6 space-y-3">
-        <label className="text-sm font-medium text-on-surface-variant flex items-center gap-1.5">
-          <Smartphone className="w-4 h-4" />
-          WhatsApp Business
-        </label>
-        <input
-          type="tel"
-          value={formData.whatsapp}
-          onChange={(e) => updateField("whatsapp", e.target.value)}
-          placeholder="+225 00 00 00 00 00"
-          className="w-full px-4 py-3 text-sm rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface placeholder:text-on-surface-variant/40"
-        />
+      <div className="rounded-2xl border border-border bg-white overflow-hidden shadow-sm">
+        <div className="flex items-center justify-between gap-3 border-b border-border px-6 py-4">
+          <h3 className="flex items-center gap-2.5 text-sm font-bold text-on-surface">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#25D366]/10 flex-shrink-0" style={{ color: "#25D366" }}>
+              <Smartphone className="w-3.5 h-3.5" />
+            </span>
+            WhatsApp Business
+          </h3>
+          {sectionStatus[7].done && (
+            <span className="flex items-center gap-1 text-xs font-medium text-kelen-green-600">
+              <CheckCircle2 className="w-3.5 h-3.5" /> Complété
+            </span>
+          )}
+        </div>
+        <div className="p-6">
+          <input
+            type="tel"
+            value={formData.whatsapp}
+            onChange={(e) => updateField("whatsapp", e.target.value)}
+            placeholder="+225 00 00 00 00 00"
+            className="w-full px-4 py-3 text-sm rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface placeholder:text-on-surface-variant/40"
+          />
+          <p className="mt-2 text-xs text-on-surface-variant/60">
+            Affiché sur votre page publique pour que les clients puissent vous contacter directement
+          </p>
+        </div>
       </div>
 
-      {/* ── Submit ──────────────────────────────────────── */}
-      <button
-        type="button"
-        onClick={onSubmit}
-        disabled={isSaving}
-        className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-primary text-on-primary rounded-2xl font-bold text-base hover:opacity-90 transition-opacity disabled:opacity-50 shadow-lg shadow-primary/20"
-      >
-        {isSaving ? (
-          <>
-            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-            Synchronisation...
-          </>
-        ) : (
-          <>
-            <Save className="w-5 h-5" />
-            Enregistrer toutes les modifications
-          </>
-        )}
-      </button>
+      {/* ── Sticky save footer ──────────────────────────── */}
+      <div className="sticky bottom-4 z-10">
+        <div className="rounded-2xl border border-border bg-white/90 p-3 shadow-xl shadow-black/10 backdrop-blur-md flex items-center gap-3">
+          {/* Completion mini-bar */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-xs text-on-surface-variant">
+                {completedCount}/{sectionStatus.length} sections complétées
+              </span>
+              <span className="text-xs font-bold text-on-surface">{completionPct}%</span>
+            </div>
+            <div className="h-1 rounded-full bg-surface-container-high overflow-hidden">
+              <div
+                className="h-full rounded-full transition-all duration-500"
+                style={{
+                  width: `${completionPct}%`,
+                  background:
+                    completionPct === 100
+                      ? "#009639"
+                      : completionPct >= 50
+                      ? "#FCCF00"
+                      : "#CE1126",
+                }}
+              />
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={onSubmit}
+            disabled={isSaving}
+            className="flex flex-shrink-0 items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-bold text-on-primary shadow-md shadow-primary/25 hover:opacity-90 transition-opacity disabled:opacity-50"
+          >
+            {isSaving ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Enregistrement…
+              </>
+            ) : (
+              <>
+                <Save className="w-4 h-4" />
+                Enregistrer
+              </>
+            )}
+          </button>
+        </div>
+      </div>
 
       {/* AI Copywriting Dialog */}
       <AICopywritingDialog
