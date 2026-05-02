@@ -161,11 +161,16 @@ export default function ProAnalyticsPage() {
 
   return (
     <main className="max-w-6xl">
-      <header className="mb-10">
-        <h1 className="text-3xl font-extrabold text-on-surface tracking-tight">Performance & visibilité</h1>
-        <p className="mt-2 text-on-surface-variant font-medium">
-          Analysez l&apos;impact de votre présence sur Kelen et optimisez votre taux d&apos;engagement.
-        </p>
+      <header className="mb-8 flex items-center gap-4">
+        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600 flex-shrink-0">
+          <Eye className="w-5 h-5" />
+        </div>
+        <div>
+          <h1 className="text-2xl font-bold text-on-surface tracking-tight">Performance & visibilité</h1>
+          <p className="text-sm text-on-surface-variant mt-0.5">
+            Analysez l&apos;impact de votre présence sur Kelen et optimisez votre taux d&apos;engagement.
+          </p>
+        </div>
       </header>
 
       {/* Stats Cards */}

@@ -6,6 +6,7 @@ import { PresentationTabs } from "@/components/pro/PresentationTabs";
 import { getServices } from "@/lib/actions/services";
 import { getProducts } from "@/lib/actions/products";
 import { CataloguePDFButton } from "@/components/pro/CataloguePDFButton";
+import { Layers } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Présentation — Kelen Pro",
@@ -78,14 +79,18 @@ export default async function ProRealisationsPage({ searchParams }: Props) {
 
   return (
     <div className="mx-auto max-w-7xl">
-      <div className="mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-        <div className="space-y-1">
-          <h1 className="font-headline text-3xl font-bold tracking-tight text-on-surface lg:text-4xl">
-            Ma présentation
-          </h1>
-          <p className="text-on-surface-variant/70 leading-relaxed max-w-lg">
-            Gérez vos réalisations, services et produits affichés sur votre profil public.
-          </p>
+      {/* ── Header ────────────────────────────────────────── */}
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-4">
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-kelen-green-50 text-kelen-green-600 flex-shrink-0">
+            <Layers className="w-5 h-5" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-on-surface tracking-tight">Ma présentation</h1>
+            <p className="text-sm text-on-surface-variant mt-0.5 max-w-lg">
+              Gérez vos réalisations, services et produits affichés sur votre profil public.
+            </p>
+          </div>
         </div>
         <CataloguePDFButton professionalId={professional.id} />
       </div>

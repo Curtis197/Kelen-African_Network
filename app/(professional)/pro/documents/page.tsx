@@ -28,24 +28,20 @@ export default function ProDocumentsPage() {
   }, []);
 
   const handleDelete = async (docId: string) => {
-    console.log('[Documents] Request delete for:', docId);
     if (!confirm("Supprimer ce document ?")) return;
-    
+
     const { error } = await supabase.from("project_documents").delete().eq("id", docId);
-    
+
     if (error) {
-      console.error("[Documents] Delete error:", error.message, error.code);
       alert("Erreur lors de la suppression.");
       return;
     }
-    
-    console.log('[Documents] ✅ Deleted:', docId);
+
     if (selectedDoc?.id === docId) setSelectedDoc(null);
     fetchDocuments();
   };
 
   const fetchDocuments = async () => {
-    console.log('[Documents] Fetching documents...');
     setIsLoading(true);
 
     const { data: { user } } = await supabase.auth.getUser();
@@ -71,9 +67,7 @@ export default function ProDocumentsPage() {
       .eq("professional_id", pro.id)
       .order("created_at", { ascending: false });
 
-    if (error) {
-      console.error('[Documents] Fetch error:', error.message);
-    } else {
+    if (!error) {
       setDocuments((data as ProjectDocument[]) || []);
     }
     setIsLoading(false);
@@ -120,8 +114,7 @@ export default function ProDocumentsPage() {
       fetchDocuments();
       alert("Document ajouté.");
     } catch (err: any) {
-      console.error("[Documents] Upload failed:", err);
-      alert("Erreur upload: " + (err.message || 'Erreur inconnue'));
+      alert("Erreur upload: " + ((err as any).message || 'Erreur inconnue'));
     } finally {
       setIsUploading(false);
     }

@@ -36,7 +36,6 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard({ project, imageUrl, index, onEdit }: ProjectCardProps) {
-  console.log('[COMPONENT] Rendering ProjectCard:', { id: project.id, index });
 
   return (
     <motion.div

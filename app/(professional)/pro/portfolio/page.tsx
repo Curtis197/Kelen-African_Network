@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Plus } from "lucide-react";
+import { Plus, FileText } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { PortfolioPDFBuilder } from "@/components/pro/PortfolioPDFBuilder";
@@ -103,19 +103,22 @@ export default async function PortfolioPage() {
 
   return (
     <div className="mx-auto max-w-4xl space-y-8">
-      {/* Header */}
-      <div className="flex items-start justify-between gap-4">
-        <div className="space-y-1">
-          <h1 className="font-headline text-3xl font-bold tracking-tight text-on-surface lg:text-4xl">
-            Mon Portfolio PDF
-          </h1>
-          <p className="text-on-surface-variant/70 leading-relaxed max-w-lg">
-            Configurez la couverture, la page à propos et sélectionnez les éléments à inclure dans votre PDF.
-          </p>
+      {/* ── Header ────────────────────────────────────────── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-kelen-green-50 text-kelen-green-600 flex-shrink-0">
+            <FileText className="w-5 h-5" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-on-surface tracking-tight">Mon Portfolio PDF</h1>
+            <p className="text-sm text-on-surface-variant mt-0.5 max-w-lg">
+              Configurez la couverture, la page à propos et sélectionnez les éléments à inclure.
+            </p>
+          </div>
         </div>
         <Link
           href="/pro/portfolio/add"
-          className="shrink-0 flex h-10 items-center gap-2 rounded-xl bg-gradient-to-br from-kelen-green-600 to-kelen-green-500 px-5 font-headline text-sm font-bold text-white shadow-[0_6px_12px_-3px_rgba(0,150,57,0.25)] transition-all hover:-translate-y-0.5 active:scale-95"
+          className="shrink-0 flex h-10 items-center gap-2 rounded-xl bg-gradient-to-br from-kelen-green-600 to-kelen-green-500 px-5 text-sm font-bold text-white shadow-[0_6px_12px_-3px_rgba(0,150,57,0.25)] transition-all hover:opacity-90"
         >
           <Plus size={16} />
           Nouvelle réalisation

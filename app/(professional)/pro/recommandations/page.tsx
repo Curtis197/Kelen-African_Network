@@ -79,11 +79,16 @@ export default function ProRecommendationsPage() {
 
   return (
     <main className="max-w-4xl">
-      <header className="mb-10">
-        <h1 className="text-3xl font-extrabold text-on-surface tracking-tight">Recommandations reçues</h1>
-        <p className="mt-2 text-on-surface-variant font-medium">
-          Retrouvez ici tous les témoignages de clients satisfaits. Liez-les à votre profil pour renforcer votre visibilité.
-        </p>
+      <header className="mb-8 flex items-center gap-4">
+        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-kelen-green-50 text-kelen-green-600 flex-shrink-0">
+          <Award className="w-5 h-5" />
+        </div>
+        <div>
+          <h1 className="text-2xl font-bold text-on-surface tracking-tight">Recommandations reçues</h1>
+          <p className="text-sm text-on-surface-variant mt-0.5">
+            Témoignages de clients satisfaits. Liez-les à votre profil pour renforcer votre visibilité.
+          </p>
+        </div>
       </header>
 
       {isLoading ? (

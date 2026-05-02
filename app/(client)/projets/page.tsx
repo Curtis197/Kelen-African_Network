@@ -65,19 +65,11 @@ export default function ProjectsPage() {
       .eq("user_id", user.id)
       .order("created_at", { ascending: false });
 
-    if (error) {
-      console.error("Error fetching projects:", error);
-    } else {
+    if (!error) {
       const projectsData = (data as Project[]) || [];
       setProjects(projectsData);
-
-      // Fetch images for all projects in one batch
-      const projectIds = projectsData.map(p => p.id);
-      console.log('[PROJECTS-LIST] Fetching images for', projectIds.length, 'projects in batch');
-      const imagesMap = await getAllProjectsMainImages(projectIds);
-      console.log('[PROJECTS-LIST] Images map loaded:', Object.keys(imagesMap).length);
+      const imagesMap = await getAllProjectsMainImages(projectsData.map(p => p.id));
       setProjectImages(imagesMap);
-      console.log('[PROJECTS-LIST] Images map:', imagesMap);
     }
     setIsLoading(false);
   };

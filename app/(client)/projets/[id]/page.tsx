@@ -72,64 +72,26 @@ export default function ProjectDetailPage() {
   }, [projectIdStr]);
 
   const fetchProjectData = async () => {
-    console.log('[PROJECT-DETAIL] Starting parallel fetch for project:', projectIdStr);
     setIsLoading(true);
-    
     try {
-      const [
-        projectRes,
-        teamRes,
-        areasData,
-        stepsData,
-        imgs
-      ] = await Promise.all([
-        // Fetch Project
-        supabase
-          .from("user_projects")
-          .select("*")
-          .eq("id", projectIdStr)
-          .single(),
-        
-        // Fetch Team
+      const [projectRes, teamRes, areasData, stepsData, imgs] = await Promise.all([
+        supabase.from("user_projects").select("*").eq("id", projectIdStr).single(),
         supabase
           .from("project_professionals")
           .select("*, professionals(business_name, category, portfolio_photos, status, slug)")
           .eq("project_id", projectIdStr)
           .order("rank_order", { ascending: true }),
-        
-        // Fetch Areas
         getProjectAreas(projectIdStr),
-        
-        // Fetch Steps
         getProjectSteps(projectIdStr),
-        
-        // Fetch Images
-        getProjectImages(projectIdStr)
+        getProjectImages(projectIdStr),
       ]);
 
-      console.log('[PROJECT-DETAIL] Parallel fetch complete');
-
-      if (projectRes.error) {
-        console.error("[PROJECT-DETAIL] Error fetching project:", projectRes.error);
-        if (projectRes.error.code === '42501') {
-          console.error('[RLS] ❌ EXPLICIT RLS BLOCKING on user_projects!');
-        }
-      } else {
-        setProject(projectRes.data as Project);
-      }
-
-      if (teamRes.error) {
-        console.error("[PROJECT-DETAIL] Error fetching team:", teamRes.error);
-      } else {
-        setTeam(teamRes.data as ProjectProfessional[]);
-      }
-
+      if (!projectRes.error) setProject(projectRes.data as Project);
+      if (!teamRes.error) setTeam(teamRes.data as ProjectProfessional[]);
       setAreas(areasData as ProjectArea[]);
       setSteps(stepsData as ProjectStep[]);
       setImages(imgs);
-
-    } catch (err) {
-      console.error("[PROJECT-DETAIL] Unexpected error during fetch:", err);
+    } catch {
       toast.error("Erreur lors du chargement des données");
     } finally {
       setIsLoading(false);
@@ -151,7 +113,6 @@ export default function ProjectDetailPage() {
   };
 
   const addDevelopmentArea = async (area: string) => {
-    console.log('[PROJECT-DETAIL] Adding development area:', area);
     const result = await addProjectDevelopmentArea(projectIdStr, area);
     if (result.success) {
       toast.success(`Domaine "${area}" ajouté au projet`);
@@ -166,7 +127,6 @@ export default function ProjectDetailPage() {
 
   const removeDevelopmentArea = async (area: string) => {
     if (!confirm(`Retirer le domaine "${area}" du projet ?`)) return;
-    console.log('[PROJECT-DETAIL] Removing development area:', area);
     const result = await removeProjectDevelopmentArea(projectIdStr, area);
     if (result.success) {
       toast.success(`Domaine "${area}" retiré du projet`);
@@ -297,7 +257,6 @@ export default function ProjectDetailPage() {
               </Link>
               <button
                 onClick={async () => {
-                  console.log('[PROJECT-DETAIL] Exporting PDF for project:', projectIdStr);
                   toast.info("Génération du PDF en cours...");
                   const result = await generateProjectPdf(projectIdStr);
                   if (result.success && result.html) {
@@ -463,10 +422,7 @@ export default function ProjectDetailPage() {
                     <input
                       type="text"
                       value={newProjectArea}
-                      onChange={(e) => {
-                        console.log('[PROJECT-DETAIL] Search areas input:', e.target.value);
-                        setNewProjectArea(e.target.value);
-                      }}
+                      onChange={(e) => setNewProjectArea(e.target.value)}
                       onKeyDown={(e) => {
                         if (e.key === "Enter" && newProjectArea.trim()) {
                           addDevelopmentArea(newProjectArea.trim());
@@ -493,10 +449,7 @@ export default function ProjectDetailPage() {
                       .map((area) => (
                         <button
                           key={area}
-                          onClick={() => {
-                            console.log('[PROJECT-DETAIL] Area suggestion selected:', area);
-                            addDevelopmentArea(area);
-                          }}
+                          onClick={() => addDevelopmentArea(area)}
                           className="w-full text-left px-3 py-2 text-[10px] font-bold text-on-surface-variant hover:text-primary hover:bg-primary/5 rounded-lg transition-all"
                         >
                           {area}
@@ -516,11 +469,7 @@ export default function ProjectDetailPage() {
 
                   <div className="flex gap-2 pt-1 border-t border-outline-variant/10">
                     <button
-                      onClick={() => {
-                        console.log('[PROJECT-DETAIL] Cancel area addition');
-                        setShowProjectAreaInput(false);
-                        setNewProjectArea("");
-                      }}
+                      onClick={() => { setShowProjectAreaInput(false); setNewProjectArea(""); }}
                       className="flex-1 py-1 text-[10px] font-black uppercase tracking-widest text-on-surface-variant hover:text-on-surface transition-colors"
                     >
                       Annuler

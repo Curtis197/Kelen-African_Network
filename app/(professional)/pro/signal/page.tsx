@@ -92,11 +92,16 @@ export default function ProSignalsPage() {
 
   return (
     <main className="max-w-4xl">
-      <header className="mb-8">
-        <h1 className="text-3xl font-extrabold text-on-surface tracking-tight">Signalements & Litiges</h1>
-        <p className="mt-2 text-on-surface-variant font-medium">
-          Gérez les incidents rapportés par vos clients et apportez votre version des faits pour maintenir votre score de confiance.
-        </p>
+      <header className="mb-8 flex items-center gap-4">
+        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-red-50 text-red-600 flex-shrink-0">
+          <Shield className="w-5 h-5" />
+        </div>
+        <div>
+          <h1 className="text-2xl font-bold text-on-surface tracking-tight">Signalements & Litiges</h1>
+          <p className="text-sm text-on-surface-variant mt-0.5">
+            Gérez les incidents rapportés par vos clients et apportez votre version des faits.
+          </p>
+        </div>
       </header>
 
       <div className="mb-10 p-5 bg-amber-50 rounded-2xl border border-amber-200 flex gap-4 items-start">
