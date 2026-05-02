@@ -19,7 +19,7 @@ export default async function MySitePage() {
 
   const { data: pro, error: proError } = await supabase
     .from("professionals")
-    .select("id, slug, business_name, category, status, brand_primary")
+    .select("id, slug, business_name, category, status")
     .eq("user_id", user.id)
     .single();
 
@@ -31,7 +31,7 @@ export default async function MySitePage() {
 
   const { data: portfolio, error: portfolioError } = await supabase
     .from("professional_portfolio")
-    .select("style_tokens, copy_quiz_answers, hero_subtitle, about_text, about_image_url, custom_domain, domain_status, show_realizations_section, show_services_section, show_products_section, show_about_section, show_calendar_section")
+    .select("copy_quiz_answers, hero_subtitle, about_text, about_image_url, custom_domain, domain_status, show_realizations_section, show_services_section, show_products_section, show_about_section, show_calendar_section")
     .eq("professional_id", pro.id)
     .single();
 
@@ -130,7 +130,6 @@ export default async function MySitePage() {
           pro={{ id: pro.id, slug: pro.slug, businessName: pro.business_name }}
           portfolio={portfolio}
           isPaid={isPaid}
-          initialBrandPrimary={pro.brand_primary ?? null}
         />
       )}
 

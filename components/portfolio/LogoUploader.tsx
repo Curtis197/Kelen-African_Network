@@ -18,7 +18,7 @@ interface ExtractedColors {
 interface Props {
   initialLogoUrl: string | null;
   initialBrandPrimary: string | null;
-  onColorsSaved?: (primary: string) => void;
+  onColorsSaved?: (primary: string, secondary: string, accent: string) => void;
 }
 
 export function LogoUploader({ initialLogoUrl, initialBrandPrimary, onColorsSaved }: Props) {
@@ -90,7 +90,7 @@ export function LogoUploader({ initialLogoUrl, initialBrandPrimary, onColorsSave
       }
       toast.success("Logo et couleurs enregistrés");
       setFile(null);
-      onColorsSaved?.(colors.primary);
+      onColorsSaved?.(colors.primary, colors.secondary, colors.accent);
     });
   }
 

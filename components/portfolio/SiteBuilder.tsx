@@ -2,16 +2,14 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { StyleQuiz } from "./StyleQuiz";
 import { CopywritingQuiz } from "./CopywritingQuiz";
 import { CopyEditor } from "./CopyEditor";
 import { AboutEditor } from "./AboutEditor";
 import { PortfolioPreviewFrame } from "./PortfolioPreviewFrame";
 import { DomainSearch } from "./DomainSearch";
 import { DomainManager } from "./DomainManager";
-import type { StyleAnswers } from "@/lib/portfolio/style-tokens";
 import type { CopyAnswers } from "@/lib/portfolio/copy-questions";
-import { Palette, FileText, Globe, Lock, Eye, UserRound } from "lucide-react";
+import { FileText, Globe, Lock, Eye, UserRound } from "lucide-react";
 import Link from "next/link";
 import { updatePortfolioVisibility } from "@/lib/actions/portfolio";
 import { toast } from "sonner";
@@ -19,7 +17,6 @@ import { toast } from "sonner";
 interface Props {
   pro: { id: string; slug: string; businessName: string };
   portfolio: {
-    style_tokens?: Partial<StyleAnswers>;
     copy_quiz_answers?: Partial<CopyAnswers>;
     hero_subtitle?: string;
     about_text?: string;
@@ -33,11 +30,9 @@ interface Props {
     show_calendar_section?: boolean;
   } | null;
   isPaid: boolean;
-  initialBrandPrimary: string | null;
 }
 
 const TABS = [
-  { id: "style",      label: "Style",      icon: Palette   },
   { id: "content",    label: "Contenu",    icon: FileText  },
   { id: "about",      label: "À propos",   icon: UserRound },
   { id: "domain",     label: "Domaine",    icon: Globe     },
@@ -84,12 +79,8 @@ function VisibilityToggle({
   );
 }
 
-export function SiteBuilder({ pro, portfolio, isPaid, initialBrandPrimary }: Props) {
-  const [activeTab, setActiveTab] = useState<TabId>("style");
-  const [styleOverride, setStyleOverride] = useState<Partial<StyleAnswers>>(
-    portfolio?.style_tokens ?? {}
-  );
-  const [brandPrimary, setBrandPrimary] = useState<string | null>(initialBrandPrimary);
+export function SiteBuilder({ pro, portfolio, isPaid }: Props) {
+  const [activeTab, setActiveTab] = useState<TabId>("content");
 
   // Visibility state
   const [showRealizations, setShowRealizations] = useState(
@@ -132,15 +123,6 @@ export function SiteBuilder({ pro, portfolio, isPaid, initialBrandPrimary }: Pro
         </div>
 
         {/* Tab panels */}
-        {activeTab === "style" && (
-          <StyleQuiz
-            initialAnswers={portfolio?.style_tokens ?? {}}
-            onAnswersChange={setStyleOverride}
-            hasBrandColor={!!brandPrimary}
-            brandPrimary={brandPrimary}
-          />
-        )}
-
         {activeTab === "content" && (
           <div className="space-y-10">
             <CopywritingQuiz
@@ -281,7 +263,7 @@ export function SiteBuilder({ pro, portfolio, isPaid, initialBrandPrimary }: Pro
       {/* Right: Live preview (sticky on xl) */}
       <div className="xl:sticky xl:top-8 xl:self-start space-y-3">
         <h3 className="font-headline text-lg font-bold text-on-surface">Aperçu en direct</h3>
-        <PortfolioPreviewFrame slug={pro.slug} styleOverride={styleOverride} />
+        <PortfolioPreviewFrame slug={pro.slug} styleOverride={{}} />
       </div>
     </div>
   );
