@@ -9,9 +9,11 @@ import { saveStyleQuiz } from "@/lib/actions/portfolio-site";
 interface Props {
   initialAnswers: Partial<StyleAnswers>;
   onAnswersChange: (answers: Partial<StyleAnswers>) => void;
+  hasBrandColor?: boolean;
+  brandPrimary?: string | null;
 }
 
-export function StyleQuiz({ initialAnswers, onAnswersChange }: Props) {
+export function StyleQuiz({ initialAnswers, onAnswersChange, hasBrandColor = false, brandPrimary }: Props) {
   console.log('[COMPONENT] StyleQuiz render:', { initialAnswers });
   const [answers, setAnswers] = useState<Partial<StyleAnswers>>(initialAnswers);
   const [saving, setSaving] = useState(false);
@@ -69,6 +71,33 @@ export function StyleQuiz({ initialAnswers, onAnswersChange }: Props) {
                 </button>
               );
             })}
+
+            {/* Logo-color option — only on the mood question */}
+            {question.id === "mood" && (
+              <button
+                key="logo-color"
+                disabled={!hasBrandColor}
+                onClick={() => hasBrandColor && handleSelect("mood", "logo-color")}
+                className={`text-left p-4 rounded-xl border-2 transition-all duration-150 relative ${
+                  answers.mood === "logo-color"
+                    ? "border-kelen-green-600 bg-kelen-green-50"
+                    : hasBrandColor
+                    ? "border-outline-variant/30 hover:border-kelen-green-300 hover:bg-surface-container-low"
+                    : "border-outline-variant/20 opacity-50 cursor-not-allowed"
+                }`}
+              >
+                {brandPrimary && (
+                  <span
+                    className="absolute top-3 right-3 w-3 h-3 rounded-full border border-white/50 shadow-sm"
+                    style={{ background: brandPrimary }}
+                  />
+                )}
+                <p className="font-bold text-sm text-on-surface">Couleur du logo</p>
+                <p className="text-xs text-on-surface-variant/60 mt-0.5">
+                  {hasBrandColor ? "Teinte issue de votre marque" : "Téléversez votre logo d'abord"}
+                </p>
+              </button>
+            )}
           </div>
         </div>
       ))}

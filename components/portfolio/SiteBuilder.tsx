@@ -9,6 +9,7 @@ import { AboutEditor } from "./AboutEditor";
 import { PortfolioPreviewFrame } from "./PortfolioPreviewFrame";
 import { DomainSearch } from "./DomainSearch";
 import { DomainManager } from "./DomainManager";
+import { LogoUploader } from "./LogoUploader";
 import type { StyleAnswers } from "@/lib/portfolio/style-tokens";
 import type { CopyAnswers } from "@/lib/portfolio/copy-questions";
 import { Palette, FileText, Globe, Lock, Eye, UserRound } from "lucide-react";
@@ -33,6 +34,8 @@ interface Props {
     show_calendar_section?: boolean;
   } | null;
   isPaid: boolean;
+  initialLogoUrl: string | null;
+  initialBrandPrimary: string | null;
 }
 
 const TABS = [
@@ -83,11 +86,12 @@ function VisibilityToggle({
   );
 }
 
-export function SiteBuilder({ pro, portfolio, isPaid }: Props) {
+export function SiteBuilder({ pro, portfolio, isPaid, initialLogoUrl, initialBrandPrimary }: Props) {
   const [activeTab, setActiveTab] = useState<TabId>("style");
   const [styleOverride, setStyleOverride] = useState<Partial<StyleAnswers>>(
     portfolio?.style_tokens ?? {}
   );
+  const [brandPrimary, setBrandPrimary] = useState<string | null>(initialBrandPrimary);
 
   // Visibility state
   const [showRealizations, setShowRealizations] = useState(
@@ -131,10 +135,20 @@ export function SiteBuilder({ pro, portfolio, isPaid }: Props) {
 
         {/* Tab panels */}
         {activeTab === "style" && (
-          <StyleQuiz
-            initialAnswers={portfolio?.style_tokens ?? {}}
-            onAnswersChange={setStyleOverride}
-          />
+          <div className="space-y-8">
+            <LogoUploader
+              initialLogoUrl={initialLogoUrl}
+              initialBrandPrimary={initialBrandPrimary}
+              onColorsSaved={(primary) => setBrandPrimary(primary)}
+            />
+            <div className="border-t border-outline-variant/20" />
+            <StyleQuiz
+              initialAnswers={portfolio?.style_tokens ?? {}}
+              onAnswersChange={setStyleOverride}
+              hasBrandColor={!!brandPrimary}
+              brandPrimary={brandPrimary}
+            />
+          </div>
         )}
 
         {activeTab === "content" && (

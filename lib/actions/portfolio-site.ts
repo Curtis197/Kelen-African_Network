@@ -44,6 +44,7 @@ function toCornerStyle(imageShape?: string) {
 function toColorMode(mood?: string) {
   if (mood === "dark") return "dark";
   if (mood === "warm") return "warm";
+  if (mood === "logo-color") return "logo-color";
   return "light";
 }
 

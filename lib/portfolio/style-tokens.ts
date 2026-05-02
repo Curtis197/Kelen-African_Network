@@ -41,7 +41,7 @@ export const STYLE_QUESTIONS = [
 
 export type StyleAnswers = {
   imageShape: "sharp" | "rounded" | "pill";
-  mood: "light" | "dark" | "warm";
+  mood: "light" | "dark" | "warm" | "logo-color";
   imageWeight: "image" | "balanced" | "text";
   spacing: "spacious" | "standard" | "compact";
 };

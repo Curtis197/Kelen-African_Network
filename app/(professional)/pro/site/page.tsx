@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { SiteBuilder } from "@/components/portfolio/SiteBuilder";
 import { CalendarSettings } from "@/components/calendar/CalendarSettings";
+import { getLogoUrl } from "@/lib/actions/branding";
 
 export const metadata: Metadata = {
   title: "Mon Site Web — Kelen Pro",
@@ -19,7 +20,7 @@ export default async function MySitePage() {
 
   const { data: pro, error: proError } = await supabase
     .from("professionals")
-    .select("id, slug, business_name, category, status")
+    .select("id, slug, business_name, category, status, brand_primary")
     .eq("user_id", user.id)
     .single();
 
@@ -40,6 +41,8 @@ export default async function MySitePage() {
   }
 
   const isPaid = true; // DEV MODE: paywall bypassed — restore check before production
+
+  const logoUrl = await getLogoUrl();
 
   const { data: calendarTokens } = await supabase
     .from("pro_calendar_tokens")
@@ -130,6 +133,8 @@ export default async function MySitePage() {
           pro={{ id: pro.id, slug: pro.slug, businessName: pro.business_name }}
           portfolio={portfolio}
           isPaid={isPaid}
+          initialLogoUrl={logoUrl}
+          initialBrandPrimary={pro.brand_primary ?? null}
         />
       )}
 
