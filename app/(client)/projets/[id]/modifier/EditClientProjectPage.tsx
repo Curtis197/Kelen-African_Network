@@ -86,7 +86,7 @@ export default function EditClientProjectPage() {
 
     if (!user) {
       toast.error("Non authentifiÃ©");
-      router.push("/login");
+      router.push("/connexion");
       return;
     }
 
