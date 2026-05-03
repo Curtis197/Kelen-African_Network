@@ -27,7 +27,7 @@ export default async function RealizationDetailPage({ params }: RealizationDetai
   }
 
   if (!user) {
-    redirect("/login");
+    redirect("/pro/connexion");
   }
 
 

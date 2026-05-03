@@ -9,7 +9,7 @@ export default async function Page() {
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    return redirect("/login");
+    return redirect("/pro/connexion");
   }
 
   // Get professional and subscription

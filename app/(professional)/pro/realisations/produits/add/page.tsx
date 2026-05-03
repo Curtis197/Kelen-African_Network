@@ -16,7 +16,7 @@ export default async function AddProductPage() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
+  if (!user) redirect("/pro/connexion");
 
   const { data: professional } = await supabase
     .from("professionals")

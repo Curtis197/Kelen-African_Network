@@ -27,7 +27,7 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
   }
 
   if (!user) {
-    redirect("/login");
+    redirect("/pro/connexion");
   }
 
   // Fetch professional profile

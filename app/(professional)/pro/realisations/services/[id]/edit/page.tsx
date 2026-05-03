@@ -27,7 +27,7 @@ export default async function EditServicePage({ params }: EditServicePageProps) 
   }
 
   if (!user) {
-    redirect("/login");
+    redirect("/pro/connexion");
   }
 
   // Fetch professional profile

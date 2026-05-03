@@ -18,7 +18,7 @@ export default async function AddRealizationPage() {
   }
 
   if (!user) {
-    redirect("/login");
+    redirect("/pro/connexion");
   }
 
 

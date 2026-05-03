@@ -139,7 +139,7 @@ export default function InvitationPage() {
                   <ArrowRight className="w-4 h-4" />
                 </Link>
                 <Link
-                  href={`/auth/login?invite=${token}`}
+                  href={`/connexion?invite=${token}`}
                   className="flex items-center justify-center gap-2 w-full px-6 py-3 bg-surface-container-high text-on-surface rounded-xl font-semibold hover:bg-surface-container transition-colors"
                 >
                   Se connecter

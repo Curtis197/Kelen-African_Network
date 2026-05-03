@@ -14,7 +14,7 @@ export default async function AddPortfolioPage() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
+  if (!user) redirect("/pro/connexion");
 
   const { data: professional } = await supabase
     .from("professionals")

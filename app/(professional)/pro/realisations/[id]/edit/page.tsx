@@ -24,7 +24,7 @@ export default async function EditRealizationPage({ params }: EditRealizationPag
   }
 
   if (!user) {
-    redirect("/login");
+    redirect("/pro/connexion");
   }
 
 

@@ -13,7 +13,7 @@ export default async function EditRealizationPage({ params }: Props) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
+  if (!user) redirect("/pro/connexion");
 
   const { data: professional } = await supabase
     .from("professionals")
