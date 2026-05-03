@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { History, MapPin, Clock, CheckCircle, BadgeCheck, UserCircle, Download, Paperclip, Eye, Image, ExternalLink, FileText, ArrowLeft } from "lucide-react";
+import { approveQueueItem, requestMoreInfo, rejectQueueItem } from "@/lib/actions/admin-queue";
 
 export const metadata: Metadata = {
   title: "Vérification — Kelen Admin",
@@ -259,10 +260,12 @@ export default async function AdminReviewPage({ params }: ReviewPageProps) {
             </div>
 
             {/* Decision Form */}
-            <form className="pt-8 border-t border-stone-100 space-y-6">
+            <div className="pt-8 border-t border-stone-100 space-y-6">
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Note Interne de l&apos;Instructeur</label>
+                <label htmlFor="admin-notes" className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Note Interne de l&apos;Instructeur</label>
                 <textarea
+                  id="admin-notes"
+                  form="approve-form"
                   name="notes"
                   rows={3}
                   className="w-full rounded-[1.25rem] border border-stone-100 bg-stone-50 px-5 py-4 text-sm transition-all placeholder:text-stone-300 focus:bg-white focus:border-kelen-green-500 focus:outline-none focus:ring-4 focus:ring-kelen-green-500/10"
@@ -271,28 +274,39 @@ export default async function AdminReviewPage({ params }: ReviewPageProps) {
               </div>
 
               <div className="space-y-3">
-                <button 
-                  type="button" 
-                  className="w-full py-4 bg-gradient-to-r from-kelen-green-600 to-kelen-green-400 text-white rounded-2xl font-black font-headline text-base shadow-xl shadow-kelen-green-600/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
-                >
-                  Approuver & Publier
-                </button>
+                <form id="approve-form" action={approveQueueItem}>
+                  <input type="hidden" name="id" value={queueItem.id} />
+                  <button
+                    type="submit"
+                    className="w-full py-4 bg-gradient-to-r from-kelen-green-600 to-kelen-green-400 text-white rounded-2xl font-black font-headline text-base shadow-xl shadow-kelen-green-600/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                  >
+                    Approuver &amp; Publier
+                  </button>
+                </form>
                 <div className="grid grid-cols-2 gap-3">
-                  <button 
-                    type="button" 
-                    className="py-3 px-4 bg-stone-100 text-stone-700 text-xs font-black uppercase tracking-widest rounded-xl hover:bg-stone-200 transition-colors"
-                  >
-                    Besoin d&apos;Infos
-                  </button>
-                  <button 
-                    type="button"
-                    className="py-3 px-4 text-kelen-red-500 text-xs font-black uppercase tracking-widest rounded-xl hover:bg-kelen-red-50 transition-colors"
-                  >
-                    Rejeter Dossier
-                  </button>
+                  <form action={requestMoreInfo}>
+                    <input type="hidden" name="id" value={queueItem.id} />
+                    <input type="hidden" name="notes" value="" />
+                    <button
+                      type="submit"
+                      className="w-full py-3 px-4 bg-stone-100 text-stone-700 text-xs font-black uppercase tracking-widest rounded-xl hover:bg-stone-200 transition-colors"
+                    >
+                      Besoin d&apos;Infos
+                    </button>
+                  </form>
+                  <form action={rejectQueueItem}>
+                    <input type="hidden" name="id" value={queueItem.id} />
+                    <input type="hidden" name="notes" value="" />
+                    <button
+                      type="submit"
+                      className="w-full py-3 px-4 text-kelen-red-500 text-xs font-black uppercase tracking-widest rounded-xl hover:bg-kelen-red-50 transition-colors"
+                    >
+                      Rejeter Dossier
+                    </button>
+                  </form>
                 </div>
               </div>
-            </form>
+            </div>
           </div>
 
           {/* Submitter Info Card */}
