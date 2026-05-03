@@ -649,15 +649,47 @@ export function ProListPage() {
           <span className="text-primary">Professionnels</span>
         </nav>
 
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-on-surface">
-              {projectTitle || "Projet"}
-            </h1>
-            <p className="text-sm text-on-surface-variant mt-1">
-              {totalCount} professionnel{totalCount > 1 ? "s" : ""} â€¢ GÃ©rez votre processus de sÃ©lection
-            </p>
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600 shrink-0">
+              <Users className="w-5 h-5" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold text-on-surface tracking-tight">
+                {projectTitle || "Équipe du projet"}
+              </h1>
+              <p className="text-sm text-on-surface-variant mt-0.5">
+                Gérez et suivez votre processus de sélection
+              </p>
+            </div>
           </div>
+          <Link
+            href="/"
+            className="shrink-0 inline-flex items-center gap-2 px-4 py-2.5 bg-primary text-on-primary rounded-xl font-semibold text-sm hover:opacity-90 transition-opacity"
+          >
+            <Send className="w-4 h-4" />
+            Explorer
+          </Link>
+        </div>
+
+        {/* Stat cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5">
+          {[
+            { label: "Sauvegardés", value: groups.saved.count, color: "bg-surface-container text-on-surface-variant", icon: <Users className="w-4 h-4" /> },
+            { label: "Shortlistés", value: groups.shortlisted.count, color: "bg-blue-50 text-blue-600", icon: <Star className="w-4 h-4" /> },
+            { label: "Finalistes", value: groups.finalists.count, color: "bg-amber-50 text-amber-600", icon: <Award className="w-4 h-4" /> },
+            { label: "Actifs", value: groups.active.count, color: "bg-green-50 text-green-600", icon: <CheckCircle2 className="w-4 h-4" /> },
+          ].map(({ label, value, color, icon }) => (
+            <div key={label} className="bg-white border border-border rounded-xl p-4 flex items-center gap-3">
+              <div className={`flex h-9 w-9 items-center justify-center rounded-lg ${color} shrink-0`}>
+                {icon}
+              </div>
+              <div>
+                <p className="text-xl font-bold text-on-surface leading-none">{value}</p>
+                <p className="text-xs text-on-surface-variant mt-0.5">{label}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -716,16 +748,19 @@ export function ProListPage() {
 
       {/* Empty state */}
       {totalCount === 0 && (
-        <div className="text-center py-16 bg-surface-container-low rounded-2xl">
-          <Users className="w-12 h-12 mx-auto text-on-surface-variant/40 mb-4" />
-          <h3 className="text-lg font-semibold text-on-surface mb-2">Aucun professionnel</h3>
-          <p className="text-sm text-on-surface-variant mb-6">
-            Explorez les professionnels et sauvegardez ceux qui vous intÃ©ressent.
+        <div className="text-center py-20 bg-surface-container-low rounded-2xl border border-dashed border-outline-variant/30">
+          <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-blue-50 flex items-center justify-center">
+            <Users className="w-8 h-8 text-blue-400" />
+          </div>
+          <h3 className="text-lg font-bold text-on-surface mb-2">Aucun professionnel ajouté</h3>
+          <p className="text-sm text-on-surface-variant mb-6 max-w-xs mx-auto">
+            Explorez l&apos;annuaire et sauvegardez les professionnels qui correspondent à votre projet.
           </p>
           <Link
-            href="/professionnels"
-            className="inline-flex items-center gap-2 px-5 py-3 bg-primary text-on-primary rounded-xl font-semibold text-sm hover:opacity-90 transition-opacity"
+            href="/"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-xl font-semibold text-sm hover:opacity-90 transition-opacity"
           >
+            <Send className="w-4 h-4" />
             Explorer les professionnels
           </Link>
         </div>

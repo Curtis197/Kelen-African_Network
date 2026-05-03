@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -100,90 +99,105 @@ export function CollaborationThread({
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-lg">Fil de discussion</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4 mb-4 max-h-[500px] overflow-y-auto">
-          {messages.length === 0 ? (
-            <p className="text-center text-gray-500 py-8">
-              Aucun message pour le moment
-            </p>
-          ) : (
-            messages.map((message) => {
-              const isOwn = message.sender_id === currentUserId;
-              const config = MESSAGE_TYPE_CONFIG[message.message_type];
+    <div className="bg-white rounded-2xl border border-border overflow-hidden">
+      {/* Header */}
+      <div className="flex items-center gap-3 px-5 py-4 border-b border-border">
+        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-600 shrink-0">
+          <MessageSquare className="w-4 h-4" />
+        </div>
+        <div className="flex-1">
+          <h3 className="text-sm font-bold text-on-surface">Fil de discussion</h3>
+          <p className="text-xs text-on-surface-variant">
+            {messages.length > 0 ? `${messages.length} message${messages.length > 1 ? 's' : ''}` : 'Aucun message'}
+          </p>
+        </div>
+      </div>
 
-              return (
-                <div
-                  key={message.id}
-                  className={`flex gap-3 ${isOwn ? 'flex-row-reverse' : 'flex-row'}`}
-                >
-                  <Avatar className="h-8 w-8 flex-shrink-0">
-                    <AvatarImage src={undefined} />
-                    <AvatarFallback>
-                      <User className="w-4 h-4" />
-                    </AvatarFallback>
-                  </Avatar>
+      {/* Messages */}
+      <div className="space-y-4 p-5 max-h-[500px] overflow-y-auto">
+        {messages.length === 0 ? (
+          <div className="text-center py-10">
+            <div className="w-12 h-12 mx-auto mb-3 rounded-2xl bg-surface-container flex items-center justify-center">
+              <MessageSquare className="w-6 h-6 text-on-surface-variant/40" />
+            </div>
+            <p className="text-sm font-medium text-on-surface-variant">Aucun message pour le moment</p>
+            <p className="text-xs text-on-surface-variant/60 mt-1">Commencez la conversation ci-dessous.</p>
+          </div>
+        ) : (
+          messages.map((message) => {
+            const isOwn = message.sender_id === currentUserId;
+            const config = MESSAGE_TYPE_CONFIG[message.message_type];
 
-                  <div className={`max-w-[70%] ${isOwn ? 'items-end' : 'items-start'}`}>
-                    <div className="flex items-center gap-2 mb-1">
-                      {!isOwn && (
-                        <span className="text-xs text-gray-500">
-                          {message.sender_role === 'client' ? 'Client' : 'Professional'}
-                        </span>
-                      )}
-                      <Badge variant="outline" className={`text-xs ${config.color}`}>
-                        {config.icon}
-                        <span className="ml-1">{config.label}</span>
-                      </Badge>
-                      <span className="text-xs text-gray-400">
-                        {formatDistanceToNow(new Date(message.created_at), { 
-                          addSuffix: true, 
-                          locale: fr 
-                        })}
+            return (
+              <div
+                key={message.id}
+                className={`flex gap-3 ${isOwn ? 'flex-row-reverse' : 'flex-row'}`}
+              >
+                <Avatar className="h-8 w-8 flex-shrink-0">
+                  <AvatarImage src={undefined} />
+                  <AvatarFallback className="bg-primary/10 text-primary">
+                    <User className="w-4 h-4" />
+                  </AvatarFallback>
+                </Avatar>
+
+                <div className={`flex flex-col max-w-[70%] ${isOwn ? 'items-end' : 'items-start'}`}>
+                  <div className="flex items-center gap-2 mb-1.5">
+                    {!isOwn && (
+                      <span className="text-xs font-medium text-on-surface-variant">
+                        {message.sender_role === 'client' ? 'Client' : 'Professionnel'}
                       </span>
-                    </div>
+                    )}
+                    <Badge variant="outline" className={`text-[10px] gap-1 py-0 h-5 ${config.color}`}>
+                      {config.icon}
+                      {config.label}
+                    </Badge>
+                    <span className="text-[10px] text-on-surface-variant/50">
+                      {formatDistanceToNow(new Date(message.created_at), {
+                        addSuffix: true,
+                        locale: fr
+                      })}
+                    </span>
+                  </div>
 
-                    <div
-                      className={`rounded-lg px-3 py-2 ${
-                        isOwn
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-gray-100 text-gray-900'
-                      }`}
-                    >
-                      <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-                    </div>
+                  <div
+                    className={`rounded-2xl px-4 py-2.5 ${
+                      isOwn
+                        ? 'bg-primary text-on-primary rounded-tr-sm'
+                        : 'bg-surface-container text-on-surface rounded-tl-sm'
+                    }`}
+                  >
+                    <p className="text-sm whitespace-pre-wrap leading-relaxed">{message.content}</p>
                   </div>
                 </div>
-              );
-            })
-          )}
-        </div>
+              </div>
+            );
+          })
+        )}
+      </div>
 
-        <div className="border-t pt-4">
-          <Textarea
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            placeholder="Ã‰crivez votre message..."
-            className="mb-2"
-            disabled={isSending}
-          />
-          <Button
-            onClick={handleSend}
-            disabled={!newMessage.trim() || isSending}
-            className="w-full"
-          >
-            {isSending ? (
-              <Loader2 className="w-4 h-4 animate-spin mr-2" />
-            ) : (
-              <Send className="w-4 h-4 mr-2" />
-            )}
-            Envoyer
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+      {/* Compose */}
+      <div className="border-t border-border p-4 bg-surface-container-low/40">
+        <Textarea
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+          placeholder="Écrivez votre message..."
+          className="mb-3 resize-none bg-white border-border focus:ring-primary/20 text-sm"
+          rows={3}
+          disabled={isSending}
+        />
+        <Button
+          onClick={handleSend}
+          disabled={!newMessage.trim() || isSending}
+          className="w-full rounded-xl font-semibold"
+        >
+          {isSending ? (
+            <Loader2 className="w-4 h-4 animate-spin mr-2" />
+          ) : (
+            <Send className="w-4 h-4 mr-2" />
+          )}
+          Envoyer le message
+        </Button>
+      </div>
+    </div>
   );
 }

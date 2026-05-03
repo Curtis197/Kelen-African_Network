@@ -130,9 +130,16 @@ export default function ProDocumentsPage() {
             <ChevronRight className="w-3 h-3" />
             <span className="text-on-surface">Tous les fichiers</span>
           </div>
-          <h1 className="text-4xl lg:text-5xl font-extrabold leading-tight tracking-tight text-on-surface">
-            Coffre-fort <span className="text-kelen-green-600">Numérique</span>
-          </h1>
+          <div className="flex items-center gap-3 flex-wrap">
+            <h1 className="text-4xl lg:text-5xl font-extrabold leading-tight tracking-tight text-on-surface">
+              Coffre-fort <span className="text-kelen-green-600">Numérique</span>
+            </h1>
+            {!isLoading && (
+              <span className="px-3 py-1 rounded-full text-sm font-bold bg-kelen-green-50 text-kelen-green-700 border border-kelen-green-100">
+                {documents.length} fichier{documents.length !== 1 ? 's' : ''}
+              </span>
+            )}
+          </div>
           <p className="mt-3 text-stone-500 font-medium max-w-xl">
             Stockez et gérez vos preuves d&apos;activité en toute sécurité.
           </p>
