@@ -11,7 +11,7 @@ function log(action: string, data: Record<string, unknown>) {
 
 const createClientSchema = z.object({
   proProjectId: z.string().uuid(),
-  clientName: z.string().min(2, "Le nom doit contenir au moins 2 caractÃ¨res"),
+  clientName: z.string().min(2, "Le nom doit contenir au moins 2 caractères"),
   clientEmail: z.string().email("Email invalide"),
   clientPhone: z.string().optional(),
   sendInvitation: z.boolean().optional().default(false),
@@ -35,12 +35,12 @@ async function sendInvitationEmail(email: string, name: string, inviteUrl: strin
       subject: `${name} vous invite Ã  consulter le journal de votre projet sur Kelen`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #1e3a8a;">Vous avez Ã©tÃ© invitÃ© Ã  accÃ©der au journal de votre projet</h2>
+          <h2 style="color: #1e3a8a;">Vous avez été invité Ã  accéder au journal de votre projet</h2>
           <p>Bonjour ${name},</p>
-          <p>Un professionnel vous a invitÃ© Ã  consulter le journal de votre projet sur Kelen. Ce journal documente l'avancement des travaux avec des photos, des rapports financiers et des mises Ã  jour rÃ©guliÃ¨res.</p>
+          <p>Un professionnel vous a invité Ã  consulter le journal de votre projet sur Kelen. Ce journal documente l'avancement des travaux avec des photos, des rapports financiers et des mises Ã  jour régulières.</p>
           <p style="margin: 2rem 0;">
             <a href="${inviteUrl}" style="background: #1e3a8a; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; display: inline-block;">
-              AccÃ©der au journal de votre projet
+              Accéder au journal de votre projet
             </a>
           </p>
           <p style="color: #6b7280; font-size: 0.875rem;">
@@ -48,7 +48,7 @@ async function sendInvitationEmail(email: string, name: string, inviteUrl: strin
             <code style="background: #f3f4f6; padding: 4px 8px; border-radius: 4px;">${inviteUrl}</code>
           </p>
           <hr style="margin-top: 2rem; border: none; border-top: 1px solid #e5e7eb;"/>
-          <p style="color: #6b7280; font-size: 0.75rem;">Kelen - RÃ©seau de professionnels de confiance</p>
+          <p style="color: #6b7280; font-size: 0.75rem;">Kelen - Réseau de professionnels de confiance</p>
         </div>
       `,
     });
@@ -65,7 +65,7 @@ export async function createClientContact(
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    return { success: false, error: "Non autorisÃ©", client: null };
+    return { success: false, error: "Non autorisé", client: null };
   }
 
   const validated = createClientSchema.parse(data);
@@ -103,7 +103,7 @@ export async function createClientContact(
   if (existingClient) {
     return { 
       success: false, 
-      error: "Un contact client avec cet email existe dÃ©jÃ  pour ce projet", 
+      error: "Un contact client avec cet email existe déjÃ  pour ce projet", 
       client: null 
     };
   }
@@ -240,15 +240,15 @@ export async function verifyInvitation(token: string): Promise<{
     .single();
 
   if (findError || !clientContact) {
-    return { success: false, error: "Invitation invalide ou expirÃ©e" };
+    return { success: false, error: "Invitation invalide ou expirée" };
   }
 
   if (clientContact.status === 'linked') {
-    return { success: false, error: "Cette invitation a dÃ©jÃ  Ã©tÃ© utilisÃ©e" };
+    return { success: false, error: "Cette invitation a déjÃ  été utilisée" };
   }
 
   if (clientContact.status === 'cancelled') {
-    return { success: false, error: "Cette invitation a Ã©tÃ© annulÃ©e" };
+    return { success: false, error: "Cette invitation a été annulée" };
   }
 
   // Mark as verified
@@ -274,7 +274,7 @@ export async function resendInvitation(clientId: string): Promise<{ success: boo
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    return { success: false, error: "Non autorisÃ©" };
+    return { success: false, error: "Non autorisé" };
   }
 
   // Get client contact and verify ownership
@@ -302,7 +302,7 @@ export async function resendInvitation(clientId: string): Promise<{ success: boo
     .single();
 
   if (!professional || professional.id !== clientContact.project.professional_id) {
-    return { success: false, error: "Non autorisÃ©" };
+    return { success: false, error: "Non autorisé" };
   }
 
   // Generate new token and update
@@ -337,7 +337,7 @@ export async function cancelInvitation(clientId: string): Promise<{ success: boo
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    return { success: false, error: "Non autorisÃ©" };
+    return { success: false, error: "Non autorisé" };
   }
 
   // Get client contact and verify ownership
@@ -359,7 +359,7 @@ export async function cancelInvitation(clientId: string): Promise<{ success: boo
     .single();
 
   if (!professional || professional.id !== clientContact.project.professional_id) {
-    return { success: false, error: "Non autorisÃ©" };
+    return { success: false, error: "Non autorisé" };
   }
 
   await supabase

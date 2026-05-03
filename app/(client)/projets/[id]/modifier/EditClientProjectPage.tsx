@@ -34,20 +34,20 @@ interface Project {
 }
 
 const STATUS_CONFIG = {
-  en_preparation: { label: "En prÃ©paration", color: "bg-stone-100 text-stone-700" },
+  en_preparation: { label: "En préparation", color: "bg-stone-100 text-stone-700" },
   en_cours: { label: "En cours", color: "bg-blue-50 text-blue-700" },
   en_pause: { label: "En pause", color: "bg-orange-50 text-orange-700" },
-  termine: { label: "TerminÃ©", color: "bg-green-50 text-green-700" },
-  annule: { label: "AnnulÃ©", color: "bg-red-50 text-red-700" },
+  termine: { label: "Terminé", color: "bg-green-50 text-green-700" },
+  annule: { label: "Annulé", color: "bg-red-50 text-red-700" },
 };
 
 const CATEGORIES = [
   "Construction",
-  "RÃ©novation",
+  "Rénovation",
   "Architecture",
   "Design",
-  "IngÃ©nierie",
-  "Ã‰lectricitÃ©",
+  "Ingénierie",
+  "Électricité",
   "Plomberie",
   "Peinture",
   "Menuiserie",
@@ -85,7 +85,7 @@ export default function EditClientProjectPage() {
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
-      toast.error("Non authentifiÃ©");
+      toast.error("Non authentifié");
       router.push("/connexion");
       return;
     }
@@ -98,7 +98,7 @@ export default function EditClientProjectPage() {
 
 
     if (error?.code === '42501') {
-      toast.error("AccÃ¨s refusÃ© - Vous n'avez pas les droits sur ce projet");
+      toast.error("Accès refusé - Vous n'avez pas les droits sur ce projet");
       router.push("/projets");
     } else if (error || !data) {
       toast.error("Projet introuvable");
@@ -152,7 +152,7 @@ export default function EditClientProjectPage() {
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      toast.error("Session expirÃ©e");
+      toast.error("Session expirée");
       setIsSaving(false);
       return;
     }
@@ -180,11 +180,11 @@ export default function EditClientProjectPage() {
 
 
     if (error?.code === '42501') {
-      toast.error("Modification refusÃ©e - AccÃ¨s non autorisÃ©");
+      toast.error("Modification refusée - Accès non autorisé");
     } else if (error) {
       toast.error("Erreur lors de la modification: " + error.message);
     } else {
-      toast.success("Projet modifiÃ© avec succÃ¨s");
+      toast.success("Projet modifié avec succès");
       setHasChanges(false);
       router.push(`/projets/${project.id}`);
       router.refresh();
@@ -195,7 +195,7 @@ export default function EditClientProjectPage() {
 
   const handleCancel = () => {
     if (hasChanges) {
-      if (confirm("Voulez-vous vraiment annuler ? Les modifications non enregistrÃ©es seront perdues.")) {
+      if (confirm("Voulez-vous vraiment annuler ? Les modifications non enregistrées seront perdues.")) {
         router.push(`/projets/${project?.id}`);
       }
     } else {
@@ -208,7 +208,7 @@ export default function EditClientProjectPage() {
     const file = e.target.files?.[0];
 
     if (!file) {
-      toast.error("Aucun fichier sÃ©lectionnÃ©");
+      toast.error("Aucun fichier sélectionné");
       return;
     }
 
@@ -217,7 +217,7 @@ export default function EditClientProjectPage() {
     const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
 
     if (!allowedTypes.includes(file.type)) {
-      toast.error("Format non supportÃ©. Utilisez JPG, PNG ou WEBP");
+      toast.error("Format non supporté. Utilisez JPG, PNG ou WEBP");
       return;
     }
 
@@ -235,7 +235,7 @@ export default function EditClientProjectPage() {
       const { data: { user }, error: authError } = await supabase.auth.getUser();
 
       if (!user) {
-        toast.error("Session expirÃ©e");
+        toast.error("Session expirée");
         setIsUploading(false);
         return;
       }
@@ -262,7 +262,7 @@ export default function EditClientProjectPage() {
         return;
       }
 
-      toast.success("Image ajoutÃ©e avec succÃ¨s");
+      toast.success("Image ajoutée avec succès");
 
       // Refresh image list
       await fetchImages();
@@ -282,7 +282,7 @@ export default function EditClientProjectPage() {
     const result = await deleteProjectImage(imageId, projectId);
 
     if (result.success) {
-      toast.success("Image supprimÃ©e");
+      toast.success("Image supprimée");
       await fetchImages();
     } else {
       toast.error(result.error || "Erreur lors de la suppression");
@@ -293,10 +293,10 @@ export default function EditClientProjectPage() {
     const result = await setMainProjectImage(imageId, projectId);
 
     if (result.success) {
-      toast.success("Image principale dÃ©finie");
+      toast.success("Image principale définie");
       await fetchImages();
     } else {
-      toast.error(result.error || "Erreur lors de la dÃ©finition de l'image principale");
+      toast.error(result.error || "Erreur lors de la définition de l'image principale");
     }
   };
 
@@ -336,7 +336,7 @@ export default function EditClientProjectPage() {
             {hasChanges && (
               <div className="flex items-center gap-2 px-3 py-2 bg-kelen-yellow-50 text-kelen-yellow-700 rounded-lg text-sm font-medium">
                 <AlertCircle className="w-4 h-4" />
-                Modifications non enregistrÃ©es
+                Modifications non enregistrées
               </div>
             )}
           </div>
@@ -368,7 +368,7 @@ export default function EditClientProjectPage() {
               onChange={(e) => updateField("description", e.target.value)}
               rows={4}
               className="w-full px-4 py-3 border border-border rounded-lg bg-white text-foreground focus:outline-none focus:ring-2 focus:ring-kelen-green-500 focus:border-transparent"
-              placeholder="DÃ©crivez votre projet..."
+              placeholder="Décrivez votre projet..."
             />
           </div>
 
@@ -376,14 +376,14 @@ export default function EditClientProjectPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
-                CatÃ©gorie
+                Catégorie
               </label>
               <select
                 value={formData.category || ""}
                 onChange={(e) => updateField("category", e.target.value)}
                 className="w-full px-4 py-3 border border-border rounded-lg bg-white text-foreground focus:outline-none focus:ring-2 focus:ring-kelen-green-500 focus:border-transparent"
               >
-                <option value="">Non dÃ©finie</option>
+                <option value="">Non définie</option>
                 {CATEGORIES.map((cat) => (
                   <option key={cat} value={cat}>
                     {cat}
@@ -432,10 +432,10 @@ export default function EditClientProjectPage() {
                   updateField("location_country", "");
                 }
               }}
-              placeholder="Ex: Dakar, SÃ©nÃ©gal"
+              placeholder="Ex: Dakar, Sénégal"
             />
             <p className="mt-1 text-xs text-muted-foreground">
-              Recherchez une ville, adresse ou lieu (autocomplÃ©tion Google Maps)
+              Recherchez une ville, adresse ou lieu (autocomplétion Google Maps)
             </p>
           </div>
 
@@ -476,7 +476,7 @@ export default function EditClientProjectPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
-                Date de dÃ©but
+                Date de début
               </label>
               <input
                 type="date"
@@ -487,7 +487,7 @@ export default function EditClientProjectPage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
-                Date de fin (prÃ©vue ou rÃ©elle)
+                Date de fin (prévue ou réelle)
               </label>
               <input
                 type="date"
@@ -584,7 +584,7 @@ export default function EditClientProjectPage() {
                         type="button"
                         onClick={() => handleSetMainImage(img.id)}
                         className="p-2 bg-white rounded-full hover:bg-kelen-green-50 transition-colors"
-                        title="DÃ©finir comme principale"
+                        title="Définir comme principale"
                       >
                         <Star className="w-4 h-4 text-kelen-green-600" />
                       </button>
@@ -632,9 +632,9 @@ export default function EditClientProjectPage() {
               <p className="font-medium mb-1">Informations</p>
               <ul className="space-y-1 text-blue-700">
                 <li>â€¢ Tous les champs sauf le titre sont optionnels</li>
-                <li>â€¢ Les modifications sont enregistrÃ©es immÃ©diatement</li>
+                <li>â€¢ Les modifications sont enregistrées immédiatement</li>
                 <li>â€¢ Pour ajouter des professionnels, utilisez la page du projet</li>
-                <li>â€¢ La premiÃ¨re image ajoutÃ©e devient automatiquement l'image principale</li>
+                <li>â€¢ La première image ajoutée devient automatiquement l'image principale</li>
               </ul>
             </div>
           </div>

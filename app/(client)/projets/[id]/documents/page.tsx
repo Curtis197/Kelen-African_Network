@@ -107,7 +107,7 @@ export default function ClientProjectDocumentsPage() {
     // Validate file type
     const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
     if (!allowedTypes.includes(file.type)) {
-      alert("Format non acceptÃ©. Formats acceptÃ©s : PDF, JPG, PNG.");
+      alert("Format non accepté. Formats acceptés : PDF, JPG, PNG.");
       return;
     }
 
@@ -116,7 +116,7 @@ export default function ClientProjectDocumentsPage() {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        alert("Vous devez Ãªtre connectÃ© pour uploader un document.");
+        alert("Vous devez être connecté pour uploader un document.");
         return;
       }
 
@@ -151,7 +151,7 @@ export default function ClientProjectDocumentsPage() {
         return;
       }
 
-      alert("Document uploadÃ© avec succÃ¨s !");
+      alert("Document uploadé avec succès !");
       fetchDocuments();
     } catch (err) {
       alert("Erreur lors de l'upload du document.");
@@ -212,7 +212,7 @@ export default function ClientProjectDocumentsPage() {
                   Documents â€” {projectTitle}
                 </h1>
                 <p className="text-sm text-on-surface-variant mt-1">
-                  GÃ©rez les documents et fichiers de ce projet
+                  Gérez les documents et fichiers de ce projet
                 </p>
               </div>
             </div>
@@ -228,12 +228,12 @@ export default function ClientProjectDocumentsPage() {
               <Upload className="w-8 h-8 text-on-surface-variant/40 group-hover:text-primary transition-colors" />
             )}
           </div>
-          <h3 className="text-lg font-headline font-bold text-on-surface mb-2">DÃ©posez vos documents ici</h3>
+          <h3 className="text-lg font-headline font-bold text-on-surface mb-2">Déposez vos documents ici</h3>
           <p className="text-sm text-on-surface-variant mb-4 italic">
-            Chiffrement AES-256 de bout en bout. Formats acceptÃ©s : PDF, JPG, PNG (Max 10Mo).
+            Chiffrement AES-256 de bout en bout. Formats acceptés : PDF, JPG, PNG (Max 10Mo).
           </p>
           <button className="px-6 py-3 bg-primary text-on-primary rounded-xl font-headline font-bold text-sm shadow-lg shadow-primary/20 active:scale-95 transition-all">
-            SÃ‰LECTIONNER FICHIER
+            SÉLECTIONNER FICHIER
           </button>
           <input
             type="file"
@@ -406,7 +406,7 @@ export default function ClientProjectDocumentsPage() {
                             window.open(doc.contract_url, '_blank');
                           }}
                           className="p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded transition-colors"
-                          title="TÃ©lÃ©charger"
+                          title="Télécharger"
                         >
                           <Download className="w-4 h-4" />
                         </button>
@@ -438,7 +438,7 @@ export default function ClientProjectDocumentsPage() {
             />
             <div className="relative w-96 bg-surface shadow-2xl overflow-y-auto border-l border-outline-variant/20">
               <div className="sticky top-0 bg-surface border-b border-outline-variant/10 px-6 py-4 flex items-center justify-between z-10">
-                <h2 className="text-lg font-headline font-bold text-on-surface">DÃ©tails du document</h2>
+                <h2 className="text-lg font-headline font-bold text-on-surface">Détails du document</h2>
                 <button
                   onClick={() => setSelectedDoc(null)}
                   className="p-2 hover:bg-surface-container rounded-lg transition-colors"
@@ -492,11 +492,11 @@ export default function ClientProjectDocumentsPage() {
                 {/* Metadata */}
                 <div className="space-y-4">
                   <p className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider border-b border-outline-variant/10 pb-2">
-                    MÃ©tadonnÃ©es
+                    Métadonnées
                   </p>
                   <div className="space-y-3">
                     <div className="flex justify-between text-sm">
-                      <span className="text-on-surface-variant">CrÃ©Ã© le</span>
+                      <span className="text-on-surface-variant">Créé le</span>
                       <span className="font-medium text-on-surface">
                         {new Date(selectedDoc.created_at).toLocaleDateString('fr-FR')}
                       </span>
@@ -508,7 +508,7 @@ export default function ClientProjectDocumentsPage() {
                       </span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-on-surface-variant">SÃ©curitÃ©</span>
+                      <span className="text-on-surface-variant">Sécurité</span>
                       <span className="font-medium text-primary flex items-center gap-1">
                         <ShieldCheck className="text-sm" />
                         AES-256

@@ -24,12 +24,12 @@ export function ProjectDocumentCard({
     e.preventDefault();
     e.stopPropagation();
 
-    if (!confirm("ÃŠtes-vous sÃ»r de vouloir supprimer ce projet ?")) return;
+    if (!confirm("ÃŠtes-vous sûr de vouloir supprimer ce projet ?")) return;
 
     setIsDeleting(true);
     try {
       await deleteProjectDocument(doc.id);
-      toast.success("Projet supprimÃ©");
+      toast.success("Projet supprimé");
       router.refresh();
     } catch (error) {
       toast.error("Erreur lors de la suppression.");
@@ -44,7 +44,7 @@ export function ProjectDocumentCard({
 
     try {
       await exportRealisationToPDF(doc.id);
-      toast.success('Export PDF lancÃ©');
+      toast.success('Export PDF lancé');
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Erreur lors de l'export");
     }
@@ -52,8 +52,8 @@ export function ProjectDocumentCard({
 
   const statusLabels: Record<string, string> = {
     pending_review: "En attente",
-    published: "PubliÃ©",
-    rejected: "RejetÃ©",
+    published: "Publié",
+    rejected: "Rejeté",
   };
 
   const statusColors: Record<string, string> = {
@@ -159,7 +159,7 @@ export function ProjectDocumentCard({
       <Link 
         href={`/pro/realisations/${doc.id}`}
         className="absolute inset-0 z-0"
-        aria-label={`Voir les dÃ©tails de ${doc.project_title}`}
+        aria-label={`Voir les détails de ${doc.project_title}`}
       />
     </div>
   );

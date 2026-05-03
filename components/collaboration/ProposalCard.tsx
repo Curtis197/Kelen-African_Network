@@ -31,7 +31,7 @@ const STATUS_CONFIG: Record<string, { label: string; badgeColor: string; icon: R
     icon: <Clock className="w-3 h-3" />,
   },
   negotiating: {
-    label: "En nÃ©gociation",
+    label: "En négociation",
     badgeColor: "bg-purple-100 text-purple-700",
     icon: <MessageSquare className="w-3 h-3" />,
   },
@@ -85,7 +85,7 @@ export function ProposalCard({
                   {pro.professional?.business_name || "Professional"}
                 </h3>
                 <p className="text-sm text-gray-500">
-                  {pro.professional?.category} â€¢ {pro.professional?.city}, {pro.professional?.country}
+                  {pro.professional?.category} "¢ {pro.professional?.city}, {pro.professional?.country}
                 </p>
                 {pro.professional?.avg_rating && (
                   <div className="flex items-center gap-1 mt-1">
@@ -125,7 +125,7 @@ export function ProposalCard({
 
             {!hasProposal && collabStatus === 'pending' && (
               <p className="text-sm text-yellow-600 mt-2">
-                â³ En attente de rÃ©ponse du professionnel
+                â³ En attente de réponse du professionnel
               </p>
             )}
 
@@ -173,7 +173,7 @@ export function ProposalCard({
                   {isLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : (
                     <>
                       <Check className="w-3 h-3 mr-1" />
-                      SÃ©lectionner
+                      Sélectionner
                     </>
                   )}
                 </Button>

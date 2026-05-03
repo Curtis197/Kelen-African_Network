@@ -67,7 +67,7 @@ export default function AddStepDialog({ isOpen, onClose, projectId, step, onSucc
       onSuccess();
       onClose();
     } catch (err) {
-      setSubmitError("Une erreur est survenue. Veuillez rÃ©essayer.");
+      setSubmitError("Une erreur est survenue. Veuillez réessayer.");
     } finally {
       setIsLoading(false);
     }
@@ -86,7 +86,7 @@ export default function AddStepDialog({ isOpen, onClose, projectId, step, onSucc
         <div className="p-4 sm:p-6 lg:p-8 pb-3 sm:pb-4 flex items-center justify-between border-b border-border flex-shrink-0">
           <div className="flex-1 min-w-0 pr-4">
             <h2 className="text-lg sm:text-xl lg:text-2xl font-black text-on-surface tracking-tight">
-              {step ? "Modifier l'Ã©tape" : "Nouvelle Ã©tape"}
+              {step ? "Modifier l'étape" : "Nouvelle étape"}
             </h2>
             <p className="text-xs sm:text-sm text-on-surface-variant font-medium pt-1 truncate">Structurez votre roadmap projet</p>
           </div>
@@ -107,7 +107,7 @@ export default function AddStepDialog({ isOpen, onClose, projectId, step, onSucc
           <div className="space-y-3 sm:space-y-4">
             <div className="space-y-2">
               <label className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] text-on-surface-variant/60 ml-1">
-                Titre de l&apos;Ã©tape
+                Titre de l&apos;étape
               </label>
               <input
                 required
@@ -126,7 +126,7 @@ export default function AddStepDialog({ isOpen, onClose, projectId, step, onSucc
               <textarea
                 value={formData.comment}
                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFormData({ ...formData, comment: e.target.value })}
-                placeholder="DÃ©tails sur l'avancement ou points d'attention..."
+                placeholder="Détails sur l'avancement ou points d'attention..."
                 rows={3}
                 className="w-full bg-surface-container border-none rounded-xl sm:rounded-2xl p-3 sm:p-4 text-sm sm:text-base text-on-surface focus:ring-2 focus:ring-kelen-green-500 transition-all font-medium resize-none placeholder:text-on-surface-variant/40"
               />
@@ -135,7 +135,7 @@ export default function AddStepDialog({ isOpen, onClose, projectId, step, onSucc
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div className="space-y-2">
                 <label className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] text-on-surface-variant/60 ml-1">
-                  Budget AllouÃ©
+                  Budget Alloué
                 </label>
                 <div className="relative">
                   <input
@@ -150,7 +150,7 @@ export default function AddStepDialog({ isOpen, onClose, projectId, step, onSucc
 
               <div className="space-y-2">
                 <label className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] text-on-surface-variant/60 ml-1">
-                  DÃ©pense RÃ©elle
+                  Dépense Réelle
                 </label>
                 <div className="relative">
                   <input
@@ -175,9 +175,9 @@ export default function AddStepDialog({ isOpen, onClose, projectId, step, onSucc
               >
                 <option value="pending">En attente</option>
                 <option value="in_progress">En cours</option>
-                <option value="completed">TerminÃ©</option>
+                <option value="completed">Terminé</option>
                 <option value="on_hold">En pause</option>
-                <option value="cancelled">AnnulÃ©</option>
+                <option value="cancelled">Annulé</option>
               </select>
             </div>
           </div>
@@ -199,7 +199,7 @@ export default function AddStepDialog({ isOpen, onClose, projectId, step, onSucc
                 <Loader2 className="w-4 h-4 animate-spin" />
               ) : (
                 <>
-                  {step ? "Enregistrer" : "CrÃ©er l'Ã©tape"}
+                  {step ? "Enregistrer" : "Créer l'étape"}
                   <Check className="w-4 h-4" />
                 </>
               )}

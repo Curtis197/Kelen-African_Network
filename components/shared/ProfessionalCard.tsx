@@ -109,7 +109,7 @@ export function ProfessionalCard({
       {added && (
         <div className="absolute inset-0 bg-kelen-green-600/90 backdrop-blur-sm z-30 flex flex-col items-center justify-center text-white animate-in fade-in duration-300">
           <Check className="w-12 h-12 mb-4 animate-bounce" />
-          <p className="font-black uppercase tracking-widest text-[10px]">AjoutÃ© au projet !</p>
+          <p className="font-black uppercase tracking-widest text-[10px]">Ajouté au projet !</p>
           <p className="text-white/60 text-[9px] mt-2">Redirection...</p>
         </div>
       )}
@@ -153,14 +153,14 @@ export function ProfessionalCard({
 
       <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
         <span>{category}</span>
-        <span className="text-border">Â·</span>
+        <span className="text-border">·</span>
         <span>{city}, {country}</span>
       </div>
 
       <div className="mt-4 flex items-center gap-4 text-sm">
         {recommendationCount > 0 && (
           <span className="text-kelen-green-700">
-            {recommendationCount} projet{recommendationCount > 1 ? "s" : ""} vÃ©rifiÃ©{recommendationCount > 1 ? "s" : ""}
+            {recommendationCount} projet{recommendationCount > 1 ? "s" : ""} vérifié{recommendationCount > 1 ? "s" : ""}
           </span>
         )}
         {signalCount > 0 && (
@@ -175,7 +175,7 @@ export function ProfessionalCard({
         )}
         {recommendationCount === 0 && signalCount === 0 && (
           <span className="text-muted-foreground">
-            Aucun historique documentÃ©
+            Aucun historique documenté
           </span>
         )}
       </div>
@@ -204,7 +204,7 @@ export function ProfessionalCard({
             ) : (
               <Plus className="w-4 h-4" />
             )}
-            {added ? 'AjoutÃ©' : 'Choisir'}
+            {added ? 'Ajouté' : 'Choisir'}
           </button>
         )}
       </div>

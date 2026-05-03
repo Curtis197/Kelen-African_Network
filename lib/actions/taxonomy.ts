@@ -86,7 +86,7 @@ async function requireAdmin() {
   const { data: { user }, error: authError } = await supabase.auth.getUser();
   
   if (authError || !user) {
-    return { error: "Vous devez Ãªtre connectÃ©" as string };
+    return { error: "Vous devez être connecté" as string };
   }
 
   // Check if user is admin
@@ -97,7 +97,7 @@ async function requireAdmin() {
     .single();
 
   if (userError || !userData || userData.role !== 'admin') {
-    return { error: "Non autorisÃ©: accÃ¨s admin requis" as string };
+    return { error: "Non autorisé: accès admin requis" as string };
   }
 
   return { success: true };

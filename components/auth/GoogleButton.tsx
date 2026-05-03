@@ -36,7 +36,7 @@ export function GoogleButton({ role = "client" }: GoogleButtonProps) {
 
       // Note: This will redirect to Google, so we won't reach here immediately
     } catch (err: any) {
-      setError(err.message || "Ã‰chec de la connexion avec Google.");
+      setError(err.message || "Échec de la connexion avec Google.");
       setIsLoading(false);
     }
   };

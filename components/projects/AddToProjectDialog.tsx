@@ -106,7 +106,7 @@ export function AddToProjectDialog({
 
 
       if (result.success) {
-        toast.success(`${professionalName} ajoutÃ© au projet`);
+        toast.success(`${professionalName} ajouté au projet`);
         setIsOpen(false);
         router.push(`/projets/${selectedProjectId}`);
       } else {
@@ -142,12 +142,12 @@ export function AddToProjectDialog({
         <div className="p-8 pb-4 flex items-center justify-between border-b border-stone-50">
           <div>
             <h2 className="text-2xl font-black text-stone-900 tracking-tight">
-              {step === "project" ? "Choisir un projet" : "DÃ©finir le domaine"}
+              {step === "project" ? "Choisir un projet" : "Définir le domaine"}
             </h2>
             <p className="text-sm text-stone-500 font-medium">Pour {professionalName}</p>
             {step === "area" && (
               <p className="text-xs text-kelen-green-600 font-bold mt-1">
-                Ã‰tape 2/2 â€” SÃ©lectionnez un domaine
+                Étape 2/2 "” Sélectionnez un domaine
               </p>
             )}
           </div>
@@ -204,7 +204,7 @@ export function AddToProjectDialog({
                     onClick={() => router.push("/projets/nouveau")}
                     className="text-kelen-green-600 font-black uppercase tracking-widest text-xs"
                   >
-                    CrÃ©er mon premier projet
+                    Créer mon premier projet
                   </button>
                 </div>
               )}
@@ -221,7 +221,7 @@ export function AddToProjectDialog({
                       : "text-stone-500 hover:text-stone-700"
                   }`}
                 >
-                  PrÃ©dÃ©finis
+                  Prédéfinis
                 </button>
                 <button
                   onClick={() => { setAreaMode("project"); setSelectedArea(null); }}
@@ -241,7 +241,7 @@ export function AddToProjectDialog({
                       : "text-stone-500 hover:text-stone-700"
                   }`}
                 >
-                  PersonnalisÃ©
+                  Personnalisé
                 </button>
               </div>
 
@@ -291,7 +291,7 @@ export function AddToProjectDialog({
                   {projectAreas.length > 0 ? (
                     <>
                       <p className="text-[9px] text-stone-400 font-medium mb-2">
-                        Ces domaines ont Ã©tÃ© dÃ©finis pour ce projet. SÃ©lectionnez-en un.
+                        Ces domaines ont été définis pour ce projet. Sélectionnez-en un.
                       </p>
                       <div className="space-y-2 max-h-[40vh] overflow-y-auto pr-2 custom-scrollbar">
                         {projectAreas.map((areaData) => (
@@ -380,7 +380,7 @@ export function AddToProjectDialog({
                         <div className="w-full mt-2 p-3 bg-kelen-green-50 rounded-xl border border-kelen-green-100">
                           <p className="text-[10px] text-kelen-green-700 font-bold flex items-center gap-2">
                             <Plus className="w-3 h-3" />
-                            CrÃ©er un nouveau domaine : &quot;{customArea}&quot;
+                            Créer un nouveau domaine : &quot;{customArea}&quot;
                           </p>
                         </div>
                       )}

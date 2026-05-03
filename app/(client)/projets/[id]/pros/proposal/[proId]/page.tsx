@@ -32,7 +32,7 @@ import { useRef } from "react";
 
 const STATUS_BADGE_CONFIG: Record<string, { label: string; className: string }> = {
   pending: { label: "En attente", className: "bg-yellow-100 text-yellow-700" },
-  negotiating: { label: "NÃ©gociation", className: "bg-purple-100 text-purple-700" },
+  negotiating: { label: "Négociation", className: "bg-purple-100 text-purple-700" },
   active: { label: "Actif", className: "bg-green-500 text-white" },
 };
 
@@ -133,7 +133,7 @@ export default function ProposalReviewPage() {
     if (!collaboration) return;
 
 
-    if (!confirm("Accepter cette proposition ? Les autres finalistes seront automatiquement refusÃ©s.")) {
+    if (!confirm("Accepter cette proposition ? Les autres finalistes seront automatiquement refusés.")) {
       return;
     }
 
@@ -145,7 +145,7 @@ export default function ProposalReviewPage() {
     if (result.error) {
       toast.error(result.error);
     } else {
-      toast.success("Proposition acceptÃ©e ! Le professionnel a maintenant accÃ¨s au projet.");
+      toast.success("Proposition acceptée ! Le professionnel a maintenant accès au projet.");
       router.push(`/projets/${projectIdStr}/pros`);
     }
     setIsSubmitting(false);
@@ -162,13 +162,13 @@ export default function ProposalReviewPage() {
 
     setIsSubmitting(true);
 
-    const result = await declineFinalist(collaboration.id, reason || "Non sÃ©lectionnÃ©");
+    const result = await declineFinalist(collaboration.id, reason || "Non sélectionné");
 
 
     if (result.error) {
       toast.error(result.error);
     } else {
-      toast.success("Professionnel refusÃ©.");
+      toast.success("Professionnel refusé.");
       router.push(`/projets/${projectIdStr}/pros`);
     }
     setIsSubmitting(false);
@@ -178,7 +178,7 @@ export default function ProposalReviewPage() {
     if (!collaboration) return;
 
 
-    const message = prompt("Votre demande de rÃ©vision :");
+    const message = prompt("Votre demande de révision :");
     if (!message) {
       return;
     }
@@ -191,7 +191,7 @@ export default function ProposalReviewPage() {
     if (result.error) {
       toast.error(result.error);
     } else {
-      toast.success("Demande de rÃ©vision envoyÃ©e.");
+      toast.success("Demande de révision envoyée.");
 
       const supabase = createClient();
       const { data, error: reloadError } = await supabase
@@ -229,7 +229,7 @@ export default function ProposalReviewPage() {
         type: file.type
       }]);
       
-      toast.success("Fichier ajoutÃ©");
+      toast.success("Fichier ajouté");
     } catch (error: any) {
       toast.error(error.message || "Erreur lors de l'envoi du fichier");
     } finally {
@@ -253,7 +253,7 @@ export default function ProposalReviewPage() {
     const { data: authData } = await supabase.auth.getUser();
     const senderId = authData.user?.id;
     if (!senderId) {
-      toast.error("Non authentifiÃ©");
+      toast.error("Non authentifié");
       setIsSubmitting(false);
       return;
     }
@@ -274,7 +274,7 @@ export default function ProposalReviewPage() {
 
 
     if (error?.code === "42501") {
-      toast.error("AccÃ¨s refusÃ©");
+      toast.error("Accès refusé");
     } else if (error) {
       toast.error(error.message);
     } else {
@@ -282,7 +282,7 @@ export default function ProposalReviewPage() {
       if (data) {
         setMessages((prev) => [...prev, data as CollaborationMessage]);
       }
-      toast.success("Message envoyÃ©");
+      toast.success("Message envoyé");
       setAttachments([]);
     }
     setIsSubmitting(false);
@@ -302,7 +302,7 @@ export default function ProposalReviewPage() {
         <FileText className="w-12 h-12 text-on-surface-variant/40 mb-4" />
         <h1 className="text-2xl font-bold text-on-surface mb-2">Proposition introuvable</h1>
         <Link href={`/projets/${projectIdStr}/pros`} className="text-primary font-semibold hover:underline">
-          â† Retour aux professionnels
+          ← Retour aux professionnels
         </Link>
       </div>
     );
@@ -403,7 +403,7 @@ export default function ProposalReviewPage() {
               <div className="bg-surface-container rounded-xl p-4">
                 <div className="flex items-center gap-2 text-sm text-on-surface-variant mb-1">
                   <DollarSign className="w-4 h-4" />
-                  Budget proposÃ©
+                  Budget proposé
                 </div>
                 <div className="text-xl font-bold text-on-surface">
                   {collaboration.proposal_budget.toLocaleString("fr-FR")} {collaboration.proposal_currency || "XOF"}
@@ -415,7 +415,7 @@ export default function ProposalReviewPage() {
               <div className="bg-surface-container rounded-xl p-4">
                 <div className="flex items-center gap-2 text-sm text-on-surface-variant mb-1">
                   <Calendar className="w-4 h-4" />
-                  DurÃ©e estimÃ©e
+                  Durée estimée
                 </div>
                 <div className="text-xl font-bold text-on-surface">
                   {collaboration.proposal_timeline}
@@ -474,7 +474,7 @@ export default function ProposalReviewPage() {
                       {msg.message_type !== "general" && (
                         <Badge className="ml-2 bg-surface-container-high text-on-surface-variant text-[10px]">
                           {msg.message_type === "proposal" && "Proposition"}
-                          {msg.message_type === "revision_request" && "Demande de rÃ©vision"}
+                          {msg.message_type === "revision_request" && "Demande de révision"}
                           {msg.message_type === "counter_offer" && "Contre-offre"}
                           {msg.message_type === "acceptance" && "Acceptation"}
                           {msg.message_type === "decline" && "Refus"}
@@ -624,7 +624,7 @@ export default function ProposalReviewPage() {
               className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 bg-green-500 text-white rounded-xl font-semibold text-sm hover:bg-green-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <CheckCircle2 className="w-5 h-5" />
-              Accepter â€” SÃ©lectionner ce pro
+              Accepter â€” Sélectionner ce pro
             </button>
             <button
               onClick={handleRequestRevision}
@@ -650,7 +650,7 @@ export default function ProposalReviewPage() {
             <CheckCircle2 className="w-8 h-8 text-green-500 mx-auto mb-2" />
             <h3 className="text-lg font-bold text-green-700">Collaboration active</h3>
             <p className="text-sm text-green-600 mt-1">
-              Ce professionnel a accÃ¨s complet au projet.
+              Ce professionnel a accès complet au projet.
             </p>
             <Link
               href={`/projets/${projectIdStr}`}

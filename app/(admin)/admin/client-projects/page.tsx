@@ -1,8 +1,8 @@
 ﻿"use client";
 
 import { useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
+import { getAdminProjects, updateAdminProject } from "@/lib/actions/admin-projects";
 import { motion } from "framer-motion";
 import { FolderOpen, Edit, Save, X, Search, MapPin, Calendar, DollarSign, Eye } from "lucide-react";
 import Link from "next/link";
@@ -30,17 +30,17 @@ const STATUS_CONFIG = {
   en_preparation: { label: "Brouillon", color: "bg-stone-100 text-stone-700 border-stone-300" },
   en_cours: { label: "En cours", color: "bg-blue-50 text-blue-700 border-blue-200" },
   en_pause: { label: "En pause", color: "bg-orange-50 text-orange-700 border-orange-200" },
-  termine: { label: "TerminÃ©", color: "bg-green-50 text-green-700 border-green-200" },
-  annule: { label: "AnnulÃ©", color: "bg-red-50 text-red-700 border-red-200" },
+  termine: { label: "Terminé", color: "bg-green-50 text-green-700 border-green-200" },
+  annule: { label: "Annulé", color: "bg-red-50 text-red-700 border-red-200" },
 };
 
 const CATEGORIES = [
   "Construction",
-  "RÃ©novation",
+  "Rénovation",
   "Architecture",
   "Design",
-  "IngÃ©nierie",
-  "Ã‰lectricitÃ©",
+  "Ingénierie",
+  "Électricité",
   "Plomberie",
   "Peinture",
   "Menuiserie",
@@ -57,9 +57,6 @@ export default function ClientProjectsAdminPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [editingProject, setEditingProject] = useState<UserProject | null>(null);
   const [editForm, setEditForm] = useState<Partial<UserProject>>({});
-  const supabase = createClient();
-
-
   useEffect(() => {
     fetchProjects();
   }, []);
@@ -80,30 +77,15 @@ export default function ClientProjectsAdminPage() {
 
   const fetchProjects = async () => {
     setIsLoading(true);
-
-    const { data: { user } } = await supabase.auth.getUser();
-
-    if (!user) {
-      toast.error("Non authentifiÃ©");
-      setIsLoading(false);
-      return;
-    }
-
-    const { data, error } = await supabase
-      .from("user_projects")
-      .select("*")
-      .order("created_at", { ascending: false });
-
-
+    const { data, error } = await getAdminProjects();
     if (error?.code === '42501') {
-      toast.error("AccÃ¨s refusÃ© - Contactez un super-admin");
+      toast.error("Accès refusé - Contactez un super-admin");
     } else if (error) {
       toast.error("Erreur lors du chargement");
     } else {
-      setProjects(data || []);
-      setFilteredProjects(data || []);
+      setProjects(data);
+      setFilteredProjects(data);
     }
-
     setIsLoading(false);
   };
 
@@ -119,32 +101,25 @@ export default function ClientProjectsAdminPage() {
 
   const saveProject = async () => {
     if (!editingProject) return;
-
-
-    const { error } = await supabase
-      .from("user_projects")
-      .update({
-        title: editForm.title,
-        description: editForm.description,
-        category: editForm.category,
-        location: editForm.location,
-        location_formatted: editForm.location_formatted,
-        status: editForm.status,
-        budget_total: editForm.budget_total,
-        budget_currency: editForm.budget_currency,
-        start_date: editForm.start_date,
-        end_date: editForm.end_date,
-        objectives: editForm.objectives,
-      })
-      .eq("id", editingProject.id);
-
-
+    const { error } = await updateAdminProject(editingProject.id, {
+      title: editForm.title,
+      description: editForm.description,
+      category: editForm.category,
+      location: editForm.location,
+      location_formatted: editForm.location_formatted,
+      status: editForm.status,
+      budget_total: editForm.budget_total,
+      budget_currency: editForm.budget_currency,
+      start_date: editForm.start_date,
+      end_date: editForm.end_date,
+      objectives: editForm.objectives,
+    });
     if (error?.code === '42501') {
-      toast.error("Modification refusÃ©e - AccÃ¨s non autorisÃ©");
+      toast.error("Modification refusée - Accès non autorisé");
     } else if (error) {
       toast.error("Erreur lors de la modification");
     } else {
-      toast.success("Projet modifiÃ© avec succÃ¨s");
+      toast.success("Projet modifié avec succès");
       setEditingProject(null);
       setEditForm({});
       fetchProjects();
@@ -156,7 +131,7 @@ export default function ClientProjectsAdminPage() {
   };
 
   const formatDate = (dateStr?: string) => {
-    if (!dateStr) return "â€”";
+    if (!dateStr) return ""”";
     return new Date(dateStr).toLocaleDateString("fr-FR", {
       day: "numeric",
       month: "long",
@@ -181,7 +156,7 @@ export default function ClientProjectsAdminPage() {
           href="/admin"
           className="px-4 py-2 bg-surface-container text-foreground rounded-lg hover:bg-surface-container-high transition-colors text-sm font-medium"
         >
-          â† Retour
+          ← Retour
         </Link>
       </div>
 
@@ -198,7 +173,7 @@ export default function ClientProjectsAdminPage() {
           </p>
         </div>
         <div className="rounded-xl border border-border bg-white p-4">
-          <p className="text-sm text-muted-foreground">TerminÃ©s</p>
+          <p className="text-sm text-muted-foreground">Terminés</p>
           <p className="text-2xl font-bold text-green-600 mt-1">
             {projects.filter((p) => p.status === "termine").length}
           </p>
@@ -279,14 +254,14 @@ export default function ClientProjectsAdminPage() {
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-foreground mb-1">
-                          CatÃ©gorie
+                          Catégorie
                         </label>
                         <select
                           value={editForm.category || ""}
                           onChange={(e) => updateEditField("category", e.target.value)}
                           className="w-full px-3 py-2 border border-border rounded-lg bg-white text-foreground focus:outline-none focus:ring-2 focus:ring-kelen-green-500"
                         >
-                          <option value="">Non dÃ©finie</option>
+                          <option value="">Non définie</option>
                           {CATEGORIES.map((cat) => (
                             <option key={cat} value={cat}>
                               {cat}
@@ -360,7 +335,7 @@ export default function ClientProjectsAdminPage() {
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-foreground mb-1">
-                          Date de dÃ©but
+                          Date de début
                         </label>
                         <input
                           type="date"
@@ -482,11 +457,11 @@ export default function ClientProjectsAdminPage() {
       ) : (
         <div className="rounded-xl border border-border bg-white p-12 text-center">
           <FolderOpen className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-          <p className="text-lg font-semibold text-foreground">Aucun projet trouvÃ©</p>
+          <p className="text-lg font-semibold text-foreground">Aucun projet trouvé</p>
           <p className="text-sm text-muted-foreground mt-2">
             {searchQuery
               ? "Essayez avec d'autres termes de recherche"
-              : "Aucun projet client n'a Ã©tÃ© trouvÃ©"}
+              : "Aucun projet client n'a été trouvé"}
           </p>
         </div>
       )}

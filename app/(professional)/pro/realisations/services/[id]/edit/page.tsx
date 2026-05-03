@@ -67,7 +67,7 @@ export default async function EditServicePage({ params }: EditServicePageProps) 
           Modifier : {service.title}
         </h1>
         <p className="mt-2 text-on-surface-variant/70">
-          Mettez Ã  jour les informations et les mÃ©dias de votre service.
+          Mettez Ã  jour les informations et les médias de votre service.
         </p>
       </div>
 

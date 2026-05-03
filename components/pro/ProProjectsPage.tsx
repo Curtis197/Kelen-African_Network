@@ -21,7 +21,7 @@ const STATUS_CONFIG: Record<ProProjectStatus, { label: string; icon: React.React
     color: "bg-blue-100 text-blue-700",
   },
   completed: {
-    label: "TerminÃ©",
+    label: "Terminé",
     icon: <CheckCircle className="w-3.5 h-3.5" />,
     color: "bg-green-100 text-green-700",
   },
@@ -31,7 +31,7 @@ const STATUS_CONFIG: Record<ProProjectStatus, { label: string; icon: React.React
     color: "bg-amber-100 text-amber-700",
   },
   cancelled: {
-    label: "AnnulÃ©",
+    label: "Annulé",
     icon: <XCircle className="w-3.5 h-3.5" />,
     color: "bg-red-100 text-red-700",
   },
@@ -87,7 +87,7 @@ export function ProProjectsPage() {
     if (result.error) {
       toast.error(result.error);
     } else {
-      toast.success("Projet supprimÃ©");
+      toast.success("Projet supprimé");
       loadProjects();
     }
   };
@@ -98,7 +98,7 @@ export function ProProjectsPage() {
     if (result.error) {
       toast.error(result.error);
     } else {
-      toast.success(project.is_public ? "Projet retirÃ© du portfolio" : "Projet ajoutÃ© au portfolio");
+      toast.success(project.is_public ? "Projet retiré du portfolio" : "Projet ajouté au portfolio");
       loadProjects();
     }
   };
@@ -106,7 +106,7 @@ export function ProProjectsPage() {
   const filters = [
     { value: "all", label: "Tous" },
     { value: "in_progress", label: "En cours" },
-    { value: "completed", label: "TerminÃ©s" },
+    { value: "completed", label: "Terminés" },
     { value: "paused", label: "En pause" },
   ];
 
@@ -114,7 +114,7 @@ export function ProProjectsPage() {
   const stats = [
     { label: "Total", value: projects.length, color: "text-on-surface", bg: "bg-surface-container" },
     { label: "En cours", value: projects.filter(p => p.status === "in_progress").length, color: "text-blue-700", bg: "bg-blue-50" },
-    { label: "TerminÃ©s", value: projects.filter(p => p.status === "completed").length, color: "text-kelen-green-700", bg: "bg-kelen-green-50" },
+    { label: "Terminés", value: projects.filter(p => p.status === "completed").length, color: "text-kelen-green-700", bg: "bg-kelen-green-50" },
     { label: "Portfolio public", value: projects.filter(p => p.is_public).length, color: "text-amber-700", bg: "bg-amber-50" },
   ];
 
@@ -125,7 +125,7 @@ export function ProProjectsPage() {
         <div>
           <h1 className="text-2xl font-bold text-on-surface tracking-tight">Mes projets</h1>
           <p className="text-sm text-on-surface-variant mt-1">
-            GÃ©rez vos chantiers et documentez votre expertise
+            Gérez vos chantiers et documentez votre expertise
           </p>
         </div>
         <Link
@@ -208,14 +208,14 @@ export function ProProjectsPage() {
           </div>
           <h3 className="text-lg font-bold text-on-surface mb-2">Aucun projet pour l'instant</h3>
           <p className="text-sm text-on-surface-variant mb-6 max-w-xs">
-            CrÃ©ez votre premier projet pour documenter votre travail et enrichir votre portfolio
+            Créez votre premier projet pour documenter votre travail et enrichir votre portfolio
           </p>
           <Link
             href="/pro/projets/nouveau"
             className="inline-flex items-center gap-2 px-5 py-3 bg-primary text-on-primary rounded-xl font-semibold text-sm shadow-md shadow-primary/20 hover:opacity-90 transition-opacity"
           >
             <Plus className="w-4 h-4" />
-            CrÃ©er mon premier projet
+            Créer mon premier projet
           </Link>
         </div>
       ) : (
@@ -347,7 +347,7 @@ export function ProProjectsPage() {
                           href={`/pro/projets/${project.id}`}
                           className="text-xs font-medium text-primary hover:underline"
                         >
-                          Voir dÃ©tails
+                          Voir détails
                         </Link>
                         <div className="flex items-center gap-1">
                           <button
@@ -373,7 +373,7 @@ export function ProProjectsPage() {
                   <tr>
                     <th className="px-6 py-4 text-left text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Projet</th>
                     <th className="px-6 py-4 text-left text-[10px] font-bold text-on-surface-variant uppercase tracking-wider hidden md:table-cell">Statut</th>
-                    <th className="px-6 py-4 text-left text-[10px] font-bold text-on-surface-variant uppercase tracking-wider hidden lg:table-cell">DÃ©tails</th>
+                    <th className="px-6 py-4 text-left text-[10px] font-bold text-on-surface-variant uppercase tracking-wider hidden lg:table-cell">Détails</th>
                     <th className="px-6 py-4 text-right text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Actions</th>
                   </tr>
                 </thead>
@@ -416,7 +416,7 @@ export function ProProjectsPage() {
                                 )}
                                 {project.client_name && (
                                   <>
-                                    <span>â€¢</span>
+                                    <span>"¢</span>
                                     <span className="truncate">Client: {project.client_name}</span>
                                   </>
                                 )}
@@ -493,7 +493,7 @@ export function ProProjectsPage() {
                             <Link
                               href={`/pro/projets/${project.id}`}
                               className="p-2 text-on-surface-variant hover:text-on-surface rounded-lg hover:bg-surface-container transition-colors"
-                              aria-label="Voir dÃ©tails"
+                              aria-label="Voir détails"
                             >
                               <Eye className="w-4 h-4" />
                             </Link>

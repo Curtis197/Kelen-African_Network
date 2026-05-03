@@ -173,7 +173,7 @@ export function Navbar() {
             className="flex items-center gap-2 rounded-xl border border-kelen-green-100 bg-kelen-green-50/50 px-4 py-2 text-sm font-bold text-kelen-green-700 transition-all hover:bg-kelen-green-100 hover:text-kelen-green-800 active:scale-95"
           >
             <ShieldCheck className="w-5 h-5" />
-            VÃ©rifier un pro
+            Vérifier un pro
           </Link>
 
           {user ? (
@@ -185,7 +185,7 @@ export function Navbar() {
                 className="flex items-center gap-2 rounded-xl border border-border px-4 py-2 text-sm font-bold text-on-surface-variant transition-all hover:bg-surface-container hover:text-on-surface active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100"
               >
                 <LogOut className="w-5 h-5" />
-                {signingOut ? 'DÃ©connexion...' : 'DÃ©connexion'}
+                {signingOut ? 'Déconnexion...' : 'Déconnexion'}
               </button>
             </div>
           ) : (
@@ -276,7 +276,7 @@ export function Navbar() {
               className="flex items-center justify-center gap-2 rounded-xl border border-kelen-green-100 bg-kelen-green-50/50 py-3 text-base font-bold text-kelen-green-700 transition-all active:scale-95"
             >
               <ShieldCheck className="w-5 h-5" />
-              VÃ©rifier un pro
+              Vérifier un pro
             </Link>
 
             {user ? (
@@ -286,7 +286,7 @@ export function Navbar() {
                 className="flex items-center justify-center gap-2 rounded-xl border border-border py-3 text-base font-bold text-stone-500 transition-all hover:bg-stone-50 disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 <LogOut className="w-5 h-5" />
-                {signingOut ? 'DÃ©connexion...' : 'DÃ©connexion'}
+                {signingOut ? 'Déconnexion...' : 'Déconnexion'}
               </button>
             ) : (
               <>

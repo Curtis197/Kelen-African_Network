@@ -7,7 +7,7 @@ import { ArrowLeft, Calendar, DollarSign, ImageIcon, Edit2, MapPin, Play, Video 
 import { RealizationGallery } from "@/components/pro/RealizationGallery";
 
 export const metadata: Metadata = {
-  title: "DÃ©tails de la rÃ©alisation â€” Kelen Pro",
+  title: "Détails de la réalisation â€” Kelen Pro",
 };
 
 interface RealizationDetailPageProps {
@@ -121,7 +121,7 @@ export default async function RealizationDetailPage({ params }: RealizationDetai
               {videos.length > 0 && (
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-surface-container px-3 py-1 text-xs font-medium text-on-surface-variant">
                   <Video size={12} />
-                  {videos.length} vidÃ©o{videos.length > 1 ? 's' : ''}
+                  {videos.length} vidéo{videos.length > 1 ? 's' : ''}
                 </span>
               )}
             </div>
@@ -140,7 +140,7 @@ export default async function RealizationDetailPage({ params }: RealizationDetai
       <div className="space-y-8">
         {/* Image Gallery */}
         <div className="rounded-[2.5rem] bg-white p-8 shadow-sm lg:p-12">
-          <h2 className="font-headline text-xl font-bold text-on-surface mb-6">Photos de la rÃ©alisation</h2>
+          <h2 className="font-headline text-xl font-bold text-on-surface mb-6">Photos de la réalisation</h2>
           {allPhotos.length > 0 ? (
             <RealizationGallery
               photoUrls={allPhotos}
@@ -159,7 +159,7 @@ export default async function RealizationDetailPage({ params }: RealizationDetai
           <div className="rounded-[2.5rem] bg-white p-8 shadow-sm lg:p-12">
             <h2 className="font-headline text-xl font-bold text-on-surface mb-6 flex items-center gap-2">
               <Video size={20} className="text-kelen-green-600" />
-              VidÃ©os
+              Vidéos
             </h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {videos.map((video) => (
@@ -167,7 +167,7 @@ export default async function RealizationDetailPage({ params }: RealizationDetai
                   {video.thumbnail_url ? (
                     <Image
                       src={video.thumbnail_url}
-                      alt="Miniature vidÃ©o"
+                      alt="Miniature vidéo"
                       fill
                       className="object-cover"
                     />
@@ -203,7 +203,7 @@ export default async function RealizationDetailPage({ params }: RealizationDetai
 
         {/* Project Details */}
         <div className="rounded-[2.5rem] bg-white p-8 shadow-sm lg:p-12">
-          <h2 className="font-headline text-xl font-bold text-on-surface mb-6">DÃ©tails de la rÃ©alisation</h2>
+          <h2 className="font-headline text-xl font-bold text-on-surface mb-6">Détails de la réalisation</h2>
 
           <div className="space-y-6">
             {realization.description && (
@@ -228,7 +228,7 @@ export default async function RealizationDetailPage({ params }: RealizationDetai
                 <div className="flex items-start gap-3">
                   <Calendar size={18} className="mt-0.5 text-kelen-green-600" />
                   <div>
-                    <h3 className="text-sm font-bold text-on-surface-variant mb-1">Date d'achÃ¨vement</h3>
+                    <h3 className="text-sm font-bold text-on-surface-variant mb-1">Date d'achèvement</h3>
                     <p className="text-on-surface">
                       {new Date(realization.completion_date).toLocaleDateString('fr-FR', {
                         day: 'numeric',

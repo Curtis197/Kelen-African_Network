@@ -12,7 +12,7 @@ export async function uploadLogMedia(
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) return { error: "Non autorisÃ©" };
+  if (!user) return { error: "Non autorisé" };
 
   const { data: logEntry } = await supabase
     .from("project_logs")
@@ -21,7 +21,7 @@ export async function uploadLogMedia(
     .single();
 
   if (!logEntry || logEntry.author_id !== user.id) {
-    return { error: "Non autorisÃ©" };
+    return { error: "Non autorisé" };
   }
 
   const entries = Array.from(files.entries());
@@ -91,7 +91,7 @@ export async function deleteLogMedia(
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) return { success: false, error: "Non autorisÃ©" };
+  if (!user) return { success: false, error: "Non autorisé" };
 
   const { data: media } = await supabase
     .from("project_log_media")
@@ -99,7 +99,7 @@ export async function deleteLogMedia(
     .eq("id", mediaId)
     .single();
 
-  if (!media) return { success: false, error: "MÃ©dia introuvable" };
+  if (!media) return { success: false, error: "Média introuvable" };
 
   // Verify ownership via log
   const { data: logEntry } = await supabase
@@ -109,7 +109,7 @@ export async function deleteLogMedia(
     .single();
 
   if (!logEntry || logEntry.author_id !== user.id) {
-    return { success: false, error: "Non autorisÃ©" };
+    return { success: false, error: "Non autorisé" };
   }
 
   // Delete from storage

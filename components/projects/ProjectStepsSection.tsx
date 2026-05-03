@@ -65,7 +65,7 @@ export default function ProjectStepsSection({
   };
 
   const handleDelete = async (id: string) => {
-    if (confirm("Voulez-vous vraiment supprimer cette Ã©tape ?")) {
+    if (confirm("Voulez-vous vraiment supprimer cette étape ?")) {
       const result = await deleteProjectStep(id, projectId);
       if (result.success) {
         if (onStepsChange) onStepsChange();
@@ -78,9 +78,9 @@ export default function ProjectStepsSection({
     <section className="space-y-4 sm:space-y-6 lg:space-y-8">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6">
         <div>
-          <h3 className="text-lg sm:text-xl lg:text-2xl font-black text-on-surface tracking-tight">Roadmap de RÃ©alisation</h3>
+          <h3 className="text-lg sm:text-xl lg:text-2xl font-black text-on-surface tracking-tight">Roadmap de Réalisation</h3>
           <p className="text-xs sm:text-sm text-on-surface-variant font-medium pt-1 italic">
-            GÃ©rez les phases d&apos;intervention et les budgets associÃ©s.
+            Gérez les phases d&apos;intervention et les budgets associés.
           </p>
         </div>
 
@@ -90,8 +90,8 @@ export default function ProjectStepsSection({
             className="flex items-center gap-2 sm:gap-3 px-4 sm:px-8 py-2 sm:py-3 bg-kelen-green-600 text-white rounded-lg sm:rounded-xl font-black uppercase tracking-widest text-[8px] sm:text-[10px] shadow-xl shadow-kelen-green-600/20 hover:scale-[0.98] transition-all"
           >
             <PlusCircle className="w-3 h-3 sm:w-4 sm:h-4" />
-            <span className="hidden xs:inline">Nouvelle Ã‰tape</span>
-            <span className="xs:hidden">Ã‰tape</span>
+            <span className="hidden xs:inline">Nouvelle Étape</span>
+            <span className="xs:hidden">Étape</span>
           </button>
         </div>
       </div>
@@ -121,14 +121,14 @@ export default function ProjectStepsSection({
             </div>
             <h4 className="text-lg sm:text-2xl font-black text-on-surface tracking-tight">Initialisez votre roadmap</h4>
             <p className="text-on-surface-variant font-medium mt-2 sm:mt-3 max-w-sm mx-auto leading-relaxed text-xs sm:text-sm">
-              DÃ©coupez votre projet en Ã©tapes clÃ©s pour suivre son avancement, vos paiements et vos experts prÃ©cisÃ©ment.
+              Découpez votre projet en étapes clés pour suivre son avancement, vos paiements et vos experts précisément.
             </p>
             <button
               onClick={handleAdd}
               className="mt-6 sm:mt-10 px-6 sm:px-10 py-3 sm:py-4 bg-stone-900 text-white rounded-xl sm:rounded-2xl font-black uppercase tracking-widest text-[9px] sm:text-xs shadow-xl shadow-stone-900/10 hover:scale-[0.98] transition-all inline-flex items-center gap-2"
             >
               <PlusCircle className="w-3 h-3 sm:w-4 sm:h-4" />
-              CrÃ©er la premiÃ¨re Ã©tape
+              Créer la première étape
             </button>
           </div>
         )}

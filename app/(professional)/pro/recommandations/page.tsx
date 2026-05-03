@@ -17,8 +17,8 @@ interface Recommendation {
 
 const STATUS_MAP = {
   pending: { label: "En attente", className: "bg-amber-100 text-amber-700" },
-  verified: { label: "VÃ©rifiÃ©", className: "bg-kelen-green-100 text-kelen-green-700 shadow-sm" },
-  rejected: { label: "RefusÃ©", className: "bg-red-100 text-red-700" },
+  verified: { label: "Vérifié", className: "bg-kelen-green-100 text-kelen-green-700 shadow-sm" },
+  rejected: { label: "Refusé", className: "bg-red-100 text-red-700" },
 };
 
 export default function ProRecommendationsPage() {
@@ -83,9 +83,9 @@ export default function ProRecommendationsPage() {
           <Award className="w-5 h-5" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-on-surface tracking-tight">Recommandations reÃ§ues</h1>
+          <h1 className="text-2xl font-bold text-on-surface tracking-tight">Recommandations reçues</h1>
           <p className="text-sm text-on-surface-variant mt-0.5">
-            TÃ©moignages de clients satisfaits. Liez-les Ã  votre profil pour renforcer votre visibilitÃ©.
+            Témoignages de clients satisfaits. Liez-les Ã  votre profil pour renforcer votre visibilité.
           </p>
         </div>
       </header>
@@ -109,11 +109,11 @@ export default function ProRecommendationsPage() {
                     <h3 className="text-base font-bold text-on-surface">
                       {rec.project_type}
                     </h3>
-                    <span className="text-on-surface-variant/30">Â·</span>
+                    <span className="text-on-surface-variant/30">·</span>
                     <span className="text-on-surface-variant text-sm font-medium">{rec.location}</span>
                   </div>
                   <p className="text-xs text-on-surface-variant/60 font-semibold uppercase tracking-wider">
-                    Client: {rec.submitter_name} <span className="mx-1">Â·</span> TerminÃ© le{" "}
+                    Client: {rec.submitter_name} <span className="mx-1">·</span> Terminé le{" "}
                     {new Date(rec.completion_date).toLocaleDateString("fr-FR", {
                       day: "numeric",
                       month: "long",
@@ -133,7 +133,7 @@ export default function ProRecommendationsPage() {
                   {rec.linked ? (
                     <div className="flex items-center gap-2 text-kelen-green-600 px-4 py-1.5 bg-kelen-green-50 rounded-xl border border-kelen-green-200/50">
                       <BadgeCheck className="text-sm font-black text-kelen-green-600" />
-                      <span className="text-[10px] font-black uppercase tracking-widest">PubliÃ©</span>
+                      <span className="text-[10px] font-black uppercase tracking-widest">Publié</span>
                     </div>
                   ) : (
                     <button
@@ -161,13 +161,13 @@ export default function ProRecommendationsPage() {
           </div>
           <h3 className="text-xl font-bold text-on-surface">Aucune recommandation</h3>
           <p className="text-on-surface-variant mt-2 max-w-sm text-center">
-            Envoyez votre lien de recommandation Ã  vos anciens clients pour commencer Ã  bÃ¢tir votre rÃ©putation.
+            Envoyez votre lien de recommandation Ã  vos anciens clients pour commencer Ã  bâtir votre réputation.
           </p>
           <button
             onClick={() => {
               const url = window.location.origin + `/pro/profil`;
               navigator.clipboard.writeText(url);
-              toast.success("Lien de profil copiÃ© dans le presse-papiers");
+              toast.success("Lien de profil copié dans le presse-papiers");
             }}
             className="mt-8 px-8 py-3 bg-kelen-green-500 text-white font-bold rounded-xl shadow-lg shadow-kelen-green-500/20 hover:bg-kelen-green-600 transition-colors"
           >

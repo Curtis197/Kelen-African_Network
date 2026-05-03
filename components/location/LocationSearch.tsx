@@ -123,7 +123,7 @@ export function LocationSearch({ value, onChange, placeholder = "Rechercher une 
           // Show only city name in the input
           setInputValue(city?.long_name || place.name || "");
         } else {
-          setError("Impossible de rÃ©cupÃ©rer les dÃ©tails du lieu");
+          setError("Impossible de récupérer les détails du lieu");
         }
       }
     );
@@ -149,7 +149,7 @@ export function LocationSearch({ value, onChange, placeholder = "Rechercher une 
 
     debounceTimer.current = setTimeout(() => {
       if (!isGoogleLoaded || !autocompleteService.current) {
-        // Silently skip â€” Google Maps still loading, poll will catch it
+        // Silently skip "” Google Maps still loading, poll will catch it
         return;
       }
 
@@ -178,7 +178,7 @@ export function LocationSearch({ value, onChange, placeholder = "Rechercher une 
   // Get user's current location
   const handleGetCurrentLocation = useCallback(() => {
     if (!navigator.geolocation) {
-      setError("La gÃ©olocalisation n'est pas supportÃ©e par votre navigateur");
+      setError("La géolocalisation n'est pas supportée par votre navigateur");
       return;
     }
 
@@ -215,12 +215,12 @@ export function LocationSearch({ value, onChange, placeholder = "Rechercher une 
             // Show only city name in the input
             setInputValue(cityName);
           } else {
-            setError("Impossible de dÃ©terminer votre position");
+            setError("Impossible de déterminer votre position");
           }
         });
       },
       (err) => {
-        setError("Impossible d'accÃ©der Ã  votre position. VÃ©rifiez les permissions.");
+        setError("Impossible d'accéder Ã  votre position. Vérifiez les permissions.");
         setIsGettingLocation(false);
       },
       { enableHighAccuracy: true, timeout: 10000 }

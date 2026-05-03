@@ -50,7 +50,7 @@ export function PortfolioSettings({
   ) => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("Non authentifiÃ©");
+      if (!user) throw new Error("Non authentifié");
 
       const path = `portfolios/${user.id}`;
       const url = await uploadFile(file, "portfolios", path);
@@ -62,9 +62,9 @@ export function PortfolioSettings({
         setAboutImageUrl(url);
       }
       
-      toast.success("Image tÃ©lÃ©chargÃ©e avec succÃ¨s");
+      toast.success("Image téléchargée avec succès");
     } catch (error) {
-      toast.error("Erreur lors du tÃ©lÃ©chargement de l'image");
+      toast.error("Erreur lors du téléchargement de l'image");
     }
   };
 
@@ -83,7 +83,7 @@ export function PortfolioSettings({
         color_mode: colorMode,
       });
       
-      toast.success("Portfolio mis Ã  jour avec succÃ¨s");
+      toast.success("Portfolio mis Ã  jour avec succès");
       router.refresh();
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Erreur lors de la sauvegarde");
@@ -97,13 +97,13 @@ export function PortfolioSettings({
       {/* Hero Section */}
       <div className="space-y-4">
         <h3 className="font-headline text-lg font-bold text-on-surface">
-          Section HÃ©ros (BanniÃ¨re)
+          Section Héros (Bannière)
         </h3>
         
         {/* Hero Image Preview */}
         <div className="space-y-2">
           <label className="text-sm font-medium text-on-surface-variant">
-            Image de banniÃ¨re
+            Image de bannière
           </label>
           <div className="relative aspect-[21/9] w-full overflow-hidden rounded-xl bg-surface-container-lowest border-2 border-dashed border-outline-variant/30">
             {heroImageUrl ? (
@@ -118,7 +118,7 @@ export function PortfolioSettings({
               <div className="flex h-full items-center justify-center text-on-surface-variant/40">
                 <div className="text-center">
                   <ImageIcon className="mx-auto mb-2 h-8 w-8" />
-                  <p className="text-sm">Aucune image de banniÃ¨re</p>
+                  <p className="text-sm">Aucune image de bannière</p>
                 </div>
               </div>
             )}
@@ -141,7 +141,7 @@ export function PortfolioSettings({
         {/* Hero Subtitle */}
         <div className="space-y-2">
           <label className="text-sm font-medium text-on-surface-variant">
-            Sous-titre du hÃ©ros
+            Sous-titre du héros
           </label>
           <input
             type="text"
@@ -159,13 +159,13 @@ export function PortfolioSettings({
       {/* About Section */}
       <div className="space-y-4">
         <h3 className="font-headline text-lg font-bold text-on-surface">
-          Section "Ã€ propos"
+          Section "À propos"
         </h3>
         
         {/* About Image Preview */}
         <div className="space-y-2">
           <label className="text-sm font-medium text-on-surface-variant">
-            Image "Ã€ propos" (optionnelle)
+            Image "À propos" (optionnelle)
           </label>
           <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl bg-surface-container-lowest border-2 border-dashed border-outline-variant/30">
             {aboutImageUrl ? (
@@ -203,17 +203,17 @@ export function PortfolioSettings({
         {/* About Text */}
         <div className="space-y-2">
           <label className="text-sm font-medium text-on-surface-variant">
-            Texte "Ã€ propos"
+            Texte "À propos"
           </label>
           <textarea
             value={aboutText}
             onChange={(e) => setAboutText(e.target.value)}
-            placeholder="PrÃ©sentez votre entreprise, votre expÃ©rience et vos valeurs..."
+            placeholder="Présentez votre entreprise, votre expérience et vos valeurs..."
             rows={8}
             className="w-full rounded-xl bg-surface-container-lowest px-4 py-3 text-sm transition-all focus:bg-white focus:ring-4 focus:ring-kelen-green-500/5 outline-none resize-none"
           />
           <p className="text-xs text-on-surface-variant/60">
-            {aboutText.length} caractÃ¨res
+            {aboutText.length} caractères
           </p>
         </div>
       </div>
@@ -242,7 +242,7 @@ export function PortfolioSettings({
                   cornerStyle === style ? 'border-[#009639] bg-green-50 text-[#009639]' : 'border-gray-200 text-gray-600',
                 ].join(' ')}
               >
-                {style === 'square' ? 'CarrÃ©' : style === 'half-rounded' ? 'Arrondi' : 'TrÃ¨s arrondi'}
+                {style === 'square' ? 'Carré' : style === 'half-rounded' ? 'Arrondi' : 'Très arrondi'}
               </button>
             ))}
           </div>

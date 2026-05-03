@@ -178,7 +178,7 @@ export function DashboardSidebar() {
               disabled={signingOut}
               className="mt-2 w-full rounded-lg px-3 py-2 text-left text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              {signingOut ? 'DÃ©connexion...' : 'Se dÃ©connecter'}
+              {signingOut ? 'Déconnexion...' : 'Se déconnecter'}
             </button>
           </div>
         </div>
@@ -261,7 +261,7 @@ export function DashboardSidebar() {
                 className="mt-2 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 <LogOut className={`h-4 w-4 ${signingOut ? 'animate-pulse' : ''}`} />
-                {signingOut ? 'DÃ©connexion...' : 'Se dÃ©connecter'}
+                {signingOut ? 'Déconnexion...' : 'Se déconnecter'}
               </button>
             </div>
           </div>

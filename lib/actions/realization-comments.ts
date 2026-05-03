@@ -6,9 +6,9 @@ export async function createRealizationComment(realizationId: string, content: s
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) throw new Error("Vous devez Ãªtre connectÃ©");
-  if (!content.trim()) return { success: false, error: "Le commentaire ne peut pas Ãªtre vide" };
-  if (content.length < 10) return { success: false, error: "Le commentaire doit contenir au moins 10 caractÃ¨res" };
+  if (!user) throw new Error("Vous devez être connecté");
+  if (!content.trim()) return { success: false, error: "Le commentaire ne peut pas être vide" };
+  if (content.length < 10) return { success: false, error: "Le commentaire doit contenir au moins 10 caractères" };
 
   const { error } = await supabase
     .from("realization_comments")
@@ -57,7 +57,7 @@ export async function moderateRealizationComment(commentId: string, status: "app
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) throw new Error("Vous devez Ãªtre connectÃ©");
+  if (!user) throw new Error("Vous devez être connecté");
 
   // Verify user owns the realization
   const { data: comment } = await supabase
@@ -72,7 +72,7 @@ export async function moderateRealizationComment(commentId: string, status: "app
     .single();
 
   const proUserId = (comment as any)?.realization_id?.professional?.user_id;
-  if (proUserId !== user.id) throw new Error("Non autorisÃ©");
+  if (proUserId !== user.id) throw new Error("Non autorisé");
 
   const { error } = await supabase
     .from("realization_comments")

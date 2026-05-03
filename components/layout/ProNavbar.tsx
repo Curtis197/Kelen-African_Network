@@ -22,7 +22,7 @@ import { NotificationDropdown } from "@/components/layout/NotificationDropdown";
 const NAV_ITEMS = [
   { href: "/pro/dashboard", label: "Tableau de bord", icon: LayoutDashboard },
   { href: "/pro/projets", label: "Projets", icon: Briefcase },
-  { href: "/pro/realisations", label: "RÃ©alisations", icon: Award },
+  { href: "/pro/realisations", label: "Réalisations", icon: Award },
   { href: "/pro/portfolio", label: "Portfolio", icon: LayoutGrid },
   { href: "/pro/abonnement", label: "Abonnement", icon: Gem },
   { href: "/pro/analytique", label: "Analytique", icon: BarChart3 },
@@ -264,8 +264,8 @@ export function ProNavbar() {
                 onClick={handleSignOut}
                 disabled={signingOut}
                 className="p-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                aria-label="Se dÃ©connecter"
-                title="Se dÃ©connecter"
+                aria-label="Se déconnecter"
+                title="Se déconnecter"
               >
                 <LogOut className={`w-4 h-4 ${signingOut ? 'animate-pulse' : ''}`} />
               </button>
@@ -359,7 +359,7 @@ export function ProNavbar() {
                 className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 <LogOut className={`w-4 h-4 ${signingOut ? 'animate-pulse' : ''}`} />
-                {signingOut ? 'DÃ©connexion...' : 'Se dÃ©connecter'}
+                {signingOut ? 'Déconnexion...' : 'Se déconnecter'}
               </button>
             </div>
           </div>

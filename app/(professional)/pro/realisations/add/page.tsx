@@ -4,8 +4,8 @@ import { ProjectDocumentForm } from "@/components/forms/RealizationForm";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "Ajouter une rÃ©alisation â€” Kelen Pro",
-  description: "DÃ©montrez votre savoir-faire en ajoutant une nouvelle rÃ©alisation Ã  votre portfolio.",
+  title: "Ajouter une réalisation "” Kelen Pro",
+  description: "Démontrez votre savoir-faire en ajoutant une nouvelle réalisation Ã  votre portfolio.",
 };
 
 export default async function AddRealizationPage() {

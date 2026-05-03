@@ -6,7 +6,7 @@ export async function generateProjectPdf(projectId: string): Promise<{ success: 
   const supabase = await createClient();
 
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { success: false, error: "Non authentifiÃ©" };
+  if (!user) return { success: false, error: "Non authentifié" };
 
   // Fetch project
   const { data: project, error: projectError } = await supabase
@@ -17,7 +17,7 @@ export async function generateProjectPdf(projectId: string): Promise<{ success: 
     .single();
 
   if (projectError || !project) {
-    return { success: false, error: "Projet non trouvÃ©" };
+    return { success: false, error: "Projet non trouvé" };
   }
 
 
@@ -63,9 +63,9 @@ export async function generateProjectPdf(projectId: string): Promise<{ success: 
   // Get step status label
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'complete': return '<span class="timeline-status status-complete">âœ“ TerminÃ©</span>';
+      case 'complete': return '<span class="timeline-status status-complete">âœ“ Terminé</span>';
       case 'in_progress': return '<span class="timeline-status status-progress">âŸ³ En cours</span>';
-      case 'pending': return '<span class="timeline-status status-pending">â³ Ã€ venir</span>';
+      case 'pending': return '<span class="timeline-status status-pending">â³ À venir</span>';
       default: return `<span class="timeline-status status-pending">${status}</span>`;
     }
   };
@@ -131,7 +131,7 @@ export async function generateProjectPdf(projectId: string): Promise<{ success: 
     .pro-role { font-size: 0.85rem; color: var(--accent); font-weight: 500; margin-bottom: 0.3rem; }
     .pro-company { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.8rem; flex: 1; }
     .pro-link { display: inline-flex; align-items: center; font-size: 0.8rem; color: var(--primary); text-decoration: none; font-weight: 600; padding-top: 0.4rem; border-top: 1px solid var(--border); margin-top: auto; }
-    .pro-link::after { content: "â†’"; margin-left: 0.3rem; }
+    .pro-link::after { content: "←’"; margin-left: 0.3rem; }
     .back-cover { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); color: #ffffff; padding: 20mm; }
     .back-content .brand-large { font-size: 2rem; font-weight: 700; letter-spacing: 3px; margin-bottom: 1.5rem; }
     .back-message { font-size: 1.8rem; font-weight: 600; margin-bottom: 0.8rem; line-height: 1.3; }
@@ -164,17 +164,17 @@ export async function generateProjectPdf(projectId: string): Promise<{ success: 
           <p>${project.description || 'Aucune description fournie.'}</p>
         </div>
         <div class="info-block">
-          <h3>ðŸ“ Localisation & PortÃ©e</h3>
+          <h3>ðŸ“ Localisation & Portée</h3>
           <p>${project.location_formatted || project.location || 'N/A'}</p>
         </div>
       </div>
       <div>
         <div class="info-block">
-          <h3>ðŸ’° RÃ©sumÃ© budgÃ©taire</h3>
+          <h3>ðŸ’° Résumé budgétaire</h3>
           <table class="budget-table">
             <tr><td class="budget-label">Budget total</td><td class="budget-value">${formatCurrency(project.budget_total || 0, project.budget_currency || 'EUR')}</td></tr>
-            <tr><td class="budget-label">CatÃ©gorie</td><td class="budget-value">${project.category || 'Non dÃ©fini'}</td></tr>
-            <tr><td class="budget-label">Date de dÃ©but</td><td class="budget-value">${project.start_date ? new Date(project.start_date).toLocaleDateString('fr-FR') : 'N/A'}</td></tr>
+            <tr><td class="budget-label">Catégorie</td><td class="budget-value">${project.category || 'Non défini'}</td></tr>
+            <tr><td class="budget-label">Date de début</td><td class="budget-value">${project.start_date ? new Date(project.start_date).toLocaleDateString('fr-FR') : 'N/A'}</td></tr>
             <tr><td class="budget-label">Date de fin</td><td class="budget-value">${project.end_date ? new Date(project.end_date).toLocaleDateString('fr-FR') : 'N/A'}</td></tr>
           </table>
         </div>
@@ -184,11 +184,11 @@ export async function generateProjectPdf(projectId: string): Promise<{ success: 
 
   ${steps && steps.length > 0 ? `
   <section class="page">
-    <div class="page-header">Calendrier du projet <span>Ã‰tapes & ProgrÃ¨s</span></div>
+    <div class="page-header">Calendrier du projet <span>Étapes & Progrès</span></div>
     <div class="timeline">
       ${steps.map((step: any) => `
       <div class="timeline-item">
-        <div class="timeline-date">${step.start_date ? new Date(step.start_date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : 'Date non dÃ©finie'}</div>
+        <div class="timeline-date">${step.start_date ? new Date(step.start_date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : 'Date non définie'}</div>
         <div class="timeline-title">${step.name}</div>
         <div class="timeline-desc">${step.description || ''}</div>
         ${getStatusBadge(step.status || 'pending')}
@@ -200,7 +200,7 @@ export async function generateProjectPdf(projectId: string): Promise<{ success: 
 
   ${images && images.length > 0 ? `
   <section class="page">
-    <div class="page-header">Galerie du projet <span>ProgrÃ¨s & Livrables</span></div>
+    <div class="page-header">Galerie du projet <span>Progrès & Livrables</span></div>
     <div class="gallery-grid">
       ${images.slice(0, 6).map((img: any, i: number) => `
       <div class="gallery-item">
@@ -214,8 +214,8 @@ export async function generateProjectPdf(projectId: string): Promise<{ success: 
 
   ${teamData && teamData.length > 0 ? `
   <section class="page">
-    <div class="page-header">Professionnels impliquÃ©s <span>Ã‰quipe projet</span></div>
-    <p class="pros-intro">Tous les professionnels vÃ©rifiÃ©s connectÃ©s via la plateforme Kelen.</p>
+    <div class="page-header">Professionnels impliqués <span>Équipe projet</span></div>
+    <p class="pros-intro">Tous les professionnels vérifiés connectés via la plateforme Kelen.</p>
     <div class="pros-grid">
       ${teamData.map((tp: any) => `
       <div class="pro-card">
@@ -225,7 +225,7 @@ export async function generateProjectPdf(projectId: string): Promise<{ success: 
         <div class="pro-details">
           <div class="pro-name">${tp.professionals?.business_name || 'Professionnel'}</div>
           <div class="pro-role">${tp.professionals?.category || 'N/A'}</div>
-          <div class="pro-company">VÃ©rifiÃ© Kelen</div>
+          <div class="pro-company">Vérifié Kelen</div>
           <a href="https://kelen.africa/professionnels/${tp.professionals?.slug || ''}" class="pro-link">Voir le profil</a>
         </div>
       </div>
@@ -237,8 +237,8 @@ export async function generateProjectPdf(projectId: string): Promise<{ success: 
   <section class="page back-cover">
     <div class="back-content">
       <div class="brand-large">KELEN</div>
-      <h2 class="back-message">Ce projet a Ã©tÃ© rÃ©alisÃ© sur la plateforme Kelen.</h2>
-      <p class="back-sub">Connecter les clients avec des professionnels vÃ©rifiÃ©s pour donner vie Ã  vos projets. Transparent, documentÃ© et livrÃ©.</p>
+      <h2 class="back-message">Ce projet a été réalisé sur la plateforme Kelen.</h2>
+      <p class="back-sub">Connecter les clients avec des professionnels vérifiés pour donner vie Ã  vos projets. Transparent, documenté et livré.</p>
     </div>
   </section>
 </body>

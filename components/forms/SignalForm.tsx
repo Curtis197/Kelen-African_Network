@@ -20,25 +20,25 @@ const STEPS = [
   "Type de manquement",
   "Description",
   "Dates & budget",
-  "PiÃ¨ces jointes",
-  "Engagement lÃ©gal",
+  "Pièces jointes",
+  "Engagement légal",
 ];
 
 const SEVERITY_OPTIONS = [
   {
     value: "minor",
     label: "Mineur",
-    description: "Retard limitÃ©, Ã©cart budgÃ©taire faible, dÃ©faut mineur",
+    description: "Retard limité, écart budgétaire faible, défaut mineur",
   },
   {
     value: "major",
     label: "Majeur",
-    description: "Retard significatif, dÃ©passement important, dÃ©fauts multiples",
+    description: "Retard significatif, dépassement important, défauts multiples",
   },
   {
     value: "critical",
     label: "Critique",
-    description: "Abandon de chantier, fraude, malfaÃ§ons graves",
+    description: "Abandon de chantier, fraude, malfaçons graves",
   },
 ];
 
@@ -57,15 +57,15 @@ export function SignalForm({
         "Type de manquement",
         "Description",
         "Dates & budget",
-        "PiÃ¨ces jointes",
-        "Engagement lÃ©gal",
+        "Pièces jointes",
+        "Engagement légal",
       ]
     : [
         "Type de manquement",
         "Description",
         "Dates & budget",
-        "PiÃ¨ces jointes",
-        "Engagement lÃ©gal",
+        "Pièces jointes",
+        "Engagement légal",
       ];
   const [isLoading, setIsLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -132,7 +132,7 @@ export function SignalForm({
       // 1. Get current user
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        setError("Vous devez Ãªtre connectÃ© pour soumettre un signal.");
+        setError("Vous devez être connecté pour soumettre un signal.");
         return;
       }
 
@@ -144,7 +144,7 @@ export function SignalForm({
         .single();
 
       if (!profile) {
-        setError("Impossible de rÃ©cupÃ©rer votre profil.");
+        setError("Impossible de récupérer votre profil.");
         return;
       }
 
@@ -205,7 +205,7 @@ export function SignalForm({
 
       setSubmitted(true);
     } catch (err: any) {
-      setError("Une erreur est survenue lors de l'envoi. Veuillez rÃ©essayer.");
+      setError("Une erreur est survenue lors de l'envoi. Veuillez réessayer.");
     } finally {
       setIsLoading(false);
     }
@@ -219,11 +219,11 @@ export function SignalForm({
         </div>
         <h2 className="text-xl font-bold text-foreground">Signal soumis</h2>
         <p className="mt-2 text-muted-foreground text-sm">
-          Votre signal concernant <strong>{professionalName || watch("external_name")}</strong> a Ã©tÃ©
-          enregistrÃ©. Il sera vÃ©rifiÃ©e par notre Ã©quipe.
+          Votre signal concernant <strong>{professionalName || watch("external_name")}</strong> a été
+          enregistré. Il sera vérifiée par notre équipe.
         </p>
         <p className="mt-4 text-sm text-muted-foreground">
-          Le professionnel sera notifiÃ© et disposera de 15 jours pour rÃ©pondre
+          Le professionnel sera notifié et disposera de 15 jours pour répondre
           avant publication.
         </p>
         <div className="mt-8 flex justify-center">
@@ -307,13 +307,13 @@ export function SignalForm({
 
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-foreground">
-                  CatÃ©gorie / MÃ©tier
+                  Catégorie / Métier
                 </label>
                 <input
                   type="text"
                   {...register("external_category")}
                   className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors focus:border-kelen-red-500 focus:outline-none focus:ring-2 focus:ring-kelen-red-500/20"
-                  placeholder="Ex : Architecte, MaÃ§on, Ã‰lectricien..."
+                  placeholder="Ex : Architecte, Maçon, Électricien..."
                 />
                 {errors.external_category && (
                   <p className="mt-1 text-xs text-kelen-red-500">
@@ -380,7 +380,7 @@ export function SignalForm({
                   {...register("breach_type")}
                   className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors focus:border-kelen-red-500 focus:outline-none focus:ring-2 focus:ring-kelen-red-500/20"
                 >
-                  <option value="">SÃ©lectionner</option>
+                  <option value="">Sélectionner</option>
                   {BREACH_TYPES.map((b) => (
                     <option key={b.value} value={b.value}>
                       {b.label}
@@ -396,7 +396,7 @@ export function SignalForm({
 
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-foreground">
-                  GravitÃ©
+                  Gravité
                 </label>
                 <div className="space-y-2">
                   {SEVERITY_OPTIONS.map((opt) => (
@@ -436,15 +436,15 @@ export function SignalForm({
           <div className="animate-in fade-in slide-in-from-right-2 duration-300">
             <h2 className="text-lg font-semibold text-foreground">Description</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              DÃ©crivez le manquement en dÃ©tail. Plus votre description est
-              prÃ©cise, plus la vÃ©rification sera rapide.
+              Décrivez le manquement en détail. Plus votre description est
+              précise, plus la vérification sera rapide.
             </p>
             <div className="mt-4">
               <textarea
                 {...register("breach_description")}
                 rows={8}
                 className="w-full rounded-lg border border-border bg-white px-4 py-3 text-sm transition-colors placeholder:text-muted-foreground focus:border-kelen-red-500 focus:outline-none focus:ring-2 focus:ring-kelen-red-500/20"
-                placeholder="DÃ©crivez les faits de maniÃ¨re factuelle : ce qui Ã©tait convenu, ce qui s'est passÃ©, les consÃ©quences..."
+                placeholder="Décrivez les faits de manière factuelle : ce qui était convenu, ce qui s'est passé, les conséquences..."
               />
               {errors.breach_description && (
                 <p className="mt-1 text-xs text-kelen-red-500">
@@ -453,10 +453,10 @@ export function SignalForm({
               )}
               <div className="mt-2 flex items-center justify-between">
                 <p className="text-xs text-muted-foreground">
-                  Minimum 100 caractÃ¨res
+                  Minimum 100 caractères
                 </p>
                 <p className="text-xs font-medium text-muted-foreground">
-                  {watch("breach_description")?.length || 0} caractÃ¨res
+                  {watch("breach_description")?.length || 0} caractères
                 </p>
               </div>
             </div>
@@ -468,13 +468,13 @@ export function SignalForm({
           <div className="animate-in fade-in slide-in-from-right-2 duration-300">
             <h2 className="text-lg font-semibold text-foreground">Dates & budget</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Informations sur les dÃ©lais et le budget convenus.
+              Informations sur les délais et le budget convenus.
             </p>
             <div className="mt-4 space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-foreground">
-                    DÃ©marrage convenu
+                    Démarrage convenu
                   </label>
                   <input
                     type="date"
@@ -506,7 +506,7 @@ export function SignalForm({
 
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-foreground">
-                  Ã‰cart de dÃ©lai (optionnel)
+                  Écart de délai (optionnel)
                 </label>
                 <input
                   type="text"
@@ -518,7 +518,7 @@ export function SignalForm({
 
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-foreground">
-                  Ã‰cart budgÃ©taire (optionnel)
+                  Écart budgétaire (optionnel)
                 </label>
                 <input
                   type="text"
@@ -534,9 +534,9 @@ export function SignalForm({
         {/* File upload */}
         {step === (effectiveIsExternal ? 4 : 3) && (
           <div className="animate-in fade-in slide-in-from-right-2 duration-300">
-            <h2 className="text-lg font-semibold text-foreground">PiÃ¨ces jointes</h2>
+            <h2 className="text-lg font-semibold text-foreground">Pièces jointes</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Ajoutez des piÃ¨ces justificatives (contrat, factures, photos, Ã©changes...).
+              Ajoutez des pièces justificatives (contrat, factures, photos, échanges...).
             </p>
             
             <div className="mt-6 space-y-6">
@@ -569,7 +569,7 @@ export function SignalForm({
 
               <div>
                 <label className="mb-2 block text-sm font-medium text-foreground">
-                  Photos des malfaÃ§ons / Preuves visuelles
+                  Photos des malfaçons / Preuves visuelles
                 </label>
                 <div className="relative">
                   <input
@@ -585,7 +585,7 @@ export function SignalForm({
                     </div>
                     <div>
                       <p className="text-sm font-medium text-foreground">
-                        {evidenceFiles.length > 0 ? `${evidenceFiles.length} photos sÃ©lectionnÃ©es` : "Cliquer pour uploader des photos"}
+                        {evidenceFiles.length > 0 ? `${evidenceFiles.length} photos sélectionnées` : "Cliquer pour uploader des photos"}
                       </p>
                       <p className="text-xs text-muted-foreground">
                         Images (JPG, PNG), max 10 photos
@@ -606,7 +606,7 @@ export function SignalForm({
 
               <div>
                 <label className="mb-2 block text-sm font-medium text-foreground">
-                  Ã‰changes (WhatsApp, Email screenshots)
+                  Échanges (WhatsApp, Email screenshots)
                 </label>
                 <div className="relative">
                   <input
@@ -622,7 +622,7 @@ export function SignalForm({
                     </div>
                     <div>
                       <p className="text-sm font-medium text-foreground">
-                        {logFiles.length > 0 ? `${logFiles.length} fichiers sÃ©lectionnÃ©s` : "Cliquer pour uploader des captures"}
+                        {logFiles.length > 0 ? `${logFiles.length} fichiers sélectionnés` : "Cliquer pour uploader des captures"}
                       </p>
                       <p className="text-xs text-muted-foreground">
                         Images, max 10 fichiers
@@ -647,7 +647,7 @@ export function SignalForm({
         {/* Legal confirmation */}
         {step === (effectiveIsExternal ? 5 : 4) && (
           <div className="animate-in fade-in slide-in-from-right-2 duration-300">
-            <h2 className="text-lg font-semibold text-foreground">Engagement lÃ©gal</h2>
+            <h2 className="text-lg font-semibold text-foreground">Engagement légal</h2>
             <p className="mt-1 text-sm text-muted-foreground">
               Veuillez lire et confirmer les engagements suivants.
             </p>
@@ -661,7 +661,7 @@ export function SignalForm({
                 />
                 <span className="text-sm leading-relaxed text-muted-foreground group-hover:text-foreground">
                   Je confirme que les informations fournies sont authentiques et
-                  basÃ©es sur une expÃ©rience rÃ©elle avec ce professionnel.
+                  basées sur une expérience réelle avec ce professionnel.
                 </span>
               </label>
               {errors.authenticity_confirmed && (
@@ -677,8 +677,8 @@ export function SignalForm({
                   className="mt-1 h-4 w-4 rounded border-border text-kelen-red-500 focus:ring-kelen-red-500/20 cursor-pointer"
                 />
                 <span className="text-sm leading-relaxed text-muted-foreground group-hover:text-foreground">
-                  Je comprends qu&apos;un faux signal entraÃ®nera la suspension
-                  dÃ©finitive de mon compte et d&apos;Ã©ventuelles poursuites
+                  Je comprends qu&apos;un faux signal entraînera la suspension
+                  définitive de mon compte et d&apos;éventuelles poursuites
                   judiciaires.
                 </span>
               </label>
@@ -695,8 +695,8 @@ export function SignalForm({
                   className="mt-1 h-4 w-4 rounded border-border text-kelen-red-500 focus:ring-kelen-red-500/20 cursor-pointer"
                 />
                 <span className="text-sm leading-relaxed text-muted-foreground group-hover:text-foreground">
-                  Je comprends que le professionnel sera notifiÃ© de ce signal et
-                  disposera de 15 jours pour y rÃ©pondre avant publication sur
+                  Je comprends que le professionnel sera notifié de ce signal et
+                  disposera de 15 jours pour y répondre avant publication sur
                   son profil.
                 </span>
               </label>
@@ -717,7 +717,7 @@ export function SignalForm({
               onClick={prevStep}
               className="rounded-lg border border-border px-6 py-2.5 text-sm font-semibold text-foreground transition-all hover:bg-muted"
             >
-              PrÃ©cÃ©dent
+              Précédent
             </button>
           ) : (
             <div />

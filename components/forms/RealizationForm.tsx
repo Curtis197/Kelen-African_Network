@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import Image from "next/image";
 
 const projectDocumentSchema = z.object({
-  title: z.string().min(3, "Le titre doit contenir au moins 3 caractÃ¨res"),
+  title: z.string().min(3, "Le titre doit contenir au moins 3 caractères"),
   description: z.string().optional(),
   completion_date: z.string().optional(),
   price: z.string().optional(),
@@ -86,7 +86,7 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
     setIsSaving(true);
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("Non authentifiÃ©");
+      if (!user) throw new Error("Non authentifié");
 
       // Upload new images if any
       const newImageUrls: {url: string, file: File}[] = [];
@@ -184,7 +184,7 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
 
       if (error) throw error;
 
-      toast.success(isEditing ? "Projet mis Ã  jour avec succÃ¨s" : "Projet enregistrÃ© avec succÃ¨s");
+      toast.success(isEditing ? "Projet mis Ã  jour avec succès" : "Projet enregistré avec succès");
       router.push("/pro/realisations");
       router.refresh();
     } catch (error) {
@@ -202,7 +202,7 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
           className="flex items-center gap-2 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors"
         >
           <ArrowLeft size={16} />
-          Retour aux rÃ©alisations
+          Retour aux réalisations
         </Link>
       </div>
 
@@ -210,12 +210,12 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
         <div className="space-y-8 lg:col-span-7">
           <section className="space-y-6">
             <h2 className="font-headline text-xl font-bold text-on-surface">
-              {isEditing ? "Modifier le projet" : "DÃ©tails du projet"}
+              {isEditing ? "Modifier le projet" : "Détails du projet"}
             </h2>
 
             <div className="space-y-4">
               <div className="space-y-2">
-                <label className="text-sm font-bold text-on-surface">Titre de la rÃ©alisation</label>
+                <label className="text-sm font-bold text-on-surface">Titre de la réalisation</label>
                 <input
                   {...register("title")}
                   placeholder="Ex: Construction Villa Moderne Ã  Abidjan"
@@ -225,11 +225,11 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-bold text-on-surface">Description dÃ©taillÃ©e</label>
+                <label className="text-sm font-bold text-on-surface">Description détaillée</label>
                 <textarea
                   {...register("description")}
                   rows={6}
-                  placeholder="DÃ©crivez les dÃ©fis relevÃ©s, les matÃ©riaux utilisÃ©s, et le rÃ©sultat final..."
+                  placeholder="Décrivez les défis relevés, les matériaux utilisés, et le résultat final..."
                   className="w-full rounded-xl bg-surface-container-low px-4 py-3 text-sm transition-all focus:bg-white focus:ring-4 focus:ring-kelen-green-500/5 outline-none resize-none"
                 />
                 {errors.description && <p className="text-xs text-kelen-red-500">{errors.description.message}</p>}
@@ -309,7 +309,7 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
                             ? 'bg-kelen-green-500 text-white'
                             : 'bg-white/90 text-stone-600 opacity-0 group-hover:opacity-100'
                         }`}
-                        title={img.is_main ? 'Photo principale' : 'DÃ©finir comme photo principale'}
+                        title={img.is_main ? 'Photo principale' : 'Définir comme photo principale'}
                       >
                         <Star size={12} fill={img.is_main ? 'currentColor' : 'none'} />
                       </button>
@@ -375,7 +375,7 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
             {imageFiles.length === 0 && (!isEditing || !initialData?.photo_urls || initialData.photo_urls.length === 0) && (
               <div className="flex flex-col items-center justify-center py-8 text-center border-2 border-dashed border-on-surface-variant/10 rounded-xl">
                 <ImageIcon size={32} className="mb-2 text-on-surface-variant/20" />
-                <p className="text-xs text-on-surface-variant/50">Aucune photo ajoutÃ©e</p>
+                <p className="text-xs text-on-surface-variant/50">Aucune photo ajoutée</p>
               </div>
             )}
           </section>

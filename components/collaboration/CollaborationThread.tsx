@@ -40,7 +40,7 @@ const MESSAGE_TYPE_CONFIG: Record<MessageType, { label: string; icon: React.Reac
     color: "bg-purple-100 text-purple-700",
   },
   revision_request: {
-    label: "Demande de rÃ©vision",
+    label: "Demande de révision",
     icon: <RefreshCw className="w-3.5 h-3.5" />,
     color: "bg-amber-100 text-amber-700",
   },

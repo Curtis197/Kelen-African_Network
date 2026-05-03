@@ -20,14 +20,14 @@ import { NotificationDropdown } from "@/components/layout/NotificationDropdown";
 
 const DIRECT_ITEMS = [
   { href: "/pro/dashboard", label: "Tableau de bord", icon: LayoutDashboard },
-  { href: "/pro/collaborations", label: "BoÃ®te de rÃ©ception", icon: Handshake },
+  { href: "/pro/collaborations", label: "Boîte de réception", icon: Handshake },
   { href: "/pro/newsletter", label: "Newsletter", icon: Mail },
 ];
 
 const GROUP_ITEMS = [
   {
     href: "/pro/visibilite",
-    label: "Ma VisibilitÃ©",
+    label: "Ma Visibilité",
     icon: Globe,
     childPaths: ["/pro/portfolio", "/pro/realisations", "/pro/site", "/pro/identite"],
   },
@@ -252,7 +252,7 @@ export function ProSidebar() {
             className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:text-red-600 hover:bg-red-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <LogOut className={`w-4 h-4 ${signingOut ? 'animate-pulse' : ''}`} />
-            {signingOut ? 'DÃ©connexion...' : 'Se dÃ©connecter'}
+            {signingOut ? 'Déconnexion...' : 'Se déconnecter'}
           </button>
         </div>
       </aside>
@@ -371,7 +371,7 @@ export function ProSidebar() {
                 className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 <LogOut className={`w-4 h-4 ${signingOut ? 'animate-pulse' : ''}`} />
-                {signingOut ? 'DÃ©connexion...' : 'Se dÃ©connecter'}
+                {signingOut ? 'Déconnexion...' : 'Se déconnecter'}
               </button>
             </div>
           </div>

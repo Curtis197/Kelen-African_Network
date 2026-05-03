@@ -116,7 +116,7 @@ export function ProProjectJournal({ project }: ProProjectJournalProps) {
       }
 
       if (syncedCount > 0) {
-        toast.success(`${syncedCount} brouillon(s) synchronisÃ©(s)`);
+        toast.success(`${syncedCount} brouillon(s) synchronisé(s)`);
         setPendingDrafts(0);
         loadLogs();
       } else {
@@ -155,7 +155,7 @@ export function ProProjectJournal({ project }: ProProjectJournalProps) {
   const handleExportPDF = async () => {
     try {
       await exportJournalToPDF(project.id, true);
-      toast.success('Export PDF lancÃ©');
+      toast.success('Export PDF lancé');
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Erreur lors de l'export");
     }

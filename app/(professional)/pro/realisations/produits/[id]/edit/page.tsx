@@ -67,7 +67,7 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
           Modifier : {product.title}
         </h1>
         <p className="mt-2 text-on-surface-variant/70">
-          Mettez Ã  jour les informations et les mÃ©dias de votre produit.
+          Mettez Ã  jour les informations et les médias de votre produit.
         </p>
       </div>
 

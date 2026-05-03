@@ -88,12 +88,12 @@ export async function sendNewsletter(
     return { success: false, sent: 0, error: "Sujet et contenu requis." };
   }
   if (recipientEmails.length === 0) {
-    return { success: false, sent: 0, error: "Aucun destinataire sÃ©lectionnÃ©." };
+    return { success: false, sent: 0, error: "Aucun destinataire sélectionné." };
   }
 
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { success: false, sent: 0, error: "Non authentifiÃ©." };
+  if (!user) return { success: false, sent: 0, error: "Non authentifié." };
 
   const { data: pro } = await supabase
     .from("professionals")
@@ -114,12 +114,12 @@ export async function sendNewsletter(
         <div style="white-space:pre-wrap;line-height:1.7;font-size:15px;color:#333;">${body}</div>
         <hr style="border:none;border-top:1px solid #eee;margin:32px 0;" />
         <p style="font-size:13px;color:#999;margin:0;">
-          Vous recevez cet email car vous avez collaborÃ© avec
+          Vous recevez cet email car vous avez collaboré avec
           <a href="${profileUrl}" style="color:#006c49;">${senderName}</a> via Kelen.
         </p>
       </div>
       <div style="background:#f5f5f5;padding:16px;text-align:center;font-size:12px;color:#999;">
-        PropulsÃ© par <a href="${BASE_URL}" style="color:#006c49;text-decoration:none;">Kelen</a>
+        Propulsé par <a href="${BASE_URL}" style="color:#006c49;text-decoration:none;">Kelen</a>
       </div>
     </div>
   `;
@@ -127,7 +127,7 @@ export async function sendNewsletter(
   let sent = 0;
 
   if (!resend) {
-    // Dev mode â€” skip actual send, record as sent
+    // Dev mode "” skip actual send, record as sent
     sent = recipientEmails.length;
   } else {
     // Send in batches of 50 (Resend batch limit)

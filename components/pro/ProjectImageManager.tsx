@@ -40,7 +40,7 @@ export default function ProjectImageManager({
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) {
-        setError("Vous devez Ãªtre connectÃ© pour uploader des images.");
+        setError("Vous devez être connecté pour uploader des images.");
         return;
       }
 
@@ -53,7 +53,7 @@ export default function ProjectImageManager({
 
       if (!pro) {
         setError(
-          "Profil professionnel non trouvÃ©. Veuillez complÃ©ter votre profil."
+          "Profil professionnel non trouvé. Veuillez compléter votre profil."
         );
         return;
       }
@@ -73,7 +73,7 @@ export default function ProjectImageManager({
         // Validate file type
         const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
         if (!allowedTypes.includes(file.type)) {
-          setError("Format non acceptÃ©. Formats acceptÃ©s : JPG, PNG, WEBP.");
+          setError("Format non accepté. Formats acceptés : JPG, PNG, WEBP.");
           continue;
         }
 
@@ -116,7 +116,7 @@ export default function ProjectImageManager({
     const result = await setMainProjectImage(documentId, imageId);
 
     if (!result.success) {
-      setError(result.error || "Erreur lors de la dÃ©finition de l'image principale.");
+      setError(result.error || "Erreur lors de la définition de l'image principale.");
       return;
     }
 
@@ -212,7 +212,7 @@ export default function ProjectImageManager({
                 <button
                   onClick={() => handleSetMain(image.id)}
                   className="p-2 bg-white text-on-surface rounded-lg hover:bg-gray-100 transition-colors"
-                  title="DÃ©finir comme image principale"
+                  title="Définir comme image principale"
                 >
                   <Star className="w-4 h-4" />
                 </button>
@@ -269,7 +269,7 @@ export default function ProjectImageManager({
           </p>
           <label className="inline-flex items-center gap-2 px-6 py-3 bg-kelen-green-600 text-white rounded-xl font-semibold text-sm hover:bg-kelen-green-700 transition-colors cursor-pointer">
             <Upload className="w-4 h-4" />
-            SÃ©lectionner des images
+            Sélectionner des images
             <input
               ref={fileInputRef}
               type="file"

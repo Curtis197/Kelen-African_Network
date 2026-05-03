@@ -42,12 +42,12 @@ import { toast } from "sonner";
 
 const STATUS_BADGE_CONFIG: Record<string, { label: string; variant: "default" | "secondary" | "outline" | "destructive"; className: string; icon?: React.ReactNode }> = {
   candidate: {
-    label: "SauvegardÃ©",
+    label: "Sauvegardé",
     variant: "outline",
     className: "bg-surface-container text-on-surface-variant",
   },
   shortlisted: {
-    label: "ShortlistÃ©",
+    label: "Shortlisté",
     variant: "secondary",
     className: "bg-blue-100 text-blue-700",
   },
@@ -62,7 +62,7 @@ const STATUS_BADGE_CONFIG: Record<string, { label: string; variant: "default" | 
     className: "bg-green-100 text-green-700",
   },
   "finalist-negotiating": {
-    label: "NÃ©gociation",
+    label: "Négociation",
     variant: "secondary",
     className: "bg-purple-100 text-purple-700",
   },
@@ -72,7 +72,7 @@ const STATUS_BADGE_CONFIG: Record<string, { label: string; variant: "default" | 
     className: "bg-green-500 text-white",
   },
   declined: {
-    label: "RefusÃ©",
+    label: "Refusé",
     variant: "destructive",
     className: "bg-red-100 text-red-700",
   },
@@ -84,31 +84,31 @@ const STATUS_BADGE_CONFIG: Record<string, { label: string; variant: "default" | 
 
 const SECTION_CONFIG: Record<keyof ProListGrouped, { title: string; icon: React.ReactNode; defaultCollapsed: boolean; color: string }> = {
   saved: {
-    title: "SAUVEGARDÃ‰S",
+    title: "SAUVEGARDÉS",
     icon: <Users className="w-4 h-4" />,
     defaultCollapsed: false,
     color: "text-on-surface-variant",
   },
   shortlisted: {
-    title: "SHORTLISTÃ‰S",
+    title: "SHORTLISTÉS",
     icon: <Star className="w-4 h-4" />,
     defaultCollapsed: false,
     color: "text-blue-600",
   },
   finalists: {
-    title: "FINALISTES â€” PHASE PROPOSITION",
+    title: "FINALISTES "” PHASE PROPOSITION",
     icon: <Award className="w-4 h-4" />,
     defaultCollapsed: false,
     color: "text-yellow-600",
   },
   active: {
-    title: "SÃ‰LECTIONNÃ‰ â€” ACTIF",
+    title: "SÉLECTIONNÉ "” ACTIF",
     icon: <CheckCircle2 className="w-4 h-4" />,
     defaultCollapsed: false,
     color: "text-green-600",
   },
   declined: {
-    title: "REFUSÃ‰S",
+    title: "REFUSÉS",
     icon: <XCircle className="w-4 h-4" />,
     defaultCollapsed: true,
     color: "text-red-600",
@@ -242,13 +242,13 @@ function ProCard({
             )}
             {location && (
               <>
-                <span>â€¢</span>
+                <span>"¢</span>
                 <span>{location}</span>
               </>
             )}
             {!pro.is_external && rating && (
               <>
-                <span>â€¢</span>
+                <span>"¢</span>
                 <span className="flex items-center gap-1">
                   <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
                   {rating.toFixed(1)} ({reviewCount})
@@ -264,7 +264,7 @@ function ProCard({
                 collab.status === "negotiating" ? (
                   <span className="text-purple-600 flex items-center gap-1">
                     <MessageSquare className="w-3 h-3" />
-                    NÃ©gociation en cours
+                    Négociation en cours
                   </span>
                 ) : (
                   <span className="text-green-600 flex items-center gap-1">
@@ -275,7 +275,7 @@ function ProCard({
               ) : (
                 <span className="text-yellow-600 flex items-center gap-1">
                   <Clock className="w-3 h-3" />
-                  En attente de rÃ©ponse
+                  En attente de réponse
                 </span>
               )}
             </div>
@@ -286,7 +286,7 @@ function ProCard({
             <div className="mt-2 text-xs text-green-600 flex items-center gap-1.5">
               <CheckCircle2 className="w-3 h-3" />
               Actif depuis {new Date(collab.started_at).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })}
-              <span className="text-on-surface-variant ml-1">â€¢ AccÃ¨s complet</span>
+              <span className="text-on-surface-variant ml-1">"¢ Accès complet</span>
             </div>
           )}
         </div>
@@ -305,13 +305,13 @@ function ProCard({
             }}
           >
             <SelectTrigger className="h-8 text-xs min-w-[130px] bg-surface-container-high border-outline-variant/20 hover:border-outline-variant/50">
-              <SelectValue placeholder="Changer d'Ã©tat" />
+              <SelectValue placeholder="Changer d'état" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="candidate">SauvegardÃ©</SelectItem>
-              <SelectItem value="shortlisted">ShortlistÃ©</SelectItem>
+              <SelectItem value="candidate">Sauvegardé</SelectItem>
+              <SelectItem value="shortlisted">Shortlisté</SelectItem>
               <SelectItem value="finalist" disabled={pro.is_external}>Rendre finaliste</SelectItem>
-              <SelectItem value="agreed">SÃ©lectionner (Actif)</SelectItem>
+              <SelectItem value="agreed">Sélectionner (Actif)</SelectItem>
               <SelectItem value="not_selected">Refuser</SelectItem>
             </SelectContent>
           </Select>
@@ -320,7 +320,7 @@ function ProCard({
             title="Retirer du projet"
             disabled={isUpdating}
             onClick={async () => {
-              if (confirm("Voulez-vous vraiment retirer ce professionnel du projet ? Cela annulera Ã©galement toute collaboration en cours.")) {
+              if (confirm("Voulez-vous vraiment retirer ce professionnel du projet ? Cela annulera également toute collaboration en cours.")) {
                 setIsUpdating(true);
                 await onRemove(pro.id);
                 setIsUpdating(false);
@@ -361,7 +361,7 @@ function ProCard({
               {!collab?.proposal_submitted_at && (!collab?.messages || collab.messages.length === 0) && (
                 <button
                   onClick={() => {
-                    toast.info("Envoyer un rappel â€” fonctionnalitÃ© Ã  venir");
+                    toast.info("Envoyer un rappel "” fonctionnalité Ã  venir");
                   }}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container/50 text-on-surface-variant/70 rounded-lg text-xs font-medium hover:bg-surface-container transition-colors"
                 >
@@ -373,12 +373,12 @@ function ProCard({
               {collab?.proposal_submitted_at && (
                 <button
                   onClick={() => {
-                    toast.info("Demander un changement â€” fonctionnalitÃ© Ã  venir");
+                    toast.info("Demander un changement "” fonctionnalité Ã  venir");
                   }}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container text-on-surface-variant rounded-lg text-xs font-medium hover:bg-surface-container-high transition-colors"
                 >
                   <MessageSquare className="w-3 h-3" />
-                  Demander rÃ©vision
+                  Demander révision
                 </button>
               )}
             </div>
@@ -391,7 +391,7 @@ function ProCard({
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary rounded-lg text-xs font-medium hover:bg-primary/20 transition-colors"
               >
                 <Eye className="w-3 h-3" />
-                Voir l&apos;activitÃ©
+                Voir l&apos;activité
               </Link>
               {collab?.proposal_submitted_at && (
                 <Link
@@ -588,7 +588,7 @@ export function ProListPage() {
     const result = await removeProjectProfessionalById(ppId, projectId);
     
     if (result.success) {
-      toast.success("Professionnel retirÃ© du projet");
+      toast.success("Professionnel retiré du projet");
       loadProList();
     } else {
       toast.error(result.error || "Erreur lors du retrait");

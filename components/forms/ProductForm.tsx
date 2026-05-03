@@ -14,7 +14,7 @@ import Image from "next/image";
 import { createProduct, updateProduct } from "@/lib/actions/products";
 
 const productSchema = z.object({
-  title: z.string().min(3, "Le titre doit contenir au moins 3 caractÃ¨res"),
+  title: z.string().min(3, "Le titre doit contenir au moins 3 caractères"),
   description: z.string().optional(),
   price: z.string().optional(),
   currency: z.string().default("XOF"),
@@ -110,7 +110,7 @@ export function ProductForm({ professionalId, initialData }: ProductFormProps) {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      if (!user) throw new Error("Non authentifiÃ©");
+      if (!user) throw new Error("Non authentifié");
 
       // Upload new images
       const newImageUrls: string[] = [];
@@ -134,7 +134,7 @@ export function ProductForm({ professionalId, initialData }: ProductFormProps) {
           image_urls: newImageUrls,
           removed_image_ids: removedImageIds,
         });
-        toast.success("Produit mis Ã  jour avec succÃ¨s");
+        toast.success("Produit mis Ã  jour avec succès");
       } else {
         await createProduct({
           professional_id: professionalId,
@@ -146,7 +146,7 @@ export function ProductForm({ professionalId, initialData }: ProductFormProps) {
           category: data.category || null,
           image_urls: newImageUrls,
         });
-        toast.success("Produit crÃ©Ã© avec succÃ¨s");
+        toast.success("Produit créé avec succès");
       }
 
       router.push("/pro/realisations?tab=produits");
@@ -174,7 +174,7 @@ export function ProductForm({ professionalId, initialData }: ProductFormProps) {
         <div className="space-y-8 lg:col-span-7">
           <section className="space-y-6">
             <h2 className="font-headline text-xl font-bold text-on-surface">
-              {isEditing ? "Modifier le produit" : "DÃ©tails du produit"}
+              {isEditing ? "Modifier le produit" : "Détails du produit"}
             </h2>
 
             <div className="space-y-4">
@@ -182,7 +182,7 @@ export function ProductForm({ professionalId, initialData }: ProductFormProps) {
                 <label className="text-sm font-bold text-on-surface">Nom du produit</label>
                 <input
                   {...register("title")}
-                  placeholder="Ex: BÃ©ton armÃ© haute rÃ©sistance"
+                  placeholder="Ex: Béton armé haute résistance"
                   className="w-full rounded-xl bg-surface-container-low px-4 py-3 text-sm transition-all focus:bg-white focus:ring-4 focus:ring-kelen-green-500/5 outline-none"
                 />
                 {errors.title && (
@@ -204,13 +204,13 @@ export function ProductForm({ professionalId, initialData }: ProductFormProps) {
                     ) : (
                       <Sparkles size={13} />
                     )}
-                    {isCorrecting ? "Correctionâ€¦" : "Corriger avec l'IA"}
+                    {isCorrecting ? "Correction"¦" : "Corriger avec l'IA"}
                   </button>
                 </div>
                 <textarea
                   {...register("description")}
                   rows={6}
-                  placeholder="DÃ©crivez votre produit, ses caractÃ©ristiques et ses usages..."
+                  placeholder="Décrivez votre produit, ses caractéristiques et ses usages..."
                   className="w-full rounded-xl bg-surface-container-low px-4 py-3 text-sm transition-all focus:bg-white focus:ring-4 focus:ring-kelen-green-500/5 outline-none resize-none"
                 />
               </div>
@@ -233,8 +233,8 @@ export function ProductForm({ professionalId, initialData }: ProductFormProps) {
                   >
                     <option value="XOF">XOF (Franc CFA UEMOA)</option>
                     <option value="EUR">EUR (Euro)</option>
-                    <option value="USD">USD (Dollar amÃ©ricain)</option>
-                    <option value="GNF">GNF (Franc guinÃ©en)</option>
+                    <option value="USD">USD (Dollar américain)</option>
+                    <option value="GNF">GNF (Franc guinéen)</option>
                     <option value="XAF">XAF (Franc CFA CEMAC)</option>
                   </select>
                 </div>
@@ -242,21 +242,21 @@ export function ProductForm({ professionalId, initialData }: ProductFormProps) {
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-on-surface">DisponibilitÃ©</label>
+                  <label className="text-sm font-bold text-on-surface">Disponibilité</label>
                   <select
                     {...register("availability")}
                     className="w-full rounded-xl bg-surface-container-low px-4 py-3 text-sm transition-all focus:bg-white focus:ring-4 focus:ring-kelen-green-500/5 outline-none"
                   >
                     <option value="available">Disponible</option>
-                    <option value="limited">Stock limitÃ©</option>
+                    <option value="limited">Stock limité</option>
                     <option value="out_of_stock">Rupture de stock</option>
                   </select>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-on-surface">CatÃ©gorie (optionnel)</label>
+                  <label className="text-sm font-bold text-on-surface">Catégorie (optionnel)</label>
                   <input
                     {...register("category")}
-                    placeholder="Ex: MatÃ©riaux, Mobilier, Outillage..."
+                    placeholder="Ex: Matériaux, Mobilier, Outillage..."
                     className="w-full rounded-xl bg-surface-container-low px-4 py-3 text-sm transition-all focus:bg-white focus:ring-4 focus:ring-kelen-green-500/5 outline-none"
                   />
                 </div>
@@ -325,7 +325,7 @@ export function ProductForm({ professionalId, initialData }: ProductFormProps) {
                             ? "bg-kelen-green-500 text-white"
                             : "bg-white/90 text-stone-600 opacity-0 group-hover:opacity-100"
                         }`}
-                        title={img.is_main ? "Photo principale" : "DÃ©finir comme photo principale"}
+                        title={img.is_main ? "Photo principale" : "Définir comme photo principale"}
                       >
                         <Star size={12} fill={img.is_main ? "currentColor" : "none"} />
                       </button>
@@ -394,7 +394,7 @@ export function ProductForm({ professionalId, initialData }: ProductFormProps) {
             {imageFiles.length === 0 && existingImages.length === 0 && (
               <div className="flex flex-col items-center justify-center py-8 text-center border-2 border-dashed border-on-surface-variant/10 rounded-xl">
                 <ImageIcon size={32} className="mb-2 text-on-surface-variant/20" />
-                <p className="text-xs text-on-surface-variant/50">Aucune photo ajoutÃ©e</p>
+                <p className="text-xs text-on-surface-variant/50">Aucune photo ajoutée</p>
               </div>
             )}
           </section>

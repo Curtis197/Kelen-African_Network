@@ -14,7 +14,7 @@ const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://kelen.africa";
 // Pricing tiers
 const PLANS = {
   pro_africa: {
-    price: 3000, // XOF equivalent ~â‚¬4.57 â€” using Stripe for simplicity
+    price: 3000, // XOF equivalent ~â‚¬4.57 "” using Stripe for simplicity
     stripePriceId: process.env.STRIPE_PRICE_PRO_AFRICA,
     name: "Premium Kelen",
     currency: "xof" as const,
@@ -39,7 +39,7 @@ export async function createCheckoutSession(
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) return { error: "Non autorisÃ©" };
+  if (!user) return { error: "Non autorisé" };
 
   // Get professional profile
   const { data: pro } = await supabase
@@ -71,7 +71,7 @@ export async function createCheckoutSession(
   // Create Stripe Checkout Session
   const plan = PLANS[planKey];
   if (!plan.stripePriceId) {
-    return { error: `Plan ${plan.name} non configurÃ©. Contactez le support.` };
+    return { error: `Plan ${plan.name} non configuré. Contactez le support.` };
   }
 
   try {
@@ -101,12 +101,12 @@ export async function createCheckoutSession(
     });
 
     if (!session.url) {
-      return { error: "Impossible de crÃ©er la session de paiement" };
+      return { error: "Impossible de créer la session de paiement" };
     }
 
     return { url: session.url };
   } catch (err) {
-    return { error: "Erreur lors de la crÃ©ation de la session de paiement" };
+    return { error: "Erreur lors de la création de la session de paiement" };
   }
 }
 
@@ -282,7 +282,7 @@ export async function cancelSubscription(): Promise<{ url?: string; error?: stri
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) return { error: "Non autorisÃ©" };
+  if (!user) return { error: "Non autorisé" };
 
   const { data: pro } = await supabase
     .from("professionals")
@@ -310,6 +310,6 @@ export async function cancelSubscription(): Promise<{ url?: string; error?: stri
 
     return { url: portalSession.url };
   } catch (err) {
-    return { error: "Impossible d'accÃ©der au portail de gestion" };
+    return { error: "Impossible d'accéder au portail de gestion" };
   }
 }

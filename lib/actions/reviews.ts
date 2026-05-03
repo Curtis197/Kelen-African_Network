@@ -21,12 +21,12 @@ export async function submitReview(
 
   const { data: { user }, error: authError } = await supabase.auth.getUser();
   if (authError || !user) {
-    return { success: false, error: "Vous devez Ãªtre connectÃ© pour laisser un avis." };
+    return { success: false, error: "Vous devez être connecté pour laisser un avis." };
   }
 
   const parsed = insertReviewSchema.safeParse(payload);
   if (!parsed.success) {
-    return { success: false, error: "DonnÃ©es invalides." };
+    return { success: false, error: "Données invalides." };
   }
 
   const { professional_id, rating, comment } = parsed.data;
@@ -38,7 +38,7 @@ export async function submitReview(
     .single();
 
   if (profileError || !profile) {
-    return { success: false, error: "Impossible de rÃ©cupÃ©rer votre profil." };
+    return { success: false, error: "Impossible de récupérer votre profil." };
   }
 
   const { error: insertError } = await supabase.from("reviews").insert({
@@ -52,7 +52,7 @@ export async function submitReview(
   });
 
   if (insertError) {
-    return { success: false, error: "Une erreur est survenue lors de l'envoi. Veuillez rÃ©essayer." };
+    return { success: false, error: "Une erreur est survenue lors de l'envoi. Veuillez réessayer." };
   }
 
   return { success: true };

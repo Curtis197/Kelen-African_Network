@@ -32,15 +32,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  // Only paid professionals appear in the sitemap (SSR + indexed)
-  // TODO: Add subscription check when payment flow is implemented
-  // For now, include all professionals with a business_name
+  // Only paid professionals (gold/silver) appear in the sitemap
   const supabase = await createClient();
   const { data: professionals } = await supabase
     .from('professionals')
     .select('slug, updated_at')
     .not('slug', 'is', null)
     .not('business_name', 'is', null)
+    .in('status', ['gold', 'silver'])
     .order('updated_at', { ascending: false });
 
   const professionalRoutes: MetadataRoute.Sitemap = professionals

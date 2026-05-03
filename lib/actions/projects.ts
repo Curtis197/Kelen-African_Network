@@ -14,7 +14,7 @@ const projectSchema = z.object({
   location_lng: z.number().optional(),
   location_country: z.string().optional(),
   location_formatted: z.string().optional(),
-  budget_total: z.number().min(0, "Le budget doit Ãªtre positif").optional(),
+  budget_total: z.number().min(0, "Le budget doit être positif").optional(),
   budget_currency: z.enum(["EUR", "XOF", "USD"]).optional(),
   start_date: z.string().optional(),
   end_date: z.string().optional(),
@@ -27,7 +27,7 @@ export async function upsertProject(data: z.infer<typeof projectSchema>) {
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    throw new Error("Vous devez Ãªtre connectÃ©");
+    throw new Error("Vous devez être connecté");
   }
 
   const validatedData = projectSchema.parse(data);
@@ -98,7 +98,7 @@ export async function updateProjectStatus(id: string, status: string) {
   // Authentication check
   const { data: { user }, error: authError } = await supabase.auth.getUser();
   if (authError || !user) {
-    return { error: "Vous devez Ãªtre connectÃ©" };
+    return { error: "Vous devez être connecté" };
   }
 
   // Verify user owns the project
@@ -113,7 +113,7 @@ export async function updateProjectStatus(id: string, status: string) {
   }
 
   if (project.user_id !== user.id) {
-    return { error: "Non autorisÃ©" };
+    return { error: "Non autorisé" };
   }
 
   const { error } = await supabase
@@ -179,7 +179,7 @@ export async function manageProjectProfessional(
 
 
   if (!user) {
-    throw new Error("Non autorisÃ©");
+    throw new Error("Non autorisé");
   }
 
   if (action === 'add') {
@@ -387,7 +387,7 @@ export async function getProjectAreas(projectId: string) {
 export async function createProjectArea(projectId: string, name: string) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: "Non autorisÃ©" };
+  if (!user) return { error: "Non autorisé" };
 
   const { data: project } = await supabase
     .from("user_projects")
@@ -396,7 +396,7 @@ export async function createProjectArea(projectId: string, name: string) {
     .eq("user_id", user.id)
     .single();
 
-  if (!project) return { error: "Projet introuvable ou accÃ¨s refusÃ©." };
+  if (!project) return { error: "Projet introuvable ou accès refusé." };
 
   const { data, error } = await supabase
     .from("project_areas")
@@ -418,7 +418,7 @@ export async function createProjectArea(projectId: string, name: string) {
 export async function syncProjectAreasFromProfessionals(projectId: string) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: "Non autorisÃ©" };
+  if (!user) return { error: "Non autorisé" };
 
   // Verify project ownership
   const { data: project } = await supabase
@@ -428,7 +428,7 @@ export async function syncProjectAreasFromProfessionals(projectId: string) {
     .eq("user_id", user.id)
     .single();
 
-  if (!project) return { error: "Projet introuvable ou accÃ¨s refusÃ©." };
+  if (!project) return { error: "Projet introuvable ou accès refusé." };
 
   // Get unique areas from professionals
   const { data: professionals, error: proError } = await supabase
@@ -481,7 +481,7 @@ export async function updateExternalProfessional(
 ) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: "Non autorisÃ©" };
+  if (!user) return { error: "Non autorisé" };
 
   const { data: updated, error } = await supabase
     .from("project_professionals")
@@ -507,7 +507,7 @@ export async function updateExternalProfessional(
 export async function updateProjectArea(areaId: string, projectId: string, newName: string) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: "Non autorisÃ©" };
+  if (!user) return { error: "Non autorisé" };
 
   const { data: project } = await supabase
     .from("user_projects")
@@ -516,7 +516,7 @@ export async function updateProjectArea(areaId: string, projectId: string, newNa
     .eq("user_id", user.id)
     .single();
 
-  if (!project) return { error: "Projet introuvable ou accÃ¨s refusÃ©." };
+  if (!project) return { error: "Projet introuvable ou accès refusé." };
 
   const { data, error } = await supabase
     .from("project_areas")
@@ -535,7 +535,7 @@ export async function updateProjectArea(areaId: string, projectId: string, newNa
 export async function deleteProjectArea(areaId: string, projectId: string) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: "Non autorisÃ©" };
+  if (!user) return { error: "Non autorisé" };
 
   const { data: project } = await supabase
     .from("user_projects")
@@ -544,7 +544,7 @@ export async function deleteProjectArea(areaId: string, projectId: string) {
     .eq("user_id", user.id)
     .single();
 
-  if (!project) return { error: "Projet introuvable ou accÃ¨s refusÃ©." };
+  if (!project) return { error: "Projet introuvable ou accès refusé." };
 
   // FIRST: Delete all professionals associated with this area to ensure sync with /pros page
   const { error: proDeleteError, count: proCount } = await supabase
@@ -555,7 +555,7 @@ export async function deleteProjectArea(areaId: string, projectId: string) {
   if (proDeleteError) {
     // We continue even if this fails, or should we abort? 
     // Usually it's better to keep the area if cleanup fails to avoid orphans.
-    return { error: `Ã‰chec du nettoyage des professionnels: ${proDeleteError.message}` };
+    return { error: `Échec du nettoyage des professionnels: ${proDeleteError.message}` };
   }
   
 
@@ -580,7 +580,7 @@ export async function deleteProjectArea(areaId: string, projectId: string) {
 export async function addProjectDevelopmentArea(projectId: string, area: string) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: "Non autorisÃ©" };
+  if (!user) return { error: "Non autorisé" };
 
   // Verify project ownership
   const { data: project } = await supabase
@@ -590,7 +590,7 @@ export async function addProjectDevelopmentArea(projectId: string, area: string)
     .eq("user_id", user.id)
     .single();
 
-  if (!project) return { error: "Projet introuvable ou accÃ¨s refusÃ©." };
+  if (!project) return { error: "Projet introuvable ou accès refusé." };
 
   const currentAreas = (project.development_areas as string[]) || [];
   
@@ -622,7 +622,7 @@ export async function addProjectDevelopmentArea(projectId: string, area: string)
 export async function removeProjectDevelopmentArea(projectId: string, area: string) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: "Non autorisÃ©" };
+  if (!user) return { error: "Non autorisé" };
 
   // Verify project ownership
   const { data: project } = await supabase
@@ -632,7 +632,7 @@ export async function removeProjectDevelopmentArea(projectId: string, area: stri
     .eq("user_id", user.id)
     .single();
 
-  if (!project) return { error: "Projet introuvable ou accÃ¨s refusÃ©." };
+  if (!project) return { error: "Projet introuvable ou accès refusé." };
 
   const currentAreas = (project.development_areas as string[]) || [];
   const newAreas = currentAreas.filter(a => a !== area);

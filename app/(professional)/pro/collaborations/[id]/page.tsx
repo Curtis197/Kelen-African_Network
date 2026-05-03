@@ -42,9 +42,9 @@ const STATUS_CONFIG: Record<string, { label: string; className: string }> = {
   pending:     { label: "Invitation en attente",   className: "bg-yellow-100 text-yellow-700" },
   negotiating: { label: "Proposition soumise",     className: "bg-purple-100 text-purple-700" },
   active:      { label: "Collaboration active",    className: "bg-green-500 text-white" },
-  declined:    { label: "RefusÃ©",                  className: "bg-red-100 text-red-700" },
+  declined:    { label: "Refusé",                  className: "bg-red-100 text-red-700" },
   not_picked:  { label: "Non retenu",              className: "bg-surface-container text-on-surface-variant" },
-  terminated:  { label: "TerminÃ©",                 className: "bg-surface-container text-on-surface-variant" },
+  terminated:  { label: "Terminé",                 className: "bg-surface-container text-on-surface-variant" },
 };
 
 type FullCollaboration = Omit<ProjectCollaboration, 'project' | 'messages'> & {
@@ -128,7 +128,7 @@ export default function ProCollaborationDetailPage() {
       // â”€â”€ RLS DETECTION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       if (error) {
         if (error.code === '42501') {
-          toast.error('AccÃ¨s refusÃ© â€” politique RLS');
+          toast.error('Accès refusé â€” politique RLS');
         } else if (error.code === 'PGRST116') {
           toast.error('Collaboration introuvable');
         } else {
@@ -169,7 +169,7 @@ export default function ProCollaborationDetailPage() {
     if (result.error) {
       toast.error(result.error);
     } else {
-      toast.success('Proposition soumise avec succÃ¨s !');
+      toast.success('Proposition soumise avec succès !');
       setShowProposalForm(false);
       setTimeout(() => window.location.reload(), 500);
     }
@@ -180,11 +180,11 @@ export default function ProCollaborationDetailPage() {
   // â”€â”€ ACTION: DECLINE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const handleDecline = async () => {
 
-    if (!confirm('Refuser cette invitation ? Cette action est irrÃ©versible.')) {
+    if (!confirm('Refuser cette invitation ? Cette action est irréversible.')) {
       return;
     }
 
-    const reason = prompt('Raison du refus (optionnel) :') || 'RefusÃ© par le professionnel';
+    const reason = prompt('Raison du refus (optionnel) :') || 'Refusé par le professionnel';
 
     setIsSubmitting(true);
 
@@ -194,7 +194,7 @@ export default function ProCollaborationDetailPage() {
     if (result.error) {
       toast.error(result.error);
     } else {
-      toast.success('Invitation refusÃ©e.');
+      toast.success('Invitation refusée.');
       router.push('/pro/collaborations');
     }
 
@@ -223,7 +223,7 @@ export default function ProCollaborationDetailPage() {
         type: file.type
       }]);
       
-      toast.success("Fichier ajoutÃ©");
+      toast.success("Fichier ajouté");
     } catch (error: any) {
       toast.error(error.message || "Erreur lors de l'envoi du fichier");
     } finally {
@@ -288,10 +288,10 @@ export default function ProCollaborationDetailPage() {
         <Handshake className="w-12 h-12 text-on-surface-variant/40 mb-4" />
         <h1 className="text-2xl font-bold text-on-surface mb-2">Collaboration introuvable</h1>
         <p className="text-sm text-on-surface-variant mb-4">
-          VÃ©rifiez l'URL ou consultez vos collaborations.
+          Vérifiez l'URL ou consultez vos collaborations.
         </p>
         <Link href="/pro/collaborations" className="text-primary font-semibold hover:underline">
-          â† Retour aux collaborations
+          ← Retour aux collaborations
         </Link>
       </div>
     );
@@ -317,7 +317,7 @@ export default function ProCollaborationDetailPage() {
             Collaborations
           </Link>
           <span className="opacity-30">/</span>
-          <span className="text-primary truncate">{project?.title || 'DÃ©tail'}</span>
+          <span className="text-primary truncate">{project?.title || 'Détail'}</span>
         </nav>
 
         <Link
@@ -345,7 +345,7 @@ export default function ProCollaborationDetailPage() {
             <div className="font-semibold text-sm text-on-surface">{statusCfg.label}</div>
             {isPending && (
               <div className="text-xs text-on-surface-variant mt-0.5">
-                Invitation reÃ§ue le {new Date(collab.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
+                Invitation reçue le {new Date(collab.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
               </div>
             )}
             {isActive && collab.started_at && (
@@ -384,7 +384,7 @@ export default function ProCollaborationDetailPage() {
             {/* Steps */}
             {project.steps?.length > 0 && (
               <div className="mb-4">
-                <h3 className="text-sm font-semibold text-on-surface mb-2">Ã‰tapes du projet</h3>
+                <h3 className="text-sm font-semibold text-on-surface mb-2">Étapes du projet</h3>
                 <div className="space-y-2">
                   {project.steps.map((step, idx) => (
                     <div key={step.id} className="flex items-center gap-3 bg-surface-container rounded-xl px-4 py-3 text-sm">
@@ -406,7 +406,7 @@ export default function ProCollaborationDetailPage() {
             {/* Areas */}
             {project.areas?.length > 0 && (
               <div>
-                <h3 className="text-sm font-semibold text-on-surface mb-2">Zones / pÃ©rimÃ¨tres</h3>
+                <h3 className="text-sm font-semibold text-on-surface mb-2">Zones / périmètres</h3>
                 <div className="flex flex-wrap gap-2">
                   {project.areas.map(area => (
                     <span key={area.id} className="px-3 py-1 bg-surface-container rounded-full text-xs text-on-surface-variant">
@@ -428,7 +428,7 @@ export default function ProCollaborationDetailPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
               {collab.proposal_budget && (
                 <div className="bg-surface-container rounded-xl p-4">
-                  <div className="text-xs text-on-surface-variant mb-1">Budget proposÃ©</div>
+                  <div className="text-xs text-on-surface-variant mb-1">Budget proposé</div>
                   <div className="text-xl font-bold text-on-surface">
                     {collab.proposal_budget.toLocaleString('fr-FR')} {collab.proposal_currency || 'XOF'}
                   </div>
@@ -436,7 +436,7 @@ export default function ProCollaborationDetailPage() {
               )}
               {collab.proposal_timeline && (
                 <div className="bg-surface-container rounded-xl p-4">
-                  <div className="text-xs text-on-surface-variant mb-1">DurÃ©e estimÃ©e</div>
+                  <div className="text-xs text-on-surface-variant mb-1">Durée estimée</div>
                   <div className="text-xl font-bold text-on-surface">{collab.proposal_timeline}</div>
                 </div>
               )}
@@ -468,7 +468,7 @@ export default function ProCollaborationDetailPage() {
                       {msg.message_type !== 'general' && (
                         <Badge className="ml-2 bg-surface-container-high text-on-surface-variant text-[10px]">
                           {msg.message_type === 'proposal'          && 'Proposition'}
-                          {msg.message_type === 'revision_request'  && 'Demande de rÃ©vision'}
+                          {msg.message_type === 'revision_request'  && 'Demande de révision'}
                           {msg.message_type === 'counter_offer'     && 'Contre-offre'}
                           {msg.message_type === 'acceptance'        && 'Acceptation'}
                           {msg.message_type === 'decline'           && 'Refus'}
@@ -718,7 +718,7 @@ export default function ProCollaborationDetailPage() {
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-on-surface mb-1.5">Budget proposÃ©</label>
+                      <label className="block text-sm font-medium text-on-surface mb-1.5">Budget proposé</label>
                       <input
                         type="number"
                         value={proposal.budget || ''}
@@ -731,7 +731,7 @@ export default function ProCollaborationDetailPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-on-surface mb-1.5">DurÃ©e estimÃ©e *</label>
+                      <label className="block text-sm font-medium text-on-surface mb-1.5">Durée estimée *</label>
                       <input
                         type="text"
                         value={proposal.timeline}
@@ -750,7 +750,7 @@ export default function ProCollaborationDetailPage() {
                       onChange={e => {
                         setProposal(prev => ({ ...prev, text: e.target.value }));
                       }}
-                      placeholder="DÃ©crivez votre approche, vos mÃ©thodes, vos conditions..."
+                      placeholder="Décrivez votre approche, vos méthodes, vos conditions..."
                       rows={6}
                       className="w-full bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/50 resize-none focus:outline-none focus:border-primary/50"
                     />
@@ -783,9 +783,9 @@ export default function ProCollaborationDetailPage() {
         {isActive && project && (
           <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-center mb-6">
             <CheckCircle2 className="w-8 h-8 text-green-500 mx-auto mb-2" />
-            <h3 className="text-lg font-bold text-green-700">Vous avez accÃ¨s au projet</h3>
+            <h3 className="text-lg font-bold text-green-700">Vous avez accès au projet</h3>
             <p className="text-sm text-green-600 mt-1 mb-4">
-              Vous pouvez crÃ©er des journaux, uploader des mÃ©dias et gÃ©rer les documents.
+              Vous pouvez créer des journaux, uploader des médias et gérer les documents.
             </p>
             <Link
               href={`/projets/${project.id}`}
@@ -812,7 +812,7 @@ export default function ProCollaborationDetailPage() {
         {/* Archived notice */}
         {isArchived && (
           <div className="bg-surface-container rounded-xl p-4 text-center text-sm text-on-surface-variant">
-            Cette collaboration est archivÃ©e.
+            Cette collaboration est archivée.
           </div>
         )}
 

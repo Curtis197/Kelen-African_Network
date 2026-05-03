@@ -18,7 +18,7 @@ export function UpdatePasswordForm() {
     setError(null);
 
     if (password.length < 6) {
-      setError("Le mot de passe doit contenir au moins 6 caractÃ¨res.");
+      setError("Le mot de passe doit contenir au moins 6 caractères.");
       return;
     }
 
@@ -65,7 +65,7 @@ export function UpdatePasswordForm() {
       <div className="rounded-lg border border-kelen-green-200 bg-kelen-green-50 p-6 text-center shadow-sm">
         <h3 className="mb-2 text-lg font-bold text-kelen-green-800">Mot de passe mis Ã  jour !</h3>
         <p className="text-kelen-green-700">
-          Votre mot de passe a Ã©tÃ© modifiÃ© avec succÃ¨s. Redirection vers votre tableau de bord...
+          Votre mot de passe a été modifié avec succès. Redirection vers votre tableau de bord...
         </p>
       </div>
     );
@@ -94,7 +94,7 @@ export function UpdatePasswordForm() {
           required
           minLength={6}
           className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors placeholder:text-muted-foreground focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
-          placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+          placeholder=""¢"¢"¢"¢"¢"¢"¢"¢"
         />
       </div>
 
@@ -113,7 +113,7 @@ export function UpdatePasswordForm() {
           required
           minLength={6}
           className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors placeholder:text-muted-foreground focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
-          placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+          placeholder=""¢"¢"¢"¢"¢"¢"¢"¢"
         />
       </div>
 

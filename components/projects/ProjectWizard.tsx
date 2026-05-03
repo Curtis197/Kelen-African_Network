@@ -34,10 +34,10 @@ type ProjectData = {
 };
 
 const STEPS = [
-  { id: "identity", label: "IdentitÃ©", icon: Fingerprint },
+  { id: "identity", label: "Identité", icon: Fingerprint },
   { id: "financial", label: "Finances", icon: Banknote },
   { id: "timeline", label: "Calendrier", icon: Calendar },
-  { id: "details", label: "DÃ©tails", icon: DraftingCompass },
+  { id: "details", label: "Détails", icon: DraftingCompass },
   { id: "review", label: "Revision", icon: Verified },
 ];
 
@@ -52,7 +52,7 @@ export default function ProjectWizard({ initialId }: { initialId?: string }) {
   const [formData, setFormData] = useState<ProjectData>({
     title: "",
     category: "construction",
-    location: "SÃ©nÃ©gal", // Default
+    location: "Sénégal", // Default
     budget_total: 0,
     budget_currency: "XOF",
     description: "",
@@ -99,7 +99,7 @@ export default function ProjectWizard({ initialId }: { initialId?: string }) {
     const validFiles = files.filter(f => {
       const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
       if (!validTypes.includes(f.type)) {
-        toast.error(`${f.name}: format non supportÃ©. Utilisez JPG, PNG ou WEBP`);
+        toast.error(`${f.name}: format non supporté. Utilisez JPG, PNG ou WEBP`);
         return false;
       }
       if (f.size > 10 * 1024 * 1024) {
@@ -139,7 +139,7 @@ export default function ProjectWizard({ initialId }: { initialId?: string }) {
                 await uploadProjectImage(projectId, imageUrl);
               }
             }
-            toast.success(`${projectImages.length} image(s) ajoutÃ©e(s)`);
+            toast.success(`${projectImages.length} image(s) ajoutée(s)`);
           }
         }
         router.push("/projets");
@@ -161,7 +161,7 @@ export default function ProjectWizard({ initialId }: { initialId?: string }) {
       if (result.data) {
         updateFormData({ id: result.data.id });
         setCurrentStep((prev) => prev + 1);
-        toast.success("ProgrÃ¨s enregistrÃ©");
+        toast.success("Progrès enregistré");
       }
     } catch (err) {
       toast.error("Une erreur est survenue lors de l'enregistrement");
@@ -182,7 +182,7 @@ export default function ProjectWizard({ initialId }: { initialId?: string }) {
       <aside className="hidden lg:flex flex-col gap-2 p-6 h-screen w-64 fixed left-0 top-0 pt-24 bg-surface-container-low">
         <div className="mb-8 px-2">
           <h2 className="font-headline font-bold text-on-surface">Assistant de Projet</h2>
-          <p className="text-xs text-on-surface-variant opacity-70">Le Diplomate NumÃ©rique</p>
+          <p className="text-xs text-on-surface-variant opacity-70">Le Diplomate Numérique</p>
         </div>
         <nav className="flex flex-col gap-2">
           {STEPS.map((step, idx) => {
@@ -265,7 +265,7 @@ export default function ProjectWizard({ initialId }: { initialId?: string }) {
             className="flex items-center gap-2 bg-surface-container text-on-surface rounded-lg px-8 py-3 font-headline font-bold uppercase tracking-widest text-xs hover:brightness-110 transition-all active:scale-[0.98] disabled:opacity-30"
           >
             <ArrowLeft className="text-sm" />
-            PrÃ©cÃ©dent
+            Précédent
           </button>
 
           <div className="hidden md:flex items-center gap-2">
@@ -300,13 +300,13 @@ function Step1Identity({ formData, onChange }: { formData: ProjectData; onChange
   const categories = [
     { id: "architecture", label: "Architecture & Design", icon: DraftingCompass },
     { id: "construction", label: "Gros Å“uvre", icon: DraftingCompass },
-    { id: "renovation", label: "RÃ©novation", icon: Pencil },
+    { id: "renovation", label: "Rénovation", icon: Pencil },
     { id: "juridique", label: "Conseil Juridique", icon: Scale },
-    { id: "etudes", label: "Ã‰tudes & Expertise", icon: GraduationCap },
-    { id: "securite", label: "SÃ©curitÃ© & Domotique", icon: HeartPulse },
+    { id: "etudes", label: "Études & Expertise", icon: GraduationCap },
+    { id: "securite", label: "Sécurité & Domotique", icon: HeartPulse },
     { id: "maintenance", label: "Maintenance", icon: Wrench },
-    { id: "immobilier", label: "Promotion ImmobiliÃ¨re", icon: Building2 },
-    { id: "ecologie", label: "Solutions Ã‰cologiques", icon: Leaf },
+    { id: "immobilier", label: "Promotion Immobilière", icon: Building2 },
+    { id: "ecologie", label: "Solutions Écologiques", icon: Leaf },
     { id: "autre", label: "Autre projet", icon: Ellipsis },
   ];
 
@@ -314,10 +314,10 @@ function Step1Identity({ formData, onChange }: { formData: ProjectData; onChange
     <div className="space-y-12">
       <header className="mb-16 space-y-4">
         <h1 className="font-headline font-extrabold text-3xl md:text-4xl lg:text-5xl text-on-surface tracking-tight">
-          01 IdentitÃ© du Projet
+          01 Identité du Projet
         </h1>
         <p className="text-base md:text-xl text-on-surface-variant opacity-80 max-w-2xl font-body leading-relaxed">
-          CommenÃ§ons par les bases. Comment souhaitez-vous nommer votre vision et dans quelle catÃ©gorie s'inscrit-elle ?
+          Commençons par les bases. Comment souhaitez-vous nommer votre vision et dans quelle catégorie s'inscrit-elle ?
         </p>
       </header>
 
@@ -363,7 +363,7 @@ function Step1Identity({ formData, onChange }: { formData: ProjectData; onChange
                   });
                 } else {
                   onChange({
-                    location: "SÃ©nÃ©gal",
+                    location: "Sénégal",
                     location_lat: undefined,
                     location_lng: undefined,
                     location_country: undefined,
@@ -403,10 +403,10 @@ function Step2Financial({ formData, onChange }: { formData: ProjectData; onChang
     <div className="space-y-12">
       <header className="mb-16 space-y-4">
         <h1 className="font-headline font-extrabold text-5xl lg:text-6xl text-on-surface tracking-tight">
-          02 Budget EstimÃ©
+          02 Budget Estimé
         </h1>
         <p className="text-xl text-on-surface-variant opacity-80 max-w-2xl font-body leading-relaxed">
-          DÃ©finissez le cadre financier. Kelen vous aide Ã  sÃ©curiser chaque Ã©tape de votre investissement.
+          Définissez le cadre financier. Kelen vous aide Ã  sécuriser chaque étape de votre investissement.
         </p>
       </header>
 
@@ -465,14 +465,14 @@ function Step3Timeline({ formData, onChange }: { formData: ProjectData; onChange
           03 Horizon Temporel
         </h1>
         <p className="text-xl text-on-surface-variant opacity-80 max-w-2xl font-body leading-relaxed">
-          Quand prÃ©voyez-vous de commencer et de voir votre projet aboutir ?
+          Quand prévoyez-vous de commencer et de voir votre projet aboutir ?
         </p>
       </header>
 
       <div className="bg-surface-container-lowest rounded-[2rem] p-8 lg:p-16 shadow-sm relative">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
           <div className="space-y-6">
-            <label className="font-headline font-bold text-sm tracking-widest uppercase text-on-surface-variant/60 block">Date de dÃ©but</label>
+            <label className="font-headline font-bold text-sm tracking-widest uppercase text-on-surface-variant/60 block">Date de début</label>
             <input
               type="date"
               value={formData.start_date || ""}
@@ -481,7 +481,7 @@ function Step3Timeline({ formData, onChange }: { formData: ProjectData; onChange
             />
           </div>
           <div className="space-y-6">
-            <label className="font-headline font-bold text-sm tracking-widest uppercase text-on-surface-variant/60 block">Date de livraison estimÃ©e</label>
+            <label className="font-headline font-bold text-sm tracking-widest uppercase text-on-surface-variant/60 block">Date de livraison estimée</label>
             <input
               type="date"
               value={formData.end_date || ""}
@@ -514,10 +514,10 @@ function Step4Objectives({ formData, onChange }: { formData: ProjectData; onChan
     <div className="space-y-12">
       <header className="mb-16 space-y-4">
         <h1 className="font-headline font-extrabold text-3xl md:text-4xl lg:text-5xl text-on-surface tracking-tight">
-          04 DÃ©tails du Projet
+          04 Détails du Projet
         </h1>
         <p className="text-base md:text-xl text-on-surface-variant opacity-80 max-w-2xl font-body leading-relaxed">
-          DÃ©crivez votre projet en quelques mots et listez les jalons clÃ©s que vous souhaitez atteindre.
+          Décrivez votre projet en quelques mots et listez les jalons clés que vous souhaitez atteindre.
         </p>
       </header>
 
@@ -528,13 +528,13 @@ function Step4Objectives({ formData, onChange }: { formData: ProjectData; onChan
             rows={4}
             value={formData.description}
             onChange={(e) => onChange({ description: e.target.value })}
-            placeholder="DÃ©crivez votre vision..."
+            placeholder="Décrivez votre vision..."
             className="w-full bg-surface-container-low rounded-3xl p-8 font-body text-xl border-none focus:ring-2 focus:ring-primary/20 resize-none"
           />
         </div>
 
         <div className="space-y-6">
-          <label className="font-headline font-bold text-sm tracking-widest uppercase text-on-surface-variant/60 block">Objectifs ClÃ©s</label>
+          <label className="font-headline font-bold text-sm tracking-widest uppercase text-on-surface-variant/60 block">Objectifs Clés</label>
           <div className="flex flex-wrap gap-3 mb-6">
             {formData.objectives.map(tag => (
               <button
@@ -587,10 +587,10 @@ function Step5Review({
     <div className="space-y-12">
       <header className="mb-16 space-y-4">
         <h1 className="font-headline font-extrabold text-5xl lg:text-6xl text-on-surface tracking-tight">
-          RÃ©capitulatif
+          Récapitulatif
         </h1>
         <p className="text-xl text-on-surface-variant opacity-80 max-w-2xl font-body leading-relaxed">
-          VÃ©rifiez les dÃ©tails de votre projet et ajoutez des photos avant la validation finale.
+          Vérifiez les détails de votre projet et ajoutez des photos avant la validation finale.
         </p>
       </header>
 
@@ -602,7 +602,7 @@ function Step5Review({
             <p className="text-3xl font-headline font-extrabold text-on-surface">{formData.title}</p>
           </div>
           <div className="space-y-2">
-            <p className="text-xs uppercase tracking-widest text-on-surface-variant font-bold">CatÃ©gorie</p>
+            <p className="text-xs uppercase tracking-widest text-on-surface-variant font-bold">Catégorie</p>
             <p className="text-3xl font-headline font-extrabold text-primary capitalize">{formData.category}</p>
           </div>
           <div className="space-y-2">
@@ -614,7 +614,7 @@ function Step5Review({
           <div className="space-y-2">
             <p className="text-xs uppercase tracking-widest text-on-surface-variant font-bold">Dates</p>
             <p className="text-3xl font-headline font-extrabold text-on-surface">
-              {formData.start_date || "N/A"} â€” {formData.end_date || "N/A"}
+              {formData.start_date || "N/A"} "” {formData.end_date || "N/A"}
             </p>
           </div>
         </div>
@@ -653,7 +653,7 @@ function Step5Review({
             <div className="text-center py-12 bg-surface-container-lowest rounded-2xl border-2 border-dashed border-surface-container-high">
               <ImagePlus className="text-5xl text-on-surface-variant/30 mb-3" />
               <p className="text-sm font-medium text-on-surface-variant">
-                Aucune photo ajoutÃ©e
+                Aucune photo ajoutée
               </p>
               <p className="text-xs text-on-surface-variant/60 mt-1">
                 Cliquez sur &quot;Ajouter des photos&quot; pour uploader des images

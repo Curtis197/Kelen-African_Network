@@ -155,7 +155,7 @@ export function SectorPageClient({
         </div>
       ) : (
         <div className="py-20 text-center">
-          <p className="text-lg font-bold text-on-surface">Aucun professionnel dans cette catÃ©gorie</p>
+          <p className="text-lg font-bold text-on-surface">Aucun professionnel dans cette catégorie</p>
           <p className="mt-2 text-sm text-muted-foreground">
             Essayez une autre ville ou retirez le filtre de profession.
           </p>

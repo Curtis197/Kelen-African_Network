@@ -78,7 +78,7 @@ export async function subscribeToNewsletter(
 
   if (error) {
     log("newsletter.subscribe.error", { error: error.message, code: error.code });
-    return { success: false, error: "Une erreur est survenue. Veuillez rÃ©essayer." };
+    return { success: false, error: "Une erreur est survenue. Veuillez réessayer." };
   }
 
   log("newsletter.subscribe.ok", { professionalId, email });
@@ -101,11 +101,11 @@ export async function unsubscribeByToken(
     .single();
 
   if (findErr || !subscriber) {
-    return { success: false, error: "Lien de dÃ©sinscription invalide ou expirÃ©." };
+    return { success: false, error: "Lien de désinscription invalide ou expiré." };
   }
 
   if (!subscriber.is_active) {
-    return { success: false, error: "Vous Ãªtes dÃ©jÃ  dÃ©sinscrit(e)." };
+    return { success: false, error: "Vous êtes déjÃ  désinscrit(e)." };
   }
 
   await admin
@@ -153,7 +153,7 @@ export async function deleteSubscriber(
   subscriberId: string
 ): Promise<{ success: boolean; error?: string }> {
   const proId = await getProfessionalId();
-  if (!proId) return { success: false, error: "Non autorisÃ©" };
+  if (!proId) return { success: false, error: "Non autorisé" };
 
   const supabase = await createClient();
 
@@ -164,7 +164,7 @@ export async function deleteSubscriber(
     .single();
 
   if (!sub || sub.professional_id !== proId) {
-    return { success: false, error: "AbonnÃ© introuvable" };
+    return { success: false, error: "Abonné introuvable" };
   }
 
   const { error } = await supabase
@@ -185,7 +185,7 @@ export async function sendCampaign(
   attachments: NewsletterAttachment[] = []
 ): Promise<SendCampaignResult> {
   const proId = await getProfessionalId();
-  if (!proId) return { success: false, error: "Non autorisÃ©" };
+  if (!proId) return { success: false, error: "Non autorisé" };
 
   const supabase = await createClient();
 
@@ -215,7 +215,7 @@ export async function sendCampaign(
     const nextAvailable = new Date(
       new Date(recentCampaign.sent_at!).getTime() + 24 * 60 * 60 * 1000
     ).toISOString();
-    return { success: false, error: "Une campagne a dÃ©jÃ  Ã©tÃ© envoyÃ©e aujourd'hui.", rateLimitedUntil: nextAvailable };
+    return { success: false, error: "Une campagne a déjÃ  été envoyée aujourd'hui.", rateLimitedUntil: nextAvailable };
   }
 
   const { data: subscribers } = await supabase
@@ -225,7 +225,7 @@ export async function sendCampaign(
     .eq("is_active", true);
 
   if (!subscribers || subscribers.length === 0) {
-    return { success: false, error: "Aucun abonnÃ© actif. Partagez votre profil pour commencer." };
+    return { success: false, error: "Aucun abonné actif. Partagez votre profil pour commencer." };
   }
 
   const sanitizedHtml = DOMPurify.sanitize(parsed.data.bodyHtml, {
@@ -247,10 +247,10 @@ export async function sendCampaign(
     .single();
 
   if (insertErr || !campaign) {
-    return { success: false, error: "Erreur lors de la crÃ©ation de la campagne." };
+    return { success: false, error: "Erreur lors de la création de la campagne." };
   }
 
-  // Populate the send queue â€” the Edge Function will process it on the next cron tick
+  // Populate the send queue "” the Edge Function will process it on the next cron tick
   const queueRows = subscribers.map((sub) => ({
     campaign_id: campaign.id,
     subscriber_id: sub.id,

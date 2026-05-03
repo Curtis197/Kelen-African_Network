@@ -39,7 +39,7 @@ export function ReviewForm({
 
   const onSubmit = async (data: ReviewFormData) => {
     if (data.rating === 0) {
-      setError("Veuillez sÃ©lectionner une note.");
+      setError("Veuillez sélectionner une note.");
       return;
     }
 
@@ -60,7 +60,7 @@ export function ReviewForm({
 
       setSubmitted(true);
     } catch (err) {
-      setError("Une erreur est survenue lors de l'envoi. Veuillez rÃ©essayer.");
+      setError("Une erreur est survenue lors de l'envoi. Veuillez réessayer.");
     } finally {
       setIsLoading(false);
     }
@@ -74,7 +74,7 @@ export function ReviewForm({
         </div>
         <h2 className="text-lg font-bold text-foreground">Merci pour votre avis !</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          Votre retour aide la communautÃ© Kelen Ã  identifier les meilleurs
+          Votre retour aide la communauté Kelen Ã  identifier les meilleurs
           professionnels.
         </p>
         <div className="mt-6">
@@ -101,14 +101,14 @@ export function ReviewForm({
         <legend className="block text-sm font-medium text-foreground mb-3">
           Votre note
         </legend>
-        <div className="flex items-center gap-1" role="radiogroup" aria-label="Note sur 5 Ã©toiles">
+        <div className="flex items-center gap-1" role="radiogroup" aria-label="Note sur 5 étoiles">
           {[1, 2, 3, 4, 5].map((star) => (
             <button
               key={star}
               type="button"
               role="radio"
               aria-checked={star === rating}
-              aria-label={`${star} Ã©toile${star > 1 ? "s" : ""} sur 5`}
+              aria-label={`${star} étoile${star > 1 ? "s" : ""} sur 5`}
               className="p-1 transition-all hover:scale-110 active:scale-95"
               onMouseEnter={() => setHoverRating(star)}
               onMouseLeave={() => setHoverRating(0)}
@@ -143,14 +143,14 @@ export function ReviewForm({
         <legend className="block text-sm font-medium text-foreground mb-3">
           Votre note
         </legend>
-        <div className="flex items-center gap-1" role="radiogroup" aria-label="Note sur 5 Ã©toiles">
+        <div className="flex items-center gap-1" role="radiogroup" aria-label="Note sur 5 étoiles">
           {[1, 2, 3, 4, 5].map((star) => (
             <button
               key={star}
               type="button"
               role="radio"
               aria-checked={star === rating}
-              aria-label={`${star} Ã©toile${star > 1 ? "s" : ""} sur 5`}
+              aria-label={`${star} étoile${star > 1 ? "s" : ""} sur 5`}
               className="p-1 transition-all hover:scale-110 active:scale-95"
               onMouseEnter={() => setHoverRating(star)}
               onMouseLeave={() => setHoverRating(0)}

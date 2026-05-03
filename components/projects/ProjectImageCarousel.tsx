@@ -53,7 +53,7 @@ export function ProjectImageCarousel({ images, projectId }: ProjectImageCarousel
             <button
               onClick={goToPrevious}
               className="absolute left-3 p-2 bg-black/50 hover:bg-black/70 text-white rounded-full transition-all"
-              aria-label="Image prÃ©cÃ©dente"
+              aria-label="Image précédente"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>

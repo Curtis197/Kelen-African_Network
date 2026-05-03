@@ -100,7 +100,7 @@ export default function LogForm({ projectId, proProjectId, stepId, projectCurren
     setDraftId(id);
     await markDraftPendingSync(id, true);
     setIsSavingDraft(false);
-    toast.success('Brouillon sauvegardÃ©');
+    toast.success('Brouillon sauvegardé');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -112,7 +112,7 @@ export default function LogForm({ projectId, proProjectId, stepId, projectCurren
       return;
     }
     if (formData.description.length < 50) {
-      toast.error('La description doit contenir au moins 50 caractÃ¨res');
+      toast.error('La description doit contenir au moins 50 caractères');
       return;
     }
     // GPS is now optional - will come from photo EXIF
@@ -139,7 +139,7 @@ export default function LogForm({ projectId, proProjectId, stepId, projectCurren
       });
 
       if (result.error || !result.data) {
-        toast.error(result.error || 'Erreur lors de la crÃ©ation du rapport');
+        toast.error(result.error || 'Erreur lors de la création du rapport');
         setIsSubmitting(false);
         return;
       }
@@ -162,7 +162,7 @@ export default function LogForm({ projectId, proProjectId, stepId, projectCurren
         await markDraftPendingSync(draftId, false);
       }
 
-      toast.success('Rapport publiÃ© avec succÃ¨s');
+      toast.success('Rapport publié avec succès');
 
       if (onSaved) {
         onSaved();
@@ -178,7 +178,7 @@ export default function LogForm({ projectId, proProjectId, stepId, projectCurren
   };
 
   const weatherOptions: Array<{ value: 'sunny' | 'cloudy' | 'rainy' | 'stormy' | 'cold'; label: string }> = [
-    { value: 'sunny', label: 'EnsoleillÃ©' },
+    { value: 'sunny', label: 'Ensoleillé' },
     { value: 'cloudy', label: 'Nuageux' },
     { value: 'rainy', label: 'Pluvieux' },
     { value: 'stormy', label: 'Orageux' },
@@ -229,7 +229,7 @@ export default function LogForm({ projectId, proProjectId, stepId, projectCurren
           </label>
           <textarea
             id="log-description"
-            placeholder="DÃ©crivez le travail effectuÃ© aujourd'hui..."
+            placeholder="Décrivez le travail effectué aujourd'hui..."
             value={formData.description}
             onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
             rows={6}
@@ -237,14 +237,14 @@ export default function LogForm({ projectId, proProjectId, stepId, projectCurren
             required
           />
           <p className="text-xs text-on-surface-variant/60 mt-1">
-            {formData.description.length}/50 caractÃ¨res minimum
+            {formData.description.length}/50 caractères minimum
           </p>
         </div>
 
         {/* Money */}
         <div>
           <label className="block text-sm font-medium text-on-surface mb-2">
-            ðŸ’° DÃ©penses du jour
+            ðŸ’° Dépenses du jour
           </label>
           <div className="flex gap-3">
             <input
@@ -255,7 +255,7 @@ export default function LogForm({ projectId, proProjectId, stepId, projectCurren
               onChange={(e) => setFormData(prev => ({ ...prev, moneySpent: parseFloat(e.target.value) || 0 }))}
               placeholder="0"
               className="flex-1 px-4 py-3 text-sm rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface placeholder:text-on-surface-variant/40"
-              aria-label="Montant dÃ©pensÃ©"
+              aria-label="Montant dépensé"
             />
             <select
               value={formData.moneyCurrency}
@@ -273,11 +273,11 @@ export default function LogForm({ projectId, proProjectId, stepId, projectCurren
         {/* Issues */}
         <div>
           <label htmlFor="log-issues" className="block text-sm font-medium text-on-surface mb-2">
-            âš ï¸ ProblÃ¨mes rencontrÃ©s (optionnel)
+            âš ï¸ Problèmes rencontrés (optionnel)
           </label>
           <textarea
             id="log-issues"
-            placeholder="DÃ©crivez les problÃ¨mes Ã©ventuels..."
+            placeholder="Décrivez les problèmes éventuels..."
             value={formData.issues}
             onChange={(e) => setFormData(prev => ({ ...prev, issues: e.target.value }))}
             rows={3}
@@ -289,11 +289,11 @@ export default function LogForm({ projectId, proProjectId, stepId, projectCurren
         {/* Next steps */}
         <div>
           <label htmlFor="log-next-steps" className="block text-sm font-medium text-on-surface mb-2">
-            ðŸ“‹ Prochaines Ã©tapes (optionnel)
+            ðŸ“‹ Prochaines étapes (optionnel)
           </label>
           <textarea
             id="log-next-steps"
-            placeholder="Travail prÃ©vu pour les prochains jours..."
+            placeholder="Travail prévu pour les prochains jours..."
             value={formData.nextSteps}
             onChange={(e) => setFormData(prev => ({ ...prev, nextSteps: e.target.value }))}
             rows={3}
@@ -305,7 +305,7 @@ export default function LogForm({ projectId, proProjectId, stepId, projectCurren
         {/* Weather */}
         <div>
           <label className="block text-sm font-medium text-on-surface mb-2">
-            ðŸŒ¤ï¸ MÃ©tÃ©o (optionnel)
+            ðŸŒ¤ï¸ Météo (optionnel)
           </label>
           <div className="flex flex-wrap gap-3">
             {weatherOptions.map((option) => (

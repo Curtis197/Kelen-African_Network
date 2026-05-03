@@ -141,7 +141,7 @@ export default function ProProjectLogDetail({
           {/* Meta header */}
           <div className="flex flex-wrap items-center gap-3">
             <time className="text-sm font-medium text-on-surface-variant" dateTime={log.log_date}>
-              {dateStr} Â· {timeStr}
+              {dateStr} · {timeStr}
             </time>
             <LogStatusBadge status={log.status} />
           </div>
@@ -156,7 +156,7 @@ export default function ProProjectLogDetail({
             </p>
             <div className="flex items-center gap-2 text-sm text-on-surface-variant">
               <User className="w-4 h-4" />
-              <span>RÃ©digÃ© par {authorLabel}</span>
+              <span>Rédigé par {authorLabel}</span>
             </div>
           </div>
 
@@ -200,7 +200,7 @@ export default function ProProjectLogDetail({
           {log.issues && (
             <div>
               <h2 className="text-sm font-bold text-on-surface mb-3">
-                âš ï¸ ProblÃ¨mes rencontrÃ©s
+                âš ï¸ Problèmes rencontrés
               </h2>
               <p className="text-sm text-on-surface-variant bg-amber-50 rounded-xl p-5 whitespace-pre-wrap">
                 {log.issues}
@@ -212,7 +212,7 @@ export default function ProProjectLogDetail({
           {log.next_steps && (
             <div>
               <h2 className="text-sm font-bold text-on-surface mb-3">
-                ðŸ“‹ Prochaines Ã©tapes
+                ðŸ“‹ Prochaines étapes
               </h2>
               <p className="text-sm text-on-surface-variant bg-surface-container-low rounded-xl p-5 whitespace-pre-wrap">
                 {log.next_steps}

@@ -5,7 +5,7 @@ import Image from "next/image";
 import { AlertTriangle, Shield, MapPin, Briefcase, Calendar, Eye } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Liste Noire â€” Professionnels bannis | Kelen Admin",
+  title: “Liste Noire — Professionnels bannis | Kelen Admin”,
 };
 
 export default async function BlacklistedProfessionalsPage() {
@@ -21,6 +21,15 @@ export default async function BlacklistedProfessionalsPage() {
 
 
   if (prosError?.code === '42501') {
+    console.error('[blacklisted] RLS access denied — check admin policies on professionals table', prosError)
+  }
+
+  if (prosError && prosError.code !== '42501') {
+    return (
+      <div className="rounded-xl border border-kelen-red-200 bg-kelen-red-50 p-6 text-kelen-red-700 text-sm font-medium">
+        Erreur lors du chargement de la liste noire : {prosError.message}
+      </div>
+    )
   }
 
   // Fetch signals for each blacklisted pro
@@ -54,9 +63,9 @@ export default async function BlacklistedProfessionalsPage() {
   };
 
   const breachTypeLabels = {
-    timeline: "Retard / DÃ©lais",
-    budget: "DÃ©passement budget",
-    quality: "QualitÃ© non conforme",
+    timeline: "Retard / Délais",
+    budget: "Dépassement budget",
+    quality: "Qualité non conforme",
     abandonment: "Abandon de chantier",
     fraud: "Fraude / Arnaque",
   };
@@ -77,7 +86,7 @@ export default async function BlacklistedProfessionalsPage() {
         <div>
           <h1 className="text-2xl font-bold text-foreground">Liste Noire</h1>
           <p className="text-sm text-muted-foreground">
-            Professionnels bannis de la plateforme â€” Action admin requise
+            Professionnels bannis de la plateforme "” Action admin requise
           </p>
         </div>
       </div>
@@ -99,7 +108,7 @@ export default async function BlacklistedProfessionalsPage() {
             </div>
           </div>
           <div className="text-right">
-            <p className="text-xs text-muted-foreground">Total signaux vÃ©rifiÃ©s</p>
+            <p className="text-xs text-muted-foreground">Total signaux vérifiés</p>
             <p className="text-xl font-bold text-foreground">
               {blacklistedPros?.reduce((sum, pro) => sum + (pro.signal_count || 0), 0) || 0}
             </p>
@@ -144,7 +153,7 @@ export default async function BlacklistedProfessionalsPage() {
                             {pro.business_name}
                           </h2>
                           <p className="text-sm text-muted-foreground mt-1">
-                            {pro.owner_name || 'PropriÃ©taire inconnu'}
+                            {pro.owner_name || 'Propriétaire inconnu'}
                           </p>
                         </div>
                         <div className="flex items-center gap-2">
@@ -158,7 +167,7 @@ export default async function BlacklistedProfessionalsPage() {
                       <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                         <div className="flex items-center gap-2 text-muted-foreground">
                           <Briefcase className="w-4 h-4" />
-                          <span>{pro.category || 'Non catÃ©gorisÃ©'}</span>
+                          <span>{pro.category || 'Non catégorisé'}</span>
                         </div>
                         <div className="flex items-center gap-2 text-muted-foreground">
                           <MapPin className="w-4 h-4" />
@@ -192,7 +201,7 @@ export default async function BlacklistedProfessionalsPage() {
                 {signals.length > 0 && (
                   <div className="p-6">
                     <h3 className="text-sm font-bold text-foreground uppercase tracking-wider mb-4">
-                      Signaux vÃ©rifiÃ©s ({signals.length})
+                      Signaux vérifiés ({signals.length})
                     </h3>
                     <div className="space-y-4">
                       {signals.map((signal) => (
@@ -223,13 +232,13 @@ export default async function BlacklistedProfessionalsPage() {
                           {/* Footer */}
                           <div className="flex items-center justify-between text-xs text-muted-foreground">
                             <div className="flex items-center gap-2">
-                              <span>SignalÃ© par: {signal.submitter_name}</span>
+                              <span>Signalé par: {signal.submitter_name}</span>
                               {signal.submitter_country && (
-                                <span>Â· {signal.submitter_country}</span>
+                                <span>· {signal.submitter_country}</span>
                               )}
                             </div>
                             {signal.verified_at && (
-                              <span>VÃ©rifiÃ© le {formatDate(signal.verified_at)}</span>
+                              <span>Vérifié le {formatDate(signal.verified_at)}</span>
                             )}
                           </div>
 
@@ -273,7 +282,7 @@ export default async function BlacklistedProfessionalsPage() {
           <Shield className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
           <p className="text-lg font-semibold text-foreground">Aucun professionnel banni</p>
           <p className="text-sm text-muted-foreground mt-2">
-            La liste noire est vide. Aucun professionnel n'a Ã©tÃ© banni de la plateforme.
+            La liste noire est vide. Aucun professionnel n'a été banni de la plateforme.
           </p>
         </div>
       )}
