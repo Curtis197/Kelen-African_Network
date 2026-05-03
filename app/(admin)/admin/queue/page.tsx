@@ -83,7 +83,7 @@ export default async function AdminQueuePage() {
                           : "Signal"}
                       </span>
                       <span className="text-sm font-medium text-foreground">
-                        {(item.professional as any)?.[0]?.business_name || "Professionnel inconnu"}
+                        {(item.professional as any)?.business_name || "Professionnel inconnu"}
                       </span>
                     </div>
                     <p className="mt-0.5 text-xs text-muted-foreground">

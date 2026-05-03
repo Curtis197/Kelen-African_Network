@@ -224,9 +224,9 @@ export default async function AdminReviewPage({ params }: ReviewPageProps) {
               </div>
               <div>
                 <h3 className="text-2xl font-extrabold font-headline text-stone-900 leading-tight">
-                  {(queueItem.professional as any)?.[0]?.business_name}
+                  {(queueItem.professional as any)?.business_name}
                 </h3>
-                <p className="text-sm font-medium text-stone-500 capitalize">{(queueItem.professional as any)?.[0]?.category} • {(queueItem.professional as any)?.[0]?.city}</p>
+                <p className="text-sm font-medium text-stone-500 capitalize">{(queueItem.professional as any)?.category} • {(queueItem.professional as any)?.city}</p>
               </div>
             </div>
 
