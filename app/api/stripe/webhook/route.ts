@@ -40,6 +40,7 @@ export async function POST(request: NextRequest) {
   const { createClient } = await import("@/lib/supabase/server");
   const supabase = await createClient();
 
+  try {
   switch (event.type) {
     case "checkout.session.completed": {
       const paymentId = session.metadata?.payment_id;
@@ -254,6 +255,10 @@ export async function POST(request: NextRequest) {
       }
       break;
     }
+  }
+  } catch (err) {
+    console.error(`[stripe/webhook] Unhandled error processing ${event.type}`, String(err));
+    // Return 200 so Stripe doesn't retry — log for manual investigation
   }
 
   return NextResponse.json({ received: true });

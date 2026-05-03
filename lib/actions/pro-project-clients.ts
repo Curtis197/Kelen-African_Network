@@ -136,7 +136,7 @@ export async function createClientContact(
 
   // Generate invitation token only if sending invitation
   const inviteToken = shouldSendInvitation ? generateInviteToken() : null;
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://kelen-african-network.vercel.app";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://kelen.africa";
   const inviteUrl = inviteToken ? `${baseUrl}/invitation/${inviteToken}` : undefined;
 
   // Create client contact
@@ -307,7 +307,7 @@ export async function resendInvitation(clientId: string): Promise<{ success: boo
 
   // Generate new token and update
   const newToken = generateInviteToken();
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://kelen-african-network.vercel.app";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://kelen.africa";
   const inviteUrl = `${baseUrl}/invitation/${newToken}`;
 
   await supabase
@@ -320,12 +320,16 @@ export async function resendInvitation(clientId: string): Promise<{ success: boo
     })
     .eq("id", clientId);
 
-  // Send email
-  await sendInvitationEmail(
-    clientContact.client_email,
-    clientContact.client_name,
-    inviteUrl
-  );
+  // Send email — non-fatal: DB update already succeeded
+  try {
+    await sendInvitationEmail(
+      clientContact.client_email,
+      clientContact.client_name,
+      inviteUrl
+    );
+  } catch (err) {
+    console.error("[pro-project-clients] resendInvitation email failed", String(err));
+  }
 
   log("invitation.resent", { clientId, email: clientContact.client_email });
 

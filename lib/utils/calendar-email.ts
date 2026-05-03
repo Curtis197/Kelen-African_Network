@@ -34,29 +34,33 @@ export async function sendClientConfirmationEmail({
   const dateLabel = formatDateTime(startsAt);
   const endLabel = formatDateTime(endsAt);
 
-  await resend.emails.send({
-    from: "Kelen <noreply@kelen.africa>",
-    to: clientEmail,
-    subject: `Votre rendez-vous avec ${proName} est confirmé`,
-    html: `
-      <div style="font-family: system-ui, sans-serif; max-width: 600px; margin: 0 auto; color: #1a1a1a;">
-        <div style="background: #006c49; padding: 24px; text-align: center;">
-          <h1 style="margin: 0; font-size: 20px; color: white;">Rendez-vous confirmé ✓</h1>
-        </div>
-        <div style="padding: 32px 24px;">
-          <p>Bonjour <strong>${clientName}</strong>,</p>
-          <p>Votre rendez-vous avec <strong>${proName}</strong> est confirmé.</p>
-          <div style="background: #f9fafb; border-left: 4px solid #006c49; padding: 16px; margin: 24px 0; border-radius: 4px;">
-            <p style="margin: 0 0 8px;"><strong>Date :</strong> ${dateLabel}</p>
-            <p style="margin: 0 0 8px;"><strong>Heure de fin :</strong> ${endLabel}</p>
-            ${reason ? `<p style="margin: 0;"><strong>Objet :</strong> ${reason}</p>` : ""}
+  try {
+    await resend.emails.send({
+      from: "Kelen <noreply@kelen.africa>",
+      to: clientEmail,
+      subject: `Votre rendez-vous avec ${proName} est confirmé`,
+      html: `
+        <div style="font-family: system-ui, sans-serif; max-width: 600px; margin: 0 auto; color: #1a1a1a;">
+          <div style="background: #006c49; padding: 24px; text-align: center;">
+            <h1 style="margin: 0; font-size: 20px; color: white;">Rendez-vous confirmé ✓</h1>
           </div>
-          <p>Un événement a été ajouté à votre calendrier Google. Vous pouvez le modifier ou l'annuler directement depuis votre agenda.</p>
-          <p style="color: #6b7280; font-size: 14px;">À bientôt,<br/>L'équipe Kelen</p>
+          <div style="padding: 32px 24px;">
+            <p>Bonjour <strong>${clientName}</strong>,</p>
+            <p>Votre rendez-vous avec <strong>${proName}</strong> est confirmé.</p>
+            <div style="background: #f9fafb; border-left: 4px solid #006c49; padding: 16px; margin: 24px 0; border-radius: 4px;">
+              <p style="margin: 0 0 8px;"><strong>Date :</strong> ${dateLabel}</p>
+              <p style="margin: 0 0 8px;"><strong>Heure de fin :</strong> ${endLabel}</p>
+              ${reason ? `<p style="margin: 0;"><strong>Objet :</strong> ${reason}</p>` : ""}
+            </div>
+            <p>Un événement a été ajouté à votre calendrier Google. Vous pouvez le modifier ou l'annuler directement depuis votre agenda.</p>
+            <p style="color: #6b7280; font-size: 14px;">À bientôt,<br/>L'équipe Kelen</p>
+          </div>
         </div>
-      </div>
-    `,
-  });
+      `,
+    });
+  } catch (err) {
+    console.error("[calendar-email] sendClientConfirmationEmail failed", String(err));
+  }
 }
 
 export async function sendProNotificationEmail({
@@ -83,29 +87,33 @@ export async function sendProNotificationEmail({
   const dateLabel = formatDateTime(startsAt);
   const endLabel = formatDateTime(endsAt);
 
-  await resend.emails.send({
-    from: "Kelen <noreply@kelen.africa>",
-    to: proEmail,
-    subject: `Nouveau RDV — ${clientName} — ${dateLabel}`,
-    html: `
-      <div style="font-family: system-ui, sans-serif; max-width: 600px; margin: 0 auto; color: #1a1a1a;">
-        <div style="background: #1a1a1a; padding: 24px; text-align: center;">
-          <h1 style="margin: 0; font-size: 20px; color: white;">Nouveau rendez-vous</h1>
-        </div>
-        <div style="padding: 32px 24px;">
-          <p>Bonjour <strong>${proName}</strong>,</p>
-          <p>Un client vient de réserver un créneau via votre profil Kelen.</p>
-          <div style="background: #f9fafb; border-left: 4px solid #1a1a1a; padding: 16px; margin: 24px 0; border-radius: 4px;">
-            <p style="margin: 0 0 8px;"><strong>Client :</strong> ${clientName}</p>
-            <p style="margin: 0 0 8px;"><strong>Email :</strong> <a href="mailto:${clientEmail}">${clientEmail}</a></p>
-            ${clientPhone ? `<p style="margin: 0 0 8px;"><strong>Téléphone :</strong> ${clientPhone}</p>` : ""}
-            <p style="margin: 0 0 8px;"><strong>Date :</strong> ${dateLabel}</p>
-            <p style="margin: 0 0 8px;"><strong>Fin :</strong> ${endLabel}</p>
-            ${reason ? `<p style="margin: 0;"><strong>Objet :</strong> ${reason}</p>` : ""}
+  try {
+    await resend.emails.send({
+      from: "Kelen <noreply@kelen.africa>",
+      to: proEmail,
+      subject: `Nouveau RDV — ${clientName} — ${dateLabel}`,
+      html: `
+        <div style="font-family: system-ui, sans-serif; max-width: 600px; margin: 0 auto; color: #1a1a1a;">
+          <div style="background: #1a1a1a; padding: 24px; text-align: center;">
+            <h1 style="margin: 0; font-size: 20px; color: white;">Nouveau rendez-vous</h1>
           </div>
-          <p>L'événement a été ajouté à votre Google Calendar automatiquement.</p>
+          <div style="padding: 32px 24px;">
+            <p>Bonjour <strong>${proName}</strong>,</p>
+            <p>Un client vient de réserver un créneau via votre profil Kelen.</p>
+            <div style="background: #f9fafb; border-left: 4px solid #1a1a1a; padding: 16px; margin: 24px 0; border-radius: 4px;">
+              <p style="margin: 0 0 8px;"><strong>Client :</strong> ${clientName}</p>
+              <p style="margin: 0 0 8px;"><strong>Email :</strong> <a href="mailto:${clientEmail}">${clientEmail}</a></p>
+              ${clientPhone ? `<p style="margin: 0 0 8px;"><strong>Téléphone :</strong> ${clientPhone}</p>` : ""}
+              <p style="margin: 0 0 8px;"><strong>Date :</strong> ${dateLabel}</p>
+              <p style="margin: 0 0 8px;"><strong>Fin :</strong> ${endLabel}</p>
+              ${reason ? `<p style="margin: 0;"><strong>Objet :</strong> ${reason}</p>` : ""}
+            </div>
+            <p>L'événement a été ajouté à votre Google Calendar automatiquement.</p>
+          </div>
         </div>
-      </div>
-    `,
-  });
+      `,
+    });
+  } catch (err) {
+    console.error("[calendar-email] sendProNotificationEmail failed", String(err));
+  }
 }
