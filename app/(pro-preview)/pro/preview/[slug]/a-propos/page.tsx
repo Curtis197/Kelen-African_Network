@@ -85,10 +85,9 @@ export default async function PreviewAProposPage({ params, searchParams }: Props
               />
             </div>
           )}
-          <div
-            className="prose prose-sm max-w-none text-[var(--pro-text-muted,#444)] leading-relaxed"
-            dangerouslySetInnerHTML={{ __html: portfolio.about_text }}
-          />
+          <p className="prose prose-sm max-w-none text-[var(--pro-text-muted,#444)] leading-relaxed whitespace-pre-wrap">
+            {portfolio.about_text}
+          </p>
         </div>
 
         <ProSiteContact

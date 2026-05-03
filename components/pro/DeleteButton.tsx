@@ -1,13 +1,18 @@
 "use client";
 
+import { toast } from "sonner";
 import { deleteRealization } from "@/lib/actions/portfolio";
 
 export function DeleteButton({ realizationId }: { realizationId: string }) {
-  async function handleDelete() {
-    if (!confirm("Supprimer cette réalisation ? Elle sera retirée de votre profil public.")) {
-      return;
-    }
-    await deleteRealization(realizationId);
+  function handleDelete() {
+    toast("Supprimer cette réalisation ?", {
+      description: "Elle sera retirée de votre profil public.",
+      action: {
+        label: "Supprimer",
+        onClick: () => deleteRealization(realizationId),
+      },
+      cancel: { label: "Annuler", onClick: () => {} },
+    });
   }
 
   return (

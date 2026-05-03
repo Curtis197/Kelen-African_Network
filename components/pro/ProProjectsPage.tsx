@@ -81,15 +81,22 @@ export function ProProjectsPage() {
     setStatusDropdownOpen(null);
   };
 
-  const handleDelete = async (id: string, title: string) => {
-    if (!confirm(`Supprimer le projet "${title}" ?`)) return;
-    const result = await deleteProProject(id);
-    if (result.error) {
-      toast.error(result.error);
-    } else {
-      toast.success("Projet supprimé");
-      loadProjects();
-    }
+  const handleDelete = (id: string, title: string) => {
+    toast(`Supprimer le projet "${title}" ?`, {
+      action: {
+        label: "Supprimer",
+        onClick: async () => {
+          const result = await deleteProProject(id);
+          if (result.error) {
+            toast.error(result.error);
+          } else {
+            toast.success("Projet supprimé");
+            loadProjects();
+          }
+        },
+      },
+      cancel: { label: "Annuler", onClick: () => {} },
+    });
   };
 
   const togglePublic = async (project: ProProject) => {

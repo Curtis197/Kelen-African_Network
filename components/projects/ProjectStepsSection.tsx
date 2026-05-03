@@ -64,14 +64,20 @@ export default function ProjectStepsSection({
     setIsAssignOpen(true);
   };
 
-  const handleDelete = async (id: string) => {
-    if (confirm("Voulez-vous vraiment supprimer cette étape ?")) {
-      const result = await deleteProjectStep(id, projectId);
-      if (result.success) {
-        if (onStepsChange) onStepsChange();
-        else fetchSteps();
-      }
-    }
+  const handleDelete = (id: string) => {
+    toast("Supprimer cette étape ?", {
+      action: {
+        label: "Supprimer",
+        onClick: async () => {
+          const result = await deleteProjectStep(id, projectId);
+          if (result.success) {
+            if (onStepsChange) onStepsChange();
+            else fetchSteps();
+          }
+        },
+      },
+      cancel: { label: "Annuler", onClick: () => {} },
+    });
   };
 
   return (

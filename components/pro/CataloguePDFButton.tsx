@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 import { FileDown, Loader2 } from "lucide-react";
 
 interface Props {
@@ -15,7 +16,7 @@ export function CataloguePDFButton({ professionalId, label = "Exporter catalogue
     setLoading(true);
     const win = window.open(`/api/catalogue-pdf?professional_id=${professionalId}`, "_blank");
     if (!win) {
-      alert("Pop-up bloqué. Autorisez les pop-ups pour exporter le PDF.");
+      toast.error("Pop-up bloqué. Autorisez les pop-ups pour exporter le PDF.");
     }
     setTimeout(() => setLoading(false), 2000);
   }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 import { FileDown, Loader2 } from "lucide-react";
 
 interface Props {
@@ -23,7 +24,7 @@ export function PortfolioPDFButton({ realizationId, professionalId, label, varia
     setLoading(true);
     const win = window.open(url, "_blank");
     if (!win) {
-      alert("Pop-up bloqué. Autorisez les pop-ups pour exporter le PDF.");
+      toast.error("Pop-up bloqué. Autorisez les pop-ups pour exporter le PDF.");
     }
     // Reset after a short delay (print dialog takes over in the new tab)
     setTimeout(() => setLoading(false), 2000);

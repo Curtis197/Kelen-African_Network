@@ -4,10 +4,10 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import LinkExt from "@tiptap/extension-link";
 import ImageExt from "@tiptap/extension-image";
-import { useRef } from "react";
-import { Bold, Italic, List, ListOrdered, Link2, Heading2, ImageIcon, Loader2, Sparkles } from "lucide-react";
+import { useRef, useState } from "react";
+import { Bold, Italic, List, ListOrdered, Link2, Heading2, ImageIcon, Loader2, Sparkles, Check, X } from "lucide-react";
 import { uploadFile } from "@/lib/supabase/storage";
-import { useState } from "react";
+import { toast } from "sonner";
 
 interface Props {
   content: string;
@@ -19,6 +19,8 @@ export function TipTapEditor({ content, onChange, professionalId }: Props) {
   const imageInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [correcting, setCorrecting] = useState(false);
+  const [showLinkInput, setShowLinkInput] = useState(false);
+  const [linkUrl, setLinkUrl] = useState("");
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -39,8 +41,14 @@ export function TipTapEditor({ content, onChange, professionalId }: Props) {
   if (!editor) return null;
 
   function addLink() {
-    const url = window.prompt("URL du lien");
-    if (url) editor?.chain().focus().setLink({ href: url }).run();
+    setLinkUrl("");
+    setShowLinkInput(true);
+  }
+
+  function confirmLink() {
+    if (linkUrl.trim()) editor?.chain().focus().setLink({ href: linkUrl.trim() }).run();
+    setShowLinkInput(false);
+    setLinkUrl("");
   }
 
   async function handleAiCorrect() {
@@ -74,7 +82,7 @@ export function TipTapEditor({ content, onChange, professionalId }: Props) {
       const url = await uploadFile(file, "portfolios", `newsletter/${professionalId}`);
       editor.chain().focus().setImage({ src: url, alt: file.name }).run();
     } catch (err) {
-      alert((err as Error).message);
+      toast.error((err as Error).message ?? "Erreur lors de l'upload.");
     } finally {
       setUploading(false);
       if (imageInputRef.current) imageInputRef.current.value = "";
@@ -138,6 +146,25 @@ export function TipTapEditor({ content, onChange, professionalId }: Props) {
           {correcting ? "Correction…" : "Corriger"}
         </button>
       </div>
+      {showLinkInput && (
+        <div className="flex items-center gap-2 px-3 py-2 border-b border-outline-variant bg-surface-container-low">
+          <input
+            autoFocus
+            type="url"
+            placeholder="https://..."
+            value={linkUrl}
+            onChange={(e) => setLinkUrl(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter") confirmLink(); if (e.key === "Escape") setShowLinkInput(false); }}
+            className="flex-1 text-sm px-2 py-1 rounded border border-outline-variant bg-surface outline-none focus:border-kelen-green-500"
+          />
+          <button type="button" onClick={confirmLink} className="p-1.5 rounded bg-kelen-green-600 text-white hover:bg-kelen-green-700 transition-colors" title="Confirmer">
+            <Check className="w-4 h-4" />
+          </button>
+          <button type="button" onClick={() => setShowLinkInput(false)} className="p-1.5 rounded hover:bg-surface-container transition-colors text-on-surface-variant" title="Annuler">
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
       <EditorContent editor={editor} />
     </div>
   );

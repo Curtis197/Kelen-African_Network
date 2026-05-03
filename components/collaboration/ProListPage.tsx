@@ -319,12 +319,19 @@ function ProCard({
           <button
             title="Retirer du projet"
             disabled={isUpdating}
-            onClick={async () => {
-              if (confirm("Voulez-vous vraiment retirer ce professionnel du projet ? Cela annulera également toute collaboration en cours.")) {
-                setIsUpdating(true);
-                await onRemove(pro.id);
-                setIsUpdating(false);
-              }
+            onClick={() => {
+              toast("Retirer ce professionnel du projet ?", {
+                description: "Cela annulera également toute collaboration en cours.",
+                action: {
+                  label: "Retirer",
+                  onClick: async () => {
+                    setIsUpdating(true);
+                    await onRemove(pro.id);
+                    setIsUpdating(false);
+                  },
+                },
+                cancel: { label: "Annuler", onClick: () => {} },
+              });
             }}
             className="p-1.5 text-on-surface-variant hover:text-error hover:bg-error/10 rounded-lg transition-colors border border-transparent hover:border-error/20"
           >

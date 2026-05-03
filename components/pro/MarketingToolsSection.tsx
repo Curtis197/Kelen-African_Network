@@ -24,7 +24,8 @@ function MarketingToolCard({ title, description, icon, href, disabled }: ToolCar
     setLoading(true);
     const win = window.open(href, "_blank");
     if (!win) {
-      alert("Pop-up bloqué. Autorisez les pop-ups pour ouvrir cet outil.");
+      const { toast } = await import("sonner");
+      toast.error("Pop-up bloqué. Autorisez les pop-ups pour ouvrir cet outil.");
     }
     setTimeout(() => setLoading(false), 2000);
   }

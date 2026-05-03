@@ -61,10 +61,9 @@ export default async function AProposPage({ params }: { params: Promise<{ slug: 
               />
             </div>
           )}
-          <div
-            className="prose prose-sm max-w-none text-[var(--pro-text-muted,#444)] leading-relaxed"
-            dangerouslySetInnerHTML={{ __html: portfolio.about_text }}
-          />
+          <p className="prose prose-sm max-w-none text-[var(--pro-text-muted,#444)] leading-relaxed whitespace-pre-wrap">
+            {portfolio.about_text}
+          </p>
         </div>
 
         <ProSiteContact

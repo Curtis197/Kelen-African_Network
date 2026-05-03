@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useState, useRef } from "react";
+import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { uploadFile } from "@/lib/supabase/storage";
 import { addProjectImage, deleteProjectImage, setMainProjectImage } from "@/lib/actions/realisations";
@@ -123,24 +124,25 @@ export default function ProjectImageManager({
     onImagesChange();
   };
 
-  const handleDelete = async (imageId: string) => {
-    if (!confirm("Supprimer cette image ?")) {
-      return;
-    }
-
-    setIsDeleting(imageId);
-    setError(null);
-
-    const result = await deleteProjectImage(imageId);
-
-    if (!result.success) {
-      setError(result.error || "Erreur lors de la suppression de l'image.");
-      setIsDeleting(null);
-      return;
-    }
-
-    onImagesChange();
-    setIsDeleting(null);
+  const handleDelete = (imageId: string) => {
+    toast("Supprimer cette image ?", {
+      action: {
+        label: "Supprimer",
+        onClick: async () => {
+          setIsDeleting(imageId);
+          setError(null);
+          const result = await deleteProjectImage(imageId);
+          if (!result.success) {
+            setError(result.error || "Erreur lors de la suppression de l'image.");
+            setIsDeleting(null);
+            return;
+          }
+          onImagesChange();
+          setIsDeleting(null);
+        },
+      },
+      cancel: { label: "Annuler", onClick: () => {} },
+    });
   };
 
   const mainImage = images.find((img) => img.is_main);

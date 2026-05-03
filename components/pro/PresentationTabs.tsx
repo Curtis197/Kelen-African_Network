@@ -1,6 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
+import { toast } from "sonner";
 import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -62,9 +63,10 @@ function DeleteServiceButton({ serviceId }: { serviceId: string }) {
   const [isPending, startTransition] = useTransition();
 
   function handleDelete() {
-    if (!confirm("Supprimer ce service ? Il sera retiré de votre profil public.")) return;
-    startTransition(async () => {
-      await deleteService(serviceId);
+    toast("Supprimer ce service ?", {
+      description: "Il sera retiré de votre profil public.",
+      action: { label: "Supprimer", onClick: () => startTransition(() => deleteService(serviceId)) },
+      cancel: { label: "Annuler", onClick: () => {} },
     });
   }
 
@@ -119,9 +121,16 @@ function DeleteProductButton({ productId }: { productId: string }) {
   const [isPending, startTransition] = useTransition();
 
   function handleDelete() {
-    if (!confirm("Supprimer ce produit ? Il sera retiré de votre profil public.")) return;
-    startTransition(async () => {
-      await deleteProduct(productId);
+    toast("Supprimer ce produit ?", {
+      description: "Il sera retiré de votre profil public.",
+      action: {
+        label: "Supprimer",
+        onClick: () =>
+          startTransition(async () => {
+            await deleteProduct(productId);
+          }),
+      },
+      cancel: { label: "Annuler", onClick: () => {} },
     });
   }
 

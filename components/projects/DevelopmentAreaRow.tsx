@@ -25,6 +25,7 @@ import {
   ExternalLink 
 } from "lucide-react";
 
+import { toast } from "sonner";
 import { ProjectProfessional, Professional } from "@/lib/types/projects";
 
 interface DevelopmentAreaRowProps {
@@ -59,20 +60,27 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
     setIsUpdating(false);
   };
 
-  const handleRemove = async (member: ProjectProfessional) => {
-    if (!confirm("Retirer ce professionnel de ce domaine ?")) return;
-    setIsUpdating(true);
-    await manageProjectProfessional(
-      projectId, 
-      member.professional_id, 
-      areaName, 
-      'remove', 
-      member.is_external,
-      member.is_external ? { name: member.external_name || undefined } : undefined,
-      areaId
-    );
-    onRefresh();
-    setIsUpdating(false);
+  const handleRemove = (member: ProjectProfessional) => {
+    toast("Retirer ce professionnel de ce domaine ?", {
+      action: {
+        label: "Retirer",
+        onClick: async () => {
+          setIsUpdating(true);
+          await manageProjectProfessional(
+            projectId,
+            member.professional_id,
+            areaName,
+            'remove',
+            member.is_external,
+            member.is_external ? { name: member.external_name || undefined } : undefined,
+            areaId
+          );
+          onRefresh();
+          setIsUpdating(false);
+        },
+      },
+      cancel: { label: "Annuler", onClick: () => {} },
+    });
   };
 
   const handleAddExternal = () => {

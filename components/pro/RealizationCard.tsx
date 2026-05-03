@@ -20,22 +20,28 @@ export function ProjectDocumentCard({
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const handleDelete = async (e: React.MouseEvent) => {
+  const handleDelete = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-
-    if (!confirm("ÃŠtes-vous sûr de vouloir supprimer ce projet ?")) return;
-
-    setIsDeleting(true);
-    try {
-      await deleteProjectDocument(doc.id);
-      toast.success("Projet supprimé");
-      router.refresh();
-    } catch (error) {
-      toast.error("Erreur lors de la suppression.");
-    } finally {
-      setIsDeleting(false);
-    }
+    toast("Supprimer ce projet ?", {
+      description: "Cette action est irréversible.",
+      action: {
+        label: "Supprimer",
+        onClick: async () => {
+          setIsDeleting(true);
+          try {
+            await deleteProjectDocument(doc.id);
+            toast.success("Projet supprimé");
+            router.refresh();
+          } catch {
+            toast.error("Erreur lors de la suppression.");
+          } finally {
+            setIsDeleting(false);
+          }
+        },
+      },
+      cancel: { label: "Annuler", onClick: () => {} },
+    });
   };
 
   const handleExportPDF = async (e: React.MouseEvent) => {
