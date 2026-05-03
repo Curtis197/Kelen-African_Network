@@ -1,6 +1,7 @@
 ﻿"use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createClient as createServiceClient } from "@/lib/supabase/service";
 import { revalidatePath } from "next/cache";
 
 export type NotificationType =
@@ -19,6 +20,32 @@ interface CreateNotificationInput {
   link?: string;
   icon?: string;
   metadata?: Record<string, unknown>;
+}
+
+/**
+ * Internal use only — bypasses caller auth check.
+ * Use this from server actions that need to notify another user (e.g. collaboration events).
+ * Never call from client code.
+ */
+export async function insertNotification(input: CreateNotificationInput): Promise<{ id?: string; error?: string }> {
+  const supabase = createServiceClient();
+
+  const { data, error } = await supabase
+    .from("notifications")
+    .insert([{
+      user_id: input.userId,
+      type: input.type,
+      title: input.title,
+      body: input.body,
+      link: input.link || null,
+      icon: input.icon || "bell",
+      metadata: input.metadata || {},
+    }])
+    .select("id")
+    .single();
+
+  if (error) return { error: error.message };
+  return { id: data.id };
 }
 
 /**

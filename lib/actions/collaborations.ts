@@ -2,7 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
-import { createNotification } from "./notifications";
+import { insertNotification } from "./notifications";
 import type {
   CollaborationStatus,
   ProposalFormData,
@@ -70,7 +70,7 @@ export async function makeFinalist(projectId: string, professionalId: string, pr
     .single();
 
   if (professional?.user_id) {
-    const { error: notifError } = await createNotification({
+    const { error: notifError } = await insertNotification({
       userId: professional.user_id,
       type: 'finalist_selected',
       title: 'Invitation à soumettre une proposition',
@@ -243,7 +243,7 @@ export async function submitProposal(
   const collab = collabRaw as typeof collabRaw & { project: { user_id: string } | null };
 
   if (collab?.project?.user_id) {
-    const { error: notifError } = await createNotification({
+    const { error: notifError } = await insertNotification({
       userId: collab.project.user_id,
       type: 'proposal_submitted',
       title: 'Proposition soumise',
@@ -299,7 +299,7 @@ export async function declineCollaboration(collaborationId: string, reason: stri
 
   // Notify client
   if (collab?.project?.user_id) {
-    const { error: notifError } = await createNotification({
+    const { error: notifError } = await insertNotification({
       userId: collab.project.user_id,
       type: 'collaboration_declined',
       title: 'Proposition refusée',
@@ -347,7 +347,7 @@ export async function requestRevision(collaborationId: string, message: string) 
   const collab = collabRaw3 as typeof collabRaw3 & { professional: { user_id: string } | null };
 
   if (collab?.professional?.user_id) {
-    const { error: notifError } = await createNotification({
+    const { error: notifError } = await insertNotification({
       userId: collab.professional.user_id,
       type: 'revision_requested',
       title: 'Demande de révision',
@@ -457,7 +457,7 @@ export async function acceptProposal(collaborationId: string) {
 
       // Notify declined finalist
       if (finalist.professional?.user_id) {
-        const { error: notifError } = await createNotification({
+        const { error: notifError } = await insertNotification({
           userId: finalist.professional.user_id,
           type: 'proposal_declined',
           title: 'Proposition non retenue',
@@ -472,7 +472,7 @@ export async function acceptProposal(collaborationId: string) {
 
   // Notify winner
   if (collab.professional?.user_id) {
-    const { error: notifError } = await createNotification({
+    const { error: notifError } = await insertNotification({
       userId: collab.professional.user_id,
       type: 'proposal_accepted',
       title: 'Proposition acceptée !',
@@ -535,7 +535,7 @@ export async function declineFinalist(collaborationId: string, reason: string) {
 
   // Notify pro
   if (collab?.professional?.user_id) {
-    await createNotification({
+    await insertNotification({
       userId: collab.professional.user_id,
       type: 'proposal_declined',
       title: 'Proposition non retenue',
@@ -590,7 +590,7 @@ export async function terminateCollaboration(collaborationId: string, reason: st
 
   // Notify pro
   if (collab?.professional?.user_id) {
-    await createNotification({
+    await insertNotification({
       userId: collab.professional.user_id,
       type: 'collaboration_terminated',
       title: 'Collaboration terminée',
