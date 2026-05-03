@@ -131,7 +131,7 @@ export default function ProDocumentsPage() {
             <span className="text-on-surface">Tous les fichiers</span>
           </div>
           <div className="flex items-center gap-3 flex-wrap">
-            <h1 className="text-4xl lg:text-5xl font-extrabold leading-tight tracking-tight text-on-surface">
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold leading-tight tracking-tight text-on-surface">
               Coffre-fort <span className="text-kelen-green-600">Numérique</span>
             </h1>
             {!isLoading && (
@@ -278,7 +278,7 @@ export default function ProDocumentsPage() {
       {/* Detail Sidebar */}
       <aside className="w-full lg:w-80 shrink-0 sticky top-24">
         {selectedDoc ? (
-          <div className="bg-white rounded-[2rem] p-8 border border-stone-100 shadow-xl shadow-stone-200/20 space-y-8 animate-in slide-in-from-right-4 duration-500">
+          <div className="bg-white rounded-[2rem] p-5 sm:p-8 border border-stone-100 shadow-xl shadow-stone-200/20 space-y-8 animate-in slide-in-from-right-4 duration-500">
             <div className="flex items-center justify-between mb-4">
                <h3 className="font-extrabold text-lg">Détails du fichier</h3>
                <button onClick={() => setSelectedDoc(null)} className="text-stone-300 hover:text-stone-600"><X className="w-5 h-5" /></button>

@@ -101,7 +101,7 @@ export function CollaborationThread({
   return (
     <div className="bg-white rounded-2xl border border-border overflow-hidden">
       {/* Header */}
-      <div className="flex items-center gap-3 px-5 py-4 border-b border-border">
+      <div className="flex items-center gap-3 px-4 sm:px-5 py-4 border-b border-border">
         <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-600 shrink-0">
           <MessageSquare className="w-4 h-4" />
         </div>
@@ -114,7 +114,7 @@ export function CollaborationThread({
       </div>
 
       {/* Messages */}
-      <div className="space-y-4 p-5 max-h-[500px] overflow-y-auto">
+      <div className="space-y-4 p-4 sm:p-5 max-h-[500px] overflow-y-auto">
         {messages.length === 0 ? (
           <div className="text-center py-10">
             <div className="w-12 h-12 mx-auto mb-3 rounded-2xl bg-surface-container flex items-center justify-center">
@@ -140,7 +140,7 @@ export function CollaborationThread({
                   </AvatarFallback>
                 </Avatar>
 
-                <div className={`flex flex-col max-w-[70%] ${isOwn ? 'items-end' : 'items-start'}`}>
+                <div className={`flex flex-col max-w-[85%] sm:max-w-[70%] ${isOwn ? 'items-end' : 'items-start'}`}>
                   <div className="flex items-center gap-2 mb-1.5">
                     {!isOwn && (
                       <span className="text-xs font-medium text-on-surface-variant">

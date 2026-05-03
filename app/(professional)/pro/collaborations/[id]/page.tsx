@@ -458,7 +458,7 @@ export default function ProCollaborationDetailPage() {
             <div className="space-y-4 max-h-80 overflow-y-auto mb-4">
               {messages.map(msg => (
                 <div key={msg.id} className={`flex ${msg.sender_role === 'professional' ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`max-w-[80%] rounded-xl p-4 ${
+                  <div className={`max-w-[90%] sm:max-w-[80%] rounded-xl p-3 sm:p-4 ${
                     msg.sender_role === 'professional'
                       ? 'bg-primary/10 text-on-surface'
                       : 'bg-surface-container text-on-surface'
@@ -599,7 +599,7 @@ export default function ProCollaborationDetailPage() {
                   <button
                     onClick={handleSendMessage}
                     disabled={(!replyText.trim() && attachments.length === 0) || isSubmitting || isUploading}
-                    className="self-end px-4 py-3 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed h-[100px] inline-flex items-center justify-center min-w-[56px]"
+                    className="self-end px-4 py-3 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed h-12 sm:h-[100px] inline-flex items-center justify-center min-w-[56px]"
                   >
                     {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                   </button>
@@ -688,7 +688,7 @@ export default function ProCollaborationDetailPage() {
                 <button
                   onClick={handleSendMessage}
                   disabled={(!replyText.trim() && attachments.length === 0) || isSubmitting || isUploading}
-                  className="self-end px-4 py-3 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed h-[100px] inline-flex items-center justify-center min-w-[56px]"
+                  className="self-end px-4 py-3 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed h-12 sm:h-[100px] inline-flex items-center justify-center min-w-[56px]"
                 >
                   {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                 </button>

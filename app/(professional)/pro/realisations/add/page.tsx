@@ -42,17 +42,17 @@ export default async function AddRealizationPage() {
 
 
   return (
-    <div className="mx-auto max-w-5xl">
+    <div className="mx-auto max-w-5xl px-4 sm:px-6">
       <div className="mb-10">
-        <h1 className="font-headline text-3xl font-bold tracking-tight text-on-surface lg:text-4xl">
-          Nouvelle rÃ©alisation
+        <h1 className="font-headline text-2xl sm:text-3xl font-bold tracking-tight text-on-surface lg:text-4xl">
+          Nouvelle réalisation
         </h1>
         <p className="mt-2 text-on-surface-variant/70">
-          Remplissez les dÃ©tails pour faire rayonner votre expertise.
+          Remplissez les détails pour faire rayonner votre expertise.
         </p>
       </div>
 
-      <div className="rounded-[2.5rem] bg-white p-8 shadow-sm lg:p-12">
+      <div className="rounded-2xl sm:rounded-[2.5rem] bg-white p-5 sm:p-8 shadow-sm lg:p-12">
         <ProjectDocumentForm professionalId={professional.id} />
       </div>
     </div>
