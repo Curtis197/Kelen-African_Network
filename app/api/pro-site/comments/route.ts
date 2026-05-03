@@ -29,9 +29,26 @@ export async function GET(req: NextRequest) {
 
 const VALID_TYPES = new Set(['service', 'realisation', 'produit'])
 
+async function isRateLimited(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  itemId: string,
+  authorName: string,
+): Promise<boolean> {
+  const since = new Date(Date.now() - 60 * 60 * 1000).toISOString()
+  const { count } = await supabase
+    .from('item_comments')
+    .select('*', { count: 'exact', head: true })
+    .eq('item_id', itemId)
+    .eq('author_name', authorName)
+    .gte('created_at', since)
+  return (count ?? 0) >= 5
+}
+
 // POST /api/pro-site/comments  body: { item_type, item_id, author_name, body }
 export async function POST(req: NextRequest) {
-  const body = await req.json()
+  const body = await req.json().catch(() => null)
+  if (!body) return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
+
   const { item_type, item_id, author_name, body: commentBody } = body
 
   if (!VALID_TYPES.has(item_type)) return NextResponse.json({ error: 'Invalid item_type' }, { status: 400 })
@@ -42,6 +59,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'body must be 1-1000 chars' }, { status: 400 })
 
   const supabase = await createClient()
+
+  if (await isRateLimited(supabase, item_id, author_name)) {
+    return NextResponse.json(
+      { error: 'Trop de commentaires. Veuillez patienter avant de réessayer.' },
+      { status: 429 },
+    )
+  }
+
   const { data, error } = await supabase
     .from('item_comments')
     .insert({ item_type, item_id, author_name, body: commentBody })
