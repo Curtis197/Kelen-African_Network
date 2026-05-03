@@ -85,7 +85,7 @@ export function buildCssVars(tokens: Partial<StyleAnswers>): Record<string, stri
       "--portfolio-overlay":    "rgba(30,15,0,0.45)",
     },
   };
-  if (tokens.mood) Object.assign(vars, moodMap[tokens.mood]);
+  if (tokens.mood && tokens.mood in moodMap) Object.assign(vars, moodMap[tokens.mood as keyof typeof moodMap]);
 
   // Hero image height based on imageWeight
   const heroHeightMap = { image: "90vh", balanced: "80vh", text: "60vh" };

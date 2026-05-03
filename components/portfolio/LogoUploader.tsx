@@ -39,7 +39,9 @@ export function LogoUploader({ initialLogoUrl, initialBrandPrimary, onColorsSave
       img.onload = async () => {
         try {
           // Dynamic import avoids SSR issues
-          const { default: ColorThief } = await import("colorthief");
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const ColorThiefModule = await import("colorthief") as any;
+          const ColorThief = ColorThiefModule.default ?? ColorThiefModule;
           const thief = new ColorThief();
           const palette = thief.getPalette(img, 3) as [number, number, number][];
           resolve({

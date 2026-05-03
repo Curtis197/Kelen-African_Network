@@ -324,8 +324,6 @@ export async function getUserProjects(limit: number = 100, offset: number = 0) {
     return [];
   }
 
-  });
-
   return data;
 }
 
