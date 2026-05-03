@@ -368,7 +368,7 @@ export default function ProposalReviewPage() {
                 <span className="capitalize">{professional.category}</span>
                 {professional.city && (
                   <>
-                    <span>â€¢</span>
+                    <span>â€•</span>
                     <span className="flex items-center gap-1">
                       <MapPin className="w-3.5 h-3.5" />
                       {professional.city}
@@ -377,7 +377,7 @@ export default function ProposalReviewPage() {
                 )}
                 {professional.avg_rating && (
                   <>
-                    <span>â€¢</span>
+                    <span>â€•</span>
                     <span className="flex items-center gap-1">
                       <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
                       {professional.avg_rating.toFixed(1)} ({professional.review_count || 0})

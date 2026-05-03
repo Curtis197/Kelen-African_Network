@@ -242,13 +242,13 @@ function ProCard({
             )}
             {location && (
               <>
-                <span>"¢</span>
+                <span>"•</span>
                 <span>{location}</span>
               </>
             )}
             {!pro.is_external && rating && (
               <>
-                <span>"¢</span>
+                <span>"•</span>
                 <span className="flex items-center gap-1">
                   <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
                   {rating.toFixed(1)} ({reviewCount})
@@ -286,7 +286,7 @@ function ProCard({
             <div className="mt-2 text-xs text-green-600 flex items-center gap-1.5">
               <CheckCircle2 className="w-3 h-3" />
               Actif depuis {new Date(collab.started_at).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })}
-              <span className="text-on-surface-variant ml-1">"¢ Accès complet</span>
+              <span className="text-on-surface-variant ml-1">"• Accès complet</span>
             </div>
           )}
         </div>

@@ -204,7 +204,7 @@ export function ProductForm({ professionalId, initialData }: ProductFormProps) {
                     ) : (
                       <Sparkles size={13} />
                     )}
-                    {isCorrecting ? "Correction"¦" : "Corriger avec l'IA"}
+                    {isCorrecting ? "Correction"…" : "Corriger avec l'IA"}
                   </button>
                 </div>
                 <textarea

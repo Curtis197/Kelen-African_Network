@@ -178,7 +178,7 @@ export function LoginForm({ defaultRole }: LoginFormProps) {
           type="password"
           {...register("password")}
           className="w-full rounded-lg border border-border bg-white px-4 py-2 text-sm transition-colors placeholder:text-muted-foreground focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
-          placeholder=""¢"¢"¢"¢"¢"¢"¢"¢"
+          placeholder=""•"•"•"•"•"•"•"•"
         />
         {errors.password && (
           <p className="mt-1 text-xs text-kelen-red-500">{errors.password.message}</p>

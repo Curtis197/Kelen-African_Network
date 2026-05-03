@@ -633,10 +633,10 @@ export default function EditClientProjectPage() {
             <div className="text-sm text-blue-800">
               <p className="font-medium mb-1">Informations</p>
               <ul className="space-y-1 text-blue-700">
-                <li>â€¢ Tous les champs sauf le titre sont optionnels</li>
-                <li>â€¢ Les modifications sont enregistrées immédiatement</li>
-                <li>â€¢ Pour ajouter des professionnels, utilisez la page du projet</li>
-                <li>â€¢ La première image ajoutée devient automatiquement l'image principale</li>
+                <li>â€• Tous les champs sauf le titre sont optionnels</li>
+                <li>â€• Les modifications sont enregistrées immédiatement</li>
+                <li>â€• Pour ajouter des professionnels, utilisez la page du projet</li>
+                <li>â€• La première image ajoutée devient automatiquement l'image principale</li>
               </ul>
             </div>
           </div>

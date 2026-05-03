@@ -423,7 +423,7 @@ export function ProProjectsPage() {
                                 )}
                                 {project.client_name && (
                                   <>
-                                    <span>"¢</span>
+                                    <span>"•</span>
                                     <span className="truncate">Client: {project.client_name}</span>
                                   </>
                                 )}

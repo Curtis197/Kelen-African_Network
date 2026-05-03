@@ -85,7 +85,7 @@ export function ProposalCard({
                   {pro.professional?.business_name || "Professional"}
                 </h3>
                 <p className="text-sm text-gray-500">
-                  {pro.professional?.category} "¢ {pro.professional?.city}, {pro.professional?.country}
+                  {pro.professional?.category} "• {pro.professional?.city}, {pro.professional?.country}
                 </p>
                 {pro.professional?.avg_rating && (
                   <div className="flex items-center gap-1 mt-1">
