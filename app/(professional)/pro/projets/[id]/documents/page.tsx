@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { uploadFile } from "@/lib/supabase/storage";
 import Link from "next/link";
@@ -117,14 +118,14 @@ export default function ProProjectDocumentsPage() {
 
     // Validate file size (10MB max)
     if (file.size > 10 * 1024 * 1024) {
-      alert("Le fichier est trop volumineux. Taille maximale : 10 Mo.");
+      toast.error("Le fichier est trop volumineux. Taille maximale : 10 Mo.");
       return;
     }
 
     // Validate file type
     const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
     if (!allowedTypes.includes(file.type)) {
-      alert("Format non accepté. Formats acceptés : PDF, JPG, PNG.");
+      toast.error("Format non accepté. Formats acceptés : PDF, JPG, PNG.");
       return;
     }
 
@@ -133,7 +134,7 @@ export default function ProProjectDocumentsPage() {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        alert("Vous devez être connecté pour uploader un document.");
+        toast.error("Vous devez être connecté pour uploader un document.");
         return;
       }
 
@@ -145,7 +146,7 @@ export default function ProProjectDocumentsPage() {
         .single();
 
       if (!pro) {
-        alert("Profil professionnel non trouvé. Veuillez compléter votre profil.");
+        toast.error("Profil professionnel non trouvé. Veuillez compléter votre profil.");
         return;
       }
 
@@ -166,40 +167,44 @@ export default function ProProjectDocumentsPage() {
 
       if (error) {
         if (error.code === '42501') {
-          alert("Erreur de permissions. Veuillez contacter le support.");
+          toast.error("Erreur de permissions. Veuillez contacter le support.");
         } else {
-          alert("Erreur lors de l'enregistrement du document.");
+          toast.error("Erreur lors de l'enregistrement du document.");
         }
         return;
       }
 
-      alert("Document uploadé avec succès !");
+      toast.success("Document uploadé avec succès !");
       fetchDocuments();
     } catch (err) {
-      alert("Erreur lors de l'upload du document.");
+      toast.error("Erreur lors de l'upload du document.");
     } finally {
       setIsUploading(false);
     }
   };
 
-  const handleDelete = async (docId: string) => {
-    if (!confirm("Supprimer ce document ?")) return;
-
-    const { error } = await supabase
-      .from("project_documents")
-      .delete()
-      .eq("id", docId);
-
-    if (error) {
-      alert("Erreur lors de la suppression du document.");
-      return;
-    }
-
-    fetchDocuments();
-    if (selectedDoc?.id === docId) {
-      setSelectedDoc(null);
-      setSelectedDocumentImages([]);
-    }
+  const handleDelete = (docId: string) => {
+    toast("Supprimer ce document ?", {
+      action: {
+        label: "Supprimer",
+        onClick: async () => {
+          const { error } = await supabase
+            .from("project_documents")
+            .delete()
+            .eq("id", docId);
+          if (error) {
+            toast.error("Erreur lors de la suppression du document.");
+            return;
+          }
+          fetchDocuments();
+          if (selectedDoc?.id === docId) {
+            setSelectedDoc(null);
+            setSelectedDocumentImages([]);
+          }
+        },
+      },
+      cancel: { label: "Annuler", onClick: () => {} },
+    });
   };
 
   const handleDocumentSelect = (doc: ProjectDocument) => {

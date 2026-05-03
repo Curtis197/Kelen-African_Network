@@ -178,27 +178,24 @@ export default function ProCollaborationDetailPage() {
   };
 
   // â”€â”€ ACTION: DECLINE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-  const handleDecline = async () => {
+  const handleDecline = () => {
+    const doDecline = async () => {
+      setIsSubmitting(true);
+      const result = await declineCollaboration(collabIdStr, 'Refusé par le professionnel');
+      if (result.error) {
+        toast.error(result.error);
+      } else {
+        toast.success('Invitation refusée.');
+        router.push('/pro/collaborations');
+      }
+      setIsSubmitting(false);
+    };
 
-    if (!confirm('Refuser cette invitation ? Cette action est irréversible.')) {
-      return;
-    }
-
-    const reason = prompt('Raison du refus (optionnel) :') || 'Refusé par le professionnel';
-
-    setIsSubmitting(true);
-
-    const result = await declineCollaboration(collabIdStr, reason);
-
-
-    if (result.error) {
-      toast.error(result.error);
-    } else {
-      toast.success('Invitation refusée.');
-      router.push('/pro/collaborations');
-    }
-
-    setIsSubmitting(false);
+    toast("Refuser cette invitation ?", {
+      description: "Cette action est irréversible.",
+      action: { label: "Refuser", onClick: doDecline },
+      cancel: { label: "Annuler", onClick: () => {} },
+    });
   };
 
   // â”€â”€ ATTACHMENT LOGIC â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€

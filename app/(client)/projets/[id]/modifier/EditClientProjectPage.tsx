@@ -195,9 +195,11 @@ export default function EditClientProjectPage() {
 
   const handleCancel = () => {
     if (hasChanges) {
-      if (confirm("Voulez-vous vraiment annuler ? Les modifications non enregistrées seront perdues.")) {
-        router.push(`/projets/${project?.id}`);
-      }
+      toast("Annuler les modifications ?", {
+        description: "Les modifications non enregistrées seront perdues.",
+        action: { label: "Oui, annuler", onClick: () => router.push(`/projets/${project?.id}`) },
+        cancel: { label: "Continuer l'édition", onClick: () => {} },
+      });
     } else {
       router.push(`/projets/${project?.id}`);
     }

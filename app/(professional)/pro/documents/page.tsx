@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { uploadFile } from "@/lib/supabase/storage";
 import { Trash2, PlusCircle, ShieldCheck, X, FileText, FileJson, List, LayoutGrid, ChevronRight, Download, CloudOff, FileSearch, Loader2, Paperclip } from "lucide-react";
@@ -27,18 +28,22 @@ export default function ProDocumentsPage() {
     fetchDocuments();
   }, []);
 
-  const handleDelete = async (docId: string) => {
-    if (!confirm("Supprimer ce document ?")) return;
-
-    const { error } = await supabase.from("project_documents").delete().eq("id", docId);
-
-    if (error) {
-      alert("Erreur lors de la suppression.");
-      return;
-    }
-
-    if (selectedDoc?.id === docId) setSelectedDoc(null);
-    fetchDocuments();
+  const handleDelete = (docId: string) => {
+    toast("Supprimer ce document ?", {
+      action: {
+        label: "Supprimer",
+        onClick: async () => {
+          const { error } = await supabase.from("project_documents").delete().eq("id", docId);
+          if (error) {
+            toast.error("Erreur lors de la suppression.");
+            return;
+          }
+          if (selectedDoc?.id === docId) setSelectedDoc(null);
+          fetchDocuments();
+        },
+      },
+      cancel: { label: "Annuler", onClick: () => {} },
+    });
   };
 
   const fetchDocuments = async () => {
@@ -78,13 +83,13 @@ export default function ProDocumentsPage() {
     if (!file) return;
 
     if (file.size > 10 * 1024 * 1024) {
-      alert("Le fichier est trop volumineux (max 10 Mo).");
+      toast.error("Le fichier est trop volumineux (max 10 Mo).");
       return;
     }
 
     const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'];
     if (!allowedTypes.includes(file.type)) {
-      alert("Format non accepté. Formats acceptés : PDF, JPG, PNG, WEBP.");
+      toast.error("Format non accepté. Formats acceptés : PDF, JPG, PNG, WEBP.");
       return;
     }
 
@@ -112,9 +117,9 @@ export default function ProDocumentsPage() {
       if (error) throw error;
       
       fetchDocuments();
-      alert("Document ajouté.");
+      toast.success("Document ajouté.");
     } catch (err: any) {
-      alert("Erreur upload: " + ((err as any).message || 'Erreur inconnue'));
+      toast.error("Erreur upload : " + ((err as any).message || 'Erreur inconnue'));
     } finally {
       setIsUploading(false);
     }

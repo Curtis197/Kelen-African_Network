@@ -106,10 +106,18 @@ export default function ProjectDetailPage() {
     setShowAreaSelector(false);
   };
 
-  const removeArea = async (areaId: string) => {
-    if (!confirm("Supprimer ce domaine et retirer tous ses professionnels ?")) return;
-    await deleteProjectArea(areaId, projectIdStr);
-    setAreas(prev => prev.filter(a => a.id !== areaId));
+  const removeArea = (areaId: string) => {
+    toast("Supprimer ce domaine ?", {
+      description: "Tous ses professionnels seront retirés du projet.",
+      action: {
+        label: "Supprimer",
+        onClick: async () => {
+          await deleteProjectArea(areaId, projectIdStr);
+          setAreas(prev => prev.filter(a => a.id !== areaId));
+        },
+      },
+      cancel: { label: "Annuler", onClick: () => {} },
+    });
   };
 
   const addDevelopmentArea = async (area: string) => {
@@ -125,16 +133,22 @@ export default function ProjectDetailPage() {
     }
   };
 
-  const removeDevelopmentArea = async (area: string) => {
-    if (!confirm(`Retirer le domaine "${area}" du projet ?`)) return;
-    const result = await removeProjectDevelopmentArea(projectIdStr, area);
-    if (result.success) {
-      toast.success(`Domaine "${area}" retiré du projet`);
-      // Update project state
-      setProject(prev => prev ? { ...prev, development_areas: result.data as string[] } : null);
-    } else {
-      toast.error(`Erreur: ${result.error}`);
-    }
+  const removeDevelopmentArea = (area: string) => {
+    toast(`Retirer "${area}" du projet ?`, {
+      action: {
+        label: "Retirer",
+        onClick: async () => {
+          const result = await removeProjectDevelopmentArea(projectIdStr, area);
+          if (result.success) {
+            toast.success(`Domaine "${area}" retiré du projet`);
+            setProject(prev => prev ? { ...prev, development_areas: result.data as string[] } : null);
+          } else {
+            toast.error(`Erreur: ${result.error}`);
+          }
+        },
+      },
+      cancel: { label: "Annuler", onClick: () => {} },
+    });
   };
 
   const updateStatus = async (newStatus: string) => {

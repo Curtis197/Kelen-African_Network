@@ -46,6 +46,7 @@ export default function ProposalReviewPage() {
   const [professional, setProfessional] = useState<ProfessionalSnapshot | null>(null);
   const [messages, setMessages] = useState<CollaborationMessage[]>([]);
   const [replyText, setReplyText] = useState("");
+  const [revisionMessage, setRevisionMessage] = useState("");
   const [attachments, setAttachments] = useState<{ url: string; name: string; type: string }[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -129,63 +130,59 @@ export default function ProposalReviewPage() {
     fetchProposal();
   }, [projectIdStr, proIdStr]);
 
-  const handleAccept = async () => {
+  const handleAccept = () => {
     if (!collaboration) return;
-
-
-    if (!confirm("Accepter cette proposition ? Les autres finalistes seront automatiquement refusés.")) {
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    const result = await acceptProposal(collaboration.id);
-
-
-    if (result.error) {
-      toast.error(result.error);
-    } else {
-      toast.success("Proposition acceptée ! Le professionnel a maintenant accès au projet.");
-      router.push(`/projets/${projectIdStr}/pros`);
-    }
-    setIsSubmitting(false);
+    toast("Accepter cette proposition ?", {
+      description: "Les autres finalistes seront automatiquement refusés.",
+      action: {
+        label: "Confirmer",
+        onClick: async () => {
+          setIsSubmitting(true);
+          const result = await acceptProposal(collaboration.id);
+          if (result.error) {
+            toast.error(result.error);
+          } else {
+            toast.success("Proposition acceptée ! Le professionnel a maintenant accès au projet.");
+            router.push(`/projets/${projectIdStr}/pros`);
+          }
+          setIsSubmitting(false);
+        },
+      },
+      cancel: { label: "Annuler", onClick: () => {} },
+    });
   };
 
-  const handleDecline = async () => {
+  const handleDecline = () => {
     if (!collaboration) return;
-
-
-    const reason = prompt("Raison du refus (optionnel) :");
-    if (reason === null) {
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    const result = await declineFinalist(collaboration.id, reason || "Non sélectionné");
-
-
-    if (result.error) {
-      toast.error(result.error);
-    } else {
-      toast.success("Professionnel refusé.");
-      router.push(`/projets/${projectIdStr}/pros`);
-    }
-    setIsSubmitting(false);
+    toast("Refuser ce professionnel ?", {
+      action: {
+        label: "Refuser",
+        onClick: async () => {
+          setIsSubmitting(true);
+          const result = await declineFinalist(collaboration.id, "Non sélectionné");
+          if (result.error) {
+            toast.error(result.error);
+          } else {
+            toast.success("Professionnel refusé.");
+            router.push(`/projets/${projectIdStr}/pros`);
+          }
+          setIsSubmitting(false);
+        },
+      },
+      cancel: { label: "Annuler", onClick: () => {} },
+    });
   };
 
   const handleRequestRevision = async () => {
     if (!collaboration) return;
-
-
-    const message = prompt("Votre demande de révision :");
-    if (!message) {
+    if (!revisionMessage.trim()) {
+      toast.error("Veuillez saisir votre demande de révision.");
       return;
     }
 
     setIsSubmitting(true);
 
-    const result = await requestRevision(collaboration.id, message);
+    const result = await requestRevision(collaboration.id, revisionMessage);
 
 
     if (result.error) {
@@ -205,6 +202,7 @@ export default function ProposalReviewPage() {
       if (data) {
         setMessages(data as CollaborationMessage[]);
       }
+      setRevisionMessage("");
     }
     setIsSubmitting(false);
   };
@@ -626,14 +624,22 @@ export default function ProposalReviewPage() {
               <CheckCircle2 className="w-5 h-5" />
               Accepter â€” Sélectionner ce pro
             </button>
-            <button
-              onClick={handleRequestRevision}
-              disabled={isSubmitting}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-surface-container text-on-surface rounded-xl font-semibold text-sm hover:bg-surface-container-high transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <RefreshCw className="w-4 h-4" />
-              Demander un changement
-            </button>
+            <div className="w-full flex flex-col gap-2">
+              <textarea
+                value={revisionMessage}
+                onChange={(e) => setRevisionMessage(e.target.value)}
+                placeholder="Décrivez votre demande de révision..."
+                className="w-full bg-surface-container border border-outline-variant/20 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/50 resize-none focus:outline-none focus:border-primary/50 min-h-[80px]"
+              />
+              <button
+                onClick={handleRequestRevision}
+                disabled={isSubmitting || !revisionMessage.trim()}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-surface-container text-on-surface rounded-xl font-semibold text-sm hover:bg-surface-container-high transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <RefreshCw className="w-4 h-4" />
+                Demander un changement
+              </button>
+            </div>
             <button
               onClick={handleDecline}
               disabled={isSubmitting}
