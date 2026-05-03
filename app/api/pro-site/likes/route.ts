@@ -40,12 +40,25 @@ export async function GET(req: NextRequest) {
 
 // POST /api/pro-site/likes  body: { item_type, item_id }
 export async function POST(req: NextRequest) {
-  const body = await req.json()
+  const cookieStore = await cookies()
+  const sessionId = cookieStore.get('kelen_session')?.value
+
+  // Require an existing session cookie (set by the GET endpoint).
+  // This blocks headless clients that omit cookies from inflating likes.
+  if (!sessionId) {
+    return NextResponse.json(
+      { error: 'Session requise. Rechargez la page et réessayez.' },
+      { status: 400 },
+    )
+  }
+
+  const body = await req.json().catch(() => null)
+  if (!body) return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
+
   const { item_type, item_id } = body
   if (!item_type || !item_id) return NextResponse.json({ error: 'Missing params' }, { status: 400 })
 
   const supabase = await createClient()
-  const sessionId = await getOrCreateSessionId()
 
   const { data: existing } = await supabase
     .from('item_likes')
