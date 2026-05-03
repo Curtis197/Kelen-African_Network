@@ -76,7 +76,7 @@ export async function POST(
       const depositAmountCents = Math.round((connectAccount.deposit_amount ?? 0) * 100);
 
       if (depositAmountCents > 0) {
-        const origin = request.headers.get("origin") ?? process.env.NEXT_PUBLIC_APP_URL!;
+        const origin = request.headers.get("origin") ?? process.env.NEXT_PUBLIC_SITE_URL ?? 'https://kelen.africa';
         try {
           // Create payment record first to get ID for Stripe metadata
           const { data: paymentRecord } = await supabase

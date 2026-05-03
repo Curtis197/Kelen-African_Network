@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to create payment record' }, { status: 500 })
   }
 
-  const origin = request.headers.get('origin') ?? process.env.NEXT_PUBLIC_APP_URL!
+  const origin = request.headers.get('origin') ?? process.env.NEXT_PUBLIC_SITE_URL ?? 'https://kelen.africa'
 
   try {
     const session = await createCheckoutSession({
