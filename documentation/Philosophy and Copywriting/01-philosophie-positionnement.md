@@ -91,43 +91,96 @@ La valeur se déploie en trois étapes :
 
 ---
 
-## Contexte géographique — usage interne uniquement
+## Contexte géographique et moment stratégique — usage interne uniquement
 
-**La majorité des Africains ne cherchent pas encore un professionnel sur Internet.**
+**L'Afrique en 2026 ≈ l'Occident en 2000–2010.**
 
-Le canal d'acquisition dominant en Afrique reste physique et oral : recommandation directe, passage devant un atelier, flyer reçu en main propre, WhatsApp dans un groupe de quartier. Google est un canal réel mais minoritaire dans ce contexte — et l'indexation SEO ne changera pas ce comportement à court terme.
+Sur le bureau, l'Afrique est approximativement au stade de digitalisation où l'Occident se trouvait entre 2000 et 2010 : internet présent mais inégalement distribué, habitudes de recherche en ligne non encore formées à grande échelle, majorité des professionnels sans aucune présence numérique structurée. L'écosystème local de production web et applicatif est embryonnaire — peu d'agences compétentes, peu de capital structuré pour financer des challengers, peu de concurrents capables de répliquer une plateforme à grande échelle.
+
+**Mais avec une différence fondamentale par rapport à l'Occident de cette époque :**
+
+La pénétration du smartphone est massive. Le desktop a été largement sauté. L'Afrique n'est pas en train de "rattraper" l'Occident en passant par les mêmes étapes — elle arrive directement au mobile. Le numérique africain sera mobile-first par trajectoire, pas par choix de design.
+
+---
+
+**La fenêtre stratégique :**
+
+C'est précisément dans cette configuration — internet naissant, comportements non encore formés, faible concurrence locale, levier mobile fort — que les grandes plateformes technologiques occidentales se sont constituées. Google a capturé la recherche. Facebook a capturé l'identité sociale. Amazon a capturé le commerce. Ils l'ont fait tôt, à grande échelle, avec des produits simples — et les effets de réseau ont rendu leur position structurellement dominante.
+
+Cette fenêtre est aujourd'hui ouverte en Afrique pour la catégorie des professionnels de métier. Elle ne le restera pas indéfiniment. À mesure que le marché mûrit, les concurrents arrivent, le coût d'acquisition augmente, et les comportements clients se cristallisent autour des premières habitudes formées.
+
+**La stratégie de capture :**
+
+Si une proportion significative des professionnels africains crée un profil Kelen maintenant — avant que les comportements de recherche numérique ne soient établis, avant que des concurrents locaux ne structurent la catégorie — Kelen devient l'infrastructure par défaut. Le réflexe "cherche sur Kelen" se substitue au réflexe "demande à quelqu'un que tu connais".
+
+Ce n'est pas une stratégie de croissance parmi d'autres. C'est **la** stratégie : capturer la catégorie pendant que la catégorie se forme.
+
+La capture est aujourd'hui plus accessible qu'elle ne le sera dans cinq ans :
+1. La majorité des professionnels n'ont aucune présence en ligne — la proposition de valeur est additive, pas substitutive : on ne leur demande pas d'abandonner quoi que ce soit
+2. L'écosystème local de production web est petit — peu de concurrents capables de répliquer rapidement
+3. Les comportements clients ne sont pas encore formés — Kelen peut les former en sa faveur
+4. La friction d'entrée est minimale — onboarding mobile en 15 minutes, depuis le téléphone que le professionnel a déjà
+
+---
+
+**Le profil comme site web — pas comme outil de création de site web :**
+
+Il existe une distinction fondamentale qui doit orienter la façon dont Kelen pense et communique son produit.
+
+Un constructeur de site web (Wix, Squarespace) est un outil : le professionnel s'en sert pour créer un site hébergé ailleurs, qu'il gère séparément. La valeur est dans les fonctionnalités de l'outil. La page sort de la plateforme.
+
+Kelen est l'inverse : **la page Kelen du professionnel est son site web**. Pas un outil pour créer un site ailleurs. La présence elle-même. Comme la page Facebook d'une PME était "son site web" pour des millions de petites entreprises dans les années 2010 — non pas parce que Facebook avait décidé de concurrencer les agences web, mais parce que c'est là que les clients cherchaient.
+
+Cette distinction change fondamentalement la valeur du profil :
+- Le professionnel ne "crée pas un site web" — il ouvre un profil, comme sur WhatsApp
+- La valeur de ce profil croît avec la taille de la plateforme : plus Kelen attire de clients, plus être sur Kelen a de la valeur — indépendamment des fonctionnalités du profil lui-même
+- Le profil Kelen est un actif de plateforme, pas un actif d'outil
+
+**Le volant :**
+
+Un marketing client fort attire des clients sur la plateforme.
+Des clients sur la plateforme donnent de la valeur au profil des professionnels.
+Des professionnels nombreux et bien documentés renforcent la pertinence de la plateforme pour les clients.
+Une plateforme pertinente justifie d'investir davantage en marketing client.
+
+Le volant tourne. L'entrée précoce crée un avantage cumulatif que des arrivants tardifs ne peuvent pas racheter à prix équivalent.
+
+---
 
 **Conséquence sur la proposition de valeur par marché :**
 
 | Marché | Canal dominant | Valeur principale de Kelen |
 |--------|---------------|---------------------------|
-| Afrique | Physique, oral, WhatsApp | PDF portfolio, partage par lien, montrer son travail en face-à-face |
+| Afrique | Physique, oral, WhatsApp | Présence sur la plateforme que Kelen forme comme réflexe client + PDF pour le circuit physique |
 | Europe / diaspora | Internet, recherche Google | Indexation Google, profil trouvable en ligne |
 
-**Le PDF portfolio est l'outil d'acquisition primaire en Afrique** — pas le site web, pas Google. Un professionnel qui arrive en rendez-vous avec son portfolio sur son téléphone, qui l'envoie sur WhatsApp avant un devis, qui l'imprime pour le laisser chez un client potentiel : c'est la chaîne d'acquisition la plus efficace dans le contexte africain actuel.
+**Le PDF portfolio reste l'outil d'acquisition physique** — un professionnel qui arrive en rendez-vous avec son portfolio sur son téléphone, qui l'envoie sur WhatsApp avant un devis, qui l'imprime : c'est le circuit dominant à court terme en Afrique.
 
-**Le site web compose de la valeur dans le temps.** Il n'est pas un outil d'acquisition immédiate pour la majorité — c'est un actif qui se renforce projet après projet, recommandation après recommandation. Dans cinq ans, quand les comportements de recherche en ligne auront progressé, un professionnel qui a documenté son travail depuis le début sera déjà positionné.
+**La présence Kelen construit l'actif à long terme.** Elle n'est pas un canal d'acquisition immédiate pour la majorité dans le contexte africain actuel — c'est un actif de plateforme qui se renforce à mesure que Kelen grandit. Un professionnel qui documente son travail dès aujourd'hui est déjà positionné quand les comportements de recherche se forment.
 
 **Direction produit — outils marketing physiques pour les pros abonnés :**
 
-L'offre payante a vocation à s'étendre au-delà des trois sorties numériques actuelles (site, PDF, GMB) vers des outils marketing physiques générés depuis le même profil :
+L'offre payante a vocation à s'étendre vers des outils marketing physiques générés depuis le même profil — zéro effort supplémentaire pour le professionnel :
 
 - Carte de visite imprimable (recto : nom, métier, contact, QR code vers le profil / verso : photo de réalisation)
 - Flyer A5 (photo hero, services, coordonnées, QR code)
 - Autocollant QR code vers le profil (à coller sur un véhicule, une vitrine, un chantier)
 
-Ces formats partent du même profil — zéro effort supplémentaire pour le professionnel. Cette direction est à développer quand la base de profils abonnés le justifie.
+Cette direction est à développer quand la base de profils abonnés le justifie.
 
 **Ce que Kelen doit faire différemment :**
 
-- Proposer l'outil gratuitement élimine le problème du ROI non démontré
-- Le produit doit se sentir comme un outil de travail, pas un projet artistique — l'onboarding est simple, le résultat est immédiat
-- La vanité est une motivation légitime — le copy et le produit doivent l'honorer sans la nommer (personne ne dit "je veux un site pour être fier", mais c'est souvent ce qu'ils veulent)
-- L'acquisition est la promesse centrale — Kelen amène des clients sur la plateforme, c'est le service vendu. Ce qu'on ne promet pas : le taux de conversion. Un profil vide ou non documenté ne convertira pas, même si les clients passent. La promesse est l'accès à la demande — pas la garantie du résultat individuel.
+- Un marketing client fort est le moteur de la plateforme — c'est lui qui forme le réflexe "cherche sur Kelen", et c'est ce réflexe qui donne de la valeur au profil des professionnels
+- Proposer le profil gratuitement élimine le problème du ROI non démontré
+- Le produit doit se sentir comme un profil, pas un projet artistique — l'onboarding est simple, le résultat est immédiat
+- La vanité est une motivation légitime — le copy et le produit doivent l'honorer sans la nommer
+- L'acquisition est la promesse centrale — Kelen amène des clients sur la plateforme, c'est le service vendu. Ce qu'on ne promet pas : le taux de conversion. Un profil vide ou non documenté ne convertira pas, même si les clients passent.
 
 **La dimension philosophique :**
 
-La non-digitalisation des PME africaines n'est pas un retard technique — c'est le résultat logique d'outils conçus pour d'autres contextes, d'autres budgets, et d'autres motivations. Kelen part du bon endroit : le téléphone que le professionnel a déjà en main, les photos qu'il prend déjà, le WhatsApp qu'il maîtrise déjà. La technologie s'adapte au professionnel — pas l'inverse.
+La non-digitalisation des PME africaines n'est pas un retard technique — c'est le résultat logique d'outils conçus pour d'autres contextes, d'autres budgets, et d'autres motivations. Et la trajectoire africaine n'est pas "rattraper l'Occident" : c'est construire directement sur mobile, dans un marché où les habitudes ne sont pas encore prises — ce qui est une opportunité, pas un handicap.
+
+Kelen part du bon endroit : le téléphone que le professionnel a déjà en main, les photos qu'il prend déjà, le WhatsApp qu'il maîtrise déjà. La technologie s'adapte au professionnel — pas l'inverse.
 
 ---
 

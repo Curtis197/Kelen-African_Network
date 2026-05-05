@@ -10,7 +10,7 @@
 
 Millions of African professionals work well. Artisans, contractors, service providers — skilled, experienced, serious.
 
-Most of them have no digital presence.
+Most of them have no digital presence and no affordable client acquisition channel.
 
 No website. No portfolio. No Google listing. Their reputation travels through word of mouth, WhatsApp photos, and phone numbers that change. Clients — local or abroad — can't find them, can't compare them, can't verify their work before committing.
 
@@ -18,7 +18,7 @@ On the other side: clients have projects. They need professionals. They don't ha
 
 **The gap:** Competent professionals exist. Serious clients exist. The infrastructure to connect them reliably doesn't.
 
-Kelen is that infrastructure.
+Kelen is that infrastructure — and it is being built at the moment when the market is still open.
 
 ---
 
@@ -55,6 +55,28 @@ The client uses Kelen for free. They are the market the professional is trying t
 **Profile:** Anyone with a project that requires a professional — local Africans, diaspora investing from abroad, businesses looking for subcontractors. Geography is not the defining criterion. The situation is: they need to find someone reliable and they don't have a trusted network in that sector.
 
 **What matters to them:** Finding, comparing, and choosing with confidence. Then managing the project without friction.
+
+### The market window (Internal — not public)
+
+Africa's current stage on desktop approximates where the West was between 2000 and 2010: internet present but unevenly distributed, online search behaviors not yet mainstream at scale, the majority of professionals with no structured digital presence, a small and nascent local web and app production ecosystem.
+
+The critical difference from the West of that era: smartphone penetration is massive. Africa largely bypassed the desktop era. Digital behavior here will be mobile-first by trajectory, not by design choice.
+
+**The parallel:** The 2000–2010 window in the West was when dominant platforms formed. Google captured search. Facebook captured social identity. They moved early, in volume, with simple products — and built network effects that made their positions structurally unassailable. That window is open today in Africa for the professional services category.
+
+**The profile as website — not as website builder:**
+
+A website builder (Wix, Squarespace) is a tool: the professional uses it to create a site that lives elsewhere, which they manage separately. The value is in the tool's features.
+
+Kelen is the opposite: the professional's Kelen page is their website. Not a tool to create one elsewhere — the presence itself. The same way a Facebook Page was "the website" for millions of small businesses in the 2010s — not because Facebook competed with web agencies, but because that's where clients looked.
+
+This distinction changes the value equation entirely. The value of the profile grows with the platform's size: the more clients Kelen attracts, the more valuable being on Kelen becomes — regardless of which features the profile has. A Kelen profile is a platform asset, not a tool asset.
+
+**The flywheel:**
+
+Strong marketing attracts clients → clients make the platform valuable to professionals → professionals join and document their work → richer profiles make the platform more useful to clients → Kelen can invest more in marketing.
+
+The goal: capture a significant portion of African professionals before competitors can replicate the model. Early entry, at minimal friction, into a market that has not yet formed its digital habits. This window is open now. It will not stay open at the same cost.
 
 ---
 
@@ -162,7 +184,7 @@ Right: "Des clients cherchent votre métier dans votre ville. Kelen leur montre 
 
 **Rule 2 — Concrete over abstract**
 Wrong: "Une plateforme de digitalisation professionnelle."
-Right: "Un plombier à Dakar qui paie 3 000 FCFA/mois apparaît sur Google quand quelqu'un cherche un plombier à Dakar."
+Right: "Un client cherche un électricien à Cotonou sur Kelen. Trois profils apparaissent. Il choisit celui dont les réalisations lui parlent. Il appelle."
 
 **Rule 3 — One idea per sentence**
 No compound propositions. State one thing clearly, then the next.
