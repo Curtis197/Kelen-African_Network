@@ -176,18 +176,32 @@ Clients who have worked with a professional can submit a verified recommendation
 
 ---
 
-## 8. Kelen-Pro in the Kelen Ecosystem
+## 8. The WordPress Parallel (Internal — not public)
 
-Kelen-Pro is the first module of a larger system. Its role is to digitalize African professionals and accumulate the data and trust layer that enables everything that follows.
+WordPress powers roughly 40% of websites on the internet. Tens of millions of sites — each on its own server, with no connection to the others. No network effect between a WordPress site and the next. WordPress democratized website creation. It did not create a platform.
+
+Kelen can produce a result of comparable scale with a fundamentally different structure.
+
+If a significant portion of African professional websites are Kelen profiles, they are not scattered — they are all on one platform. Each profile strengthens every other: more professionals attract more clients, more clients make every profile more valuable, and a more complete platform is harder to displace.
+
+**"Website as profile" is the concept that makes this possible.** Instead of each professional independently creating, hosting, and maintaining their own site, they create a profile — which is their website, which lives on Kelen, which is networked with all the others. This is not a feature difference. It is a structural difference.
+
+The ambition: a significant share of African professional web presence on one platform — the default infrastructure, not one tool among many. The equivalent of what WordPress represents on the Western web, but concentrated, networked, with cumulative effects that WordPress never had and cannot have.
+
+---
+
+## 9. Kelen-Pro in the Kelen Ecosystem
+
+Kelen-Pro is the first module of a larger system. Its role is to build the professional web presence layer — profiles, verified reputations, client relationships — and accumulate the data and trust that enables everything that follows.
 
 **Planned sequence (internal roadmap — not public):**
-1. **Kelen-Pro** — Digitalization, visibility, project collaboration ← current
+1. **Kelen-Pro** — Professional profiles, client discovery, project collaboration ← current
 2. **Data layer** — Structured data from professional activity, sectors, geographies
 3. **Kelen-Design** — Designer marketplace for custom templates and integrations
 4. **Kelen-Market** — Simple, affordable e-commerce for professionals already on the platform
 5. **Kelen-Restaurant** — Reservation engine for restaurant websites
 
-Each module is built on the foundation laid by the previous one. Kelen-Pro's job is to build the foundation — professionals, profiles, verified reputations, client relationships.
+Each module is built on the foundation laid by the previous one. Kelen-Pro's job is to build the foundation — and the foundation is the network of profiles.
 
 ---
 

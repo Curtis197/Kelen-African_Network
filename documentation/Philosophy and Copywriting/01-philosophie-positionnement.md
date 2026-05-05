@@ -201,6 +201,28 @@ Kelen part du bon endroit : le téléphone que le professionnel a déjà en main
 
 ## La vision à long terme — usage interne uniquement
 
+**Le parallèle WordPress :**
+
+WordPress alimente aujourd'hui environ 40% des sites web dans le monde. Des dizaines de millions de sites — sur autant de serveurs différents, sans aucun lien entre eux. Chacun est une île. Il n'y a aucun effet de réseau entre un site WordPress et le suivant. WordPress a démocratisé la création de sites web. Il n'a pas créé une plateforme.
+
+Kelen peut produire un résultat d'échelle comparable, avec une différence structurelle fondamentale.
+
+Si une portion significative des sites web professionnels africains sont des profils Kelen, ils ne sont pas dispersés — ils sont tous sur une seule plateforme. Chaque profil renforce tous les autres : plus de professionnels attirent plus de clients, plus de clients donnent plus de valeur à chaque profil, plus la plateforme est complète, plus elle est difficile à déloger.
+
+**"Website as profile" est le concept central qui rend cela possible.**
+
+Au lieu que chaque professionnel crée, héberge et maintienne son propre site indépendant, il crée un profil — qui est son site, qui vit sur Kelen, qui est en réseau avec tous les autres. Ce n'est pas une différence de fonctionnalité. C'est une différence de structure.
+
+**L'ambition :**
+
+Imaginer un monde où une part significative de la présence web professionnelle africaine passe par des profils Kelen, c'est imaginer l'infrastructure par défaut — pas un outil parmi d'autres. L'équivalent de ce que WordPress représente sur le web occidental, mais concentré sur une plateforme, en réseau, avec des effets cumulatifs que WordPress n'a jamais eus.
+
+Ce n'est pas une promesse de trafic ou de ROI individuel. C'est une infrastructure. La valeur d'une infrastructure est structurelle et cumulative — elle ne s'apprécie pas profil par profil, mais réseau par réseau.
+
+*Cette vision n'est pas communiquée publiquement. Elle guide les décisions de produit, de pricing, et de séquence de marché.*
+
+---
+
 **L'objectif final de Kelen est de construire une infrastructure de business intelligence pour les PME africaines.**
 
 La business intelligence — l'analyse de données à grande échelle pour prendre de meilleures décisions commerciales — est ce qui a généré des milliards pour Facebook, Google, et les grandes firmes de Wall Street dans les années 2000. Cette technologie est restée inaccessible aux petites et moyennes entreprises, en particulier en Afrique.
