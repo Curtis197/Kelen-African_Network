@@ -197,21 +197,30 @@ Kelen-Pro is the first module of a larger system. Its role is to build the profe
 **Planned sequence (internal roadmap — not public):**
 1. **Kelen-Pro** — Professional profiles, client discovery, project collaboration ← current
 2. **Data layer** — Structured data from professional activity, sectors, geographies
-3. **Kelen-Design** — WordPress-level customization on top of the standard profile. Designers build and sell custom templates, layouts, and integrations directly on the Kelen infrastructure. Professionals who want to go beyond the standard profile buy from the marketplace. Same base, differentiated surface.
+3. **Kelen-Design** — Two-layer customization ecosystem built on top of the standard profile, mirroring the WordPress themes + plugins model:
+
+   *Visual layer (themes):* Designers build and sell custom profile templates, layouts, and branding configurations. Professionals who want to stand out beyond the standard profile buy from the marketplace.
+
+   *Functional layer (plugins):* Developers build custom backends, automation workflows, and dashboards tailored to specific professions — a construction firm gets a project budget tracker, a plumber gets automated WhatsApp follow-ups on project milestones, an architect gets a client approval workflow with sign-off gates. These tools live inside Kelen, use its data, and extend the platform's capabilities without Kelen building them.
+
+   The functional layer is where lock-in becomes structural. A professional whose invoicing, client notifications, and project automation run on top of Kelen is not switching platforms — switching would mean rebuilding their entire operational stack.
 4. **Kelen-Market** — Simple, affordable e-commerce for professionals already on the platform
 5. **Kelen-Restaurant** — Reservation engine for restaurant websites
 
-**The WordPress architecture:**
+**The WordPress architecture — themes and plugins:**
 
-Kelen-Pro is WordPress core — simple, standardized, the base every professional gets. Kelen-Design is the theme and plugin ecosystem — the customization layer that sits on top without touching the foundation.
+Kelen-Pro is WordPress core — simple, standardized, the base every professional gets. Kelen-Design is the theme and plugin ecosystem — both the visual and functional customization layers that sit on top without touching the foundation.
 
-WordPress's scale came partly from this separation. The core was free and frictionless enough to achieve mass adoption. The ecosystem of designers and developers building on top of it created a network that no single team could have built alone — and locked the platform in as infrastructure.
+WordPress's scale came from this separation. The core was free and frictionless enough to achieve mass adoption. WooCommerce added e-commerce. Yoast added SEO. Thousands of plugins added functionality that WordPress itself never built — and each one deepened the platform's lock-in. The ecosystem of designers and developers building on top created a network no single team could have assembled alone.
 
-Kelen-Design replicates this logic:
-- Professionals who want a standard presence: Kelen-Pro profile, unchanged
-- Professionals who want to stand out: Kelen-Design templates, built by a marketplace of designers
-- Designers: a distribution channel for their work, inside a platform with a growing base of professionals
-- Kelen: a customization ecosystem that deepens platform lock-in without complicating the core
+Kelen-Design replicates this logic across two layers:
+
+| Layer | Built by | Bought by | What it adds |
+|---|---|---|---|
+| Visual (themes) | Designers | Pros who want to stand out | Custom profile layouts, branding, templates |
+| Functional (plugins) | Developers | Pros who want custom tools | Backends, automation, dashboards — profession-specific |
+
+The functional layer is where platform stickiness becomes structural. A professional running their project automation, client notifications, and reporting dashboards inside Kelen is not a subscription — they are embedded. Switching platforms means dismantling their operational stack.
 
 The WordPress parallel closes completely with Kelen-Design. The base is simple enough for mass adoption. The customization layer is rich enough for professionals who want more. And the infrastructure underneath is the same for both.
 
