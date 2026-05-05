@@ -210,8 +210,14 @@ Kelen-Pro is the first module of a larger system. Its role is to build the profe
 
    *Commissioner (professional):* Contacts a Kelen designer directly for custom work — a tool built specifically for their workflow. Once built, they can choose to keep it private or publish it to the marketplace and sell it to other professionals in the same trade.
 
-   **The "build once, sell to all" dynamic:**
-   A developer who builds a job-tracking CRM for a carpentry firm can publish it to the marketplace. Every carpenter on Kelen becomes a potential buyer. The carpenter who commissioned it gets a revenue share. The developer earns from every installation. Kelen earns from the transaction. One piece of custom work becomes a product.
+   **How builders earn — two mechanisms:**
+
+   *Subscription share:* When a professional uses a builder's tool as part of their active subscription, the builder receives a portion of that subscription fee each month. The tool is embedded in the platform, usage is automatic, and revenue is passive. Build once — earn for every month every professional keeps using it.
+
+   *Direct plugin fee:* Premium tools are sold separately at a fixed price per professional — around $3/plugin/month or a one-time purchase equivalent. The builder sets the price within platform guidelines. Kelen takes a marketplace cut; the builder keeps the majority. A developer with 500 professionals using a $3/month CRM earns $1,500/month from a single tool.
+
+   **The passive income dynamic:**
+   Unlike freelance work — paid once per project — a Kelen-Design tool generates recurring income proportional to its install base. A well-built vertical tool becomes a long-term revenue stream. The more professionals join Kelen, the more potential buyers exist for every tool already in the marketplace. Engineers who enter early in a growing platform earn disproportionately from the platform's growth — without additional work.
 
    **What this produces:**
    - Pre-built tools for standard professional needs (fast, affordable, immediately usable)
@@ -272,7 +278,13 @@ But an army of independent engineers, each building for one vertical, can.
 
 The platform provides the infrastructure, the marketplace, the payment system, and the user base. Each engineer provides specialization. Together they cover what no central team has the resources to build alone.
 
-This is how Linux produced what no single company could fund — thousands of independent contributors, each owning one piece. But with a commercial incentive structure: each engineer earns on every install of their tool. A professional who commissions a custom tool can publish it to the marketplace and earn on every installation by professionals in the same trade.
+This is how Linux produced what no single company could fund — thousands of independent contributors, each owning one piece. But with a direct commercial incentive structure:
+
+- **Subscription share:** when a professional uses an engineer's tool as part of their active subscription, the engineer receives a monthly cut — passively, for as long as the professional keeps using it
+- **Plugin fee:** premium tools sold directly at ~$3/plugin/month or one-time equivalent — the engineer keeps the majority, Kelen takes a marketplace cut
+- **Commission pipeline:** a professional who commissions a custom tool can publish it to the marketplace; the commissioning professional earns a share on every future installation by professionals in the same trade
+
+An engineer with a well-built CRM for architects and 400 active users at $3/month earns $1,200/month from a single tool — with no additional work, growing as Kelen's user base grows. The earlier the engineer enters, the more they benefit from the platform's expansion.
 
 **Why this model is structurally superior:**
 

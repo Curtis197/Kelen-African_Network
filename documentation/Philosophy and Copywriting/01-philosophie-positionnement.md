@@ -76,8 +76,14 @@ WordPress a atteint 40% du web en partie grâce à cette séparation. Le cœur �
 
   *Commanditaire (professionnel) :* Contacte un designer Kelen directement pour un outil sur mesure — construit spécifiquement pour son workflow. Une fois livré, il peut le garder en privé ou le publier sur la marketplace et le vendre aux autres professionnels du même métier.
 
+  **Comment les builders gagnent — deux mécanismes :**
+
+  *Part d'abonnement :* Quand un professionnel utilise l'outil d'un builder dans le cadre de son abonnement actif, le builder reçoit chaque mois une portion de cet abonnement. L'outil est intégré à la plateforme, l'usage est automatique, le revenu est passif. Construire une fois — gagner tant que le professionnel reste abonné.
+
+  *Frais de plugin direct :* Les outils premium sont vendus séparément à un tarif fixe par professionnel — autour de 1 500 FCFA / 3 $ par mois, ou un achat unique équivalent. Le builder fixe son prix dans les limites de la plateforme. Kelen prend une commission marketplace ; le builder garde la majorité. Un développeur avec 500 professionnels utilisant son CRM à 3 $/mois gagne 1 500 $/mois depuis un seul outil.
+
   **La dynamique "construire une fois, vendre à tous" :**
-  Un développeur qui construit un CRM de suivi de chantier pour un menuisier peut le publier sur la marketplace. Chaque menuisier sur Kelen devient un acheteur potentiel. Le menuisier commanditaire reçoit une part des revenus. Le développeur gagne sur chaque installation. Kelen gagne sur la transaction. Un travail sur mesure devient un produit.
+  Un développeur qui construit un CRM de suivi de chantier pour un menuisier peut le publier sur la marketplace. Chaque menuisier sur Kelen devient un acheteur potentiel. Le menuisier commanditaire reçoit une part des revenus. Le développeur gagne sur chaque installation. Kelen gagne sur la transaction. Un travail sur mesure devient un produit — et une source de revenus récurrents.
 
   **Ce que ça produit :**
   - Des outils pré-construits pour les besoins professionnels standards (rapides, accessibles, immédiatement utilisables)
@@ -268,7 +274,13 @@ Mais une armée d'ingénieurs indépendants, chacun construisant pour une vertic
 
 La plateforme fournit l'infrastructure, la marketplace, le système de paiement, et la base d'utilisateurs. Chaque ingénieur fournit la spécialisation. Ensemble, ils couvrent ce qu'aucune équipe centrale n'aurait les ressources de bâtir seule.
 
-C'est ainsi que Linux a produit ce qu'aucune entreprise ne pouvait financer — des milliers de contributeurs indépendants, chacun propriétaire d'une pièce. Mais avec un modèle commercial : chaque ingénieur gagne sur chaque installation de son outil. Chaque professionnel commanditaire d'un outil sur mesure peut le revendre à tous les professionnels du même métier sur la plateforme. La spécialisation se monétise. La plateforme s'enrichit sans que son équipe s'agrandisse proportionnellement.
+C'est ainsi que Linux a produit ce qu'aucune entreprise ne pouvait financer — des milliers de contributeurs indépendants, chacun propriétaire d'une pièce. Mais avec une structure d'incitation commerciale directe :
+
+- **Part d'abonnement :** quand un professionnel utilise l'outil d'un ingénieur dans son abonnement actif, l'ingénieur reçoit une portion mensuelle — passivement, tant que le professionnel reste actif
+- **Frais de plugin :** les outils premium sont vendus directement à ~3 $/mois ou en achat unique — l'ingénieur garde la majorité, Kelen prend une commission marketplace
+- **Pipeline commanditaire :** un professionnel qui commande un outil sur mesure peut le publier sur la marketplace ; il gagne une part sur chaque installation future par des professionnels du même métier
+
+Un ingénieur avec un CRM bien construit pour architectes et 400 utilisateurs actifs à 3 $/mois gagne 1 200 $/mois depuis un seul outil — sans travail supplémentaire, avec une croissance proportionnelle à celle de la plateforme. Plus l'ingénieur entre tôt, plus il bénéficie de l'expansion de la base d'utilisateurs.
 
 ---
 
