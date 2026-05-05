@@ -70,7 +70,17 @@ A website builder (Wix, Squarespace) is a tool: the professional uses it to crea
 
 Kelen is the opposite: the professional's Kelen page is their website. Not a tool to create one elsewhere — the presence itself. The same way a Facebook Page was "the website" for millions of small businesses in the 2010s — not because Facebook competed with web agencies, but because that's where clients looked.
 
-This distinction changes the value equation entirely. The value of the profile grows with the platform's size: the more clients Kelen attracts, the more valuable being on Kelen becomes — regardless of which features the profile has. A Kelen profile is a platform asset, not a tool asset.
+**The profile lives on the platform and outside it — double value, one profile:**
+
+The Kelen profile operates on two independent channels simultaneously, from the same page, with no extra effort from the professional.
+
+*On the platform:* Clients searching Kelen find the profile in results. This is passive value — Kelen does the work, the professional just keeps the profile updated. This value grows as the platform grows.
+
+*Outside the platform:* The URL `kelen.com/professional-name` is the professional's personal website. They share it on WhatsApp before a meeting, put it on a business card, send it when a client asks "do you have a website?" This value is immediate from day one — independent of how many clients are on Kelen.
+
+A classic website has one channel (its own traffic). A directory listing has one channel (platform discovery). A Kelen profile is both at once — a platform asset and a personal web presence, from the same profile.
+
+This distinction changes the value equation entirely: the value of the profile grows with the platform's size, but its baseline value exists from the first day regardless of platform scale.
 
 **The flywheel:**
 
@@ -82,19 +92,24 @@ The goal: capture a significant portion of African professionals before competit
 
 ## 4. What the Professional Gets
 
-The core product is access to clients actively searching on Kelen. The rest supports that:
+One profile. Two channels. Both active simultaneously.
 
-**Client discovery** — The professional's profile appears in Kelen search results when a client looks for their trade and city. This is the primary delivery.
+**Channel 1 — Platform (Kelen brings the clients)**
+- Profile appears in Kelen search results when a client looks for their trade and city
+- With subscription: Google indexing — findable from outside Kelen
+- This channel's value grows as Kelen's client base grows
 
-**A profile that converts** — When a client finds the professional, they need to be convinced. Documented projects, verified recommendations, and a clean profile page do that work. The professional fills in the profile; Kelen structures it.
+**Channel 2 — Direct (the professional shares it themselves)**
+- Personal URL `kelen.com/name` — their website, shareable on WhatsApp, by email, in a meeting, on a business card
+- PDF Portfolio — exportable, printable, generated from the same profile
+- Google My Business — local presence on Google Maps
+- This channel's value is immediate from day one, independent of platform scale
 
-**Website** — A professional page shareable as a link, on WhatsApp, or in a meeting. Indexable on Google with subscription.
+**What makes both channels work**
+- A profile that converts — documented projects, verified recommendations, clean structure: everything a client reads before calling
+- Reputation that compounds — each verified recommendation strengthens the profile permanently across both channels
 
-**PDF Portfolio** — Exportable, printable, sendable on WhatsApp or email. Their work in a format that exists outside the platform.
-
-**Google My Business** — Local presence. Appears when someone searches for their trade in their city on Google Maps.
-
-The profile is the conversion mechanism. Client access is the product.
+The profile is the asset. The two channels are what make it worth more than a website alone or a directory listing alone.
 
 ---
 
@@ -219,9 +234,9 @@ The platform is simple because complexity is a barrier, not because users are un
 - The founding phrase belongs here.
 
 ### Pour les professionnels
-- Lead: Access to clients actively searching for your trade.
-- Sub: Kelen is where clients search. Be there when they do.
-- The profile (website, PDF, GMB) is how you convert clients once they find you.
+- Lead: One profile. Two channels. Clients find you on Kelen. You share your URL everywhere else.
+- Sub: Kelen brings clients to you. You bring yourself to everyone else — with the same page.
+- The two-channel structure is the core pitch: platform discovery + personal website, from one profile.
 - What subscription adds: Google ranking, broader discovery, collaboration.
 - Pricing is simple and clear. No feature matrix overload on the landing.
 

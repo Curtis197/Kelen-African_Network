@@ -40,8 +40,7 @@ Kelen     Comment ça marche · Tarifs · FAQ · Contact      [Se connecter]  [C
 > Soyez là quand ils cherchent le vôtre.
 
 **Sous-titre :**
-> Kelen amène les clients. Votre profil les convainc.
-> Site web, portfolio PDF et fiche Google My Business — générés automatiquement depuis votre profil.
+> Kelen amène les clients. Vous partagez votre lien partout. Un seul profil — deux canaux.
 
 **CTA principal :**
 > [Créer mon profil gratuitement →]

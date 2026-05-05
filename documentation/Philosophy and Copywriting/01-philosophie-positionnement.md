@@ -131,10 +131,25 @@ Un constructeur de site web (Wix, Squarespace) est un outil : le professionnel s
 
 Kelen est l'inverse : **la page Kelen du professionnel est son site web**. Pas un outil pour créer un site ailleurs. La présence elle-même. Comme la page Facebook d'une PME était "son site web" pour des millions de petites entreprises dans les années 2010 — non pas parce que Facebook avait décidé de concurrencer les agences web, mais parce que c'est là que les clients cherchaient.
 
+**Le profil vit sur la plateforme et en dehors — double valeur, un seul profil :**
+
+Le profil Kelen existe simultanément sur deux canaux distincts, depuis la même page, sans effort supplémentaire pour le professionnel.
+
+*Sur la plateforme :* Les clients qui cherchent un professionnel sur Kelen trouvent le profil dans les résultats. C'est la valeur passive — Kelen amène les clients, le professionnel n'a rien à faire sinon maintenir son profil à jour.
+
+*En dehors de la plateforme :* L'URL `kelen.com/nom-du-professionnel` est le site web personnel du professionnel. Il la partage sur WhatsApp avant un rendez-vous. Il la met sur sa carte de visite. Il la donne verbalement à un contact. Il l'envoie à un client qui lui demande "tu as un site ?". Cette valeur est indépendante du nombre de clients sur Kelen — elle fonctionne dès le premier jour, depuis le premier profil complété.
+
+Le professionnel obtient donc deux canaux d'acquisition depuis un seul profil :
+1. Le canal plateforme — clients qui cherchent sur Kelen (valeur qui croît avec la taille de la plateforme)
+2. Le canal direct — le professionnel partage lui-même son URL dans ses propres circuits (valeur immédiate, indépendante de la taille de la plateforme)
+
+Cette dualité est structurellement différente d'un site web classique (un seul canal, dépendant du trafic propre) et d'un annuaire (un seul canal, dépendant de la plateforme). Le profil Kelen est les deux à la fois.
+
 Cette distinction change fondamentalement la valeur du profil :
 - Le professionnel ne "crée pas un site web" — il ouvre un profil, comme sur WhatsApp
-- La valeur de ce profil croît avec la taille de la plateforme : plus Kelen attire de clients, plus être sur Kelen a de la valeur — indépendamment des fonctionnalités du profil lui-même
-- Le profil Kelen est un actif de plateforme, pas un actif d'outil
+- La valeur de ce profil croît avec la taille de la plateforme sans que le professionnel fasse quoi que ce soit
+- Mais la valeur hors-plateforme est immédiate dès la création — elle ne dépend de personne d'autre
+- Le profil Kelen est un actif de plateforme et un actif personnel, simultanément
 
 **Le volant :**
 
@@ -220,11 +235,20 @@ L'offre BI ne sera pas publique tant que la base de données n'est pas suffisamm
 
 ## Ce que le professionnel obtient
 
-- **L'accès à des clients qui cherchent** — présence dans les résultats de recherche Kelen, là où des clients actifs comparent et choisissent des professionnels dans leur ville
-- **Un profil qui convainc** — site web structuré, galerie de réalisations, réputation documentée : tout ce qu'il faut pour convertir un client qui vous trouve
-- **Un export PDF** — portfolio prêt à envoyer sur WhatsApp, à imprimer, à partager en rendez-vous
-- **Une fiche Google My Business** — présence locale visible quand quelqu'un cherche votre métier dans votre ville sur Google
-- **Une réputation qui s'accumule** — chaque projet documenté, chaque recommandation vérifiée renforce durablement le profil
+Le profil ouvre deux canaux depuis une seule page :
+
+**Canal plateforme — Kelen amène les clients**
+- Présence dans les résultats de recherche Kelen — des clients actifs trouvent le profil en cherchant un métier dans une ville
+- Avec l'abonnement : indexation Google — trouvable depuis une recherche externe, pas seulement depuis Kelen
+
+**Canal direct — le professionnel partage lui-même**
+- URL personnelle `kelen.com/nom` — son site web, partageable sur WhatsApp, par email, en rendez-vous, sur une carte de visite
+- Export PDF — portfolio prêt à envoyer ou imprimer, généré depuis le même profil
+- Fiche Google My Business — présence locale visible sur Google Maps
+
+**Ce qui renforce les deux canaux**
+- Un profil qui convainc — galerie de réalisations, description, statut documenté : tout ce qu'un client regarde avant d'appeler
+- Une réputation qui s'accumule — chaque recommandation vérifiée renforce le profil durablement sur les deux canaux
 
 ---
 
