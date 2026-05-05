@@ -197,32 +197,44 @@ Kelen-Pro is the first module of a larger system. Its role is to build the profe
 **Planned sequence (internal roadmap — not public):**
 1. **Kelen-Pro** — Professional profiles, client discovery, project collaboration ← current
 2. **Data layer** — Structured data from professional activity, sectors, geographies
-3. **Kelen-Design** — Two-layer customization ecosystem built on top of the standard profile, mirroring the WordPress themes + plugins model:
+3. **Kelen-Design** — An open platform economy on top of Kelen-Pro. Not just a marketplace — a full ecosystem where professionals, designers, and developers can consume, commission, build, and sell.
 
-   *Visual layer (themes):* Designers build and sell custom profile templates, layouts, and branding configurations. Professionals who want to stand out beyond the standard profile buy from the marketplace.
+   **What Kelen provides (the infrastructure layer):**
+   Base templates for common professional workflows — CRM, project tracker, invoice manager, client portal, automation builder. An API and SDK that builders use to extend the platform. A marketplace for distribution. A payment and revenue-sharing system.
 
-   *Functional layer (plugins):* Developers build custom backends, automation workflows, and dashboards tailored to specific professions — a construction firm gets a project budget tracker, a plumber gets automated WhatsApp follow-ups on project milestones, an architect gets a client approval workflow with sign-off gates. These tools live inside Kelen, use its data, and extend the platform's capabilities without Kelen building them.
+   **Three roles in the ecosystem:**
 
-   The functional layer is where lock-in becomes structural. A professional whose invoicing, client notifications, and project automation run on top of Kelen is not switching platforms — switching would mean rebuilding their entire operational stack.
+   *Builder (Kelen designer / developer):* Builds visual or functional tools on Kelen's infrastructure. Publishes to the marketplace to sell to all professionals on the platform, or takes direct commissions from professionals who need something custom.
+
+   *Buyer (professional):* Browses the marketplace and installs pre-built tools — a CRM configured for their trade, a dashboard tracking the metrics that matter to them, an automation that follows up with clients after project completion.
+
+   *Commissioner (professional):* Contacts a Kelen designer directly for custom work — a tool built specifically for their workflow. Once built, they can choose to keep it private or publish it to the marketplace and sell it to other professionals in the same trade.
+
+   **The "build once, sell to all" dynamic:**
+   A developer who builds a job-tracking CRM for a carpentry firm can publish it to the marketplace. Every carpenter on Kelen becomes a potential buyer. The carpenter who commissioned it gets a revenue share. The developer earns from every installation. Kelen earns from the transaction. One piece of custom work becomes a product.
+
+   **What this produces:**
+   - Pre-built tools for standard professional needs (fast, affordable, immediately usable)
+   - Custom tools for specific workflows (commissioned, then optionally resold)
+   - A growing library of profession-specific software, built by people who understand those professions
+   - Professionals who are embedded in an operational stack — not using a subscription
+
+   This is closer to Salesforce AppExchange than to a theme store: a full developer platform where third parties extend the core product for specific verticals, and where the ecosystem builds what no central team could cover alone.
+
 4. **Kelen-Market** — Simple, affordable e-commerce for professionals already on the platform
 5. **Kelen-Restaurant** — Reservation engine for restaurant websites
 
-**The WordPress architecture — themes and plugins:**
+**The WordPress architecture — completed:**
 
-Kelen-Pro is WordPress core — simple, standardized, the base every professional gets. Kelen-Design is the theme and plugin ecosystem — both the visual and functional customization layers that sit on top without touching the foundation.
+Kelen-Pro is WordPress core — simple, standardized, the base every professional gets. Kelen-Design is the theme and plugin ecosystem — both the visual and functional customization layers — but with an additional dimension WordPress never had: professionals can commission custom work and resell it, creating a secondary economy of profession-specific software.
 
-WordPress's scale came from this separation. The core was free and frictionless enough to achieve mass adoption. WooCommerce added e-commerce. Yoast added SEO. Thousands of plugins added functionality that WordPress itself never built — and each one deepened the platform's lock-in. The ecosystem of designers and developers building on top created a network no single team could have assembled alone.
-
-Kelen-Design replicates this logic across two layers:
-
-| Layer | Built by | Bought by | What it adds |
+| Layer | Built by | How | Sold to |
 |---|---|---|---|
-| Visual (themes) | Designers | Pros who want to stand out | Custom profile layouts, branding, templates |
-| Functional (plugins) | Developers | Pros who want custom tools | Backends, automation, dashboards — profession-specific |
+| Visual (themes) | Designers | Marketplace | Pros who want to stand out |
+| Functional (plugins) | Developers | Marketplace or commission | Pros who want custom tools |
+| Custom (bespoke) | Designers hired directly | Commission | One pro — optionally resold to all |
 
-The functional layer is where platform stickiness becomes structural. A professional running their project automation, client notifications, and reporting dashboards inside Kelen is not a subscription — they are embedded. Switching platforms means dismantling their operational stack.
-
-The WordPress parallel closes completely with Kelen-Design. The base is simple enough for mass adoption. The customization layer is rich enough for professionals who want more. And the infrastructure underneath is the same for both.
+The infrastructure underneath is always Kelen. The tools built on top serve the professional. The marketplace connects builders and buyers. And every tool that runs inside Kelen deepens the reason to stay.
 
 Each module is built on the foundation laid by the previous one. Kelen-Pro's job is to build the foundation — and the foundation is the network of profiles.
 

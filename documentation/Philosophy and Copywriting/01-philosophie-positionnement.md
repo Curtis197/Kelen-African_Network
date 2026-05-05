@@ -63,19 +63,32 @@ WordPress a atteint 40% du web en partie grâce à cette séparation. Le cœur �
 
 - **Kelen-Pro (gratuit)** → profil standard — le socle pour tout le monde, zéro friction
 - **Kelen-Pro (abonnement)** → accès clients, indexation Google, fonctionnalités avancées
-- **Kelen-Design** → deux couches de personnalisation construites sur l'infrastructure Kelen, comme les thèmes et plugins WordPress :
+- **Kelen-Design** → une économie de plateforme ouverte au-dessus de Kelen-Pro. Pas seulement une marketplace — un écosystème complet où les professionnels, les designers et les développeurs peuvent consommer, commander, construire et vendre.
 
-  *Couche visuelle (thèmes) :* Les designers construisent et vendent des templates de profil, des mises en page, des configurations de branding. Le professionnel qui veut se démarquer achète sur la marketplace.
+  **Ce que Kelen fournit — la couche infrastructure :**
+  Templates de base pour les workflows professionnels courants (CRM, suivi de projet, gestionnaire de factures, portail client, automatisations). Une API et un SDK que les builders utilisent pour étendre la plateforme. Une marketplace pour la distribution. Un système de paiement et de partage de revenus.
 
-  *Couche fonctionnelle (plugins) :* Les développeurs construisent des backends sur mesure, des automatisations et des tableaux de bord adaptés à des métiers spécifiques — une entreprise de BTP obtient un suivi de budget projet, un plombier obtient des relances WhatsApp automatiques à chaque étape de chantier, un architecte obtient un workflow de validation client avec signature à chaque phase. Ces outils vivent dans Kelen, utilisent ses données, et étendent ses capacités sans que Kelen les construise lui-même.
+  **Trois rôles dans l'écosystème :**
 
-La couche fonctionnelle est là où l'ancrage devient structurel. Un professionnel dont la facturation, les relances clients et les reportings tournent dans Kelen n'est pas abonné — il est intégré. Changer de plateforme signifie démonter toute sa chaîne opérationnelle.
+  *Builder (designer / développeur Kelen) :* Construit des outils visuels ou fonctionnels sur l'infrastructure Kelen. Les publie sur la marketplace pour les vendre à tous les professionnels de la plateforme, ou prend des commandes directes de professionnels qui ont besoin de quelque chose de spécifique.
+
+  *Acheteur (professionnel) :* Parcourt la marketplace et installe des outils pré-construits — un CRM configuré pour son métier, un tableau de bord centré sur ses indicateurs, une automatisation qui relance les clients après livraison.
+
+  *Commanditaire (professionnel) :* Contacte un designer Kelen directement pour un outil sur mesure — construit spécifiquement pour son workflow. Une fois livré, il peut le garder en privé ou le publier sur la marketplace et le vendre aux autres professionnels du même métier.
+
+  **La dynamique "construire une fois, vendre à tous" :**
+  Un développeur qui construit un CRM de suivi de chantier pour un menuisier peut le publier sur la marketplace. Chaque menuisier sur Kelen devient un acheteur potentiel. Le menuisier commanditaire reçoit une part des revenus. Le développeur gagne sur chaque installation. Kelen gagne sur la transaction. Un travail sur mesure devient un produit.
+
+  **Ce que ça produit :**
+  - Des outils pré-construits pour les besoins professionnels standards (rapides, accessibles, immédiatement utilisables)
+  - Des outils sur mesure pour les workflows spécifiques (commandés, puis optionnellement revendus)
+  - Une bibliothèque croissante de logiciels métier, construits par des gens qui comprennent ces métiers
+  - Des professionnels intégrés dans une chaîne opérationnelle — pas simplement abonnés
 
 Le professionnel qui veut une présence standard : Kelen-Pro, tel quel.
-Le professionnel qui veut se démarquer visuellement : couche thèmes de Kelen-Design.
-Le professionnel qui veut des outils métier sur mesure : couche plugins de Kelen-Design.
-Le designer ou développeur : un canal de distribution dans une plateforme avec une base croissante de professionnels.
-Kelen : un écosystème à deux couches qui approfondit l'ancrage sans jamais complexifier le cœur.
+Le professionnel qui veut des outils métier : il achète sur la marketplace ou commande sur mesure.
+Le builder : un canal de distribution dans une plateforme avec une base croissante de professionnels, et la possibilité de transformer chaque commande en produit.
+Kelen : une économie ouverte qui s'enrichit sans que l'équipe centrale construise chaque outil.
 
 Kelen-Pro est le point d'entrée. Les profils construits, les collaborations documentées, les données collectées — tout cela prépare la couche suivante.
 
@@ -239,13 +252,15 @@ Au lieu que chaque professionnel crée, héberge et maintienne son propre site i
 
 Imaginer un monde où une part significative de la présence web professionnelle africaine passe par des profils Kelen, c'est imaginer l'infrastructure par défaut — pas un outil parmi d'autres. L'équivalent de ce que WordPress représente sur le web occidental, mais concentré sur une plateforme, en réseau, avec des effets cumulatifs que WordPress n'a jamais eus.
 
-**Et avec Kelen-Design, le parallèle WordPress est complet.**
+**Et avec Kelen-Design, le parallèle WordPress est complet — et dépassé.**
 
 WordPress core = Kelen-Pro : la base simple, standardisée, adoptée massivement.
 WordPress themes = couche visuelle de Kelen-Design : templates, mises en page, branding.
-WordPress plugins = couche fonctionnelle de Kelen-Design : backends métier, automatisations, tableaux de bord sur mesure.
+WordPress plugins = couche fonctionnelle de Kelen-Design : CRMs, automatisations, tableaux de bord métier sur mesure.
 
-C'est cet écosystème à deux couches qui a permis à WordPress d'atteindre 40% du web sans que leur équipe seule le construise — WooCommerce, Yoast, et des milliers d'autres ont construit la fonctionnalité que WordPress n'avait pas à bâtir. Kelen-Design crée la même dynamique : designers et développeurs construisent sur la plateforme, les professionnels achètent leur travail, la plateforme s'enrichit et l'ancrage s'approfondit sans que le cœur se complexifie.
+Mais Kelen-Design va plus loin que WordPress sur un point : les professionnels peuvent commander des outils sur mesure, puis les revendre à d'autres professionnels du même métier. Un travail sur commande devient un produit de marketplace. WordPress n'a jamais eu cette boucle — chaque site est une île, chaque plugin est vendu par son créateur seul. Sur Kelen, le commanditaire devient co-créateur et co-distributeur.
+
+C'est cet écosystème — consommer, commander, construire, vendre — qui a permis à Salesforce AppExchange de générer des milliards en tierce partie sur une infrastructure centrale. Kelen-Design crée la même dynamique pour les professionnels africains : l'équipe centrale pose l'infrastructure, l'écosystème construit le reste.
 
 Ce n'est pas une promesse de trafic ou de ROI individuel. C'est une infrastructure. La valeur d'une infrastructure est structurelle et cumulative — elle ne s'apprécie pas profil par profil, mais réseau par réseau.
 
