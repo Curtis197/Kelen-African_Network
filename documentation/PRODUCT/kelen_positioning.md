@@ -26,9 +26,9 @@ Kelen is that infrastructure.
 
 Kelen is a digitalization platform for African professionals, and a discovery platform for their clients.
 
-**For the professional:** A simple way to get online — a website, a PDF portfolio, a Google My Business listing — without technical skills, without a designer, without an agency. As easy as filling in a WhatsApp profile.
-
 **For the client:** A place to find professionals, compare their actual work, create a project, and collaborate — whether they're local or managing from abroad.
+
+**For the professional:** A mutualized client acquisition channel. Instead of funding a website, a Google Ads campaign, or a social media presence alone — at costs that rarely pay off individually — the professional pays 3,000 XOF/month to be present where clients are already searching. Kelen brings the clients. The professional's profile converts them.
 
 **Not a review platform. Not a directory. Not a blacklist.** A platform where reputation is built through documented work, verified project by project.
 
@@ -42,9 +42,11 @@ The professional is Kelen's paying customer and primary focus.
 
 **Profile:** Any African professional in a service or trade — construction, renovation, plumbing, electrical, carpentry, architecture, design, and beyond. Especially those who are tech-reluctant — competent at their craft, not at digital self-promotion.
 
-**The core insight:** Most African professionals who need a digital presence don't have one because existing solutions are too complex, too expensive, or too foreign to their reality. Kelen's entry bar is deliberately low: if you can fill in a WhatsApp profile, you can have a website.
+**The core insight:** Most African professionals who need clients don't have a reliable, affordable acquisition channel. Word of mouth is limited by geography and memory. Social media requires constant content production. Running individual Google Ads campaigns is expensive and hard to manage. No single channel is cost-effective at their scale.
 
-**What they get:** A professional website, a PDF portfolio they can share on WhatsApp or print, and a Google My Business listing — all generated automatically from one profile.
+Kelen is a shared acquisition model: many professionals contribute to one platform, and Kelen does the marketing to bring clients to it. The cost of reaching clients is distributed across the platform. The entry bar is deliberately low: if you can fill in a WhatsApp profile, you can be on Kelen.
+
+**What they get:** Access to clients actively searching for their trade and city — plus the profile, website, PDF portfolio, and Google My Business listing to convert those clients once they find you.
 
 ### Secondary target — The client
 
@@ -56,17 +58,21 @@ The client uses Kelen for free. They are the market the professional is trying t
 
 ---
 
-## 4. The Three Outputs (Core Product)
+## 4. What the Professional Gets
 
-Every professional who creates a profile gets three outputs automatically:
+The core product is access to clients actively searching on Kelen. The rest supports that:
 
-**1. Website** — A professional page indexed on Google. Structured, clean, shareable. Updated in real time as the professional adds projects.
+**Client discovery** — The professional's profile appears in Kelen search results when a client looks for their trade and city. This is the primary delivery.
 
-**2. PDF Portfolio** — Exportable, printable, sendable on WhatsApp or email. Their work in a format that exists outside the platform.
+**A profile that converts** — When a client finds the professional, they need to be convinced. Documented projects, verified recommendations, and a clean profile page do that work. The professional fills in the profile; Kelen structures it.
 
-**3. Google My Business** — Local presence. Appears when someone searches for their trade in their city.
+**Website** — A professional page shareable as a link, on WhatsApp, or in a meeting. Indexable on Google with subscription.
 
-These three outputs are the product. Everything else (reputation system, collaboration, discovery) builds on top of them.
+**PDF Portfolio** — Exportable, printable, sendable on WhatsApp or email. Their work in a format that exists outside the platform.
+
+**Google My Business** — Local presence. Appears when someone searches for their trade in their city on Google Maps.
+
+The profile is the conversion mechanism. Client access is the product.
 
 ---
 
@@ -88,7 +94,7 @@ These three outputs are the product. Everything else (reputation system, collabo
 - Full collaboration module (project management with clients)
 - Advanced analytics
 
-**The rule:** The free tier is a real product, not a teaser. The paid tier adds reach and depth. Neither tier influences the professional's status — reputation cannot be purchased.
+**The rule:** The free tier builds the profile. The paid tier activates client access — discovery in Kelen search results and Google indexing. Neither tier influences the professional's status — reputation cannot be purchased.
 
 ---
 
@@ -152,7 +158,7 @@ Each module is built on the foundation laid by the previous one. Kelen-Pro's job
 
 **Rule 1 — Lead with outcome, not system**
 Wrong: "Kelen sépare la validation de la visibilité en deux systèmes distincts."
-Right: "Votre site web, votre PDF, votre fiche Google — en quelques minutes."
+Right: "Des clients cherchent votre métier dans votre ville. Kelen leur montre votre profil."
 
 **Rule 2 — Concrete over abstract**
 Wrong: "Une plateforme de digitalisation professionnelle."
@@ -180,20 +186,21 @@ The platform is simple because complexity is a barrier, not because users are un
 - No system explanation on the landing. Show, don't explain.
 
 ### Homepage (pro-facing)
-- Lead: Your work, finally visible.
-- Sub: Website, PDF, Google — in minutes.
-- The WhatsApp analogy lives here.
+- Lead: Kelen brings the clients. You do the work.
+- Sub: Be present where clients are already searching. Website, PDF, Google — generated from one profile.
+- The WhatsApp analogy supports the ease of setup, not the value proposition.
 
 ### À propos
-- The problem: competent professionals, no digital presence.
-- The solution: simple, immediate, affordable.
+- The problem: competent professionals, no affordable client acquisition channel. Clients with projects, no reliable way to find and verify professionals.
+- The solution: a shared platform where clients search and professionals are found.
 - The context: Africa's digital gap, not just the diaspora investment angle.
 - The founding phrase belongs here.
 
 ### Pour les professionnels
-- Lead: Three outputs, one profile.
-- What they get: site, PDF, GMB.
-- What subscription adds: Google ranking, discovery, collaboration.
+- Lead: Access to clients actively searching for your trade.
+- Sub: Kelen is where clients search. Be there when they do.
+- The profile (website, PDF, GMB) is how you convert clients once they find you.
+- What subscription adds: Google ranking, broader discovery, collaboration.
 - Pricing is simple and clear. No feature matrix overload on the landing.
 
 ### Comment ça marche

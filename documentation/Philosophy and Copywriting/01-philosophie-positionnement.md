@@ -9,29 +9,29 @@
 > **"Trouvez le professionnel de confiance."**
 > *Find the right professional.*
 
-**Au professionnel — la triade complète :**
-> **"Montrez votre travail. Construisez la confiance. Développez votre activité."**
-> *Show your work. Build trust. Grow your business.*
+**Au professionnel — le message principal :**
+> **"Kelen amène les clients. Vous, vous faites le travail."**
+> *Kelen brings the clients. You do the work.*
 
-La confiance est le pilier central — c'est elle qui permet le reste. Montrer son travail en est la condition. Développer son activité en est la conséquence.
+Des clients viennent sur Kelen pour trouver leur professionnel. Le service rendu aux professionnels, c'est l'accès à cette demande — pas seulement une présence en ligne. Montrer son travail est la condition pour les convaincre. Construire la confiance est ce qui les fidélise.
 
 **Phrase condensée (usage courant) :**
-> **"Construisez la confiance."**
-> *Build trust.*
+> **"Accédez aux clients."**
+> *Get clients.*
 
 ---
 
 ## Ce que Kelen est
 
-Kelen est une plateforme de digitalisation pour les professionnels africains.
+Kelen est la plateforme où les clients viennent trouver, comparer et choisir leurs professionnels.
 
-Elle permet à tout professionnel — artisan, entrepreneur, prestataire de service — d'exposer son travail clairement, d'être trouvé facilement, et de collaborer avec ses clients de manière structurée.
+Pour le client : un moteur de recherche de professionnels — par métier, localisation, réputation documentée.
 
-Elle permet à tout client de trouver le bon professionnel, de comparer les profils, de créer un projet et de suivre sa progression.
+Pour le professionnel : un canal d'acquisition mutualisé. Plutôt que de financer seul un site, une campagne ou une présence sur les réseaux — à des coûts qui ne se rentabilisent pas à son échelle — le professionnel paie 3 000 FCFA par mois pour être présent là où les clients cherchent déjà. Les coûts d'attraction de la clientèle sont répartis sur l'ensemble de la plateforme. Kelen amène les clients. Le professionnel les convainc avec son travail.
 
 Ce n'est pas une plateforme d'avis. Ce n'est pas un annuaire. Ce n'est pas un outil de signalement ou de notation punitive.
 
-C'est une infrastructure de visibilité documentée — où la réputation se construit projet par projet, preuve par preuve.
+C'est une place de marché qualitative — où les clients viennent naturellement, et où la réputation se construit projet par projet, preuve par preuve.
 
 ---
 
@@ -73,15 +73,21 @@ Et même quand un professionnel accepte de payer, l'argument économique ne tien
 
 Facebook, Twitter, Instagram ont résolu le problème de la présence en ligne personnelle à grande échelle. Personne n'a jamais fait la même chose pour les professionnels.
 
-**Ce que ça révèle sur l'utilité réelle — la triade :**
+**Ce que ça révèle sur l'utilité réelle — le modèle d'acquisition mutualisé :**
 
-Pour le professionnel techno-réticent, la valeur d'un portfolio numérique et d'un site web s'échelonne en trois niveaux. Ces trois niveaux sont la triade fondatrice de Kelen-Pro : **Show your work. Build trust. Grow your business.**
+Pour le professionnel, la valeur de Kelen ne vient pas d'un site web ou d'un PDF. Elle vient de la demande que Kelen génère — les clients qui cherchent un professionnel, et qui le cherchent sur Kelen.
 
-1. **Montrez votre travail (primaire — déclencheur d'inscription)** — Ce bénéfice est d'abord personnel. Le professionnel n'a nulle part où montrer son travail et en être fier — vraiment fier, avec un espace à son nom, qu'il peut partager à sa famille, ses amis, son entourage. WhatsApp est le seul endroit où il envoie ses photos de chantier, et elles disparaissent dans une conversation. Ce besoin de reconnaissance est réel, sous-estimé, et suffisant pour déclencher l'inscription. Le professionnel ne dira pas "je veux un site pour être fier" — mais c'est souvent ce qu'il veut en premier.
+Le modèle est simple : chaque professionnel seul ne peut pas financer une acquisition client efficace. Une campagne Google Ads, un community manager, un site bien référencé — tout cela coûte bien plus que 3 000 FCFA par mois, et ne garantit aucun résultat. En revanche, lorsque des centaines de professionnels contribuent ensemble à une seule plateforme, le coût d'attraction de la clientèle devient marginal — et la plateforme a les moyens d'être là où les clients cherchent.
 
-2. **Construisez la confiance (central — le pilier qui tient tout)** — C'est le niveau le plus important. La plupart des professionnels sont excellents dans leur métier — et mauvais vendeurs. Ils n'ont pas le discours, la rhétorique, l'aisance commerciale pour convaincre un client qui ne les connaît pas. Ils n'en ont pas besoin : les images convainquent mieux que les mots. Un client qui peut voir le travail réel avant même d'appeler arrive déjà rassuré. Il sait exactement ce qu'il peut attendre. La conversation ne porte plus sur la légitimité du professionnel — elle porte sur le projet. Le profil parle à la place du pro. La confiance documentée remplace la confiance héritée du bouche-à-oreille — et contrairement au bouche-à-oreille, elle scale.
+**C'est le principe du marketing mutualisé : Kelen amène les clients, les professionnels les convainquent.**
 
-3. **Développez votre activité (tertiaire — bénéfice pour certains)** — Un client qui ne connaît pas le professionnel peut le choisir par son travail seul — par-dessus un autre professionnel dont il a peut-être entendu parler mais sur lequel il n'a aucune information concrète. Ce bénéfice est réel mais conditionnel : il arrive quand les deux premiers niveaux sont établis. Il ne doit jamais être promis comme résultat garanti.
+La valeur se déploie en trois étapes :
+
+1. **Accédez aux clients (primaire — la raison de s'inscrire)** — Des clients viennent sur Kelen pour trouver leur professionnel. Ils cherchent par métier, par ville, par réputation. Le professionnel inscrit est présent dans ces résultats. Ce n'est pas une promesse de conversion — c'est une promesse d'accès à une demande active que le professionnel ne pourrait pas générer seul à ce coût.
+
+2. **Montrez votre travail (condition — ce qui convertit)** — Un client qui trouve un profil sur Kelen regarde d'abord les réalisations. Les images convainquent mieux que les mots. Un profil avec des projets documentés convertit mieux qu'un profil vide. C'est la responsabilité du professionnel : alimenter son profil, pas produire du contenu.
+
+3. **Construisez la confiance (amplificateur — ce qui fidélise et rassure)** — Chaque recommandation vérifiée renforce la crédibilité du profil. Un client qui hésite entre deux professionnels choisira celui dont le travail est documenté et recommandé. La confiance accumulée ne disparaît pas — elle se renforce projet après projet.
 
 ---
 
@@ -117,7 +123,7 @@ Ces formats partent du même profil — zéro effort supplémentaire pour le pro
 - Proposer l'outil gratuitement élimine le problème du ROI non démontré
 - Le produit doit se sentir comme un outil de travail, pas un projet artistique — l'onboarding est simple, le résultat est immédiat
 - La vanité est une motivation légitime — le copy et le produit doivent l'honorer sans la nommer (personne ne dit "je veux un site pour être fier", mais c'est souvent ce qu'ils veulent)
-- L'acquisition est présentée comme un bénéfice possible, pas comme la promesse centrale — promettre de l'acquisition à des gens qui n'en verront pas serait mentir
+- L'acquisition est la promesse centrale — Kelen amène des clients sur la plateforme, c'est le service vendu. Ce qu'on ne promet pas : le taux de conversion. Un profil vide ou non documenté ne convertira pas, même si les clients passent. La promesse est l'accès à la demande — pas la garantie du résultat individuel.
 
 **La dimension philosophique :**
 
@@ -161,11 +167,11 @@ L'offre BI ne sera pas publique tant que la base de données n'est pas suffisamm
 
 ## Ce que le professionnel obtient
 
-- **Un site web** — simple, professionnel, indexé sur Google
-- **Un export PDF** — portfolio prêt à envoyer à un client, à imprimer, à partager sur WhatsApp
-- **Une fiche Google My Business** — présence locale visible immédiatement
-- **Un espace de gestion de projets** — pour documenter ses réalisations, suivre ses collaborations en cours
-- **Une réputation construite** — chaque projet documenté renforce la crédibilité du profil
+- **L'accès à des clients qui cherchent** — présence dans les résultats de recherche Kelen, là où des clients actifs comparent et choisissent des professionnels dans leur ville
+- **Un profil qui convainc** — site web structuré, galerie de réalisations, réputation documentée : tout ce qu'il faut pour convertir un client qui vous trouve
+- **Un export PDF** — portfolio prêt à envoyer sur WhatsApp, à imprimer, à partager en rendez-vous
+- **Une fiche Google My Business** — présence locale visible quand quelqu'un cherche votre métier dans votre ville sur Google
+- **Une réputation qui s'accumule** — chaque projet documenté, chaque recommandation vérifiée renforce durablement le profil
 
 ---
 
@@ -215,9 +221,9 @@ Ni paiement à l'acte. Ni commission sur les projets conclus.
 
 Le client cherche un professionnel pour un projet. Il utilise le moteur de recherche avec filtres (secteur, localisation, statut). Il compare les profils, consulte les portfolios, choisit un professionnel. Il crée un projet et collabore directement depuis la plateforme.
 
-### Parcours 2 — Digitalisation (professionnel)
+### Parcours 2 — Acquisition (professionnel)
 
-Le professionnel crée son profil en quelques minutes. Il charge ses photos de réalisations, décrit ses services, renseigne ses informations. Son site est en ligne. Son PDF est prêt. Sa fiche GMB est synchronisée. Il reçoit des demandes de clients directement.
+Le professionnel crée son profil en quelques minutes. Il charge ses photos de réalisations, décrit ses services, renseigne ses informations. Son profil est immédiatement visible dans les résultats de recherche Kelen — des clients qui cherchent son métier dans sa ville peuvent le trouver. Son site est en ligne. Son PDF est prêt. Avec l'abonnement, sa fiche GMB est synchronisée et il est indexé sur Google.
 
 ---
 
@@ -306,13 +312,13 @@ Kelen dit autre chose :
 
 ## Nos clients (ceux qui paient)
 
-Les professionnels sérieux sont nos clients commerciaux. Le client est le marché qu'ils cherchent à atteindre.
+Les professionnels sérieux sont nos clients commerciaux. Le client est le marché qu'ils cherchent à atteindre — et que Kelen s'engage à amener.
 
-Ce renversement est fondamental dans la communication :
-- Le client utilise Kelen gratuitement
-- Le professionnel paie pour être découvert, comparé, choisi
+Ce que le professionnel achète en s'abonnant :
+- Le client utilise Kelen gratuitement — ce qui maximise la base de clients actifs sur la plateforme
+- Le professionnel paie pour accéder à cette base : être découvert, comparé, choisi
 - Kelen sert le client en servant les professionnels sérieux
-- La qualité des profils attire les clients — et les clients attirent les professionnels
+- La qualité des profils attire les clients — et les clients attirent davantage de professionnels : le cercle est vertueux
 
 ---
 

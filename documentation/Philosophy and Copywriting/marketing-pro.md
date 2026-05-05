@@ -36,13 +36,12 @@ Kelen     Comment ça marche · Tarifs · FAQ · Contact      [Se connecter]  [C
 ---
 
 **Headline :**
-> Montrez votre travail.
-> Construisez la confiance.
-> Développez votre activité.
+> Les clients cherchent leur professionnel sur Kelen.
+> Soyez là quand ils cherchent le vôtre.
 
 **Sous-titre :**
-> Kelen crée votre site web, votre portfolio PDF et votre fiche Google My Business
-> en quelques minutes — sans designer, sans agence, sans compétence technique.
+> Kelen amène les clients. Votre profil les convainc.
+> Site web, portfolio PDF et fiche Google My Business — générés automatiquement depuis votre profil.
 
 **CTA principal :**
 > [Créer mon profil gratuitement →]
@@ -59,7 +58,7 @@ Kelen     Comment ça marche · Tarifs · FAQ · Contact      [Se connecter]  [C
 
 ## Bande de réassurance (sous le hero)
 
-> ✓ Profil en ligne en moins de 15 minutes
+> ✓ Visible par les clients en moins de 15 minutes
 > &nbsp;&nbsp;&nbsp;&nbsp;✓ Site web indexé sur Google
 > &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;✓ PDF portfolio en un clic
 > &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;✓ Fiche Google My Business synchronisée
@@ -70,30 +69,28 @@ Kelen     Comment ça marche · Tarifs · FAQ · Contact      [Se connecter]  [C
 ## Section — Le problème
 
 **Titre :**
-> Vous avez des années de travail derrière vous.
-> Il n'existe aucun endroit pour le montrer.
+> Vos prochains clients ne vous connaissent pas encore.
+> Ils cherchent quelqu'un comme vous — mais pas sur WhatsApp.
 
 **Corps :**
-> Vos réalisations partent en photo sur WhatsApp. Parfois à un client, parfois dans un groupe.
-> Elles disparaissent dans une conversation. Personne ne peut les retrouver.
+> Votre réseau vous amène des clients — ceux qui vous connaissent déjà.
+> Mais les clients qui ne vous connaissent pas cherchent ailleurs.
+> Ils comparent. Ils regardent les réalisations. Ils choisissent le professionnel dont le travail parle avant le premier appel.
 >
-> Votre réputation circule par le bouche-à-oreille —
-> ce qui veut dire qu'elle dépend de ce que les autres disent de vous, quand ils s'en souviennent.
+> Créer votre propre site, lancer une campagne Google, être actif sur les réseaux —
+> ce sont des métiers à part entière, et des budgets que le bouche-à-oreille ne rentabilise pas.
 >
-> Et quand un nouveau client vous contacte, vous devez vous vendre.
-> Expliquer qui vous êtes. Convaincre. Rassurer.
-> La plupart des professionnels sont excellents dans leur métier — pas dans ce discours.
->
-> Vos images convainquent mieux que vos mots.
-> Encore faut-il qu'elles existent quelque part.
+> Kelen fait ce travail à votre place.
+> Des clients viennent sur la plateforme pour trouver leur professionnel.
+> Votre profil est là. Vos réalisations convainquent. Vous travaillez.
 
 ---
 
 ## Section — La solution : trois sorties, un profil
 
 **Titre :**
-> Vous remplissez votre profil une fois.
-> Kelen génère le reste automatiquement.
+> Kelen amène les clients.
+> Votre profil fait le reste.
 
 ---
 
@@ -201,20 +198,22 @@ Page intérieure avec projet documenté (photo, description, dates).
 ## Section — Comment ça marche
 
 **Titre :**
-> Votre profil en trois étapes. Votre site prêt aujourd'hui.
+> Votre profil en trois étapes. Visible par les clients aujourd'hui.
 
 ```
 1. Créez votre profil
    Nom, activité, localisation, photos de vos réalisations.
    Comme remplir un profil Facebook.
    ↓
-2. Votre présence se génère
-   Site web, PDF portfolio, fiche Google —
-   tout est disponible immédiatement.
+2. Accédez aux clients
+   Votre profil apparaît dans les résultats de recherche Kelen.
+   Des clients qui cherchent votre métier dans votre ville vous trouvent.
+   Site web et PDF portfolio disponibles immédiatement.
    ↓
-3. Activez Google
-   3 000 FCFA / 15 € par mois pour être indexé
-   sur Google et débloquer les fonctionnalités avancées.
+3. Allez plus loin
+   3 000 FCFA / 15 € par mois pour être indexé sur Google,
+   synchroniser votre fiche Google My Business
+   et débloquer les fonctionnalités avancées.
 ```
 
 **CTA intermédiaire :**
@@ -360,22 +359,26 @@ Collaboration client            —               ✓
 
 ---
 
-**Personne ne me cherche sur Internet.**
-> Vos clients actuels viennent peut-être par recommandation.
-> Vos prochains clients, eux, cherchent peut-être sur Google.
-> Kelen ne remplace pas votre réseau. Il le prolonge vers les clients qui ne vous connaissent pas encore.
+**Je n'ai pas besoin d'Internet — mes clients viennent par recommandation.**
+> Vos clients actuels, oui. Votre prochain client — celui qui ne vous connaît pas encore —
+> cherche quelqu'un comme vous sur une plateforme, sur Google, dans un groupe.
+>
+> Le bouche-à-oreille a une limite : il dépend de la mémoire des autres et de leur réseau.
+> Kelen n'a pas de limite géographique, pas d'oubli, pas de contact perdu.
+>
+> Vous gardez votre réseau. Vous ajoutez un canal qui travaille quand vous n'êtes pas là.
 
 ---
 
 ## Section — Appel à l'action final
 
 **Headline :**
-> Votre travail mérite d'être vu.
+> Des clients cherchent votre métier dans votre ville.
 
 **Corps :**
 > Créez votre profil maintenant.
-> Votre site web est en ligne immédiatement.
-> Activez l'abonnement quand vous voulez aller sur Google.
+> Votre profil est visible dans les résultats Kelen immédiatement.
+> Activez l'abonnement pour apparaître sur Google.
 
 **CTA principal :**
 > [Créer mon profil gratuitement →]
