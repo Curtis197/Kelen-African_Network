@@ -197,9 +197,23 @@ Kelen-Pro is the first module of a larger system. Its role is to build the profe
 **Planned sequence (internal roadmap — not public):**
 1. **Kelen-Pro** — Professional profiles, client discovery, project collaboration ← current
 2. **Data layer** — Structured data from professional activity, sectors, geographies
-3. **Kelen-Design** — Designer marketplace for custom templates and integrations
+3. **Kelen-Design** — WordPress-level customization on top of the standard profile. Designers build and sell custom templates, layouts, and integrations directly on the Kelen infrastructure. Professionals who want to go beyond the standard profile buy from the marketplace. Same base, differentiated surface.
 4. **Kelen-Market** — Simple, affordable e-commerce for professionals already on the platform
 5. **Kelen-Restaurant** — Reservation engine for restaurant websites
+
+**The WordPress architecture:**
+
+Kelen-Pro is WordPress core — simple, standardized, the base every professional gets. Kelen-Design is the theme and plugin ecosystem — the customization layer that sits on top without touching the foundation.
+
+WordPress's scale came partly from this separation. The core was free and frictionless enough to achieve mass adoption. The ecosystem of designers and developers building on top of it created a network that no single team could have built alone — and locked the platform in as infrastructure.
+
+Kelen-Design replicates this logic:
+- Professionals who want a standard presence: Kelen-Pro profile, unchanged
+- Professionals who want to stand out: Kelen-Design templates, built by a marketplace of designers
+- Designers: a distribution channel for their work, inside a platform with a growing base of professionals
+- Kelen: a customization ecosystem that deepens platform lock-in without complicating the core
+
+The WordPress parallel closes completely with Kelen-Design. The base is simple enough for mass adoption. The customization layer is rich enough for professionals who want more. And the infrastructure underneath is the same for both.
 
 Each module is built on the foundation laid by the previous one. Kelen-Pro's job is to build the foundation — and the foundation is the network of profiles.
 

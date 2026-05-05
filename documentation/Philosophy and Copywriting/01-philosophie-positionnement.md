@@ -47,7 +47,7 @@ C'est une place de marché qualitative — où les clients viennent naturellemen
 
 ## Kelen-Pro dans le système Kelen
 
-Kelen-Pro est la première brique d'un écosystème plus large. Elle a un rôle précis : **combler le fossé numérique des professionnels africains**.
+Kelen-Pro est la première brique d'un écosystème plus large. Elle a un rôle précis : **poser la base du réseau de profils professionnels africains**.
 
 La promesse est radicale dans sa simplicité :
 
@@ -55,7 +55,22 @@ La promesse est radicale dans sa simplicité :
 
 L'onboarding ne demande aucune compétence technique. Aucune notion de design. Aucune maîtrise du numérique au-delà de ce que des millions de professionnels font déjà sur leurs téléphones.
 
-Kelen-Pro est le point d'entrée. Les données collectées, les profils construits, les collaborations documentées — tout cela prépare les modules suivants du système Kelen.
+**L'architecture en deux couches — le parallèle WordPress complet :**
+
+Kelen-Pro est le cœur WordPress : simple, standardisé, la base que tout professionnel reçoit. Kelen-Design est la couche thèmes et plugins : la personnalisation qui vient se poser dessus sans toucher à la fondation.
+
+WordPress a atteint 40% du web en partie grâce à cette séparation. Le cœur était suffisamment simple et gratuit pour une adoption de masse. L'écosystème de designers et de développeurs construisant par-dessus a créé un réseau qu'aucune équipe seule n'aurait pu bâtir — et a verrouillé la plateforme comme infrastructure.
+
+- **Kelen-Pro (gratuit)** → profil standard — le socle pour tout le monde, zéro friction
+- **Kelen-Pro (abonnement)** → accès clients, indexation Google, fonctionnalités avancées
+- **Kelen-Design** → personnalisation niveau WordPress — templates, mises en page, intégrations — achetés sur un marché de designers qui construisent sur l'infrastructure Kelen
+
+Le professionnel qui veut une présence standard : Kelen-Pro, tel quel.
+Le professionnel qui veut se démarquer : Kelen-Design, construit par une communauté de designers.
+Le designer : un canal de distribution pour son travail, dans une plateforme avec une base croissante de professionnels.
+Kelen : un écosystème de personnalisation qui renforce l'ancrage de la plateforme sans complexifier le cœur.
+
+Kelen-Pro est le point d'entrée. Les profils construits, les collaborations documentées, les données collectées — tout cela prépare la couche suivante.
 
 ---
 
@@ -216,6 +231,13 @@ Au lieu que chaque professionnel crée, héberge et maintienne son propre site i
 **L'ambition :**
 
 Imaginer un monde où une part significative de la présence web professionnelle africaine passe par des profils Kelen, c'est imaginer l'infrastructure par défaut — pas un outil parmi d'autres. L'équivalent de ce que WordPress représente sur le web occidental, mais concentré sur une plateforme, en réseau, avec des effets cumulatifs que WordPress n'a jamais eus.
+
+**Et avec Kelen-Design, le parallèle WordPress est complet.**
+
+WordPress core = Kelen-Pro : la base simple, standardisée, adoptée massivement.
+WordPress themes & plugins = Kelen-Design : la couche de personnalisation construite par une communauté de designers sur la même infrastructure.
+
+C'est cet écosystème à deux couches qui a permis à WordPress d'atteindre 40% du web sans que leur équipe seule le construise. Kelen-Design crée la même dynamique : les designers construisent sur la plateforme, les professionnels achètent leur travail, la plateforme s'enrichit sans que le cœur se complexifie.
 
 Ce n'est pas une promesse de trafic ou de ROI individuel. C'est une infrastructure. La valeur d'une infrastructure est structurelle et cumulative — elle ne s'apprécie pas profil par profil, mais réseau par réseau.
 
