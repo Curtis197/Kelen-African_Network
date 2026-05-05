@@ -240,7 +240,55 @@ Each module is built on the foundation laid by the previous one. Kelen-Pro's job
 
 ---
 
-## 9. Tone Principles
+## 10. The SuperSaaS Vision (Internal — not public)
+
+**The third model — beyond fragmented SaaS and the Asian superapp**
+
+The Western SaaS market is fragmented by design. Venture-backed startups each solve one problem, each charge a separate subscription, each require a different login. A professional in the West who needs a CRM, project management, invoicing, client communication, and analytics pays for five tools, manages five contexts, and wastes time between five interfaces that don't talk to each other. This fragmentation was profitable for Silicon Valley. It is a bad deal for the end user.
+
+Asia observed this and built differently. WeChat, Grab, Gojek, Alipay — superapps that put everything in one place. The insight was correct: capture the user once, give them every service in a single interface, never lose them. This worked at massive scale for consumer markets.
+
+Africa can go further — and differently.
+
+The fragmented SaaS model has not yet arrived at scale in Africa — the market is still open. The Asian superapp model is designed for consumer messaging and payments, not for professional B2B software. The opportunity is a third model that neither the West nor Asia produced:
+
+> **The SuperSaaS — one platform for all professional software, built by an army of independent engineers.**
+
+---
+
+**What the SuperSaaS is:**
+
+- One platform — no fragmentation across tools
+- Professional-focused, not consumer-focused
+- Vertical software for every trade and profession
+- Built by independent engineers, not a single central team
+- Kelen provides the infrastructure and distribution; engineers provide the specialization
+
+**The army of independent engineers:**
+
+No central team can build a CRM for plumbers AND a project tracker for architects AND an inventory manager for electricians AND a client portal for interior designers — not fast enough, not with the depth each trade demands.
+
+But an army of independent engineers, each building for one vertical, can.
+
+The platform provides the infrastructure, the marketplace, the payment system, and the user base. Each engineer provides specialization. Together they cover what no central team has the resources to build alone.
+
+This is how Linux produced what no single company could fund — thousands of independent contributors, each owning one piece. But with a commercial incentive structure: each engineer earns on every install of their tool. A professional who commissions a custom tool can publish it to the marketplace and earn on every installation by professionals in the same trade.
+
+**Why this model is structurally superior:**
+
+| Model | Built by | For whom | Fragmentation | Lock-in |
+|---|---|---|---|---|
+| Western SaaS | Independent startups | Businesses | High — one tool per need | Low — easy to swap one tool |
+| Asian superapp | Single central team | Consumers | Low | Strong — but limited to what the team builds |
+| Kelen SuperSaaS | Army of independent engineers | Professionals | None — one platform | Structural — integrated operations |
+
+A professional in the West manages ten SaaS tools. A professional on Kelen has their CRM, automations, dashboards, website, clients, and projects on one platform. Switching means dismantling their entire operational stack. That is not contractual lock-in — it is integration lock-in.
+
+*This vision is not communicated publicly. It guides product architecture, market sequencing, pricing strategy, and engineering recruitment decisions.*
+
+---
+
+## 11. Tone Principles
 
 **Rule 1 — Lead with outcome, not system**
 Wrong: "Kelen sépare la validation de la visibilité en deux systèmes distincts."
@@ -264,7 +312,7 @@ The platform is simple because complexity is a barrier, not because users are un
 
 ---
 
-## 10. Message Map by Page
+## 12. Message Map by Page
 
 ### Homepage (client-facing)
 - Lead: Find the right professional.
