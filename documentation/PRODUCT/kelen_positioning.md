@@ -200,7 +200,7 @@ Kelen-Pro is the first module of a larger system. Its role is to build the profe
 3. **Kelen-Design** — An open platform economy on top of Kelen-Pro. Not just a marketplace — a full ecosystem where professionals, designers, and developers can consume, commission, build, and sell.
 
    **What Kelen provides (the infrastructure layer):**
-   Base templates for common professional workflows — CRM, project tracker, invoice manager, client portal, automation builder. An API and SDK that builders use to extend the platform. A marketplace for distribution. A payment and revenue-sharing system.
+   Pre-built modules covering the fundamental needs of any professional SaaS (CRM, project, invoicing, client portal, automation, reporting) — built from 20 years of SaaS experience so engineers don't start from zero. A fully database-driven architecture: dashboard layouts, UI components, design tokens, and business logic are all data records, modifiable by developers without rewriting code. Integration points (APIs, hooks, events) to connect modules to each other and to external services. A marketplace for distribution and a payment and revenue-sharing system.
 
    **Three roles in the ecosystem:**
 
@@ -246,7 +246,62 @@ Each module is built on the foundation laid by the previous one. Kelen-Pro's job
 
 ---
 
-## 10. The SuperSaaS Vision (Internal — not public)
+## 10. Kelen's Central Job — Platform Infrastructure (Internal)
+
+The core team's job is not to build features for end users. It is to build the infrastructure that lets independent engineers build any SaaS possible.
+
+**20 years of SaaS experience as the founding moat:**
+
+The team has 20 years of experience building SaaS products. They know what businesses need — not in theory, in practice. Which modules are universal. How a CRM must be structured to work for a service business. What a project dashboard needs to show a site manager. How client approval workflows actually function. Which integrations are critical and which are secondary.
+
+This knowledge is not quickly acquired. It is built over years of building, failing, adjusting, and observing real user behavior. It is Kelen's moat — not technology alone, but domain knowledge encoded into the platform's architecture.
+
+---
+
+**The platform as a SaaS factory:**
+
+Kelen provides independent engineers three layers:
+
+**1. Pre-built modules** — based on 20 years of understanding what businesses need:
+- CRM module — contacts, prospect pipeline, client history, follow-ups
+- Project module — phases, milestones, documents, approvals, progress tracking
+- Invoicing module — quotes, invoices, payment tracking, reminders
+- Client portal module — messaging, shared documents, phase sign-offs
+- Automation module — triggers, rules, notifications, conditional actions
+- Reporting module — configurable dashboards, metrics, exports
+
+Each module is solid, tested, and covers the fundamental use cases of its category. The engineer does not build it — they configure and adapt it to their vertical.
+
+**2. Integration points** — hooks, events, APIs and connectors that allow:
+- Modules to communicate with each other
+- External tools to integrate (WhatsApp, Mobile Money, Google, sector-specific tools)
+- Automations to run across modules and channels
+
+**3. A fully database-driven architecture:**
+
+This is the fundamental technical principle. Every interface element is data, not static code:
+
+- **Dashboard layouts** → records in the database → a dev modifies them, the interface changes for all users of their tool
+- **UI components** → records in the database → a dev adds, removes, or rearranges blocks without touching frontend code
+- **Design tokens** (colors, typography, spacing, icons) → config in the database → a dev customizes the full visual identity of a tool in a few lines
+- **Business logic** → configurable rules in the database → a dev defines behaviors (if X then Y, when Z notify W) without rewriting the engine
+
+The result: a Kelen builder configures more than they code. They bring vertical knowledge — how a plumber tracks their jobs, what an architect needs a client to approve, how a carpenter manages quotes. The platform brings everything else.
+
+---
+
+**What this changes for the independent engineer:**
+
+| Approach | What the engineer builds | Time | Starting quality |
+|---|---|---|---|
+| From scratch | Everything — architecture, UI, database, logic, design | Months | Entirely depends on the engineer |
+| On Kelen | The vertical — configuration, customization, trade-specific logic | Weeks | Always solid (proven modules) |
+
+The engineer brings trade knowledge. Kelen brings SaaS knowledge. Together they produce a tool that neither could build as fast or as well alone.
+
+---
+
+## 11. The SuperSaaS Vision (Internal — not public)
 
 **The third model — beyond fragmented SaaS and the Asian superapp**
 
@@ -300,7 +355,7 @@ A professional in the West manages ten SaaS tools. A professional on Kelen has t
 
 ---
 
-## 11. Tone Principles
+## 12. Tone Principles
 
 **Rule 1 — Lead with outcome, not system**
 Wrong: "Kelen sépare la validation de la visibilité en deux systèmes distincts."
@@ -324,7 +379,7 @@ The platform is simple because complexity is a barrier, not because users are un
 
 ---
 
-## 12. Message Map by Page
+## 13. Message Map by Page
 
 ### Homepage (client-facing)
 - Lead: Find the right professional.
