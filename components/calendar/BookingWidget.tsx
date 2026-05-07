@@ -76,7 +76,7 @@ function BookingModal({ proId, proName, onClose }: Props & { onClose: () => void
     return new Date(Date.UTC(d.getFullYear(), d.getMonth(), 1));
   });
 
-  const [form, setForm] = useState({ clientName: "", clientEmail: "", clientPhone: "", reason: — });
+  const [form, setForm] = useState({ clientName: "", clientEmail: "", clientPhone: "", reason: "" });
   const [submitting, setSubmitting] = useState(false);
 
   const fetchSlots = useCallback(async () => {
