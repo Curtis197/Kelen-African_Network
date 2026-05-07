@@ -453,7 +453,7 @@ export function RecommendationForm({
                   />
                   <div className={`flex items-center gap-3 rounded-lg border border-dashed p-4 transition-colors ${contractFile ? "border-kelen-green-500 bg-kelen-green-50" : "border-border bg-muted/30 hover:bg-muted/50"}`}>
                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-xl">
-                      {contractFile ? "ðŸ"„" : "ðŸ""}
+                      {contractFile ? "📄" : "📁"}
                     </div>
                     <div>
                       <p className="text-sm font-medium text-foreground">
@@ -481,7 +481,7 @@ export function RecommendationForm({
                   />
                   <div className={`flex items-center gap-3 rounded-lg border border-dashed p-4 transition-colors ${photoFiles.length > 0 ? "border-kelen-green-500 bg-kelen-green-50" : "border-border bg-muted/30 hover:bg-muted/50"}`}>
                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-xl">
-                      {photoFiles.length > 0 ? "ðŸ"¸" : "ðŸ"·"}
+                      {photoFiles.length > 0 ? "📸" : "📷"}
                     </div>
                     <div>
                       <p className="text-sm font-medium text-foreground">

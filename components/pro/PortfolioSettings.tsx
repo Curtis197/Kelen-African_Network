@@ -262,7 +262,7 @@ export function PortfolioSettings({
                   colorMode === mode ? 'border-[#009639] bg-green-50 text-[#009639]' : 'border-gray-200 text-gray-600',
                 ].join(' ')}
               >
-                {mode === 'light' ? 'â˜€ï¸ Clair' : mode === 'dark' ? 'ðŸŒ™ Sombre' : 'ðŸŽ¨ Couleur logo'}
+                {mode === 'light' ? 'â˜€ï¸ Clair' : mode === 'dark' ? '🌙 Sombre' : '🎨 Couleur logo'}
               </button>
             ))}
           </div>

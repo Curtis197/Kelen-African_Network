@@ -203,7 +203,7 @@ export function DevelopmentAreaRow({ areaId, areaName, professionals, projectId,
                       ) : (
                         <Image
                           src={member.professionals?.portfolio_photos?.[0] || "https://images.unsplash.com/photo-1541888946425-d81bb19480c5?auto=format&fit=crop&q=80"}
-                          alt={member.is_external ? member.external_name || — : member.professionals?.business_name || ""}
+                          alt={member.is_external ? member.external_name || "" : member.professionals?.business_name || ""}
                           fill
                           sizes="(max-width: 768px) 64px, 80px"
                           className="object-cover"

@@ -193,7 +193,7 @@ export default function LogForm({ projectId, proProjectId, stepId, projectCurren
         {/* Date */}
         <div>
           <label htmlFor="log-date" className="block text-sm font-medium text-on-surface mb-2">
-            ðŸ"… Date
+            📅 Date
           </label>
           <input
             id="log-date"
@@ -208,7 +208,7 @@ export default function LogForm({ projectId, proProjectId, stepId, projectCurren
         {/* Title */}
         <div>
           <label htmlFor="log-title" className="block text-sm font-medium text-on-surface mb-2">
-            ðŸ·ï¸ Titre du rapport
+            🏷ï¸ Titre du rapport
           </label>
           <input
             id="log-title"
@@ -225,7 +225,7 @@ export default function LogForm({ projectId, proProjectId, stepId, projectCurren
         {/* Description */}
         <div>
           <label htmlFor="log-description" className="block text-sm font-medium text-on-surface mb-2">
-            ðŸ" Description
+            📝 Description
           </label>
           <textarea
             id="log-description"
@@ -244,7 +244,7 @@ export default function LogForm({ projectId, proProjectId, stepId, projectCurren
         {/* Money */}
         <div>
           <label className="block text-sm font-medium text-on-surface mb-2">
-            ðŸ’° Dépenses du jour
+            💰 Dépenses du jour
           </label>
           <div className="flex gap-3">
             <input
@@ -289,7 +289,7 @@ export default function LogForm({ projectId, proProjectId, stepId, projectCurren
         {/* Next steps */}
         <div>
           <label htmlFor="log-next-steps" className="block text-sm font-medium text-on-surface mb-2">
-            ðŸ"‹ Prochaines étapes (optionnel)
+            📋 Prochaines étapes (optionnel)
           </label>
           <textarea
             id="log-next-steps"
@@ -305,7 +305,7 @@ export default function LogForm({ projectId, proProjectId, stepId, projectCurren
         {/* Weather */}
         <div>
           <label className="block text-sm font-medium text-on-surface mb-2">
-            ðŸŒ¤ï¸ Météo (optionnel)
+            🌤ï¸ Météo (optionnel)
           </label>
           <div className="flex flex-wrap gap-3">
             {weatherOptions.map((option) => (
@@ -354,7 +354,7 @@ export default function LogForm({ projectId, proProjectId, stepId, projectCurren
             disabled={isSavingDraft}
             className="px-6 py-3 rounded-xl font-semibold text-sm text-on-surface bg-surface-container hover:bg-surface-container-high transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
           >
-            {isSavingDraft ? <Loader2 className="w-4 h-4 animate-spin" /> : 'ðŸ’¾ Brouillon'}
+            {isSavingDraft ? <Loader2 className="w-4 h-4 animate-spin" /> : '💾 Brouillon'}
           </button>
           <button
             type="submit"

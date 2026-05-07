@@ -553,7 +553,7 @@ export function SignalForm({
                   />
                   <div className={`flex items-center gap-3 rounded-lg border border-dashed p-4 transition-colors ${contractFile ? "border-kelen-red-500 bg-kelen-red-50" : "border-border bg-muted/30 hover:bg-muted/50"}`}>
                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-xl">
-                      {contractFile ? "ðŸ"„" : "ðŸ""}
+                      {contractFile ? "📄" : "📁"}
                     </div>
                     <div>
                       <p className="text-sm font-medium text-foreground">
@@ -581,7 +581,7 @@ export function SignalForm({
                   />
                   <div className={`flex items-center gap-3 rounded-lg border border-dashed p-4 transition-colors ${evidenceFiles.length > 0 ? "border-kelen-red-500 bg-kelen-red-50" : "border-border bg-muted/30 hover:bg-muted/50"}`}>
                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-xl">
-                      {evidenceFiles.length > 0 ? "ðŸ"¸" : "ðŸ"·"}
+                      {evidenceFiles.length > 0 ? "📸" : "📷"}
                     </div>
                     <div>
                       <p className="text-sm font-medium text-foreground">
@@ -618,7 +618,7 @@ export function SignalForm({
                   />
                   <div className={`flex items-center gap-3 rounded-lg border border-dashed p-4 transition-colors ${logFiles.length > 0 ? "border-kelen-red-500 bg-kelen-red-50" : "border-border bg-muted/30 hover:bg-muted/50"}`}>
                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-xl">
-                      {logFiles.length > 0 ? "ðŸ’¬" : "ðŸ"§"}
+                      {logFiles.length > 0 ? "💬" : "📧"}
                     </div>
                     <div>
                       <p className="text-sm font-medium text-foreground">

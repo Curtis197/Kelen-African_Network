@@ -160,17 +160,17 @@ export async function generateProjectPdf(projectId: string): Promise<{ success: 
     <div class="details-grid">
       <div>
         <div class="info-block">
-          <h3>ðŸ"‹ Description du projet</h3>
+          <h3>📋 Description du projet</h3>
           <p>${project.description || 'Aucune description fournie.'}</p>
         </div>
         <div class="info-block">
-          <h3>ðŸ" Localisation & Portée</h3>
+          <h3>📍 Localisation & Portée</h3>
           <p>${project.location_formatted || project.location || 'N/A'}</p>
         </div>
       </div>
       <div>
         <div class="info-block">
-          <h3>ðŸ’° Résumé budgétaire</h3>
+          <h3>💰 Résumé budgétaire</h3>
           <table class="budget-table">
             <tr><td class="budget-label">Budget total</td><td class="budget-value">${formatCurrency(project.budget_total || 0, project.budget_currency || 'EUR')}</td></tr>
             <tr><td class="budget-label">Catégorie</td><td class="budget-value">${project.category || 'Non défini'}</td></tr>

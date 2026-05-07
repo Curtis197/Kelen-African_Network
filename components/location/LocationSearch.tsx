@@ -19,7 +19,7 @@ interface LocationSearchProps {
   className?: string;
 }
 
-export function LocationSearch({ value, onChange, placeholder = "Rechercher une ville ou un lieu...", className = — }: LocationSearchProps) {
+export function LocationSearch({ value, onChange, placeholder = "Rechercher une ville ou un lieu...", className = "" }: LocationSearchProps) {
   const [inputValue, setInputValue] = useState(value?.formatted_address || "");
   const [suggestions, setSuggestions] = useState<google.maps.places.AutocompletePrediction[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);

@@ -11,7 +11,7 @@ interface Props {
   initialAboutImageUrl?: string;
 }
 
-export function AboutEditor({ initialAboutText = "", initialAboutImageUrl = — }: Props) {
+export function AboutEditor({ initialAboutText = "", initialAboutImageUrl = "" }: Props) {
   const [aboutText, setAboutText] = useState(initialAboutText);
   const [aboutImageUrl, setAboutImageUrl] = useState(initialAboutImageUrl);
   const [saving, setSaving] = useState(false);
