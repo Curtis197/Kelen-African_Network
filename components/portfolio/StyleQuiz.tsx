@@ -104,7 +104,7 @@ export function StyleQuiz({ initialAnswers, onAnswersChange, hasBrandColor = fal
         disabled={!allAnswered || saving}
         className="h-11 px-6 rounded-xl bg-kelen-green-600 text-white font-bold text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-kelen-green-700 transition-colors"
       >
-        {saving ? "Enregistrement..." : saved ? "Enregistré âœ"" : "Enregistrer le style"}
+        {saving ? "Enregistrement..." : saved ? "Enregistré ✓" : "Enregistrer le style"}
       </button>
     </div>
   );

@@ -63,7 +63,7 @@ export async function generateProjectPdf(projectId: string): Promise<{ success: 
   // Get step status label
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'complete': return '<span class="timeline-status status-complete">âœ" Terminé</span>';
+      case 'complete': return '<span class="timeline-status status-complete">✓ Terminé</span>';
       case 'in_progress': return '<span class="timeline-status status-progress">âŸ³ En cours</span>';
       case 'pending': return '<span class="timeline-status status-pending">â³ À venir</span>';
       default: return `<span class="timeline-status status-pending">${status}</span>`;

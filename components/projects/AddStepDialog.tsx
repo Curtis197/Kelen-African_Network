@@ -114,7 +114,7 @@ export default function AddStepDialog({ isOpen, onClose, projectId, step, onSucc
                 type="text"
                 value={formData.title}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, title: e.target.value })}
-                placeholder="Ex: Fondation & Gros Å"uvre"
+                placeholder="Ex: Fondation & Gros œuvre"
                 className="w-full bg-surface-container border-none rounded-xl sm:rounded-2xl p-3 sm:p-4 text-sm sm:text-base text-on-surface focus:ring-2 focus:ring-kelen-green-500 transition-all font-medium placeholder:text-on-surface-variant/40"
               />
             </div>

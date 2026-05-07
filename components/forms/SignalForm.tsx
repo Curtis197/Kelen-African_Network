@@ -258,7 +258,7 @@ export function SignalForm({
                     : "bg-muted text-muted-foreground"
               }`}
             >
-              {i < step ? "âœ"" : i + 1}
+              {i < step ? "✓" : i + 1}
             </div>
             {i < STEPS.length - 1 && (
               <div

@@ -4,7 +4,7 @@ import { ProjectDocumentForm } from "@/components/forms/RealizationForm";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "Modifier la réalisation â€" Kelen Pro",
+  title: "Modifier la réalisation — Kelen Pro",
 };
 
 interface EditRealizationPageProps {

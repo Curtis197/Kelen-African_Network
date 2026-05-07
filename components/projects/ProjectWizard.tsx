@@ -299,7 +299,7 @@ export default function ProjectWizard({ initialId }: { initialId?: string }) {
 function Step1Identity({ formData, onChange }: { formData: ProjectData; onChange: (d: Partial<ProjectData>) => void }) {
   const categories = [
     { id: "architecture", label: "Architecture & Design", icon: DraftingCompass },
-    { id: "construction", label: "Gros Å"uvre", icon: DraftingCompass },
+    { id: "construction", label: "Gros œuvre", icon: DraftingCompass },
     { id: "renovation", label: "Rénovation", icon: Pencil },
     { id: "juridique", label: "Conseil Juridique", icon: Scale },
     { id: "etudes", label: "Études & Expertise", icon: GraduationCap },

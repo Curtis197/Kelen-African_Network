@@ -160,7 +160,7 @@ export function RecommendationForm({
     return (
       <div className="text-center py-8">
         <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-kelen-green-50">
-          <span className="text-3xl text-kelen-green-500">âœ"</span>
+          <span className="text-3xl text-kelen-green-500">✓</span>
         </div>
         <h2 className="text-xl font-bold text-foreground">
           Recommandation soumise
@@ -201,7 +201,7 @@ export function RecommendationForm({
                     : "bg-muted text-muted-foreground"
               }`}
             >
-              {i < step ? "âœ"" : i + 1}
+              {i < step ? "✓" : i + 1}
             </div>
             {i < STEPS.length - 1 && (
               <div

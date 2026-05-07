@@ -225,7 +225,7 @@ export default function ProProjectDocumentsPage() {
             Retour au projet
           </Link>
           <h1 className="text-2xl font-bold text-on-surface">
-            Documents & Images â€" {projectTitle}
+            Documents & Images — {projectTitle}
           </h1>
           <p className="text-sm text-on-surface-variant mt-1">
             Gérez les documents et images de ce projet

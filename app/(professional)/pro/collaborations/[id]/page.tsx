@@ -128,7 +128,7 @@ export default function ProCollaborationDetailPage() {
       // â"€â"€ RLS DETECTION â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
       if (error) {
         if (error.code === '42501') {
-          toast.error('Accès refusé â€" politique RLS');
+          toast.error('Accès refusé — politique RLS');
         } else if (error.code === 'PGRST116') {
           toast.error('Collaboration introuvable');
         } else {
@@ -606,7 +606,7 @@ export default function ProCollaborationDetailPage() {
           </div>
         )}
 
-        {/* No messages yet but active collaboration â€" show reply box */}
+        {/* No messages yet but active collaboration — show reply box */}
         {messages.length === 0 && !isArchived && (
           <div className="bg-surface-container-low rounded-2xl p-6 mb-6">
             <h2 className="text-lg font-bold text-on-surface mb-4 flex items-center gap-2">

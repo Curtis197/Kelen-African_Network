@@ -4,7 +4,7 @@ import { ProductForm } from "@/components/forms/ProductForm";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "Modifier le produit â€" Kelen Pro",
+  title: "Modifier le produit — Kelen Pro",
 };
 
 interface EditProductPageProps {

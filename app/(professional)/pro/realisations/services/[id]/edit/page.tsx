@@ -4,7 +4,7 @@ import { ServiceForm } from "@/components/forms/ServiceForm";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "Modifier le service â€" Kelen Pro",
+  title: "Modifier le service — Kelen Pro",
 };
 
 interface EditServicePageProps {
