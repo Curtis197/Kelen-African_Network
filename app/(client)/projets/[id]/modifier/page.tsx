@@ -3,7 +3,7 @@ import { GoogleMapsScriptProvider } from "@/components/location/GoogleMapsScript
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Modifier le projet â€” Kelen",
+  title: "Modifier le projet â€" Kelen",
   description: "Modifiez les informations de votre projet sur Kelen.",
 };
 

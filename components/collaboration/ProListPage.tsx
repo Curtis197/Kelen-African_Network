@@ -96,13 +96,13 @@ const SECTION_CONFIG: Record<keyof ProListGrouped, { title: string; icon: React.
     color: "text-blue-600",
   },
   finalists: {
-    title: "FINALISTES "” PHASE PROPOSITION",
+    title: "FINALISTES — PHASE PROPOSITION",
     icon: <Award className="w-4 h-4" />,
     defaultCollapsed: false,
     color: "text-yellow-600",
   },
   active: {
-    title: "SÉLECTIONNÉ "” ACTIF",
+    title: "SÉLECTIONNÉ — ACTIF",
     icon: <CheckCircle2 className="w-4 h-4" />,
     defaultCollapsed: false,
     color: "text-green-600",
@@ -368,7 +368,7 @@ function ProCard({
               {!collab?.proposal_submitted_at && (!collab?.messages || collab.messages.length === 0) && (
                 <button
                   onClick={() => {
-                    toast.info("Envoyer un rappel "” fonctionnalité Ã  venir");
+                    toast.info("Envoyer un rappel — fonctionnalité à venir");
                   }}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container/50 text-on-surface-variant/70 rounded-lg text-xs font-medium hover:bg-surface-container transition-colors"
                 >
@@ -380,7 +380,7 @@ function ProCard({
               {collab?.proposal_submitted_at && (
                 <button
                   onClick={() => {
-                    toast.info("Demander un changement "” fonctionnalité Ã  venir");
+                    toast.info("Demander un changement — fonctionnalité à venir");
                   }}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container text-on-surface-variant rounded-lg text-xs font-medium hover:bg-surface-container-high transition-colors"
                 >
@@ -584,10 +584,10 @@ export function ProListPage() {
     const result = await updateProjectProfessionalSelectionStatus(ppId, status, projectId);
     
     if (result.success) {
-      toast.success("Statut mis Ã  jour");
+      toast.success("Statut mis à jour");
       loadProList();
     } else {
-      toast.error(result.error || "Erreur lors de la mise Ã  jour");
+      toast.error(result.error || "Erreur lors de la mise à jour");
     }
   };
 
@@ -627,7 +627,7 @@ export function ProListPage() {
         <Users className="w-12 h-12 mx-auto text-on-surface-variant/40 mb-4" />
         <h3 className="text-lg font-semibold text-on-surface mb-2">Aucun professionnel</h3>
         <p className="text-sm text-on-surface-variant">
-          Sauvegardez des professionnels pour commencer Ã  les comparer.
+          Sauvegardez des professionnels pour commencer à les comparer.
         </p>
       </div>
     );

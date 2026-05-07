@@ -184,7 +184,7 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
 
       if (error) throw error;
 
-      toast.success(isEditing ? "Projet mis Ã  jour avec succès" : "Projet enregistré avec succès");
+      toast.success(isEditing ? "Projet mis à jour avec succès" : "Projet enregistré avec succès");
       router.push("/pro/realisations");
       router.refresh();
     } catch (error) {
@@ -218,7 +218,7 @@ export function ProjectDocumentForm({ professionalId, initialData }: ProjectDocu
                 <label className="text-sm font-bold text-on-surface">Titre de la réalisation</label>
                 <input
                   {...register("title")}
-                  placeholder="Ex: Construction Villa Moderne Ã  Abidjan"
+                  placeholder="Ex: Construction Villa Moderne à Abidjan"
                   className="w-full rounded-xl bg-surface-container-low px-4 py-3 text-sm transition-all focus:bg-white focus:ring-4 focus:ring-kelen-green-500/5 outline-none"
                 />
                 {errors.title && <p className="text-xs text-kelen-red-500">{errors.title.message}</p>}

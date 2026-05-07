@@ -232,7 +232,7 @@ export function AddProSearchDialog({
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center py-12 text-center text-on-surface-variant/30">
-                  <p className="text-sm italic font-medium">Commencez Ã  taper pour rechercher...</p>
+                  <p className="text-sm italic font-medium">Commencez à taper pour rechercher...</p>
                 </div>
               )}
             </div>

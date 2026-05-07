@@ -71,7 +71,7 @@ export function LoginForm({ defaultRole }: LoginFormProps) {
           return;
         }
 
-        // Role matches page "” redirect to correct dashboard
+        // Role matches page — redirect to correct dashboard
         if (isAdminUser) {
           router.push("/admin");
         } else if (isProUser) {
@@ -116,12 +116,12 @@ export function LoginForm({ defaultRole }: LoginFormProps) {
       {wrongRole === "client" && (
         <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
           <p className="font-medium mb-1">Compte professionnel détecté</p>
-          <p className="mb-3">Ce compte appartient Ã  l&apos;Espace Pro. Veuillez vous connecter depuis la page professionnelle.</p>
+          <p className="mb-3">Ce compte appartient à l&apos;Espace Pro. Veuillez vous connecter depuis la page professionnelle.</p>
           <Link
             href="/pro/connexion"
             className="inline-flex items-center gap-1.5 rounded-lg bg-amber-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-amber-700 transition-colors"
           >
-            Aller Ã  l&apos;Espace Pro ←’
+            Aller à l&apos;Espace Pro ←’
           </Link>
         </div>
       )}
@@ -134,7 +134,7 @@ export function LoginForm({ defaultRole }: LoginFormProps) {
             href="/connexion"
             className="inline-flex items-center gap-1.5 rounded-lg bg-kelen-green-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-kelen-green-700 transition-colors"
           >
-            Aller Ã  la page de connexion ←’
+            Aller à la page de connexion ←’
           </Link>
         </div>
       )}
@@ -178,7 +178,7 @@ export function LoginForm({ defaultRole }: LoginFormProps) {
           type="password"
           {...register("password")}
           className="w-full rounded-lg border border-border bg-white px-4 py-2 text-sm transition-colors placeholder:text-muted-foreground focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
-          placeholder=""•"•"•"•"•"•"•"•"
+          placeholder="••••••••"
         />
         {errors.password && (
           <p className="mt-1 text-xs text-kelen-red-500">{errors.password.message}</p>

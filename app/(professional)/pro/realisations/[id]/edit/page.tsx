@@ -4,7 +4,7 @@ import { ProjectDocumentForm } from "@/components/forms/RealizationForm";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "Modifier la réalisation â€” Kelen Pro",
+  title: "Modifier la réalisation â€" Kelen Pro",
 };
 
 interface EditRealizationPageProps {
@@ -79,7 +79,7 @@ export default async function EditRealizationPage({ params }: EditRealizationPag
           Modifier : {realization.title}
         </h1>
         <p className="mt-2 text-on-surface-variant/70">
-          Mettez Ã  jour les informations et les médias de votre réalisation.
+          Mettez à jour les informations et les médias de votre réalisation.
         </p>
       </div>
 

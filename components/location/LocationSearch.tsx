@@ -19,7 +19,7 @@ interface LocationSearchProps {
   className?: string;
 }
 
-export function LocationSearch({ value, onChange, placeholder = "Rechercher une ville ou un lieu...", className = "" }: LocationSearchProps) {
+export function LocationSearch({ value, onChange, placeholder = "Rechercher une ville ou un lieu...", className = — }: LocationSearchProps) {
   const [inputValue, setInputValue] = useState(value?.formatted_address || "");
   const [suggestions, setSuggestions] = useState<google.maps.places.AutocompletePrediction[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -149,7 +149,7 @@ export function LocationSearch({ value, onChange, placeholder = "Rechercher une 
 
     debounceTimer.current = setTimeout(() => {
       if (!isGoogleLoaded || !autocompleteService.current) {
-        // Silently skip "” Google Maps still loading, poll will catch it
+        // Silently skip — Google Maps still loading, poll will catch it
         return;
       }
 
@@ -220,7 +220,7 @@ export function LocationSearch({ value, onChange, placeholder = "Rechercher une 
         });
       },
       (err) => {
-        setError("Impossible d'accéder Ã  votre position. Vérifiez les permissions.");
+        setError("Impossible d'accéder à votre position. Vérifiez les permissions.");
         setIsGettingLocation(false);
       },
       { enableHighAccuracy: true, timeout: 10000 }

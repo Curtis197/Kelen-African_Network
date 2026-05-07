@@ -85,7 +85,7 @@ export default function ProRecommendationsPage() {
         <div>
           <h1 className="text-2xl font-bold text-on-surface tracking-tight">Recommandations reçues</h1>
           <p className="text-sm text-on-surface-variant mt-0.5">
-            Témoignages de clients satisfaits. Liez-les Ã  votre profil pour renforcer votre visibilité.
+            Témoignages de clients satisfaits. Liez-les à votre profil pour renforcer votre visibilité.
           </p>
         </div>
       </header>
@@ -161,7 +161,7 @@ export default function ProRecommendationsPage() {
           </div>
           <h3 className="text-xl font-bold text-on-surface">Aucune recommandation</h3>
           <p className="text-on-surface-variant mt-2 max-w-sm text-center">
-            Envoyez votre lien de recommandation Ã  vos anciens clients pour commencer Ã  bâtir votre réputation.
+            Envoyez votre lien de recommandation à vos anciens clients pour commencer à bâtir votre réputation.
           </p>
           <button
             onClick={() => {

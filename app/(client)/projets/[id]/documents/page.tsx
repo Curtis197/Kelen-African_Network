@@ -212,7 +212,7 @@ export default function ClientProjectDocumentsPage() {
               </Link>
               <div>
                 <h1 className="text-xl sm:text-2xl lg:text-3xl font-headline font-bold text-on-surface">
-                  Documents â€” {projectTitle}
+                  Documents â€" {projectTitle}
                 </h1>
                 <p className="text-sm text-on-surface-variant mt-1">
                   Gérez les documents et fichiers de ce projet

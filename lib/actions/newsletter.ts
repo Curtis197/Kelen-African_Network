@@ -105,7 +105,7 @@ export async function unsubscribeByToken(
   }
 
   if (!subscriber.is_active) {
-    return { success: false, error: "Vous êtes déjÃ  désinscrit(e)." };
+    return { success: false, error: "Vous êtes déjà désinscrit(e)." };
   }
 
   await admin
@@ -215,7 +215,7 @@ export async function sendCampaign(
     const nextAvailable = new Date(
       new Date(recentCampaign.sent_at!).getTime() + 24 * 60 * 60 * 1000
     ).toISOString();
-    return { success: false, error: "Une campagne a déjÃ  été envoyée aujourd'hui.", rateLimitedUntil: nextAvailable };
+    return { success: false, error: "Une campagne a déjà été envoyée aujourd'hui.", rateLimitedUntil: nextAvailable };
   }
 
   const { data: subscribers } = await supabase
@@ -250,7 +250,7 @@ export async function sendCampaign(
     return { success: false, error: "Erreur lors de la création de la campagne." };
   }
 
-  // Populate the send queue "” the Edge Function will process it on the next cron tick
+  // Populate the send queue — the Edge Function will process it on the next cron tick
   const queueRows = subscribers.map((sub) => ({
     campaign_id: campaign.id,
     subscriber_id: sub.id,

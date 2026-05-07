@@ -35,7 +35,7 @@ export function PasswordResetForm() {
     return (
       <div className="text-center">
         <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-kelen-green-50">
-          <span className="text-xl text-kelen-green-500">âœ“</span>
+          <span className="text-xl text-kelen-green-500">âœ"</span>
         </div>
         <h3 className="font-semibold text-foreground">Email envoyé</h3>
         <p className="mt-2 text-sm text-muted-foreground">

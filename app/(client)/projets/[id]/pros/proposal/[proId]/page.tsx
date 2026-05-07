@@ -65,7 +65,7 @@ export default function ProposalReviewPage() {
 
       const supabase = createClient();
 
-      // â”€â”€ COLLABORATION + PROFESSIONAL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+      // â"€â"€ COLLABORATION + PROFESSIONAL â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 
       const { data: collabData, error: collabError } = await supabase
         .from("project_collaborations")
@@ -109,7 +109,7 @@ export default function ProposalReviewPage() {
         setProfessional(collabData.professional as ProfessionalSnapshot);
       }
 
-      // â”€â”€ MESSAGES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+      // â"€â"€ MESSAGES â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 
       const { data: messagesData, error: messagesError } = await supabase
         .from("collaboration_messages")
@@ -622,7 +622,7 @@ export default function ProposalReviewPage() {
               className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 bg-green-500 text-white rounded-xl font-semibold text-sm hover:bg-green-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <CheckCircle2 className="w-5 h-5" />
-              Accepter â€” Sélectionner ce pro
+              Accepter â€" Sélectionner ce pro
             </button>
             <div className="w-full flex flex-col gap-2">
               <textarea

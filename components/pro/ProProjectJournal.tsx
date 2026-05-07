@@ -120,7 +120,7 @@ export function ProProjectJournal({ project }: ProProjectJournalProps) {
         setPendingDrafts(0);
         loadLogs();
       } else {
-        toast.info('Aucun brouillon Ã  synchroniser');
+        toast.info('Aucun brouillon à synchroniser');
       }
     } catch (err) {
       toast.error('Erreur lors de la synchronisation');

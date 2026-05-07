@@ -76,7 +76,7 @@ ${q.limitsRefused && q.limitsRefused.length > 0 ? `- Limites refusées: ${q.limi
 RÉPONSES ATTENDUES (format JSON strict):
 {
   "bio_accroche": "1 phrase courte et percutante pour la section hero (max 80 caractères). Doit capturer l'essence du métier et inspirer confiance.",
-  "bio_presentation": "3 Ã  5 phrases pour la section À propos. Présente la philosophie de travail, l'expertise, et ce qui différencie ce professionnel. Pas de liste de services "” c'est une présentation narrative."
+  "bio_presentation": "3 à 5 phrases pour la section À propos. Présente la philosophie de travail, l'expertise, et ce qui différencie ce professionnel. Pas de liste de services — c'est une présentation narrative."
 }
 
 Génère UNIQUEMENT le JSON valide, sans texte avant ou après.`;

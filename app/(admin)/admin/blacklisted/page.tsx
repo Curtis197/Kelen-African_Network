@@ -5,7 +5,7 @@ import Image from "next/image";
 import { AlertTriangle, Shield, MapPin, Briefcase, Calendar, Eye } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: “Liste Noire — Professionnels bannis | Kelen Admin”,
+  title: "Liste Noire — Professionnels bannis | Kelen Admin",
 };
 
 export default async function BlacklistedProfessionalsPage() {
@@ -86,7 +86,7 @@ export default async function BlacklistedProfessionalsPage() {
         <div>
           <h1 className="text-2xl font-bold text-foreground">Liste Noire</h1>
           <p className="text-sm text-muted-foreground">
-            Professionnels bannis de la plateforme "” Action admin requise
+            Professionnels bannis de la plateforme — Action admin requise
           </p>
         </div>
       </div>

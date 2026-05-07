@@ -83,7 +83,7 @@ export function PortfolioSettings({
         color_mode: colorMode,
       });
       
-      toast.success("Portfolio mis Ã  jour avec succès");
+      toast.success("Portfolio mis à jour avec succès");
       router.refresh();
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Erreur lors de la sauvegarde");

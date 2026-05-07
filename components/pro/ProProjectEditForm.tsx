@@ -72,7 +72,7 @@ export function ProProjectEditForm({ project }: ProProjectEditFormProps) {
         return;
       }
 
-      toast.success("Projet mis Ã  jour avec succès");
+      toast.success("Projet mis à jour avec succès");
       router.push(`/pro/projets/${project.id}`);
       router.refresh();
     } catch (err) {

@@ -225,7 +225,7 @@ export default function ProProjectDocumentsPage() {
             Retour au projet
           </Link>
           <h1 className="text-2xl font-bold text-on-surface">
-            Documents & Images â€” {projectTitle}
+            Documents & Images â€" {projectTitle}
           </h1>
           <p className="text-sm text-on-surface-variant mt-1">
             Gérez les documents et images de ce projet
@@ -556,7 +556,7 @@ export default function ProProjectDocumentsPage() {
               Gestion des images du projet
             </h2>
             <p className="text-sm text-on-surface-variant mb-6">
-              Uploadez et gérez les images associées Ã  ce projet. Les images sont stockées de manière sécurisée et peuvent être utilisées pour illustrer vos réalisations.
+              Uploadez et gérez les images associées à ce projet. Les images sont stockées de manière sécurisée et peuvent être utilisées pour illustrer vos réalisations.
             </p>
             
             {/* Image Manager Component */}
@@ -577,7 +577,7 @@ export default function ProProjectDocumentsPage() {
                 Images du document: {selectedDoc.project_title}
               </h3>
               <p className="text-sm text-on-surface-variant mb-4">
-                Ces images sont associées Ã  ce document spécifique
+                Ces images sont associées à ce document spécifique
               </p>
               
               <ProjectImageManager

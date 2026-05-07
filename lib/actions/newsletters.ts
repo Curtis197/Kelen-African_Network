@@ -127,7 +127,7 @@ export async function sendNewsletter(
   let sent = 0;
 
   if (!resend) {
-    // Dev mode "” skip actual send, record as sent
+    // Dev mode — skip actual send, record as sent
     sent = recipientEmails.length;
   } else {
     // Send in batches of 50 (Resend batch limit)

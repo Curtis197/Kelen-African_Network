@@ -108,7 +108,7 @@ export function CopywritingQuiz({ initialAnswers, onCopyGenerated }: Props) {
         className="h-11 px-6 rounded-xl bg-kelen-green-600 text-white font-bold text-sm flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-kelen-green-700 transition-colors"
       >
         {generating && <Loader2 className="w-4 h-4 animate-spin" />}
-        {generating ? "Génération en cours..." : generated ? "Texte généré âœ“" : "Générer mon contenu"}
+        {generating ? "Génération en cours..." : generated ? "Texte généré âœ"" : "Générer mon contenu"}
       </button>
     </div>
   );

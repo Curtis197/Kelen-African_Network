@@ -32,12 +32,12 @@ async function sendInvitationEmail(email: string, name: string, inviteUrl: strin
     await resend.emails.send({
       from: 'Kelen <noreply@kelen.co>',
       to: email,
-      subject: `${name} vous invite Ã  consulter le journal de votre projet sur Kelen`,
+      subject: `${name} vous invite à consulter le journal de votre projet sur Kelen`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #1e3a8a;">Vous avez été invité Ã  accéder au journal de votre projet</h2>
+          <h2 style="color: #1e3a8a;">Vous avez été invité à accéder au journal de votre projet</h2>
           <p>Bonjour ${name},</p>
-          <p>Un professionnel vous a invité Ã  consulter le journal de votre projet sur Kelen. Ce journal documente l'avancement des travaux avec des photos, des rapports financiers et des mises Ã  jour régulières.</p>
+          <p>Un professionnel vous a invité à consulter le journal de votre projet sur Kelen. Ce journal documente l'avancement des travaux avec des photos, des rapports financiers et des mises à jour régulières.</p>
           <p style="margin: 2rem 0;">
             <a href="${inviteUrl}" style="background: #1e3a8a; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; display: inline-block;">
               Accéder au journal de votre projet
@@ -103,7 +103,7 @@ export async function createClientContact(
   if (existingClient) {
     return { 
       success: false, 
-      error: "Un contact client avec cet email existe déjÃ  pour ce projet", 
+      error: "Un contact client avec cet email existe déjà pour ce projet", 
       client: null 
     };
   }
@@ -244,7 +244,7 @@ export async function verifyInvitation(token: string): Promise<{
   }
 
   if (clientContact.status === 'linked') {
-    return { success: false, error: "Cette invitation a déjÃ  été utilisée" };
+    return { success: false, error: "Cette invitation a déjà été utilisée" };
   }
 
   if (clientContact.status === 'cancelled') {

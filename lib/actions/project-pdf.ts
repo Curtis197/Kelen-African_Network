@@ -63,7 +63,7 @@ export async function generateProjectPdf(projectId: string): Promise<{ success: 
   // Get step status label
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'complete': return '<span class="timeline-status status-complete">âœ“ Terminé</span>';
+      case 'complete': return '<span class="timeline-status status-complete">âœ" Terminé</span>';
       case 'in_progress': return '<span class="timeline-status status-progress">âŸ³ En cours</span>';
       case 'pending': return '<span class="timeline-status status-pending">â³ À venir</span>';
       default: return `<span class="timeline-status status-pending">${status}</span>`;
@@ -160,11 +160,11 @@ export async function generateProjectPdf(projectId: string): Promise<{ success: 
     <div class="details-grid">
       <div>
         <div class="info-block">
-          <h3>ðŸ“‹ Description du projet</h3>
+          <h3>ðŸ"‹ Description du projet</h3>
           <p>${project.description || 'Aucune description fournie.'}</p>
         </div>
         <div class="info-block">
-          <h3>ðŸ“ Localisation & Portée</h3>
+          <h3>ðŸ" Localisation & Portée</h3>
           <p>${project.location_formatted || project.location || 'N/A'}</p>
         </div>
       </div>
@@ -238,7 +238,7 @@ export async function generateProjectPdf(projectId: string): Promise<{ success: 
     <div class="back-content">
       <div class="brand-large">KELEN</div>
       <h2 class="back-message">Ce projet a été réalisé sur la plateforme Kelen.</h2>
-      <p class="back-sub">Connecter les clients avec des professionnels vérifiés pour donner vie Ã  vos projets. Transparent, documenté et livré.</p>
+      <p class="back-sub">Connecter les clients avec des professionnels vérifiés pour donner vie à vos projets. Transparent, documenté et livré.</p>
     </div>
   </section>
 </body>

@@ -44,7 +44,7 @@ export async function middleware(request: NextRequest) {
     const slug = host.split(".")[0];
     if (slug) {
       const rewriteUrl = new URL(request.url);
-      const originalPath = pathname === "/" ? "" : pathname;
+      const originalPath = pathname === "/" ? — : pathname;
       rewriteUrl.pathname = `/professionnels/${slug}${originalPath}`;
       middlewareLog.info(`[MIDDLEWARE] Kelen subdomain rewrite: ${host} → /professionnels/${slug}${originalPath}`, { host, slug });
       return NextResponse.rewrite(rewriteUrl);
@@ -121,7 +121,7 @@ export async function middleware(request: NextRequest) {
     }
 
     const rewriteUrl = new URL(request.url);
-    const originalPath = pathname === "/" ? "" : pathname;
+    const originalPath = pathname === "/" ? — : pathname;
     rewriteUrl.pathname = `/professionnels/${slug}${originalPath}`;
 
     middlewareLog.info(`[MIDDLEWARE] Rewriting custom domain to portfolio`, { host, slug, rewritePath: rewriteUrl.pathname });

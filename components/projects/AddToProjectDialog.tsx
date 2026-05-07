@@ -147,7 +147,7 @@ export function AddToProjectDialog({
             <p className="text-sm text-stone-500 font-medium">Pour {professionalName}</p>
             {step === "area" && (
               <p className="text-xs text-kelen-green-600 font-bold mt-1">
-                Étape 2/2 "” Sélectionnez un domaine
+                Étape 2/2 — Sélectionnez un domaine
               </p>
             )}
           </div>

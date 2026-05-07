@@ -267,7 +267,7 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
           removed_document_ids: removedDocumentIds,
           updated_images: updatedImages,
         });
-        toast.success("Réalisation mise Ã  jour avec succès");
+        toast.success("Réalisation mise à jour avec succès");
       } else {
         await createRealization({
           professional_id: professionalId,
@@ -345,7 +345,7 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
                 <label className="text-sm font-bold text-on-surface">Titre</label>
                 <input
                   {...register("title")}
-                  placeholder="Ex: Construction Villa Moderne Ã  Abidjan"
+                  placeholder="Ex: Construction Villa Moderne à Abidjan"
                   className="w-full rounded-xl bg-surface-container-low px-4 py-3 text-sm transition-all focus:bg-white focus:ring-4 focus:ring-kelen-green-500/5 outline-none"
                 />
                 {errors.title && <p className="text-xs text-kelen-red-500">{errors.title.message}</p>}
@@ -396,9 +396,9 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
                     {...register("currency")}
                     className="w-full rounded-xl bg-surface-container-low px-4 py-3 text-sm transition-all focus:bg-white focus:ring-4 focus:ring-kelen-green-500/5 outline-none"
                   >
-                    <option value="XOF">XOF "” Franc CFA</option>
-                    <option value="EUR">EUR "” Euro</option>
-                    <option value="USD">USD "” Dollar US</option>
+                    <option value="XOF">XOF — Franc CFA</option>
+                    <option value="EUR">EUR — Euro</option>
+                    <option value="USD">USD — Dollar US</option>
                   </select>
                 </div>
               </div>
@@ -603,7 +603,7 @@ export function RealizationForm({ professionalId, initialData }: RealizationForm
             </div>
 
             <p className="text-xs text-on-surface-variant/60">
-              Plans, certificats, ou tout document Ã  afficher sur le portfolio.
+              Plans, certificats, ou tout document à afficher sur le portfolio.
             </p>
 
             {isEditing && existingDocuments.length > 0 && (

@@ -14,7 +14,7 @@ const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://kelen.africa";
 // Pricing tiers
 const PLANS = {
   pro_africa: {
-    price: 3000, // XOF equivalent ~â‚¬4.57 "” using Stripe for simplicity
+    price: 3000, // XOF equivalent ~â‚¬4.57 — using Stripe for simplicity
     stripePriceId: process.env.STRIPE_PRICE_PRO_AFRICA,
     name: "Premium Kelen",
     currency: "xof" as const,

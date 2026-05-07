@@ -134,7 +134,7 @@ export function ServiceForm({ professionalId, initialData }: ServiceFormProps) {
           image_urls: newImageUrls,
           removed_image_ids: removedImageIds,
         });
-        toast.success("Service mis Ã  jour avec succès");
+        toast.success("Service mis à jour avec succès");
       } else {
         await createService({
           professional_id: professionalId,
@@ -204,7 +204,7 @@ export function ServiceForm({ professionalId, initialData }: ServiceFormProps) {
                     ) : (
                       <Sparkles size={13} />
                     )}
-                    {isCorrecting ? "Correction"…" : "Corriger avec l'IA"}
+                    {isCorrecting ? "Correction…" : "Corriger avec l'IA"}
                   </button>
                 </div>
                 <textarea

@@ -10,7 +10,7 @@ interface Props {
   initialAboutText?: string;
 }
 
-export function CopyEditor({ initialHeroSubtitle = "", initialAboutText = "" }: Props) {
+export function CopyEditor({ initialHeroSubtitle = "", initialAboutText = — }: Props) {
   const [heroSubtitle, setHeroSubtitle] = useState(initialHeroSubtitle);
   const [aboutText, setAboutText] = useState(initialAboutText);
   const [saving, setSaving] = useState(false);

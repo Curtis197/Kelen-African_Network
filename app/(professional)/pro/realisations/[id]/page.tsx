@@ -7,7 +7,7 @@ import { ArrowLeft, Calendar, DollarSign, ImageIcon, Edit2, MapPin, Play, Video 
 import { RealizationGallery } from "@/components/pro/RealizationGallery";
 
 export const metadata: Metadata = {
-  title: "Détails de la réalisation â€” Kelen Pro",
+  title: "Détails de la réalisation â€" Kelen Pro",
 };
 
 interface RealizationDetailPageProps {

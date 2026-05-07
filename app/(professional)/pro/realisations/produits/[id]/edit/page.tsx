@@ -4,7 +4,7 @@ import { ProductForm } from "@/components/forms/ProductForm";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "Modifier le produit â€” Kelen Pro",
+  title: "Modifier le produit â€" Kelen Pro",
 };
 
 interface EditProductPageProps {
@@ -67,7 +67,7 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
           Modifier : {product.title}
         </h1>
         <p className="mt-2 text-on-surface-variant/70">
-          Mettez Ã  jour les informations et les médias de votre produit.
+          Mettez à jour les informations et les médias de votre produit.
         </p>
       </div>
 

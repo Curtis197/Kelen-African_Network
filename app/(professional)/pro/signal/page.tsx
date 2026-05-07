@@ -107,7 +107,7 @@ export default function ProSignalsPage() {
         <Info className="text-amber-600 text-2xl" />
         <div className="text-sm text-amber-900">
           <p className="font-bold mb-1">Droit de réponse (15 jours)</p>
-          <p>Vous disposez d&apos;un délai légal de 15 jours pour répondre Ã  tout signalement. Passé ce délai, le signalement peut être validé automatiquement par nos services.</p>
+          <p>Vous disposez d&apos;un délai légal de 15 jours pour répondre à tout signalement. Passé ce délai, le signalement peut être validé automatiquement par nos services.</p>
         </div>
       </div>
 
@@ -170,7 +170,7 @@ export default function ProSignalsPage() {
                         onChange={(e) => setResponseInput({ ...responseInput, [signal.id]: e.target.value })}
                         rows={4}
                         className="w-full rounded-2xl border border-border bg-surface-container px-5 py-4 text-sm focus:border-kelen-green-500 focus:bg-surface-container-low focus:outline-none focus:ring-4 focus:ring-kelen-green-500/5 transition-all"
-                        placeholder="Apportez des éléments factuels pour répondre Ã  ce signalement..."
+                        placeholder="Apportez des éléments factuels pour répondre à ce signalement..."
                       />
                       <div className="flex justify-end">
                         <button
@@ -210,7 +210,7 @@ export default function ProSignalsPage() {
           </div>
           <h3 className="text-2xl font-bold text-on-surface">Score de confiance impeccable</h3>
           <p className="text-on-surface-variant mt-2 max-w-sm text-center">
-            Aucun signalement n&apos;a été enregistré sur votre profil. Continuez Ã  offrir un service d&apos;excellence !
+            Aucun signalement n&apos;a été enregistré sur votre profil. Continuez à offrir un service d&apos;excellence !
           </p>
         </div>
       )}

@@ -31,7 +31,7 @@ export function AddExternalProModal({ isOpen, onClose, projectId, areaName, area
 
   useEffect(() => {
     if (isOpen) {
-      setFormData(initialData || { name: "", phone: "", category: areaName, location: "", note: "" });
+      setFormData(initialData || { name: "", phone: "", category: areaName, location: "", note: — });
     }
   }, [isOpen, editLinkId]);
 
@@ -148,7 +148,7 @@ export function AddExternalProModal({ isOpen, onClose, projectId, areaName, area
                     <label className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60 ml-4">Localisation</label>
                     <LocationSearch
                       value={formData.location ? { name: formData.location, formatted_address: formData.location, lat: 0, lng: 0 } : null}
-                      onChange={(loc: LocationData | null) => setFormData({ ...formData, location: loc?.formatted_address || "" })}
+                      onChange={(loc: LocationData | null) => setFormData({ ...formData, location: loc?.formatted_address || — })}
                       placeholder="Dakar, Sénégal"
                     />
                   </div>

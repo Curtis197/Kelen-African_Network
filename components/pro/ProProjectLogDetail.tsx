@@ -212,7 +212,7 @@ export default function ProProjectLogDetail({
           {log.next_steps && (
             <div>
               <h2 className="text-sm font-bold text-on-surface mb-3">
-                ðŸ“‹ Prochaines étapes
+                ðŸ"‹ Prochaines étapes
               </h2>
               <p className="text-sm text-on-surface-variant bg-surface-container-low rounded-xl p-5 whitespace-pre-wrap">
                 {log.next_steps}

@@ -299,7 +299,7 @@ export default function ProjectWizard({ initialId }: { initialId?: string }) {
 function Step1Identity({ formData, onChange }: { formData: ProjectData; onChange: (d: Partial<ProjectData>) => void }) {
   const categories = [
     { id: "architecture", label: "Architecture & Design", icon: DraftingCompass },
-    { id: "construction", label: "Gros Å“uvre", icon: DraftingCompass },
+    { id: "construction", label: "Gros Å"uvre", icon: DraftingCompass },
     { id: "renovation", label: "Rénovation", icon: Pencil },
     { id: "juridique", label: "Conseil Juridique", icon: Scale },
     { id: "etudes", label: "Études & Expertise", icon: GraduationCap },
@@ -406,7 +406,7 @@ function Step2Financial({ formData, onChange }: { formData: ProjectData; onChang
           02 Budget Estimé
         </h1>
         <p className="text-xl text-on-surface-variant opacity-80 max-w-2xl font-body leading-relaxed">
-          Définissez le cadre financier. Kelen vous aide Ã  sécuriser chaque étape de votre investissement.
+          Définissez le cadre financier. Kelen vous aide à sécuriser chaque étape de votre investissement.
         </p>
       </header>
 
@@ -614,7 +614,7 @@ function Step5Review({
           <div className="space-y-2">
             <p className="text-xs uppercase tracking-widest text-on-surface-variant font-bold">Dates</p>
             <p className="text-3xl font-headline font-extrabold text-on-surface">
-              {formData.start_date || "N/A"} "” {formData.end_date || "N/A"}
+              {formData.start_date || "N/A"} — {formData.end_date || "N/A"}
             </p>
           </div>
         </div>

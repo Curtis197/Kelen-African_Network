@@ -70,11 +70,11 @@ export function ReviewForm({
     return (
       <div className="text-center py-6">
         <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-kelen-green-50">
-          <span className="text-2xl text-kelen-green-500">âœ“</span>
+          <span className="text-2xl text-kelen-green-500">âœ"</span>
         </div>
         <h2 className="text-lg font-bold text-foreground">Merci pour votre avis !</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          Votre retour aide la communauté Kelen Ã  identifier les meilleurs
+          Votre retour aide la communauté Kelen à identifier les meilleurs
           professionnels.
         </p>
         <div className="mt-6">

@@ -193,7 +193,7 @@ export default function LogForm({ projectId, proProjectId, stepId, projectCurren
         {/* Date */}
         <div>
           <label htmlFor="log-date" className="block text-sm font-medium text-on-surface mb-2">
-            ðŸ“… Date
+            ðŸ"… Date
           </label>
           <input
             id="log-date"
@@ -225,7 +225,7 @@ export default function LogForm({ projectId, proProjectId, stepId, projectCurren
         {/* Description */}
         <div>
           <label htmlFor="log-description" className="block text-sm font-medium text-on-surface mb-2">
-            ðŸ“ Description
+            ðŸ" Description
           </label>
           <textarea
             id="log-description"
@@ -289,7 +289,7 @@ export default function LogForm({ projectId, proProjectId, stepId, projectCurren
         {/* Next steps */}
         <div>
           <label htmlFor="log-next-steps" className="block text-sm font-medium text-on-surface mb-2">
-            ðŸ“‹ Prochaines étapes (optionnel)
+            ðŸ"‹ Prochaines étapes (optionnel)
           </label>
           <textarea
             id="log-next-steps"

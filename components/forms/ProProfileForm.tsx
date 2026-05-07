@@ -92,7 +92,7 @@ export function ProProfileForm() {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  // â”€â”€ Image Upload Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // â"€â"€ Image Upload Helpers â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 
   const uploadImage = async (file: File, bucket: string, path: string): Promise<string | null> => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -125,7 +125,7 @@ export function ProProfileForm() {
     if (url) {
       updateField("hero_image_url", url);
       setHeroPreview(url);
-      toast.success("Image hero mise Ã  jour");
+      toast.success("Image hero mise à jour");
     }
   };
 
@@ -140,7 +140,7 @@ export function ProProfileForm() {
     if (url) {
       updateField("profile_picture_url", url);
       setProfilePreview(url);
-      toast.success("Photo de profil mise Ã  jour");
+      toast.success("Photo de profil mise à jour");
     }
   };
 
@@ -192,7 +192,7 @@ export function ProProfileForm() {
     toast.success("Photo retirée");
   };
 
-  // â”€â”€ Services â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // â"€â"€ Services â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 
   const addService = () => {
     const trimmed = servicesInput.trim();
@@ -209,7 +209,7 @@ export function ProProfileForm() {
     );
   };
 
-  // â”€â”€ Submit â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // â"€â"€ Submit â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 
   const onSubmit = async () => {
     setIsSaving(true);
@@ -237,9 +237,9 @@ export function ProProfileForm() {
 
       if (error) throw error;
 
-      toast.success("Profil mis Ã  jour avec succès");
+      toast.success("Profil mis à jour avec succès");
     } catch (error) {
-      toast.error("Erreur lors de la mise Ã  jour du profil");
+      toast.error("Erreur lors de la mise à jour du profil");
     } finally {
       setIsSaving(false);
     }
@@ -258,7 +258,7 @@ export function ProProfileForm() {
     updateField("about_text", presentation);
   };
 
-  // â”€â”€ Section completion â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // â"€â"€ Section completion â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
   const sectionStatus = [
     { key: "hero",        label: "Hero",        done: !!(formData.hero_image_url || formData.hero_tagline) },
     { key: "photo",       label: "Photo",       done: !!formData.profile_picture_url },
@@ -288,7 +288,7 @@ export function ProProfileForm() {
 
   return (
     <div className="space-y-8">
-      {/* â”€â”€ Progress + Actions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* â"€â"€ Progress + Actions â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
       <div className="rounded-2xl border border-border bg-white p-5 shadow-sm">
         {/* Top row */}
         <div className="flex items-center justify-between gap-4 mb-4">
@@ -374,7 +374,7 @@ export function ProProfileForm() {
         </div>
       </div>
 
-      {/* â”€â”€ Section 1: Hero Section â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* â"€â"€ Section 1: Hero Section â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
       <div className="rounded-2xl border border-border bg-white overflow-hidden shadow-sm">
         <div className="flex items-center justify-between gap-3 border-b border-border px-6 py-4">
           <h3 className="flex items-center gap-2.5 text-sm font-bold text-on-surface">
@@ -445,7 +445,7 @@ export function ProProfileForm() {
         </div>
       </div>
 
-      {/* â”€â”€ Section 2: Profile Photo â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* â"€â"€ Section 2: Profile Photo â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
       <div className="rounded-2xl border border-border bg-white overflow-hidden shadow-sm">
         <div className="flex items-center justify-between gap-3 border-b border-border px-6 py-4">
           <h3 className="flex items-center gap-2.5 text-sm font-bold text-on-surface">
@@ -491,7 +491,7 @@ export function ProProfileForm() {
         </div>
       </div>
 
-      {/* â”€â”€ Section 3: About Text â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* â"€â"€ Section 3: About Text â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
       <div className="rounded-2xl border border-border bg-white overflow-hidden shadow-sm">
         <div className="flex items-center justify-between gap-3 border-b border-border px-6 py-4">
           <h3 className="flex items-center gap-2.5 text-sm font-bold text-on-surface">
@@ -521,7 +521,7 @@ export function ProProfileForm() {
         </div>
       </div>
 
-      {/* â”€â”€ Section 4: Portfolio Photos â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* â"€â"€ Section 4: Portfolio Photos â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
       <div className="rounded-2xl border border-border bg-white overflow-hidden shadow-sm">
         <div className="flex items-center justify-between gap-3 border-b border-border px-6 py-4">
           <h3 className="flex items-center gap-2.5 text-sm font-bold text-on-surface">
@@ -593,7 +593,7 @@ export function ProProfileForm() {
         </div>
       </div>
 
-      {/* â”€â”€ Section 5: Description â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* â"€â"€ Section 5: Description â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
       <div className="rounded-2xl border border-border bg-white overflow-hidden shadow-sm">
         <div className="flex items-center justify-between gap-3 border-b border-border px-6 py-4">
           <h3 className="flex items-center gap-2.5 text-sm font-bold text-on-surface">
@@ -623,7 +623,7 @@ export function ProProfileForm() {
         </div>
       </div>
 
-      {/* â”€â”€ Section 6: Services â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* â"€â"€ Section 6: Services â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
       <div className="rounded-2xl border border-border bg-white overflow-hidden shadow-sm">
         <div className="flex items-center justify-between gap-3 border-b border-border px-6 py-4">
           <h3 className="flex items-center gap-2.5 text-sm font-bold text-on-surface">
@@ -679,7 +679,7 @@ export function ProProfileForm() {
         </div>
       </div>
 
-      {/* â”€â”€ Section 7: Details â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* â"€â"€ Section 7: Details â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
       <div className="rounded-2xl border border-border bg-white overflow-hidden shadow-sm">
         <div className="flex items-center justify-between gap-3 border-b border-border px-6 py-4">
           <h3 className="flex items-center gap-2.5 text-sm font-bold text-on-surface">
@@ -722,7 +722,7 @@ export function ProProfileForm() {
         </div>
       </div>
 
-      {/* â”€â”€ Section 8: WhatsApp â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* â"€â"€ Section 8: WhatsApp â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
       <div className="rounded-2xl border border-border bg-white overflow-hidden shadow-sm">
         <div className="flex items-center justify-between gap-3 border-b border-border px-6 py-4">
           <h3 className="flex items-center gap-2.5 text-sm font-bold text-on-surface">
@@ -751,7 +751,7 @@ export function ProProfileForm() {
         </div>
       </div>
 
-      {/* â”€â”€ Sticky save footer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* â"€â"€ Sticky save footer â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
       <div className="sticky bottom-4 z-10">
         <div className="rounded-2xl border border-border bg-white/90 p-3 shadow-xl shadow-black/10 backdrop-blur-md flex items-center gap-3">
           {/* Completion mini-bar */}
@@ -787,7 +787,7 @@ export function ProProfileForm() {
             {isSaving ? (
               <>
                 <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                Enregistrement"…
+                Enregistrement…
               </>
             ) : (
               <>

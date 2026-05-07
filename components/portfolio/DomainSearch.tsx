@@ -54,7 +54,7 @@ export function DomainSearch() {
         <Globe className="w-5 h-5 text-kelen-green-600 shrink-0" />
         <div>
           <p className="font-bold text-sm text-kelen-green-800">
-            {activated} "” Activation en cours
+            {activated} — Activation en cours
           </p>
           <p className="text-xs text-kelen-green-600 mt-0.5">
             Votre site sera accessible dans quelques minutes le temps que le DNS se propage.
@@ -107,7 +107,7 @@ export function DomainSearch() {
                     </p>
                   )}
                   {!r.available && (
-                    <p className="text-xs text-red-400">DéjÃ  pris</p>
+                    <p className="text-xs text-red-400">Déjà pris</p>
                   )}
                 </div>
               </div>

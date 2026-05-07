@@ -75,7 +75,7 @@ export function ProProjectsPage() {
     if (result.error) {
       toast.error(result.error);
     } else {
-      toast.success(`Statut mis Ã  jour : ${STATUS_CONFIG[status].label}`);
+      toast.success(`Statut mis à jour : ${STATUS_CONFIG[status].label}`);
       loadProjects();
     }
     setStatusDropdownOpen(null);
@@ -117,7 +117,7 @@ export function ProProjectsPage() {
     { value: "paused", label: "En pause" },
   ];
 
-  // â”€â”€ Derived stats â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // â"€â"€ Derived stats â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
   const stats = [
     { label: "Total", value: projects.length, color: "text-on-surface", bg: "bg-surface-container" },
     { label: "En cours", value: projects.filter(p => p.status === "in_progress").length, color: "text-blue-700", bg: "bg-blue-50" },
@@ -127,7 +127,7 @@ export function ProProjectsPage() {
 
   return (
     <div className="space-y-6">
-      {/* â”€â”€ Header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* â"€â"€ Header â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-on-surface tracking-tight">Mes projets</h1>
@@ -144,7 +144,7 @@ export function ProProjectsPage() {
         </Link>
       </div>
 
-      {/* â”€â”€ Stat cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* â"€â"€ Stat cards â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
       {!isLoading && projects.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {stats.map((s) => (
@@ -156,7 +156,7 @@ export function ProProjectsPage() {
         </div>
       )}
 
-      {/* â”€â”€ Filters & View Toggle â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* â"€â"€ Filters & View Toggle â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap gap-2">
           {filters.map((f) => (
