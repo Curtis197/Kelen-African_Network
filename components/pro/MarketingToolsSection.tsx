@@ -19,7 +19,7 @@ interface ToolCardProps {
 function MarketingToolCard({ title, description, icon, href, disabled }: ToolCardProps) {
   const [loading, setLoading] = useState(false);
 
-  function handleClick() {
+  async function handleClick() {
     if (disabled) return;
     setLoading(true);
     const win = window.open(href, "_blank");

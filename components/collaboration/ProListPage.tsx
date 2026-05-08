@@ -102,7 +102,7 @@ const SECTION_CONFIG: Record<keyof ProListGrouped, { title: string; icon: React.
     color: "text-yellow-600",
   },
   active: {
-    title: "SÉLECTIONNÉ "— ACTIF",
+    title: "SÉLECTIONNÉ — ACTIF",
     icon: <CheckCircle2 className="w-4 h-4" />,
     defaultCollapsed: false,
     color: "text-green-600",
