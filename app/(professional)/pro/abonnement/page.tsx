@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import Link from 'next/link';
 import { redirect } from "next/navigation";
-import { createCheckoutSession, cancelSubscription, getSubscriptionInfo } from "@/lib/actions/stripe";
+import { createCheckoutSession, cancelSubscription } from "@/lib/actions/payments";
 import { Lightbulb, History, CheckCircle, XCircle, CreditCard, Bell } from "lucide-react";
 
 export default async function Page() {
@@ -71,12 +71,12 @@ export default async function Page() {
           </div>
           <form action={async () => {
             "use server";
-            const result = await cancelSubscription();
-            if (result.url) redirect(result.url);
+            await cancelSubscription();
+            redirect("/pro/abonnement?canceled=true");
           }}>
             <button className="inline-flex items-center gap-2 bg-surface-container text-on-surface px-6 py-3 rounded-xl font-semibold hover:bg-surface-container-high transition-colors">
               <CreditCard />
-              <span>Gérer mon moyen de paiement</span>
+              <span>Gérer mon abonnement</span>
             </button>
           </form>
         </div>
@@ -110,11 +110,11 @@ export default async function Page() {
                   <div className="flex flex-col gap-3">
                     <form action={async () => {
                       "use server";
-                      const result = await cancelSubscription();
-                      if (result.url) redirect(result.url);
+                      await cancelSubscription();
+                      redirect("/pro/abonnement?canceled=true");
                     }}>
                       <button className="bg-white text-kelen-green-700 font-bold py-3 rounded-xl hover:bg-stone-50 transition-colors shadow-sm">
-                        Gérer mon abonnement
+                        Résilier l&apos;abonnement
                       </button>
                     </form>
                   </div>

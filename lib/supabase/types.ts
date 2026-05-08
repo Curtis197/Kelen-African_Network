@@ -183,8 +183,8 @@ export interface ReviewHistory {
 export interface Subscription {
   id: string;
   professional_id: string;
-  stripe_subscription_id: string | null;
-  stripe_customer_id: string | null;
+  provider_subscription_id: string | null;
+  provider_customer_id: string | null;
   plan: SubscriptionPlan;
   status: SubscriptionStatus;
   current_period_start: string | null;

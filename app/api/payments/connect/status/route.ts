@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { getConnectAccountStatus } from '@/lib/stripe-connect'
 
 export async function GET(request: NextRequest) {
   const supabase = await createClient()
@@ -23,8 +22,8 @@ export async function GET(request: NextRequest) {
   if (!pro) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
   const { data: account } = await supabase
-    .from('stripe_connect_accounts')
-    .select('stripe_account_id, onboarded, payment_mode, deposit_type, deposit_amount, deposit_percent')
+    .from('payment_accounts')
+    .select('flw_subaccount_id, onboarded, payment_mode, deposit_type, deposit_amount, deposit_percent, orange_merchant_number')
     .eq('professional_id', professionalId)
     .single()
 
@@ -32,24 +31,13 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ onboarded: false, hasAccount: false })
   }
 
-  // If already marked onboarded in DB, trust it — avoid unnecessary Stripe calls
-  if (account.onboarded) {
-    return NextResponse.json({
-      onboarded: true,
-      hasAccount: true,
-      paymentMode: account.payment_mode,
-      depositType: account.deposit_type,
-      depositAmount: account.deposit_amount,
-      depositPercent: account.deposit_percent,
-    })
-  }
-
-  // Otherwise verify with Stripe
-  const status = await getConnectAccountStatus(account.stripe_account_id)
   return NextResponse.json({
-    onboarded: status.onboarded,
+    onboarded: account.onboarded,
     hasAccount: true,
-    chargesEnabled: status.chargesEnabled,
-    payoutsEnabled: status.payoutsEnabled,
+    paymentMode: account.payment_mode,
+    depositType: account.deposit_type,
+    depositAmount: account.deposit_amount,
+    depositPercent: account.deposit_percent,
+    hasOrangeMoney: !!account.orange_merchant_number,
   })
 }

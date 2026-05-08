@@ -3,7 +3,7 @@ import { createClient as createServiceClient } from "@/lib/supabase/service";
 import { createAppointment, getCalendarTokensPublic } from "@/lib/google-calendar";
 import { sendClientConfirmationEmail, sendProNotificationEmail } from "@/lib/utils/calendar-email";
 import { notifyBookingConfirmed } from "@/lib/notifications";
-import { createCheckoutSession } from "@/lib/stripe-connect";
+import { createCheckout } from "@/lib/flutterwave";
 
 export async function POST(
   request: NextRequest,
@@ -61,8 +61,8 @@ export async function POST(
 
     // Check if pro has booking-deposit payments enabled
     const { data: connectAccount } = await supabase
-      .from("stripe_connect_accounts")
-      .select("stripe_account_id, onboarded, payment_mode, deposit_type, deposit_amount")
+      .from("payment_accounts")
+      .select("flw_subaccount_id, onboarded, payment_mode, deposit_type, deposit_amount")
       .eq("professional_id", proId)
       .single();
 
@@ -73,53 +73,54 @@ export async function POST(
     let checkoutUrl: string | null = null;
 
     if (hasBookingPayments && connectAccount && connectAccount.deposit_type === "fixed") {
-      const depositAmountCents = Math.round((connectAccount.deposit_amount ?? 0) * 100);
+      const depositAmount = connectAccount.deposit_amount ?? 0;
 
-      if (depositAmountCents > 0) {
+      if (depositAmount > 0) {
         const origin = request.headers.get("origin") ?? process.env.NEXT_PUBLIC_SITE_URL ?? 'https://kelen.africa';
         try {
-          // Create payment record first to get ID for Stripe metadata
           const { data: paymentRecord } = await supabase
             .from("payments")
             .insert({
               professional_id: proId,
               type: "booking_deposit",
-              amount: connectAccount.deposit_amount,
-              currency: "eur",
+              amount: depositAmount,
+              currency: "xof",
               status: "pending",
               client_name: clientName,
               client_email: clientEmail,
               client_phone: body.clientPhone ?? null,
               service_name: body.reason ?? "Appointment",
               appointment_id: appointmentId ?? null,
+              provider: "flutterwave",
             })
             .select("id")
             .single();
 
           if (paymentRecord) {
-            const session = await createCheckoutSession({
-              stripeAccountId: connectAccount.stripe_account_id,
-              serviceName: body.reason ?? "Appointment",
-              amount: depositAmountCents,
-              currency: "eur",
+            const checkout = await createCheckout({
+              txRef: paymentRecord.id,
+              amount: depositAmount,
+              currency: "XOF",
               clientEmail,
-              successUrl: `${origin}/booking/success?payment_id=${paymentRecord.id}`,
-              cancelUrl: `${origin}/booking/cancel`,
-              metadata: {
+              clientName,
+              description: body.reason ?? "Appointment",
+              redirectUrl: `${origin}/booking/success?payment_id=${paymentRecord.id}`,
+              subaccountId: connectAccount.flw_subaccount_id ?? undefined,
+              meta: {
                 professional_id: proId,
                 appointment_id: appointmentId ?? "",
                 payment_id: paymentRecord.id,
+                type: "booking_deposit",
               },
             });
-            // Save session ID back to payment record
             await supabase
               .from("payments")
-              .update({ stripe_checkout_session: session.id })
+              .update({ provider_session_id: checkout.link })
               .eq("id", paymentRecord.id);
-            checkoutUrl = session.url;
+            checkoutUrl = checkout.link;
           }
         } catch (err) {
-          console.error("[api/calendar/book] Checkout session creation failed", String(err));
+          console.error("[api/calendar/book] Checkout creation failed", String(err));
           // Non-fatal — booking is confirmed, payment is optional
         }
       }

@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createClient as createServiceClient } from '@/lib/supabase/service'
-import { createPaymentLink } from '@/lib/stripe-connect'
+import { createCheckout } from '@/lib/flutterwave'
+import { initiatePayment as initiateOrangeMoney } from '@/lib/orange-money'
 import { notifyInvoiceSent } from '@/lib/notifications'
 
 export async function POST(request: NextRequest) {
@@ -12,11 +13,13 @@ export async function POST(request: NextRequest) {
   let body: {
     professional_id: string
     service_name: string
-    amount: number
+    amount: number       // in natural currency units
     currency?: string
     client_name: string
     client_email: string
     client_phone?: string
+    provider?: 'flutterwave' | 'orange_money'
+    country?: string
   }
 
   try {
@@ -31,10 +34,12 @@ export async function POST(request: NextRequest) {
   }
 
   const serviceSupabase = createServiceClient()
+  const currency = body.currency ?? 'XOF'
+  const provider = body.provider ?? 'flutterwave'
 
   const { data: account } = await serviceSupabase
-    .from('stripe_connect_accounts')
-    .select('stripe_account_id, onboarded')
+    .from('payment_accounts')
+    .select('flw_subaccount_id, onboarded, orange_merchant_number')
     .eq('professional_id', professional_id)
     .single()
 
@@ -42,19 +47,19 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Pro has not activated payments' }, { status: 402 })
   }
 
-  // Create payment record
   const { data: payment, error: insertError } = await serviceSupabase
     .from('payments')
     .insert({
       professional_id,
       type: 'invoice',
-      amount: amount / 100,
-      currency: body.currency ?? 'eur',
+      amount,
+      currency,
       status: 'pending',
       client_name,
       client_email,
       client_phone: body.client_phone ?? null,
       service_name,
+      provider,
     })
     .select('id')
     .single()
@@ -63,28 +68,64 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to create payment record' }, { status: 500 })
   }
 
+  const origin =
+    request.headers.get('origin') ??
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    'https://kelen.africa'
+
   try {
-    const link = await createPaymentLink({
-      stripeAccountId: account.stripe_account_id,
-      serviceName: service_name,
-      amount,
-      currency: body.currency ?? 'eur',
-      metadata: { professional_id, payment_id: payment.id },
-    })
+    let paymentLink: string
 
-    await serviceSupabase
-      .from('payments')
-      .update({ payment_link_url: link.url })
-      .eq('id', payment.id)
+    if (provider === 'orange_money') {
+      const om = await initiateOrangeMoney({
+        orderId: payment.id,
+        amount,
+        currency,
+        notifUrl: `${origin}/api/orange/webhook`,
+        returnUrl: `${origin}/pro/paiements?payment_id=${payment.id}&status=success`,
+        cancelUrl: `${origin}/pro/paiements?payment_id=${payment.id}&status=cancel`,
+        country: body.country,
+      })
 
-    // Fetch pro name for WhatsApp message
+      await serviceSupabase
+        .from('payments')
+        .update({ payment_link_url: om.paymentUrl, provider_session_id: om.notifToken })
+        .eq('id', payment.id)
+
+      paymentLink = om.paymentUrl
+    } else {
+      // Flutterwave — reusable payment link via standard checkout
+      const checkout = await createCheckout({
+        txRef: payment.id,
+        amount,
+        currency,
+        clientEmail: client_email,
+        clientName: client_name,
+        description: service_name,
+        redirectUrl: `${origin}/pro/paiements?payment_id=${payment.id}&status=success`,
+        subaccountId: account.flw_subaccount_id ?? undefined,
+        meta: {
+          professional_id,
+          payment_id: payment.id,
+          type: 'invoice',
+        },
+      })
+
+      await serviceSupabase
+        .from('payments')
+        .update({ payment_link_url: checkout.link })
+        .eq('id', payment.id)
+
+      paymentLink = checkout.link
+    }
+
+    // Fetch pro name for notification
     const { data: pro } = await serviceSupabase
       .from('professionals')
       .select('business_name')
       .eq('id', professional_id)
       .single()
 
-    // Auto-send WhatsApp invoice notification if client phone provided
     if (body.client_phone) {
       notifyInvoiceSent({
         professionalId: professional_id,
@@ -92,14 +133,14 @@ export async function POST(request: NextRequest) {
         clientName: client_name,
         clientPhone: body.client_phone,
         proName: pro?.business_name ?? '',
-        amount: `${(amount / 100).toFixed(2)} ${(body.currency ?? 'eur').toUpperCase()}`,
-        paymentLink: link.url,
-      }).catch((err) => console.error('[invoice] WhatsApp notify failed', String(err)))
+        amount: `${amount.toFixed(2)} ${currency.toUpperCase()}`,
+        paymentLink,
+      }).catch((err) => console.error('[payments/invoice] WhatsApp notify failed', String(err)))
     }
 
-    return NextResponse.json({ payment_link: link.url, payment_id: payment.id })
+    return NextResponse.json({ payment_link: paymentLink, payment_id: payment.id })
   } catch (err) {
-    console.error('[invoice] Stripe payment link creation failed', String(err))
+    console.error('[payments/invoice] Provider error', String(err))
     await serviceSupabase.from('payments').delete().eq('id', payment.id)
     return NextResponse.json({ error: 'Failed to create payment link' }, { status: 500 })
   }

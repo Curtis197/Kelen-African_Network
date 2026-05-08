@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { createExpressDashboardLink } from '@/lib/stripe-connect'
 
+// Flutterwave does not have a hosted dashboard like Stripe Express.
+// This route returns the pro's payment settings summary so the UI can
+// show their account details and link to a custom payments page.
 export async function POST(request: NextRequest) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -23,8 +25,8 @@ export async function POST(request: NextRequest) {
   if (!pro) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
   const { data: account } = await supabase
-    .from('stripe_connect_accounts')
-    .select('stripe_account_id, onboarded')
+    .from('payment_accounts')
+    .select('flw_subaccount_id, onboarded, payment_mode')
     .eq('professional_id', professional_id)
     .single()
 
@@ -32,6 +34,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Pro has not activated payments' }, { status: 402 })
   }
 
-  const link = await createExpressDashboardLink(account.stripe_account_id)
-  return NextResponse.json({ url: link.url })
+  // Return internal dashboard URL (payments management page)
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://kelen.africa'
+  return NextResponse.json({
+    url: `${siteUrl}/pro/paiements`,
+    subaccount_id: account.flw_subaccount_id,
+  })
 }
