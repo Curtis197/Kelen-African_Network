@@ -204,7 +204,7 @@ export function ServiceForm({ professionalId, initialData }: ServiceFormProps) {
                     ) : (
                       <Sparkles size={13} />
                     )}
-                    {isCorrecting ? "Correction"…" : "Corriger avec l'IA"}
+                    {isCorrecting ? "Correction..." : "Corriger avec l'IA"}
                   </button>
                 </div>
                 <textarea

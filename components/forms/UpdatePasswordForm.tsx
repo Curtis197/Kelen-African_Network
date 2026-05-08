@@ -94,7 +94,7 @@ export function UpdatePasswordForm() {
           required
           minLength={6}
           className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors placeholder:text-muted-foreground focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
-          placeholder=""•"•"•"•"•"•"•"•"
+          placeholder="••••••••"
         />
       </div>
 
@@ -113,7 +113,7 @@ export function UpdatePasswordForm() {
           required
           minLength={6}
           className="w-full rounded-lg border border-border bg-white px-4 py-2.5 text-sm transition-colors placeholder:text-muted-foreground focus:border-kelen-green-500 focus:outline-none focus:ring-2 focus:ring-kelen-green-500/20"
-          placeholder=""•"•"•"•"•"•"•"•"
+          placeholder="••••••••"
         />
       </div>
 

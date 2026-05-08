@@ -131,7 +131,7 @@ export default function ClientProjectsAdminPage() {
   };
 
   const formatDate = (dateStr?: string) => {
-    if (!dateStr) return ""”";
+    if (!dateStr) return "";
     return new Date(dateStr).toLocaleDateString("fr-FR", {
       day: "numeric",
       month: "long",

@@ -96,13 +96,13 @@ const SECTION_CONFIG: Record<keyof ProListGrouped, { title: string; icon: React.
     color: "text-blue-600",
   },
   finalists: {
-    title: "FINALISTES "” PHASE PROPOSITION",
+    title: "FINALISTES — PHASE PROPOSITION",
     icon: <Award className="w-4 h-4" />,
     defaultCollapsed: false,
     color: "text-yellow-600",
   },
   active: {
-    title: "SÉLECTIONNÉ "” ACTIF",
+    title: "SÉLECTIONNÉ "— ACTIF",
     icon: <CheckCircle2 className="w-4 h-4" />,
     defaultCollapsed: false,
     color: "text-green-600",
@@ -368,7 +368,7 @@ function ProCard({
               {!collab?.proposal_submitted_at && (!collab?.messages || collab.messages.length === 0) && (
                 <button
                   onClick={() => {
-                    toast.info("Envoyer un rappel "” fonctionnalité Ã  venir");
+                    toast.info("Envoyer un rappel "— fonctionnalité Ã  venir");
                   }}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container/50 text-on-surface-variant/70 rounded-lg text-xs font-medium hover:bg-surface-container transition-colors"
                 >
@@ -380,7 +380,7 @@ function ProCard({
               {collab?.proposal_submitted_at && (
                 <button
                   onClick={() => {
-                    toast.info("Demander un changement "” fonctionnalité Ã  venir");
+                    toast.info("Demander un changement "— fonctionnalité Ã  venir");
                   }}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container text-on-surface-variant rounded-lg text-xs font-medium hover:bg-surface-container-high transition-colors"
                 >
