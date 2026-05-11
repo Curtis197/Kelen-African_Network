@@ -1,7 +1,45 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm install *)"
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(findstr *)",
+      "Bash(npx *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(vercel *)",
+      "Bash(type *)",
+      "Bash(select-string *)",
+      "Bash(select-object *)",
+      "WebFetch(vercel.com)",
+      "WebFetch(kelen-african-network.vercel.app)",
+      "Bash(move *)",
+      "WebSearch",
+      "Bash(timeout *)",
+      "Bash(git log *)",
+      "Bash(tasklist)",
+      "Bash(powershell *)",
+      "Bash(copy *)",
+      "Bash(rmdir *)",
+      "Bash(git pull *)",
+      "Bash(git stash)",
+      "Bash(git stash *)",
+      "Bash(winget *)",
+      "Bash(scoop *)",
+      "Bash($supabase_key)",
+      "Bash(.matches.groups[1].value)",
+      "Bash(write-host *)",
+      "Bash($body *)",
+      "Bash(\"application/pdf\", *)",
+      "Bash(convertto-json)",
+      "Bash($response *)",
+      "Bash(\"content-type\" *)",
+      "Bash(psql *)",
+      "Bash(tee-object *)",
+      "Bash(get-content *)",
+      "Bash(cmd *)",
+      "Bash(dir *)"
     ]
-  }
+  },
+  "$version": 3
 }
