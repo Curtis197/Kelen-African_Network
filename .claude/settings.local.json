@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npx supabase *)"
+      "Bash(npx supabase *)",
+      "mcp__claude_ai_Twilio__twilio__search"
     ]
   }
 }
