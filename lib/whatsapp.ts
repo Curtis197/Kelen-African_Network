@@ -1,11 +1,17 @@
 import twilio from 'twilio'
 
-const client = twilio(
-  process.env.TWILIO_ACCOUNT_SID!,
-  process.env.TWILIO_AUTH_TOKEN!
-)
+function getClient() {
+  const sid = process.env.TWILIO_ACCOUNT_SID
+  const token = process.env.TWILIO_AUTH_TOKEN
+  if (!sid || !token) throw new Error('TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN must be set')
+  return twilio(sid, token)
+}
 
-const FROM = process.env.TWILIO_WHATSAPP_NUMBER!
+function getFrom(): string {
+  const from = process.env.TWILIO_WHATSAPP_NUMBER
+  if (!from) throw new Error('TWILIO_WHATSAPP_NUMBER must be set')
+  return from
+}
 
 export type WhatsAppTemplate =
   | 'booking_confirmed_no_payment'
@@ -18,19 +24,19 @@ export type WhatsAppTemplate =
 
 const templates: Record<WhatsAppTemplate, (p: Record<string, string>) => string> = {
   booking_confirmed_no_payment: (p) =>
-    `Hi ${p.name}, your appointment with ${p.pro_name} is confirmed for ${p.date} at ${p.time}. See you soon!`,
+    `Bonjour ${p.name}, votre rendez-vous avec ${p.pro_name} est confirmé pour le ${p.date} à ${p.time}. À bientôt !`,
   booking_confirmed_with_payment: (p) =>
-    `Hi ${p.name}, your booking with ${p.pro_name} on ${p.date} at ${p.time} is confirmed. Deposit of ${p.amount} received.`,
+    `Bonjour ${p.name}, votre réservation avec ${p.pro_name} le ${p.date} à ${p.time} est confirmée. Acompte de ${p.amount} reçu.`,
   appointment_reminder: (p) =>
-    `Reminder: your appointment with ${p.pro_name} is tomorrow at ${p.time}. Address: ${p.location}`,
+    `Rappel : votre rendez-vous avec ${p.pro_name} est demain à ${p.time}. Adresse : ${p.location}`,
   invoice_received: (p) =>
-    `Hi ${p.name}, ${p.pro_name} sent you an invoice for ${p.amount}. Pay here: ${p.link}`,
+    `Bonjour ${p.name}, ${p.pro_name} vous a envoyé une facture de ${p.amount}. Payez ici : ${p.link}`,
   payment_receipt: (p) =>
-    `Payment confirmed. ${p.amount} received by ${p.pro_name}. Thank you!`,
+    `Paiement confirmé. ${p.amount} reçu par ${p.pro_name}. Merci !`,
   pro_new_booking: (p) =>
-    `New booking from ${p.client_name} on ${p.date} at ${p.time}. Service: ${p.service}`,
+    `Nouvelle réservation de ${p.client_name} le ${p.date} à ${p.time}. Service : ${p.service}`,
   pro_payment_received: (p) =>
-    `${p.client_name} just paid ${p.amount} for ${p.service}. Check your dashboard.`,
+    `${p.client_name} vient de payer ${p.amount} pour ${p.service}. Consultez votre tableau de bord.`,
 }
 
 export async function sendWhatsApp(
@@ -39,8 +45,8 @@ export async function sendWhatsApp(
   params: Record<string, string>
 ): Promise<{ sid: string; status: string }> {
   const body = templates[template](params)
-  const message = await client.messages.create({
-    from: FROM,
+  const message = await getClient().messages.create({
+    from: `whatsapp:${getFrom()}`,
     to: `whatsapp:${to}`,
     body,
   })
