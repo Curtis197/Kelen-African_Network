@@ -1,60 +1,63 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient as createServiceClient } from '@/lib/supabase/service'
-import { getPaymentStatus } from '@/lib/orange-money'
+import { verifyTransaction, verifyWebhookSignature } from '@/lib/flutterwave'
 import { notifyPaymentReceived } from '@/lib/notifications'
 
 /**
- * CinetPay payment notification webhook.
+ * Flutterwave webhook — POSTs here when a payment completes.
  *
- * CinetPay sends a POST with form-encoded or JSON body containing cpm_trans_id.
- * Always return 200 — CinetPay retries on non-2xx.
+ * Setup in Flutterwave dashboard:
+ *   Settings → Webhooks → URL: https://kelen.africa/api/orange-money/webhook
+ *   Set a secret hash and add it as FLUTTERWAVE_WEBHOOK_SECRET in env.
  *
- * Register this URL in your CinetPay dashboard under "Notification URL".
+ * Always return 200 — Flutterwave retries on non-2xx.
  */
 export async function POST(request: NextRequest) {
-  let transactionId: string | undefined
+  const hash = request.headers.get('verif-hash')
 
-  const contentType = request.headers.get('content-type') ?? ''
-
-  try {
-    if (contentType.includes('application/json')) {
-      const data = await request.json()
-      transactionId = data.cpm_trans_id ?? data.transaction_id
-    } else {
-      const text = await request.text()
-      const params = new URLSearchParams(text)
-      transactionId = params.get('cpm_trans_id') ?? params.get('transaction_id') ?? undefined
-    }
-  } catch {
-    console.error('[cinetpay/webhook] Failed to parse body')
+  if (!verifyWebhookSignature(hash)) {
+    console.error('[flutterwave/webhook] Invalid webhook signature')
+    // Return 200 to stop retries, but don't process
     return NextResponse.json({ received: true })
   }
 
-  if (!transactionId) {
-    console.error('[cinetpay/webhook] Missing transaction ID in payload')
+  let event: { event: string; data: { id: number; tx_ref: string; status: string } }
+
+  try {
+    event = await request.json()
+  } catch {
+    return NextResponse.json({ received: true })
+  }
+
+  // Only process charge events
+  if (!event.event?.startsWith('charge.')) {
+    return NextResponse.json({ received: true })
+  }
+
+  const { id: transactionId, tx_ref: paymentId, status } = event.data
+
+  if (!paymentId || !transactionId) {
+    console.error('[flutterwave/webhook] Missing tx_ref or id', event.data)
     return NextResponse.json({ received: true })
   }
 
   const supabase = createServiceClient()
 
-  // Always verify with CinetPay — never trust webhook payload alone
-  let confirmed = false
-  let paymentMethod: string | null = null
+  // Always verify with Flutterwave — never trust webhook payload alone
+  let verified: Awaited<ReturnType<typeof verifyTransaction>> | null = null
 
   try {
-    const statusResult = await getPaymentStatus(transactionId)
-    confirmed = statusResult.status === 'ACCEPTED'
-    paymentMethod = statusResult.paymentMethod
+    verified = await verifyTransaction(String(transactionId))
   } catch (err) {
-    console.error('[cinetpay/webhook] Status check error', String(err))
+    console.error('[flutterwave/webhook] Verification error', String(err))
     return NextResponse.json({ received: true })
   }
 
-  if (!confirmed) {
+  if (verified.status !== 'successful') {
     await supabase
       .from('payments')
-      .update({ status: 'failed' })
-      .eq('id', transactionId)
+      .update({ status: 'failed', flutterwave_payment_type: verified.paymentType })
+      .eq('id', paymentId)
     return NextResponse.json({ received: true })
   }
 
@@ -62,15 +65,16 @@ export async function POST(request: NextRequest) {
     .from('payments')
     .update({
       status: 'paid',
-      cinetpay_payment_method: paymentMethod,
+      flutterwave_txn_id: String(transactionId),
+      flutterwave_payment_type: verified.paymentType,
       paid_at: new Date().toISOString(),
     })
-    .eq('id', transactionId)
+    .eq('id', paymentId)
     .select('*, professionals(business_name, whatsapp_phone)')
     .single()
 
   if (updateError) {
-    console.error('[cinetpay/webhook] Failed to update payment', updateError)
+    console.error('[flutterwave/webhook] Failed to update payment', updateError)
     return NextResponse.json({ received: true })
   }
 
@@ -85,10 +89,10 @@ export async function POST(request: NextRequest) {
       proPhone: pro?.whatsapp_phone ?? null,
       proName: pro?.business_name ?? '',
       serviceName: payment.service_name ?? '',
-      amount: `${payment.amount} XOF`,
+      amount: `${payment.amount} ${payment.currency.toUpperCase()}`,
       paymentType: 'booking_deposit',
     }).catch((err) =>
-      console.error('[cinetpay/webhook] WhatsApp notify failed', String(err))
+      console.error('[flutterwave/webhook] WhatsApp notify failed', String(err))
     )
   }
 
