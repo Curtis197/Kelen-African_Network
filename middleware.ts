@@ -19,6 +19,7 @@ export async function middleware(request: NextRequest) {
     pathname.includes("favicon.ico") ||
     pathname.includes("sso-api") ||
     pathname.endsWith(".json") ||
+    pathname.endsWith(".js") ||
     pathname.endsWith(".png") ||
     pathname.endsWith(".jpg") ||
     pathname.endsWith(".svg")
@@ -42,7 +43,7 @@ export async function middleware(request: NextRequest) {
 
   if (isKelenSubdomain) {
     const slug = host.split(".")[0];
-    if (slug) {
+    if (slug && slug !== "www") {
       const rewriteUrl = new URL(request.url);
       const originalPath = pathname === "/" ? "" : pathname;
       rewriteUrl.pathname = `/professionnels/${slug}${originalPath}`;
